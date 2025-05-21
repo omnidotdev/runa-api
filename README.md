@@ -1,4 +1,4 @@
-# 🦊 Runa API
+# 🌙 Runa API
 
 Runa is a project management platform.
 
