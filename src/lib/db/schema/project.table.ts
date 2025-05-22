@@ -1,10 +1,10 @@
 import {
+  jsonb,
   pgTable,
   text,
   uniqueIndex,
   uuid,
   varchar,
-  jsonb,
 } from "drizzle-orm/pg-core";
 import { workspaceTable } from "./workspace.table";
 

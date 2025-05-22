@@ -25,9 +25,7 @@ export const taskTable = pgTable(
     columnId: uuid("column_id")
       .notNull()
       .references(() => columnTable.id),
-    assignees: jsonb("assignees")
-      .$type<{ userId: string }[]>()
-      .default([]),
+    assignees: jsonb("assignees").$type<{ userId: string }[]>().default([]),
     labels: jsonb("labels").$type<string[]>().default([]),
     dueDate: text("due_date"),
     createdAt: generateDefaultDate(),
