@@ -1,4 +1,4 @@
-import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { projectTable } from "./project.table";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
@@ -19,7 +19,7 @@ export const columnTable = pgTable(
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id)],
+  (table) => [uniqueIndex().on(table.id), index().on(table.projectId)],
 );
 
 export type InsertColumn = InferInsertModel<typeof columnTable>;

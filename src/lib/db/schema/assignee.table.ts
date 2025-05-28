@@ -1,4 +1,4 @@
-import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { userTable } from "./user.table";
@@ -20,7 +20,7 @@ export const assigneeTable = pgTable(
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.userId)],
+  (table) => [uniqueIndex().on(table.id), index().on(table.userId)],
 );
 
 export type InsertAssignee = InferInsertModel<typeof assigneeTable>;

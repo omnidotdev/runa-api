@@ -1,4 +1,4 @@
-import { pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
 import { userTable } from "./user.table";
 import { workspaceTable } from "./workspace.table";
 
@@ -20,9 +20,11 @@ export const workspaceUserTable = pgTable(
       .references(() => userTable.id, { onDelete: "cascade" }),
     createdAt: generateDefaultDate(),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.workspaceId, table.userId] }),
-  }),
+  (table) => [
+    primaryKey({ columns: [table.workspaceId, table.userId] }),
+    index().on(table.userId),
+    index().on(table.workspaceId),
+  ],
 );
 
 export type InsertWorkspaceUser = InferInsertModel<typeof workspaceUserTable>;

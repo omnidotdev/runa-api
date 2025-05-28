@@ -1,4 +1,5 @@
 import {
+  index,
   jsonb,
   pgTable,
   text,
@@ -31,7 +32,7 @@ export const projectTable = pgTable(
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id)],
+  (table) => [uniqueIndex().on(table.id), index().on(table.workspaceId)],
 );
 
 export type InsertProject = InferInsertModel<typeof projectTable>;

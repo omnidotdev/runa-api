@@ -1,4 +1,4 @@
-import { pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
 import { projectTable } from "./project.table";
 import { userTable } from "./user.table";
 
@@ -20,9 +20,11 @@ export const projectUserTable = pgTable(
       .references(() => userTable.id, { onDelete: "cascade" }),
     createdAt: generateDefaultDate(),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.projectId, table.userId] }),
-  }),
+  (table) => [
+    primaryKey({ columns: [table.projectId, table.userId] }),
+    index().on(table.projectId),
+    index().on(table.userId),
+  ],
 );
 
 export type InsertProjectUser = InferInsertModel<typeof projectUserTable>;
