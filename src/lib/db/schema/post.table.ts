@@ -1,7 +1,8 @@
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
-import { userTable } from "lib/db/schema/user.table";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { taskTable } from "./task.table";
+import { userTable } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -19,10 +20,19 @@ export const postTable = pgTable(
       .references(() => userTable.id, {
         onDelete: "cascade",
       }),
+    taskId: uuid()
+      .notNull()
+      .references(() => taskTable.id, {
+        onDelete: "cascade",
+      }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), index().on(table.authorId)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    index().on(table.authorId),
+    index().on(table.taskId),
+  ],
 );
 
 export type InsertPost = InferInsertModel<typeof postTable>;

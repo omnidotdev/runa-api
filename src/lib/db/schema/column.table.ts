@@ -12,10 +12,10 @@ export const columnTable = pgTable(
   "column",
   {
     id: generateDefaultId(),
-    title: text("title").notNull(),
-    projectId: uuid("project_id")
+    title: text().notNull(),
+    projectId: uuid()
       .notNull()
-      .references(() => projectTable.id),
+      .references(() => projectTable.id, { onDelete: "cascade" }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

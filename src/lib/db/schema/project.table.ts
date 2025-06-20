@@ -20,15 +20,15 @@ export const projectTable = pgTable(
   "project",
   {
     id: generateDefaultId(),
-    name: text("name").notNull(),
-    description: text("description"),
-    prefix: varchar("prefix", { length: 10 }),
-    color: varchar("color", { length: 20 }),
+    name: text().notNull(),
+    description: text(),
+    prefix: varchar({ length: 10 }),
+    color: varchar({ length: 20 }),
     labels: jsonb("labels").$type<string[]>(),
     workspaceId: uuid("workspace_id")
       .notNull()
       .references(() => workspaceTable.id),
-    viewMode: varchar("view_mode", { length: 10 }).notNull().default("board"),
+    viewMode: varchar({ length: 10 }).notNull().default("board"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

@@ -11,7 +11,7 @@ export const workspaceTable = pgTable(
   "workspace",
   {
     id: generateDefaultId(),
-    name: text("name").notNull(),
+    name: text().notNull(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
