@@ -1,5 +1,5 @@
 {
-  "name": "@omnidev/runa-api",
+  "name": "@omnidotdev/runa-api",
   "private": true,
   "license": "MIT",
   "main": "build/server.js",
