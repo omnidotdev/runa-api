@@ -8,6 +8,20 @@
       "when": 1750353377383,
       "tag": "0000_young_captain_america",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750879881755,
+      "tag": "0001_steep_smiling_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750881392010,
+      "tag": "0002_calm_sugar_man",
+      "breakpoints": true
     }
   ]
 }

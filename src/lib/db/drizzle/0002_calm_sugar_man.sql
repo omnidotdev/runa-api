@@ -1,0 +1,1 @@
+ALTER TABLE "task" ADD COLUMN "column_index" integer DEFAULT 0 NOT NULL;

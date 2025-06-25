@@ -1,5 +1,6 @@
 import {
   index,
+  integer,
   jsonb,
   pgTable,
   text,
@@ -11,7 +12,6 @@ import {
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { columnTable } from "./column.table";
-import { projectTable } from "./project.table";
 import { userTable } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -29,12 +29,10 @@ export const taskTable = pgTable(
     authorId: uuid()
       .notNull()
       .references(() => userTable.id, { onDelete: "cascade" }),
-    projectId: uuid()
-      .notNull()
-      .references(() => projectTable.id, { onDelete: "cascade" }),
     columnId: uuid()
       .notNull()
       .references(() => columnTable.id, { onDelete: "cascade" }),
+    columnIndex: integer().notNull().default(0),
     labels: jsonb().$type<string[]>().default([]),
     dueDate: timestamp({
       precision: 6,
@@ -44,11 +42,7 @@ export const taskTable = pgTable(
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [
-    uniqueIndex().on(table.id),
-    index().on(table.columnId),
-    index().on(table.projectId),
-  ],
+  (table) => [uniqueIndex().on(table.id), index().on(table.columnId)],
 );
 
 export type InsertTask = InferInsertModel<typeof taskTable>;
