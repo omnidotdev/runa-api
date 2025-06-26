@@ -151,9 +151,12 @@ const seedDatabase = async () => {
     userTable: {
       columns: {
         name: f.firstName(),
-        avatarUrl: f.default({
-          defaultValue:
+        avatarUrl: f.valuesFromArray({
+          values: [
             "https://helios-i.mashable.com/imagery/articles/05SzGlYqpD4cUlIaQ8DHdVF/hero-image.fill.size_1200x1200.v1666999270.jpg",
+            "https://avatars.githubusercontent.com/u/24502053?v=4",
+            "https://ih1.redbubble.net/image.1986612550.1940/raf,360x360,075,t,fafafa:ca443f4786.u1.jpg",
+          ],
         }),
       },
     },
