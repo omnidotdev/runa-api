@@ -103,11 +103,26 @@ const seedDatabase = async () => {
         }),
         description: f.loremIpsum(),
         priority: f.valuesFromArray({ values: ["low", "medium", "high"] }),
-        labels: f.default({
-          defaultValue: [
-            { name: "Frontend", color: "orange" },
-            { name: "Feature", color: "emerald" },
-            { name: "Design", color: "teal" },
+        labels: f.valuesFromArray({
+          values: [
+            JSON.stringify([
+              { name: "Frontend", color: "orange" },
+              { name: "Design", color: "teal" },
+            ]),
+            JSON.stringify([
+              { name: "Backend", color: "green" },
+              { name: "Database", color: "purple" },
+            ]),
+            JSON.stringify([{ name: "DevOps", color: "blue" }]),
+            JSON.stringify([
+              { name: "Testing", color: "red" },
+              { name: "Bug", color: "indigo" },
+            ]),
+            JSON.stringify([
+              { name: "Urgent", color: "rose" },
+              { name: "Feature", color: "emerald" },
+              { name: "Refactor", color: "yellow" },
+            ]),
           ],
         }),
         columnIndex: f.int({
