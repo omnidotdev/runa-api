@@ -105,9 +105,9 @@ const seedDatabase = async () => {
         priority: f.valuesFromArray({ values: ["low", "medium", "high"] }),
         labels: f.default({
           defaultValue: [
-            { name: "Frontend", color: "#FFDDC1" },
-            { name: "Feature", color: "#6BFF6B" },
-            { name: "Design", color: "#C1FFDD" },
+            { name: "Frontend", color: "orange" },
+            { name: "Feature", color: "emerald" },
+            { name: "Design", color: "teal" },
           ],
         }),
         columnIndex: f.int({
