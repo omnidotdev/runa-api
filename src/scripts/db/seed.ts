@@ -80,6 +80,20 @@ const seedDatabase = async () => {
           ],
         }),
         viewMode: f.valuesFromArray({ values: ["board", "list"] }),
+        labels: f.default({
+          defaultValue: [
+            { name: "Frontend", color: "orange" },
+            { name: "Design", color: "teal" },
+            { name: "Backend", color: "green" },
+            { name: "Database", color: "purple" },
+            { name: "DevOps", color: "blue" },
+            { name: "Testing", color: "red" },
+            { name: "Bug", color: "indigo" },
+            { name: "Urgent", color: "rose" },
+            { name: "Feature", color: "emerald" },
+            { name: "Refactor", color: "yellow" },
+          ],
+        }),
       },
       with: {
         columnTable: 5,
