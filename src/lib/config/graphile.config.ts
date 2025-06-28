@@ -16,6 +16,7 @@ const graphilePreset: GraphileConfig.Preset = {
     PostGraphileConnectionFilterPreset,
     PgAggregatesPreset,
   ],
+  disablePlugins: ["PgIndexBehaviorsPlugin"],
   schema: {
     retryOnInitFail: isProdEnv,
     sortExport: true,

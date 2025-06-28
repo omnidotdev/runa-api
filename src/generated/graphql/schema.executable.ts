@@ -118,8 +118,7 @@ const spec_workspaceUser = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     }
   },
@@ -166,8 +165,7 @@ const spec_workspace = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     created_at: {
@@ -179,8 +177,7 @@ const spec_workspace = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     updated_at: {
@@ -192,8 +189,7 @@ const spec_workspace = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     }
   },
@@ -240,8 +236,7 @@ const spec_column = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     project_id: {
@@ -265,8 +260,7 @@ const spec_column = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     updated_at: {
@@ -278,8 +272,7 @@ const spec_column = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     }
   },
@@ -338,8 +331,7 @@ const spec_user = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     avatar_url: {
@@ -351,8 +343,7 @@ const spec_user = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     created_at: {
@@ -364,8 +355,7 @@ const spec_user = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     updated_at: {
@@ -377,8 +367,7 @@ const spec_user = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     }
   },
@@ -449,8 +438,7 @@ const spec_assignee = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     updated_at: {
@@ -462,8 +450,7 @@ const spec_assignee = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     deleted_at: {
@@ -475,8 +462,7 @@ const spec_assignee = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     }
   },
@@ -523,8 +509,7 @@ const spec_post = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     description: {
@@ -536,8 +521,7 @@ const spec_post = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     author_id: {
@@ -573,8 +557,7 @@ const spec_post = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     updated_at: {
@@ -586,8 +569,7 @@ const spec_post = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     }
   },
@@ -634,8 +616,7 @@ const spec_project = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     description: {
@@ -647,8 +628,7 @@ const spec_project = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     prefix: {
@@ -660,8 +640,7 @@ const spec_project = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     color: {
@@ -673,8 +652,7 @@ const spec_project = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     labels: {
@@ -686,8 +664,7 @@ const spec_project = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     workspace_id: {
@@ -711,8 +688,7 @@ const spec_project = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     created_at: {
@@ -724,8 +700,7 @@ const spec_project = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     updated_at: {
@@ -737,8 +712,7 @@ const spec_project = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     }
   },
@@ -785,8 +759,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     description: {
@@ -798,8 +771,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     priority: {
@@ -811,8 +783,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     author_id: {
@@ -824,8 +795,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     column_id: {
@@ -849,8 +819,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     due_date: {
@@ -862,8 +831,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     created_at: {
@@ -875,8 +843,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     updated_at: {
@@ -888,8 +855,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     },
     column_index: {
@@ -901,8 +867,7 @@ const spec_task = {
         tags: {},
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
       }
     }
   },
@@ -1493,8 +1458,7 @@ const registryConfig = {
         extensions: {
           tags: {
             behavior: []
-          },
-          isIndexed: false
+          }
         }
       },
       workspaceUsersByTheirUserId: {
@@ -2016,6 +1980,17 @@ function assertAllowed17(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+function assertAllowed18(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
 const dataTypeToAggregateTypeMap = {};
 const spec = {
   id: "distinctCount",
@@ -2030,6 +2005,30 @@ const spec = {
   pgTypeCodecModifier(codec) {
     const oid = codec.extensions?.oid;
     return (oid ? dataTypeToAggregateTypeMap[oid] : null) ?? TYPES.bigint;
+  }
+};
+const aggregateGroupBySpec = {
+  id: "truncated-to-hour",
+  isSuitableType(codec) {
+    return codec === TYPES.timestamp || codec === TYPES.timestamptz;
+  },
+  sqlWrap(sqlFrag) {
+    return sql`date_trunc('hour', ${sqlFrag})`;
+  },
+  sqlWrapCodec(codec) {
+    return codec;
+  }
+};
+const aggregateGroupBySpec2 = {
+  id: "truncated-to-day",
+  isSuitableType(codec) {
+    return codec === TYPES.timestamp || codec === TYPES.timestamptz;
+  },
+  sqlWrap(sqlFrag) {
+    return sql`date_trunc('day', ${sqlFrag})`;
+  },
+  sqlWrapCodec(codec) {
+    return codec;
   }
 };
 const isIntervalLike = codec => !!codec.extensions?.isIntervalLike;
@@ -2178,21 +2177,50 @@ const colSpec = {
   attribute: spec_project.attributes.id
 };
 const colSpec2 = {
+  fieldName: "name",
+  attributeName: "name",
+  attribute: spec_project.attributes.name
+};
+const colSpec3 = {
+  fieldName: "description",
+  attributeName: "description",
+  attribute: spec_project.attributes.description
+};
+const colSpec4 = {
+  fieldName: "prefix",
+  attributeName: "prefix",
+  attribute: spec_project.attributes.prefix
+};
+const colSpec5 = {
+  fieldName: "color",
+  attributeName: "color",
+  attribute: spec_project.attributes.color
+};
+const colSpec6 = {
+  fieldName: "labels",
+  attributeName: "labels",
+  attribute: spec_project.attributes.labels
+};
+const colSpec7 = {
   fieldName: "workspaceId",
   attributeName: "workspace_id",
   attribute: spec_project.attributes.workspace_id
 };
-function assertAllowed18(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-}
+const colSpec8 = {
+  fieldName: "viewMode",
+  attributeName: "view_mode",
+  attribute: spec_project.attributes.view_mode
+};
+const colSpec9 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_project.attributes.created_at
+};
+const colSpec10 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_project.attributes.updated_at
+};
 function assertAllowed19(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2205,6 +2233,17 @@ function assertAllowed19(value, mode) {
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed20(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed21(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -2265,7 +2304,440 @@ const resolve8 = (i, v) => sql`${i} < ${v}`;
 const resolve9 = (i, v) => sql`${i} <= ${v}`;
 const resolve10 = (i, v) => sql`${i} > ${v}`;
 const resolve11 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed21(value, mode) {
+const resolve12 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec4 = () => TYPES.boolean;
+const resolveSqlValue2 = () => sql.null;
+const resolve13 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive2 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains2(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec5(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive2.includes(resolveDomains2(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive2.includes(resolveDomains2(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier2(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive2.includes(resolveDomains2(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive2.includes(resolveDomains2(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve14 = (i, v) => sql`${i} <> ${v}`;
+const resolve15 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve16 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve17 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec6(c) {
+  if (forceTextTypesSensitive2.includes(resolveDomains2(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve18 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve19 = (i, v) => sql`${i} < ${v}`;
+const resolve20 = (i, v) => sql`${i} <= ${v}`;
+const resolve21 = (i, v) => sql`${i} > ${v}`;
+const resolve22 = (i, v) => sql`${i} >= ${v}`;
+const resolve23 = (i, v) => sql`${i} LIKE ${v}`;
+function escapeLikeWildcards(input) {
+  if (typeof input !== "string") throw new Error("Non-string input was provided to escapeLikeWildcards");else return input.split("%").join("\\%").split("_").join("\\_");
+}
+const resolveInput = input => `%${escapeLikeWildcards(input)}%`;
+const resolve24 = (i, v) => sql`${i} NOT LIKE ${v}`;
+const resolveInput2 = input => `%${escapeLikeWildcards(input)}%`;
+const resolve25 = (i, v) => sql`${i} ILIKE ${v}`;
+const resolveInput3 = input => `%${escapeLikeWildcards(input)}%`;
+const forceTextTypesInsensitive = [TYPES.char, TYPES.bpchar];
+function resolveInputCodec7(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesInsensitive.includes(resolveDomains2(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesInsensitive.includes(resolveDomains2(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier3(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesInsensitive.includes(resolveDomains2(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesInsensitive.includes(resolveDomains2(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve26 = (i, v) => sql`${i} NOT ILIKE ${v}`;
+const resolveInput4 = input => `%${escapeLikeWildcards(input)}%`;
+const resolve27 = (i, v) => sql`${i} LIKE ${v}`;
+const resolveInput5 = input => `${escapeLikeWildcards(input)}%`;
+const resolve28 = (i, v) => sql`${i} NOT LIKE ${v}`;
+const resolveInput6 = input => `${escapeLikeWildcards(input)}%`;
+const resolve29 = (i, v) => sql`${i} ILIKE ${v}`;
+const resolveInput7 = input => `${escapeLikeWildcards(input)}%`;
+const resolve30 = (i, v) => sql`${i} NOT ILIKE ${v}`;
+const resolveInput8 = input => `${escapeLikeWildcards(input)}%`;
+const resolve31 = (i, v) => sql`${i} LIKE ${v}`;
+const resolveInput9 = input => `%${escapeLikeWildcards(input)}`;
+const resolve32 = (i, v) => sql`${i} NOT LIKE ${v}`;
+const resolveInput10 = input => `%${escapeLikeWildcards(input)}`;
+const resolve33 = (i, v) => sql`${i} ILIKE ${v}`;
+const resolveInput11 = input => `%${escapeLikeWildcards(input)}`;
+const resolve34 = (i, v) => sql`${i} NOT ILIKE ${v}`;
+const resolveInput12 = input => `%${escapeLikeWildcards(input)}`;
+const resolve35 = (i, v) => sql`${i} LIKE ${v}`;
+const resolve36 = (i, v) => sql`${i} NOT LIKE ${v}`;
+const resolve37 = (i, v) => sql`${i} ILIKE ${v}`;
+const resolve38 = (i, v) => sql`${i} NOT ILIKE ${v}`;
+function resolveInputCodec8(inputCodec) {
+  if ("equalTo" === "in" || "equalTo" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier4(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue3(_unused, input, inputCodec) {
+  if ("equalTo" === "in" || "equalTo" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec9(inputCodec) {
+  if ("notEqualTo" === "in" || "notEqualTo" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier5(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue4(_unused, input, inputCodec) {
+  if ("notEqualTo" === "in" || "notEqualTo" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec10(inputCodec) {
+  if ("distinctFrom" === "in" || "distinctFrom" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier6(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue5(_unused, input, inputCodec) {
+  if ("distinctFrom" === "in" || "distinctFrom" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec11(inputCodec) {
+  if ("notDistinctFrom" === "in" || "notDistinctFrom" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier7(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue6(_unused, input, inputCodec) {
+  if ("notDistinctFrom" === "in" || "notDistinctFrom" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec12(inputCodec) {
+  if ("in" === "in" || "in" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier8(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue7(_unused, input, inputCodec) {
+  if ("in" === "in" || "in" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec13(inputCodec) {
+  if ("notIn" === "in" || "notIn" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier9(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue8(_unused, input, inputCodec) {
+  if ("notIn" === "in" || "notIn" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec14(inputCodec) {
+  if ("lessThan" === "in" || "lessThan" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier10(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue9(_unused, input, inputCodec) {
+  if ("lessThan" === "in" || "lessThan" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec15(inputCodec) {
+  if ("lessThanOrEqualTo" === "in" || "lessThanOrEqualTo" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier11(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue10(_unused, input, inputCodec) {
+  if ("lessThanOrEqualTo" === "in" || "lessThanOrEqualTo" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec16(inputCodec) {
+  if ("greaterThan" === "in" || "greaterThan" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier12(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue11(_unused, input, inputCodec) {
+  if ("greaterThan" === "in" || "greaterThan" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+function resolveInputCodec17(inputCodec) {
+  if ("greaterThanOrEqualTo" === "in" || "greaterThanOrEqualTo" === "notIn") {
+    const t = resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+    return listOfCodec(t, {
+      extensions: {
+        listItemNonNull: !0
+      }
+    });
+  } else return resolveDomains2(inputCodec) === TYPES.citext ? inputCodec : TYPES.text;
+}
+function resolveSqlIdentifier13(sourceAlias, codec) {
+  return resolveDomains2(codec) === TYPES.citext ? [sourceAlias, codec] : [sql`lower(${sourceAlias}::text)`, TYPES.text];
+}
+function resolveSqlValue12(_unused, input, inputCodec) {
+  if ("greaterThanOrEqualTo" === "in" || "greaterThanOrEqualTo" === "notIn") {
+    const sqlList = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec.arrayOfCodec === TYPES.citext) return sqlList;else return sql`(select lower(t) from unnest(${sqlList}) t)`;
+  } else {
+    const sqlValue = sqlValueWithCodec(input, inputCodec);
+    if (inputCodec === TYPES.citext) return sqlValue;else return sql`lower(${sqlValue})`;
+  }
+}
+const resolve39 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec18 = () => TYPES.boolean;
+const resolveSqlValue13 = () => sql.null;
+const resolve40 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive3 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains3(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec19(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive3.includes(resolveDomains3(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive3.includes(resolveDomains3(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier14(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive3.includes(resolveDomains3(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive3.includes(resolveDomains3(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve41 = (i, v) => sql`${i} <> ${v}`;
+const resolve42 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve43 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve44 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec20(c) {
+  if (forceTextTypesSensitive3.includes(resolveDomains3(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve45 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve46 = (i, v) => sql`${i} < ${v}`;
+const resolve47 = (i, v) => sql`${i} <= ${v}`;
+const resolve48 = (i, v) => sql`${i} > ${v}`;
+const resolve49 = (i, v) => sql`${i} >= ${v}`;
+const resolve50 = (i, v) => sql`${i} @> ${v}`;
+const resolve51 = (i, v) => sql`${i} ? ${v}`;
+const resolveInputCodec21 = () => TYPES.text;
+const resolve52 = (i, v) => sql`${i} ?& ${v}`;
+const resolveInputCodec22 = () => listOfCodec(TYPES.text, {
+  extensions: {
+    listItemNonNull: !0
+  }
+});
+const resolve53 = (i, v) => sql`${i} ?| ${v}`;
+const resolve54 = (i, v) => sql`${i} <@ ${v}`;
+const resolve55 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec23 = () => TYPES.boolean;
+const resolveSqlValue14 = () => sql.null;
+const resolve56 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive4 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains4(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec24(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive4.includes(resolveDomains4(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive4.includes(resolveDomains4(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier15(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive4.includes(resolveDomains4(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive4.includes(resolveDomains4(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve57 = (i, v) => sql`${i} <> ${v}`;
+const resolve58 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve59 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve60 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec25(c) {
+  if (forceTextTypesSensitive4.includes(resolveDomains4(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve61 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve62 = (i, v) => sql`${i} < ${v}`;
+const resolve63 = (i, v) => sql`${i} <= ${v}`;
+const resolve64 = (i, v) => sql`${i} > ${v}`;
+const resolve65 = (i, v) => sql`${i} >= ${v}`;
+function assertAllowed22(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -2340,27 +2812,31 @@ group by ())`;
     return this.parent.where(subquery);
   }
 };
-const colSpec3 = {
+const colSpec11 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_column.attributes.id
 };
-const colSpec4 = {
+const colSpec12 = {
+  fieldName: "title",
+  attributeName: "title",
+  attribute: spec_column.attributes.title
+};
+const colSpec13 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_column.attributes.project_id
 };
-function assertAllowed22(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-}
+const colSpec14 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_column.attributes.created_at
+};
+const colSpec15 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_column.attributes.updated_at
+};
 function assertAllowed23(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2394,16 +2870,6 @@ function assertAllowed25(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec5 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_task.attributes.id
-};
-const colSpec6 = {
-  fieldName: "columnId",
-  attributeName: "column_id",
-  attribute: spec_task.attributes.column_id
-};
 function assertAllowed26(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2415,6 +2881,61 @@ function assertAllowed26(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec16 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_task.attributes.id
+};
+const colSpec17 = {
+  fieldName: "content",
+  attributeName: "content",
+  attribute: spec_task.attributes.content
+};
+const colSpec18 = {
+  fieldName: "description",
+  attributeName: "description",
+  attribute: spec_task.attributes.description
+};
+const colSpec19 = {
+  fieldName: "priority",
+  attributeName: "priority",
+  attribute: spec_task.attributes.priority
+};
+const colSpec20 = {
+  fieldName: "authorId",
+  attributeName: "author_id",
+  attribute: spec_task.attributes.author_id
+};
+const colSpec21 = {
+  fieldName: "columnId",
+  attributeName: "column_id",
+  attribute: spec_task.attributes.column_id
+};
+const colSpec22 = {
+  fieldName: "labels",
+  attributeName: "labels",
+  attribute: spec_task.attributes.labels
+};
+const colSpec23 = {
+  fieldName: "dueDate",
+  attributeName: "due_date",
+  attribute: spec_task.attributes.due_date
+};
+const colSpec24 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_task.attributes.created_at
+};
+const colSpec25 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_task.attributes.updated_at
+};
+const colSpec26 = {
+  fieldName: "columnIndex",
+  attributeName: "column_index",
+  attribute: spec_task.attributes.column_index
+};
 function assertAllowed27(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2448,21 +2969,56 @@ function assertAllowed29(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec7 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_assignee.attributes.id
-};
-const colSpec8 = {
-  fieldName: "userId",
-  attributeName: "user_id",
-  attribute: spec_assignee.attributes.user_id
-};
-const colSpec9 = {
-  fieldName: "taskId",
-  attributeName: "task_id",
-  attribute: spec_assignee.attributes.task_id
-};
+const resolve66 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec26 = () => TYPES.boolean;
+const resolveSqlValue15 = () => sql.null;
+const resolve67 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive5 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains5(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec27(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive5.includes(resolveDomains5(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive5.includes(resolveDomains5(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier16(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive5.includes(resolveDomains5(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive5.includes(resolveDomains5(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve68 = (i, v) => sql`${i} <> ${v}`;
+const resolve69 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve70 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve71 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec28(c) {
+  if (forceTextTypesSensitive5.includes(resolveDomains5(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve72 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve73 = (i, v) => sql`${i} < ${v}`;
+const resolve74 = (i, v) => sql`${i} <= ${v}`;
+const resolve75 = (i, v) => sql`${i} > ${v}`;
+const resolve76 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed30(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2474,6 +3030,36 @@ function assertAllowed30(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec27 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_assignee.attributes.id
+};
+const colSpec28 = {
+  fieldName: "userId",
+  attributeName: "user_id",
+  attribute: spec_assignee.attributes.user_id
+};
+const colSpec29 = {
+  fieldName: "taskId",
+  attributeName: "task_id",
+  attribute: spec_assignee.attributes.task_id
+};
+const colSpec30 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_assignee.attributes.created_at
+};
+const colSpec31 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_assignee.attributes.updated_at
+};
+const colSpec32 = {
+  fieldName: "deletedAt",
+  attributeName: "deleted_at",
+  attribute: spec_assignee.attributes.deleted_at
+};
 function assertAllowed31(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2485,16 +3071,6 @@ function assertAllowed31(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec10 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_user.attributes.id
-};
-const colSpec11 = {
-  fieldName: "identityProviderId",
-  attributeName: "identity_provider_id",
-  attribute: spec_user.attributes.identity_provider_id
-};
 function assertAllowed32(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2506,6 +3082,36 @@ function assertAllowed32(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec33 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_user.attributes.id
+};
+const colSpec34 = {
+  fieldName: "identityProviderId",
+  attributeName: "identity_provider_id",
+  attribute: spec_user.attributes.identity_provider_id
+};
+const colSpec35 = {
+  fieldName: "name",
+  attributeName: "name",
+  attribute: spec_user.attributes.name
+};
+const colSpec36 = {
+  fieldName: "avatarUrl",
+  attributeName: "avatar_url",
+  attribute: spec_user.attributes.avatar_url
+};
+const colSpec37 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_user.attributes.created_at
+};
+const colSpec38 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_user.attributes.updated_at
+};
 function assertAllowed33(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2528,56 +3134,6 @@ function assertAllowed34(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const resolve12 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
-const resolveInputCodec4 = () => TYPES.boolean;
-const resolveSqlValue2 = () => sql.null;
-const resolve13 = (i, v) => sql`${i} = ${v}`;
-const forceTextTypesSensitive2 = [TYPES.citext, TYPES.char, TYPES.bpchar];
-function resolveDomains2(c) {
-  let current = c;
-  while (current.domainOfCodec) current = current.domainOfCodec;
-  return current;
-}
-function resolveInputCodec5(c) {
-  if (c.arrayOfCodec) {
-    if (forceTextTypesSensitive2.includes(resolveDomains2(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
-      extensions: {
-        listItemNonNull: c.extensions?.listItemNonNull
-      }
-    });
-    return c;
-  } else {
-    if (forceTextTypesSensitive2.includes(resolveDomains2(c))) return TYPES.text;
-    return c;
-  }
-}
-function resolveSqlIdentifier2(identifier, c) {
-  if (c.arrayOfCodec && forceTextTypesSensitive2.includes(resolveDomains2(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
-    extensions: {
-      listItemNonNull: c.extensions?.listItemNonNull
-    }
-  })];else if (forceTextTypesSensitive2.includes(resolveDomains2(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
-}
-const resolve14 = (i, v) => sql`${i} <> ${v}`;
-const resolve15 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
-const resolve16 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
-const resolve17 = (i, v) => sql`${i} = ANY(${v})`;
-function resolveInputCodec6(c) {
-  if (forceTextTypesSensitive2.includes(resolveDomains2(c))) return listOfCodec(TYPES.text, {
-    extensions: {
-      listItemNonNull: !0
-    }
-  });else return listOfCodec(c, {
-    extensions: {
-      listItemNonNull: !0
-    }
-  });
-}
-const resolve18 = (i, v) => sql`${i} <> ALL(${v})`;
-const resolve19 = (i, v) => sql`${i} < ${v}`;
-const resolve20 = (i, v) => sql`${i} <= ${v}`;
-const resolve21 = (i, v) => sql`${i} > ${v}`;
-const resolve22 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed35(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2589,21 +3145,56 @@ function assertAllowed35(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec12 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_post.attributes.id
-};
-const colSpec13 = {
-  fieldName: "authorId",
-  attributeName: "author_id",
-  attribute: spec_post.attributes.author_id
-};
-const colSpec14 = {
-  fieldName: "taskId",
-  attributeName: "task_id",
-  attribute: spec_post.attributes.task_id
-};
+const resolve77 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec29 = () => TYPES.boolean;
+const resolveSqlValue16 = () => sql.null;
+const resolve78 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive6 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains6(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec30(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive6.includes(resolveDomains6(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive6.includes(resolveDomains6(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier17(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive6.includes(resolveDomains6(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive6.includes(resolveDomains6(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve79 = (i, v) => sql`${i} <> ${v}`;
+const resolve80 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve81 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve82 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec31(c) {
+  if (forceTextTypesSensitive6.includes(resolveDomains6(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve83 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve84 = (i, v) => sql`${i} < ${v}`;
+const resolve85 = (i, v) => sql`${i} <= ${v}`;
+const resolve86 = (i, v) => sql`${i} > ${v}`;
+const resolve87 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed36(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2615,6 +3206,41 @@ function assertAllowed36(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec39 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_post.attributes.id
+};
+const colSpec40 = {
+  fieldName: "title",
+  attributeName: "title",
+  attribute: spec_post.attributes.title
+};
+const colSpec41 = {
+  fieldName: "description",
+  attributeName: "description",
+  attribute: spec_post.attributes.description
+};
+const colSpec42 = {
+  fieldName: "authorId",
+  attributeName: "author_id",
+  attribute: spec_post.attributes.author_id
+};
+const colSpec43 = {
+  fieldName: "taskId",
+  attributeName: "task_id",
+  attribute: spec_post.attributes.task_id
+};
+const colSpec44 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_post.attributes.created_at
+};
+const colSpec45 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_post.attributes.updated_at
+};
 function assertAllowed37(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2637,16 +3263,6 @@ function assertAllowed38(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec15 = {
-  fieldName: "workspaceId",
-  attributeName: "workspace_id",
-  attribute: spec_workspaceUser.attributes.workspace_id
-};
-const colSpec16 = {
-  fieldName: "userId",
-  attributeName: "user_id",
-  attribute: spec_workspaceUser.attributes.user_id
-};
 function assertAllowed39(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2658,6 +3274,56 @@ function assertAllowed39(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const resolve88 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec32 = () => TYPES.boolean;
+const resolveSqlValue17 = () => sql.null;
+const resolve89 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive7 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains7(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec33(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive7.includes(resolveDomains7(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive7.includes(resolveDomains7(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier18(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive7.includes(resolveDomains7(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive7.includes(resolveDomains7(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve90 = (i, v) => sql`${i} <> ${v}`;
+const resolve91 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve92 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve93 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec34(c) {
+  if (forceTextTypesSensitive7.includes(resolveDomains7(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve94 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve95 = (i, v) => sql`${i} < ${v}`;
+const resolve96 = (i, v) => sql`${i} <= ${v}`;
+const resolve97 = (i, v) => sql`${i} > ${v}`;
+const resolve98 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed40(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2669,10 +3335,20 @@ function assertAllowed40(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec17 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_workspace.attributes.id
+const colSpec46 = {
+  fieldName: "workspaceId",
+  attributeName: "workspace_id",
+  attribute: spec_workspaceUser.attributes.workspace_id
+};
+const colSpec47 = {
+  fieldName: "userId",
+  attributeName: "user_id",
+  attribute: spec_workspaceUser.attributes.user_id
+};
+const colSpec48 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_workspaceUser.attributes.created_at
 };
 function assertAllowed41(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -2696,6 +3372,26 @@ function assertAllowed42(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec49 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_workspace.attributes.id
+};
+const colSpec50 = {
+  fieldName: "name",
+  attributeName: "name",
+  attribute: spec_workspace.attributes.name
+};
+const colSpec51 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_workspace.attributes.created_at
+};
+const colSpec52 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_workspace.attributes.updated_at
+};
 function assertAllowed43(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -2729,6 +3425,28 @@ function assertAllowed45(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
+function assertAllowed46(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed47(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+}
 const relation = registry.pgRelations["project"]["columnsByTheirProjectId"];
 const relation2 = registry.pgRelations["column"]["tasksByTheirColumnId"];
 const infix7 = () => sql.fragment`=`;
@@ -2743,7 +3461,8 @@ const relation5 = registry.pgRelations["workspace"]["projectsByTheirWorkspaceId"
 const relation6 = registry.pgRelations["workspace"]["workspaceUsersByTheirWorkspaceId"];
 const relation7 = registry.pgRelations["user"]["assigneesByTheirUserId"];
 const relation8 = registry.pgRelations["user"]["postsByTheirAuthorId"];
-const relation9 = registry.pgRelations["user"]["workspaceUsersByTheirUserId"];
+const relation9 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
+const relation10 = registry.pgRelations["user"]["workspaceUsersByTheirUserId"];
 const specFromArgs_WorkspaceUser = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.WorkspaceUser, $nodeId);
@@ -3295,6 +4014,40 @@ type User implements Node {
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection!
 
+  """Reads and enables pagination through a set of \`Task\`."""
+  authoredTasks(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskFilter
+
+    """The method to use when ordering \`Task\`."""
+    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskConnection!
+
   """Reads and enables pagination through a set of \`WorkspaceUser\`."""
   workspaceUsers(
     """Only read the first \`n\` values of the set."""
@@ -3771,7 +4524,19 @@ scalar BigInt
 
 """Grouping methods for \`Project\` for usage during aggregation."""
 enum ProjectGroupBy {
+  NAME
+  DESCRIPTION
+  PREFIX
+  COLOR
+  LABELS
   WORKSPACE_ID
+  VIEW_MODE
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
 }
 
 """Conditions for \`Project\` aggregates."""
@@ -3850,8 +4615,32 @@ input ProjectCondition {
   """Checks for equality with the object’s \`rowId\` field."""
   rowId: UUID
 
+  """Checks for equality with the object’s \`name\` field."""
+  name: String
+
+  """Checks for equality with the object’s \`description\` field."""
+  description: String
+
+  """Checks for equality with the object’s \`prefix\` field."""
+  prefix: String
+
+  """Checks for equality with the object’s \`color\` field."""
+  color: String
+
+  """Checks for equality with the object’s \`labels\` field."""
+  labels: JSON
+
   """Checks for equality with the object’s \`workspaceId\` field."""
   workspaceId: UUID
+
+  """Checks for equality with the object’s \`viewMode\` field."""
+  viewMode: String
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
 }
 
 """
@@ -3861,8 +4650,32 @@ input ProjectFilter {
   """Filter by the object’s \`rowId\` field."""
   rowId: UUIDFilter
 
+  """Filter by the object’s \`name\` field."""
+  name: StringFilter
+
+  """Filter by the object’s \`description\` field."""
+  description: StringFilter
+
+  """Filter by the object’s \`prefix\` field."""
+  prefix: StringFilter
+
+  """Filter by the object’s \`color\` field."""
+  color: StringFilter
+
+  """Filter by the object’s \`labels\` field."""
+  labels: JSONFilter
+
   """Filter by the object’s \`workspaceId\` field."""
   workspaceId: UUIDFilter
+
+  """Filter by the object’s \`viewMode\` field."""
+  viewMode: StringFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
 
   """Filter by the object’s \`columns\` relation."""
   columns: ProjectToManyColumnFilter
@@ -3926,6 +4739,237 @@ input UUIDFilter {
 }
 
 """
+A filter to be used against String fields. All fields are combined with a logical ‘and.’
+"""
+input StringFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: String
+
+  """Not equal to the specified value."""
+  notEqualTo: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: String
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: String
+
+  """Included in the specified list."""
+  in: [String!]
+
+  """Not included in the specified list."""
+  notIn: [String!]
+
+  """Less than the specified value."""
+  lessThan: String
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: String
+
+  """Greater than the specified value."""
+  greaterThan: String
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: String
+
+  """Contains the specified string (case-sensitive)."""
+  includes: String
+
+  """Does not contain the specified string (case-sensitive)."""
+  notIncludes: String
+
+  """Contains the specified string (case-insensitive)."""
+  includesInsensitive: String
+
+  """Does not contain the specified string (case-insensitive)."""
+  notIncludesInsensitive: String
+
+  """Starts with the specified string (case-sensitive)."""
+  startsWith: String
+
+  """Does not start with the specified string (case-sensitive)."""
+  notStartsWith: String
+
+  """Starts with the specified string (case-insensitive)."""
+  startsWithInsensitive: String
+
+  """Does not start with the specified string (case-insensitive)."""
+  notStartsWithInsensitive: String
+
+  """Ends with the specified string (case-sensitive)."""
+  endsWith: String
+
+  """Does not end with the specified string (case-sensitive)."""
+  notEndsWith: String
+
+  """Ends with the specified string (case-insensitive)."""
+  endsWithInsensitive: String
+
+  """Does not end with the specified string (case-insensitive)."""
+  notEndsWithInsensitive: String
+
+  """
+  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  like: String
+
+  """
+  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLike: String
+
+  """
+  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  likeInsensitive: String
+
+  """
+  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLikeInsensitive: String
+
+  """Equal to the specified value (case-insensitive)."""
+  equalToInsensitive: String
+
+  """Not equal to the specified value (case-insensitive)."""
+  notEqualToInsensitive: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  distinctFromInsensitive: String
+
+  """
+  Equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  notDistinctFromInsensitive: String
+
+  """Included in the specified list (case-insensitive)."""
+  inInsensitive: [String!]
+
+  """Not included in the specified list (case-insensitive)."""
+  notInInsensitive: [String!]
+
+  """Less than the specified value (case-insensitive)."""
+  lessThanInsensitive: String
+
+  """Less than or equal to the specified value (case-insensitive)."""
+  lessThanOrEqualToInsensitive: String
+
+  """Greater than the specified value (case-insensitive)."""
+  greaterThanInsensitive: String
+
+  """Greater than or equal to the specified value (case-insensitive)."""
+  greaterThanOrEqualToInsensitive: String
+}
+
+"""
+A filter to be used against JSON fields. All fields are combined with a logical ‘and.’
+"""
+input JSONFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: JSON
+
+  """Not equal to the specified value."""
+  notEqualTo: JSON
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: JSON
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: JSON
+
+  """Included in the specified list."""
+  in: [JSON!]
+
+  """Not included in the specified list."""
+  notIn: [JSON!]
+
+  """Less than the specified value."""
+  lessThan: JSON
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: JSON
+
+  """Greater than the specified value."""
+  greaterThan: JSON
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: JSON
+
+  """Contains the specified JSON."""
+  contains: JSON
+
+  """Contains the specified key."""
+  containsKey: String
+
+  """Contains all of the specified keys."""
+  containsAllKeys: [String!]
+
+  """Contains any of the specified keys."""
+  containsAnyKeys: [String!]
+
+  """Contained by the specified JSON."""
+  containedBy: JSON
+}
+
+"""
+A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
+"""
+input DatetimeFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Datetime
+
+  """Not equal to the specified value."""
+  notEqualTo: Datetime
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Datetime
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Datetime
+
+  """Included in the specified list."""
+  in: [Datetime!]
+
+  """Not included in the specified list."""
+  notIn: [Datetime!]
+
+  """Less than the specified value."""
+  lessThan: Datetime
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Datetime
+
+  """Greater than the specified value."""
+  greaterThan: Datetime
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Datetime
+}
+
+"""
 A filter to be used against many \`Column\` object types. All fields are combined with a logical ‘and.’
 """
 input ProjectToManyColumnFilter {
@@ -3955,8 +4999,17 @@ input ColumnFilter {
   """Filter by the object’s \`rowId\` field."""
   rowId: UUIDFilter
 
+  """Filter by the object’s \`title\` field."""
+  title: StringFilter
+
   """Filter by the object’s \`projectId\` field."""
   projectId: UUIDFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
 
   """Filter by the object’s \`tasks\` relation."""
   tasks: ColumnToManyTaskFilter
@@ -4007,8 +5060,35 @@ input TaskFilter {
   """Filter by the object’s \`rowId\` field."""
   rowId: UUIDFilter
 
+  """Filter by the object’s \`content\` field."""
+  content: StringFilter
+
+  """Filter by the object’s \`description\` field."""
+  description: StringFilter
+
+  """Filter by the object’s \`priority\` field."""
+  priority: StringFilter
+
+  """Filter by the object’s \`authorId\` field."""
+  authorId: UUIDFilter
+
   """Filter by the object’s \`columnId\` field."""
   columnId: UUIDFilter
+
+  """Filter by the object’s \`labels\` field."""
+  labels: JSONFilter
+
+  """Filter by the object’s \`dueDate\` field."""
+  dueDate: DatetimeFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s \`columnIndex\` field."""
+  columnIndex: IntFilter
 
   """Filter by the object’s \`assignees\` relation."""
   assignees: TaskToManyAssigneeFilter
@@ -4036,6 +5116,48 @@ input TaskFilter {
 
   """Negates the expression."""
   not: TaskFilter
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
 }
 
 """
@@ -4074,6 +5196,15 @@ input AssigneeFilter {
   """Filter by the object’s \`taskId\` field."""
   taskId: UUIDFilter
 
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s \`deletedAt\` field."""
+  deletedAt: DatetimeFilter
+
   """Filter by the object’s \`task\` relation."""
   task: TaskFilter
 
@@ -4100,6 +5231,18 @@ input UserFilter {
   """Filter by the object’s \`identityProviderId\` field."""
   identityProviderId: UUIDFilter
 
+  """Filter by the object’s \`name\` field."""
+  name: StringFilter
+
+  """Filter by the object’s \`avatarUrl\` field."""
+  avatarUrl: StringFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
   """Filter by the object’s \`assignees\` relation."""
   assignees: UserToManyAssigneeFilter
 
@@ -4111,6 +5254,12 @@ input UserFilter {
 
   """Some related \`authoredPosts\` exist."""
   authoredPostsExist: Boolean
+
+  """Filter by the object’s \`authoredTasks\` relation."""
+  authoredTasks: UserToManyTaskFilter
+
+  """Some related \`authoredTasks\` exist."""
+  authoredTasksExist: Boolean
 
   """Filter by the object’s \`workspaceUsers\` relation."""
   workspaceUsers: UserToManyWorkspaceUserFilter
@@ -4166,6 +5315,9 @@ input AssigneeDistinctCountAggregateFilter {
   rowId: BigIntFilter
   userId: BigIntFilter
   taskId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+  deletedAt: BigIntFilter
 }
 
 """
@@ -4240,11 +5392,23 @@ input PostFilter {
   """Filter by the object’s \`rowId\` field."""
   rowId: UUIDFilter
 
+  """Filter by the object’s \`title\` field."""
+  title: StringFilter
+
+  """Filter by the object’s \`description\` field."""
+  description: StringFilter
+
   """Filter by the object’s \`authorId\` field."""
   authorId: UUIDFilter
 
   """Filter by the object’s \`taskId\` field."""
   taskId: UUIDFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
 
   """Filter by the object’s \`author\` relation."""
   author: UserFilter
@@ -4275,8 +5439,163 @@ input PostAggregatesFilter {
 
 input PostDistinctCountAggregateFilter {
   rowId: BigIntFilter
+  title: BigIntFilter
+  description: BigIntFilter
   authorId: BigIntFilter
   taskId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against many \`Task\` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyTaskFilter {
+  """
+  Every related \`Task\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskFilter
+
+  """
+  Some related \`Task\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskFilter
+
+  """
+  No related \`Task\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskFilter
+
+  """Aggregates across related \`Task\` match the filter criteria."""
+  aggregates: TaskAggregatesFilter
+}
+
+"""A filter to be used against aggregates of \`Task\` object types."""
+input TaskAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`Task\` object to be included within the aggregate.
+  """
+  filter: TaskFilter
+
+  """Sum aggregate over matching \`Task\` objects."""
+  sum: TaskSumAggregateFilter
+
+  """Distinct count aggregate over matching \`Task\` objects."""
+  distinctCount: TaskDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching \`Task\` objects."""
+  min: TaskMinAggregateFilter
+
+  """Maximum aggregate over matching \`Task\` objects."""
+  max: TaskMaxAggregateFilter
+
+  """Mean average aggregate over matching \`Task\` objects."""
+  average: TaskAverageAggregateFilter
+
+  """Sample standard deviation aggregate over matching \`Task\` objects."""
+  stddevSample: TaskStddevSampleAggregateFilter
+
+  """Population standard deviation aggregate over matching \`Task\` objects."""
+  stddevPopulation: TaskStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching \`Task\` objects."""
+  varianceSample: TaskVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching \`Task\` objects."""
+  variancePopulation: TaskVariancePopulationAggregateFilter
+}
+
+input TaskSumAggregateFilter {
+  columnIndex: BigIntFilter
+}
+
+input TaskDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  content: BigIntFilter
+  description: BigIntFilter
+  priority: BigIntFilter
+  authorId: BigIntFilter
+  columnId: BigIntFilter
+  labels: BigIntFilter
+  dueDate: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+  columnIndex: BigIntFilter
+}
+
+input TaskMinAggregateFilter {
+  columnIndex: IntFilter
+}
+
+input TaskMaxAggregateFilter {
+  columnIndex: IntFilter
+}
+
+input TaskAverageAggregateFilter {
+  columnIndex: BigFloatFilter
+}
+
+"""
+A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
+"""
+input BigFloatFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigFloat
+
+  """Not equal to the specified value."""
+  notEqualTo: BigFloat
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigFloat
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigFloat
+
+  """Included in the specified list."""
+  in: [BigFloat!]
+
+  """Not included in the specified list."""
+  notIn: [BigFloat!]
+
+  """Less than the specified value."""
+  lessThan: BigFloat
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigFloat
+
+  """Greater than the specified value."""
+  greaterThan: BigFloat
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigFloat
+}
+
+"""
+A floating point number that requires more precision than IEEE 754 binary 64
+"""
+scalar BigFloat
+
+input TaskStddevSampleAggregateFilter {
+  columnIndex: BigFloatFilter
+}
+
+input TaskStddevPopulationAggregateFilter {
+  columnIndex: BigFloatFilter
+}
+
+input TaskVarianceSampleAggregateFilter {
+  columnIndex: BigFloatFilter
+}
+
+input TaskVariancePopulationAggregateFilter {
+  columnIndex: BigFloatFilter
 }
 
 """
@@ -4312,6 +5631,9 @@ input WorkspaceUserFilter {
   """Filter by the object’s \`userId\` field."""
   userId: UUIDFilter
 
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
   """Filter by the object’s \`user\` relation."""
   user: UserFilter
 
@@ -4334,6 +5656,15 @@ A filter to be used against \`Workspace\` object types. All fields are combined 
 input WorkspaceFilter {
   """Filter by the object’s \`rowId\` field."""
   rowId: UUIDFilter
+
+  """Filter by the object’s \`name\` field."""
+  name: StringFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
 
   """Filter by the object’s \`projects\` relation."""
   projects: WorkspaceToManyProjectFilter
@@ -4393,7 +5724,15 @@ input ProjectAggregatesFilter {
 
 input ProjectDistinctCountAggregateFilter {
   rowId: BigIntFilter
+  name: BigIntFilter
+  description: BigIntFilter
+  prefix: BigIntFilter
+  color: BigIntFilter
+  labels: BigIntFilter
   workspaceId: BigIntFilter
+  viewMode: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
 }
 
 """
@@ -4435,6 +5774,7 @@ input WorkspaceUserAggregatesFilter {
 input WorkspaceUserDistinctCountAggregateFilter {
   workspaceId: BigIntFilter
   userId: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -4460,22 +5800,6 @@ input TaskToManyPostFilter {
   aggregates: PostAggregatesFilter
 }
 
-"""A filter to be used against aggregates of \`Task\` object types."""
-input TaskAggregatesFilter {
-  """
-  A filter that must pass for the relevant \`Task\` object to be included within the aggregate.
-  """
-  filter: TaskFilter
-
-  """Distinct count aggregate over matching \`Task\` objects."""
-  distinctCount: TaskDistinctCountAggregateFilter
-}
-
-input TaskDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  columnId: BigIntFilter
-}
-
 """A filter to be used against aggregates of \`Column\` object types."""
 input ColumnAggregatesFilter {
   """
@@ -4489,7 +5813,10 @@ input ColumnAggregatesFilter {
 
 input ColumnDistinctCountAggregateFilter {
   rowId: BigIntFilter
+  title: BigIntFilter
   projectId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
 }
 
 """Methods to use when ordering \`Project\`."""
@@ -4499,14 +5826,36 @@ enum ProjectOrderBy {
   PRIMARY_KEY_DESC
   ROW_ID_ASC
   ROW_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  PREFIX_ASC
+  PREFIX_DESC
+  COLOR_ASC
+  COLOR_DESC
+  LABELS_ASC
+  LABELS_DESC
   WORKSPACE_ID_ASC
   WORKSPACE_ID_DESC
+  VIEW_MODE_ASC
+  VIEW_MODE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
   COLUMNS_COUNT_ASC
   COLUMNS_COUNT_DESC
   COLUMNS_DISTINCT_COUNT_ROW_ID_ASC
   COLUMNS_DISTINCT_COUNT_ROW_ID_DESC
+  COLUMNS_DISTINCT_COUNT_TITLE_ASC
+  COLUMNS_DISTINCT_COUNT_TITLE_DESC
   COLUMNS_DISTINCT_COUNT_PROJECT_ID_ASC
   COLUMNS_DISTINCT_COUNT_PROJECT_ID_DESC
+  COLUMNS_DISTINCT_COUNT_CREATED_AT_ASC
+  COLUMNS_DISTINCT_COUNT_CREATED_AT_DESC
+  COLUMNS_DISTINCT_COUNT_UPDATED_AT_ASC
+  COLUMNS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of \`WorkspaceUser\` values."""
@@ -4575,6 +5924,9 @@ type WorkspaceUserDistinctCountAggregates {
 enum WorkspaceUserGroupBy {
   WORKSPACE_ID
   USER_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
 }
 
 """Conditions for \`WorkspaceUser\` aggregates."""
@@ -4638,6 +5990,9 @@ input WorkspaceUserCondition {
 
   """Checks for equality with the object’s \`userId\` field."""
   userId: UUID
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
 }
 
 """Methods to use when ordering \`WorkspaceUser\`."""
@@ -4649,6 +6004,8 @@ enum WorkspaceUserOrderBy {
   WORKSPACE_ID_DESC
   USER_ID_ASC
   USER_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
 }
 
 """A connection to a list of \`Column\` values."""
@@ -4721,7 +6078,14 @@ type ColumnDistinctCountAggregates {
 
 """Grouping methods for \`Column\` for usage during aggregation."""
 enum ColumnGroupBy {
+  TITLE
   PROJECT_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
 }
 
 """Conditions for \`Column\` aggregates."""
@@ -4791,8 +6155,17 @@ input ColumnCondition {
   """Checks for equality with the object’s \`rowId\` field."""
   rowId: UUID
 
+  """Checks for equality with the object’s \`title\` field."""
+  title: String
+
   """Checks for equality with the object’s \`projectId\` field."""
   projectId: UUID
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
 }
 
 """Methods to use when ordering \`Column\`."""
@@ -4802,14 +6175,54 @@ enum ColumnOrderBy {
   PRIMARY_KEY_DESC
   ROW_ID_ASC
   ROW_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
   PROJECT_ID_ASC
   PROJECT_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
   TASKS_COUNT_ASC
   TASKS_COUNT_DESC
+  TASKS_SUM_COLUMN_INDEX_ASC
+  TASKS_SUM_COLUMN_INDEX_DESC
   TASKS_DISTINCT_COUNT_ROW_ID_ASC
   TASKS_DISTINCT_COUNT_ROW_ID_DESC
+  TASKS_DISTINCT_COUNT_CONTENT_ASC
+  TASKS_DISTINCT_COUNT_CONTENT_DESC
+  TASKS_DISTINCT_COUNT_DESCRIPTION_ASC
+  TASKS_DISTINCT_COUNT_DESCRIPTION_DESC
+  TASKS_DISTINCT_COUNT_PRIORITY_ASC
+  TASKS_DISTINCT_COUNT_PRIORITY_DESC
+  TASKS_DISTINCT_COUNT_AUTHOR_ID_ASC
+  TASKS_DISTINCT_COUNT_AUTHOR_ID_DESC
   TASKS_DISTINCT_COUNT_COLUMN_ID_ASC
   TASKS_DISTINCT_COUNT_COLUMN_ID_DESC
+  TASKS_DISTINCT_COUNT_LABELS_ASC
+  TASKS_DISTINCT_COUNT_LABELS_DESC
+  TASKS_DISTINCT_COUNT_DUE_DATE_ASC
+  TASKS_DISTINCT_COUNT_DUE_DATE_DESC
+  TASKS_DISTINCT_COUNT_CREATED_AT_ASC
+  TASKS_DISTINCT_COUNT_CREATED_AT_DESC
+  TASKS_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASKS_DISTINCT_COUNT_UPDATED_AT_DESC
+  TASKS_DISTINCT_COUNT_COLUMN_INDEX_ASC
+  TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC
+  TASKS_MIN_COLUMN_INDEX_ASC
+  TASKS_MIN_COLUMN_INDEX_DESC
+  TASKS_MAX_COLUMN_INDEX_ASC
+  TASKS_MAX_COLUMN_INDEX_DESC
+  TASKS_AVERAGE_COLUMN_INDEX_ASC
+  TASKS_AVERAGE_COLUMN_INDEX_DESC
+  TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
+  TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
+  TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC
+  TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC
+  TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
+  TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
+  TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
+  TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
 }
 
 """A connection to a list of \`Task\` values."""
@@ -4958,11 +6371,6 @@ type TaskAverageAggregates {
   columnIndex: BigFloat
 }
 
-"""
-A floating point number that requires more precision than IEEE 754 binary 64
-"""
-scalar BigFloat
-
 type TaskStddevSampleAggregates {
   """
   Sample standard deviation of columnIndex across the matching connection
@@ -4989,7 +6397,22 @@ type TaskVariancePopulationAggregates {
 
 """Grouping methods for \`Task\` for usage during aggregation."""
 enum TaskGroupBy {
+  CONTENT
+  DESCRIPTION
+  PRIORITY
+  AUTHOR_ID
   COLUMN_ID
+  LABELS
+  DUE_DATE
+  DUE_DATE_TRUNCATED_TO_HOUR
+  DUE_DATE_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  COLUMN_INDEX
 }
 
 """Conditions for \`Task\` aggregates."""
@@ -5086,8 +6509,35 @@ input TaskCondition {
   """Checks for equality with the object’s \`rowId\` field."""
   rowId: UUID
 
+  """Checks for equality with the object’s \`content\` field."""
+  content: String
+
+  """Checks for equality with the object’s \`description\` field."""
+  description: String
+
+  """Checks for equality with the object’s \`priority\` field."""
+  priority: String
+
+  """Checks for equality with the object’s \`authorId\` field."""
+  authorId: UUID
+
   """Checks for equality with the object’s \`columnId\` field."""
   columnId: UUID
+
+  """Checks for equality with the object’s \`labels\` field."""
+  labels: JSON
+
+  """Checks for equality with the object’s \`dueDate\` field."""
+  dueDate: Datetime
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s \`columnIndex\` field."""
+  columnIndex: Int
 }
 
 """Methods to use when ordering \`Task\`."""
@@ -5097,8 +6547,26 @@ enum TaskOrderBy {
   PRIMARY_KEY_DESC
   ROW_ID_ASC
   ROW_ID_DESC
+  CONTENT_ASC
+  CONTENT_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  PRIORITY_ASC
+  PRIORITY_DESC
+  AUTHOR_ID_ASC
+  AUTHOR_ID_DESC
   COLUMN_ID_ASC
   COLUMN_ID_DESC
+  LABELS_ASC
+  LABELS_DESC
+  DUE_DATE_ASC
+  DUE_DATE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  COLUMN_INDEX_ASC
+  COLUMN_INDEX_DESC
   ASSIGNEES_COUNT_ASC
   ASSIGNEES_COUNT_DESC
   ASSIGNEES_DISTINCT_COUNT_ROW_ID_ASC
@@ -5107,14 +6575,28 @@ enum TaskOrderBy {
   ASSIGNEES_DISTINCT_COUNT_USER_ID_DESC
   ASSIGNEES_DISTINCT_COUNT_TASK_ID_ASC
   ASSIGNEES_DISTINCT_COUNT_TASK_ID_DESC
+  ASSIGNEES_DISTINCT_COUNT_CREATED_AT_ASC
+  ASSIGNEES_DISTINCT_COUNT_CREATED_AT_DESC
+  ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_ASC
+  ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_DESC
+  ASSIGNEES_DISTINCT_COUNT_DELETED_AT_ASC
+  ASSIGNEES_DISTINCT_COUNT_DELETED_AT_DESC
   POSTS_COUNT_ASC
   POSTS_COUNT_DESC
   POSTS_DISTINCT_COUNT_ROW_ID_ASC
   POSTS_DISTINCT_COUNT_ROW_ID_DESC
+  POSTS_DISTINCT_COUNT_TITLE_ASC
+  POSTS_DISTINCT_COUNT_TITLE_DESC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
   POSTS_DISTINCT_COUNT_AUTHOR_ID_ASC
   POSTS_DISTINCT_COUNT_AUTHOR_ID_DESC
   POSTS_DISTINCT_COUNT_TASK_ID_ASC
   POSTS_DISTINCT_COUNT_TASK_ID_DESC
+  POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -5130,6 +6612,15 @@ input AssigneeCondition {
 
   """Checks for equality with the object’s \`taskId\` field."""
   taskId: UUID
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s \`deletedAt\` field."""
+  deletedAt: Datetime
 }
 
 """Methods to use when ordering \`Assignee\`."""
@@ -5143,6 +6634,12 @@ enum AssigneeOrderBy {
   USER_ID_DESC
   TASK_ID_ASC
   TASK_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  DELETED_AT_ASC
+  DELETED_AT_DESC
 }
 
 """A connection to a list of \`Post\` values."""
@@ -5241,8 +6738,16 @@ type PostDistinctCountAggregates {
 
 """Grouping methods for \`Post\` for usage during aggregation."""
 enum PostGroupBy {
+  TITLE
+  DESCRIPTION
   AUTHOR_ID
   TASK_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
 }
 
 """Conditions for \`Post\` aggregates."""
@@ -5312,11 +6817,23 @@ input PostCondition {
   """Checks for equality with the object’s \`rowId\` field."""
   rowId: UUID
 
+  """Checks for equality with the object’s \`title\` field."""
+  title: String
+
+  """Checks for equality with the object’s \`description\` field."""
+  description: String
+
   """Checks for equality with the object’s \`authorId\` field."""
   authorId: UUID
 
   """Checks for equality with the object’s \`taskId\` field."""
   taskId: UUID
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
 }
 
 """Methods to use when ordering \`Post\`."""
@@ -5326,10 +6843,18 @@ enum PostOrderBy {
   PRIMARY_KEY_DESC
   ROW_ID_ASC
   ROW_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
   AUTHOR_ID_ASC
   AUTHOR_ID_DESC
   TASK_ID_ASC
   TASK_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """A \`Assignee\` edge in the connection."""
@@ -5374,6 +6899,15 @@ type AssigneeDistinctCountAggregates {
 enum AssigneeGroupBy {
   USER_ID
   TASK_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  DELETED_AT
+  DELETED_AT_TRUNCATED_TO_HOUR
+  DELETED_AT_TRUNCATED_TO_DAY
 }
 
 """Conditions for \`Assignee\` aggregates."""
@@ -5465,6 +6999,17 @@ type WorkspaceConnection {
   Aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   aggregates: WorkspaceAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`Workspace\` for these aggregates."""
+    groupBy: [WorkspaceGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: WorkspaceHavingInput
+  ): [WorkspaceAggregates!]
 }
 
 """A \`Workspace\` edge in the connection."""
@@ -5499,6 +7044,77 @@ type WorkspaceDistinctCountAggregates {
   updatedAt: BigInt
 }
 
+"""Grouping methods for \`Workspace\` for usage during aggregation."""
+enum WorkspaceGroupBy {
+  NAME
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`Workspace\` aggregates."""
+input WorkspaceHavingInput {
+  AND: [WorkspaceHavingInput!]
+  OR: [WorkspaceHavingInput!]
+  sum: WorkspaceHavingSumInput
+  distinctCount: WorkspaceHavingDistinctCountInput
+  min: WorkspaceHavingMinInput
+  max: WorkspaceHavingMaxInput
+  average: WorkspaceHavingAverageInput
+  stddevSample: WorkspaceHavingStddevSampleInput
+  stddevPopulation: WorkspaceHavingStddevPopulationInput
+  varianceSample: WorkspaceHavingVarianceSampleInput
+  variancePopulation: WorkspaceHavingVariancePopulationInput
+}
+
+input WorkspaceHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input WorkspaceHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input WorkspaceHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input WorkspaceHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input WorkspaceHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input WorkspaceHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input WorkspaceHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input WorkspaceHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input WorkspaceHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
 """
 A condition to be used against \`Workspace\` object types. All fields are tested
 for equality and combined with a logical ‘and.’
@@ -5506,6 +7122,15 @@ for equality and combined with a logical ‘and.’
 input WorkspaceCondition {
   """Checks for equality with the object’s \`rowId\` field."""
   rowId: UUID
+
+  """Checks for equality with the object’s \`name\` field."""
+  name: String
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
 }
 
 """Methods to use when ordering \`Workspace\`."""
@@ -5515,18 +7140,42 @@ enum WorkspaceOrderBy {
   PRIMARY_KEY_DESC
   ROW_ID_ASC
   ROW_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
   PROJECTS_COUNT_ASC
   PROJECTS_COUNT_DESC
   PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
   PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECTS_DISTINCT_COUNT_NAME_ASC
+  PROJECTS_DISTINCT_COUNT_NAME_DESC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  PROJECTS_DISTINCT_COUNT_PREFIX_ASC
+  PROJECTS_DISTINCT_COUNT_PREFIX_DESC
+  PROJECTS_DISTINCT_COUNT_COLOR_ASC
+  PROJECTS_DISTINCT_COUNT_COLOR_DESC
+  PROJECTS_DISTINCT_COUNT_LABELS_ASC
+  PROJECTS_DISTINCT_COUNT_LABELS_DESC
   PROJECTS_DISTINCT_COUNT_WORKSPACE_ID_ASC
   PROJECTS_DISTINCT_COUNT_WORKSPACE_ID_DESC
+  PROJECTS_DISTINCT_COUNT_VIEW_MODE_ASC
+  PROJECTS_DISTINCT_COUNT_VIEW_MODE_DESC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
   WORKSPACE_USERS_COUNT_ASC
   WORKSPACE_USERS_COUNT_DESC
   WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_ASC
   WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_DESC
   WORKSPACE_USERS_DISTINCT_COUNT_USER_ID_ASC
   WORKSPACE_USERS_DISTINCT_COUNT_USER_ID_DESC
+  WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_ASC
+  WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of \`User\` values."""
@@ -5549,6 +7198,17 @@ type UserConnection {
   Aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   aggregates: UserAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`User\` for these aggregates."""
+    groupBy: [UserGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: UserHavingInput
+  ): [UserAggregates!]
 }
 
 """A \`User\` edge in the connection."""
@@ -5589,6 +7249,78 @@ type UserDistinctCountAggregates {
   updatedAt: BigInt
 }
 
+"""Grouping methods for \`User\` for usage during aggregation."""
+enum UserGroupBy {
+  NAME
+  AVATAR_URL
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`User\` aggregates."""
+input UserHavingInput {
+  AND: [UserHavingInput!]
+  OR: [UserHavingInput!]
+  sum: UserHavingSumInput
+  distinctCount: UserHavingDistinctCountInput
+  min: UserHavingMinInput
+  max: UserHavingMaxInput
+  average: UserHavingAverageInput
+  stddevSample: UserHavingStddevSampleInput
+  stddevPopulation: UserHavingStddevPopulationInput
+  varianceSample: UserHavingVarianceSampleInput
+  variancePopulation: UserHavingVariancePopulationInput
+}
+
+input UserHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input UserHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
 """
 A condition to be used against \`User\` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
@@ -5598,6 +7330,18 @@ input UserCondition {
 
   """Checks for equality with the object’s \`identityProviderId\` field."""
   identityProviderId: UUID
+
+  """Checks for equality with the object’s \`name\` field."""
+  name: String
+
+  """Checks for equality with the object’s \`avatarUrl\` field."""
+  avatarUrl: String
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
 }
 
 """Methods to use when ordering \`User\`."""
@@ -5609,6 +7353,14 @@ enum UserOrderBy {
   ROW_ID_DESC
   IDENTITY_PROVIDER_ID_ASC
   IDENTITY_PROVIDER_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  AVATAR_URL_ASC
+  AVATAR_URL_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
   ASSIGNEES_COUNT_ASC
   ASSIGNEES_COUNT_DESC
   ASSIGNEES_DISTINCT_COUNT_ROW_ID_ASC
@@ -5617,20 +7369,76 @@ enum UserOrderBy {
   ASSIGNEES_DISTINCT_COUNT_USER_ID_DESC
   ASSIGNEES_DISTINCT_COUNT_TASK_ID_ASC
   ASSIGNEES_DISTINCT_COUNT_TASK_ID_DESC
+  ASSIGNEES_DISTINCT_COUNT_CREATED_AT_ASC
+  ASSIGNEES_DISTINCT_COUNT_CREATED_AT_DESC
+  ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_ASC
+  ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_DESC
+  ASSIGNEES_DISTINCT_COUNT_DELETED_AT_ASC
+  ASSIGNEES_DISTINCT_COUNT_DELETED_AT_DESC
   AUTHORED_POSTS_COUNT_ASC
   AUTHORED_POSTS_COUNT_DESC
   AUTHORED_POSTS_DISTINCT_COUNT_ROW_ID_ASC
   AUTHORED_POSTS_DISTINCT_COUNT_ROW_ID_DESC
+  AUTHORED_POSTS_DISTINCT_COUNT_TITLE_ASC
+  AUTHORED_POSTS_DISTINCT_COUNT_TITLE_DESC
+  AUTHORED_POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  AUTHORED_POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
   AUTHORED_POSTS_DISTINCT_COUNT_AUTHOR_ID_ASC
   AUTHORED_POSTS_DISTINCT_COUNT_AUTHOR_ID_DESC
   AUTHORED_POSTS_DISTINCT_COUNT_TASK_ID_ASC
   AUTHORED_POSTS_DISTINCT_COUNT_TASK_ID_DESC
+  AUTHORED_POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  AUTHORED_POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  AUTHORED_TASKS_COUNT_ASC
+  AUTHORED_TASKS_COUNT_DESC
+  AUTHORED_TASKS_SUM_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_SUM_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_CONTENT_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_CONTENT_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_DESCRIPTION_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_DESCRIPTION_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_PRIORITY_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_PRIORITY_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_AUTHOR_ID_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_AUTHOR_ID_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_ID_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_ID_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_LABELS_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_LABELS_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_DUE_DATE_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_DUE_DATE_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_CREATED_AT_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_CREATED_AT_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_UPDATED_AT_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_UPDATED_AT_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_MIN_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_MIN_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_MAX_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_MAX_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
+  AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
   WORKSPACE_USERS_COUNT_ASC
   WORKSPACE_USERS_COUNT_DESC
   WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_ASC
   WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_DESC
   WORKSPACE_USERS_DISTINCT_COUNT_USER_ID_ASC
   WORKSPACE_USERS_DISTINCT_COUNT_USER_ID_DESC
+  WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_ASC
+  WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """
@@ -7874,6 +9682,48 @@ export const plans = {
         }
       }
     },
+    authoredTasks: {
+      plan($record) {
+        const $records = pgResource_taskPgResource.find({
+          author_id: $record.get("id")
+        });
+        return connection($records);
+      },
+      args: {
+        first(_, $connection, arg) {
+          $connection.setFirst(arg.getRaw());
+        },
+        last(_, $connection, val) {
+          $connection.setLast(val.getRaw());
+        },
+        offset(_, $connection, val) {
+          $connection.setOffset(val.getRaw());
+        },
+        before(_, $connection, val) {
+          $connection.setBefore(val.getRaw());
+        },
+        after(_, $connection, val) {
+          $connection.setAfter(val.getRaw());
+        },
+        condition(_condition, $connection, arg) {
+          const $select = $connection.getSubplan();
+          arg.apply($select, qbWhereBuilder);
+        },
+        filter(_, $connection, fieldArg) {
+          const $pgSelect = $connection.getSubplan();
+          fieldArg.apply($pgSelect, (queryBuilder, value) => {
+            assertAllowed11(value, "object");
+            if (value == null) return;
+            const condition = new PgCondition(queryBuilder);
+            return condition;
+          });
+        },
+        orderBy(parent, $connection, value) {
+          const $select = $connection.getSubplan();
+          value.apply($select);
+        }
+      }
+    },
     workspaceUsers: {
       plan($record) {
         const $records = pgResource_workspace_userPgResource.find({
@@ -7904,7 +9754,7 @@ export const plans = {
         filter(_, $connection, fieldArg) {
           const $pgSelect = $connection.getSubplan();
           fieldArg.apply($pgSelect, (queryBuilder, value) => {
-            assertAllowed11(value, "object");
+            assertAllowed12(value, "object");
             if (value == null) return;
             const condition = new PgCondition(queryBuilder);
             return condition;
@@ -8041,7 +9891,7 @@ export const plans = {
         filter(_, $connection, fieldArg) {
           const $pgSelect = $connection.getSubplan();
           fieldArg.apply($pgSelect, (queryBuilder, value) => {
-            assertAllowed12(value, "object");
+            assertAllowed13(value, "object");
             if (value == null) return;
             const condition = new PgCondition(queryBuilder);
             return condition;
@@ -8083,7 +9933,7 @@ export const plans = {
         filter(_, $connection, fieldArg) {
           const $pgSelect = $connection.getSubplan();
           fieldArg.apply($pgSelect, (queryBuilder, value) => {
-            assertAllowed13(value, "object");
+            assertAllowed14(value, "object");
             if (value == null) return;
             const condition = new PgCondition(queryBuilder);
             return condition;
@@ -8189,7 +10039,7 @@ export const plans = {
         filter(_, $connection, fieldArg) {
           const $pgSelect = $connection.getSubplan();
           fieldArg.apply($pgSelect, (queryBuilder, value) => {
-            assertAllowed14(value, "object");
+            assertAllowed15(value, "object");
             if (value == null) return;
             const condition = new PgCondition(queryBuilder);
             return condition;
@@ -8258,7 +10108,7 @@ export const plans = {
         filter(_, $connection, fieldArg) {
           const $pgSelect = $connection.getSubplan();
           fieldArg.apply($pgSelect, (queryBuilder, value) => {
-            assertAllowed15(value, "object");
+            assertAllowed16(value, "object");
             if (value == null) return;
             const condition = new PgCondition(queryBuilder);
             return condition;
@@ -8316,7 +10166,7 @@ export const plans = {
         filter(_, $connection, fieldArg) {
           const $pgSelect = $connection.getSubplan();
           fieldArg.apply($pgSelect, (queryBuilder, value) => {
-            assertAllowed16(value, "object");
+            assertAllowed17(value, "object");
             if (value == null) return;
             const condition = new PgCondition(queryBuilder);
             return condition;
@@ -8358,7 +10208,7 @@ export const plans = {
         filter(_, $connection, fieldArg) {
           const $pgSelect = $connection.getSubplan();
           fieldArg.apply($pgSelect, (queryBuilder, value) => {
-            assertAllowed17(value, "object");
+            assertAllowed18(value, "object");
             if (value == null) return;
             const condition = new PgCondition(queryBuilder);
             return condition;
@@ -8500,10 +10350,82 @@ export const plans = {
     }
   },
   ProjectGroupBy: {
+    NAME($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("name")}`,
+        codec: TYPES.text
+      });
+    },
+    DESCRIPTION($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("description")}`,
+        codec: TYPES.text
+      });
+    },
+    PREFIX($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("prefix")}`,
+        codec: TYPES.varchar
+      });
+    },
+    COLOR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("color")}`,
+        codec: TYPES.varchar
+      });
+    },
+    LABELS($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("labels")}`,
+        codec: TYPES.jsonb
+      });
+    },
     WORKSPACE_ID($pgSelect) {
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("workspace_id")}`,
         codec: TYPES.uuid
+      });
+    },
+    VIEW_MODE($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("view_mode")}`,
+        codec: TYPES.varchar
+      });
+    },
+    CREATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
       });
     }
   },
@@ -8686,12 +10608,84 @@ export const plans = {
         }
       });
     },
+    name($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "name",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
+    description($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "description",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
+    prefix($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "prefix",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.varchar)}`;
+        }
+      });
+    },
+    color($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "color",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.varchar)}`;
+        }
+      });
+    },
+    labels($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "labels",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.jsonb)}`;
+        }
+      });
+    },
     workspaceId($condition, val) {
       $condition.where({
         type: "attribute",
         attribute: "workspace_id",
         callback(expression) {
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
+    },
+    viewMode($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "view_mode",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.varchar)}`;
+        }
+      });
+    },
+    createdAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "created_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    updatedAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "updated_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
         }
       });
     }
@@ -8705,7 +10699,7 @@ export const plans = {
       condition.extensions.pgFilterAttribute = colSpec;
       return condition;
     },
-    workspaceId(queryBuilder, value) {
+    name(queryBuilder, value) {
       if (value === void 0) return;
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
@@ -8713,8 +10707,72 @@ export const plans = {
       condition.extensions.pgFilterAttribute = colSpec2;
       return condition;
     },
+    description(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec3;
+      return condition;
+    },
+    prefix(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec4;
+      return condition;
+    },
+    color(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec5;
+      return condition;
+    },
+    labels(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec6;
+      return condition;
+    },
+    workspaceId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec7;
+      return condition;
+    },
+    viewMode(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec8;
+      return condition;
+    },
+    createdAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec9;
+      return condition;
+    },
+    updatedAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec10;
+      return condition;
+    },
     columns($where, value) {
-      assertAllowed18(value, "object");
+      assertAllowed19(value, "object");
       const $rel = $where.andPlan();
       $rel.extensions.pgFilterRelation = {
         tableExpression: columnIdentifier,
@@ -8725,7 +10783,7 @@ export const plans = {
       return $rel;
     },
     columnsExist($where, value) {
-      assertAllowed18(value, "scalar");
+      assertAllowed19(value, "scalar");
       if (value == null) return;
       const $subQuery = $where.existsPlan({
         tableExpression: columnIdentifier,
@@ -8738,7 +10796,7 @@ export const plans = {
       });
     },
     workspace($where, value) {
-      assertAllowed19(value, "object");
+      assertAllowed20(value, "object");
       if (value == null) return;
       const $subQuery = $where.existsPlan({
         tableExpression: workspaceIdentifier,
@@ -8751,18 +10809,18 @@ export const plans = {
       return $subQuery;
     },
     and($where, value) {
-      assertAllowed20(value, "list");
+      assertAllowed21(value, "list");
       if (value == null) return;
       return $where.andPlan();
     },
     or($where, value) {
-      assertAllowed20(value, "list");
+      assertAllowed21(value, "list");
       if (value == null) return;
       const $or = $where.orPlan();
       return () => $or.andPlan();
     },
     not($where, value) {
-      assertAllowed20(value, "object");
+      assertAllowed21(value, "object");
       if (value == null) return;
       return $where.notPlan().andPlan();
     }
@@ -9033,727 +11091,7 @@ export const plans = {
       $where.where(fragment);
     }
   },
-  ProjectToManyColumnFilter: {
-    every($where, value) {
-      assertAllowed21(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.notPlan().existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery.notPlan().andPlan();
-    },
-    some($where, value) {
-      assertAllowed21(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    none($where, value) {
-      assertAllowed21(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.notPlan().existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    aggregates($where, input) {
-      if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = new PgAggregateCondition($where, {
-          sql,
-          tableExpression,
-          alias
-        }, pgWhereConditionSpecListToSQL);
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    }
-  },
-  ColumnFilter: {
-    rowId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec3;
-      return condition;
-    },
-    projectId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec4;
-      return condition;
-    },
-    tasks($where, value) {
-      assertAllowed22(value, "object");
-      const $rel = $where.andPlan();
-      $rel.extensions.pgFilterRelation = {
-        tableExpression: taskIdentifier,
-        alias: pgResource_taskPgResource.name,
-        localAttributes: registryConfig.pgRelations.column.tasksByTheirColumnId.localAttributes,
-        remoteAttributes: registryConfig.pgRelations.column.tasksByTheirColumnId.remoteAttributes
-      };
-      return $rel;
-    },
-    tasksExist($where, value) {
-      assertAllowed22(value, "scalar");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: taskIdentifier,
-        alias: pgResource_taskPgResource.name,
-        equals: value
-      });
-      registryConfig.pgRelations.column.tasksByTheirColumnId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.column.tasksByTheirColumnId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-    },
-    project($where, value) {
-      assertAllowed23(value, "object");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: projectIdentifier,
-        alias: pgResource_projectPgResource.name
-      });
-      registryConfig.pgRelations.column.projectByMyProjectId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.column.projectByMyProjectId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    and($where, value) {
-      assertAllowed24(value, "list");
-      if (value == null) return;
-      return $where.andPlan();
-    },
-    or($where, value) {
-      assertAllowed24(value, "list");
-      if (value == null) return;
-      const $or = $where.orPlan();
-      return () => $or.andPlan();
-    },
-    not($where, value) {
-      assertAllowed24(value, "object");
-      if (value == null) return;
-      return $where.notPlan().andPlan();
-    }
-  },
-  ColumnToManyTaskFilter: {
-    every($where, value) {
-      assertAllowed25(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.notPlan().existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery.notPlan().andPlan();
-    },
-    some($where, value) {
-      assertAllowed25(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    none($where, value) {
-      assertAllowed25(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.notPlan().existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    aggregates($where, input) {
-      if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = new PgAggregateCondition($where, {
-          sql,
-          tableExpression,
-          alias
-        }, pgWhereConditionSpecListToSQL);
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    }
-  },
-  TaskFilter: {
-    rowId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec5;
-      return condition;
-    },
-    columnId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec6;
-      return condition;
-    },
-    assignees($where, value) {
-      assertAllowed26(value, "object");
-      const $rel = $where.andPlan();
-      $rel.extensions.pgFilterRelation = {
-        tableExpression: assigneeIdentifier,
-        alias: pgResource_assigneePgResource.name,
-        localAttributes: registryConfig.pgRelations.task.assigneesByTheirTaskId.localAttributes,
-        remoteAttributes: registryConfig.pgRelations.task.assigneesByTheirTaskId.remoteAttributes
-      };
-      return $rel;
-    },
-    assigneesExist($where, value) {
-      assertAllowed26(value, "scalar");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: assigneeIdentifier,
-        alias: pgResource_assigneePgResource.name,
-        equals: value
-      });
-      registryConfig.pgRelations.task.assigneesByTheirTaskId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.task.assigneesByTheirTaskId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-    },
-    posts($where, value) {
-      assertAllowed26(value, "object");
-      const $rel = $where.andPlan();
-      $rel.extensions.pgFilterRelation = {
-        tableExpression: postIdentifier,
-        alias: pgResource_postPgResource.name,
-        localAttributes: registryConfig.pgRelations.task.postsByTheirTaskId.localAttributes,
-        remoteAttributes: registryConfig.pgRelations.task.postsByTheirTaskId.remoteAttributes
-      };
-      return $rel;
-    },
-    postsExist($where, value) {
-      assertAllowed26(value, "scalar");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: postIdentifier,
-        alias: pgResource_postPgResource.name,
-        equals: value
-      });
-      registryConfig.pgRelations.task.postsByTheirTaskId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.task.postsByTheirTaskId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-    },
-    author($where, value) {
-      assertAllowed27(value, "object");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: userIdentifier,
-        alias: pgResource_userPgResource.name
-      });
-      registryConfig.pgRelations.task.userByMyAuthorId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.task.userByMyAuthorId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    column($where, value) {
-      assertAllowed27(value, "object");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: columnIdentifier,
-        alias: pgResource_columnPgResource.name
-      });
-      registryConfig.pgRelations.task.columnByMyColumnId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.task.columnByMyColumnId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    and($where, value) {
-      assertAllowed28(value, "list");
-      if (value == null) return;
-      return $where.andPlan();
-    },
-    or($where, value) {
-      assertAllowed28(value, "list");
-      if (value == null) return;
-      const $or = $where.orPlan();
-      return () => $or.andPlan();
-    },
-    not($where, value) {
-      assertAllowed28(value, "object");
-      if (value == null) return;
-      return $where.notPlan().andPlan();
-    }
-  },
-  TaskToManyAssigneeFilter: {
-    every($where, value) {
-      assertAllowed29(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.notPlan().existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery.notPlan().andPlan();
-    },
-    some($where, value) {
-      assertAllowed29(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    none($where, value) {
-      assertAllowed29(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.notPlan().existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    aggregates($where, input) {
-      if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = new PgAggregateCondition($where, {
-          sql,
-          tableExpression,
-          alias
-        }, pgWhereConditionSpecListToSQL);
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    }
-  },
-  AssigneeFilter: {
-    rowId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec7;
-      return condition;
-    },
-    userId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec8;
-      return condition;
-    },
-    taskId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec9;
-      return condition;
-    },
-    task($where, value) {
-      assertAllowed30(value, "object");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: taskIdentifier,
-        alias: pgResource_taskPgResource.name
-      });
-      registryConfig.pgRelations.assignee.taskByMyTaskId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.assignee.taskByMyTaskId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    user($where, value) {
-      assertAllowed30(value, "object");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: userIdentifier,
-        alias: pgResource_userPgResource.name
-      });
-      registryConfig.pgRelations.assignee.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.assignee.userByMyUserId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    and($where, value) {
-      assertAllowed31(value, "list");
-      if (value == null) return;
-      return $where.andPlan();
-    },
-    or($where, value) {
-      assertAllowed31(value, "list");
-      if (value == null) return;
-      const $or = $where.orPlan();
-      return () => $or.andPlan();
-    },
-    not($where, value) {
-      assertAllowed31(value, "object");
-      if (value == null) return;
-      return $where.notPlan().andPlan();
-    }
-  },
-  UserFilter: {
-    rowId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec10;
-      return condition;
-    },
-    identityProviderId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec11;
-      return condition;
-    },
-    assignees($where, value) {
-      assertAllowed32(value, "object");
-      const $rel = $where.andPlan();
-      $rel.extensions.pgFilterRelation = {
-        tableExpression: assigneeIdentifier,
-        alias: pgResource_assigneePgResource.name,
-        localAttributes: registryConfig.pgRelations.user.assigneesByTheirUserId.localAttributes,
-        remoteAttributes: registryConfig.pgRelations.user.assigneesByTheirUserId.remoteAttributes
-      };
-      return $rel;
-    },
-    assigneesExist($where, value) {
-      assertAllowed32(value, "scalar");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: assigneeIdentifier,
-        alias: pgResource_assigneePgResource.name,
-        equals: value
-      });
-      registryConfig.pgRelations.user.assigneesByTheirUserId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.user.assigneesByTheirUserId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-    },
-    authoredPosts($where, value) {
-      assertAllowed32(value, "object");
-      const $rel = $where.andPlan();
-      $rel.extensions.pgFilterRelation = {
-        tableExpression: postIdentifier,
-        alias: pgResource_postPgResource.name,
-        localAttributes: registryConfig.pgRelations.user.postsByTheirAuthorId.localAttributes,
-        remoteAttributes: registryConfig.pgRelations.user.postsByTheirAuthorId.remoteAttributes
-      };
-      return $rel;
-    },
-    authoredPostsExist($where, value) {
-      assertAllowed32(value, "scalar");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: postIdentifier,
-        alias: pgResource_postPgResource.name,
-        equals: value
-      });
-      registryConfig.pgRelations.user.postsByTheirAuthorId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.user.postsByTheirAuthorId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-    },
-    workspaceUsers($where, value) {
-      assertAllowed32(value, "object");
-      const $rel = $where.andPlan();
-      $rel.extensions.pgFilterRelation = {
-        tableExpression: workspaceUserIdentifier,
-        alias: pgResource_workspace_userPgResource.name,
-        localAttributes: registryConfig.pgRelations.user.workspaceUsersByTheirUserId.localAttributes,
-        remoteAttributes: registryConfig.pgRelations.user.workspaceUsersByTheirUserId.remoteAttributes
-      };
-      return $rel;
-    },
-    workspaceUsersExist($where, value) {
-      assertAllowed32(value, "scalar");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: workspaceUserIdentifier,
-        alias: pgResource_workspace_userPgResource.name,
-        equals: value
-      });
-      registryConfig.pgRelations.user.workspaceUsersByTheirUserId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.user.workspaceUsersByTheirUserId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-    },
-    and($where, value) {
-      assertAllowed33(value, "list");
-      if (value == null) return;
-      return $where.andPlan();
-    },
-    or($where, value) {
-      assertAllowed33(value, "list");
-      if (value == null) return;
-      const $or = $where.orPlan();
-      return () => $or.andPlan();
-    },
-    not($where, value) {
-      assertAllowed33(value, "object");
-      if (value == null) return;
-      return $where.notPlan().andPlan();
-    }
-  },
-  UserToManyAssigneeFilter: {
-    every($where, value) {
-      assertAllowed34(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.notPlan().existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery.notPlan().andPlan();
-    },
-    some($where, value) {
-      assertAllowed34(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    none($where, value) {
-      assertAllowed34(value, "object");
-      if (value == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = $where.notPlan().existsPlan({
-          tableExpression,
-          alias
-        });
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    },
-    aggregates($where, input) {
-      if (input == null) return;
-      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
-      const {
-          localAttributes,
-          remoteAttributes,
-          tableExpression,
-          alias
-        } = $where.extensions.pgFilterRelation,
-        $subQuery = new PgAggregateCondition($where, {
-          sql,
-          tableExpression,
-          alias
-        }, pgWhereConditionSpecListToSQL);
-      localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-      return $subQuery;
-    }
-  },
-  AssigneeAggregatesFilter: {
-    filter($subquery, input) {
-      if (input == null) return;
-      return new PgCondition($subquery, !1, "AND");
-    },
-    distinctCount($subquery, input) {
-      if (input == null) return;
-      return $subquery.forAggregate(spec);
-    }
-  },
-  AssigneeDistinctCountAggregateFilter: {
-    rowId($parent, input) {
-      if (input == null) return;
-      const $col = new PgCondition($parent);
-      $col.extensions.pgFilterAttribute = {
-        codec: TYPES.bigint,
-        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_assignee.attributes.id.codec)
-      };
-      return $col;
-    },
-    userId($parent, input) {
-      if (input == null) return;
-      const $col = new PgCondition($parent);
-      $col.extensions.pgFilterAttribute = {
-        codec: TYPES.bigint,
-        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("user_id")}`, spec_assignee.attributes.user_id.codec)
-      };
-      return $col;
-    },
-    taskId($parent, input) {
-      if (input == null) return;
-      const $col = new PgCondition($parent);
-      $col.extensions.pgFilterAttribute = {
-        codec: TYPES.bigint,
-        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("task_id")}`, spec_assignee.attributes.task_id.codec)
-      };
-      return $col;
-    }
-  },
-  BigIntFilter: {
+  StringFilter: {
     isNull($where, value) {
       if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
       if (value === void 0) return;
@@ -10017,9 +11355,2326 @@ export const plans = {
           operatorName: "greaterThanOrEqualTo"
         });
       $where.where(fragment);
+    },
+    includes($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput ? resolveInput(value) : value,
+        inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve23(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "includes"
+        });
+      $where.where(fragment);
+    },
+    notIncludes($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput2 ? resolveInput2(value) : value,
+        inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve24(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notIncludes"
+        });
+      $where.where(fragment);
+    },
+    includesInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput3 ? resolveInput3(value) : value,
+        inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve25(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "includesInsensitive"
+        });
+      $where.where(fragment);
+    },
+    notIncludesInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput4 ? resolveInput4(value) : value,
+        inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve26(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notIncludesInsensitive"
+        });
+      $where.where(fragment);
+    },
+    startsWith($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput5 ? resolveInput5(value) : value,
+        inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve27(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "startsWith"
+        });
+      $where.where(fragment);
+    },
+    notStartsWith($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput6 ? resolveInput6(value) : value,
+        inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve28(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notStartsWith"
+        });
+      $where.where(fragment);
+    },
+    startsWithInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput7 ? resolveInput7(value) : value,
+        inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve29(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "startsWithInsensitive"
+        });
+      $where.where(fragment);
+    },
+    notStartsWithInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput8 ? resolveInput8(value) : value,
+        inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve30(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notStartsWithInsensitive"
+        });
+      $where.where(fragment);
+    },
+    endsWith($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput9 ? resolveInput9(value) : value,
+        inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve31(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "endsWith"
+        });
+      $where.where(fragment);
+    },
+    notEndsWith($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput10 ? resolveInput10(value) : value,
+        inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve32(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notEndsWith"
+        });
+      $where.where(fragment);
+    },
+    endsWithInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput11 ? resolveInput11(value) : value,
+        inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve33(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "endsWithInsensitive"
+        });
+      $where.where(fragment);
+    },
+    notEndsWithInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = resolveInput12 ? resolveInput12(value) : value,
+        inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve34(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notEndsWithInsensitive"
+        });
+      $where.where(fragment);
+    },
+    like($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve35(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "like"
+        });
+      $where.where(fragment);
+    },
+    notLike($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier2 ? resolveSqlIdentifier2(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec5 ? resolveInputCodec5(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve36(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notLike"
+        });
+      $where.where(fragment);
+    },
+    likeInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve37(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "likeInsensitive"
+        });
+      $where.where(fragment);
+    },
+    notLikeInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier3 ? resolveSqlIdentifier3(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec7 ? resolveInputCodec7(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve38(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notLikeInsensitive"
+        });
+      $where.where(fragment);
+    },
+    equalToInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier4 ? resolveSqlIdentifier4(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec8 ? resolveInputCodec8(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue3 ? resolveSqlValue3($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve13(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "equalToInsensitive"
+        });
+      $where.where(fragment);
+    },
+    notEqualToInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier5 ? resolveSqlIdentifier5(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec9 ? resolveInputCodec9(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue4 ? resolveSqlValue4($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve14(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notEqualToInsensitive"
+        });
+      $where.where(fragment);
+    },
+    distinctFromInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier6 ? resolveSqlIdentifier6(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec10 ? resolveInputCodec10(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue5 ? resolveSqlValue5($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve15(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "distinctFromInsensitive"
+        });
+      $where.where(fragment);
+    },
+    notDistinctFromInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier7 ? resolveSqlIdentifier7(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec11 ? resolveInputCodec11(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue6 ? resolveSqlValue6($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve16(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notDistinctFromInsensitive"
+        });
+      $where.where(fragment);
+    },
+    inInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier8 ? resolveSqlIdentifier8(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec12 ? resolveInputCodec12(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue7 ? resolveSqlValue7($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve17(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "inInsensitive"
+        });
+      $where.where(fragment);
+    },
+    notInInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier9 ? resolveSqlIdentifier9(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec13 ? resolveInputCodec13(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue8 ? resolveSqlValue8($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve18(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notInInsensitive"
+        });
+      $where.where(fragment);
+    },
+    lessThanInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier10 ? resolveSqlIdentifier10(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec14 ? resolveInputCodec14(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue9 ? resolveSqlValue9($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve19(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThanInsensitive"
+        });
+      $where.where(fragment);
+    },
+    lessThanOrEqualToInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier11 ? resolveSqlIdentifier11(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec15 ? resolveInputCodec15(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue10 ? resolveSqlValue10($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve20(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThanOrEqualToInsensitive"
+        });
+      $where.where(fragment);
+    },
+    greaterThanInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier12 ? resolveSqlIdentifier12(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec16 ? resolveInputCodec16(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue11 ? resolveSqlValue11($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve21(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThanInsensitive"
+        });
+      $where.where(fragment);
+    },
+    greaterThanOrEqualToInsensitive($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier13 ? resolveSqlIdentifier13(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec17 ? resolveInputCodec17(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue12 ? resolveSqlValue12($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve22(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThanOrEqualToInsensitive"
+        });
+      $where.where(fragment);
     }
   },
-  UserToManyPostFilter: {
+  JSONFilter: {
+    isNull($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec18 ? resolveInputCodec18(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue13 ? resolveSqlValue13($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve39(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "isNull"
+        });
+      $where.where(fragment);
+    },
+    equalTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve40(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "equalTo"
+        });
+      $where.where(fragment);
+    },
+    notEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve41(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notEqualTo"
+        });
+      $where.where(fragment);
+    },
+    distinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve42(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "distinctFrom"
+        });
+      $where.where(fragment);
+    },
+    notDistinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve43(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notDistinctFrom"
+        });
+      $where.where(fragment);
+    },
+    in($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec20 ? resolveInputCodec20(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve44(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "in"
+        });
+      $where.where(fragment);
+    },
+    notIn($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec20 ? resolveInputCodec20(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve45(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notIn"
+        });
+      $where.where(fragment);
+    },
+    lessThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve46(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThan"
+        });
+      $where.where(fragment);
+    },
+    lessThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve47(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThanOrEqualTo"
+        });
+      $where.where(fragment);
+    },
+    greaterThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve48(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThan"
+        });
+      $where.where(fragment);
+    },
+    greaterThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier14 ? resolveSqlIdentifier14(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec19 ? resolveInputCodec19(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve49(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThanOrEqualTo"
+        });
+      $where.where(fragment);
+    },
+    contains($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve50(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "contains"
+        });
+      $where.where(fragment);
+    },
+    containsKey($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec21 ? resolveInputCodec21(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve51(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "containsKey"
+        });
+      $where.where(fragment);
+    },
+    containsAllKeys($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve52(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "containsAllKeys"
+        });
+      $where.where(fragment);
+    },
+    containsAnyKeys($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec22 ? resolveInputCodec22(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve53(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "containsAnyKeys"
+        });
+      $where.where(fragment);
+    },
+    containedBy($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve54(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "containedBy"
+        });
+      $where.where(fragment);
+    }
+  },
+  DatetimeFilter: {
+    isNull($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec23 ? resolveInputCodec23(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue14 ? resolveSqlValue14($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve55(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "isNull"
+        });
+      $where.where(fragment);
+    },
+    equalTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve56(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "equalTo"
+        });
+      $where.where(fragment);
+    },
+    notEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve57(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notEqualTo"
+        });
+      $where.where(fragment);
+    },
+    distinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve58(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "distinctFrom"
+        });
+      $where.where(fragment);
+    },
+    notDistinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve59(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notDistinctFrom"
+        });
+      $where.where(fragment);
+    },
+    in($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve60(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "in"
+        });
+      $where.where(fragment);
+    },
+    notIn($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec25 ? resolveInputCodec25(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve61(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notIn"
+        });
+      $where.where(fragment);
+    },
+    lessThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve62(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThan"
+        });
+      $where.where(fragment);
+    },
+    lessThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve63(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThanOrEqualTo"
+        });
+      $where.where(fragment);
+    },
+    greaterThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve64(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThan"
+        });
+      $where.where(fragment);
+    },
+    greaterThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier15 ? resolveSqlIdentifier15(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec24 ? resolveInputCodec24(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve65(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThanOrEqualTo"
+        });
+      $where.where(fragment);
+    }
+  },
+  ProjectToManyColumnFilter: {
+    every($where, value) {
+      assertAllowed22(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery.notPlan().andPlan();
+    },
+    some($where, value) {
+      assertAllowed22(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    none($where, value) {
+      assertAllowed22(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    aggregates($where, input) {
+      if (input == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = new PgAggregateCondition($where, {
+          sql,
+          tableExpression,
+          alias
+        }, pgWhereConditionSpecListToSQL);
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    }
+  },
+  ColumnFilter: {
+    rowId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec11;
+      return condition;
+    },
+    title(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec12;
+      return condition;
+    },
+    projectId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec13;
+      return condition;
+    },
+    createdAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec14;
+      return condition;
+    },
+    updatedAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec15;
+      return condition;
+    },
+    tasks($where, value) {
+      assertAllowed23(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: taskIdentifier,
+        alias: pgResource_taskPgResource.name,
+        localAttributes: registryConfig.pgRelations.column.tasksByTheirColumnId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.column.tasksByTheirColumnId.remoteAttributes
+      };
+      return $rel;
+    },
+    tasksExist($where, value) {
+      assertAllowed23(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: taskIdentifier,
+        alias: pgResource_taskPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.column.tasksByTheirColumnId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.column.tasksByTheirColumnId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    project($where, value) {
+      assertAllowed24(value, "object");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: projectIdentifier,
+        alias: pgResource_projectPgResource.name
+      });
+      registryConfig.pgRelations.column.projectByMyProjectId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.column.projectByMyProjectId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    and($where, value) {
+      assertAllowed25(value, "list");
+      if (value == null) return;
+      return $where.andPlan();
+    },
+    or($where, value) {
+      assertAllowed25(value, "list");
+      if (value == null) return;
+      const $or = $where.orPlan();
+      return () => $or.andPlan();
+    },
+    not($where, value) {
+      assertAllowed25(value, "object");
+      if (value == null) return;
+      return $where.notPlan().andPlan();
+    }
+  },
+  ColumnToManyTaskFilter: {
+    every($where, value) {
+      assertAllowed26(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery.notPlan().andPlan();
+    },
+    some($where, value) {
+      assertAllowed26(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    none($where, value) {
+      assertAllowed26(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    aggregates($where, input) {
+      if (input == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = new PgAggregateCondition($where, {
+          sql,
+          tableExpression,
+          alias
+        }, pgWhereConditionSpecListToSQL);
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    }
+  },
+  TaskFilter: {
+    rowId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec16;
+      return condition;
+    },
+    content(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec17;
+      return condition;
+    },
+    description(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec18;
+      return condition;
+    },
+    priority(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec19;
+      return condition;
+    },
+    authorId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec20;
+      return condition;
+    },
+    columnId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec21;
+      return condition;
+    },
+    labels(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec22;
+      return condition;
+    },
+    dueDate(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec23;
+      return condition;
+    },
+    createdAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec24;
+      return condition;
+    },
+    updatedAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec25;
+      return condition;
+    },
+    columnIndex(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec26;
+      return condition;
+    },
+    assignees($where, value) {
+      assertAllowed27(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: assigneeIdentifier,
+        alias: pgResource_assigneePgResource.name,
+        localAttributes: registryConfig.pgRelations.task.assigneesByTheirTaskId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.task.assigneesByTheirTaskId.remoteAttributes
+      };
+      return $rel;
+    },
+    assigneesExist($where, value) {
+      assertAllowed27(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: assigneeIdentifier,
+        alias: pgResource_assigneePgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.task.assigneesByTheirTaskId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.task.assigneesByTheirTaskId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    posts($where, value) {
+      assertAllowed27(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: postIdentifier,
+        alias: pgResource_postPgResource.name,
+        localAttributes: registryConfig.pgRelations.task.postsByTheirTaskId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.task.postsByTheirTaskId.remoteAttributes
+      };
+      return $rel;
+    },
+    postsExist($where, value) {
+      assertAllowed27(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: postIdentifier,
+        alias: pgResource_postPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.task.postsByTheirTaskId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.task.postsByTheirTaskId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    author($where, value) {
+      assertAllowed28(value, "object");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: userIdentifier,
+        alias: pgResource_userPgResource.name
+      });
+      registryConfig.pgRelations.task.userByMyAuthorId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.task.userByMyAuthorId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    column($where, value) {
+      assertAllowed28(value, "object");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: columnIdentifier,
+        alias: pgResource_columnPgResource.name
+      });
+      registryConfig.pgRelations.task.columnByMyColumnId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.task.columnByMyColumnId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    and($where, value) {
+      assertAllowed29(value, "list");
+      if (value == null) return;
+      return $where.andPlan();
+    },
+    or($where, value) {
+      assertAllowed29(value, "list");
+      if (value == null) return;
+      const $or = $where.orPlan();
+      return () => $or.andPlan();
+    },
+    not($where, value) {
+      assertAllowed29(value, "object");
+      if (value == null) return;
+      return $where.notPlan().andPlan();
+    }
+  },
+  IntFilter: {
+    isNull($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec26 ? resolveInputCodec26(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue15 ? resolveSqlValue15($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve66(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "isNull"
+        });
+      $where.where(fragment);
+    },
+    equalTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve67(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "equalTo"
+        });
+      $where.where(fragment);
+    },
+    notEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve68(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notEqualTo"
+        });
+      $where.where(fragment);
+    },
+    distinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve69(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "distinctFrom"
+        });
+      $where.where(fragment);
+    },
+    notDistinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve70(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notDistinctFrom"
+        });
+      $where.where(fragment);
+    },
+    in($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve71(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "in"
+        });
+      $where.where(fragment);
+    },
+    notIn($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec28 ? resolveInputCodec28(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve72(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notIn"
+        });
+      $where.where(fragment);
+    },
+    lessThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve73(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThan"
+        });
+      $where.where(fragment);
+    },
+    lessThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve74(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThanOrEqualTo"
+        });
+      $where.where(fragment);
+    },
+    greaterThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve75(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThan"
+        });
+      $where.where(fragment);
+    },
+    greaterThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier16 ? resolveSqlIdentifier16(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec27 ? resolveInputCodec27(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve76(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThanOrEqualTo"
+        });
+      $where.where(fragment);
+    }
+  },
+  TaskToManyAssigneeFilter: {
+    every($where, value) {
+      assertAllowed30(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery.notPlan().andPlan();
+    },
+    some($where, value) {
+      assertAllowed30(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    none($where, value) {
+      assertAllowed30(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    aggregates($where, input) {
+      if (input == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = new PgAggregateCondition($where, {
+          sql,
+          tableExpression,
+          alias
+        }, pgWhereConditionSpecListToSQL);
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    }
+  },
+  AssigneeFilter: {
+    rowId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec27;
+      return condition;
+    },
+    userId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec28;
+      return condition;
+    },
+    taskId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec29;
+      return condition;
+    },
+    createdAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec30;
+      return condition;
+    },
+    updatedAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec31;
+      return condition;
+    },
+    deletedAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec32;
+      return condition;
+    },
+    task($where, value) {
+      assertAllowed31(value, "object");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: taskIdentifier,
+        alias: pgResource_taskPgResource.name
+      });
+      registryConfig.pgRelations.assignee.taskByMyTaskId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.assignee.taskByMyTaskId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    user($where, value) {
+      assertAllowed31(value, "object");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: userIdentifier,
+        alias: pgResource_userPgResource.name
+      });
+      registryConfig.pgRelations.assignee.userByMyUserId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.assignee.userByMyUserId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    and($where, value) {
+      assertAllowed32(value, "list");
+      if (value == null) return;
+      return $where.andPlan();
+    },
+    or($where, value) {
+      assertAllowed32(value, "list");
+      if (value == null) return;
+      const $or = $where.orPlan();
+      return () => $or.andPlan();
+    },
+    not($where, value) {
+      assertAllowed32(value, "object");
+      if (value == null) return;
+      return $where.notPlan().andPlan();
+    }
+  },
+  UserFilter: {
+    rowId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec33;
+      return condition;
+    },
+    identityProviderId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec34;
+      return condition;
+    },
+    name(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec35;
+      return condition;
+    },
+    avatarUrl(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec36;
+      return condition;
+    },
+    createdAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec37;
+      return condition;
+    },
+    updatedAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec38;
+      return condition;
+    },
+    assignees($where, value) {
+      assertAllowed33(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: assigneeIdentifier,
+        alias: pgResource_assigneePgResource.name,
+        localAttributes: registryConfig.pgRelations.user.assigneesByTheirUserId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.user.assigneesByTheirUserId.remoteAttributes
+      };
+      return $rel;
+    },
+    assigneesExist($where, value) {
+      assertAllowed33(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: assigneeIdentifier,
+        alias: pgResource_assigneePgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.user.assigneesByTheirUserId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.user.assigneesByTheirUserId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    authoredPosts($where, value) {
+      assertAllowed33(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: postIdentifier,
+        alias: pgResource_postPgResource.name,
+        localAttributes: registryConfig.pgRelations.user.postsByTheirAuthorId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.user.postsByTheirAuthorId.remoteAttributes
+      };
+      return $rel;
+    },
+    authoredPostsExist($where, value) {
+      assertAllowed33(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: postIdentifier,
+        alias: pgResource_postPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.user.postsByTheirAuthorId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.user.postsByTheirAuthorId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    authoredTasks($where, value) {
+      assertAllowed33(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: taskIdentifier,
+        alias: pgResource_taskPgResource.name,
+        localAttributes: registryConfig.pgRelations.user.tasksByTheirAuthorId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.user.tasksByTheirAuthorId.remoteAttributes
+      };
+      return $rel;
+    },
+    authoredTasksExist($where, value) {
+      assertAllowed33(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: taskIdentifier,
+        alias: pgResource_taskPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.user.tasksByTheirAuthorId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.user.tasksByTheirAuthorId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    workspaceUsers($where, value) {
+      assertAllowed33(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: workspaceUserIdentifier,
+        alias: pgResource_workspace_userPgResource.name,
+        localAttributes: registryConfig.pgRelations.user.workspaceUsersByTheirUserId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.user.workspaceUsersByTheirUserId.remoteAttributes
+      };
+      return $rel;
+    },
+    workspaceUsersExist($where, value) {
+      assertAllowed33(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: workspaceUserIdentifier,
+        alias: pgResource_workspace_userPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.user.workspaceUsersByTheirUserId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.user.workspaceUsersByTheirUserId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    and($where, value) {
+      assertAllowed34(value, "list");
+      if (value == null) return;
+      return $where.andPlan();
+    },
+    or($where, value) {
+      assertAllowed34(value, "list");
+      if (value == null) return;
+      const $or = $where.orPlan();
+      return () => $or.andPlan();
+    },
+    not($where, value) {
+      assertAllowed34(value, "object");
+      if (value == null) return;
+      return $where.notPlan().andPlan();
+    }
+  },
+  UserToManyAssigneeFilter: {
     every($where, value) {
       assertAllowed35(value, "object");
       if (value == null) return;
@@ -10062,6 +13717,420 @@ export const plans = {
     },
     none($where, value) {
       assertAllowed35(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    aggregates($where, input) {
+      if (input == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = new PgAggregateCondition($where, {
+          sql,
+          tableExpression,
+          alias
+        }, pgWhereConditionSpecListToSQL);
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    }
+  },
+  AssigneeAggregatesFilter: {
+    filter($subquery, input) {
+      if (input == null) return;
+      return new PgCondition($subquery, !1, "AND");
+    },
+    distinctCount($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(spec);
+    }
+  },
+  AssigneeDistinctCountAggregateFilter: {
+    rowId($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_assignee.attributes.id.codec)
+      };
+      return $col;
+    },
+    userId($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("user_id")}`, spec_assignee.attributes.user_id.codec)
+      };
+      return $col;
+    },
+    taskId($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("task_id")}`, spec_assignee.attributes.task_id.codec)
+      };
+      return $col;
+    },
+    createdAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_assignee.attributes.created_at.codec)
+      };
+      return $col;
+    },
+    updatedAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_assignee.attributes.updated_at.codec)
+      };
+      return $col;
+    },
+    deletedAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("deleted_at")}`, spec_assignee.attributes.deleted_at.codec)
+      };
+      return $col;
+    }
+  },
+  BigIntFilter: {
+    isNull($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec29 ? resolveInputCodec29(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue16 ? resolveSqlValue16($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve77(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "isNull"
+        });
+      $where.where(fragment);
+    },
+    equalTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve78(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "equalTo"
+        });
+      $where.where(fragment);
+    },
+    notEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve79(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notEqualTo"
+        });
+      $where.where(fragment);
+    },
+    distinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve80(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "distinctFrom"
+        });
+      $where.where(fragment);
+    },
+    notDistinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve81(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notDistinctFrom"
+        });
+      $where.where(fragment);
+    },
+    in($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve82(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "in"
+        });
+      $where.where(fragment);
+    },
+    notIn($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec31 ? resolveInputCodec31(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve83(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notIn"
+        });
+      $where.where(fragment);
+    },
+    lessThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve84(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThan"
+        });
+      $where.where(fragment);
+    },
+    lessThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve85(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThanOrEqualTo"
+        });
+      $where.where(fragment);
+    },
+    greaterThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve86(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThan"
+        });
+      $where.where(fragment);
+    },
+    greaterThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier17 ? resolveSqlIdentifier17(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec30 ? resolveInputCodec30(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve87(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThanOrEqualTo"
+        });
+      $where.where(fragment);
+    }
+  },
+  UserToManyPostFilter: {
+    every($where, value) {
+      assertAllowed36(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery.notPlan().andPlan();
+    },
+    some($where, value) {
+      assertAllowed36(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    none($where, value) {
+      assertAllowed36(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10107,7 +14176,23 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec12;
+      condition.extensions.pgFilterAttribute = colSpec39;
+      return condition;
+    },
+    title(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec40;
+      return condition;
+    },
+    description(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec41;
       return condition;
     },
     authorId(queryBuilder, value) {
@@ -10115,7 +14200,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec13;
+      condition.extensions.pgFilterAttribute = colSpec42;
       return condition;
     },
     taskId(queryBuilder, value) {
@@ -10123,11 +14208,27 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec14;
+      condition.extensions.pgFilterAttribute = colSpec43;
+      return condition;
+    },
+    createdAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec44;
+      return condition;
+    },
+    updatedAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec45;
       return condition;
     },
     author($where, value) {
-      assertAllowed36(value, "object");
+      assertAllowed37(value, "object");
       if (value == null) return;
       const $subQuery = $where.existsPlan({
         tableExpression: userIdentifier,
@@ -10140,7 +14241,7 @@ export const plans = {
       return $subQuery;
     },
     task($where, value) {
-      assertAllowed36(value, "object");
+      assertAllowed37(value, "object");
       if (value == null) return;
       const $subQuery = $where.existsPlan({
         tableExpression: taskIdentifier,
@@ -10153,18 +14254,18 @@ export const plans = {
       return $subQuery;
     },
     and($where, value) {
-      assertAllowed37(value, "list");
+      assertAllowed38(value, "list");
       if (value == null) return;
       return $where.andPlan();
     },
     or($where, value) {
-      assertAllowed37(value, "list");
+      assertAllowed38(value, "list");
       if (value == null) return;
       const $or = $where.orPlan();
       return () => $or.andPlan();
     },
     not($where, value) {
-      assertAllowed37(value, "object");
+      assertAllowed38(value, "object");
       if (value == null) return;
       return $where.notPlan().andPlan();
     }
@@ -10189,6 +14290,24 @@ export const plans = {
       };
       return $col;
     },
+    title($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)
+      };
+      return $col;
+    },
+    description($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)
+      };
+      return $col;
+    },
     authorId($parent, input) {
       if (input == null) return;
       const $col = new PgCondition($parent);
@@ -10206,11 +14325,29 @@ export const plans = {
         expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("task_id")}`, spec_post.attributes.task_id.codec)
       };
       return $col;
+    },
+    createdAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)
+      };
+      return $col;
+    },
+    updatedAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)
+      };
+      return $col;
     }
   },
-  UserToManyWorkspaceUserFilter: {
+  UserToManyTaskFilter: {
     every($where, value) {
-      assertAllowed38(value, "object");
+      assertAllowed39(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10230,7 +14367,7 @@ export const plans = {
       return $subQuery.notPlan().andPlan();
     },
     some($where, value) {
-      assertAllowed38(value, "object");
+      assertAllowed39(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10250,7 +14387,594 @@ export const plans = {
       return $subQuery;
     },
     none($where, value) {
-      assertAllowed38(value, "object");
+      assertAllowed39(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    aggregates($where, input) {
+      if (input == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = new PgAggregateCondition($where, {
+          sql,
+          tableExpression,
+          alias
+        }, pgWhereConditionSpecListToSQL);
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    }
+  },
+  TaskAggregatesFilter: {
+    filter($subquery, input) {
+      if (input == null) return;
+      return new PgCondition($subquery, !1, "AND");
+    },
+    sum($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(aggregateSpec);
+    },
+    distinctCount($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(spec);
+    },
+    min($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(aggregateSpec2);
+    },
+    max($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(aggregateSpec3);
+    },
+    average($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(aggregateSpec4);
+    },
+    stddevSample($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(aggregateSpec5);
+    },
+    stddevPopulation($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(aggregateSpec6);
+    },
+    varianceSample($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(aggregateSpec7);
+    },
+    variancePopulation($subquery, input) {
+      if (input == null) return;
+      return $subquery.forAggregate(aggregateSpec8);
+    }
+  },
+  TaskSumAggregateFilter: {
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: aggregateSpec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  TaskDistinctCountAggregateFilter: {
+    rowId($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_task.attributes.id.codec)
+      };
+      return $col;
+    },
+    content($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("content")}`, spec_task.attributes.content.codec)
+      };
+      return $col;
+    },
+    description($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("description")}`, spec_task.attributes.description.codec)
+      };
+      return $col;
+    },
+    priority($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("priority")}`, spec_task.attributes.priority.codec)
+      };
+      return $col;
+    },
+    authorId($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("author_id")}`, spec_task.attributes.author_id.codec)
+      };
+      return $col;
+    },
+    columnId($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_id")}`, spec_task.attributes.column_id.codec)
+      };
+      return $col;
+    },
+    labels($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("labels")}`, spec_task.attributes.labels.codec)
+      };
+      return $col;
+    },
+    dueDate($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("due_date")}`, spec_task.attributes.due_date.codec)
+      };
+      return $col;
+    },
+    createdAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_task.attributes.created_at.codec)
+      };
+      return $col;
+    },
+    updatedAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_task.attributes.updated_at.codec)
+      };
+      return $col;
+    },
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  TaskMinAggregateFilter: {
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.int,
+        expression: aggregateSpec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  TaskMaxAggregateFilter: {
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.int,
+        expression: aggregateSpec3.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  TaskAverageAggregateFilter: {
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.numeric,
+        expression: aggregateSpec4.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  BigFloatFilter: {
+    isNull($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec32 ? resolveInputCodec32(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = resolveSqlValue17 ? resolveSqlValue17($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve88(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "isNull"
+        });
+      $where.where(fragment);
+    },
+    equalTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec33 ? resolveInputCodec33(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve89(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "equalTo"
+        });
+      $where.where(fragment);
+    },
+    notEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec33 ? resolveInputCodec33(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve90(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notEqualTo"
+        });
+      $where.where(fragment);
+    },
+    distinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec33 ? resolveInputCodec33(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve91(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "distinctFrom"
+        });
+      $where.where(fragment);
+    },
+    notDistinctFrom($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec33 ? resolveInputCodec33(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve92(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notDistinctFrom"
+        });
+      $where.where(fragment);
+    },
+    in($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec34 ? resolveInputCodec34(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve93(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "in"
+        });
+      $where.where(fragment);
+    },
+    notIn($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec34 ? resolveInputCodec34(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve94(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "notIn"
+        });
+      $where.where(fragment);
+    },
+    lessThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec33 ? resolveInputCodec33(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve95(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThan"
+        });
+      $where.where(fragment);
+    },
+    lessThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec33 ? resolveInputCodec33(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve96(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "lessThanOrEqualTo"
+        });
+      $where.where(fragment);
+    },
+    greaterThan($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec33 ? resolveInputCodec33(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve97(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThan"
+        });
+      $where.where(fragment);
+    },
+    greaterThanOrEqualTo($where, value) {
+      if (!$where.extensions?.pgFilterAttribute) throw new Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+      if (value === void 0) return;
+      const {
+          fieldName: parentFieldName,
+          attributeName,
+          attribute,
+          codec,
+          expression
+        } = $where.extensions.pgFilterAttribute,
+        sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+        sourceCodec = codec ?? attribute.codec,
+        [sqlIdentifier, identifierCodec] = resolveSqlIdentifier18 ? resolveSqlIdentifier18(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+      if (true && value === null) return;
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const resolvedInput = value,
+        inputCodec = resolveInputCodec33 ? resolveInputCodec33(codec ?? attribute.codec) : codec ?? attribute.codec,
+        sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+        fragment = resolve98(sqlIdentifier, sqlValue, value, $where, {
+          fieldName: parentFieldName ?? null,
+          operatorName: "greaterThanOrEqualTo"
+        });
+      $where.where(fragment);
+    }
+  },
+  BigFloat: {
+    serialize: UUIDSerialize,
+    parseValue: UUIDSerialize,
+    parseLiteral(ast) {
+      if (ast.kind !== Kind.STRING) throw new GraphQLError(`${"BigFloat" ?? "This scalar"} can only parse string values (kind='${ast.kind}')`);
+      return ast.value;
+    }
+  },
+  TaskStddevSampleAggregateFilter: {
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.numeric,
+        expression: aggregateSpec5.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  TaskStddevPopulationAggregateFilter: {
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.numeric,
+        expression: aggregateSpec6.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  TaskVarianceSampleAggregateFilter: {
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.numeric,
+        expression: aggregateSpec7.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  TaskVariancePopulationAggregateFilter: {
+    columnIndex($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.numeric,
+        expression: aggregateSpec8.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+      };
+      return $col;
+    }
+  },
+  UserToManyWorkspaceUserFilter: {
+    every($where, value) {
+      assertAllowed40(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.notPlan().existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery.notPlan().andPlan();
+    },
+    some($where, value) {
+      assertAllowed40(value, "object");
+      if (value == null) return;
+      if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
+      const {
+          localAttributes,
+          remoteAttributes,
+          tableExpression,
+          alias
+        } = $where.extensions.pgFilterRelation,
+        $subQuery = $where.existsPlan({
+          tableExpression,
+          alias
+        });
+      localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+      return $subQuery;
+    },
+    none($where, value) {
+      assertAllowed40(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10296,7 +15020,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec15;
+      condition.extensions.pgFilterAttribute = colSpec46;
       return condition;
     },
     userId(queryBuilder, value) {
@@ -10304,11 +15028,19 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec16;
+      condition.extensions.pgFilterAttribute = colSpec47;
+      return condition;
+    },
+    createdAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec48;
       return condition;
     },
     user($where, value) {
-      assertAllowed39(value, "object");
+      assertAllowed41(value, "object");
       if (value == null) return;
       const $subQuery = $where.existsPlan({
         tableExpression: userIdentifier,
@@ -10321,7 +15053,7 @@ export const plans = {
       return $subQuery;
     },
     workspace($where, value) {
-      assertAllowed39(value, "object");
+      assertAllowed41(value, "object");
       if (value == null) return;
       const $subQuery = $where.existsPlan({
         tableExpression: workspaceIdentifier,
@@ -10332,80 +15064,6 @@ export const plans = {
         $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
       });
       return $subQuery;
-    },
-    and($where, value) {
-      assertAllowed40(value, "list");
-      if (value == null) return;
-      return $where.andPlan();
-    },
-    or($where, value) {
-      assertAllowed40(value, "list");
-      if (value == null) return;
-      const $or = $where.orPlan();
-      return () => $or.andPlan();
-    },
-    not($where, value) {
-      assertAllowed40(value, "object");
-      if (value == null) return;
-      return $where.notPlan().andPlan();
-    }
-  },
-  WorkspaceFilter: {
-    rowId(queryBuilder, value) {
-      if (value === void 0) return;
-      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
-      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
-      const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec17;
-      return condition;
-    },
-    projects($where, value) {
-      assertAllowed41(value, "object");
-      const $rel = $where.andPlan();
-      $rel.extensions.pgFilterRelation = {
-        tableExpression: projectIdentifier,
-        alias: pgResource_projectPgResource.name,
-        localAttributes: registryConfig.pgRelations.workspace.projectsByTheirWorkspaceId.localAttributes,
-        remoteAttributes: registryConfig.pgRelations.workspace.projectsByTheirWorkspaceId.remoteAttributes
-      };
-      return $rel;
-    },
-    projectsExist($where, value) {
-      assertAllowed41(value, "scalar");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: projectIdentifier,
-        alias: pgResource_projectPgResource.name,
-        equals: value
-      });
-      registryConfig.pgRelations.workspace.projectsByTheirWorkspaceId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.workspace.projectsByTheirWorkspaceId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
-    },
-    workspaceUsers($where, value) {
-      assertAllowed41(value, "object");
-      const $rel = $where.andPlan();
-      $rel.extensions.pgFilterRelation = {
-        tableExpression: workspaceUserIdentifier,
-        alias: pgResource_workspace_userPgResource.name,
-        localAttributes: registryConfig.pgRelations.workspace.workspaceUsersByTheirWorkspaceId.localAttributes,
-        remoteAttributes: registryConfig.pgRelations.workspace.workspaceUsersByTheirWorkspaceId.remoteAttributes
-      };
-      return $rel;
-    },
-    workspaceUsersExist($where, value) {
-      assertAllowed41(value, "scalar");
-      if (value == null) return;
-      const $subQuery = $where.existsPlan({
-        tableExpression: workspaceUserIdentifier,
-        alias: pgResource_workspace_userPgResource.name,
-        equals: value
-      });
-      registryConfig.pgRelations.workspace.workspaceUsersByTheirWorkspaceId.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = registryConfig.pgRelations.workspace.workspaceUsersByTheirWorkspaceId.remoteAttributes[i];
-        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-      });
     },
     and($where, value) {
       assertAllowed42(value, "list");
@@ -10424,9 +15082,107 @@ export const plans = {
       return $where.notPlan().andPlan();
     }
   },
+  WorkspaceFilter: {
+    rowId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec49;
+      return condition;
+    },
+    name(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec50;
+      return condition;
+    },
+    createdAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec51;
+      return condition;
+    },
+    updatedAt(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec52;
+      return condition;
+    },
+    projects($where, value) {
+      assertAllowed43(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: projectIdentifier,
+        alias: pgResource_projectPgResource.name,
+        localAttributes: registryConfig.pgRelations.workspace.projectsByTheirWorkspaceId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.workspace.projectsByTheirWorkspaceId.remoteAttributes
+      };
+      return $rel;
+    },
+    projectsExist($where, value) {
+      assertAllowed43(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: projectIdentifier,
+        alias: pgResource_projectPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.workspace.projectsByTheirWorkspaceId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.workspace.projectsByTheirWorkspaceId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    workspaceUsers($where, value) {
+      assertAllowed43(value, "object");
+      const $rel = $where.andPlan();
+      $rel.extensions.pgFilterRelation = {
+        tableExpression: workspaceUserIdentifier,
+        alias: pgResource_workspace_userPgResource.name,
+        localAttributes: registryConfig.pgRelations.workspace.workspaceUsersByTheirWorkspaceId.localAttributes,
+        remoteAttributes: registryConfig.pgRelations.workspace.workspaceUsersByTheirWorkspaceId.remoteAttributes
+      };
+      return $rel;
+    },
+    workspaceUsersExist($where, value) {
+      assertAllowed43(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: workspaceUserIdentifier,
+        alias: pgResource_workspace_userPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.workspace.workspaceUsersByTheirWorkspaceId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.workspace.workspaceUsersByTheirWorkspaceId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
+    and($where, value) {
+      assertAllowed44(value, "list");
+      if (value == null) return;
+      return $where.andPlan();
+    },
+    or($where, value) {
+      assertAllowed44(value, "list");
+      if (value == null) return;
+      const $or = $where.orPlan();
+      return () => $or.andPlan();
+    },
+    not($where, value) {
+      assertAllowed44(value, "object");
+      if (value == null) return;
+      return $where.notPlan().andPlan();
+    }
+  },
   WorkspaceToManyProjectFilter: {
     every($where, value) {
-      assertAllowed43(value, "object");
+      assertAllowed45(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10446,7 +15202,7 @@ export const plans = {
       return $subQuery.notPlan().andPlan();
     },
     some($where, value) {
-      assertAllowed43(value, "object");
+      assertAllowed45(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10466,7 +15222,7 @@ export const plans = {
       return $subQuery;
     },
     none($where, value) {
-      assertAllowed43(value, "object");
+      assertAllowed45(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10526,6 +15282,51 @@ export const plans = {
       };
       return $col;
     },
+    name($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)
+      };
+      return $col;
+    },
+    description($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)
+      };
+      return $col;
+    },
+    prefix($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("prefix")}`, spec_project.attributes.prefix.codec)
+      };
+      return $col;
+    },
+    color($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("color")}`, spec_project.attributes.color.codec)
+      };
+      return $col;
+    },
+    labels($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("labels")}`, spec_project.attributes.labels.codec)
+      };
+      return $col;
+    },
     workspaceId($parent, input) {
       if (input == null) return;
       const $col = new PgCondition($parent);
@@ -10534,11 +15335,38 @@ export const plans = {
         expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("workspace_id")}`, spec_project.attributes.workspace_id.codec)
       };
       return $col;
+    },
+    viewMode($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("view_mode")}`, spec_project.attributes.view_mode.codec)
+      };
+      return $col;
+    },
+    createdAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)
+      };
+      return $col;
+    },
+    updatedAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)
+      };
+      return $col;
     }
   },
   WorkspaceToManyWorkspaceUserFilter: {
     every($where, value) {
-      assertAllowed44(value, "object");
+      assertAllowed46(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10558,7 +15386,7 @@ export const plans = {
       return $subQuery.notPlan().andPlan();
     },
     some($where, value) {
-      assertAllowed44(value, "object");
+      assertAllowed46(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10578,7 +15406,7 @@ export const plans = {
       return $subQuery;
     },
     none($where, value) {
-      assertAllowed44(value, "object");
+      assertAllowed46(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10646,11 +15474,20 @@ export const plans = {
         expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("user_id")}`, spec_workspaceUser.attributes.user_id.codec)
       };
       return $col;
+    },
+    createdAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_workspaceUser.attributes.created_at.codec)
+      };
+      return $col;
     }
   },
   TaskToManyPostFilter: {
     every($where, value) {
-      assertAllowed45(value, "object");
+      assertAllowed47(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10670,7 +15507,7 @@ export const plans = {
       return $subQuery.notPlan().andPlan();
     },
     some($where, value) {
-      assertAllowed45(value, "object");
+      assertAllowed47(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10690,7 +15527,7 @@ export const plans = {
       return $subQuery;
     },
     none($where, value) {
-      assertAllowed45(value, "object");
+      assertAllowed47(value, "object");
       if (value == null) return;
       if (!$where.extensions.pgFilterRelation) throw new Error("Invalid use of filter, 'pgFilterRelation' expected");
       const {
@@ -10730,36 +15567,6 @@ export const plans = {
       return $subQuery;
     }
   },
-  TaskAggregatesFilter: {
-    filter($subquery, input) {
-      if (input == null) return;
-      return new PgCondition($subquery, !1, "AND");
-    },
-    distinctCount($subquery, input) {
-      if (input == null) return;
-      return $subquery.forAggregate(spec);
-    }
-  },
-  TaskDistinctCountAggregateFilter: {
-    rowId($parent, input) {
-      if (input == null) return;
-      const $col = new PgCondition($parent);
-      $col.extensions.pgFilterAttribute = {
-        codec: TYPES.bigint,
-        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_task.attributes.id.codec)
-      };
-      return $col;
-    },
-    columnId($parent, input) {
-      if (input == null) return;
-      const $col = new PgCondition($parent);
-      $col.extensions.pgFilterAttribute = {
-        codec: TYPES.bigint,
-        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_id")}`, spec_task.attributes.column_id.codec)
-      };
-      return $col;
-    }
-  },
   ColumnAggregatesFilter: {
     filter($subquery, input) {
       if (input == null) return;
@@ -10780,12 +15587,39 @@ export const plans = {
       };
       return $col;
     },
+    title($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("title")}`, spec_column.attributes.title.codec)
+      };
+      return $col;
+    },
     projectId($parent, input) {
       if (input == null) return;
       const $col = new PgCondition($parent);
       $col.extensions.pgFilterAttribute = {
         codec: TYPES.bigint,
         expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("project_id")}`, spec_column.attributes.project_id.codec)
+      };
+      return $col;
+    },
+    createdAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_column.attributes.created_at.codec)
+      };
+      return $col;
+    },
+    updatedAt($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_column.attributes.updated_at.codec)
       };
       return $col;
     }
@@ -10823,6 +15657,66 @@ export const plans = {
       });
       queryBuilder.setOrderIsUnique();
     },
+    NAME_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "name",
+        direction: "ASC"
+      });
+    },
+    NAME_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "name",
+        direction: "DESC"
+      });
+    },
+    DESCRIPTION_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "description",
+        direction: "ASC"
+      });
+    },
+    DESCRIPTION_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "description",
+        direction: "DESC"
+      });
+    },
+    PREFIX_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "prefix",
+        direction: "ASC"
+      });
+    },
+    PREFIX_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "prefix",
+        direction: "DESC"
+      });
+    },
+    COLOR_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "color",
+        direction: "ASC"
+      });
+    },
+    COLOR_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "color",
+        direction: "DESC"
+      });
+    },
+    LABELS_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "labels",
+        direction: "ASC"
+      });
+    },
+    LABELS_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "labels",
+        direction: "DESC"
+      });
+    },
     WORKSPACE_ID_ASC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "workspace_id",
@@ -10832,6 +15726,42 @@ export const plans = {
     WORKSPACE_ID_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "workspace_id",
+        direction: "DESC"
+      });
+    },
+    VIEW_MODE_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "view_mode",
+        direction: "ASC"
+      });
+    },
+    VIEW_MODE_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "view_mode",
+        direction: "DESC"
+      });
+    },
+    CREATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "ASC"
+      });
+    },
+    CREATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "DESC"
+      });
+    },
+    UPDATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "ASC"
+      });
+    },
+    UPDATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
         direction: "DESC"
       });
     },
@@ -10909,6 +15839,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         direction: "DESC"
       });
     },
+    COLUMNS_DISTINCT_COUNT_TITLE_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_columnPgResource.name));
+      relation.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_columnPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_column.attributes.title.codec)}
+from ${pgResource_columnPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_column.attributes.title.codec) ?? spec_column.attributes.title.codec,
+        direction: "ASC"
+      });
+    },
+    COLUMNS_DISTINCT_COUNT_TITLE_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_columnPgResource.name));
+      relation.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_columnPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_column.attributes.title.codec)}
+from ${pgResource_columnPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_column.attributes.title.codec) ?? spec_column.attributes.title.codec,
+        direction: "DESC"
+      });
+    },
     COLUMNS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
       const foreignTableAlias = $select.alias,
         conditions = [],
@@ -10944,6 +15912,82 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $select.orderBy({
         fragment,
         codec: spec.pgTypeCodecModifier?.(spec_column.attributes.project_id.codec) ?? spec_column.attributes.project_id.codec,
+        direction: "DESC"
+      });
+    },
+    COLUMNS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_columnPgResource.name));
+      relation.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_columnPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_column.attributes.created_at.codec)}
+from ${pgResource_columnPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_column.attributes.created_at.codec) ?? spec_column.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    COLUMNS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_columnPgResource.name));
+      relation.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_columnPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_column.attributes.created_at.codec)}
+from ${pgResource_columnPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_column.attributes.created_at.codec) ?? spec_column.attributes.created_at.codec,
+        direction: "DESC"
+      });
+    },
+    COLUMNS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_columnPgResource.name));
+      relation.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_columnPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_column.attributes.updated_at.codec)}
+from ${pgResource_columnPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_column.attributes.updated_at.codec) ?? spec_column.attributes.updated_at.codec,
+        direction: "ASC"
+      });
+    },
+    COLUMNS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_columnPgResource.name));
+      relation.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_columnPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_column.attributes.updated_at.codec)}
+from ${pgResource_columnPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_column.attributes.updated_at.codec) ?? spec_column.attributes.updated_at.codec,
         direction: "DESC"
       });
     }
@@ -11021,6 +16065,24 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("user_id")}`,
         codec: TYPES.uuid
+      });
+    },
+    CREATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
       });
     }
   },
@@ -11140,6 +16202,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
         }
       });
+    },
+    createdAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "created_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
     }
   },
   WorkspaceUserOrderBy: {
@@ -11184,6 +16255,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     USER_ID_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "user_id",
+        direction: "DESC"
+      });
+    },
+    CREATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "ASC"
+      });
+    },
+    CREATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
         direction: "DESC"
       });
     }
@@ -11261,10 +16344,52 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   ColumnGroupBy: {
+    TITLE($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("title")}`,
+        codec: TYPES.text
+      });
+    },
     PROJECT_ID($pgSelect) {
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("project_id")}`,
         codec: TYPES.uuid
+      });
+    },
+    CREATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
       });
     }
   },
@@ -11421,12 +16546,39 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       });
     },
+    title($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "title",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
     projectId($condition, val) {
       $condition.where({
         type: "attribute",
         attribute: "project_id",
         callback(expression) {
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
+    },
+    createdAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "created_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    updatedAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "updated_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
         }
       });
     }
@@ -11464,6 +16616,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       });
       queryBuilder.setOrderIsUnique();
     },
+    TITLE_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "title",
+        direction: "ASC"
+      });
+    },
+    TITLE_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "title",
+        direction: "DESC"
+      });
+    },
     PROJECT_ID_ASC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "project_id",
@@ -11473,6 +16637,30 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     PROJECT_ID_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "project_id",
+        direction: "DESC"
+      });
+    },
+    CREATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "ASC"
+      });
+    },
+    CREATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "DESC"
+      });
+    },
+    UPDATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "ASC"
+      });
+    },
+    UPDATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
         direction: "DESC"
       });
     },
@@ -11509,6 +16697,44 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       $select.orderBy({
         fragment,
         codec: TYPES.bigint,
+        direction: "DESC"
+      });
+    },
+    TASKS_SUM_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_SUM_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
         direction: "DESC"
       });
     },
@@ -11550,6 +16776,158 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         direction: "DESC"
       });
     },
+    TASKS_DISTINCT_COUNT_CONTENT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("content")}`, spec_task.attributes.content.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.content.codec) ?? spec_task.attributes.content.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_CONTENT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("content")}`, spec_task.attributes.content.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.content.codec) ?? spec_task.attributes.content.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_task.attributes.description.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.description.codec) ?? spec_task.attributes.description.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_task.attributes.description.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.description.codec) ?? spec_task.attributes.description.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_PRIORITY_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("priority")}`, spec_task.attributes.priority.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.priority.codec) ?? spec_task.attributes.priority.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_PRIORITY_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("priority")}`, spec_task.attributes.priority.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.priority.codec) ?? spec_task.attributes.priority.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_AUTHOR_ID_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("author_id")}`, spec_task.attributes.author_id.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.author_id.codec) ?? spec_task.attributes.author_id.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_AUTHOR_ID_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("author_id")}`, spec_task.attributes.author_id.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.author_id.codec) ?? spec_task.attributes.author_id.codec,
+        direction: "DESC"
+      });
+    },
     TASKS_DISTINCT_COUNT_COLUMN_ID_ASC($select) {
       const foreignTableAlias = $select.alias,
         conditions = [],
@@ -11585,6 +16963,462 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $select.orderBy({
         fragment,
         codec: spec.pgTypeCodecModifier?.(spec_task.attributes.column_id.codec) ?? spec_task.attributes.column_id.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_LABELS_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("labels")}`, spec_task.attributes.labels.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.labels.codec) ?? spec_task.attributes.labels.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_LABELS_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("labels")}`, spec_task.attributes.labels.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.labels.codec) ?? spec_task.attributes.labels.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_DUE_DATE_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("due_date")}`, spec_task.attributes.due_date.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.due_date.codec) ?? spec_task.attributes.due_date.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_DUE_DATE_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("due_date")}`, spec_task.attributes.due_date.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.due_date.codec) ?? spec_task.attributes.due_date.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_task.attributes.created_at.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.created_at.codec) ?? spec_task.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_task.attributes.created_at.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.created_at.codec) ?? spec_task.attributes.created_at.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_task.attributes.updated_at.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.updated_at.codec) ?? spec_task.attributes.updated_at.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_task.attributes.updated_at.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.updated_at.codec) ?? spec_task.attributes.updated_at.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_MIN_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec2.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_MIN_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec2.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_MAX_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec3.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_MAX_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec3.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_AVERAGE_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec4.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_AVERAGE_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec4.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec5.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec5.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec6.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec6.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec7.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec7.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec8.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation2.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation2.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec8.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
         direction: "DESC"
       });
     }
@@ -11743,14 +17577,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
     }
   },
-  BigFloat: {
-    serialize: UUIDSerialize,
-    parseValue: UUIDSerialize,
-    parseLiteral(ast) {
-      if (ast.kind !== Kind.STRING) throw new GraphQLError(`${"BigFloat" ?? "This scalar"} can only parse string values (kind='${ast.kind}')`);
-      return ast.value;
-    }
-  },
   TaskStddevSampleAggregates: {
     columnIndex($pgSelectSingle) {
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
@@ -11780,10 +17606,100 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   TaskGroupBy: {
+    CONTENT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("content")}`,
+        codec: TYPES.text
+      });
+    },
+    DESCRIPTION($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("description")}`,
+        codec: TYPES.text
+      });
+    },
+    PRIORITY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("priority")}`,
+        codec: TYPES.varchar
+      });
+    },
+    AUTHOR_ID($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("author_id")}`,
+        codec: TYPES.uuid
+      });
+    },
     COLUMN_ID($pgSelect) {
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("column_id")}`,
         codec: TYPES.uuid
+      });
+    },
+    LABELS($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("labels")}`,
+        codec: TYPES.jsonb
+      });
+    },
+    DUE_DATE($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("due_date")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    DUE_DATE_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("due_date")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    DUE_DATE_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("due_date")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    COLUMN_INDEX($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("column_index")}`,
+        codec: TYPES.int
       });
     }
   },
@@ -12056,12 +17972,93 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       });
     },
+    content($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "content",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
+    description($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "description",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
+    priority($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "priority",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.varchar)}`;
+        }
+      });
+    },
+    authorId($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "author_id",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
+    },
     columnId($condition, val) {
       $condition.where({
         type: "attribute",
         attribute: "column_id",
         callback(expression) {
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
+    },
+    labels($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "labels",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.jsonb)}`;
+        }
+      });
+    },
+    dueDate($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "due_date",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    createdAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "created_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    updatedAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "updated_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    columnIndex($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "column_index",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.int)}`;
         }
       });
     }
@@ -12099,6 +18096,54 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       });
       queryBuilder.setOrderIsUnique();
     },
+    CONTENT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "content",
+        direction: "ASC"
+      });
+    },
+    CONTENT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "content",
+        direction: "DESC"
+      });
+    },
+    DESCRIPTION_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "description",
+        direction: "ASC"
+      });
+    },
+    DESCRIPTION_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "description",
+        direction: "DESC"
+      });
+    },
+    PRIORITY_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "priority",
+        direction: "ASC"
+      });
+    },
+    PRIORITY_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "priority",
+        direction: "DESC"
+      });
+    },
+    AUTHOR_ID_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "author_id",
+        direction: "ASC"
+      });
+    },
+    AUTHOR_ID_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "author_id",
+        direction: "DESC"
+      });
+    },
     COLUMN_ID_ASC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "column_id",
@@ -12108,6 +18153,66 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     COLUMN_ID_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "column_id",
+        direction: "DESC"
+      });
+    },
+    LABELS_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "labels",
+        direction: "ASC"
+      });
+    },
+    LABELS_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "labels",
+        direction: "DESC"
+      });
+    },
+    DUE_DATE_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "due_date",
+        direction: "ASC"
+      });
+    },
+    DUE_DATE_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "due_date",
+        direction: "DESC"
+      });
+    },
+    CREATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "ASC"
+      });
+    },
+    CREATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "DESC"
+      });
+    },
+    UPDATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "ASC"
+      });
+    },
+    UPDATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "DESC"
+      });
+    },
+    COLUMN_INDEX_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "column_index",
+        direction: "ASC"
+      });
+    },
+    COLUMN_INDEX_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "column_index",
         direction: "DESC"
       });
     },
@@ -12261,6 +18366,120 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         direction: "DESC"
       });
     },
+    ASSIGNEES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation3.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation3.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_assignee.attributes.created_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.created_at.codec) ?? spec_assignee.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation3.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation3.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_assignee.attributes.created_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.created_at.codec) ?? spec_assignee.attributes.created_at.codec,
+        direction: "DESC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation3.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation3.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_assignee.attributes.updated_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.updated_at.codec) ?? spec_assignee.attributes.updated_at.codec,
+        direction: "ASC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation3.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation3.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_assignee.attributes.updated_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.updated_at.codec) ?? spec_assignee.attributes.updated_at.codec,
+        direction: "DESC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_DELETED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation3.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation3.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("deleted_at")}`, spec_assignee.attributes.deleted_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.deleted_at.codec) ?? spec_assignee.attributes.deleted_at.codec,
+        direction: "ASC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_DELETED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation3.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation3.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("deleted_at")}`, spec_assignee.attributes.deleted_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.deleted_at.codec) ?? spec_assignee.attributes.deleted_at.codec,
+        direction: "DESC"
+      });
+    },
     POSTS_COUNT_ASC($select) {
       const foreignTableAlias = $select.alias,
         conditions = [],
@@ -12332,6 +18551,82 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $select.orderBy({
         fragment,
         codec: spec.pgTypeCodecModifier?.(spec_post.attributes.id.codec) ?? spec_post.attributes.id.codec,
+        direction: "DESC"
+      });
+    },
+    POSTS_DISTINCT_COUNT_TITLE_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation4.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation4.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.title.codec) ?? spec_post.attributes.title.codec,
+        direction: "ASC"
+      });
+    },
+    POSTS_DISTINCT_COUNT_TITLE_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation4.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation4.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.title.codec) ?? spec_post.attributes.title.codec,
+        direction: "DESC"
+      });
+    },
+    POSTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation4.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation4.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.description.codec) ?? spec_post.attributes.description.codec,
+        direction: "ASC"
+      });
+    },
+    POSTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation4.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation4.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.description.codec) ?? spec_post.attributes.description.codec,
         direction: "DESC"
       });
     },
@@ -12410,6 +18705,82 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         codec: spec.pgTypeCodecModifier?.(spec_post.attributes.task_id.codec) ?? spec_post.attributes.task_id.codec,
         direction: "DESC"
       });
+    },
+    POSTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation4.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation4.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.created_at.codec) ?? spec_post.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    POSTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation4.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation4.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.created_at.codec) ?? spec_post.attributes.created_at.codec,
+        direction: "DESC"
+      });
+    },
+    POSTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation4.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation4.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.updated_at.codec) ?? spec_post.attributes.updated_at.codec,
+        direction: "ASC"
+      });
+    },
+    POSTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation4.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation4.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.updated_at.codec) ?? spec_post.attributes.updated_at.codec,
+        direction: "DESC"
+      });
     }
   },
   AssigneeCondition: {
@@ -12437,6 +18808,33 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "task_id",
         callback(expression) {
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
+    },
+    createdAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "created_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    updatedAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "updated_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    deletedAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "deleted_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
         }
       });
     }
@@ -12495,6 +18893,42 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     TASK_ID_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "task_id",
+        direction: "DESC"
+      });
+    },
+    CREATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "ASC"
+      });
+    },
+    CREATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "DESC"
+      });
+    },
+    UPDATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "ASC"
+      });
+    },
+    UPDATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "DESC"
+      });
+    },
+    DELETED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "deleted_at",
+        direction: "ASC"
+      });
+    },
+    DELETED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "deleted_at",
         direction: "DESC"
       });
     }
@@ -12614,6 +19048,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   PostGroupBy: {
+    TITLE($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("title")}`,
+        codec: TYPES.text
+      });
+    },
+    DESCRIPTION($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("description")}`,
+        codec: TYPES.text
+      });
+    },
     AUTHOR_ID($pgSelect) {
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("author_id")}`,
@@ -12624,6 +19070,42 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("task_id")}`,
         codec: TYPES.uuid
+      });
+    },
+    CREATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
       });
     }
   },
@@ -12780,6 +19262,24 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       });
     },
+    title($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "title",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
+    description($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "description",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
     authorId($condition, val) {
       $condition.where({
         type: "attribute",
@@ -12795,6 +19295,24 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "task_id",
         callback(expression) {
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
+    },
+    createdAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "created_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    updatedAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "updated_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
         }
       });
     }
@@ -12832,6 +19350,30 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       });
       queryBuilder.setOrderIsUnique();
     },
+    TITLE_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "title",
+        direction: "ASC"
+      });
+    },
+    TITLE_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "title",
+        direction: "DESC"
+      });
+    },
+    DESCRIPTION_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "description",
+        direction: "ASC"
+      });
+    },
+    DESCRIPTION_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "description",
+        direction: "DESC"
+      });
+    },
     AUTHOR_ID_ASC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "author_id",
@@ -12853,6 +19395,30 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     TASK_ID_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "task_id",
+        direction: "DESC"
+      });
+    },
+    CREATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "ASC"
+      });
+    },
+    CREATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "DESC"
+      });
+    },
+    UPDATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "ASC"
+      });
+    },
+    UPDATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
         direction: "DESC"
       });
     }
@@ -12923,6 +19489,60 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("task_id")}`,
         codec: TYPES.uuid
+      });
+    },
+    CREATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    DELETED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("deleted_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    DELETED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("deleted_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    DELETED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("deleted_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
       });
     }
   },
@@ -13121,6 +19741,19 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     aggregates($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").single();
+    },
+    groupedAggregates: {
+      plan($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate");
+      },
+      args: {
+        groupBy(_$parent, $pgSelect, input) {
+          return input.apply($pgSelect);
+        },
+        having(_$parent, $pgSelect, input) {
+          return input.apply($pgSelect, queryBuilder => queryBuilder.havingBuilder());
+        }
+      }
     }
   },
   WorkspaceEdge: {
@@ -13168,6 +19801,193 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
+  WorkspaceGroupBy: {
+    NAME($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("name")}`,
+        codec: TYPES.text
+      });
+    },
+    CREATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    }
+  },
+  WorkspaceHavingInput: {
+    AND($where) {
+      return $where;
+    },
+    OR($where) {
+      return new PgOrFilter($where);
+    },
+    sum($having) {
+      return $having;
+    },
+    distinctCount($having) {
+      return $having;
+    },
+    min($having) {
+      return $having;
+    },
+    max($having) {
+      return $having;
+    },
+    average($having) {
+      return $having;
+    },
+    stddevSample($having) {
+      return $having;
+    },
+    stddevPopulation($having) {
+      return $having;
+    },
+    varianceSample($having) {
+      return $having;
+    },
+    variancePopulation($having) {
+      return $having;
+    }
+  },
+  WorkspaceHavingSumInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  WorkspaceHavingDistinctCountInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  WorkspaceHavingMinInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  WorkspaceHavingMaxInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  WorkspaceHavingAverageInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  WorkspaceHavingStddevSampleInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  WorkspaceHavingStddevPopulationInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  WorkspaceHavingVarianceSampleInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  WorkspaceHavingVariancePopulationInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_workspace.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
   WorkspaceCondition: {
     rowId($condition, val) {
       $condition.where({
@@ -13175,6 +19995,33 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "id",
         callback(expression) {
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
+    },
+    name($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "name",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
+    createdAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "created_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    updatedAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "updated_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
         }
       });
     }
@@ -13211,6 +20058,42 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         direction: "DESC"
       });
       queryBuilder.setOrderIsUnique();
+    },
+    NAME_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "name",
+        direction: "ASC"
+      });
+    },
+    NAME_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "name",
+        direction: "DESC"
+      });
+    },
+    CREATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "ASC"
+      });
+    },
+    CREATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "DESC"
+      });
+    },
+    UPDATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "ASC"
+      });
+    },
+    UPDATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "DESC"
+      });
     },
     PROJECTS_COUNT_ASC($select) {
       const foreignTableAlias = $select.alias,
@@ -13286,6 +20169,196 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         direction: "DESC"
       });
     },
+    PROJECTS_DISTINCT_COUNT_NAME_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.name.codec) ?? spec_project.attributes.name.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_NAME_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.name.codec) ?? spec_project.attributes.name.codec,
+        direction: "DESC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.description.codec) ?? spec_project.attributes.description.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_project.attributes.description.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.description.codec) ?? spec_project.attributes.description.codec,
+        direction: "DESC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_PREFIX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("prefix")}`, spec_project.attributes.prefix.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.prefix.codec) ?? spec_project.attributes.prefix.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_PREFIX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("prefix")}`, spec_project.attributes.prefix.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.prefix.codec) ?? spec_project.attributes.prefix.codec,
+        direction: "DESC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_COLOR_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("color")}`, spec_project.attributes.color.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.color.codec) ?? spec_project.attributes.color.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_COLOR_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("color")}`, spec_project.attributes.color.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.color.codec) ?? spec_project.attributes.color.codec,
+        direction: "DESC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_LABELS_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("labels")}`, spec_project.attributes.labels.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.labels.codec) ?? spec_project.attributes.labels.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_LABELS_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("labels")}`, spec_project.attributes.labels.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.labels.codec) ?? spec_project.attributes.labels.codec,
+        direction: "DESC"
+      });
+    },
     PROJECTS_DISTINCT_COUNT_WORKSPACE_ID_ASC($select) {
       const foreignTableAlias = $select.alias,
         conditions = [],
@@ -13321,6 +20394,120 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $select.orderBy({
         fragment,
         codec: spec.pgTypeCodecModifier?.(spec_project.attributes.workspace_id.codec) ?? spec_project.attributes.workspace_id.codec,
+        direction: "DESC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_VIEW_MODE_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("view_mode")}`, spec_project.attributes.view_mode.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.view_mode.codec) ?? spec_project.attributes.view_mode.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_VIEW_MODE_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("view_mode")}`, spec_project.attributes.view_mode.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.view_mode.codec) ?? spec_project.attributes.view_mode.codec,
+        direction: "DESC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.created_at.codec) ?? spec_project.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_project.attributes.created_at.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.created_at.codec) ?? spec_project.attributes.created_at.codec,
+        direction: "DESC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.updated_at.codec) ?? spec_project.attributes.updated_at.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation5.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation5.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_project.attributes.updated_at.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.updated_at.codec) ?? spec_project.attributes.updated_at.codec,
         direction: "DESC"
       });
     },
@@ -13435,6 +20622,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         codec: spec.pgTypeCodecModifier?.(spec_workspaceUser.attributes.user_id.codec) ?? spec_workspaceUser.attributes.user_id.codec,
         direction: "DESC"
       });
+    },
+    WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
+      relation6.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation6.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_workspaceUser.attributes.created_at.codec)}
+from ${pgResource_workspace_userPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_workspaceUser.attributes.created_at.codec) ?? spec_workspaceUser.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
+      relation6.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation6.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_workspaceUser.attributes.created_at.codec)}
+from ${pgResource_workspace_userPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_workspaceUser.attributes.created_at.codec) ?? spec_workspaceUser.attributes.created_at.codec,
+        direction: "DESC"
+      });
     }
   },
   UserConnection: {
@@ -13444,6 +20669,19 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     },
     aggregates($connection) {
       return $connection.cloneSubplanWithoutPagination("aggregate").single();
+    },
+    groupedAggregates: {
+      plan($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate");
+      },
+      args: {
+        groupBy(_$parent, $pgSelect, input) {
+          return input.apply($pgSelect);
+        },
+        having(_$parent, $pgSelect, input) {
+          return input.apply($pgSelect, queryBuilder => queryBuilder.havingBuilder());
+        }
+      }
     }
   },
   UserEdge: {
@@ -13501,6 +20739,199 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
+  UserGroupBy: {
+    NAME($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("name")}`,
+        codec: TYPES.text
+      });
+    },
+    AVATAR_URL($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("avatar_url")}`,
+        codec: TYPES.text
+      });
+    },
+    CREATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
+        codec: TYPES.timestamptz
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+      });
+    },
+    UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+        codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+      });
+    }
+  },
+  UserHavingInput: {
+    AND($where) {
+      return $where;
+    },
+    OR($where) {
+      return new PgOrFilter($where);
+    },
+    sum($having) {
+      return $having;
+    },
+    distinctCount($having) {
+      return $having;
+    },
+    min($having) {
+      return $having;
+    },
+    max($having) {
+      return $having;
+    },
+    average($having) {
+      return $having;
+    },
+    stddevSample($having) {
+      return $having;
+    },
+    stddevPopulation($having) {
+      return $having;
+    },
+    varianceSample($having) {
+      return $having;
+    },
+    variancePopulation($having) {
+      return $having;
+    }
+  },
+  UserHavingSumInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  UserHavingDistinctCountInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  UserHavingMinInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec2.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  UserHavingMaxInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec3.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  UserHavingAverageInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec4.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  UserHavingStddevSampleInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec5.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  UserHavingStddevPopulationInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec6.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  UserHavingVarianceSampleInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec7.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
+  UserHavingVariancePopulationInput: {
+    createdAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+        aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_user.attributes.created_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    },
+    updatedAt($having) {
+      const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+        aggregateExpression = aggregateSpec8.sqlAggregateWrap(attributeExpression, spec_user.attributes.updated_at.codec);
+      return new PgBooleanFilter($having, aggregateExpression);
+    }
+  },
   UserCondition: {
     rowId($condition, val) {
       $condition.where({
@@ -13517,6 +20948,42 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "identity_provider_id",
         callback(expression) {
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
+    },
+    name($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "name",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
+    avatarUrl($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "avatar_url",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
+    },
+    createdAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "created_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+        }
+      });
+    },
+    updatedAt($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "updated_at",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
         }
       });
     }
@@ -13567,6 +21034,54 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         direction: "DESC"
       });
       queryBuilder.setOrderIsUnique();
+    },
+    NAME_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "name",
+        direction: "ASC"
+      });
+    },
+    NAME_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "name",
+        direction: "DESC"
+      });
+    },
+    AVATAR_URL_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "avatar_url",
+        direction: "ASC"
+      });
+    },
+    AVATAR_URL_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "avatar_url",
+        direction: "DESC"
+      });
+    },
+    CREATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "ASC"
+      });
+    },
+    CREATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "created_at",
+        direction: "DESC"
+      });
+    },
+    UPDATED_AT_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "ASC"
+      });
+    },
+    UPDATED_AT_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "updated_at",
+        direction: "DESC"
+      });
     },
     ASSIGNEES_COUNT_ASC($select) {
       const foreignTableAlias = $select.alias,
@@ -13718,6 +21233,120 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         direction: "DESC"
       });
     },
+    ASSIGNEES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation7.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation7.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_assignee.attributes.created_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.created_at.codec) ?? spec_assignee.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation7.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation7.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_assignee.attributes.created_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.created_at.codec) ?? spec_assignee.attributes.created_at.codec,
+        direction: "DESC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation7.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation7.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_assignee.attributes.updated_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.updated_at.codec) ?? spec_assignee.attributes.updated_at.codec,
+        direction: "ASC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation7.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation7.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_assignee.attributes.updated_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.updated_at.codec) ?? spec_assignee.attributes.updated_at.codec,
+        direction: "DESC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_DELETED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation7.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation7.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("deleted_at")}`, spec_assignee.attributes.deleted_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.deleted_at.codec) ?? spec_assignee.attributes.deleted_at.codec,
+        direction: "ASC"
+      });
+    },
+    ASSIGNEES_DISTINCT_COUNT_DELETED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_assigneePgResource.name));
+      relation7.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation7.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_assigneePgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("deleted_at")}`, spec_assignee.attributes.deleted_at.codec)}
+from ${pgResource_assigneePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_assignee.attributes.deleted_at.codec) ?? spec_assignee.attributes.deleted_at.codec,
+        direction: "DESC"
+      });
+    },
     AUTHORED_POSTS_COUNT_ASC($select) {
       const foreignTableAlias = $select.alias,
         conditions = [],
@@ -13789,6 +21418,82 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $select.orderBy({
         fragment,
         codec: spec.pgTypeCodecModifier?.(spec_post.attributes.id.codec) ?? spec_post.attributes.id.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_POSTS_DISTINCT_COUNT_TITLE_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation8.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation8.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.title.codec) ?? spec_post.attributes.title.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_POSTS_DISTINCT_COUNT_TITLE_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation8.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation8.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_post.attributes.title.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.title.codec) ?? spec_post.attributes.title.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_POSTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation8.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation8.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.description.codec) ?? spec_post.attributes.description.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_POSTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation8.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation8.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_post.attributes.description.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.description.codec) ?? spec_post.attributes.description.codec,
         direction: "DESC"
       });
     },
@@ -13868,12 +21573,846 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         direction: "DESC"
       });
     },
+    AUTHORED_POSTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation8.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation8.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.created_at.codec) ?? spec_post.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_POSTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation8.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation8.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_post.attributes.created_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.created_at.codec) ?? spec_post.attributes.created_at.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation8.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation8.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.updated_at.codec) ?? spec_post.attributes.updated_at.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_postPgResource.name));
+      relation8.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation8.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_postPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_post.attributes.updated_at.codec)}
+from ${pgResource_postPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_post.attributes.updated_at.codec) ?? spec_post.attributes.updated_at.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_COUNT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+      $select.orderBy({
+        fragment,
+        codec: TYPES.bigint,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_COUNT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`select count(*)
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+      $select.orderBy({
+        fragment,
+        codec: TYPES.bigint,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_SUM_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_SUM_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_task.attributes.id.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.id.codec) ?? spec_task.attributes.id.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_task.attributes.id.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.id.codec) ?? spec_task.attributes.id.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_CONTENT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("content")}`, spec_task.attributes.content.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.content.codec) ?? spec_task.attributes.content.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_CONTENT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("content")}`, spec_task.attributes.content.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.content.codec) ?? spec_task.attributes.content.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_task.attributes.description.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.description.codec) ?? spec_task.attributes.description.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_task.attributes.description.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.description.codec) ?? spec_task.attributes.description.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_PRIORITY_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("priority")}`, spec_task.attributes.priority.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.priority.codec) ?? spec_task.attributes.priority.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_PRIORITY_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("priority")}`, spec_task.attributes.priority.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.priority.codec) ?? spec_task.attributes.priority.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_AUTHOR_ID_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("author_id")}`, spec_task.attributes.author_id.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.author_id.codec) ?? spec_task.attributes.author_id.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_AUTHOR_ID_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("author_id")}`, spec_task.attributes.author_id.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.author_id.codec) ?? spec_task.attributes.author_id.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_ID_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_id")}`, spec_task.attributes.column_id.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.column_id.codec) ?? spec_task.attributes.column_id.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_ID_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_id")}`, spec_task.attributes.column_id.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.column_id.codec) ?? spec_task.attributes.column_id.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_LABELS_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("labels")}`, spec_task.attributes.labels.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.labels.codec) ?? spec_task.attributes.labels.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_LABELS_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("labels")}`, spec_task.attributes.labels.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.labels.codec) ?? spec_task.attributes.labels.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_DUE_DATE_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("due_date")}`, spec_task.attributes.due_date.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.due_date.codec) ?? spec_task.attributes.due_date.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_DUE_DATE_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("due_date")}`, spec_task.attributes.due_date.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.due_date.codec) ?? spec_task.attributes.due_date.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_task.attributes.created_at.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.created_at.codec) ?? spec_task.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_task.attributes.created_at.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.created_at.codec) ?? spec_task.attributes.created_at.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_task.attributes.updated_at.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.updated_at.codec) ?? spec_task.attributes.updated_at.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_task.attributes.updated_at.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.updated_at.codec) ?? spec_task.attributes.updated_at.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_MIN_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec2.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_MIN_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec2.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_MAX_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec3.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_MAX_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec3.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec4.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec4.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec5.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec5.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec6.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec6.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec7.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec7.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
+    AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec8.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "ASC"
+      });
+    },
+    AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_taskPgResource.name));
+      relation9.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation9.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_taskPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${aggregateSpec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)}
+from ${pgResource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: aggregateSpec8.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+        direction: "DESC"
+      });
+    },
     WORKSPACE_USERS_COUNT_ASC($select) {
       const foreignTableAlias = $select.alias,
         conditions = [],
         tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
-      relation9.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = relation9.remoteAttributes[i];
+      relation10.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
       if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
@@ -13890,8 +22429,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       const foreignTableAlias = $select.alias,
         conditions = [],
         tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
-      relation9.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = relation9.remoteAttributes[i];
+      relation10.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
       if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
@@ -13908,8 +22447,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
       const foreignTableAlias = $select.alias,
         conditions = [],
         tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
-      relation9.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = relation9.remoteAttributes[i];
+      relation10.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
       if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
@@ -13927,8 +22466,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const foreignTableAlias = $select.alias,
         conditions = [],
         tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
-      relation9.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = relation9.remoteAttributes[i];
+      relation10.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
       if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
@@ -13946,8 +22485,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const foreignTableAlias = $select.alias,
         conditions = [],
         tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
-      relation9.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = relation9.remoteAttributes[i];
+      relation10.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
       if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
@@ -13965,8 +22504,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const foreignTableAlias = $select.alias,
         conditions = [],
         tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
-      relation9.localAttributes.forEach((localAttribute, i) => {
-        const remoteAttribute = relation9.remoteAttributes[i];
+      relation10.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation10.remoteAttributes[i];
         conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
       });
       if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
@@ -13977,6 +22516,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $select.orderBy({
         fragment,
         codec: spec.pgTypeCodecModifier?.(spec_workspaceUser.attributes.user_id.codec) ?? spec_workspaceUser.attributes.user_id.codec,
+        direction: "DESC"
+      });
+    },
+    WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
+      relation10.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation10.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_workspaceUser.attributes.created_at.codec)}
+from ${pgResource_workspace_userPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_workspaceUser.attributes.created_at.codec) ?? spec_workspaceUser.attributes.created_at.codec,
+        direction: "ASC"
+      });
+    },
+    WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_workspace_userPgResource.name));
+      relation10.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation10.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_workspace_userPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_workspaceUser.attributes.created_at.codec)}
+from ${pgResource_workspace_userPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_workspaceUser.attributes.created_at.codec) ?? spec_workspaceUser.attributes.created_at.codec,
         direction: "DESC"
       });
     }

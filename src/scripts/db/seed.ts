@@ -146,6 +146,7 @@ const seedDatabase = async () => {
       },
       with: {
         assigneeTable: 3,
+        postTable: 4,
       },
     },
     userTable: {
