@@ -43,6 +43,13 @@
       "when": 1751472803263,
       "tag": "0005_safe_monster_badoon",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1751491653493,
+      "tag": "0006_sleepy_reaper",
+      "breakpoints": true
     }
   ]
 }

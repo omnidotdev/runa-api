@@ -32,6 +32,9 @@ const seedDatabase = async () => {
             "Done",
           ],
         }),
+        index: f.valuesFromArray({
+          values: [0, 1, 2, 3, 4],
+        }),
       },
       with: {
         taskTable: [
