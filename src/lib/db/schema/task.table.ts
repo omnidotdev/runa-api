@@ -12,6 +12,7 @@ import {
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { columnTable } from "./column.table";
+import { projectTable } from "./project.table";
 import { userTable } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -29,6 +30,9 @@ export const taskTable = pgTable(
     authorId: uuid()
       .notNull()
       .references(() => userTable.id, { onDelete: "cascade" }),
+    projectId: uuid()
+      .notNull()
+      .references(() => projectTable.id, { onDelete: "cascade" }),
     columnId: uuid()
       .notNull()
       .references(() => columnTable.id, { onDelete: "cascade" }),
@@ -42,7 +46,12 @@ export const taskTable = pgTable(
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), index().on(table.columnId)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    index().on(table.authorId),
+    index().on(table.projectId),
+    index().on(table.columnId),
+  ],
 );
 
 export type InsertTask = InferInsertModel<typeof taskTable>;
