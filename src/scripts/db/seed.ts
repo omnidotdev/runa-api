@@ -164,6 +164,7 @@ const seedDatabase = async () => {
     workspaceTable: {
       columns: {
         name: f.companyName(),
+        viewMode: f.valuesFromArray({ values: ["board", "list"] }),
       },
     },
   }));

@@ -1,4 +1,4 @@
-import { pgTable, text, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, text, uniqueIndex, varchar } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
@@ -12,6 +12,7 @@ export const workspaceTable = pgTable(
   {
     id: generateDefaultId(),
     name: text().notNull(),
+    viewMode: varchar({ length: 10 }).notNull().default("board"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
