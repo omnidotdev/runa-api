@@ -20,7 +20,7 @@ const graphilePreset: GraphileConfig.Preset = {
   schema: {
     retryOnInitFail: isProdEnv,
     sortExport: true,
-    pgForbidSetofFunctionsToReturnNull: false,
+    pgForbidSetofFunctionsToReturnNull: true,
     jsonScalarAsString: false,
     // See https://github.com/graphile-contrib/postgraphile-plugin-connection-filter?tab=readme-ov-file#handling-null-and-empty-objects
     connectionFilterAllowNullInput: true,

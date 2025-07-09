@@ -4275,12 +4275,12 @@ type User implements Node {
 """A connection to a list of \`Assignee\` values."""
 type AssigneeConnection {
   """A list of \`Assignee\` objects."""
-  nodes: [Assignee]!
+  nodes: [Assignee!]!
 
   """
   A list of edges which contains the \`Assignee\` and cursor to aid in pagination.
   """
-  edges: [AssigneeEdge]!
+  edges: [AssigneeEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
@@ -4653,12 +4653,12 @@ type Workspace implements Node {
 """A connection to a list of \`Project\` values."""
 type ProjectConnection {
   """A list of \`Project\` objects."""
-  nodes: [Project]!
+  nodes: [Project!]!
 
   """
   A list of edges which contains the \`Project\` and cursor to aid in pagination.
   """
-  edges: [ProjectEdge]!
+  edges: [ProjectEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
@@ -4689,7 +4689,7 @@ type ProjectEdge {
   cursor: Cursor
 
   """The \`Project\` at the end of the edge."""
-  node: Project
+  node: Project!
 }
 
 """A location in a connection that can be used for resuming pagination."""
@@ -6313,12 +6313,12 @@ enum ProjectOrderBy {
 """A connection to a list of \`WorkspaceUser\` values."""
 type WorkspaceUserConnection {
   """A list of \`WorkspaceUser\` objects."""
-  nodes: [WorkspaceUser]!
+  nodes: [WorkspaceUser!]!
 
   """
   A list of edges which contains the \`WorkspaceUser\` and cursor to aid in pagination.
   """
-  edges: [WorkspaceUserEdge]!
+  edges: [WorkspaceUserEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
@@ -6349,7 +6349,7 @@ type WorkspaceUserEdge {
   cursor: Cursor
 
   """The \`WorkspaceUser\` at the end of the edge."""
-  node: WorkspaceUser
+  node: WorkspaceUser!
 }
 
 type WorkspaceUserAggregates {
@@ -6463,12 +6463,12 @@ enum WorkspaceUserOrderBy {
 """A connection to a list of \`Column\` values."""
 type ColumnConnection {
   """A list of \`Column\` objects."""
-  nodes: [Column]!
+  nodes: [Column!]!
 
   """
   A list of edges which contains the \`Column\` and cursor to aid in pagination.
   """
-  edges: [ColumnEdge]!
+  edges: [ColumnEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
@@ -6499,7 +6499,7 @@ type ColumnEdge {
   cursor: Cursor
 
   """The \`Column\` at the end of the edge."""
-  node: Column
+  node: Column!
 }
 
 type ColumnAggregates {
@@ -6789,12 +6789,12 @@ enum ColumnOrderBy {
 """A connection to a list of \`Task\` values."""
 type TaskConnection {
   """A list of \`Task\` objects."""
-  nodes: [Task]!
+  nodes: [Task!]!
 
   """
   A list of edges which contains the \`Task\` and cursor to aid in pagination.
   """
-  edges: [TaskEdge]!
+  edges: [TaskEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
@@ -6825,7 +6825,7 @@ type TaskEdge {
   cursor: Cursor
 
   """The \`Task\` at the end of the edge."""
-  node: Task
+  node: Task!
 }
 
 type TaskAggregates {
@@ -7206,12 +7206,12 @@ enum AssigneeOrderBy {
 """A connection to a list of \`Post\` values."""
 type PostConnection {
   """A list of \`Post\` objects."""
-  nodes: [Post]!
+  nodes: [Post!]!
 
   """
   A list of edges which contains the \`Post\` and cursor to aid in pagination.
   """
-  edges: [PostEdge]!
+  edges: [PostEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
@@ -7262,7 +7262,7 @@ type PostEdge {
   cursor: Cursor
 
   """The \`Post\` at the end of the edge."""
-  node: Post
+  node: Post!
 }
 
 type PostAggregates {
@@ -7424,7 +7424,7 @@ type AssigneeEdge {
   cursor: Cursor
 
   """The \`Assignee\` at the end of the edge."""
-  node: Assignee
+  node: Assignee!
 }
 
 type AssigneeAggregates {
@@ -7543,12 +7543,12 @@ input AssigneeHavingVariancePopulationInput {
 """A connection to a list of \`User\` values."""
 type UserConnection {
   """A list of \`User\` objects."""
-  nodes: [User]!
+  nodes: [User!]!
 
   """
   A list of edges which contains the \`User\` and cursor to aid in pagination.
   """
-  edges: [UserEdge]!
+  edges: [UserEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
@@ -7579,7 +7579,7 @@ type UserEdge {
   cursor: Cursor
 
   """The \`User\` at the end of the edge."""
-  node: User
+  node: User!
 }
 
 type UserAggregates {
@@ -7808,12 +7808,12 @@ enum UserOrderBy {
 """A connection to a list of \`Workspace\` values."""
 type WorkspaceConnection {
   """A list of \`Workspace\` objects."""
-  nodes: [Workspace]!
+  nodes: [Workspace!]!
 
   """
   A list of edges which contains the \`Workspace\` and cursor to aid in pagination.
   """
-  edges: [WorkspaceEdge]!
+  edges: [WorkspaceEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
@@ -7844,7 +7844,7 @@ type WorkspaceEdge {
   cursor: Cursor
 
   """The \`Workspace\` at the end of the edge."""
-  node: Workspace
+  node: Workspace!
 }
 
 type WorkspaceAggregates {
