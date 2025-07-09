@@ -1,6 +1,5 @@
 import {
   index,
-  jsonb,
   pgEnum,
   pgTable,
   text,
@@ -31,7 +30,6 @@ export const projectTable = pgTable(
     description: text(),
     prefix: varchar({ length: 10 }),
     color: varchar({ length: 20 }),
-    labels: jsonb("labels").$type<string[]>(),
     workspaceId: uuid("workspace_id")
       .notNull()
       .references(() => workspaceTable.id),

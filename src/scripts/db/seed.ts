@@ -83,20 +83,6 @@ const seedDatabase = async () => {
           ],
         }),
         viewMode: f.valuesFromArray({ values: ["board", "list"] }),
-        labels: f.default({
-          defaultValue: [
-            { name: "Frontend", color: "orange" },
-            { name: "Design", color: "teal" },
-            { name: "Backend", color: "green" },
-            { name: "Database", color: "purple" },
-            { name: "DevOps", color: "blue" },
-            { name: "Testing", color: "red" },
-            { name: "Bug", color: "indigo" },
-            { name: "Urgent", color: "rose" },
-            { name: "Feature", color: "emerald" },
-            { name: "Refactor", color: "yellow" },
-          ],
-        }),
       },
       with: {
         columnTable: 5,
@@ -120,28 +106,6 @@ const seedDatabase = async () => {
         }),
         description: f.loremIpsum(),
         priority: f.valuesFromArray({ values: ["low", "medium", "high"] }),
-        labels: f.valuesFromArray({
-          values: [
-            JSON.stringify([
-              { name: "Frontend", color: "orange" },
-              { name: "Design", color: "teal" },
-            ]),
-            JSON.stringify([
-              { name: "Backend", color: "green" },
-              { name: "Database", color: "purple" },
-            ]),
-            JSON.stringify([{ name: "DevOps", color: "blue" }]),
-            JSON.stringify([
-              { name: "Testing", color: "red" },
-              { name: "Bug", color: "indigo" },
-            ]),
-            JSON.stringify([
-              { name: "Urgent", color: "rose" },
-              { name: "Feature", color: "emerald" },
-              { name: "Refactor", color: "yellow" },
-            ]),
-          ],
-        }),
         columnIndex: f.int({
           minValue: 0,
           maxValue: 100,

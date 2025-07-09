@@ -1,7 +1,6 @@
 import {
   index,
   integer,
-  jsonb,
   pgTable,
   text,
   timestamp,
@@ -37,7 +36,6 @@ export const taskTable = pgTable(
       .notNull()
       .references(() => columnTable.id, { onDelete: "cascade" }),
     columnIndex: integer().notNull().default(0),
-    labels: jsonb().$type<string[]>().default([]),
     dueDate: timestamp({
       precision: 6,
       mode: "string",
