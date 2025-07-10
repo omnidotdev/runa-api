@@ -112,7 +112,7 @@ const spec_workspaceUser = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -124,7 +124,7 @@ const spec_workspaceUser = {
   },
   description: undefined,
   extensions: {
-    oid: "141592",
+    oid: "248012",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -183,7 +183,7 @@ const spec_taskLabel = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -195,7 +195,7 @@ const spec_taskLabel = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -207,7 +207,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "141699",
+    oid: "248173",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -278,7 +278,7 @@ const spec_user = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -290,7 +290,7 @@ const spec_user = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -302,7 +302,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "141570",
+    oid: "247990",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -361,7 +361,7 @@ const spec_assignee = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -373,7 +373,7 @@ const spec_assignee = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -397,7 +397,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "141519",
+    oid: "247939",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -468,7 +468,7 @@ const spec_label = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -480,7 +480,7 @@ const spec_label = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -492,7 +492,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "141689",
+    oid: "248163",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -539,7 +539,7 @@ const spec_workspace = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -551,7 +551,7 @@ const spec_workspace = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -575,7 +575,7 @@ const spec_workspace = {
   },
   description: undefined,
   extensions: {
-    oid: "141582",
+    oid: "248002",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -658,7 +658,7 @@ const spec_post = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -670,7 +670,7 @@ const spec_post = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -682,7 +682,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "141537",
+    oid: "247957",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -741,7 +741,7 @@ const spec_column = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -753,7 +753,7 @@ const spec_column = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -777,7 +777,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "141527",
+    oid: "247947",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -884,7 +884,7 @@ const spec_task = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -896,7 +896,7 @@ const spec_task = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -932,7 +932,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "141558",
+    oid: "247978",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -953,7 +953,7 @@ const projectStatusCodec = enumCodec({
   values: ["planned", "in_progress", "completed"],
   description: undefined,
   extensions: {
-    oid: "141671",
+    oid: "248091",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1056,7 +1056,7 @@ const spec_project = {
     created_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -1068,7 +1068,7 @@ const spec_project = {
     updated_at: {
       description: undefined,
       codec: TYPES.timestamptz,
-      notNull: false,
+      notNull: true,
       hasDefault: true,
       extensions: {
         tags: {},
@@ -1092,7 +1092,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "141547",
+    oid: "247967",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4711,7 +4711,7 @@ type WorkspaceUser implements Node {
   id: ID!
   workspaceId: UUID!
   userId: UUID!
-  createdAt: Datetime
+  createdAt: Datetime!
 
   """Reads a single \`User\` that is related to this \`WorkspaceUser\`."""
   user: User
@@ -4743,8 +4743,8 @@ type User implements Node {
   identityProviderId: UUID!
   name: String!
   avatarUrl: String
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
 
   """Reads and enables pagination through a set of \`Assignee\`."""
   assignees(
@@ -4924,8 +4924,8 @@ type Assignee implements Node {
   rowId: UUID!
   userId: UUID!
   taskId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
   deletedAt: Datetime
 
   """Reads a single \`Task\` that is related to this \`Assignee\`."""
@@ -4947,8 +4947,8 @@ type Task implements Node {
   authorId: UUID!
   columnId: UUID!
   dueDate: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
   columnIndex: Int!
   projectId: UUID!
 
@@ -5072,8 +5072,8 @@ type Column implements Node {
   rowId: UUID!
   title: String!
   projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
   index: Int!
 
   """Reads a single \`Project\` that is related to this \`Column\`."""
@@ -5126,8 +5126,8 @@ type Project implements Node {
   color: String
   workspaceId: UUID!
   viewMode: String!
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
   status: ProjectStatus!
 
   """Reads a single \`Workspace\` that is related to this \`Project\`."""
@@ -5249,8 +5249,8 @@ type Workspace implements Node {
   id: ID!
   rowId: UUID!
   name: String!
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
   viewMode: String!
 
   """Reads and enables pagination through a set of \`Project\`."""
@@ -8009,8 +8009,8 @@ type Label implements Node {
   name: String!
   color: String!
   projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
 
   """Reads a single \`Project\` that is related to this \`Label\`."""
   project: Project
@@ -8091,8 +8091,8 @@ type TaskLabel implements Node {
   rowId: UUID!
   taskId: UUID!
   labelId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
 
   """Reads a single \`Label\` that is related to this \`TaskLabel\`."""
   label: Label
@@ -8497,8 +8497,8 @@ type Post implements Node {
   description: String
   authorId: UUID!
   taskId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
 
   """Reads a single \`User\` that is related to this \`Post\`."""
   author: User

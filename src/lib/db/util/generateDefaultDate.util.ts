@@ -8,6 +8,8 @@ const generateDefaultDate = () =>
     precision: 6,
     mode: "string",
     withTimezone: true,
-  }).defaultNow();
+  })
+    .notNull()
+    .defaultNow();
 
 export default generateDefaultDate;
