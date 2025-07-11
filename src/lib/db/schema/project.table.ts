@@ -1,6 +1,6 @@
 import {
   index,
-  jsonb,
+  pgEnum,
   pgTable,
   text,
   uniqueIndex,
@@ -13,6 +13,12 @@ import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
+export const status = pgEnum("project_status", [
+  "planned",
+  "in_progress",
+  "completed",
+]);
+
 /**
  * Project table.
  */
@@ -24,10 +30,10 @@ export const projectTable = pgTable(
     description: text(),
     prefix: varchar({ length: 10 }),
     color: varchar({ length: 20 }),
-    labels: jsonb("labels").$type<string[]>(),
     workspaceId: uuid("workspace_id")
       .notNull()
       .references(() => workspaceTable.id),
+    status: status().notNull().default("planned"),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),

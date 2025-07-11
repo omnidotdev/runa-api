@@ -1,4 +1,11 @@
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  integer,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { projectTable } from "./project.table";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
@@ -16,6 +23,7 @@ export const columnTable = pgTable(
     projectId: uuid()
       .notNull()
       .references(() => projectTable.id, { onDelete: "cascade" }),
+    index: integer().notNull().default(0),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

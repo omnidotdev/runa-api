@@ -8,6 +8,62 @@
       "when": 1750353377383,
       "tag": "0000_young_captain_america",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750879881755,
+      "tag": "0001_steep_smiling_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750881392010,
+      "tag": "0002_calm_sugar_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1751408638074,
+      "tag": "0003_luxuriant_tusk",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1751464290262,
+      "tag": "0004_curious_baron_zemo",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1751472803263,
+      "tag": "0005_safe_monster_badoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1751491653493,
+      "tag": "0006_sleepy_reaper",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1752097552515,
+      "tag": "0007_clammy_leo",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1752121190078,
+      "tag": "0008_calm_invisible_woman",
+      "breakpoints": true
     }
   ]
 }

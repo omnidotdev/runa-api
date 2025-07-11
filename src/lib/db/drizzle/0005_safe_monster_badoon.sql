@@ -1,0 +1,1 @@
+ALTER TABLE "workspace" ADD COLUMN "view_mode" varchar(10) DEFAULT 'board' NOT NULL;

@@ -49,10 +49,11 @@ const app = new Elysia({
         useAuth(),
         // disable GraphQL schema introspection in production to mitigate reverse engineering
         isProdEnv && useDisableIntrospection(),
-        useOpenTelemetry({
-          variables: true,
-          result: true,
-        }),
+        isProdEnv &&
+          useOpenTelemetry({
+            variables: true,
+            result: true,
+          }),
         // parser and validation caches recommended for Grafast (https://grafast.org/grafast/servers#envelop)
         useParserCache(),
         useValidationCache(),

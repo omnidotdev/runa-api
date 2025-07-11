@@ -1,0 +1,19 @@
+ALTER TABLE "assignee" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "assignee" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "column" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "column" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "label" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "label" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "post" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "post" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "project" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "project" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "task" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "task" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "task_label" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "task_label" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "user" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "user" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "workspace" ALTER COLUMN "created_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "workspace" ALTER COLUMN "updated_at" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "workspace_user" ALTER COLUMN "created_at" SET NOT NULL;

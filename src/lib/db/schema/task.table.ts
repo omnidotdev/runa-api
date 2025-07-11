@@ -1,6 +1,6 @@
 import {
   index,
-  jsonb,
+  integer,
   pgTable,
   text,
   timestamp,
@@ -35,7 +35,7 @@ export const taskTable = pgTable(
     columnId: uuid()
       .notNull()
       .references(() => columnTable.id, { onDelete: "cascade" }),
-    labels: jsonb().$type<string[]>().default([]),
+    columnIndex: integer().notNull().default(0),
     dueDate: timestamp({
       precision: 6,
       mode: "string",
@@ -46,8 +46,9 @@ export const taskTable = pgTable(
   },
   (table) => [
     uniqueIndex().on(table.id),
-    index().on(table.columnId),
+    index().on(table.authorId),
     index().on(table.projectId),
+    index().on(table.columnId),
   ],
 );
 
