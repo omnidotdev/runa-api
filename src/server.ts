@@ -37,7 +37,7 @@ const app = new Elysia({
   .use(
     cors({
       origin: CORS_ALLOWED_ORIGINS!.split(","),
-      methods: ["GET", "POST"],
+      methods: ["GET", "POST", "OPTIONS"],
     }),
   )
   .use(
