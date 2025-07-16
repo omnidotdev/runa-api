@@ -15,6 +15,8 @@ export const userTable = pgTable(
     identityProviderId: uuid().notNull().unique(),
     name: text().notNull(),
     avatarUrl: text(),
+    // TODO: make not nullable when auth is integrated
+    email: text().unique(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
