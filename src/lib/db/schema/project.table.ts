@@ -32,7 +32,7 @@ export const projectTable = pgTable(
     color: varchar({ length: 20 }),
     workspaceId: uuid("workspace_id")
       .notNull()
-      .references(() => workspaceTable.id),
+      .references(() => workspaceTable.id, { onDelete: "cascade" }),
     status: status().notNull().default("planned"),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     createdAt: generateDefaultDate(),
