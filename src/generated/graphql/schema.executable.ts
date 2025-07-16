@@ -575,7 +575,7 @@ const spec_user = {
     email: {
       description: undefined,
       codec: TYPES.text,
-      notNull: false,
+      notNull: true,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -5101,7 +5101,7 @@ type User implements Node {
   avatarUrl: String
   createdAt: Datetime!
   updatedAt: Datetime!
-  email: String
+  email: String!
 
   """Reads and enables pagination through a set of \`Assignee\`."""
   assignees(
@@ -10709,7 +10709,7 @@ input UserInput {
   avatarUrl: String
   createdAt: Datetime
   updatedAt: Datetime
-  email: String
+  email: String!
 }
 
 """The output of our create \`Workspace\` mutation."""
