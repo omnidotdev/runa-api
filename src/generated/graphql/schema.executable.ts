@@ -124,7 +124,7 @@ const spec_workspaceUser = {
   },
   description: undefined,
   extensions: {
-    oid: "248355",
+    oid: "248611",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -207,7 +207,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "248463",
+    oid: "248719",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -290,7 +290,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "248497",
+    oid: "248748",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -385,7 +385,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "248282",
+    oid: "248538",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "248453",
+    oid: "248709",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -587,7 +587,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "248333",
+    oid: "248589",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -601,89 +601,6 @@ const spec_user = {
   executor: executor
 };
 const userCodec = recordCodec(spec_user);
-const workspaceIdentifier = sql.identifier("public", "workspace");
-const spec_workspace = {
-  name: "workspace",
-  identifier: workspaceIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    view_mode: {
-      description: undefined,
-      codec: TYPES.varchar,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  description: undefined,
-  extensions: {
-    oid: "248345",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "workspace"
-    },
-    tags: {
-      __proto__: null
-    }
-  },
-  executor: executor
-};
-const workspaceCodec = recordCodec(spec_workspace);
 const postIdentifier = sql.identifier("public", "post");
 const spec_post = {
   name: "post",
@@ -777,7 +694,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "248300",
+    oid: "248556",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -791,6 +708,101 @@ const spec_post = {
   executor: executor
 };
 const postCodec = recordCodec(spec_post);
+const workspaceIdentifier = sql.identifier("public", "workspace");
+const spec_workspace = {
+  name: "workspace",
+  identifier: workspaceIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    view_mode: {
+      description: undefined,
+      codec: TYPES.varchar,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    slug: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  description: undefined,
+  extensions: {
+    oid: "248601",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "workspace"
+    },
+    tags: {
+      __proto__: null
+    }
+  },
+  executor: executor
+};
+const workspaceCodec = recordCodec(spec_workspace);
 const columnIdentifier = sql.identifier("public", "column");
 const spec_column = {
   name: "column",
@@ -872,7 +884,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "248290",
+    oid: "248546",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1027,7 +1039,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "248321",
+    oid: "248577",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1048,7 +1060,7 @@ const projectStatusCodec = enumCodec({
   values: ["planned", "in_progress", "completed"],
   description: undefined,
   extensions: {
-    oid: "248434",
+    oid: "248690",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1183,11 +1195,23 @@ const spec_project = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    slug: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   description: undefined,
   extensions: {
-    oid: "248310",
+    oid: "248566",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1444,42 +1468,6 @@ const registryConfig_pgResources_user_user = {
     canDelete: true
   }
 };
-const workspaceUniques = [{
-  isPrimary: true,
-  attributes: ["id"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null
-    }
-  }
-}];
-const registryConfig_pgResources_workspace_workspace = {
-  executor: executor,
-  name: "workspace",
-  identifier: "main.public.workspace",
-  from: workspaceIdentifier,
-  codec: workspaceCodec,
-  uniques: workspaceUniques,
-  isVirtual: false,
-  description: undefined,
-  extensions: {
-    description: undefined,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "workspace"
-    },
-    isInsertable: true,
-    isUpdatable: true,
-    isDeletable: true,
-    tags: {},
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  }
-};
 const postUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1505,6 +1493,51 @@ const registryConfig_pgResources_post_post = {
       serviceName: "main",
       schemaName: "public",
       name: "post"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
+const workspaceUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
+}, {
+  isPrimary: false,
+  attributes: ["slug"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
+}];
+const registryConfig_pgResources_workspace_workspace = {
+  executor: executor,
+  name: "workspace",
+  identifier: "main.public.workspace",
+  from: workspaceIdentifier,
+  codec: workspaceCodec,
+  uniques: workspaceUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "workspace"
     },
     isInsertable: true,
     isUpdatable: true,
@@ -1597,6 +1630,15 @@ const projectUniques = [{
       __proto__: null
     }
   }
+}, {
+  isPrimary: false,
+  attributes: ["slug", "workspace_id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
 }];
 const registryConfig_pgResources_project_project = {
   executor: executor,
@@ -1640,9 +1682,9 @@ const registryConfig = {
     assignee: assigneeCodec,
     label: labelCodec,
     user: userCodec,
+    post: postCodec,
     workspace: workspaceCodec,
     varchar: TYPES.varchar,
-    post: postCodec,
     column: columnCodec,
     int4: TYPES.int,
     task: taskCodec,
@@ -1657,8 +1699,8 @@ const registryConfig = {
     assignee: registryConfig_pgResources_assignee_assignee,
     label: registryConfig_pgResources_label_label,
     user: registryConfig_pgResources_user_user,
-    workspace: registryConfig_pgResources_workspace_workspace,
     post: registryConfig_pgResources_post_post,
+    workspace: registryConfig_pgResources_workspace_workspace,
     column: registryConfig_pgResources_column_column,
     task: registryConfig_pgResources_task_task,
     project: registryConfig_pgResources_project_project
@@ -2157,8 +2199,8 @@ const pgResource_invitationPgResource = registry.pgResources["invitation"];
 const pgResource_assigneePgResource = registry.pgResources["assignee"];
 const pgResource_labelPgResource = registry.pgResources["label"];
 const pgResource_userPgResource = registry.pgResources["user"];
-const pgResource_workspacePgResource = registry.pgResources["workspace"];
 const pgResource_postPgResource = registry.pgResources["post"];
+const pgResource_workspacePgResource = registry.pgResources["workspace"];
 const pgResource_columnPgResource = registry.pgResources["column"];
 const pgResource_taskPgResource = registry.pgResources["task"];
 const pgResource_projectPgResource = registry.pgResources["project"];
@@ -2298,28 +2340,6 @@ const nodeIdHandlerByTypeName = {
       return obj[0] === "User";
     }
   },
-  Workspace: {
-    typeName: "Workspace",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("Workspace", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    getIdentifiers(value) {
-      return value.slice(1);
-    },
-    get(spec) {
-      return pgResource_workspacePgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "Workspace";
-    }
-  },
   Post: {
     typeName: "Post",
     codec: nodeIdCodecs_base64JSON_base64JSON,
@@ -2340,6 +2360,28 @@ const nodeIdHandlerByTypeName = {
     },
     match(obj) {
       return obj[0] === "Post";
+    }
+  },
+  Workspace: {
+    typeName: "Workspace",
+    codec: nodeIdCodecs_base64JSON_base64JSON,
+    deprecationReason: undefined,
+    plan($record) {
+      return list([constant("Workspace", false), $record.get("id")]);
+    },
+    getSpec($list) {
+      return {
+        id: inhibitOnNull(access($list, [1]))
+      };
+    },
+    getIdentifiers(value) {
+      return value.slice(1);
+    },
+    get(spec) {
+      return pgResource_workspacePgResource.get(spec);
+    },
+    match(obj) {
+      return obj[0] === "Workspace";
     }
   },
   Column: {
@@ -2446,13 +2488,13 @@ const nodeFetcher_User = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.User));
   return nodeIdHandlerByTypeName.User.get(nodeIdHandlerByTypeName.User.getSpec($decoded));
 };
-const nodeFetcher_Workspace = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.Workspace));
-  return nodeIdHandlerByTypeName.Workspace.get(nodeIdHandlerByTypeName.Workspace.getSpec($decoded));
-};
 const nodeFetcher_Post = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.Post));
   return nodeIdHandlerByTypeName.Post.get(nodeIdHandlerByTypeName.Post.getSpec($decoded));
+};
+const nodeFetcher_Workspace = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.Workspace));
+  return nodeIdHandlerByTypeName.Workspace.get(nodeIdHandlerByTypeName.Workspace.getSpec($decoded));
 };
 const nodeFetcher_Column = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.Column));
@@ -2983,6 +3025,11 @@ const colSpec10 = {
   fieldName: "status",
   attributeName: "status",
   attribute: spec_project.attributes.status
+};
+const colSpec11 = {
+  fieldName: "slug",
+  attributeName: "slug",
+  attribute: spec_project.attributes.slug
 };
 function assertAllowed26(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -3564,32 +3611,32 @@ group by ())`;
     return this.parent.where(subquery);
   }
 };
-const colSpec11 = {
+const colSpec12 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_column.attributes.id
 };
-const colSpec12 = {
+const colSpec13 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_column.attributes.title
 };
-const colSpec13 = {
+const colSpec14 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_column.attributes.project_id
 };
-const colSpec14 = {
+const colSpec15 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_column.attributes.created_at
 };
-const colSpec15 = {
+const colSpec16 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_column.attributes.updated_at
 };
-const colSpec16 = {
+const colSpec17 = {
   fieldName: "index",
   attributeName: "index",
   attribute: spec_column.attributes.index
@@ -3688,57 +3735,57 @@ function assertAllowed33(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec17 = {
+const colSpec18 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_task.attributes.id
 };
-const colSpec18 = {
+const colSpec19 = {
   fieldName: "content",
   attributeName: "content",
   attribute: spec_task.attributes.content
 };
-const colSpec19 = {
+const colSpec20 = {
   fieldName: "description",
   attributeName: "description",
   attribute: spec_task.attributes.description
 };
-const colSpec20 = {
+const colSpec21 = {
   fieldName: "priority",
   attributeName: "priority",
   attribute: spec_task.attributes.priority
 };
-const colSpec21 = {
+const colSpec22 = {
   fieldName: "authorId",
   attributeName: "author_id",
   attribute: spec_task.attributes.author_id
 };
-const colSpec22 = {
+const colSpec23 = {
   fieldName: "columnId",
   attributeName: "column_id",
   attribute: spec_task.attributes.column_id
 };
-const colSpec23 = {
+const colSpec24 = {
   fieldName: "dueDate",
   attributeName: "due_date",
   attribute: spec_task.attributes.due_date
 };
-const colSpec24 = {
+const colSpec25 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_task.attributes.created_at
 };
-const colSpec25 = {
+const colSpec26 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_task.attributes.updated_at
 };
-const colSpec26 = {
+const colSpec27 = {
   fieldName: "columnIndex",
   attributeName: "column_index",
   attribute: spec_task.attributes.column_index
 };
-const colSpec27 = {
+const colSpec28 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_task.attributes.project_id
@@ -3787,32 +3834,32 @@ function assertAllowed37(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec28 = {
+const colSpec29 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_assignee.attributes.id
 };
-const colSpec29 = {
+const colSpec30 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_assignee.attributes.user_id
 };
-const colSpec30 = {
+const colSpec31 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_assignee.attributes.task_id
 };
-const colSpec31 = {
+const colSpec32 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_assignee.attributes.created_at
 };
-const colSpec32 = {
+const colSpec33 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_assignee.attributes.updated_at
 };
-const colSpec33 = {
+const colSpec34 = {
   fieldName: "deletedAt",
   attributeName: "deleted_at",
   attribute: spec_assignee.attributes.deleted_at
@@ -3839,37 +3886,37 @@ function assertAllowed39(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec34 = {
+const colSpec35 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_user.attributes.id
 };
-const colSpec35 = {
+const colSpec36 = {
   fieldName: "identityProviderId",
   attributeName: "identity_provider_id",
   attribute: spec_user.attributes.identity_provider_id
 };
-const colSpec36 = {
+const colSpec37 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_user.attributes.name
 };
-const colSpec37 = {
+const colSpec38 = {
   fieldName: "avatarUrl",
   attributeName: "avatar_url",
   attribute: spec_user.attributes.avatar_url
 };
-const colSpec38 = {
+const colSpec39 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_user.attributes.created_at
 };
-const colSpec39 = {
+const colSpec40 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_user.attributes.updated_at
 };
-const colSpec40 = {
+const colSpec41 = {
   fieldName: "email",
   attributeName: "email",
   attribute: spec_user.attributes.email
@@ -3968,37 +4015,37 @@ function assertAllowed43(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec41 = {
+const colSpec42 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_post.attributes.id
 };
-const colSpec42 = {
+const colSpec43 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_post.attributes.title
 };
-const colSpec43 = {
+const colSpec44 = {
   fieldName: "description",
   attributeName: "description",
   attribute: spec_post.attributes.description
 };
-const colSpec44 = {
+const colSpec45 = {
   fieldName: "authorId",
   attributeName: "author_id",
   attribute: spec_post.attributes.author_id
 };
-const colSpec45 = {
+const colSpec46 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_post.attributes.task_id
 };
-const colSpec46 = {
+const colSpec47 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_post.attributes.created_at
 };
-const colSpec47 = {
+const colSpec48 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_post.attributes.updated_at
@@ -4097,17 +4144,17 @@ function assertAllowed47(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec48 = {
+const colSpec49 = {
   fieldName: "workspaceId",
   attributeName: "workspace_id",
   attribute: spec_workspaceUser.attributes.workspace_id
 };
-const colSpec49 = {
+const colSpec50 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_workspaceUser.attributes.user_id
 };
-const colSpec50 = {
+const colSpec51 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_workspaceUser.attributes.created_at
@@ -4134,30 +4181,35 @@ function assertAllowed49(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec51 = {
+const colSpec52 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_workspace.attributes.id
 };
-const colSpec52 = {
+const colSpec53 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_workspace.attributes.name
 };
-const colSpec53 = {
+const colSpec54 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_workspace.attributes.created_at
 };
-const colSpec54 = {
+const colSpec55 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_workspace.attributes.updated_at
 };
-const colSpec55 = {
+const colSpec56 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_workspace.attributes.view_mode
+};
+const colSpec57 = {
+  fieldName: "slug",
+  attributeName: "slug",
+  attribute: spec_workspace.attributes.slug
 };
 function assertAllowed50(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
@@ -4214,27 +4266,27 @@ function assertAllowed54(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec56 = {
+const colSpec58 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_invitation.attributes.id
 };
-const colSpec57 = {
+const colSpec59 = {
   fieldName: "workspaceId",
   attributeName: "workspace_id",
   attribute: spec_invitation.attributes.workspace_id
 };
-const colSpec58 = {
+const colSpec60 = {
   fieldName: "email",
   attributeName: "email",
   attribute: spec_invitation.attributes.email
 };
-const colSpec59 = {
+const colSpec61 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_invitation.attributes.created_at
 };
-const colSpec60 = {
+const colSpec62 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_invitation.attributes.updated_at
@@ -4283,27 +4335,27 @@ function assertAllowed58(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec61 = {
+const colSpec63 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_taskLabel.attributes.id
 };
-const colSpec62 = {
+const colSpec64 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_taskLabel.attributes.task_id
 };
-const colSpec63 = {
+const colSpec65 = {
   fieldName: "labelId",
   attributeName: "label_id",
   attribute: spec_taskLabel.attributes.label_id
 };
-const colSpec64 = {
+const colSpec66 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_taskLabel.attributes.created_at
 };
-const colSpec65 = {
+const colSpec67 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_taskLabel.attributes.updated_at
@@ -4330,32 +4382,32 @@ function assertAllowed60(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec66 = {
+const colSpec68 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_label.attributes.id
 };
-const colSpec67 = {
+const colSpec69 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_label.attributes.name
 };
-const colSpec68 = {
+const colSpec70 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_label.attributes.color
 };
-const colSpec69 = {
+const colSpec71 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_label.attributes.project_id
 };
-const colSpec70 = {
+const colSpec72 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_label.attributes.created_at
 };
-const colSpec71 = {
+const colSpec73 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_label.attributes.updated_at
@@ -4482,13 +4534,13 @@ const specFromArgs_User = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.User, $nodeId);
 };
-const specFromArgs_Workspace = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Workspace, $nodeId);
-};
 const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.Post, $nodeId);
+};
+const specFromArgs_Workspace = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandlerByTypeName.Workspace, $nodeId);
 };
 const specFromArgs_Column = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -4526,13 +4578,13 @@ const specFromArgs_User2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.User, $nodeId);
 };
-const specFromArgs_Workspace2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Workspace, $nodeId);
-};
 const specFromArgs_Post2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.Post, $nodeId);
+};
+const specFromArgs_Workspace2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandlerByTypeName.Workspace, $nodeId);
 };
 const specFromArgs_Column2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -4592,11 +4644,14 @@ type Query implements Node {
   """Get a single \`User\`."""
   userByIdentityProviderId(identityProviderId: UUID!): User
 
+  """Get a single \`Post\`."""
+  post(rowId: UUID!): Post
+
   """Get a single \`Workspace\`."""
   workspace(rowId: UUID!): Workspace
 
-  """Get a single \`Post\`."""
-  post(rowId: UUID!): Post
+  """Get a single \`Workspace\`."""
+  workspaceBySlug(slug: String!): Workspace
 
   """Get a single \`Column\`."""
   column(rowId: UUID!): Column
@@ -4606,6 +4661,9 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
+
+  """Get a single \`Project\`."""
+  projectBySlugAndWorkspaceId(slug: String!, workspaceId: UUID!): Project
 
   """Reads a single \`WorkspaceUser\` using its globally unique \`ID\`."""
   workspaceUserById(
@@ -4647,17 +4705,17 @@ type Query implements Node {
     id: ID!
   ): User
 
-  """Reads a single \`Workspace\` using its globally unique \`ID\`."""
-  workspaceById(
-    """The globally unique \`ID\` to be used in selecting a single \`Workspace\`."""
-    id: ID!
-  ): Workspace
-
   """Reads a single \`Post\` using its globally unique \`ID\`."""
   postById(
     """The globally unique \`ID\` to be used in selecting a single \`Post\`."""
     id: ID!
   ): Post
+
+  """Reads a single \`Workspace\` using its globally unique \`ID\`."""
+  workspaceById(
+    """The globally unique \`ID\` to be used in selecting a single \`Workspace\`."""
+    id: ID!
+  ): Workspace
 
   """Reads a single \`Column\` using its globally unique \`ID\`."""
   columnById(
@@ -4881,40 +4939,6 @@ type Query implements Node {
     orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserConnection
 
-  """Reads and enables pagination through a set of \`Workspace\`."""
-  workspaces(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: WorkspaceCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: WorkspaceFilter
-
-    """The method to use when ordering \`Workspace\`."""
-    orderBy: [WorkspaceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): WorkspaceConnection
-
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
     """Only read the first \`n\` values of the set."""
@@ -4948,6 +4972,40 @@ type Query implements Node {
     """The method to use when ordering \`Post\`."""
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection
+
+  """Reads and enables pagination through a set of \`Workspace\`."""
+  workspaces(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: WorkspaceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: WorkspaceFilter
+
+    """The method to use when ordering \`Workspace\`."""
+    orderBy: [WorkspaceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): WorkspaceConnection
 
   """Reads and enables pagination through a set of \`Column\`."""
   columns(
@@ -5486,6 +5544,7 @@ type Project implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   status: ProjectStatus!
+  slug: String!
 
   """Reads a single \`Workspace\` that is related to this \`Project\`."""
   workspace: Workspace
@@ -5609,6 +5668,7 @@ type Workspace implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   viewMode: String!
+  slug: String!
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -5812,6 +5872,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of status across the matching connection"""
   status: BigInt
+
+  """Distinct count of slug across the matching connection"""
+  slug: BigInt
 }
 
 """
@@ -5836,6 +5899,7 @@ enum ProjectGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   STATUS
+  SLUG
 }
 
 """Conditions for \`Project\` aggregates."""
@@ -5940,6 +6004,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s \`status\` field."""
   status: ProjectStatus
+
+  """Checks for equality with the object’s \`slug\` field."""
+  slug: String
 }
 
 """
@@ -5975,6 +6042,9 @@ input ProjectFilter {
 
   """Filter by the object’s \`status\` field."""
   status: ProjectStatusFilter
+
+  """Filter by the object’s \`slug\` field."""
+  slug: StringFilter
 
   """Filter by the object’s \`columns\` relation."""
   columns: ProjectToManyColumnFilter
@@ -6980,6 +7050,9 @@ input WorkspaceFilter {
   """Filter by the object’s \`viewMode\` field."""
   viewMode: StringFilter
 
+  """Filter by the object’s \`slug\` field."""
+  slug: StringFilter
+
   """Filter by the object’s \`projects\` relation."""
   projects: WorkspaceToManyProjectFilter
 
@@ -7053,6 +7126,7 @@ input ProjectDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   status: BigIntFilter
+  slug: BigIntFilter
 }
 
 """
@@ -7504,6 +7578,8 @@ enum ProjectOrderBy {
   UPDATED_AT_DESC
   STATUS_ASC
   STATUS_DESC
+  SLUG_ASC
+  SLUG_DESC
   COLUMNS_COUNT_ASC
   COLUMNS_COUNT_DESC
   COLUMNS_SUM_INDEX_ASC
@@ -9795,6 +9871,9 @@ type WorkspaceDistinctCountAggregates {
 
   """Distinct count of viewMode across the matching connection"""
   viewMode: BigInt
+
+  """Distinct count of slug across the matching connection"""
+  slug: BigInt
 }
 
 """Grouping methods for \`Workspace\` for usage during aggregation."""
@@ -9888,6 +9967,9 @@ input WorkspaceCondition {
 
   """Checks for equality with the object’s \`viewMode\` field."""
   viewMode: String
+
+  """Checks for equality with the object’s \`slug\` field."""
+  slug: String
 }
 
 """Methods to use when ordering \`Workspace\`."""
@@ -9905,6 +9987,8 @@ enum WorkspaceOrderBy {
   UPDATED_AT_DESC
   VIEW_MODE_ASC
   VIEW_MODE_DESC
+  SLUG_ASC
+  SLUG_DESC
   PROJECTS_COUNT_ASC
   PROJECTS_COUNT_DESC
   PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
@@ -9927,6 +10011,8 @@ enum WorkspaceOrderBy {
   PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
   PROJECTS_DISTINCT_COUNT_STATUS_ASC
   PROJECTS_DISTINCT_COUNT_STATUS_DESC
+  PROJECTS_DISTINCT_COUNT_SLUG_ASC
+  PROJECTS_DISTINCT_COUNT_SLUG_DESC
   WORKSPACE_USERS_COUNT_ASC
   WORKSPACE_USERS_COUNT_DESC
   WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_ASC
@@ -10001,14 +10087,6 @@ type Mutation {
     input: CreateUserInput!
   ): CreateUserPayload
 
-  """Creates a single \`Workspace\`."""
-  createWorkspace(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateWorkspaceInput!
-  ): CreateWorkspacePayload
-
   """Creates a single \`Post\`."""
   createPost(
     """
@@ -10016,6 +10094,14 @@ type Mutation {
     """
     input: CreatePostInput!
   ): CreatePostPayload
+
+  """Creates a single \`Workspace\`."""
+  createWorkspace(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateWorkspaceInput!
+  ): CreateWorkspacePayload
 
   """Creates a single \`Column\`."""
   createColumn(
@@ -10165,6 +10251,22 @@ type Mutation {
     input: UpdateUserByIdentityProviderIdInput!
   ): UpdateUserPayload
 
+  """Updates a single \`Post\` using its globally unique id and a patch."""
+  updatePostById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostByIdInput!
+  ): UpdatePostPayload
+
+  """Updates a single \`Post\` using a unique key and a patch."""
+  updatePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostInput!
+  ): UpdatePostPayload
+
   """Updates a single \`Workspace\` using its globally unique id and a patch."""
   updateWorkspaceById(
     """
@@ -10181,21 +10283,13 @@ type Mutation {
     input: UpdateWorkspaceInput!
   ): UpdateWorkspacePayload
 
-  """Updates a single \`Post\` using its globally unique id and a patch."""
-  updatePostById(
+  """Updates a single \`Workspace\` using a unique key and a patch."""
+  updateWorkspaceBySlug(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdatePostByIdInput!
-  ): UpdatePostPayload
-
-  """Updates a single \`Post\` using a unique key and a patch."""
-  updatePost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostInput!
-  ): UpdatePostPayload
+    input: UpdateWorkspaceBySlugInput!
+  ): UpdateWorkspacePayload
 
   """Updates a single \`Column\` using its globally unique id and a patch."""
   updateColumnById(
@@ -10243,6 +10337,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateProjectInput!
+  ): UpdateProjectPayload
+
+  """Updates a single \`Project\` using a unique key and a patch."""
+  updateProjectBySlugAndWorkspaceId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectBySlugAndWorkspaceIdInput!
   ): UpdateProjectPayload
 
   """Deletes a single \`WorkspaceUser\` using its globally unique id."""
@@ -10365,6 +10467,22 @@ type Mutation {
     input: DeleteUserByIdentityProviderIdInput!
   ): DeleteUserPayload
 
+  """Deletes a single \`Post\` using its globally unique id."""
+  deletePostById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostByIdInput!
+  ): DeletePostPayload
+
+  """Deletes a single \`Post\` using a unique key."""
+  deletePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostInput!
+  ): DeletePostPayload
+
   """Deletes a single \`Workspace\` using its globally unique id."""
   deleteWorkspaceById(
     """
@@ -10381,21 +10499,13 @@ type Mutation {
     input: DeleteWorkspaceInput!
   ): DeleteWorkspacePayload
 
-  """Deletes a single \`Post\` using its globally unique id."""
-  deletePostById(
+  """Deletes a single \`Workspace\` using a unique key."""
+  deleteWorkspaceBySlug(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeletePostByIdInput!
-  ): DeletePostPayload
-
-  """Deletes a single \`Post\` using a unique key."""
-  deletePost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostInput!
-  ): DeletePostPayload
+    input: DeleteWorkspaceBySlugInput!
+  ): DeleteWorkspacePayload
 
   """Deletes a single \`Column\` using its globally unique id."""
   deleteColumnById(
@@ -10443,6 +10553,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteProjectInput!
+  ): DeleteProjectPayload
+
+  """Deletes a single \`Project\` using a unique key."""
+  deleteProjectBySlugAndWorkspaceId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectBySlugAndWorkspaceIdInput!
   ): DeleteProjectPayload
 }
 
@@ -10712,50 +10830,6 @@ input UserInput {
   email: String!
 }
 
-"""The output of our create \`Workspace\` mutation."""
-type CreateWorkspacePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Workspace\` that was created by this mutation."""
-  workspace: Workspace
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Workspace\`. May be used by Relay 1."""
-  workspaceEdge(
-    """The method to use when ordering \`Workspace\`."""
-    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WorkspaceEdge
-}
-
-"""All input for the create \`Workspace\` mutation."""
-input CreateWorkspaceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Workspace\` to be created by this mutation."""
-  workspace: WorkspaceInput!
-}
-
-"""An input for mutations affecting \`Workspace\`"""
-input WorkspaceInput {
-  rowId: UUID
-  name: String!
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-}
-
 """The output of our create \`Post\` mutation."""
 type CreatePostPayload {
   """
@@ -10800,6 +10874,51 @@ input PostInput {
   taskId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`Workspace\` mutation."""
+type CreateWorkspacePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Workspace\` that was created by this mutation."""
+  workspace: Workspace
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Workspace\`. May be used by Relay 1."""
+  workspaceEdge(
+    """The method to use when ordering \`Workspace\`."""
+    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): WorkspaceEdge
+}
+
+"""All input for the create \`Workspace\` mutation."""
+input CreateWorkspaceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Workspace\` to be created by this mutation."""
+  workspace: WorkspaceInput!
+}
+
+"""An input for mutations affecting \`Workspace\`"""
+input WorkspaceInput {
+  rowId: UUID
+  name: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+  slug: String!
 }
 
 """The output of our create \`Column\` mutation."""
@@ -10944,6 +11063,7 @@ input ProjectInput {
   createdAt: Datetime
   updatedAt: Datetime
   status: ProjectStatus
+  slug: String!
 }
 
 """The output of our update \`WorkspaceUser\` mutation."""
@@ -11401,74 +11521,6 @@ input UpdateUserByIdentityProviderIdInput {
   patch: UserPatch!
 }
 
-"""The output of our update \`Workspace\` mutation."""
-type UpdateWorkspacePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Workspace\` that was updated by this mutation."""
-  workspace: Workspace
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Workspace\`. May be used by Relay 1."""
-  workspaceEdge(
-    """The method to use when ordering \`Workspace\`."""
-    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WorkspaceEdge
-}
-
-"""All input for the \`updateWorkspaceById\` mutation."""
-input UpdateWorkspaceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Workspace\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Workspace\` being updated.
-  """
-  patch: WorkspacePatch!
-}
-
-"""
-Represents an update to a \`Workspace\`. Fields that are set will be updated.
-"""
-input WorkspacePatch {
-  rowId: UUID
-  name: String
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-}
-
-"""All input for the \`updateWorkspace\` mutation."""
-input UpdateWorkspaceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Workspace\` being updated.
-  """
-  patch: WorkspacePatch!
-}
-
 """The output of our update \`Post\` mutation."""
 type UpdatePostPayload {
   """
@@ -11535,6 +11587,90 @@ input UpdatePostInput {
   An object where the defined keys will be set on the \`Post\` being updated.
   """
   patch: PostPatch!
+}
+
+"""The output of our update \`Workspace\` mutation."""
+type UpdateWorkspacePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Workspace\` that was updated by this mutation."""
+  workspace: Workspace
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Workspace\`. May be used by Relay 1."""
+  workspaceEdge(
+    """The method to use when ordering \`Workspace\`."""
+    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): WorkspaceEdge
+}
+
+"""All input for the \`updateWorkspaceById\` mutation."""
+input UpdateWorkspaceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Workspace\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Workspace\` being updated.
+  """
+  patch: WorkspacePatch!
+}
+
+"""
+Represents an update to a \`Workspace\`. Fields that are set will be updated.
+"""
+input WorkspacePatch {
+  rowId: UUID
+  name: String
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+  slug: String
+}
+
+"""All input for the \`updateWorkspace\` mutation."""
+input UpdateWorkspaceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Workspace\` being updated.
+  """
+  patch: WorkspacePatch!
+}
+
+"""All input for the \`updateWorkspaceBySlug\` mutation."""
+input UpdateWorkspaceBySlugInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  slug: String!
+
+  """
+  An object where the defined keys will be set on the \`Workspace\` being updated.
+  """
+  patch: WorkspacePatch!
 }
 
 """The output of our update \`Column\` mutation."""
@@ -11734,6 +11870,7 @@ input ProjectPatch {
   createdAt: Datetime
   updatedAt: Datetime
   status: ProjectStatus
+  slug: String
 }
 
 """All input for the \`updateProject\` mutation."""
@@ -11744,6 +11881,22 @@ input UpdateProjectInput {
   """
   clientMutationId: String
   rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Project\` being updated.
+  """
+  patch: ProjectPatch!
+}
+
+"""All input for the \`updateProjectBySlugAndWorkspaceId\` mutation."""
+input UpdateProjectBySlugAndWorkspaceIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  slug: String!
+  workspaceId: UUID!
 
   """
   An object where the defined keys will be set on the \`Project\` being updated.
@@ -12071,6 +12224,54 @@ input DeleteUserByIdentityProviderIdInput {
   identityProviderId: UUID!
 }
 
+"""The output of our delete \`Post\` mutation."""
+type DeletePostPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Post\` that was deleted by this mutation."""
+  post: Post
+  deletedPostId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Post\`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering \`Post\`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the \`deletePostById\` mutation."""
+input DeletePostByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Post\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deletePost\` mutation."""
+input DeletePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`Workspace\` mutation."""
 type DeleteWorkspacePayload {
   """
@@ -12119,52 +12320,14 @@ input DeleteWorkspaceInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Post\` mutation."""
-type DeletePostPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Post\` that was deleted by this mutation."""
-  post: Post
-  deletedPostId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Post\`. May be used by Relay 1."""
-  postEdge(
-    """The method to use when ordering \`Post\`."""
-    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostEdge
-}
-
-"""All input for the \`deletePostById\` mutation."""
-input DeletePostByIdInput {
+"""All input for the \`deleteWorkspaceBySlug\` mutation."""
+input DeleteWorkspaceBySlugInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Post\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deletePost\` mutation."""
-input DeletePostInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
+  slug: String!
 }
 
 """The output of our delete \`Column\` mutation."""
@@ -12309,6 +12472,17 @@ input DeleteProjectInput {
   """
   clientMutationId: String
   rowId: UUID!
+}
+
+"""All input for the \`deleteProjectBySlugAndWorkspaceId\` mutation."""
+input DeleteProjectBySlugAndWorkspaceIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  slug: String!
+  workspaceId: UUID!
 }`;
 export const plans = {
   Query: {
@@ -12392,6 +12566,13 @@ export const plans = {
         identity_provider_id: $identityProviderId
       });
     },
+    post(_$root, {
+      $rowId
+    }) {
+      return pgResource_postPgResource.get({
+        id: $rowId
+      });
+    },
     workspace(_$root, {
       $rowId
     }) {
@@ -12399,11 +12580,11 @@ export const plans = {
         id: $rowId
       });
     },
-    post(_$root, {
-      $rowId
+    workspaceBySlug(_$root, {
+      $slug
     }) {
-      return pgResource_postPgResource.get({
-        id: $rowId
+      return pgResource_workspacePgResource.get({
+        slug: $slug
       });
     },
     column(_$root, {
@@ -12425,6 +12606,15 @@ export const plans = {
     }) {
       return pgResource_projectPgResource.get({
         id: $rowId
+      });
+    },
+    projectBySlugAndWorkspaceId(_$root, {
+      $slug,
+      $workspaceId
+    }) {
+      return pgResource_projectPgResource.get({
+        slug: $slug,
+        workspace_id: $workspaceId
       });
     },
     workspaceUserById(_$parent, args) {
@@ -12451,13 +12641,13 @@ export const plans = {
       const $nodeId = args.getRaw("id");
       return nodeFetcher_User($nodeId);
     },
-    workspaceById(_$parent, args) {
-      const $nodeId = args.getRaw("id");
-      return nodeFetcher_Workspace($nodeId);
-    },
     postById(_$parent, args) {
       const $nodeId = args.getRaw("id");
       return nodeFetcher_Post($nodeId);
+    },
+    workspaceById(_$parent, args) {
+      const $nodeId = args.getRaw("id");
+      return nodeFetcher_Workspace($nodeId);
     },
     columnById(_$parent, args) {
       const $nodeId = args.getRaw("id");
@@ -12705,9 +12895,9 @@ export const plans = {
         }
       }
     },
-    workspaces: {
+    posts: {
       plan() {
-        return connection(pgResource_workspacePgResource.find());
+        return connection(pgResource_postPgResource.find());
       },
       args: {
         first(_, $connection, arg) {
@@ -12744,9 +12934,9 @@ export const plans = {
         }
       }
     },
-    posts: {
+    workspaces: {
       plan() {
-        return connection(pgResource_postPgResource.find());
+        return connection(pgResource_workspacePgResource.find());
       },
       args: {
         first(_, $connection, arg) {
@@ -13846,6 +14036,11 @@ export const plans = {
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("status")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, projectStatusCodec);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    slug($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("slug")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
   BigInt: {
@@ -13933,6 +14128,12 @@ export const plans = {
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("status")}`,
         codec: projectStatusCodec
+      });
+    },
+    SLUG($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("slug")}`,
+        codec: TYPES.text
       });
     }
   },
@@ -14195,6 +14396,15 @@ export const plans = {
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, projectStatusCodec)}`;
         }
       });
+    },
+    slug($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "slug",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
     }
   },
   ProjectFilter: {
@@ -14276,6 +14486,14 @@ export const plans = {
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
       condition.extensions.pgFilterAttribute = colSpec10;
+      return condition;
+    },
+    slug(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec11;
       return condition;
     },
     columns($where, value) {
@@ -16156,7 +16374,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec11;
+      condition.extensions.pgFilterAttribute = colSpec12;
       return condition;
     },
     title(queryBuilder, value) {
@@ -16164,7 +16382,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec12;
+      condition.extensions.pgFilterAttribute = colSpec13;
       return condition;
     },
     projectId(queryBuilder, value) {
@@ -16172,7 +16390,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec13;
+      condition.extensions.pgFilterAttribute = colSpec14;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -16180,7 +16398,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec14;
+      condition.extensions.pgFilterAttribute = colSpec15;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -16188,7 +16406,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec15;
+      condition.extensions.pgFilterAttribute = colSpec16;
       return condition;
     },
     index(queryBuilder, value) {
@@ -16196,7 +16414,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec16;
+      condition.extensions.pgFilterAttribute = colSpec17;
       return condition;
     },
     tasks($where, value) {
@@ -16607,7 +16825,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec17;
+      condition.extensions.pgFilterAttribute = colSpec18;
       return condition;
     },
     content(queryBuilder, value) {
@@ -16615,7 +16833,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec18;
+      condition.extensions.pgFilterAttribute = colSpec19;
       return condition;
     },
     description(queryBuilder, value) {
@@ -16623,7 +16841,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec19;
+      condition.extensions.pgFilterAttribute = colSpec20;
       return condition;
     },
     priority(queryBuilder, value) {
@@ -16631,7 +16849,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec20;
+      condition.extensions.pgFilterAttribute = colSpec21;
       return condition;
     },
     authorId(queryBuilder, value) {
@@ -16639,7 +16857,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec21;
+      condition.extensions.pgFilterAttribute = colSpec22;
       return condition;
     },
     columnId(queryBuilder, value) {
@@ -16647,7 +16865,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec22;
+      condition.extensions.pgFilterAttribute = colSpec23;
       return condition;
     },
     dueDate(queryBuilder, value) {
@@ -16655,7 +16873,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec23;
+      condition.extensions.pgFilterAttribute = colSpec24;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -16663,7 +16881,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec24;
+      condition.extensions.pgFilterAttribute = colSpec25;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -16671,7 +16889,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec25;
+      condition.extensions.pgFilterAttribute = colSpec26;
       return condition;
     },
     columnIndex(queryBuilder, value) {
@@ -16679,7 +16897,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec26;
+      condition.extensions.pgFilterAttribute = colSpec27;
       return condition;
     },
     projectId(queryBuilder, value) {
@@ -16687,7 +16905,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec27;
+      condition.extensions.pgFilterAttribute = colSpec28;
       return condition;
     },
     assignees($where, value) {
@@ -16906,7 +17124,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec28;
+      condition.extensions.pgFilterAttribute = colSpec29;
       return condition;
     },
     userId(queryBuilder, value) {
@@ -16914,7 +17132,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec29;
+      condition.extensions.pgFilterAttribute = colSpec30;
       return condition;
     },
     taskId(queryBuilder, value) {
@@ -16922,7 +17140,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec30;
+      condition.extensions.pgFilterAttribute = colSpec31;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -16930,7 +17148,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec31;
+      condition.extensions.pgFilterAttribute = colSpec32;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -16938,7 +17156,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec32;
+      condition.extensions.pgFilterAttribute = colSpec33;
       return condition;
     },
     deletedAt(queryBuilder, value) {
@@ -16946,7 +17164,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec33;
+      condition.extensions.pgFilterAttribute = colSpec34;
       return condition;
     },
     task($where, value) {
@@ -16998,7 +17216,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec34;
+      condition.extensions.pgFilterAttribute = colSpec35;
       return condition;
     },
     identityProviderId(queryBuilder, value) {
@@ -17006,7 +17224,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec35;
+      condition.extensions.pgFilterAttribute = colSpec36;
       return condition;
     },
     name(queryBuilder, value) {
@@ -17014,7 +17232,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec36;
+      condition.extensions.pgFilterAttribute = colSpec37;
       return condition;
     },
     avatarUrl(queryBuilder, value) {
@@ -17022,7 +17240,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec37;
+      condition.extensions.pgFilterAttribute = colSpec38;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -17030,7 +17248,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec38;
+      condition.extensions.pgFilterAttribute = colSpec39;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -17038,7 +17256,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec39;
+      condition.extensions.pgFilterAttribute = colSpec40;
       return condition;
     },
     email(queryBuilder, value) {
@@ -17046,7 +17264,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec40;
+      condition.extensions.pgFilterAttribute = colSpec41;
       return condition;
     },
     assignees($where, value) {
@@ -17664,7 +17882,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec41;
+      condition.extensions.pgFilterAttribute = colSpec42;
       return condition;
     },
     title(queryBuilder, value) {
@@ -17672,7 +17890,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec42;
+      condition.extensions.pgFilterAttribute = colSpec43;
       return condition;
     },
     description(queryBuilder, value) {
@@ -17680,7 +17898,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec43;
+      condition.extensions.pgFilterAttribute = colSpec44;
       return condition;
     },
     authorId(queryBuilder, value) {
@@ -17688,7 +17906,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec44;
+      condition.extensions.pgFilterAttribute = colSpec45;
       return condition;
     },
     taskId(queryBuilder, value) {
@@ -17696,7 +17914,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec45;
+      condition.extensions.pgFilterAttribute = colSpec46;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -17704,7 +17922,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec46;
+      condition.extensions.pgFilterAttribute = colSpec47;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -17712,7 +17930,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec47;
+      condition.extensions.pgFilterAttribute = colSpec48;
       return condition;
     },
     author($where, value) {
@@ -18508,7 +18726,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec48;
+      condition.extensions.pgFilterAttribute = colSpec49;
       return condition;
     },
     userId(queryBuilder, value) {
@@ -18516,7 +18734,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec49;
+      condition.extensions.pgFilterAttribute = colSpec50;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -18524,7 +18742,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec50;
+      condition.extensions.pgFilterAttribute = colSpec51;
       return condition;
     },
     user($where, value) {
@@ -18576,7 +18794,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec51;
+      condition.extensions.pgFilterAttribute = colSpec52;
       return condition;
     },
     name(queryBuilder, value) {
@@ -18584,7 +18802,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec52;
+      condition.extensions.pgFilterAttribute = colSpec53;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -18592,7 +18810,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec53;
+      condition.extensions.pgFilterAttribute = colSpec54;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -18600,7 +18818,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec54;
+      condition.extensions.pgFilterAttribute = colSpec55;
       return condition;
     },
     viewMode(queryBuilder, value) {
@@ -18608,7 +18826,15 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec55;
+      condition.extensions.pgFilterAttribute = colSpec56;
+      return condition;
+    },
+    slug(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec57;
       return condition;
     },
     projects($where, value) {
@@ -18882,6 +19108,15 @@ export const plans = {
         expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("status")}`, spec_project.attributes.status.codec)
       };
       return $col;
+    },
+    slug($parent, input) {
+      if (input == null) return;
+      const $col = new PgCondition($parent);
+      $col.extensions.pgFilterAttribute = {
+        codec: TYPES.bigint,
+        expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)
+      };
+      return $col;
     }
   },
   WorkspaceToManyWorkspaceUserFilter: {
@@ -19093,7 +19328,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec56;
+      condition.extensions.pgFilterAttribute = colSpec58;
       return condition;
     },
     workspaceId(queryBuilder, value) {
@@ -19101,7 +19336,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec57;
+      condition.extensions.pgFilterAttribute = colSpec59;
       return condition;
     },
     email(queryBuilder, value) {
@@ -19109,7 +19344,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec58;
+      condition.extensions.pgFilterAttribute = colSpec60;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -19117,7 +19352,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec59;
+      condition.extensions.pgFilterAttribute = colSpec61;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -19125,7 +19360,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec60;
+      condition.extensions.pgFilterAttribute = colSpec62;
       return condition;
     },
     workspace($where, value) {
@@ -19385,7 +19620,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec61;
+      condition.extensions.pgFilterAttribute = colSpec63;
       return condition;
     },
     taskId(queryBuilder, value) {
@@ -19393,7 +19628,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec62;
+      condition.extensions.pgFilterAttribute = colSpec64;
       return condition;
     },
     labelId(queryBuilder, value) {
@@ -19401,7 +19636,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec63;
+      condition.extensions.pgFilterAttribute = colSpec65;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -19409,7 +19644,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec64;
+      condition.extensions.pgFilterAttribute = colSpec66;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -19417,7 +19652,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec65;
+      condition.extensions.pgFilterAttribute = colSpec67;
       return condition;
     },
     label($where, value) {
@@ -19469,7 +19704,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec66;
+      condition.extensions.pgFilterAttribute = colSpec68;
       return condition;
     },
     name(queryBuilder, value) {
@@ -19477,7 +19712,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec67;
+      condition.extensions.pgFilterAttribute = colSpec69;
       return condition;
     },
     color(queryBuilder, value) {
@@ -19485,7 +19720,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec68;
+      condition.extensions.pgFilterAttribute = colSpec70;
       return condition;
     },
     projectId(queryBuilder, value) {
@@ -19493,7 +19728,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec69;
+      condition.extensions.pgFilterAttribute = colSpec71;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -19501,7 +19736,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec70;
+      condition.extensions.pgFilterAttribute = colSpec72;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -19509,7 +19744,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec71;
+      condition.extensions.pgFilterAttribute = colSpec73;
       return condition;
     },
     taskLabels($where, value) {
@@ -20261,6 +20496,20 @@ export const plans = {
         attribute: "status",
         direction: "DESC"
       });
+    },
+    SLUG_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "slug",
+        direction: "ASC"
+      });
+      queryBuilder.setOrderIsUnique();
+    },
+    SLUG_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "slug",
+        direction: "DESC"
+      });
+      queryBuilder.setOrderIsUnique();
     },
     COLUMNS_COUNT_ASC($select) {
       const foreignTableAlias = $select.alias,
@@ -29536,6 +29785,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("view_mode")}`,
         sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.varchar);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    slug($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("slug")}`,
+        sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.text);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
   WorkspaceGroupBy: {
@@ -29776,6 +30030,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.varchar)}`;
         }
       });
+    },
+    slug($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "slug",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+        }
+      });
     }
   },
   WorkspaceOrderBy: {
@@ -29858,6 +30121,20 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         attribute: "view_mode",
         direction: "DESC"
       });
+    },
+    SLUG_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "slug",
+        direction: "ASC"
+      });
+      queryBuilder.setOrderIsUnique();
+    },
+    SLUG_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "slug",
+        direction: "DESC"
+      });
+      queryBuilder.setOrderIsUnique();
     },
     PROJECTS_COUNT_ASC($select) {
       const foreignTableAlias = $select.alias,
@@ -30272,6 +30549,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $select.orderBy({
         fragment,
         codec: spec.pgTypeCodecModifier?.(spec_project.attributes.status.codec) ?? spec_project.attributes.status.codec,
+        direction: "DESC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_SLUG_ASC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation13.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation13.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.slug.codec) ?? spec_project.attributes.slug.codec,
+        direction: "ASC"
+      });
+    },
+    PROJECTS_DISTINCT_COUNT_SLUG_DESC($select) {
+      const foreignTableAlias = $select.alias,
+        conditions = [],
+        tableAlias = sql.identifier(Symbol(pgResource_projectPgResource.name));
+      relation13.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = relation13.remoteAttributes[i];
+        conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+      });
+      if (typeof pgResource_projectPgResource.from === "function") throw new Error("Function source unsupported");
+      const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("slug")}`, spec_project.attributes.slug.codec)}
+from ${pgResource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+      $select.orderBy({
+        fragment,
+        codec: spec.pgTypeCodecModifier?.(spec_project.attributes.slug.codec) ?? spec_project.attributes.slug.codec,
         direction: "DESC"
       });
     },
@@ -30738,9 +31053,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    createWorkspace: {
+    createPost: {
       plan(_, args) {
-        const $insert = pgInsertSingle(pgResource_workspacePgResource, Object.create(null));
+        const $insert = pgInsertSingle(pgResource_postPgResource, Object.create(null));
         args.apply($insert);
         return object({
           result: $insert
@@ -30752,9 +31067,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    createPost: {
+    createWorkspace: {
       plan(_, args) {
-        const $insert = pgInsertSingle(pgResource_postPgResource, Object.create(null));
+        const $insert = pgInsertSingle(pgResource_workspacePgResource, Object.create(null));
         args.apply($insert);
         return object({
           result: $insert
@@ -31038,6 +31353,36 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
+    updatePostById: {
+      plan(_$root, args) {
+        const $update = pgUpdateSingle(pgResource_postPgResource, specFromArgs_Post(args));
+        args.apply($update);
+        return object({
+          result: $update
+        });
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
+    updatePost: {
+      plan(_$root, args) {
+        const $update = pgUpdateSingle(pgResource_postPgResource, {
+          id: args.getRaw(['input', "rowId"])
+        });
+        args.apply($update);
+        return object({
+          result: $update
+        });
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
     updateWorkspaceById: {
       plan(_$root, args) {
         const $update = pgUpdateSingle(pgResource_workspacePgResource, specFromArgs_Workspace(args));
@@ -31068,24 +31413,10 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    updatePostById: {
+    updateWorkspaceBySlug: {
       plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_postPgResource, specFromArgs_Post(args));
-        args.apply($update);
-        return object({
-          result: $update
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    updatePost: {
-      plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_postPgResource, {
-          id: args.getRaw(['input', "rowId"])
+        const $update = pgUpdateSingle(pgResource_workspacePgResource, {
+          slug: args.getRaw(['input', "slug"])
         });
         args.apply($update);
         return object({
@@ -31176,6 +31507,23 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       plan(_$root, args) {
         const $update = pgUpdateSingle(pgResource_projectPgResource, {
           id: args.getRaw(['input', "rowId"])
+        });
+        args.apply($update);
+        return object({
+          result: $update
+        });
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
+    updateProjectBySlugAndWorkspaceId: {
+      plan(_$root, args) {
+        const $update = pgUpdateSingle(pgResource_projectPgResource, {
+          slug: args.getRaw(['input', "slug"]),
+          workspace_id: args.getRaw(['input', "workspaceId"])
         });
         args.apply($update);
         return object({
@@ -31418,6 +31766,36 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
+    deletePostById: {
+      plan(_$root, args) {
+        const $delete = pgDeleteSingle(pgResource_postPgResource, specFromArgs_Post2(args));
+        args.apply($delete);
+        return object({
+          result: $delete
+        });
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
+    deletePost: {
+      plan(_$root, args) {
+        const $delete = pgDeleteSingle(pgResource_postPgResource, {
+          id: args.getRaw(['input', "rowId"])
+        });
+        args.apply($delete);
+        return object({
+          result: $delete
+        });
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
     deleteWorkspaceById: {
       plan(_$root, args) {
         const $delete = pgDeleteSingle(pgResource_workspacePgResource, specFromArgs_Workspace2(args));
@@ -31448,24 +31826,10 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    deletePostById: {
+    deleteWorkspaceBySlug: {
       plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_postPgResource, specFromArgs_Post2(args));
-        args.apply($delete);
-        return object({
-          result: $delete
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    deletePost: {
-      plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_postPgResource, {
-          id: args.getRaw(['input', "rowId"])
+        const $delete = pgDeleteSingle(pgResource_workspacePgResource, {
+          slug: args.getRaw(['input', "slug"])
         });
         args.apply($delete);
         return object({
@@ -31556,6 +31920,23 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       plan(_$root, args) {
         const $delete = pgDeleteSingle(pgResource_projectPgResource, {
           id: args.getRaw(['input', "rowId"])
+        });
+        args.apply($delete);
+        return object({
+          result: $delete
+        });
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
+    deleteProjectBySlugAndWorkspaceId: {
+      plan(_$root, args) {
+        const $delete = pgDeleteSingle(pgResource_projectPgResource, {
+          slug: args.getRaw(['input', "slug"]),
+          workspace_id: args.getRaw(['input', "workspaceId"])
         });
         args.apply($delete);
         return object({
@@ -32001,76 +32382,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       obj.set("email", bakedInputRuntime(schema, field.type, val));
     }
   },
-  CreateWorkspacePayload: {
-    __assertStep: assertExecutableStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("result").getMeta("clientMutationId");
-    },
-    workspace($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    workspaceEdge($mutation, fieldArgs) {
-      const $result = $mutation.getStepForKey("result", !0);
-      if (!$result) return constant(null);
-      const $select = (() => {
-        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
-            memo[attributeName] = $result.get(attributeName);
-            return memo;
-          }, Object.create(null));
-          return pgResource_workspacePgResource.find(spec);
-        }
-      })();
-      fieldArgs.apply($select, "orderBy");
-      const $connection = connection($select),
-        $single = $select.row(first($select));
-      return new EdgeStep($connection, $single);
-    }
-  },
-  CreateWorkspaceInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    workspace(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
-  WorkspaceInput: {
-    __baked: createObjectAndApplyChildren,
-    rowId(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("id", bakedInputRuntime(schema, field.type, val));
-    },
-    name(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("name", bakedInputRuntime(schema, field.type, val));
-    },
-    createdAt(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("created_at", bakedInputRuntime(schema, field.type, val));
-    },
-    updatedAt(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
-    },
-    viewMode(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("view_mode", bakedInputRuntime(schema, field.type, val));
-    }
-  },
   CreatePostPayload: {
     __assertStep: assertExecutableStep,
     clientMutationId($mutation) {
@@ -32151,6 +32462,82 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       schema
     }) {
       obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
+    }
+  },
+  CreateWorkspacePayload: {
+    __assertStep: assertExecutableStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("result").getMeta("clientMutationId");
+    },
+    workspace($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    workspaceEdge($mutation, fieldArgs) {
+      const $result = $mutation.getStepForKey("result", !0);
+      if (!$result) return constant(null);
+      const $select = (() => {
+        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
+            memo[attributeName] = $result.get(attributeName);
+            return memo;
+          }, Object.create(null));
+          return pgResource_workspacePgResource.find(spec);
+        }
+      })();
+      fieldArgs.apply($select, "orderBy");
+      const $connection = connection($select),
+        $single = $select.row(first($select));
+      return new EdgeStep($connection, $single);
+    }
+  },
+  CreateWorkspaceInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    },
+    workspace(qb, arg) {
+      if (arg != null) return qb.setBuilder();
+    }
+  },
+  WorkspaceInput: {
+    __baked: createObjectAndApplyChildren,
+    rowId(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("id", bakedInputRuntime(schema, field.type, val));
+    },
+    name(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("name", bakedInputRuntime(schema, field.type, val));
+    },
+    createdAt(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+    },
+    updatedAt(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
+    },
+    viewMode(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("view_mode", bakedInputRuntime(schema, field.type, val));
+    },
+    slug(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("slug", bakedInputRuntime(schema, field.type, val));
     }
   },
   CreateColumnPayload: {
@@ -32433,6 +32820,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       schema
     }) {
       obj.set("status", bakedInputRuntime(schema, field.type, val));
+    },
+    slug(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("slug", bakedInputRuntime(schema, field.type, val));
     }
   },
   UpdateWorkspaceUserPayload: {
@@ -32939,84 +33332,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       if (arg != null) return qb.setBuilder();
     }
   },
-  UpdateWorkspacePayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("result").getMeta("clientMutationId");
-    },
-    workspace($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    workspaceEdge($mutation, fieldArgs) {
-      const $result = $mutation.getStepForKey("result", !0);
-      if (!$result) return constant(null);
-      const $select = (() => {
-        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
-            memo[attributeName] = $result.get(attributeName);
-            return memo;
-          }, Object.create(null));
-          return pgResource_workspacePgResource.find(spec);
-        }
-      })();
-      fieldArgs.apply($select, "orderBy");
-      const $connection = connection($select),
-        $single = $select.row(first($select));
-      return new EdgeStep($connection, $single);
-    }
-  },
-  UpdateWorkspaceByIdInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
-  WorkspacePatch: {
-    __baked: createObjectAndApplyChildren,
-    rowId(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("id", bakedInputRuntime(schema, field.type, val));
-    },
-    name(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("name", bakedInputRuntime(schema, field.type, val));
-    },
-    createdAt(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("created_at", bakedInputRuntime(schema, field.type, val));
-    },
-    updatedAt(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
-    },
-    viewMode(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("view_mode", bakedInputRuntime(schema, field.type, val));
-    }
-  },
-  UpdateWorkspaceInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
   UpdatePostPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -33100,6 +33415,98 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   UpdatePostInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    },
+    patch(qb, arg) {
+      if (arg != null) return qb.setBuilder();
+    }
+  },
+  UpdateWorkspacePayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("result").getMeta("clientMutationId");
+    },
+    workspace($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    workspaceEdge($mutation, fieldArgs) {
+      const $result = $mutation.getStepForKey("result", !0);
+      if (!$result) return constant(null);
+      const $select = (() => {
+        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
+            memo[attributeName] = $result.get(attributeName);
+            return memo;
+          }, Object.create(null));
+          return pgResource_workspacePgResource.find(spec);
+        }
+      })();
+      fieldArgs.apply($select, "orderBy");
+      const $connection = connection($select),
+        $single = $select.row(first($select));
+      return new EdgeStep($connection, $single);
+    }
+  },
+  UpdateWorkspaceByIdInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    },
+    patch(qb, arg) {
+      if (arg != null) return qb.setBuilder();
+    }
+  },
+  WorkspacePatch: {
+    __baked: createObjectAndApplyChildren,
+    rowId(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("id", bakedInputRuntime(schema, field.type, val));
+    },
+    name(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("name", bakedInputRuntime(schema, field.type, val));
+    },
+    createdAt(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+    },
+    updatedAt(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
+    },
+    viewMode(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("view_mode", bakedInputRuntime(schema, field.type, val));
+    },
+    slug(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("slug", bakedInputRuntime(schema, field.type, val));
+    }
+  },
+  UpdateWorkspaceInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    },
+    patch(qb, arg) {
+      if (arg != null) return qb.setBuilder();
+    }
+  },
+  UpdateWorkspaceBySlugInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     },
@@ -33403,9 +33810,23 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       schema
     }) {
       obj.set("status", bakedInputRuntime(schema, field.type, val));
+    },
+    slug(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("slug", bakedInputRuntime(schema, field.type, val));
     }
   },
   UpdateProjectInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    },
+    patch(qb, arg) {
+      if (arg != null) return qb.setBuilder();
+    }
+  },
+  UpdateProjectBySlugAndWorkspaceIdInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     },
@@ -33692,6 +34113,50 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       qb.setMeta("clientMutationId", val);
     }
   },
+  DeletePostPayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("result").getMeta("clientMutationId");
+    },
+    post($object) {
+      return $object.get("result");
+    },
+    deletedPostId($object) {
+      const $record = $object.getStepForKey("result"),
+        specifier = nodeIdHandlerByTypeName.Post.plan($record);
+      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
+    },
+    query() {
+      return rootValue();
+    },
+    postEdge($mutation, fieldArgs) {
+      const $result = $mutation.getStepForKey("result", !0);
+      if (!$result) return constant(null);
+      const $select = (() => {
+        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+          const spec = postUniques[0].attributes.reduce((memo, attributeName) => {
+            memo[attributeName] = $result.get(attributeName);
+            return memo;
+          }, Object.create(null));
+          return pgResource_postPgResource.find(spec);
+        }
+      })();
+      fieldArgs.apply($select, "orderBy");
+      const $connection = connection($select),
+        $single = $select.row(first($select));
+      return new EdgeStep($connection, $single);
+    }
+  },
+  DeletePostByIdInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    }
+  },
+  DeletePostInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    }
+  },
   DeleteWorkspacePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -33736,46 +34201,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       qb.setMeta("clientMutationId", val);
     }
   },
-  DeletePostPayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("result").getMeta("clientMutationId");
-    },
-    post($object) {
-      return $object.get("result");
-    },
-    deletedPostId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.Post.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
-    },
-    query() {
-      return rootValue();
-    },
-    postEdge($mutation, fieldArgs) {
-      const $result = $mutation.getStepForKey("result", !0);
-      if (!$result) return constant(null);
-      const $select = (() => {
-        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-          const spec = postUniques[0].attributes.reduce((memo, attributeName) => {
-            memo[attributeName] = $result.get(attributeName);
-            return memo;
-          }, Object.create(null));
-          return pgResource_postPgResource.find(spec);
-        }
-      })();
-      fieldArgs.apply($select, "orderBy");
-      const $connection = connection($select),
-        $single = $select.row(first($select));
-      return new EdgeStep($connection, $single);
-    }
-  },
-  DeletePostByIdInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
-  DeletePostInput: {
+  DeleteWorkspaceBySlugInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     }
@@ -33908,6 +34334,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   DeleteProjectInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    }
+  },
+  DeleteProjectBySlugAndWorkspaceIdInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     }

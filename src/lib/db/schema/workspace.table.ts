@@ -12,11 +12,16 @@ export const workspaceTable = pgTable(
   {
     id: generateDefaultId(),
     name: text().notNull(),
+    slug: text()
+      // TODO
+      // .generatedAlwaysAs((): SQL => generateSlug(workspaceTable.name))
+      .unique()
+      .notNull(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id)],
+  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.slug)],
 );
 
 export type InsertWorkspace = InferInsertModel<typeof workspaceTable>;

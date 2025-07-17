@@ -3,6 +3,7 @@ import {
   pgEnum,
   pgTable,
   text,
+  unique,
   uniqueIndex,
   uuid,
   varchar,
@@ -30,7 +31,11 @@ export const projectTable = pgTable(
     description: text(),
     prefix: varchar({ length: 10 }),
     color: varchar({ length: 20 }),
-    workspaceId: uuid("workspace_id")
+    slug: text()
+      // TODO
+      // .generatedAlwaysAs((): SQL => generateSlug(projectTable.name))
+      .notNull(),
+    workspaceId: uuid()
       .notNull()
       .references(() => workspaceTable.id, { onDelete: "cascade" }),
     status: status().notNull().default("planned"),
@@ -38,7 +43,11 @@ export const projectTable = pgTable(
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), index().on(table.workspaceId)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    index().on(table.workspaceId),
+    unique().on(table.slug, table.workspaceId),
+  ],
 );
 
 export type InsertProject = InferInsertModel<typeof projectTable>;
