@@ -20,7 +20,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
       .get("authorization")
       ?.split("Bearer ")[1];
 
-    if (!accessToken) return null;
+    if (!accessToken) throw new Error("Invalid or missing access token");
 
     // TODO validate access token (introspection endpoint?) here?
 
@@ -31,7 +31,7 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
       },
     });
 
-    if (!userInfo.ok) return null;
+    if (!userInfo.ok) throw new Error("Invalid access token or request failed");
 
     const idToken: jose.JWTPayload = await userInfo.json();
 
@@ -42,6 +42,8 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
 
     const insertedUser: InsertUser = {
       identityProviderId: idToken.sub!,
+      name: idToken.preferred_username as string,
+      email: idToken.email as string,
     };
 
     const { identityProviderId, ...rest } = insertedUser;
@@ -73,7 +75,7 @@ const useAuth = () =>
   useGenericAuth({
     contextFieldName: "observer",
     resolveUserFn: resolveUser,
-    mode: "resolve-only",
+    mode: "protect-all",
   });
 
 export default useAuth;
