@@ -12,6 +12,7 @@ import appConfig from "lib/config/app.config";
 import {
   CORS_ALLOWED_ORIGINS,
   PORT,
+  PROTECT_ROUTES,
   isDevEnv,
   isProdEnv,
 } from "lib/config/env.config";
@@ -46,7 +47,7 @@ const app = new Elysia({
       context: createGraphqlContext,
       plugins: [
         ...armorPlugins,
-        useAuth(),
+        (isProdEnv || PROTECT_ROUTES === "true") && useAuth(),
         // disable GraphQL schema introspection in production to mitigate reverse engineering
         isProdEnv && useDisableIntrospection(),
         isProdEnv &&
