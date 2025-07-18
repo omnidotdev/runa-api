@@ -64,6 +64,13 @@
       "when": 1752121190078,
       "tag": "0008_calm_invisible_woman",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1752850196728,
+      "tag": "0009_sticky_garia",
+      "breakpoints": true
     }
   ]
 }

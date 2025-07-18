@@ -3,6 +3,8 @@ import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { labelTable } from "./label.table";
 import { taskTable } from "./task.table";
 
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm/table";
+
 export const taskLabelTable = pgTable(
   "task_label",
   {
@@ -22,3 +24,6 @@ export const taskLabelTable = pgTable(
     index().on(table.labelId),
   ],
 );
+
+export type InsertTaskLabel = InferInsertModel<typeof taskLabelTable>;
+export type SelectTaskLabel = InferSelectModel<typeof taskLabelTable>;
