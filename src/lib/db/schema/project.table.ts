@@ -26,11 +26,10 @@ export const projectTable = pgTable(
     color: varchar({ length: 20 }),
     workspaceId: uuid("workspace_id")
       .notNull()
-      .references(() => workspaceTable.id),
+      .references(() => workspaceTable.id, { onDelete: "cascade" }),
     projectColumnId: uuid()
       .notNull()
       .references(() => projectColumnTable.id, { onDelete: "cascade" }),
-    viewMode: varchar({ length: 10 }).notNull().default("board"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

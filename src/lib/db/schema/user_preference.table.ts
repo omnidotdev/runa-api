@@ -1,4 +1,12 @@
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgTable,
+  text,
+  unique,
+  uniqueIndex,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { projectTable } from "./project.table";
 import { userTable } from "./user.table";
@@ -19,10 +27,16 @@ export const userPreferenceTable = pgTable(
       .notNull()
       .references(() => projectTable.id, { onDelete: "cascade" }),
     hiddenColumnIds: text().array().notNull().default([]),
+    viewMode: varchar({ length: 10 }).notNull().default("board"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), index().on(table.userId)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    index().on(table.userId),
+    index().on(table.projectId),
+    unique().on(table.userId, table.projectId),
+  ],
 );
 
 export type InsertUserPreference = InferInsertModel<typeof userPreferenceTable>;
