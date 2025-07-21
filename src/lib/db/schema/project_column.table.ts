@@ -8,12 +8,12 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-
-import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { workspaceTable } from "./workspace.table";
 
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
 /**
- * Column table.
+ * Project column table.
  */
 export const projectColumnTable = pgTable(
   "project_column",

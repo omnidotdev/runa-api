@@ -5,6 +5,9 @@ import { taskTable } from "./task.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm/table";
 
+/**
+ * Task label table.
+ */
 export const taskLabelTable = pgTable(
   "task_label",
   {

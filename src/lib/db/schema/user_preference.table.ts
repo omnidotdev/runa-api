@@ -5,6 +5,9 @@ import { userTable } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm/table";
 
+/**
+ * User preferences table.
+ */
 export const userPreferenceTable = pgTable(
   "user_preference",
   {
