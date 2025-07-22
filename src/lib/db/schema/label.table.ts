@@ -3,6 +3,11 @@ import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { projectTable } from "./project.table";
 
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
+/**
+ * Label table.
+ */
 export const labelTable = pgTable(
   "label",
   {
@@ -21,3 +26,6 @@ export const labelTable = pgTable(
     index().on(table.name),
   ],
 );
+
+export type InsertLabel = InferInsertModel<typeof labelTable>;
+export type SelectLabel = InferSelectModel<typeof labelTable>;
