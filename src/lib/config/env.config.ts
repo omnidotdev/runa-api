@@ -15,4 +15,5 @@ export const {
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development",
-  isProdEnv = NODE_ENV === "production";
+  isProdEnv = NODE_ENV === "production",
+  protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
