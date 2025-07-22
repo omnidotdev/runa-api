@@ -1,5 +1,6 @@
 import {
   index,
+  integer,
   pgTable,
   text,
   unique,
@@ -35,12 +36,14 @@ export const projectTable = pgTable(
     projectColumnId: uuid()
       .notNull()
       .references(() => projectColumnTable.id, { onDelete: "cascade" }),
+    columnIndex: integer().notNull().default(0),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
     index().on(table.workspaceId),
+    index().on(table.projectColumnId),
     unique().on(table.slug, table.workspaceId),
   ],
 );
