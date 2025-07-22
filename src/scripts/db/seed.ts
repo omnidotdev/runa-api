@@ -45,6 +45,19 @@ const seedDatabase = async () => {
         ],
       },
     },
+    projectColumnTable: {
+      columns: {
+        title: f.valuesFromArray({
+          values: ["To Do", "In Progress", "Awaiting Review", "Done"],
+        }),
+        emoji: f.valuesFromArray({
+          values: ["📝", "🔨", "👀", "✅"],
+        }),
+        index: f.valuesFromArray({
+          values: [0, 1, 2, 3, 4],
+        }),
+      },
+    },
     postTable: {
       columns: {
         title: f.valuesFromArray({

@@ -1,0 +1,2 @@
+CREATE INDEX "user_preference_project_id_index" ON "user_preference" USING btree ("project_id");--> statement-breakpoint
+ALTER TABLE "user_preference" ADD CONSTRAINT "user_preference_userId_projectId_unique" UNIQUE("user_id","project_id");

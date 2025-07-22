@@ -1,6 +1,5 @@
 import {
   index,
-  pgEnum,
   pgTable,
   text,
   unique,
@@ -13,12 +12,7 @@ import { workspaceTable } from "./workspace.table";
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-
-export const status = pgEnum("project_status", [
-  "planned",
-  "in_progress",
-  "completed",
-]);
+import { projectColumnTable } from "./project_column.table";
 
 /**
  * Project table.
@@ -38,8 +32,9 @@ export const projectTable = pgTable(
     workspaceId: uuid()
       .notNull()
       .references(() => workspaceTable.id, { onDelete: "cascade" }),
-    status: status().notNull().default("planned"),
-    viewMode: varchar({ length: 10 }).notNull().default("board"),
+    projectColumnId: uuid()
+      .notNull()
+      .references(() => projectColumnTable.id, { onDelete: "cascade" }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

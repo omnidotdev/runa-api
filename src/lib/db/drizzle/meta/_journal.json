@@ -64,6 +64,41 @@
       "when": 1752121190078,
       "tag": "0008_calm_invisible_woman",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1752850196728,
+      "tag": "0009_sticky_garia",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1753136869687,
+      "tag": "0010_acoustic_amphibian",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1753137321173,
+      "tag": "0011_bouncy_nighthawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1753138219568,
+      "tag": "0012_aberrant_thunderbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1753143031041,
+      "tag": "0013_freezing_warpath",
+      "breakpoints": true
     }
   ]
 }
