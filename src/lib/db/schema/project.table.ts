@@ -25,7 +25,6 @@ export const projectTable = pgTable(
     name: text().notNull(),
     description: text(),
     prefix: varchar({ length: 10 }),
-    color: varchar({ length: 20 }),
     slug: text()
       // TODO
       // .generatedAlwaysAs((): SQL => generateSlug(projectTable.name))
