@@ -12,6 +12,7 @@ export const {
   GRAPHQL_COMPLEXITY_MAX_COST,
   CORS_ALLOWED_ORIGINS,
   PROTECT_ROUTES,
+  AUTH_DEBUG,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development",

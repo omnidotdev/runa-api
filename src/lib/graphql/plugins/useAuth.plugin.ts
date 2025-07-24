@@ -2,7 +2,11 @@ import { createHash } from "node:crypto";
 import { useGenericAuth } from "@envelop/generic-auth";
 import type * as jose from "jose";
 
-import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
+import {
+  AUTH_BASE_URL,
+  AUTH_DEBUG,
+  protectRoutes,
+} from "lib/config/env.config";
 import { userTable } from "lib/db/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
@@ -66,7 +70,7 @@ function cleanupCache(config: CacheConfig = DEFAULT_CACHE_CONFIG): void {
 
   cacheStats.evictions += evictedCount;
 
-  if (evictedCount > 0) {
+  if (evictedCount > 0 && AUTH_DEBUG) {
     console.debug(
       `Auth cache cleanup: evicted ${evictedCount} entries, current size: ${userInfoCache.size}`,
     );
@@ -180,9 +184,10 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
 
     if (!user) {
       // Cache miss - fetch from userinfo endpoint and create/update user
-      console.debug(
-        "Auth cache miss, fetching user info from external service",
-      );
+      AUTH_DEBUG &&
+        console.debug(
+          "Auth cache miss, fetching user info from external service",
+        );
 
       const userInfo = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
         headers: {
@@ -227,9 +232,9 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
 
       // Cache the complete user object
       setCachedUser(accessToken, user);
-      console.debug("User object cached successfully");
+      AUTH_DEBUG && console.debug("User object cached successfully");
     } else {
-      console.debug("Auth cache hit, using cached user object");
+      AUTH_DEBUG && console.debug("Auth cache hit, using cached user object");
     }
 
     return user;
