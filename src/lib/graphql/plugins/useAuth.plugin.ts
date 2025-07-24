@@ -1,6 +1,6 @@
+import { createHash } from "node:crypto";
 import { useGenericAuth } from "@envelop/generic-auth";
 import type * as jose from "jose";
-import { createHash } from "node:crypto";
 
 import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
 import { userTable } from "lib/db/schema";
