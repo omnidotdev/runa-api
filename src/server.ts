@@ -4,9 +4,9 @@ import { useOpenTelemetry } from "@envelop/opentelemetry";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
+import { Checkout } from "@polar-sh/elysia";
 import { Elysia } from "elysia";
 import { useGrafast } from "grafast/envelop";
-import { Checkout } from "@polar-sh/elysia";
 
 import { schema } from "generated/graphql/schema.executable";
 import appConfig from "lib/config/app.config";
