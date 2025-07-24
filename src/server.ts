@@ -6,12 +6,16 @@ import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
 import { Elysia } from "elysia";
 import { useGrafast } from "grafast/envelop";
+import { Checkout } from "@polar-sh/elysia";
 
 import { schema } from "generated/graphql/schema.executable";
 import appConfig from "lib/config/app.config";
 import {
+  CHECKOUT_SUCCESS_URL,
   CORS_ALLOWED_ORIGINS,
+  POLAR_ACCESS_TOKEN,
   PORT,
+  enablePolarSandbox,
   isDevEnv,
   isProdEnv,
 } from "lib/config/env.config";
@@ -40,6 +44,15 @@ const app = new Elysia({
       methods: ["GET", "POST", "OPTIONS"],
     }),
   )
+  .get(
+    "/checkout",
+    Checkout({
+      accessToken: POLAR_ACCESS_TOKEN,
+      successUrl: CHECKOUT_SUCCESS_URL,
+      server: enablePolarSandbox ? "sandbox" : "production",
+    }),
+  )
+  // TODO: customer portal and webhooks routes
   .use(
     yoga({
       schema,
