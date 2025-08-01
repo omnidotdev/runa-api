@@ -4,7 +4,7 @@ import { useOpenTelemetry } from "@envelop/opentelemetry";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
-import { Checkout } from "@polar-sh/elysia";
+import { Checkout, CustomerPortal } from "@polar-sh/elysia";
 import { Elysia } from "elysia";
 import { useGrafast } from "grafast/envelop";
 
@@ -50,6 +50,17 @@ const app = new Elysia({
       accessToken: POLAR_ACCESS_TOKEN,
       successUrl: CHECKOUT_SUCCESS_URL,
       server: enablePolarSandbox ? "sandbox" : "production",
+    }),
+  )
+  .get(
+    "/portal",
+    CustomerPortal({
+      accessToken: POLAR_ACCESS_TOKEN,
+      server: enablePolarSandbox ? "sandbox" : "production",
+      getCustomerId: async (req) => {
+        const { searchParams } = new URL(req.url);
+        return searchParams.get("customerId")!;
+      },
     }),
   )
   // TODO: customer portal and webhooks routes
