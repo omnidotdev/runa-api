@@ -124,7 +124,7 @@ const spec_workspaceUser = {
   },
   description: undefined,
   extensions: {
-    oid: "253233",
+    oid: "153792",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -207,7 +207,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "253341",
+    oid: "153899",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -290,7 +290,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "253425",
+    oid: "153983",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -385,7 +385,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "253160",
+    oid: "153719",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "253331",
+    oid: "153889",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -587,7 +587,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "253211",
+    oid: "153770",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -694,7 +694,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "253178",
+    oid: "153737",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -789,7 +789,7 @@ const spec_workspace = {
   },
   description: undefined,
   extensions: {
-    oid: "253223",
+    oid: "153782",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -896,7 +896,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "253168",
+    oid: "153727",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1003,7 +1003,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "253370",
+    oid: "153928",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1138,7 +1138,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "253381",
+    oid: "153939",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1281,7 +1281,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "253188",
+    oid: "153747",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1436,7 +1436,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "253199",
+    oid: "153758",
     isTableLike: true,
     pg: {
       serviceName: "main",
