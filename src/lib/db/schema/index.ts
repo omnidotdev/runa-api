@@ -1,5 +1,6 @@
 export * from "./assignee.table";
 export * from "./column.table";
+export * from "./emoji.table";
 export * from "./invitation.table";
 export * from "./label.table";
 export * from "./post.table";
