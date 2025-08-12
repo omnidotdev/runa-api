@@ -124,7 +124,7 @@ const spec_workspaceUser = {
   },
   description: undefined,
   extensions: {
-    oid: "154138",
+    oid: "253233",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -207,7 +207,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "154245",
+    oid: "253341",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -290,7 +290,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "154329",
+    oid: "253425",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -385,7 +385,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "154065",
+    oid: "253160",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -480,7 +480,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "154357",
+    oid: "260944",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -575,7 +575,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "154235",
+    oid: "253331",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -682,7 +682,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "154116",
+    oid: "253211",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -741,7 +741,7 @@ const spec_post = {
     author_id: {
       description: undefined,
       codec: TYPES.uuid,
-      notNull: true,
+      notNull: false,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -789,7 +789,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "154083",
+    oid: "253178",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -884,7 +884,7 @@ const spec_workspace = {
   },
   description: undefined,
   extensions: {
-    oid: "154128",
+    oid: "253223",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -991,7 +991,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "154073",
+    oid: "253168",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1098,7 +1098,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "154274",
+    oid: "253370",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1233,7 +1233,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "154285",
+    oid: "253381",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1376,7 +1376,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "154093",
+    oid: "253188",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1447,7 +1447,7 @@ const spec_task = {
     author_id: {
       description: undefined,
       codec: TYPES.uuid,
-      notNull: true,
+      notNull: false,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -1531,7 +1531,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "154104",
+    oid: "253199",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -6666,7 +6666,7 @@ type Task implements Node {
   content: String!
   description: String!
   priority: String!
-  authorId: UUID!
+  authorId: UUID
   columnId: UUID!
   dueDate: Datetime
   createdAt: Datetime!
@@ -8012,6 +8012,9 @@ input TaskFilter {
   """Filter by the object’s \`author\` relation."""
   author: UserFilter
 
+  """A related \`author\` exists."""
+  authorExists: Boolean
+
   """Filter by the object’s \`column\` relation."""
   column: ColumnFilter
 
@@ -8301,6 +8304,9 @@ input PostFilter {
 
   """Filter by the object’s \`author\` relation."""
   author: UserFilter
+
+  """A related \`author\` exists."""
+  authorExists: Boolean
 
   """Filter by the object’s \`task\` relation."""
   task: TaskFilter
@@ -11821,7 +11827,7 @@ type Post implements Node {
   rowId: UUID!
   title: String
   description: String
-  authorId: UUID!
+  authorId: UUID
   taskId: UUID!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -13969,7 +13975,7 @@ input PostInput {
   rowId: UUID
   title: String
   description: String
-  authorId: UUID!
+  authorId: UUID
   taskId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
@@ -14249,7 +14255,7 @@ input TaskInput {
   content: String!
   description: String!
   priority: String
-  authorId: UUID!
+  authorId: UUID
   columnId: UUID!
   dueDate: Datetime
   createdAt: Datetime
@@ -20877,6 +20883,19 @@ export const plans = {
       });
       return $subQuery;
     },
+    authorExists($where, value) {
+      assertAllowed43(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: userIdentifier,
+        alias: pgResource_userPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.task.userByMyAuthorId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.task.userByMyAuthorId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
+    },
     column($where, value) {
       assertAllowed43(value, "object");
       if (value == null) return;
@@ -21901,6 +21920,19 @@ export const plans = {
         $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
       });
       return $subQuery;
+    },
+    authorExists($where, value) {
+      assertAllowed53(value, "scalar");
+      if (value == null) return;
+      const $subQuery = $where.existsPlan({
+        tableExpression: userIdentifier,
+        alias: pgResource_userPgResource.name,
+        equals: value
+      });
+      registryConfig.pgRelations.post.userByMyAuthorId.localAttributes.forEach((localAttribute, i) => {
+        const remoteAttribute = registryConfig.pgRelations.post.userByMyAuthorId.remoteAttributes[i];
+        $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+      });
     },
     task($where, value) {
       assertAllowed53(value, "object");

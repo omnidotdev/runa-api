@@ -26,9 +26,7 @@ export const taskTable = pgTable(
     content: text().notNull(),
     description: text().notNull(),
     priority: varchar({ length: 10 }).notNull().default("medium"),
-    authorId: uuid()
-      .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" }),
+    authorId: uuid().references(() => userTable.id, { onDelete: "set null" }),
     projectId: uuid()
       .notNull()
       .references(() => projectTable.id, { onDelete: "cascade" }),

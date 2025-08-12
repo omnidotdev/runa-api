@@ -15,11 +15,9 @@ export const postTable = pgTable(
     id: generateDefaultId(),
     title: text(),
     description: text(),
-    authorId: uuid()
-      .notNull()
-      .references(() => userTable.id, {
-        onDelete: "cascade",
-      }),
+    authorId: uuid().references(() => userTable.id, {
+      onDelete: "set null",
+    }),
     taskId: uuid()
       .notNull()
       .references(() => taskTable.id, {
