@@ -1,8 +1,16 @@
-import { pgTable, text, uniqueIndex, varchar } from "drizzle-orm/pg-core";
+import {
+  pgEnum,
+  pgTable,
+  text,
+  uniqueIndex,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
+export const tier = pgEnum("tier", ["free", "basic", "team"]);
 
 /**
  * Workspace table.
@@ -18,6 +26,7 @@ export const workspaceTable = pgTable(
       .unique()
       .notNull(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
+    tier: tier("tier").notNull().default("free"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
