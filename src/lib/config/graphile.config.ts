@@ -4,6 +4,7 @@ import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connecti
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
+import { PrimaryKeyMutationsOnlyPlugin } from "lib/graphql/plugins/authorization";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
 /**
@@ -16,6 +17,7 @@ const graphilePreset: GraphileConfig.Preset = {
     PostGraphileConnectionFilterPreset,
     PgAggregatesPreset,
   ],
+  plugins: [PrimaryKeyMutationsOnlyPlugin],
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   schema: {
     retryOnInitFail: isProdEnv,

@@ -4,10 +4,10 @@ import type * as jose from "jose";
 
 import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
 import { userTable } from "lib/db/schema";
-import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { InsertUser, SelectUser } from "lib/db/schema";
+import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
 // TODO research best practices for all of this file (token validation, caching, etc.). Validate access token (introspection endpoint)? Cache userinfo output? etc. (https://linear.app/omnidev/issue/OMNI-302/increase-security-of-useauth-plugin)
 

@@ -1632,7 +1632,8 @@ const invitationUniques = [{
   description: undefined,
   extensions: {
     tags: {
-      __proto__: null
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -1785,7 +1786,8 @@ const userUniques = [{
   description: undefined,
   extensions: {
     tags: {
-      __proto__: null
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }, {
@@ -1794,7 +1796,8 @@ const userUniques = [{
   description: undefined,
   extensions: {
     tags: {
-      __proto__: null
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -1875,7 +1878,8 @@ const workspaceUniques = [{
   description: undefined,
   extensions: {
     tags: {
-      __proto__: null
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -1992,7 +1996,8 @@ const user_preferenceUniques = [{
   description: undefined,
   extensions: {
     tags: {
-      __proto__: null
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -2037,7 +2042,8 @@ const projectUniques = [{
   description: undefined,
   extensions: {
     tags: {
-      __proto__: null
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -13123,14 +13129,6 @@ type Mutation {
     input: UpdateInvitationInput!
   ): UpdateInvitationPayload
 
-  """Updates a single \`Invitation\` using a unique key and a patch."""
-  updateInvitationByWorkspaceIdAndEmail(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvitationByWorkspaceIdAndEmailInput!
-  ): UpdateInvitationPayload
-
   """Updates a single \`Assignee\` using its globally unique id and a patch."""
   updateAssigneeById(
     """
@@ -13195,22 +13193,6 @@ type Mutation {
     input: UpdateUserInput!
   ): UpdateUserPayload
 
-  """Updates a single \`User\` using a unique key and a patch."""
-  updateUserByEmail(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserByEmailInput!
-  ): UpdateUserPayload
-
-  """Updates a single \`User\` using a unique key and a patch."""
-  updateUserByIdentityProviderId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserByIdentityProviderIdInput!
-  ): UpdateUserPayload
-
   """Updates a single \`Post\` using its globally unique id and a patch."""
   updatePostById(
     """
@@ -13241,14 +13223,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateWorkspaceInput!
-  ): UpdateWorkspacePayload
-
-  """Updates a single \`Workspace\` using a unique key and a patch."""
-  updateWorkspaceBySlug(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWorkspaceBySlugInput!
   ): UpdateWorkspacePayload
 
   """Updates a single \`Column\` using its globally unique id and a patch."""
@@ -13303,14 +13277,6 @@ type Mutation {
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
 
-  """Updates a single \`UserPreference\` using a unique key and a patch."""
-  updateUserPreferenceByUserIdAndProjectId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceByUserIdAndProjectIdInput!
-  ): UpdateUserPreferencePayload
-
   """Updates a single \`Project\` using its globally unique id and a patch."""
   updateProjectById(
     """
@@ -13325,14 +13291,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateProjectInput!
-  ): UpdateProjectPayload
-
-  """Updates a single \`Project\` using a unique key and a patch."""
-  updateProjectBySlugAndWorkspaceId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectBySlugAndWorkspaceIdInput!
   ): UpdateProjectPayload
 
   """Updates a single \`Task\` using its globally unique id and a patch."""
@@ -13399,14 +13357,6 @@ type Mutation {
     input: DeleteInvitationInput!
   ): DeleteInvitationPayload
 
-  """Deletes a single \`Invitation\` using a unique key."""
-  deleteInvitationByWorkspaceIdAndEmail(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvitationByWorkspaceIdAndEmailInput!
-  ): DeleteInvitationPayload
-
   """Deletes a single \`Assignee\` using its globally unique id."""
   deleteAssigneeById(
     """
@@ -13471,22 +13421,6 @@ type Mutation {
     input: DeleteUserInput!
   ): DeleteUserPayload
 
-  """Deletes a single \`User\` using a unique key."""
-  deleteUserByEmail(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserByEmailInput!
-  ): DeleteUserPayload
-
-  """Deletes a single \`User\` using a unique key."""
-  deleteUserByIdentityProviderId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserByIdentityProviderIdInput!
-  ): DeleteUserPayload
-
   """Deletes a single \`Post\` using its globally unique id."""
   deletePostById(
     """
@@ -13517,14 +13451,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteWorkspaceInput!
-  ): DeleteWorkspacePayload
-
-  """Deletes a single \`Workspace\` using a unique key."""
-  deleteWorkspaceBySlug(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWorkspaceBySlugInput!
   ): DeleteWorkspacePayload
 
   """Deletes a single \`Column\` using its globally unique id."""
@@ -13575,14 +13501,6 @@ type Mutation {
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
 
-  """Deletes a single \`UserPreference\` using a unique key."""
-  deleteUserPreferenceByUserIdAndProjectId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceByUserIdAndProjectIdInput!
-  ): DeleteUserPreferencePayload
-
   """Deletes a single \`Project\` using its globally unique id."""
   deleteProjectById(
     """
@@ -13597,14 +13515,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteProjectInput!
-  ): DeleteProjectPayload
-
-  """Deletes a single \`Project\` using a unique key."""
-  deleteProjectBySlugAndWorkspaceId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectBySlugAndWorkspaceIdInput!
   ): DeleteProjectPayload
 
   """Deletes a single \`Task\` using its globally unique id."""
@@ -14467,22 +14377,6 @@ input UpdateInvitationInput {
   patch: InvitationPatch!
 }
 
-"""All input for the \`updateInvitationByWorkspaceIdAndEmail\` mutation."""
-input UpdateInvitationByWorkspaceIdAndEmailInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  workspaceId: UUID!
-  email: String!
-
-  """
-  An object where the defined keys will be set on the \`Invitation\` being updated.
-  """
-  patch: InvitationPatch!
-}
-
 """The output of our update \`Assignee\` mutation."""
 type UpdateAssigneePayload {
   """
@@ -14758,36 +14652,6 @@ input UpdateUserInput {
   patch: UserPatch!
 }
 
-"""All input for the \`updateUserByEmail\` mutation."""
-input UpdateUserByEmailInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  email: String!
-
-  """
-  An object where the defined keys will be set on the \`User\` being updated.
-  """
-  patch: UserPatch!
-}
-
-"""All input for the \`updateUserByIdentityProviderId\` mutation."""
-input UpdateUserByIdentityProviderIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  identityProviderId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`User\` being updated.
-  """
-  patch: UserPatch!
-}
-
 """The output of our update \`Post\` mutation."""
 type UpdatePostPayload {
   """
@@ -14918,21 +14782,6 @@ input UpdateWorkspaceInput {
   """
   clientMutationId: String
   rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Workspace\` being updated.
-  """
-  patch: WorkspacePatch!
-}
-
-"""All input for the \`updateWorkspaceBySlug\` mutation."""
-input UpdateWorkspaceBySlugInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  slug: String!
 
   """
   An object where the defined keys will be set on the \`Workspace\` being updated.
@@ -15151,22 +15000,6 @@ input UpdateUserPreferenceInput {
   patch: UserPreferencePatch!
 }
 
-"""All input for the \`updateUserPreferenceByUserIdAndProjectId\` mutation."""
-input UpdateUserPreferenceByUserIdAndProjectIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  userId: UUID!
-  projectId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`UserPreference\` being updated.
-  """
-  patch: UserPreferencePatch!
-}
-
 """The output of our update \`Project\` mutation."""
 type UpdateProjectPayload {
   """
@@ -15233,22 +15066,6 @@ input UpdateProjectInput {
   """
   clientMutationId: String
   rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Project\` being updated.
-  """
-  patch: ProjectPatch!
-}
-
-"""All input for the \`updateProjectBySlugAndWorkspaceId\` mutation."""
-input UpdateProjectBySlugAndWorkspaceIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  slug: String!
-  workspaceId: UUID!
 
   """
   An object where the defined keys will be set on the \`Project\` being updated.
@@ -15473,17 +15290,6 @@ input DeleteInvitationInput {
   rowId: UUID!
 }
 
-"""All input for the \`deleteInvitationByWorkspaceIdAndEmail\` mutation."""
-input DeleteInvitationByWorkspaceIdAndEmailInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  workspaceId: UUID!
-  email: String!
-}
-
 """The output of our delete \`Assignee\` mutation."""
 type DeleteAssigneePayload {
   """
@@ -15676,26 +15482,6 @@ input DeleteUserInput {
   rowId: UUID!
 }
 
-"""All input for the \`deleteUserByEmail\` mutation."""
-input DeleteUserByEmailInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  email: String!
-}
-
-"""All input for the \`deleteUserByIdentityProviderId\` mutation."""
-input DeleteUserByIdentityProviderIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  identityProviderId: UUID!
-}
-
 """The output of our delete \`Post\` mutation."""
 type DeletePostPayload {
   """
@@ -15790,16 +15576,6 @@ input DeleteWorkspaceInput {
   """
   clientMutationId: String
   rowId: UUID!
-}
-
-"""All input for the \`deleteWorkspaceBySlug\` mutation."""
-input DeleteWorkspaceBySlugInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  slug: String!
 }
 
 """The output of our delete \`Column\` mutation."""
@@ -15946,17 +15722,6 @@ input DeleteUserPreferenceInput {
   rowId: UUID!
 }
 
-"""All input for the \`deleteUserPreferenceByUserIdAndProjectId\` mutation."""
-input DeleteUserPreferenceByUserIdAndProjectIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  userId: UUID!
-  projectId: UUID!
-}
-
 """The output of our delete \`Project\` mutation."""
 type DeleteProjectPayload {
   """
@@ -16003,17 +15768,6 @@ input DeleteProjectInput {
   """
   clientMutationId: String
   rowId: UUID!
-}
-
-"""All input for the \`deleteProjectBySlugAndWorkspaceId\` mutation."""
-input DeleteProjectBySlugAndWorkspaceIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  slug: String!
-  workspaceId: UUID!
 }
 
 """The output of our delete \`Task\` mutation."""
@@ -41386,23 +41140,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    updateInvitationByWorkspaceIdAndEmail: {
-      plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_invitationPgResource, {
-          workspace_id: args.getRaw(['input', "workspaceId"]),
-          email: args.getRaw(['input', "email"])
-        });
-        args.apply($update);
-        return object({
-          result: $update
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
     updateAssigneeById: {
       plan(_$root, args) {
         const $update = pgUpdateSingle(pgResource_assigneePgResource, specFromArgs_Assignee(args));
@@ -41523,38 +41260,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    updateUserByEmail: {
-      plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_userPgResource, {
-          email: args.getRaw(['input', "email"])
-        });
-        args.apply($update);
-        return object({
-          result: $update
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    updateUserByIdentityProviderId: {
-      plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_userPgResource, {
-          identity_provider_id: args.getRaw(['input', "identityProviderId"])
-        });
-        args.apply($update);
-        return object({
-          result: $update
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
     updatePostById: {
       plan(_$root, args) {
         const $update = pgUpdateSingle(pgResource_postPgResource, specFromArgs_Post(args));
@@ -41603,22 +41308,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       plan(_$root, args) {
         const $update = pgUpdateSingle(pgResource_workspacePgResource, {
           id: args.getRaw(['input', "rowId"])
-        });
-        args.apply($update);
-        return object({
-          result: $update
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    updateWorkspaceBySlug: {
-      plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_workspacePgResource, {
-          slug: args.getRaw(['input', "slug"])
         });
         args.apply($update);
         return object({
@@ -41721,23 +41410,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    updateUserPreferenceByUserIdAndProjectId: {
-      plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_user_preferencePgResource, {
-          user_id: args.getRaw(['input', "userId"]),
-          project_id: args.getRaw(['input', "projectId"])
-        });
-        args.apply($update);
-        return object({
-          result: $update
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
     updateProjectById: {
       plan(_$root, args) {
         const $update = pgUpdateSingle(pgResource_projectPgResource, specFromArgs_Project(args));
@@ -41756,23 +41428,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       plan(_$root, args) {
         const $update = pgUpdateSingle(pgResource_projectPgResource, {
           id: args.getRaw(['input', "rowId"])
-        });
-        args.apply($update);
-        return object({
-          result: $update
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    updateProjectBySlugAndWorkspaceId: {
-      plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_projectPgResource, {
-          slug: args.getRaw(['input', "slug"]),
-          workspace_id: args.getRaw(['input', "workspaceId"])
         });
         args.apply($update);
         return object({
@@ -41906,23 +41561,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    deleteInvitationByWorkspaceIdAndEmail: {
-      plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_invitationPgResource, {
-          workspace_id: args.getRaw(['input', "workspaceId"]),
-          email: args.getRaw(['input', "email"])
-        });
-        args.apply($delete);
-        return object({
-          result: $delete
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
     deleteAssigneeById: {
       plan(_$root, args) {
         const $delete = pgDeleteSingle(pgResource_assigneePgResource, specFromArgs_Assignee2(args));
@@ -42043,38 +41681,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    deleteUserByEmail: {
-      plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_userPgResource, {
-          email: args.getRaw(['input', "email"])
-        });
-        args.apply($delete);
-        return object({
-          result: $delete
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    deleteUserByIdentityProviderId: {
-      plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_userPgResource, {
-          identity_provider_id: args.getRaw(['input', "identityProviderId"])
-        });
-        args.apply($delete);
-        return object({
-          result: $delete
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
     deletePostById: {
       plan(_$root, args) {
         const $delete = pgDeleteSingle(pgResource_postPgResource, specFromArgs_Post2(args));
@@ -42123,22 +41729,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       plan(_$root, args) {
         const $delete = pgDeleteSingle(pgResource_workspacePgResource, {
           id: args.getRaw(['input', "rowId"])
-        });
-        args.apply($delete);
-        return object({
-          result: $delete
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    deleteWorkspaceBySlug: {
-      plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_workspacePgResource, {
-          slug: args.getRaw(['input', "slug"])
         });
         args.apply($delete);
         return object({
@@ -42241,23 +41831,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         }
       }
     },
-    deleteUserPreferenceByUserIdAndProjectId: {
-      plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_user_preferencePgResource, {
-          user_id: args.getRaw(['input', "userId"]),
-          project_id: args.getRaw(['input', "projectId"])
-        });
-        args.apply($delete);
-        return object({
-          result: $delete
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
     deleteProjectById: {
       plan(_$root, args) {
         const $delete = pgDeleteSingle(pgResource_projectPgResource, specFromArgs_Project2(args));
@@ -42276,23 +41849,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       plan(_$root, args) {
         const $delete = pgDeleteSingle(pgResource_projectPgResource, {
           id: args.getRaw(['input', "rowId"])
-        });
-        args.apply($delete);
-        return object({
-          result: $delete
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    deleteProjectBySlugAndWorkspaceId: {
-      plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_projectPgResource, {
-          slug: args.getRaw(['input', "slug"]),
-          workspace_id: args.getRaw(['input', "workspaceId"])
         });
         args.apply($delete);
         return object({
@@ -43682,14 +43238,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       if (arg != null) return qb.setBuilder();
     }
   },
-  UpdateInvitationByWorkspaceIdAndEmailInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
   UpdateAssigneePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -44032,22 +43580,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       if (arg != null) return qb.setBuilder();
     }
   },
-  UpdateUserByEmailInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
-  UpdateUserByIdentityProviderIdInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
   UpdatePostPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -44215,14 +43747,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   UpdateWorkspaceInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
-  UpdateWorkspaceBySlugInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     },
@@ -44506,14 +44030,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       if (arg != null) return qb.setBuilder();
     }
   },
-  UpdateUserPreferenceByUserIdAndProjectIdInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
   UpdateProjectPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -44615,14 +44131,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   UpdateProjectInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
-  UpdateProjectBySlugAndWorkspaceIdInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     },
@@ -44876,11 +44384,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       qb.setMeta("clientMutationId", val);
     }
   },
-  DeleteInvitationByWorkspaceIdAndEmailInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
   DeleteAssigneePayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -45057,16 +44560,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       qb.setMeta("clientMutationId", val);
     }
   },
-  DeleteUserByEmailInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
-  DeleteUserByIdentityProviderIdInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
   DeletePostPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -45151,11 +44644,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   DeleteWorkspaceInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
-  DeleteWorkspaceBySlugInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     }
@@ -45292,11 +44780,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       qb.setMeta("clientMutationId", val);
     }
   },
-  DeleteUserPreferenceByUserIdAndProjectIdInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
   DeleteProjectPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -45337,11 +44820,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     }
   },
   DeleteProjectInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
-  DeleteProjectBySlugAndWorkspaceIdInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     }
