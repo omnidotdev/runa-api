@@ -24,7 +24,9 @@
     "graphile:generate": "NODE_ENV=development GRAPHILE_ENV=development bun run --env-file .env.local src/scripts/generateGraphqlSchema.ts",
     "prepare": "husky"
   },
-  "trustedDependencies": ["@biomejs/biome"],
+  "trustedDependencies": [
+    "@biomejs/biome"
+  ],
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.13",
@@ -45,6 +47,7 @@
     "@graphile/simplify-inflection": "^8.0.0-beta.6",
     "@graphql-yoga/plugin-disable-introspection": "^2.14.4",
     "@polar-sh/elysia": "^0.2.3",
+    "@tanstack/query-core": "^5.85.3",
     "drizzle-orm": "^0.43.1",
     "elysia": "^1.3.1",
     "graphile-export": "0.0.2-beta.26",
