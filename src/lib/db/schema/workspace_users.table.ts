@@ -1,8 +1,9 @@
+import { relations } from "drizzle-orm";
 import { index, pgEnum, pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
-import { userTable } from "./user.table";
-import { workspaceTable } from "./workspace.table";
 
 import { generateDefaultDate } from "lib/db/util";
+import { userTable } from "./user.table";
+import { workspaceTable } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -28,6 +29,16 @@ export const workspaceUserTable = pgTable(
     index().on(table.userId),
     index().on(table.workspaceId),
   ],
+);
+
+export const workspaceUserRelations = relations(
+  workspaceUserTable,
+  ({ one }) => ({
+    workspace: one(workspaceTable, {
+      fields: [workspaceUserTable.workspaceId],
+      references: [workspaceTable.id],
+    }),
+  }),
 );
 
 export type InsertWorkspaceUser = InferInsertModel<typeof workspaceUserTable>;

@@ -5955,9 +5955,30 @@ function oldPlan13(_, args) {
 }
 const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspace"]),
-    $observer = context().get("observer");
-  sideEffect([$input, $observer], async ([input, observer]) => {
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("create" !== "create") {
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspaceUsers: {
+            where(table, {
+              eq
+            }) {
+              return eq(table.userId, observer.id);
+            }
+          }
+        }
+      });
+      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -6244,9 +6265,30 @@ const oldPlan27 = (_$root, args) => {
 };
 const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer");
-  sideEffect([$input, $observer], async ([input, observer]) => {
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("update" !== "create") {
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspaceUsers: {
+            where(table, {
+              eq
+            }) {
+              return eq(table.userId, observer.id);
+            }
+          }
+        }
+      });
+      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -6539,9 +6581,30 @@ const oldPlan41 = (_$root, args) => {
 };
 const planWrapper41 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer");
-  sideEffect([$input, $observer], async ([input, observer]) => {
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("delete" !== "create") {
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspaceUsers: {
+            where(table, {
+              eq
+            }) {
+              return eq(table.userId, observer.id);
+            }
+          }
+        }
+      });
+      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
