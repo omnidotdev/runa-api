@@ -15,6 +15,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       },
     [context, sideEffect, propName, scope],
   );
+
 export default makeWrapPlansPlugin({
   Mutation: {
     createProjectColumn: validatePermissions("projectColumn", "create"),

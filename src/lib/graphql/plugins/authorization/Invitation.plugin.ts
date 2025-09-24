@@ -15,6 +15,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       },
     [context, sideEffect, propName, scope],
   );
+
 export default makeWrapPlansPlugin({
   Mutation: {
     createInvitation: validatePermissions("invitation", "create"),
