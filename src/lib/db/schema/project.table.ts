@@ -13,6 +13,7 @@ import { workspaceTable } from "./workspace.table";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { projectColumnTable } from "./project_column.table";
+import { taskTable } from "./task.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -48,11 +49,12 @@ export const projectTable = pgTable(
   ],
 );
 
-export const projectRelations = relations(projectTable, ({ one }) => ({
+export const projectRelations = relations(projectTable, ({ one, many }) => ({
   workspace: one(workspaceTable, {
     fields: [projectTable.workspaceId],
     references: [workspaceTable.id],
   }),
+  tasks: many(taskTable),
 }));
 
 export type InsertProject = InferInsertModel<typeof projectTable>;
