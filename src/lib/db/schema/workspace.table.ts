@@ -26,7 +26,7 @@ export const workspaceTable = pgTable(
       .unique()
       .notNull(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
-    tier: tier("tier").notNull().default("free"),
+    tier: tier().notNull().default("free"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
