@@ -6,7 +6,7 @@
   "module": "build/server.js",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development GRAPHILE_ENV=development bun run --watch src/server.ts",
+    "dev": "concurrently --kill-others --names \"SERVER,STUDIO\" \"NODE_ENV=development GRAPHILE_ENV=development bun run --watch src/server.ts\" \"bun db:studio\"",
     "build": "bun build --target node --outdir build src/server.ts",
     "start": "NODE_ENV=production GRAPHILE_ENV=production bun db:migrate && NODE_ENV=production GRAPHILE_ENV=production bun run build/server.js",
     "lint": "biome lint src",
@@ -28,6 +28,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.13",
+    "concurrently": "^9.2.1",
     "drizzle-kit": "^0.31.1",
     "drizzle-seed": "^0.3.1",
     "husky": "^9.1.7",
