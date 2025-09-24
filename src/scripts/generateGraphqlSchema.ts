@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { EXPORTABLE, exportSchema } from "graphile-export";
 import { makeSchema } from "postgraphile";
+import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
 
 import graphilePreset from "lib/config/graphile.config";
@@ -25,6 +26,7 @@ const generateGraphqlSchema = async () => {
     mode: "typeDefs",
     modules: {
       "graphile-export": { EXPORTABLE },
+      "postgraphile/grafast": { context, sideEffect },
     },
   });
 
