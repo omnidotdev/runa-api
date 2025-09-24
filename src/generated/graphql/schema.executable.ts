@@ -5776,6 +5776,9 @@ function oldPlan(_, args) {
 const planWrapper = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "taskLabel"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan2(_, args) {
@@ -5788,6 +5791,9 @@ function oldPlan2(_, args) {
 const planWrapper2 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "invitation"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan3(_, args) {
@@ -5800,6 +5806,9 @@ function oldPlan3(_, args) {
 const planWrapper3 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "assignee"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan4(_, args) {
@@ -5812,6 +5821,9 @@ function oldPlan4(_, args) {
 const planWrapper4 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "emoji"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan5(_, args) {
@@ -5824,6 +5836,9 @@ function oldPlan5(_, args) {
 const planWrapper5 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "label"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan6(_, args) {
@@ -5836,6 +5851,9 @@ function oldPlan6(_, args) {
 const planWrapper6 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "user"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan7(_, args) {
@@ -5848,6 +5866,9 @@ function oldPlan7(_, args) {
 const planWrapper7 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "post"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan8(_, args) {
@@ -5860,6 +5881,9 @@ function oldPlan8(_, args) {
 const planWrapper8 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "column"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan9(_, args) {
@@ -5872,6 +5896,9 @@ function oldPlan9(_, args) {
 const planWrapper9 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspaceUser"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan10(_, args) {
@@ -5884,6 +5911,9 @@ function oldPlan10(_, args) {
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "projectColumn"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan11(_, args) {
@@ -5896,6 +5926,9 @@ function oldPlan11(_, args) {
 const planWrapper11 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "userPreference"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan12(_, args) {
@@ -5908,6 +5941,9 @@ function oldPlan12(_, args) {
 const planWrapper12 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "project"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan13(_, args) {
@@ -5920,6 +5956,9 @@ function oldPlan13(_, args) {
 const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspace"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 function oldPlan14(_, args) {
@@ -5932,6 +5971,9 @@ function oldPlan14(_, args) {
 const planWrapper14 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "task"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_TaskLabel = args => {
@@ -5950,6 +5992,9 @@ const oldPlan15 = (_$root, args) => {
 const planWrapper15 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Invitation = args => {
@@ -5968,6 +6013,9 @@ const oldPlan16 = (_$root, args) => {
 const planWrapper16 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Assignee = args => {
@@ -5986,6 +6034,9 @@ const oldPlan17 = (_$root, args) => {
 const planWrapper17 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Emoji = args => {
@@ -6004,6 +6055,9 @@ const oldPlan18 = (_$root, args) => {
 const planWrapper18 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Label = args => {
@@ -6022,6 +6076,9 @@ const oldPlan19 = (_$root, args) => {
 const planWrapper19 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_User = args => {
@@ -6040,6 +6097,9 @@ const oldPlan20 = (_$root, args) => {
 const planWrapper20 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Post = args => {
@@ -6058,6 +6118,9 @@ const oldPlan21 = (_$root, args) => {
 const planWrapper21 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Column = args => {
@@ -6076,6 +6139,9 @@ const oldPlan22 = (_$root, args) => {
 const planWrapper22 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_WorkspaceUser = args => {
@@ -6095,6 +6161,9 @@ const oldPlan23 = (_$root, args) => {
 const planWrapper23 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_ProjectColumn = args => {
@@ -6113,6 +6182,9 @@ const oldPlan24 = (_$root, args) => {
 const planWrapper24 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_UserPreference = args => {
@@ -6131,6 +6203,9 @@ const oldPlan25 = (_$root, args) => {
 const planWrapper25 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Project = args => {
@@ -6149,6 +6224,9 @@ const oldPlan26 = (_$root, args) => {
 const planWrapper26 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Workspace = args => {
@@ -6167,6 +6245,9 @@ const oldPlan27 = (_$root, args) => {
 const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Task = args => {
@@ -6185,6 +6266,9 @@ const oldPlan28 = (_$root, args) => {
 const planWrapper28 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_TaskLabel2 = args => {
@@ -6203,6 +6287,9 @@ const oldPlan29 = (_$root, args) => {
 const planWrapper29 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Invitation2 = args => {
@@ -6221,6 +6308,9 @@ const oldPlan30 = (_$root, args) => {
 const planWrapper30 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Assignee2 = args => {
@@ -6239,6 +6329,9 @@ const oldPlan31 = (_$root, args) => {
 const planWrapper31 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Emoji2 = args => {
@@ -6257,6 +6350,9 @@ const oldPlan32 = (_$root, args) => {
 const planWrapper32 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Label2 = args => {
@@ -6275,6 +6371,9 @@ const oldPlan33 = (_$root, args) => {
 const planWrapper33 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_User2 = args => {
@@ -6293,6 +6392,9 @@ const oldPlan34 = (_$root, args) => {
 const planWrapper34 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Post2 = args => {
@@ -6311,6 +6413,9 @@ const oldPlan35 = (_$root, args) => {
 const planWrapper35 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Column2 = args => {
@@ -6329,6 +6434,9 @@ const oldPlan36 = (_$root, args) => {
 const planWrapper36 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_WorkspaceUser2 = args => {
@@ -6348,6 +6456,9 @@ const oldPlan37 = (_$root, args) => {
 const planWrapper37 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_ProjectColumn2 = args => {
@@ -6366,6 +6477,9 @@ const oldPlan38 = (_$root, args) => {
 const planWrapper38 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_UserPreference2 = args => {
@@ -6384,6 +6498,9 @@ const oldPlan39 = (_$root, args) => {
 const planWrapper39 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Project2 = args => {
@@ -6402,6 +6519,9 @@ const oldPlan40 = (_$root, args) => {
 const planWrapper40 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Workspace2 = args => {
@@ -6420,6 +6540,9 @@ const oldPlan41 = (_$root, args) => {
 const planWrapper41 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 const specFromArgs_Task2 = args => {
@@ -6438,6 +6561,9 @@ const oldPlan42 = (_$root, args) => {
 const planWrapper42 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw new Error("Unauthorized");
+  });
   return plan();
 };
 export const typeDefs = /* GraphQL */`"""The root query type which gives access points into the data universe."""
