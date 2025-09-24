@@ -1,4 +1,4 @@
-import { index, pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
+import { index, pgEnum, pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
 import { userTable } from "./user.table";
 import { workspaceTable } from "./workspace.table";
 
@@ -6,18 +6,21 @@ import { generateDefaultDate } from "lib/db/util";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
+export const role = pgEnum("role", ["owner", "admin", "member"]);
+
 /**
  * Workspace users junction table.
  */
 export const workspaceUserTable = pgTable(
   "workspace_user",
   {
-    workspaceId: uuid("workspace_id")
+    workspaceId: uuid()
       .notNull()
       .references(() => workspaceTable.id, { onDelete: "cascade" }),
-    userId: uuid("user_id")
+    userId: uuid()
       .notNull()
       .references(() => userTable.id, { onDelete: "cascade" }),
+    role: role().notNull().default("member"),
     createdAt: generateDefaultDate(),
   },
   (table) => [
