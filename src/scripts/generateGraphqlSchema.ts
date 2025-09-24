@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from "node:fs";
-import { exportSchema } from "graphile-export";
+import { EXPORTABLE, exportSchema } from "graphile-export";
 import { makeSchema } from "postgraphile";
 import { replaceInFile } from "replace-in-file";
 
@@ -23,6 +23,9 @@ const generateGraphqlSchema = async () => {
 
   await exportSchema(schema, schemaFilePath, {
     mode: "typeDefs",
+    modules: {
+      "graphile-export": { EXPORTABLE },
+    },
   });
 
   await replaceInFile({

@@ -4,7 +4,23 @@ import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connecti
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
 
-import { PrimaryKeyMutationsOnlyPlugin } from "lib/graphql/plugins/authorization";
+import {
+  AssigneePlugin,
+  ColumnPlugin,
+  EmojiPlugin,
+  InvitationPlugin,
+  LabelPlugin,
+  PostPlugin,
+  PrimaryKeyMutationsOnlyPlugin,
+  ProjectColumnPlugin,
+  ProjectPlugin,
+  TaskLabelPlugin,
+  TaskPlugin,
+  UserPlugin,
+  UserPreferencePlugin,
+  WorkspacePlugin,
+  WorkspaceUserPlugin,
+} from "lib/graphql/plugins/authorization";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
 /**
@@ -17,7 +33,23 @@ const graphilePreset: GraphileConfig.Preset = {
     PostGraphileConnectionFilterPreset,
     PgAggregatesPreset,
   ],
-  plugins: [PrimaryKeyMutationsOnlyPlugin],
+  plugins: [
+    AssigneePlugin,
+    ColumnPlugin,
+    EmojiPlugin,
+    InvitationPlugin,
+    LabelPlugin,
+    PostPlugin,
+    PrimaryKeyMutationsOnlyPlugin,
+    ProjectPlugin,
+    ProjectColumnPlugin,
+    TaskPlugin,
+    TaskLabelPlugin,
+    UserPlugin,
+    UserPreferencePlugin,
+    WorkspacePlugin,
+    WorkspaceUserPlugin,
+  ],
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   schema: {
     retryOnInitFail: isProdEnv,
