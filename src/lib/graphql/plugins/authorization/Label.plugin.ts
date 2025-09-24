@@ -14,8 +14,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context<GraphQLContext>().get("observer");
+        const $db = context<GraphQLContext>().get("db");
 
-        sideEffect([$input, $observer], async ([input, observer]) => {
+        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
         });
 
