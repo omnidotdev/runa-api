@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
@@ -32,6 +33,13 @@ export const postTable = pgTable(
     index().on(table.taskId),
   ],
 );
+
+export const postRelations = relations(postTable, ({ one }) => ({
+  task: one(taskTable, {
+    fields: [postTable.taskId],
+    references: [taskTable.id],
+  }),
+}));
 
 export type InsertPost = InferInsertModel<typeof postTable>;
 export type SelectPost = InferSelectModel<typeof postTable>;

@@ -12,6 +12,7 @@ import {
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { columnTable } from "./column.table";
+import { postTable } from "./post.table";
 import { projectTable } from "./project.table";
 import { userTable } from "./user.table";
 
@@ -51,11 +52,12 @@ export const taskTable = pgTable(
   ],
 );
 
-export const taskRelations = relations(taskTable, ({ one }) => ({
+export const taskRelations = relations(taskTable, ({ one, many }) => ({
   project: one(projectTable, {
     fields: [taskTable.projectId],
     references: [projectTable.id],
   }),
+  posts: many(postTable),
 }));
 
 export type InsertTask = InferInsertModel<typeof taskTable>;
