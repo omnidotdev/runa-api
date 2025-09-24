@@ -4,6 +4,7 @@ import { makeWrapPlansPlugin } from "postgraphile/utils";
 
 import type { MutationScope } from "./types";
 
+import type { InsertProject } from "lib/db/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 
@@ -18,6 +19,55 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
+
+          if (scope !== "create") {
+            const project = await db.query.projectTable.findFirst({
+              where: (table, { eq }) => eq(table.id, input),
+              with: {
+                workspace: {
+                  with: {
+                    workspaceUsers: {
+                      where: (table, { eq }) => eq(table.userId, observer.id),
+                    },
+                  },
+                },
+              },
+            });
+
+            if (!project?.workspace?.workspaceUsers?.length)
+              throw new Error("Unauthorized");
+
+            // TODO: determine proper permissions
+            if (
+              scope === "delete" &&
+              project.workspace.workspaceUsers[0].role !== "owner"
+            )
+              throw new Error("Unauthorized");
+
+            if (
+              scope === "update" &&
+              project.workspace.workspaceUsers[0].role === "member"
+            )
+              throw new Error("Unauthorized");
+          } else {
+            const workspaceId = (input as InsertProject).workspaceId;
+
+            const workspace = await db.query.workspaceTable.findFirst({
+              where: (table, { eq }) => eq(table.id, workspaceId),
+              with: {
+                workspaceUsers: {
+                  where: (table, { eq }) => eq(table.userId, observer.id),
+                },
+              },
+            });
+
+            if (!workspace?.workspaceUsers?.length)
+              throw new Error("Unauthorized");
+
+            // TODO: determine proper permissions, including tier based
+            if (workspace.workspaceUsers[0].role === "member")
+              throw new Error("Unauthorized");
+          }
         });
 
         return plan();

@@ -8,9 +8,10 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { projectTable } from "./project.table";
+import { workspaceUserTable } from "./workspace_users.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { workspaceUserTable } from "./workspace_users.table";
 
 export const tier = pgEnum("tier", ["free", "basic", "team"]);
 
@@ -37,6 +38,7 @@ export const workspaceTable = pgTable(
 
 export const workspaceRelations = relations(workspaceTable, ({ many }) => ({
   workspaceUsers: many(workspaceUserTable),
+  projects: many(projectTable),
 }));
 
 export type InsertWorkspace = InferInsertModel<typeof workspaceTable>;
