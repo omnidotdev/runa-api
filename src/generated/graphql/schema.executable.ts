@@ -5869,6 +5869,72 @@ const planWrapper4 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("create" !== "create") {
+      const emoji = await db.query.emojiTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          post: {
+            with: {
+              task: {
+                with: {
+                  project: {
+                    with: {
+                      workspace: {
+                        with: {
+                          workspaceUsers: {
+                            where(table, {
+                              eq
+                            }) {
+                              return eq(table.userId, observer.id);
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (!emoji?.post.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (emoji.userId !== observer.id && emoji.post.task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+    } else {
+      const postId = input.postId;
+      if (!(await db.query.postTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, postId);
+        },
+        with: {
+          task: {
+            with: {
+              project: {
+                with: {
+                  workspace: {
+                    with: {
+                      workspaceUsers: {
+                        where(table, {
+                          eq
+                        }) {
+                          return eq(table.userId, observer.id);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }))?.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -6428,6 +6494,72 @@ const planWrapper18 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("update" !== "create") {
+      const emoji = await db.query.emojiTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          post: {
+            with: {
+              task: {
+                with: {
+                  project: {
+                    with: {
+                      workspace: {
+                        with: {
+                          workspaceUsers: {
+                            where(table, {
+                              eq
+                            }) {
+                              return eq(table.userId, observer.id);
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (!emoji?.post.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (emoji.userId !== observer.id && emoji.post.task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+    } else {
+      const postId = input.postId;
+      if (!(await db.query.postTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, postId);
+        },
+        with: {
+          task: {
+            with: {
+              project: {
+                with: {
+                  workspace: {
+                    with: {
+                      workspaceUsers: {
+                        where(table, {
+                          eq
+                        }) {
+                          return eq(table.userId, observer.id);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }))?.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -7048,6 +7180,72 @@ const planWrapper32 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("delete" !== "create") {
+      const emoji = await db.query.emojiTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          post: {
+            with: {
+              task: {
+                with: {
+                  project: {
+                    with: {
+                      workspace: {
+                        with: {
+                          workspaceUsers: {
+                            where(table, {
+                              eq
+                            }) {
+                              return eq(table.userId, observer.id);
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (!emoji?.post.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (emoji.userId !== observer.id && emoji.post.task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+    } else {
+      const postId = input.postId;
+      if (!(await db.query.postTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, postId);
+        },
+        with: {
+          task: {
+            with: {
+              project: {
+                with: {
+                  workspace: {
+                    with: {
+                      workspaceUsers: {
+                        where(table, {
+                          eq
+                        }) {
+                          return eq(table.userId, observer.id);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }))?.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    }
   });
   return plan();
 };

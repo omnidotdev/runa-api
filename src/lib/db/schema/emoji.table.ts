@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate } from "lib/db/util";
@@ -35,6 +36,13 @@ export const emojiTable = pgTable(
     index().on(table.userId),
   ],
 );
+
+export const emojiRelations = relations(emojiTable, ({ one }) => ({
+  post: one(postTable, {
+    fields: [emojiTable.postId],
+    references: [postTable.id],
+  }),
+}));
 
 export type InsertEmoji = InferInsertModel<typeof emojiTable>;
 export type SelectEmoji = InferSelectModel<typeof emojiTable>;

@@ -6,6 +6,7 @@ import { taskTable } from "./task.table";
 import { userTable } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { emojiTable } from "./emoji.table";
 
 /**
  * Post table.
@@ -34,11 +35,12 @@ export const postTable = pgTable(
   ],
 );
 
-export const postRelations = relations(postTable, ({ one }) => ({
+export const postRelations = relations(postTable, ({ one, many }) => ({
   task: one(taskTable, {
     fields: [postTable.taskId],
     references: [taskTable.id],
   }),
+  emojis: many(emojiTable),
 }));
 
 export type InsertPost = InferInsertModel<typeof postTable>;
