@@ -11,6 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { assigneeTable } from "./assignee.table";
 import { columnTable } from "./column.table";
 import { postTable } from "./post.table";
 import { projectTable } from "./project.table";
@@ -58,6 +59,7 @@ export const taskRelations = relations(taskTable, ({ one, many }) => ({
     references: [projectTable.id],
   }),
   posts: many(postTable),
+  assignees: many(assigneeTable),
 }));
 
 export type InsertTask = InferInsertModel<typeof taskTable>;

@@ -5853,6 +5853,64 @@ const planWrapper3 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("create" !== "create") {
+      const assignee = await db.query.assigneeTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          task: {
+            with: {
+              project: {
+                with: {
+                  workspace: {
+                    with: {
+                      workspaceUsers: {
+                        where(table, {
+                          eq
+                        }) {
+                          return eq(table.userId, observer.id);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (!assignee?.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (assignee.task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+    } else {
+      const taskId = input.taskId;
+      if (!(await db.query.taskTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, taskId);
+        },
+        with: {
+          project: {
+            with: {
+              workspace: {
+                with: {
+                  workspaceUsers: {
+                    where(table, {
+                      eq
+                    }) {
+                      return eq(table.userId, observer.id);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }))?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -6524,6 +6582,64 @@ const planWrapper17 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("update" !== "create") {
+      const assignee = await db.query.assigneeTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          task: {
+            with: {
+              project: {
+                with: {
+                  workspace: {
+                    with: {
+                      workspaceUsers: {
+                        where(table, {
+                          eq
+                        }) {
+                          return eq(table.userId, observer.id);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (!assignee?.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (assignee.task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+    } else {
+      const taskId = input.taskId;
+      if (!(await db.query.taskTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, taskId);
+        },
+        with: {
+          project: {
+            with: {
+              workspace: {
+                with: {
+                  workspaceUsers: {
+                    where(table, {
+                      eq
+                    }) {
+                      return eq(table.userId, observer.id);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }))?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -7262,6 +7378,64 @@ const planWrapper31 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("delete" !== "create") {
+      const assignee = await db.query.assigneeTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          task: {
+            with: {
+              project: {
+                with: {
+                  workspace: {
+                    with: {
+                      workspaceUsers: {
+                        where(table, {
+                          eq
+                        }) {
+                          return eq(table.userId, observer.id);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (!assignee?.task.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (assignee.task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+    } else {
+      const taskId = input.taskId;
+      if (!(await db.query.taskTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, taskId);
+        },
+        with: {
+          project: {
+            with: {
+              workspace: {
+                with: {
+                  workspaceUsers: {
+                    where(table, {
+                      eq
+                    }) {
+                      return eq(table.userId, observer.id);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }))?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
