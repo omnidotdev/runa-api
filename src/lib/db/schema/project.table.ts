@@ -12,6 +12,7 @@ import {
 import { workspaceTable } from "./workspace.table";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { columnTable } from "./column.table";
 import { labelTable } from "./label.table";
 import { projectColumnTable } from "./project_column.table";
 import { taskTable } from "./task.table";
@@ -57,6 +58,7 @@ export const projectRelations = relations(projectTable, ({ one, many }) => ({
   }),
   tasks: many(taskTable),
   labels: many(labelTable),
+  columns: many(columnTable),
 }));
 
 export type InsertProject = InferInsertModel<typeof projectTable>;
