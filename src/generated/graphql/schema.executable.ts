@@ -5795,6 +5795,48 @@ const planWrapper2 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("create" !== "create") {
+      if (!(await db.query.invitationsTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspace: {
+            with: {
+              workspaceUsers: {
+                where(table, {
+                  eq
+                }) {
+                  return eq(table.userId, observer.id);
+                }
+              }
+            }
+          }
+        }
+      }))?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    } else {
+      const workspaceId = input.workspaceId,
+        workspace = await db.query.workspaceTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, workspaceId);
+          },
+          with: {
+            workspaceUsers: {
+              where(table, {
+                eq
+              }) {
+                return eq(table.userId, observer.id);
+              }
+            }
+          }
+        });
+      if (!workspace?.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -6300,6 +6342,48 @@ const planWrapper16 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("update" !== "create") {
+      if (!(await db.query.invitationsTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspace: {
+            with: {
+              workspaceUsers: {
+                where(table, {
+                  eq
+                }) {
+                  return eq(table.userId, observer.id);
+                }
+              }
+            }
+          }
+        }
+      }))?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    } else {
+      const workspaceId = input.workspaceId,
+        workspace = await db.query.workspaceTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, workspaceId);
+          },
+          with: {
+            workspaceUsers: {
+              where(table, {
+                eq
+              }) {
+                return eq(table.userId, observer.id);
+              }
+            }
+          }
+        });
+      if (!workspace?.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -6878,6 +6962,48 @@ const planWrapper30 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw new Error("Unauthorized");
+    if ("delete" !== "create") {
+      if (!(await db.query.invitationsTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspace: {
+            with: {
+              workspaceUsers: {
+                where(table, {
+                  eq
+                }) {
+                  return eq(table.userId, observer.id);
+                }
+              }
+            }
+          }
+        }
+      }))?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+    } else {
+      const workspaceId = input.workspaceId,
+        workspace = await db.query.workspaceTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, workspaceId);
+          },
+          with: {
+            workspaceUsers: {
+              where(table, {
+                eq
+              }) {
+                return eq(table.userId, observer.id);
+              }
+            }
+          }
+        });
+      if (!workspace?.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+    }
   });
   return plan();
 };

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   index,
   pgTable,
@@ -15,7 +16,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 /**
  * Invitation table.
  */
-export const invitations = pgTable(
+export const invitationsTable = pgTable(
   "invitation",
   {
     id: generateDefaultId(),
@@ -33,8 +34,15 @@ export const invitations = pgTable(
   ],
 );
 
+export const invitationRelations = relations(invitationsTable, ({ one }) => ({
+  workspace: one(workspaceTable, {
+    fields: [invitationsTable.workspaceId],
+    references: [workspaceTable.id],
+  }),
+}));
+
 /**
  * Type helpers related to the invitation table.
  */
-export type InsertInvitation = InferInsertModel<typeof invitations>;
-export type SelectInvitation = InferSelectModel<typeof invitations>;
+export type InsertInvitation = InferInsertModel<typeof invitationsTable>;
+export type SelectInvitation = InferSelectModel<typeof invitationsTable>;

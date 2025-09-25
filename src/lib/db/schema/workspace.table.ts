@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { invitationsTable } from "./invitation.table";
 import { projectTable } from "./project.table";
 import { projectColumnTable } from "./project_column.table";
 import { workspaceUserTable } from "./workspace_users.table";
@@ -41,6 +42,7 @@ export const workspaceRelations = relations(workspaceTable, ({ many }) => ({
   workspaceUsers: many(workspaceUserTable),
   projects: many(projectTable),
   projectColumns: many(projectColumnTable),
+  invitations: many(invitationsTable),
 }));
 
 export type InsertWorkspace = InferInsertModel<typeof workspaceTable>;
