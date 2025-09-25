@@ -6456,27 +6456,35 @@ const planWrapper14 = (plan, _, fieldArgs) => {
       if (!task?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
       if (task.authorId !== observer.id && task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
     } else {
-      const projectId = input.projectId;
-      if (!(await db.query.projectTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, projectId);
-        },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
+      const projectId = input.projectId,
+        project = await db.query.projectTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          },
+          with: {
+            workspace: {
+              with: {
+                workspaceUsers: {
+                  where(table, {
+                    eq
+                  }) {
+                    return eq(table.userId, observer.id);
+                  }
+                },
+                projects: {
+                  with: {
+                    tasks: !0
+                  }
                 }
               }
             }
           }
-        }
-      }))?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+        });
+      if (!project?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
+      if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
     }
   });
   return plan();
@@ -7255,27 +7263,35 @@ const planWrapper28 = (plan, _, fieldArgs) => {
       if (!task?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
       if (task.authorId !== observer.id && task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
     } else {
-      const projectId = input.projectId;
-      if (!(await db.query.projectTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, projectId);
-        },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
+      const projectId = input.projectId,
+        project = await db.query.projectTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          },
+          with: {
+            workspace: {
+              with: {
+                workspaceUsers: {
+                  where(table, {
+                    eq
+                  }) {
+                    return eq(table.userId, observer.id);
+                  }
+                },
+                projects: {
+                  with: {
+                    tasks: !0
+                  }
                 }
               }
             }
           }
-        }
-      }))?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+        });
+      if (!project?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
+      if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
     }
   });
   return plan();
@@ -8054,27 +8070,35 @@ const planWrapper42 = (plan, _, fieldArgs) => {
       if (!task?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
       if (task.authorId !== observer.id && task.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
     } else {
-      const projectId = input.projectId;
-      if (!(await db.query.projectTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, projectId);
-        },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
+      const projectId = input.projectId,
+        project = await db.query.projectTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          },
+          with: {
+            workspace: {
+              with: {
+                workspaceUsers: {
+                  where(table, {
+                    eq
+                  }) {
+                    return eq(table.userId, observer.id);
+                  }
+                },
+                projects: {
+                  with: {
+                    tasks: !0
+                  }
                 }
               }
             }
           }
-        }
-      }))?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+        });
+      if (!project?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
+      if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
     }
   });
   return plan();
