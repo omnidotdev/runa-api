@@ -6135,7 +6135,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
         }
       });
       if (!column?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
-      if (column.project.workspace.workspaceUsers[0].role !== "member") throw new Error("Unauthorized");
+      if (column.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
     } else {
       const projectId = input.projectId,
         project = await db.query.projectTable.findFirst({
@@ -6836,7 +6836,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         }
       });
       if (!column?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
-      if (column.project.workspace.workspaceUsers[0].role !== "member") throw new Error("Unauthorized");
+      if (column.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
     } else {
       const projectId = input.projectId,
         project = await db.query.projectTable.findFirst({
@@ -7574,7 +7574,7 @@ const planWrapper36 = (plan, _, fieldArgs) => {
         }
       });
       if (!column?.project.workspace.workspaceUsers.length) throw new Error("Unauthorized");
-      if (column.project.workspace.workspaceUsers[0].role !== "member") throw new Error("Unauthorized");
+      if (column.project.workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
     } else {
       const projectId = input.projectId,
         project = await db.query.projectTable.findFirst({

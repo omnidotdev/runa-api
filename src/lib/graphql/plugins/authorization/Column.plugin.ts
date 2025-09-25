@@ -41,7 +41,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               throw new Error("Unauthorized");
 
             // TODO: determine proper permissions
-            if (column.project.workspace.workspaceUsers[0].role !== "member")
+            if (column.project.workspace.workspaceUsers[0].role === "member")
               throw new Error("Unauthorized");
           } else {
             const projectId = (input as InsertColumn).projectId;
