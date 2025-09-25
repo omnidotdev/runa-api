@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
@@ -26,6 +27,13 @@ export const labelTable = pgTable(
     index().on(table.name),
   ],
 );
+
+export const labelRelations = relations(labelTable, ({ one }) => ({
+  project: one(projectTable, {
+    fields: [labelTable.projectId],
+    references: [projectTable.id],
+  }),
+}));
 
 export type InsertLabel = InferInsertModel<typeof labelTable>;
 export type SelectLabel = InferSelectModel<typeof labelTable>;
