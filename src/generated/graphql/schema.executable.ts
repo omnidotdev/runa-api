@@ -3,6 +3,7 @@ import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilte
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, inhibitOnNull, isExecutableStep, lambda, list, makeGrafastSchema, node, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
 import { sql } from "pg-sql2";
+import { match } from "ts-pattern";
 import { inspect } from "util";
 const handler = {
   typeName: "Query",
@@ -6366,11 +6367,14 @@ const planWrapper12 = (plan, _, fieldArgs) => {
               }) {
                 return eq(table.userId, observer.id);
               }
-            }
+            },
+            projects: !0
           }
         });
       if (!workspace?.workspaceUsers?.length) throw new Error("Unauthorized");
       if (workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+      const tier = workspace.tier;
+      if (!match(tier).with("free", () => workspace.projects.length < 2).with("basic", () => workspace.projects.length < 10).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
     }
   });
   return plan();
@@ -7150,11 +7154,14 @@ const planWrapper26 = (plan, _, fieldArgs) => {
               }) {
                 return eq(table.userId, observer.id);
               }
-            }
+            },
+            projects: !0
           }
         });
       if (!workspace?.workspaceUsers?.length) throw new Error("Unauthorized");
       if (workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+      const tier = workspace.tier;
+      if (!match(tier).with("free", () => workspace.projects.length < 2).with("basic", () => workspace.projects.length < 10).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
     }
   });
   return plan();
@@ -7946,11 +7953,14 @@ const planWrapper40 = (plan, _, fieldArgs) => {
               }) {
                 return eq(table.userId, observer.id);
               }
-            }
+            },
+            projects: !0
           }
         });
       if (!workspace?.workspaceUsers?.length) throw new Error("Unauthorized");
       if (workspace.workspaceUsers[0].role === "member") throw new Error("Unauthorized");
+      const tier = workspace.tier;
+      if (!match(tier).with("free", () => workspace.projects.length < 2).with("basic", () => workspace.projects.length < 10).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
     }
   });
   return plan();

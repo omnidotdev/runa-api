@@ -3,8 +3,15 @@ import { EXPORTABLE, exportSchema } from "graphile-export";
 import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
+import { match } from "ts-pattern";
 
 import graphilePreset from "lib/config/graphile.config";
+import {
+  BASIC_TIER_MAX_PROJECTS,
+  BASIC_TIER_MAX_TASKS,
+  FREE_TIER_MAX_PROJECTS,
+  FREE_TIER_MAX_TASKS,
+} from "lib/graphql/plugins/authorization/constants";
 
 /**
  * Generate a GraphQL schema from a Postgres database.
@@ -27,6 +34,13 @@ const generateGraphqlSchema = async () => {
     modules: {
       "graphile-export": { EXPORTABLE },
       "postgraphile/grafast": { context, sideEffect },
+      "ts-pattern": { match },
+      "./constants": {
+        FREE_TIER_MAX_PROJECTS,
+        FREE_TIER_MAX_TASKS,
+        BASIC_TIER_MAX_PROJECTS,
+        BASIC_TIER_MAX_TASKS,
+      },
     },
   });
 
