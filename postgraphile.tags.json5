@@ -1,0 +1,16 @@
+{
+  version: 1,
+  config: {
+    class: {
+      workspace: {
+        attribute: {
+          tier: {
+            tags: {
+              behavior: "-insert -update",
+            },
+          },
+        },
+      },
+    },
+  },
+}

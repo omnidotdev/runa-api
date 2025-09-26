@@ -1583,7 +1583,9 @@ const spec_workspace = {
       notNull: true,
       hasDefault: true,
       extensions: {
-        tags: {},
+        tags: {
+          behavior: "-insert -update"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -16781,7 +16783,6 @@ input WorkspaceInput {
   updatedAt: Datetime
   viewMode: String
   slug: String!
-  tier: Tier
   subscriptionId: UUID
 }
 
@@ -17740,7 +17741,6 @@ input WorkspacePatch {
   updatedAt: Datetime
   viewMode: String
   slug: String
-  tier: Tier
   subscriptionId: UUID
 }
 
@@ -46695,12 +46695,6 @@ ${String(oldPlan42)}`);
     }) {
       obj.set("slug", bakedInputRuntime(schema, field.type, val));
     },
-    tier(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("tier", bakedInputRuntime(schema, field.type, val));
-    },
     subscriptionId(obj, val, {
       field,
       schema
@@ -47940,12 +47934,6 @@ ${String(oldPlan42)}`);
       schema
     }) {
       obj.set("slug", bakedInputRuntime(schema, field.type, val));
-    },
-    tier(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("tier", bakedInputRuntime(schema, field.type, val));
     },
     subscriptionId(obj, val, {
       field,
