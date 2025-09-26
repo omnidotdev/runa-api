@@ -37,6 +37,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             // TODO: determine proper permissions for admins when it comes to updating / deleting workspaces
             if (role !== "owner") throw new Error("Unauthorized");
+          } else {
+            // TODO: create `free` tier workspace upon creation with user credentials
+            // This should be fine as a `Free` tier from polar does not require any credit card
           }
         });
 
