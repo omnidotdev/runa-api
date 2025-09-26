@@ -3,7 +3,6 @@ import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
 import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
-import { TagsFilePlugin } from "postgraphile/utils";
 
 import {
   AssigneePlugin,
@@ -15,6 +14,7 @@ import {
   PrimaryKeyMutationsOnlyPlugin,
   ProjectColumnPlugin,
   ProjectPlugin,
+  SmartTagsPlugin,
   TaskLabelPlugin,
   TaskPlugin,
   UserPlugin,
@@ -50,7 +50,7 @@ const graphilePreset: GraphileConfig.Preset = {
     UserPreferencePlugin,
     WorkspacePlugin,
     WorkspaceUserPlugin,
-    TagsFilePlugin,
+    SmartTagsPlugin,
   ],
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   schema: {
