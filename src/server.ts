@@ -4,21 +4,25 @@ import { useOpenTelemetry } from "@envelop/opentelemetry";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
-import { Checkout, CustomerPortal } from "@polar-sh/elysia";
+import { Checkout, CustomerPortal, Webhooks } from "@polar-sh/elysia";
 import { Elysia } from "elysia";
 import { useGrafast } from "grafast/envelop";
 
+import { eq } from "drizzle-orm";
 import { schema } from "generated/graphql/schema.executable";
 import appConfig from "lib/config/app.config";
 import {
   CHECKOUT_SUCCESS_URL,
   CORS_ALLOWED_ORIGINS,
   POLAR_ACCESS_TOKEN,
+  POLAR_WEBHOOK_SECRET,
   PORT,
   enablePolarSandbox,
   isDevEnv,
   isProdEnv,
 } from "lib/config/env.config";
+import { dbPool as db } from "lib/db/db";
+import { workspaceTable } from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugins, useAuth } from "lib/graphql/plugins";
 
@@ -63,7 +67,23 @@ const app = new Elysia({
       },
     }),
   )
-  // TODO: customer portal and webhooks routes
+  .post(
+    "/polar/webhooks",
+    Webhooks({
+      webhookSecret: POLAR_WEBHOOK_SECRET!,
+      onSubscriptionCreated: async (payload) => {
+        // TODO: determine if we need to conditionalize this to runa specific subscriptions (probably do)
+        const workspaceSlug = payload.data.metadata.workspaceSlug;
+
+        if (!workspaceSlug) return;
+
+        await db
+          .update(workspaceTable)
+          .set({ subscriptionId: payload.data.id })
+          .where(eq(workspaceTable.slug, workspaceSlug as string));
+      },
+    }),
+  )
   .use(
     yoga({
       schema,

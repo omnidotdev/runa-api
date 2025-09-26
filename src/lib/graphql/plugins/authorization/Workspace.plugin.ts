@@ -40,7 +40,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             // TODO: determine proper permissions for admins when it comes to updating / deleting workspaces
             if (role !== "owner") throw new Error("Unauthorized");
 
-            // TODO: figure out best way to make subscriptionId not nullable
+            // TODO: figure out best way to make subscriptionId not nullable, *or* update logic to possibly throw if subId is null
             if (scope === "delete" && !!workspace.subscriptionId) {
               await polar.subscriptions.revoke({
                 id: workspace.subscriptionId,
