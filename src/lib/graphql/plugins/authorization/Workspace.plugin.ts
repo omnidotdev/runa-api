@@ -6,6 +6,8 @@ import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
 import type { MutationScope } from "./types";
 
+// TODO: determine restrictions for updating, inserting, deleting `tier` column. Possibly through tags plugin, see: https://github.com/omnidotdev/backfeed-api/blob/master/postgraphile.tags.json5
+
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (context, sideEffect, propName, scope) =>
