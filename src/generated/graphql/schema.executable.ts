@@ -2,6 +2,7 @@
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertEdgeCapableStep, assertExecutableStep, assertPageInfoCapableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, inhibitOnNull, isExecutableStep, lambda, list, makeGrafastSchema, node, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
+import { polar } from "lib/polar/sdk";
 import { sql } from "pg-sql2";
 import { match } from "ts-pattern";
 import { inspect } from "util";
@@ -1587,6 +1588,18 @@ const spec_workspace = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    subscription_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   description: undefined,
@@ -2087,6 +2100,42 @@ const registryConfig_pgResources_project_project = {
     canDelete: true
   }
 };
+const taskUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
+}];
+const registryConfig_pgResources_task_task = {
+  executor: executor,
+  name: "task",
+  identifier: "main.public.task",
+  from: taskIdentifier,
+  codec: taskCodec,
+  uniques: taskUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "task"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
 const workspaceUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -2122,42 +2171,6 @@ const registryConfig_pgResources_workspace_workspace = {
       serviceName: "main",
       schemaName: "public",
       name: "workspace"
-    },
-    isInsertable: true,
-    isUpdatable: true,
-    isDeletable: true,
-    tags: {},
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  }
-};
-const taskUniques = [{
-  isPrimary: true,
-  attributes: ["id"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null
-    }
-  }
-}];
-const registryConfig_pgResources_task_task = {
-  executor: executor,
-  name: "task",
-  identifier: "main.public.task",
-  from: taskIdentifier,
-  codec: taskCodec,
-  uniques: taskUniques,
-  isVirtual: false,
-  description: undefined,
-  extensions: {
-    description: undefined,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "task"
     },
     isInsertable: true,
     isUpdatable: true,
@@ -2213,8 +2226,8 @@ const registryConfig = {
     project_column: registryConfig_pgResources_project_column_project_column,
     user_preference: registryConfig_pgResources_user_preference_user_preference,
     project: registryConfig_pgResources_project_project,
-    workspace: registryConfig_pgResources_workspace_workspace,
-    task: registryConfig_pgResources_task_task
+    task: registryConfig_pgResources_task_task,
+    workspace: registryConfig_pgResources_workspace_workspace
   },
   pgRelations: {
     __proto__: null,
@@ -2905,8 +2918,8 @@ const pgResource_workspace_userPgResource = registry.pgResources["workspace_user
 const pgResource_project_columnPgResource = registry.pgResources["project_column"];
 const pgResource_user_preferencePgResource = registry.pgResources["user_preference"];
 const pgResource_projectPgResource = registry.pgResources["project"];
-const pgResource_workspacePgResource = registry.pgResources["workspace"];
 const pgResource_taskPgResource = registry.pgResources["task"];
+const pgResource_workspacePgResource = registry.pgResources["workspace"];
 const nodeIdHandlerByTypeName = {
   __proto__: null,
   Query: handler,
@@ -3175,28 +3188,6 @@ const nodeIdHandlerByTypeName = {
       return obj[0] === "Project";
     }
   },
-  Workspace: {
-    typeName: "Workspace",
-    codec: nodeIdCodecs_base64JSON_base64JSON,
-    deprecationReason: undefined,
-    plan($record) {
-      return list([constant("Workspace", false), $record.get("id")]);
-    },
-    getSpec($list) {
-      return {
-        id: inhibitOnNull(access($list, [1]))
-      };
-    },
-    getIdentifiers(value) {
-      return value.slice(1);
-    },
-    get(spec) {
-      return pgResource_workspacePgResource.get(spec);
-    },
-    match(obj) {
-      return obj[0] === "Workspace";
-    }
-  },
   Task: {
     typeName: "Task",
     codec: nodeIdCodecs_base64JSON_base64JSON,
@@ -3217,6 +3208,28 @@ const nodeIdHandlerByTypeName = {
     },
     match(obj) {
       return obj[0] === "Task";
+    }
+  },
+  Workspace: {
+    typeName: "Workspace",
+    codec: nodeIdCodecs_base64JSON_base64JSON,
+    deprecationReason: undefined,
+    plan($record) {
+      return list([constant("Workspace", false), $record.get("id")]);
+    },
+    getSpec($list) {
+      return {
+        id: inhibitOnNull(access($list, [1]))
+      };
+    },
+    getIdentifiers(value) {
+      return value.slice(1);
+    },
+    get(spec) {
+      return pgResource_workspacePgResource.get(spec);
+    },
+    match(obj) {
+      return obj[0] === "Workspace";
     }
   }
 };
@@ -3281,13 +3294,13 @@ const nodeFetcher_Project = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.Project));
   return nodeIdHandlerByTypeName.Project.get(nodeIdHandlerByTypeName.Project.getSpec($decoded));
 };
-const nodeFetcher_Workspace = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.Workspace));
-  return nodeIdHandlerByTypeName.Workspace.get(nodeIdHandlerByTypeName.Workspace.getSpec($decoded));
-};
 const nodeFetcher_Task = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.Task));
   return nodeIdHandlerByTypeName.Task.get(nodeIdHandlerByTypeName.Task.getSpec($decoded));
+};
+const nodeFetcher_Workspace = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandlerByTypeName.Workspace));
+  return nodeIdHandlerByTypeName.Workspace.get(nodeIdHandlerByTypeName.Workspace.getSpec($decoded));
 };
 function qbWhereBuilder(qb) {
   return qb.whereBuilder();
@@ -5071,6 +5084,11 @@ const colSpec65 = {
   attributeName: "tier",
   attribute: spec_workspace.attributes.tier
 };
+const colSpec66 = {
+  fieldName: "subscriptionId",
+  attributeName: "subscription_id",
+  attribute: spec_workspace.attributes.subscription_id
+};
 function assertAllowed53(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5176,37 +5194,37 @@ function assertAllowed57(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec66 = {
+const colSpec67 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_projectColumn.attributes.id
 };
-const colSpec67 = {
+const colSpec68 = {
   fieldName: "emoji",
   attributeName: "emoji",
   attribute: spec_projectColumn.attributes.emoji
 };
-const colSpec68 = {
+const colSpec69 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_projectColumn.attributes.title
 };
-const colSpec69 = {
+const colSpec70 = {
   fieldName: "workspaceId",
   attributeName: "workspace_id",
   attribute: spec_projectColumn.attributes.workspace_id
 };
-const colSpec70 = {
+const colSpec71 = {
   fieldName: "index",
   attributeName: "index",
   attribute: spec_projectColumn.attributes.index
 };
-const colSpec71 = {
+const colSpec72 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectColumn.attributes.created_at
 };
-const colSpec72 = {
+const colSpec73 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_projectColumn.attributes.updated_at
@@ -5266,27 +5284,27 @@ function assertAllowed62(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec73 = {
+const colSpec74 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_invitation.attributes.id
 };
-const colSpec74 = {
+const colSpec75 = {
   fieldName: "workspaceId",
   attributeName: "workspace_id",
   attribute: spec_invitation.attributes.workspace_id
 };
-const colSpec75 = {
+const colSpec76 = {
   fieldName: "email",
   attributeName: "email",
   attribute: spec_invitation.attributes.email
 };
-const colSpec76 = {
+const colSpec77 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_invitation.attributes.created_at
 };
-const colSpec77 = {
+const colSpec78 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_invitation.attributes.updated_at
@@ -5324,42 +5342,42 @@ function assertAllowed65(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec78 = {
+const colSpec79 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_userPreference.attributes.id
 };
-const colSpec79 = {
+const colSpec80 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_userPreference.attributes.user_id
 };
-const colSpec80 = {
+const colSpec81 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_userPreference.attributes.project_id
 };
-const colSpec81 = {
+const colSpec82 = {
   fieldName: "hiddenColumnIds",
   attributeName: "hidden_column_ids",
   attribute: spec_userPreference.attributes.hidden_column_ids
 };
-const colSpec82 = {
+const colSpec83 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_userPreference.attributes.created_at
 };
-const colSpec83 = {
+const colSpec84 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_userPreference.attributes.updated_at
 };
-const colSpec84 = {
+const colSpec85 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_userPreference.attributes.view_mode
 };
-const colSpec85 = {
+const colSpec86 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_userPreference.attributes.color
@@ -5471,27 +5489,27 @@ function assertAllowed70(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec86 = {
+const colSpec87 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_taskLabel.attributes.id
 };
-const colSpec87 = {
+const colSpec88 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_taskLabel.attributes.task_id
 };
-const colSpec88 = {
+const colSpec89 = {
   fieldName: "labelId",
   attributeName: "label_id",
   attribute: spec_taskLabel.attributes.label_id
 };
-const colSpec89 = {
+const colSpec90 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_taskLabel.attributes.created_at
 };
-const colSpec90 = {
+const colSpec91 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_taskLabel.attributes.updated_at
@@ -5518,32 +5536,32 @@ function assertAllowed72(value, mode) {
   }
   if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec91 = {
+const colSpec92 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_label.attributes.id
 };
-const colSpec92 = {
+const colSpec93 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_label.attributes.name
 };
-const colSpec93 = {
+const colSpec94 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_label.attributes.color
 };
-const colSpec94 = {
+const colSpec95 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_label.attributes.project_id
 };
-const colSpec95 = {
+const colSpec96 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_label.attributes.created_at
 };
-const colSpec96 = {
+const colSpec97 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_label.attributes.updated_at
@@ -6380,49 +6398,13 @@ const planWrapper12 = (plan, _, fieldArgs) => {
   return plan();
 };
 function oldPlan13(_, args) {
-  const $insert = pgInsertSingle(pgResource_workspacePgResource, Object.create(null));
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper13 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "workspace"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
-    if ("create" !== "create") {
-      const workspace = await db.query.workspaceTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspaceUsers: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-function oldPlan14(_, args) {
   const $insert = pgInsertSingle(pgResource_taskPgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper14 = (plan, _, fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "task"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -6485,6 +6467,60 @@ const planWrapper14 = (plan, _, fieldArgs) => {
       if (!project?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
       const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
       if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+function oldPlan14(_, args) {
+  const $insert = pgInsertSingle(pgResource_workspacePgResource, Object.create(null));
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper14 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "workspace"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
+    if ("create" !== "create") {
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspaceUsers: {
+            where(table, {
+              eq
+            }) {
+              return eq(table.userId, observer.id);
+            }
+          }
+        }
+      });
+      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+      if ("create" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
+        id: workspace.subscriptionId
+      });
+    } else {
+      const checkout = await polar.checkouts.create({
+        products: ["ab64808c-6616-4265-9de1-1acb606dce2a"],
+        externalCustomerId: observer.identityProviderId,
+        metadata: {
+          workspaceSlug: input.slug
+        }
+      });
+      await polar.checkouts.clientConfirm({
+        clientSecret: checkout.clientSecret,
+        checkoutConfirmStripe: {
+          productId: "ab64808c-6616-4265-9de1-1acb606dce2a",
+          customerEmail: observer.email
+        }
+      });
     }
   });
   return plan();
@@ -7174,53 +7210,11 @@ const planWrapper26 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_Workspace = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Workspace, $nodeId);
-};
-const oldPlan27 = (_$root, args) => {
-  const $update = pgUpdateSingle(pgResource_workspacePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper27 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
-    if ("update" !== "create") {
-      const workspace = await db.query.workspaceTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspaceUsers: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
-    }
-  });
-  return plan();
-};
 const specFromArgs_Task = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.Task, $nodeId);
 };
-const oldPlan28 = (_$root, args) => {
+const oldPlan27 = (_$root, args) => {
   const $update = pgUpdateSingle(pgResource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7229,7 +7223,7 @@ const oldPlan28 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper28 = (plan, _, fieldArgs) => {
+const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -7292,6 +7286,66 @@ const planWrapper28 = (plan, _, fieldArgs) => {
       if (!project?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
       const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
       if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Workspace = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandlerByTypeName.Workspace, $nodeId);
+};
+const oldPlan28 = (_$root, args) => {
+  const $update = pgUpdateSingle(pgResource_workspacePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper28 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
+    if ("update" !== "create") {
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspaceUsers: {
+            where(table, {
+              eq
+            }) {
+              return eq(table.userId, observer.id);
+            }
+          }
+        }
+      });
+      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+      if ("update" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
+        id: workspace.subscriptionId
+      });
+    } else {
+      const checkout = await polar.checkouts.create({
+        products: ["ab64808c-6616-4265-9de1-1acb606dce2a"],
+        externalCustomerId: observer.identityProviderId,
+        metadata: {
+          workspaceSlug: input.slug
+        }
+      });
+      await polar.checkouts.clientConfirm({
+        clientSecret: checkout.clientSecret,
+        checkoutConfirmStripe: {
+          productId: "ab64808c-6616-4265-9de1-1acb606dce2a",
+          customerEmail: observer.email
+        }
+      });
     }
   });
   return plan();
@@ -7981,53 +8035,11 @@ const planWrapper40 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_Workspace2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandlerByTypeName.Workspace, $nodeId);
-};
-const oldPlan41 = (_$root, args) => {
-  const $delete = pgDeleteSingle(pgResource_workspacePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper41 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw new Error("Unauthorized");
-    if ("delete" !== "create") {
-      const workspace = await db.query.workspaceTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspaceUsers: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
-    }
-  });
-  return plan();
-};
 const specFromArgs_Task2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandlerByTypeName.Task, $nodeId);
 };
-const oldPlan42 = (_$root, args) => {
+const oldPlan41 = (_$root, args) => {
   const $delete = pgDeleteSingle(pgResource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8036,7 +8048,7 @@ const oldPlan42 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper42 = (plan, _, fieldArgs) => {
+const planWrapper41 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -8099,6 +8111,66 @@ const planWrapper42 = (plan, _, fieldArgs) => {
       if (!project?.workspace.workspaceUsers.length) throw new Error("Unauthorized");
       const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
       if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw new Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Workspace2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandlerByTypeName.Workspace, $nodeId);
+};
+const oldPlan42 = (_$root, args) => {
+  const $delete = pgDeleteSingle(pgResource_workspacePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper42 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw new Error("Unauthorized");
+    if ("delete" !== "create") {
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          workspaceUsers: {
+            where(table, {
+              eq
+            }) {
+              return eq(table.userId, observer.id);
+            }
+          }
+        }
+      });
+      if (!workspace || !workspace.workspaceUsers.length) throw new Error("Unauthorized");
+      if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
+      if ("delete" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
+        id: workspace.subscriptionId
+      });
+    } else {
+      const checkout = await polar.checkouts.create({
+        products: ["ab64808c-6616-4265-9de1-1acb606dce2a"],
+        externalCustomerId: observer.identityProviderId,
+        metadata: {
+          workspaceSlug: input.slug
+        }
+      });
+      await polar.checkouts.clientConfirm({
+        clientSecret: checkout.clientSecret,
+        checkoutConfirmStripe: {
+          productId: "ab64808c-6616-4265-9de1-1acb606dce2a",
+          customerEmail: observer.email
+        }
+      });
     }
   });
   return plan();
@@ -8173,14 +8245,14 @@ type Query implements Node {
   """Get a single \`Project\`."""
   projectBySlugAndWorkspaceId(slug: String!, workspaceId: UUID!): Project
 
+  """Get a single \`Task\`."""
+  task(rowId: UUID!): Task
+
   """Get a single \`Workspace\`."""
   workspace(rowId: UUID!): Workspace
 
   """Get a single \`Workspace\`."""
   workspaceBySlug(slug: String!): Workspace
-
-  """Get a single \`Task\`."""
-  task(rowId: UUID!): Task
 
   """Reads a single \`TaskLabel\` using its globally unique \`ID\`."""
   taskLabelById(
@@ -8262,17 +8334,17 @@ type Query implements Node {
     id: ID!
   ): Project
 
-  """Reads a single \`Workspace\` using its globally unique \`ID\`."""
-  workspaceById(
-    """The globally unique \`ID\` to be used in selecting a single \`Workspace\`."""
-    id: ID!
-  ): Workspace
-
   """Reads a single \`Task\` using its globally unique \`ID\`."""
   taskById(
     """The globally unique \`ID\` to be used in selecting a single \`Task\`."""
     id: ID!
   ): Task
+
+  """Reads a single \`Workspace\` using its globally unique \`ID\`."""
+  workspaceById(
+    """The globally unique \`ID\` to be used in selecting a single \`Workspace\`."""
+    id: ID!
+  ): Workspace
 
   """Reads and enables pagination through a set of \`TaskLabel\`."""
   taskLabels(
@@ -8682,40 +8754,6 @@ type Query implements Node {
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
 
-  """Reads and enables pagination through a set of \`Workspace\`."""
-  workspaces(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: WorkspaceCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: WorkspaceFilter
-
-    """The method to use when ordering \`Workspace\`."""
-    orderBy: [WorkspaceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): WorkspaceConnection
-
   """Reads and enables pagination through a set of \`Task\`."""
   tasks(
     """Only read the first \`n\` values of the set."""
@@ -8749,6 +8787,40 @@ type Query implements Node {
     """The method to use when ordering \`Task\`."""
     orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaskConnection
+
+  """Reads and enables pagination through a set of \`Workspace\`."""
+  workspaces(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: WorkspaceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: WorkspaceFilter
+
+    """The method to use when ordering \`Workspace\`."""
+    orderBy: [WorkspaceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): WorkspaceConnection
 }
 
 """An object with a globally unique \`ID\`."""
@@ -9063,6 +9135,7 @@ type Workspace implements Node {
   viewMode: String!
   slug: String!
   tier: Tier!
+  subscriptionId: UUID
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -10707,6 +10780,9 @@ input WorkspaceFilter {
 
   """Filter by the object’s \`tier\` field."""
   tier: TierFilter
+
+  """Filter by the object’s \`subscriptionId\` field."""
+  subscriptionId: UUIDFilter
 
   """Filter by the object’s \`projects\` relation."""
   projects: WorkspaceToManyProjectFilter
@@ -15269,6 +15345,9 @@ type WorkspaceDistinctCountAggregates {
 
   """Distinct count of tier across the matching connection"""
   tier: BigInt
+
+  """Distinct count of subscriptionId across the matching connection"""
+  subscriptionId: BigInt
 }
 
 """Grouping methods for \`Workspace\` for usage during aggregation."""
@@ -15282,6 +15361,7 @@ enum WorkspaceGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
   VIEW_MODE
   TIER
+  SUBSCRIPTION_ID
 }
 
 """Conditions for \`Workspace\` aggregates."""
@@ -15369,6 +15449,9 @@ input WorkspaceCondition {
 
   """Checks for equality with the object’s \`tier\` field."""
   tier: Tier
+
+  """Checks for equality with the object’s \`subscriptionId\` field."""
+  subscriptionId: UUID
 }
 
 """Methods to use when ordering \`Workspace\`."""
@@ -15390,6 +15473,8 @@ enum WorkspaceOrderBy {
   SLUG_DESC
   TIER_ASC
   TIER_DESC
+  SUBSCRIPTION_ID_ASC
+  SUBSCRIPTION_ID_DESC
   PROJECTS_COUNT_ASC
   PROJECTS_COUNT_DESC
   PROJECTS_SUM_COLUMN_INDEX_ASC
@@ -15584,14 +15669,6 @@ type Mutation {
     input: CreateProjectInput!
   ): CreateProjectPayload
 
-  """Creates a single \`Workspace\`."""
-  createWorkspace(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateWorkspaceInput!
-  ): CreateWorkspacePayload
-
   """Creates a single \`Task\`."""
   createTask(
     """
@@ -15599,6 +15676,14 @@ type Mutation {
     """
     input: CreateTaskInput!
   ): CreateTaskPayload
+
+  """Creates a single \`Workspace\`."""
+  createWorkspace(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateWorkspaceInput!
+  ): CreateWorkspacePayload
 
   """Updates a single \`TaskLabel\` using its globally unique id and a patch."""
   updateTaskLabelById(
@@ -15800,22 +15885,6 @@ type Mutation {
     input: UpdateProjectInput!
   ): UpdateProjectPayload
 
-  """Updates a single \`Workspace\` using its globally unique id and a patch."""
-  updateWorkspaceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWorkspaceByIdInput!
-  ): UpdateWorkspacePayload
-
-  """Updates a single \`Workspace\` using a unique key and a patch."""
-  updateWorkspace(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWorkspaceInput!
-  ): UpdateWorkspacePayload
-
   """Updates a single \`Task\` using its globally unique id and a patch."""
   updateTaskById(
     """
@@ -15831,6 +15900,22 @@ type Mutation {
     """
     input: UpdateTaskInput!
   ): UpdateTaskPayload
+
+  """Updates a single \`Workspace\` using its globally unique id and a patch."""
+  updateWorkspaceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateWorkspaceByIdInput!
+  ): UpdateWorkspacePayload
+
+  """Updates a single \`Workspace\` using a unique key and a patch."""
+  updateWorkspace(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateWorkspaceInput!
+  ): UpdateWorkspacePayload
 
   """Deletes a single \`TaskLabel\` using its globally unique id."""
   deleteTaskLabelById(
@@ -16024,22 +16109,6 @@ type Mutation {
     input: DeleteProjectInput!
   ): DeleteProjectPayload
 
-  """Deletes a single \`Workspace\` using its globally unique id."""
-  deleteWorkspaceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWorkspaceByIdInput!
-  ): DeleteWorkspacePayload
-
-  """Deletes a single \`Workspace\` using a unique key."""
-  deleteWorkspace(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWorkspaceInput!
-  ): DeleteWorkspacePayload
-
   """Deletes a single \`Task\` using its globally unique id."""
   deleteTaskById(
     """
@@ -16055,6 +16124,22 @@ type Mutation {
     """
     input: DeleteTaskInput!
   ): DeleteTaskPayload
+
+  """Deletes a single \`Workspace\` using its globally unique id."""
+  deleteWorkspaceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteWorkspaceByIdInput!
+  ): DeleteWorkspacePayload
+
+  """Deletes a single \`Workspace\` using a unique key."""
+  deleteWorkspace(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteWorkspaceInput!
+  ): DeleteWorkspacePayload
 }
 
 """The output of our create \`TaskLabel\` mutation."""
@@ -16603,52 +16688,6 @@ input ProjectInput {
   columnIndex: Int
 }
 
-"""The output of our create \`Workspace\` mutation."""
-type CreateWorkspacePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Workspace\` that was created by this mutation."""
-  workspace: Workspace
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Workspace\`. May be used by Relay 1."""
-  workspaceEdge(
-    """The method to use when ordering \`Workspace\`."""
-    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WorkspaceEdge
-}
-
-"""All input for the create \`Workspace\` mutation."""
-input CreateWorkspaceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Workspace\` to be created by this mutation."""
-  workspace: WorkspaceInput!
-}
-
-"""An input for mutations affecting \`Workspace\`"""
-input WorkspaceInput {
-  rowId: UUID
-  name: String!
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-  slug: String!
-  tier: Tier
-}
-
 """The output of our create \`Task\` mutation."""
 type CreateTaskPayload {
   """
@@ -16697,6 +16736,53 @@ input TaskInput {
   updatedAt: Datetime
   columnIndex: Int
   projectId: UUID!
+}
+
+"""The output of our create \`Workspace\` mutation."""
+type CreateWorkspacePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Workspace\` that was created by this mutation."""
+  workspace: Workspace
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Workspace\`. May be used by Relay 1."""
+  workspaceEdge(
+    """The method to use when ordering \`Workspace\`."""
+    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): WorkspaceEdge
+}
+
+"""All input for the create \`Workspace\` mutation."""
+input CreateWorkspaceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Workspace\` to be created by this mutation."""
+  workspace: WorkspaceInput!
+}
+
+"""An input for mutations affecting \`Workspace\`"""
+input WorkspaceInput {
+  rowId: UUID
+  name: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+  slug: String!
+  tier: Tier
+  subscriptionId: UUID
 }
 
 """The output of our update \`TaskLabel\` mutation."""
@@ -17530,76 +17616,6 @@ input UpdateProjectInput {
   patch: ProjectPatch!
 }
 
-"""The output of our update \`Workspace\` mutation."""
-type UpdateWorkspacePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Workspace\` that was updated by this mutation."""
-  workspace: Workspace
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Workspace\`. May be used by Relay 1."""
-  workspaceEdge(
-    """The method to use when ordering \`Workspace\`."""
-    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WorkspaceEdge
-}
-
-"""All input for the \`updateWorkspaceById\` mutation."""
-input UpdateWorkspaceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Workspace\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Workspace\` being updated.
-  """
-  patch: WorkspacePatch!
-}
-
-"""
-Represents an update to a \`Workspace\`. Fields that are set will be updated.
-"""
-input WorkspacePatch {
-  rowId: UUID
-  name: String
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-  slug: String
-  tier: Tier
-}
-
-"""All input for the \`updateWorkspace\` mutation."""
-input UpdateWorkspaceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Workspace\` being updated.
-  """
-  patch: WorkspacePatch!
-}
-
 """The output of our update \`Task\` mutation."""
 type UpdateTaskPayload {
   """
@@ -17670,6 +17686,77 @@ input UpdateTaskInput {
   An object where the defined keys will be set on the \`Task\` being updated.
   """
   patch: TaskPatch!
+}
+
+"""The output of our update \`Workspace\` mutation."""
+type UpdateWorkspacePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Workspace\` that was updated by this mutation."""
+  workspace: Workspace
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Workspace\`. May be used by Relay 1."""
+  workspaceEdge(
+    """The method to use when ordering \`Workspace\`."""
+    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): WorkspaceEdge
+}
+
+"""All input for the \`updateWorkspaceById\` mutation."""
+input UpdateWorkspaceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Workspace\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Workspace\` being updated.
+  """
+  patch: WorkspacePatch!
+}
+
+"""
+Represents an update to a \`Workspace\`. Fields that are set will be updated.
+"""
+input WorkspacePatch {
+  rowId: UUID
+  name: String
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+  slug: String
+  tier: Tier
+  subscriptionId: UUID
+}
+
+"""All input for the \`updateWorkspace\` mutation."""
+input UpdateWorkspaceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Workspace\` being updated.
+  """
+  patch: WorkspacePatch!
 }
 
 """The output of our delete \`TaskLabel\` mutation."""
@@ -18249,54 +18336,6 @@ input DeleteProjectInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Workspace\` mutation."""
-type DeleteWorkspacePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Workspace\` that was deleted by this mutation."""
-  workspace: Workspace
-  deletedWorkspaceId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Workspace\`. May be used by Relay 1."""
-  workspaceEdge(
-    """The method to use when ordering \`Workspace\`."""
-    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WorkspaceEdge
-}
-
-"""All input for the \`deleteWorkspaceById\` mutation."""
-input DeleteWorkspaceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Workspace\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteWorkspace\` mutation."""
-input DeleteWorkspaceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Task\` mutation."""
 type DeleteTaskPayload {
   """
@@ -18337,6 +18376,54 @@ input DeleteTaskByIdInput {
 
 """All input for the \`deleteTask\` mutation."""
 input DeleteTaskInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Workspace\` mutation."""
+type DeleteWorkspacePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Workspace\` that was deleted by this mutation."""
+  workspace: Workspace
+  deletedWorkspaceId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Workspace\`. May be used by Relay 1."""
+  workspaceEdge(
+    """The method to use when ordering \`Workspace\`."""
+    orderBy: [WorkspaceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): WorkspaceEdge
+}
+
+"""All input for the \`deleteWorkspaceById\` mutation."""
+input DeleteWorkspaceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Workspace\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteWorkspace\` mutation."""
+input DeleteWorkspaceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18486,6 +18573,13 @@ export const plans = {
         workspace_id: $workspaceId
       });
     },
+    task(_$root, {
+      $rowId
+    }) {
+      return pgResource_taskPgResource.get({
+        id: $rowId
+      });
+    },
     workspace(_$root, {
       $rowId
     }) {
@@ -18498,13 +18592,6 @@ export const plans = {
     }) {
       return pgResource_workspacePgResource.get({
         slug: $slug
-      });
-    },
-    task(_$root, {
-      $rowId
-    }) {
-      return pgResource_taskPgResource.get({
-        id: $rowId
       });
     },
     taskLabelById(_$parent, args) {
@@ -18555,13 +18642,13 @@ export const plans = {
       const $nodeId = args.getRaw("id");
       return nodeFetcher_Project($nodeId);
     },
-    workspaceById(_$parent, args) {
-      const $nodeId = args.getRaw("id");
-      return nodeFetcher_Workspace($nodeId);
-    },
     taskById(_$parent, args) {
       const $nodeId = args.getRaw("id");
       return nodeFetcher_Task($nodeId);
+    },
+    workspaceById(_$parent, args) {
+      const $nodeId = args.getRaw("id");
+      return nodeFetcher_Workspace($nodeId);
     },
     taskLabels: {
       plan() {
@@ -19031,9 +19118,9 @@ export const plans = {
         }
       }
     },
-    workspaces: {
+    tasks: {
       plan() {
-        return connection(pgResource_workspacePgResource.find());
+        return connection(pgResource_taskPgResource.find());
       },
       args: {
         first(_, $connection, arg) {
@@ -19070,9 +19157,9 @@ export const plans = {
         }
       }
     },
-    tasks: {
+    workspaces: {
       plan() {
-        return connection(pgResource_taskPgResource.find());
+        return connection(pgResource_workspacePgResource.find());
       },
       args: {
         first(_, $connection, arg) {
@@ -19512,6 +19599,9 @@ export const plans = {
     },
     viewMode($record) {
       return $record.get("view_mode");
+    },
+    subscriptionId($record) {
+      return $record.get("subscription_id");
     },
     projects: {
       plan($record) {
@@ -25123,6 +25213,14 @@ export const plans = {
       condition.extensions.pgFilterAttribute = colSpec65;
       return condition;
     },
+    subscriptionId(queryBuilder, value) {
+      if (value === void 0) return;
+      if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
+      if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
+      const condition = new PgCondition(queryBuilder);
+      condition.extensions.pgFilterAttribute = colSpec66;
+      return condition;
+    },
     projects($where, value) {
       assertAllowed53(value, "object");
       const $rel = $where.andPlan();
@@ -26024,7 +26122,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec66;
+      condition.extensions.pgFilterAttribute = colSpec67;
       return condition;
     },
     emoji(queryBuilder, value) {
@@ -26032,7 +26130,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec67;
+      condition.extensions.pgFilterAttribute = colSpec68;
       return condition;
     },
     title(queryBuilder, value) {
@@ -26040,7 +26138,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec68;
+      condition.extensions.pgFilterAttribute = colSpec69;
       return condition;
     },
     workspaceId(queryBuilder, value) {
@@ -26048,7 +26146,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec69;
+      condition.extensions.pgFilterAttribute = colSpec70;
       return condition;
     },
     index(queryBuilder, value) {
@@ -26056,7 +26154,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec70;
+      condition.extensions.pgFilterAttribute = colSpec71;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -26064,7 +26162,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec71;
+      condition.extensions.pgFilterAttribute = colSpec72;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -26072,7 +26170,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec72;
+      condition.extensions.pgFilterAttribute = colSpec73;
       return condition;
     },
     projects($where, value) {
@@ -26494,7 +26592,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec73;
+      condition.extensions.pgFilterAttribute = colSpec74;
       return condition;
     },
     workspaceId(queryBuilder, value) {
@@ -26502,7 +26600,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec74;
+      condition.extensions.pgFilterAttribute = colSpec75;
       return condition;
     },
     email(queryBuilder, value) {
@@ -26510,7 +26608,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec75;
+      condition.extensions.pgFilterAttribute = colSpec76;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -26518,7 +26616,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec76;
+      condition.extensions.pgFilterAttribute = colSpec77;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -26526,7 +26624,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec77;
+      condition.extensions.pgFilterAttribute = colSpec78;
       return condition;
     },
     workspace($where, value) {
@@ -26704,7 +26802,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec78;
+      condition.extensions.pgFilterAttribute = colSpec79;
       return condition;
     },
     userId(queryBuilder, value) {
@@ -26712,7 +26810,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec79;
+      condition.extensions.pgFilterAttribute = colSpec80;
       return condition;
     },
     projectId(queryBuilder, value) {
@@ -26720,7 +26818,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec80;
+      condition.extensions.pgFilterAttribute = colSpec81;
       return condition;
     },
     hiddenColumnIds(queryBuilder, value) {
@@ -26728,7 +26826,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec81;
+      condition.extensions.pgFilterAttribute = colSpec82;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -26736,7 +26834,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec82;
+      condition.extensions.pgFilterAttribute = colSpec83;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -26744,7 +26842,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec83;
+      condition.extensions.pgFilterAttribute = colSpec84;
       return condition;
     },
     viewMode(queryBuilder, value) {
@@ -26752,7 +26850,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec84;
+      condition.extensions.pgFilterAttribute = colSpec85;
       return condition;
     },
     color(queryBuilder, value) {
@@ -26760,7 +26858,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec85;
+      condition.extensions.pgFilterAttribute = colSpec86;
       return condition;
     },
     project($where, value) {
@@ -27576,7 +27674,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec86;
+      condition.extensions.pgFilterAttribute = colSpec87;
       return condition;
     },
     taskId(queryBuilder, value) {
@@ -27584,7 +27682,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec87;
+      condition.extensions.pgFilterAttribute = colSpec88;
       return condition;
     },
     labelId(queryBuilder, value) {
@@ -27592,7 +27690,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec88;
+      condition.extensions.pgFilterAttribute = colSpec89;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -27600,7 +27698,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec89;
+      condition.extensions.pgFilterAttribute = colSpec90;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -27608,7 +27706,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec90;
+      condition.extensions.pgFilterAttribute = colSpec91;
       return condition;
     },
     label($where, value) {
@@ -27660,7 +27758,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec91;
+      condition.extensions.pgFilterAttribute = colSpec92;
       return condition;
     },
     name(queryBuilder, value) {
@@ -27668,7 +27766,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec92;
+      condition.extensions.pgFilterAttribute = colSpec93;
       return condition;
     },
     color(queryBuilder, value) {
@@ -27676,7 +27774,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec93;
+      condition.extensions.pgFilterAttribute = colSpec94;
       return condition;
     },
     projectId(queryBuilder, value) {
@@ -27684,7 +27782,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec94;
+      condition.extensions.pgFilterAttribute = colSpec95;
       return condition;
     },
     createdAt(queryBuilder, value) {
@@ -27692,7 +27790,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec95;
+      condition.extensions.pgFilterAttribute = colSpec96;
       return condition;
     },
     updatedAt(queryBuilder, value) {
@@ -27700,7 +27798,7 @@ export const plans = {
       if (!true && isEmpty(value)) throw Object.assign(new Error("Empty objects are forbidden in filter argument input."), {});
       if (!true && value === null) throw Object.assign(new Error("Null literals are forbidden in filter argument input."), {});
       const condition = new PgCondition(queryBuilder);
-      condition.extensions.pgFilterAttribute = colSpec96;
+      condition.extensions.pgFilterAttribute = colSpec97;
       return condition;
     },
     taskLabels($where, value) {
@@ -41961,6 +42059,11 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tier")}`,
         sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, tierCodec);
       return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+    },
+    subscriptionId($pgSelectSingle) {
+      const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("subscription_id")}`,
+        sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+      return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
     }
   },
   WorkspaceGroupBy: {
@@ -42016,6 +42119,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       $pgSelect.groupBy({
         fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("tier")}`,
         codec: tierCodec
+      });
+    },
+    SUBSCRIPTION_ID($pgSelect) {
+      $pgSelect.groupBy({
+        fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("subscription_id")}`,
+        codec: TYPES.uuid
       });
     }
   },
@@ -42225,6 +42334,15 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, tierCodec)}`;
         }
       });
+    },
+    subscriptionId($condition, val) {
+      $condition.where({
+        type: "attribute",
+        attribute: "subscription_id",
+        callback(expression) {
+          return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+        }
+      });
     }
   },
   WorkspaceOrderBy: {
@@ -42331,6 +42449,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     TIER_DESC(queryBuilder) {
       queryBuilder.orderBy({
         attribute: "tier",
+        direction: "DESC"
+      });
+    },
+    SUBSCRIPTION_ID_ASC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "subscription_id",
+        direction: "ASC"
+      });
+    },
+    SUBSCRIPTION_ID_DESC(queryBuilder) {
+      queryBuilder.orderBy({
+        attribute: "subscription_id",
         direction: "DESC"
       });
     },
@@ -44353,12 +44483,12 @@ ${String(oldPlan12)}`);
         }
       }
     },
-    createWorkspace: {
+    createTask: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan13(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"createWorkspace"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"createTask"}, but that function did not return a step!
 ${String(oldPlan13)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -44376,12 +44506,12 @@ ${String(oldPlan13)}`);
         }
       }
     },
-    createTask: {
+    createWorkspace: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
             const $prev = oldPlan14(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"createTask"}, but that function did not return a step!
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"createWorkspace"}, but that function did not return a step!
 ${String(oldPlan14)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -44843,43 +44973,6 @@ ${String(oldPlan26)}`);
         }
       }
     },
-    updateWorkspaceById: {
-      plan(_$root, args) {
-        const $update = pgUpdateSingle(pgResource_workspacePgResource, specFromArgs_Workspace(args));
-        args.apply($update);
-        return object({
-          result: $update
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    updateWorkspace: {
-      plan(...planParams) {
-        const smartPlan = (...overrideParams) => {
-            const $prev = oldPlan27(...overrideParams.concat(planParams.slice(overrideParams.length)));
-            if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateWorkspace"}, but that function did not return a step!
-${String(oldPlan27)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
-            }
-            return $prev;
-          },
-          [$source, fieldArgs, info] = planParams,
-          $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-        return $newPlan;
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
     updateTaskById: {
       plan(_$root, args) {
         const $update = pgUpdateSingle(pgResource_taskPgResource, specFromArgs_Task(args));
@@ -44897,9 +44990,46 @@ ${String(oldPlan27)}`);
     updateTask: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
-            const $prev = oldPlan28(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            const $prev = oldPlan27(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"updateTask"}, but that function did not return a step!
+${String(oldPlan27)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
+    updateWorkspaceById: {
+      plan(_$root, args) {
+        const $update = pgUpdateSingle(pgResource_workspacePgResource, specFromArgs_Workspace(args));
+        args.apply($update);
+        return object({
+          result: $update
+        });
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
+    updateWorkspace: {
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan28(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"updateWorkspace"}, but that function did not return a step!
 ${String(oldPlan28)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -45361,43 +45491,6 @@ ${String(oldPlan40)}`);
         }
       }
     },
-    deleteWorkspaceById: {
-      plan(_$root, args) {
-        const $delete = pgDeleteSingle(pgResource_workspacePgResource, specFromArgs_Workspace2(args));
-        args.apply($delete);
-        return object({
-          result: $delete
-        });
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
-    deleteWorkspace: {
-      plan(...planParams) {
-        const smartPlan = (...overrideParams) => {
-            const $prev = oldPlan41(...overrideParams.concat(planParams.slice(overrideParams.length)));
-            if (!($prev instanceof ExecutableStep)) {
-              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteWorkspace"}, but that function did not return a step!
-${String(oldPlan41)}`);
-              throw new Error("Wrapped a plan function, but that function did not return a step!");
-            }
-            return $prev;
-          },
-          [$source, fieldArgs, info] = planParams,
-          $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
-        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
-        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-        return $newPlan;
-      },
-      args: {
-        input(_, $object) {
-          return $object;
-        }
-      }
-    },
     deleteTaskById: {
       plan(_$root, args) {
         const $delete = pgDeleteSingle(pgResource_taskPgResource, specFromArgs_Task2(args));
@@ -45415,9 +45508,46 @@ ${String(oldPlan41)}`);
     deleteTask: {
       plan(...planParams) {
         const smartPlan = (...overrideParams) => {
-            const $prev = oldPlan42(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            const $prev = oldPlan41(...overrideParams.concat(planParams.slice(overrideParams.length)));
             if (!($prev instanceof ExecutableStep)) {
               console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteTask"}, but that function did not return a step!
+${String(oldPlan41)}`);
+              throw new Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw new Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isExecutableStep($newPlan)) throw new Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
+    deleteWorkspaceById: {
+      plan(_$root, args) {
+        const $delete = pgDeleteSingle(pgResource_workspacePgResource, specFromArgs_Workspace2(args));
+        args.apply($delete);
+        return object({
+          result: $delete
+        });
+      },
+      args: {
+        input(_, $object) {
+          return $object;
+        }
+      }
+    },
+    deleteWorkspace: {
+      plan(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const $prev = oldPlan42(...overrideParams.concat(planParams.slice(overrideParams.length)));
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteWorkspace"}, but that function did not return a step!
 ${String(oldPlan42)}`);
               throw new Error("Wrapped a plan function, but that function did not return a step!");
             }
@@ -46384,88 +46514,6 @@ ${String(oldPlan42)}`);
       obj.set("column_index", bakedInputRuntime(schema, field.type, val));
     }
   },
-  CreateWorkspacePayload: {
-    __assertStep: assertExecutableStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("result").getMeta("clientMutationId");
-    },
-    workspace($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    workspaceEdge($mutation, fieldArgs) {
-      const $result = $mutation.getStepForKey("result", !0);
-      if (!$result) return constant(null);
-      const $select = (() => {
-        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
-            memo[attributeName] = $result.get(attributeName);
-            return memo;
-          }, Object.create(null));
-          return pgResource_workspacePgResource.find(spec);
-        }
-      })();
-      fieldArgs.apply($select, "orderBy");
-      const $connection = connection($select),
-        $single = $select.row(first($select));
-      return new EdgeStep($connection, $single);
-    }
-  },
-  CreateWorkspaceInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    workspace(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
-  WorkspaceInput: {
-    __baked: createObjectAndApplyChildren,
-    rowId(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("id", bakedInputRuntime(schema, field.type, val));
-    },
-    name(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("name", bakedInputRuntime(schema, field.type, val));
-    },
-    createdAt(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("created_at", bakedInputRuntime(schema, field.type, val));
-    },
-    updatedAt(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
-    },
-    viewMode(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("view_mode", bakedInputRuntime(schema, field.type, val));
-    },
-    slug(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("slug", bakedInputRuntime(schema, field.type, val));
-    },
-    tier(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("tier", bakedInputRuntime(schema, field.type, val));
-    }
-  },
   CreateTaskPayload: {
     __assertStep: assertExecutableStep,
     clientMutationId($mutation) {
@@ -46570,6 +46618,94 @@ ${String(oldPlan42)}`);
       schema
     }) {
       obj.set("project_id", bakedInputRuntime(schema, field.type, val));
+    }
+  },
+  CreateWorkspacePayload: {
+    __assertStep: assertExecutableStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("result").getMeta("clientMutationId");
+    },
+    workspace($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    workspaceEdge($mutation, fieldArgs) {
+      const $result = $mutation.getStepForKey("result", !0);
+      if (!$result) return constant(null);
+      const $select = (() => {
+        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
+            memo[attributeName] = $result.get(attributeName);
+            return memo;
+          }, Object.create(null));
+          return pgResource_workspacePgResource.find(spec);
+        }
+      })();
+      fieldArgs.apply($select, "orderBy");
+      const $connection = connection($select),
+        $single = $select.row(first($select));
+      return new EdgeStep($connection, $single);
+    }
+  },
+  CreateWorkspaceInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    },
+    workspace(qb, arg) {
+      if (arg != null) return qb.setBuilder();
+    }
+  },
+  WorkspaceInput: {
+    __baked: createObjectAndApplyChildren,
+    rowId(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("id", bakedInputRuntime(schema, field.type, val));
+    },
+    name(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("name", bakedInputRuntime(schema, field.type, val));
+    },
+    createdAt(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+    },
+    updatedAt(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
+    },
+    viewMode(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("view_mode", bakedInputRuntime(schema, field.type, val));
+    },
+    slug(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("slug", bakedInputRuntime(schema, field.type, val));
+    },
+    tier(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("tier", bakedInputRuntime(schema, field.type, val));
+    },
+    subscriptionId(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("subscription_id", bakedInputRuntime(schema, field.type, val));
     }
   },
   UpdateTaskLabelPayload: {
@@ -47616,96 +47752,6 @@ ${String(oldPlan42)}`);
       if (arg != null) return qb.setBuilder();
     }
   },
-  UpdateWorkspacePayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("result").getMeta("clientMutationId");
-    },
-    workspace($object) {
-      return $object.get("result");
-    },
-    query() {
-      return rootValue();
-    },
-    workspaceEdge($mutation, fieldArgs) {
-      const $result = $mutation.getStepForKey("result", !0);
-      if (!$result) return constant(null);
-      const $select = (() => {
-        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
-            memo[attributeName] = $result.get(attributeName);
-            return memo;
-          }, Object.create(null));
-          return pgResource_workspacePgResource.find(spec);
-        }
-      })();
-      fieldArgs.apply($select, "orderBy");
-      const $connection = connection($select),
-        $single = $select.row(first($select));
-      return new EdgeStep($connection, $single);
-    }
-  },
-  UpdateWorkspaceByIdInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
-  WorkspacePatch: {
-    __baked: createObjectAndApplyChildren,
-    rowId(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("id", bakedInputRuntime(schema, field.type, val));
-    },
-    name(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("name", bakedInputRuntime(schema, field.type, val));
-    },
-    createdAt(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("created_at", bakedInputRuntime(schema, field.type, val));
-    },
-    updatedAt(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
-    },
-    viewMode(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("view_mode", bakedInputRuntime(schema, field.type, val));
-    },
-    slug(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("slug", bakedInputRuntime(schema, field.type, val));
-    },
-    tier(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("tier", bakedInputRuntime(schema, field.type, val));
-    }
-  },
-  UpdateWorkspaceInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    },
-    patch(qb, arg) {
-      if (arg != null) return qb.setBuilder();
-    }
-  },
   UpdateTaskPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -47813,6 +47859,102 @@ ${String(oldPlan42)}`);
     }
   },
   UpdateTaskInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    },
+    patch(qb, arg) {
+      if (arg != null) return qb.setBuilder();
+    }
+  },
+  UpdateWorkspacePayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("result").getMeta("clientMutationId");
+    },
+    workspace($object) {
+      return $object.get("result");
+    },
+    query() {
+      return rootValue();
+    },
+    workspaceEdge($mutation, fieldArgs) {
+      const $result = $mutation.getStepForKey("result", !0);
+      if (!$result) return constant(null);
+      const $select = (() => {
+        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
+            memo[attributeName] = $result.get(attributeName);
+            return memo;
+          }, Object.create(null));
+          return pgResource_workspacePgResource.find(spec);
+        }
+      })();
+      fieldArgs.apply($select, "orderBy");
+      const $connection = connection($select),
+        $single = $select.row(first($select));
+      return new EdgeStep($connection, $single);
+    }
+  },
+  UpdateWorkspaceByIdInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    },
+    patch(qb, arg) {
+      if (arg != null) return qb.setBuilder();
+    }
+  },
+  WorkspacePatch: {
+    __baked: createObjectAndApplyChildren,
+    rowId(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("id", bakedInputRuntime(schema, field.type, val));
+    },
+    name(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("name", bakedInputRuntime(schema, field.type, val));
+    },
+    createdAt(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+    },
+    updatedAt(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
+    },
+    viewMode(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("view_mode", bakedInputRuntime(schema, field.type, val));
+    },
+    slug(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("slug", bakedInputRuntime(schema, field.type, val));
+    },
+    tier(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("tier", bakedInputRuntime(schema, field.type, val));
+    },
+    subscriptionId(obj, val, {
+      field,
+      schema
+    }) {
+      obj.set("subscription_id", bakedInputRuntime(schema, field.type, val));
+    }
+  },
+  UpdateWorkspaceInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     },
@@ -48348,50 +48490,6 @@ ${String(oldPlan42)}`);
       qb.setMeta("clientMutationId", val);
     }
   },
-  DeleteWorkspacePayload: {
-    __assertStep: ObjectStep,
-    clientMutationId($mutation) {
-      return $mutation.getStepForKey("result").getMeta("clientMutationId");
-    },
-    workspace($object) {
-      return $object.get("result");
-    },
-    deletedWorkspaceId($object) {
-      const $record = $object.getStepForKey("result"),
-        specifier = nodeIdHandlerByTypeName.Workspace.plan($record);
-      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
-    },
-    query() {
-      return rootValue();
-    },
-    workspaceEdge($mutation, fieldArgs) {
-      const $result = $mutation.getStepForKey("result", !0);
-      if (!$result) return constant(null);
-      const $select = (() => {
-        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
-          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
-            memo[attributeName] = $result.get(attributeName);
-            return memo;
-          }, Object.create(null));
-          return pgResource_workspacePgResource.find(spec);
-        }
-      })();
-      fieldArgs.apply($select, "orderBy");
-      const $connection = connection($select),
-        $single = $select.row(first($select));
-      return new EdgeStep($connection, $single);
-    }
-  },
-  DeleteWorkspaceByIdInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
-  DeleteWorkspaceInput: {
-    clientMutationId(qb, val) {
-      qb.setMeta("clientMutationId", val);
-    }
-  },
   DeleteTaskPayload: {
     __assertStep: ObjectStep,
     clientMutationId($mutation) {
@@ -48432,6 +48530,50 @@ ${String(oldPlan42)}`);
     }
   },
   DeleteTaskInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    }
+  },
+  DeleteWorkspacePayload: {
+    __assertStep: ObjectStep,
+    clientMutationId($mutation) {
+      return $mutation.getStepForKey("result").getMeta("clientMutationId");
+    },
+    workspace($object) {
+      return $object.get("result");
+    },
+    deletedWorkspaceId($object) {
+      const $record = $object.getStepForKey("result"),
+        specifier = nodeIdHandlerByTypeName.Workspace.plan($record);
+      return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
+    },
+    query() {
+      return rootValue();
+    },
+    workspaceEdge($mutation, fieldArgs) {
+      const $result = $mutation.getStepForKey("result", !0);
+      if (!$result) return constant(null);
+      const $select = (() => {
+        if ($result instanceof PgDeleteSingleStep) return pgSelectFromRecord($result.resource, $result.record());else {
+          const spec = workspaceUniques[0].attributes.reduce((memo, attributeName) => {
+            memo[attributeName] = $result.get(attributeName);
+            return memo;
+          }, Object.create(null));
+          return pgResource_workspacePgResource.find(spec);
+        }
+      })();
+      fieldArgs.apply($select, "orderBy");
+      const $connection = connection($select),
+        $single = $select.row(first($select));
+      return new EdgeStep($connection, $single);
+    }
+  },
+  DeleteWorkspaceByIdInput: {
+    clientMutationId(qb, val) {
+      qb.setMeta("clientMutationId", val);
+    }
+  },
+  DeleteWorkspaceInput: {
     clientMutationId(qb, val) {
       qb.setMeta("clientMutationId", val);
     }
