@@ -1597,7 +1597,9 @@ const spec_workspace = {
       notNull: false,
       hasDefault: false,
       extensions: {
-        tags: {},
+        tags: {
+          behavior: "-insert -update"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -16783,7 +16785,6 @@ input WorkspaceInput {
   updatedAt: Datetime
   viewMode: String
   slug: String!
-  subscriptionId: UUID
 }
 
 """The output of our update \`TaskLabel\` mutation."""
@@ -17741,7 +17742,6 @@ input WorkspacePatch {
   updatedAt: Datetime
   viewMode: String
   slug: String
-  subscriptionId: UUID
 }
 
 """All input for the \`updateWorkspace\` mutation."""
@@ -46694,12 +46694,6 @@ ${String(oldPlan42)}`);
       schema
     }) {
       obj.set("slug", bakedInputRuntime(schema, field.type, val));
-    },
-    subscriptionId(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("subscription_id", bakedInputRuntime(schema, field.type, val));
     }
   },
   UpdateTaskLabelPayload: {
@@ -47934,12 +47928,6 @@ ${String(oldPlan42)}`);
       schema
     }) {
       obj.set("slug", bakedInputRuntime(schema, field.type, val));
-    },
-    subscriptionId(obj, val, {
-      field,
-      schema
-    }) {
-      obj.set("subscription_id", bakedInputRuntime(schema, field.type, val));
     }
   },
   UpdateWorkspaceInput: {

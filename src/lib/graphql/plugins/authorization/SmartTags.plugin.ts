@@ -11,6 +11,11 @@ export default makeJSONPgSmartTagsPlugin({
               behavior: "-insert -update",
             },
           },
+          subscription_id: {
+            tags: {
+              behavior: "-insert -update",
+            },
+          },
         },
       },
     },
