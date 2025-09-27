@@ -22,7 +22,7 @@ import {
   isProdEnv,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
-import { workspaceTable } from "lib/db/schema";
+import { type SelectWorkspace, workspaceTable } from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugins, useAuth } from "lib/graphql/plugins";
 
@@ -81,6 +81,20 @@ const app = new Elysia({
           .update(workspaceTable)
           .set({ subscriptionId: payload.data.id })
           .where(eq(workspaceTable.id, workspaceId as string));
+      },
+      onSubscriptionUpdated: async (payload) => {
+        // TODO: determine if we need to conditionalize this to runa specific subscriptions (probably do)
+        const workspaceId = payload.data.metadata.workspaceId;
+
+        if (payload.data.status === "active") {
+          const tier = payload.data.product.metadata
+            .title as SelectWorkspace["tier"];
+
+          await db
+            .update(workspaceTable)
+            .set({ tier })
+            .where(eq(workspaceTable.id, workspaceId as string));
+        }
       },
     }),
   )
