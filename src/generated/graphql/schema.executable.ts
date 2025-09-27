@@ -6510,21 +6510,6 @@ const planWrapper14 = (plan, _, fieldArgs) => {
       if ("create" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
         id: workspace.subscriptionId
       });
-    } else {
-      const checkout = await polar.checkouts.create({
-        products: ["ab64808c-6616-4265-9de1-1acb606dce2a"],
-        externalCustomerId: observer.identityProviderId,
-        metadata: {
-          workspaceSlug: input.slug
-        }
-      });
-      await polar.checkouts.clientConfirm({
-        clientSecret: checkout.clientSecret,
-        checkoutConfirmStripe: {
-          productId: "ab64808c-6616-4265-9de1-1acb606dce2a",
-          customerEmail: observer.email
-        }
-      });
     }
   });
   return plan();
@@ -7335,21 +7320,6 @@ const planWrapper28 = (plan, _, fieldArgs) => {
       if ("update" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
         id: workspace.subscriptionId
       });
-    } else {
-      const checkout = await polar.checkouts.create({
-        products: ["ab64808c-6616-4265-9de1-1acb606dce2a"],
-        externalCustomerId: observer.identityProviderId,
-        metadata: {
-          workspaceSlug: input.slug
-        }
-      });
-      await polar.checkouts.clientConfirm({
-        clientSecret: checkout.clientSecret,
-        checkoutConfirmStripe: {
-          productId: "ab64808c-6616-4265-9de1-1acb606dce2a",
-          customerEmail: observer.email
-        }
-      });
     }
   });
   return plan();
@@ -8159,21 +8129,6 @@ const planWrapper42 = (plan, _, fieldArgs) => {
       if (workspace.workspaceUsers[0].role !== "owner") throw new Error("Unauthorized");
       if ("delete" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
         id: workspace.subscriptionId
-      });
-    } else {
-      const checkout = await polar.checkouts.create({
-        products: ["ab64808c-6616-4265-9de1-1acb606dce2a"],
-        externalCustomerId: observer.identityProviderId,
-        metadata: {
-          workspaceSlug: input.slug
-        }
-      });
-      await polar.checkouts.clientConfirm({
-        clientSecret: checkout.clientSecret,
-        checkoutConfirmStripe: {
-          productId: "ab64808c-6616-4265-9de1-1acb606dce2a",
-          customerEmail: observer.email
-        }
       });
     }
   });

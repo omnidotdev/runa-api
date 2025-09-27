@@ -73,14 +73,14 @@ const app = new Elysia({
       webhookSecret: POLAR_WEBHOOK_SECRET!,
       onSubscriptionCreated: async (payload) => {
         // TODO: determine if we need to conditionalize this to runa specific subscriptions (probably do)
-        const workspaceSlug = payload.data.metadata.workspaceSlug;
+        const workspaceId = payload.data.metadata.workspaceId;
 
-        if (!workspaceSlug) return;
+        if (!workspaceId) return;
 
         await db
           .update(workspaceTable)
           .set({ subscriptionId: payload.data.id })
-          .where(eq(workspaceTable.slug, workspaceSlug as string));
+          .where(eq(workspaceTable.id, workspaceId as string));
       },
     }),
   )

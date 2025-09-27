@@ -1,14 +1,10 @@
 import { EXPORTABLE } from "graphile-export";
-import { context, sideEffect } from "postgraphile/grafast";
-import { makeWrapPlansPlugin } from "postgraphile/utils";
-
-import type { InsertWorkspace } from "lib/db/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 import { polar } from "lib/polar/sdk";
+import { context, sideEffect } from "postgraphile/grafast";
 import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
+import { makeWrapPlansPlugin } from "postgraphile/utils";
 import type { MutationScope } from "./types";
-
-// TODO: determine restrictions for updating, inserting, deleting `tier` column. Possibly through tags plugin, see: https://github.com/omnidotdev/backfeed-api/blob/master/postgraphile.tags.json5
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
@@ -48,28 +44,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               // TODO: determine how to handle errors from above.
             }
-          } else {
-            // This should be fine as a `Free` tier from polar does not require any credit card
-            const checkout = await polar.checkouts.create({
-              // TODO: conditionalize, this is the sandbox for the the `Free` runa product
-              products: ["ab64808c-6616-4265-9de1-1acb606dce2a"],
-              externalCustomerId: observer.identityProviderId,
-              metadata: {
-                // TODO: determine best metadata for workspace. `id` is not available until after create mutation
-                workspaceSlug: (input as InsertWorkspace).slug,
-              },
-            });
-
-            await polar.checkouts.clientConfirm({
-              clientSecret: checkout.clientSecret,
-              checkoutConfirmStripe: {
-                // TODO: conditionalize
-                productId: "ab64808c-6616-4265-9de1-1acb606dce2a",
-                customerEmail: observer.email,
-              },
-            });
-
-            // TODO: determine how to handle errors from above.
           }
         });
 
