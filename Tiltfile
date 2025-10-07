@@ -14,6 +14,6 @@ local_resource(
 
 local_resource(
     "dev-%s" % project_name,
-    cmd="bun dev",
+    serve_cmd="bun dev",
     labels=[project_name],
 )
