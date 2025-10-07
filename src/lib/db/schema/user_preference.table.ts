@@ -28,6 +28,7 @@ export const userPreferenceTable = pgTable(
       .references(() => projectTable.id, { onDelete: "cascade" }),
     hiddenColumnIds: text().array().notNull().default([]),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
+    color: varchar({ length: 24 }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

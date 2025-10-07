@@ -1,0 +1,1 @@
+ALTER TABLE "workspace" ADD COLUMN "subscription_id" uuid;

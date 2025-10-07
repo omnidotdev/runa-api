@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   index,
   integer,
@@ -10,7 +11,9 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { assigneeTable } from "./assignee.table";
 import { columnTable } from "./column.table";
+import { postTable } from "./post.table";
 import { projectTable } from "./project.table";
 import { userTable } from "./user.table";
 
@@ -26,9 +29,7 @@ export const taskTable = pgTable(
     content: text().notNull(),
     description: text().notNull(),
     priority: varchar({ length: 10 }).notNull().default("medium"),
-    authorId: uuid()
-      .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" }),
+    authorId: uuid().references(() => userTable.id, { onDelete: "set null" }),
     projectId: uuid()
       .notNull()
       .references(() => projectTable.id, { onDelete: "cascade" }),
@@ -51,6 +52,15 @@ export const taskTable = pgTable(
     index().on(table.columnId),
   ],
 );
+
+export const taskRelations = relations(taskTable, ({ one, many }) => ({
+  project: one(projectTable, {
+    fields: [taskTable.projectId],
+    references: [projectTable.id],
+  }),
+  posts: many(postTable),
+  assignees: many(assigneeTable),
+}));
 
 export type InsertTask = InferInsertModel<typeof taskTable>;
 export type SelectTask = InferSelectModel<typeof taskTable>;

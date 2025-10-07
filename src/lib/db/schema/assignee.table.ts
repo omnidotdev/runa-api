@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   index,
   pgTable,
@@ -39,6 +40,13 @@ export const assigneeTable = pgTable(
     index().on(table.taskId),
   ],
 );
+
+export const assigneeRelations = relations(assigneeTable, ({ one }) => ({
+  task: one(taskTable, {
+    fields: [assigneeTable.taskId],
+    references: [taskTable.id],
+  }),
+}));
 
 export type InsertAssignee = InferInsertModel<typeof assigneeTable>;
 export type SelectAssignee = InferSelectModel<typeof assigneeTable>;

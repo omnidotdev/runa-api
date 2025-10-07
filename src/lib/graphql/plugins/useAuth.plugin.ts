@@ -1,14 +1,24 @@
 import { useGenericAuth } from "@envelop/generic-auth";
+import { QueryClient } from "@tanstack/query-core";
 import type * as jose from "jose";
 
-import { AUTH_BASE_URL } from "lib/config/env.config";
+import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
 import { userTable } from "lib/db/schema";
-import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { InsertUser, SelectUser } from "lib/db/schema";
+import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
 // TODO research best practices for all of this file (token validation, caching, etc.). Validate access token (introspection endpoint)? Cache userinfo output? etc. (https://linear.app/omnidev/issue/OMNI-302/increase-security-of-useauth-plugin)
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: 1000 * 60 * 5,
+    },
+  },
+});
 
 /**
  * Validate user session and resolve user if successful.
@@ -20,28 +30,50 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
       .get("authorization")
       ?.split("Bearer ")[1];
 
-    if (!accessToken) return null;
+    if (!accessToken) {
+      if (!protectRoutes) return null;
+
+      throw new Error("Invalid or missing access token");
+    }
 
     // TODO validate access token (introspection endpoint?) here?
 
-    // TODO cache so this doesn't occur on every request. Research best practices
-    const userInfo = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    const idToken = await queryClient.ensureQueryData({
+      queryKey: ["UserInfo", { accessToken }],
+      queryFn: async () => {
+        const response = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (!protectRoutes) return null;
+
+          throw new Error("Invalid access token or request failed");
+        }
+
+        const idToken: jose.JWTPayload = await response.json();
+
+        // TODO validate token, currently major security flaw (pending BA OIDC JWKS support: https://www.better-auth.com/docs/plugins/oidc-provider#jwks-endpoint-not-fully-implemented) (https://linear.app/omnidev/issue/OMNI-302/validate-id-token-with-jwks)
+        // const jwks = jose.createRemoteJWKSet(new URL(`${AUTH_BASE_URL}/jwks`));
+        // const { payload } = await jose.jwtVerify(JSON.stringify(idToken), jwks);
+        // if (!payload) throw new Error("Failed to verify token");
+
+        return idToken;
       },
     });
 
-    if (!userInfo.ok) return null;
+    if (!idToken) {
+      if (!protectRoutes) return null;
 
-    const idToken: jose.JWTPayload = await userInfo.json();
-
-    // TODO validate token, currently major security flaw (pending BA OIDC JWKS support: https://www.better-auth.com/docs/plugins/oidc-provider#jwks-endpoint-not-fully-implemented) (https://linear.app/omnidev/issue/OMNI-302/validate-id-token-with-jwks)
-    // const jwks = jose.createRemoteJWKSet(new URL(`${AUTH_BASE_URL}/jwks`));
-    // const { payload } = await jose.jwtVerify(JSON.stringify(idToken), jwks);
-    // if (!payload) throw new Error("Failed to verify token");
+      throw new Error("Invalid access token or request failed");
+    }
 
     const insertedUser: InsertUser = {
       identityProviderId: idToken.sub!,
+      name: idToken.preferred_username as string,
+      email: idToken.email as string,
     };
 
     const { identityProviderId, ...rest } = insertedUser;
@@ -73,7 +105,7 @@ const useAuth = () =>
   useGenericAuth({
     contextFieldName: "observer",
     resolveUserFn: resolveUser,
-    mode: "resolve-only",
+    mode: protectRoutes ? "protect-all" : "resolve-only",
   });
 
 export default useAuth;

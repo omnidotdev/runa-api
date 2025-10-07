@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   index,
   integer,
@@ -30,6 +31,13 @@ export const columnTable = pgTable(
   },
   (table) => [uniqueIndex().on(table.id), index().on(table.projectId)],
 );
+
+export const columnRelations = relations(columnTable, ({ one }) => ({
+  project: one(projectTable, {
+    fields: [columnTable.projectId],
+    references: [projectTable.id],
+  }),
+}));
 
 export type InsertColumn = InferInsertModel<typeof columnTable>;
 export type SelectColumn = InferSelectModel<typeof columnTable>;
