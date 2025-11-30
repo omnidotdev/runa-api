@@ -5,11 +5,11 @@ import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
 import { Checkout, CustomerPortal, Webhooks } from "@polar-sh/elysia";
+import { eq } from "drizzle-orm";
 import { Elysia } from "elysia";
+import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
-import { eq } from "drizzle-orm";
-import { schema } from "generated/graphql/schema.executable";
 import appConfig from "lib/config/app.config";
 import {
   CHECKOUT_SUCCESS_URL,
@@ -22,9 +22,11 @@ import {
   isProdEnv,
 } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
-import { type SelectWorkspace, workspaceTable } from "lib/db/schema";
+import { workspaceTable } from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugins, useAuth } from "lib/graphql/plugins";
+
+import type { SelectWorkspace } from "lib/db/schema";
 
 /**
  * Elysia server.
@@ -121,12 +123,12 @@ const app = new Elysia({
   )
   .listen(PORT);
 
-// biome-ignore lint/suspicious/noConsoleLog: root logging
+// biome-ignore lint/suspicious/noConsole: root logging
 console.log(
   `🦊 ${appConfig.name} Elysia server running at ${app.server?.url.toString().slice(0, -1)}`,
 );
 
-// biome-ignore lint/suspicious/noConsoleLog: root logging
+// biome-ignore lint/suspicious/noConsole: root logging
 console.log(
   `🧘 ${appConfig.name} GraphQL Yoga API running at ${app.server?.url}graphql`,
 );

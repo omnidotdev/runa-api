@@ -2,11 +2,11 @@ import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { emojiTable } from "./emoji.table";
 import { taskTable } from "./task.table";
 import { userTable } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { emojiTable } from "./emoji.table";
 
 /**
  * Post table.

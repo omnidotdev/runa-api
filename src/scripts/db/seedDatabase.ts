@@ -9,7 +9,7 @@ import * as schema from "lib/db/schema";
  */
 const seedDatabase = async () => {
   if (!isDevEnv || !DATABASE_URL?.includes("localhost")) {
-    // biome-ignore lint/suspicious/noConsoleLog: script logging
+    // biome-ignore lint/suspicious/noConsole: script logging
     console.log("This script can only be run in development");
     process.exit(1);
   }
@@ -17,7 +17,7 @@ const seedDatabase = async () => {
   const db = drizzle(DATABASE_URL, { casing: "snake_case" });
   await reset(db, schema);
 
-  // biome-ignore lint/suspicious/noConsoleLog: script logging
+  // biome-ignore lint/suspicious/noConsole: script logging
   console.log("Seeding database...");
 
   await seed(db, schema, { count: 50 }).refine((f) => ({
@@ -149,7 +149,7 @@ const seedDatabase = async () => {
     },
   }));
 
-  // biome-ignore lint/suspicious/noConsoleLog: script logging
+  // biome-ignore lint/suspicious/noConsole: script logging
   console.log("Database seeded successfully!");
 };
 

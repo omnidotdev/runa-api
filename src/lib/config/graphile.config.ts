@@ -1,8 +1,8 @@
 import { PgAggregatesPreset } from "@graphile/pg-aggregates";
 import { PgSimplifyInflectionPreset } from "@graphile/simplify-inflection";
-import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 import { makePgService } from "postgraphile/adaptors/pg";
 import { PostGraphileAmberPreset } from "postgraphile/presets/amber";
+import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connection-filter";
 
 import {
   AssigneePlugin,

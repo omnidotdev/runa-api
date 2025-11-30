@@ -1,4 +1,5 @@
 import { index, pgTable, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { labelTable } from "./label.table";
 import { taskTable } from "./task.table";

@@ -1,9 +1,7 @@
 import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
-import { generateDefaultDate } from "lib/db/util";
-
-import { generateDefaultId } from "../util";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { postTable } from "./post.table";
 import { userTable } from "./user.table";
 

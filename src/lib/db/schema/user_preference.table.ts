@@ -7,6 +7,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { projectTable } from "./project.table";
 import { userTable } from "./user.table";

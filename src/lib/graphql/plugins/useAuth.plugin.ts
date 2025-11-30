@@ -1,11 +1,11 @@
 import { useGenericAuth } from "@envelop/generic-auth";
 import { QueryClient } from "@tanstack/query-core";
-import type * as jose from "jose";
 
 import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
 import { userTable } from "lib/db/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
+import type * as jose from "jose";
 import type { InsertUser, SelectUser } from "lib/db/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
