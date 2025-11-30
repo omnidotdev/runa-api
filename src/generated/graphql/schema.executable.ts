@@ -2,7 +2,6 @@
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertExecutableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isExecutableStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
-import { polar } from "lib/polar/sdk";
 import { sql } from "pg-sql2";
 import { match } from "ts-pattern";
 const nodeIdHandler_Query = {
@@ -6534,9 +6533,6 @@ const planWrapper14 = (plan, _, fieldArgs) => {
       });
       if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role !== "owner") throw Error("Unauthorized");
-      if ("create" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
-        id: workspace.subscriptionId
-      });
     }
   });
   return plan();
@@ -7344,9 +7340,6 @@ const planWrapper28 = (plan, _, fieldArgs) => {
       });
       if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role !== "owner") throw Error("Unauthorized");
-      if ("update" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
-        id: workspace.subscriptionId
-      });
     }
   });
   return plan();
@@ -8154,9 +8147,6 @@ const planWrapper42 = (plan, _, fieldArgs) => {
       });
       if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role !== "owner") throw Error("Unauthorized");
-      if ("delete" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
-        id: workspace.subscriptionId
-      });
     }
   });
   return plan();
