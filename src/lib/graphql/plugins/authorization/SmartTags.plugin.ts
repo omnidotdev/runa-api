@@ -1,6 +1,6 @@
-import { makeJSONPgSmartTagsPlugin } from "postgraphile/utils";
+import { jsonPgSmartTags } from "postgraphile/utils";
 
-export default makeJSONPgSmartTagsPlugin({
+export default jsonPgSmartTags({
   version: 1,
   config: {
     class: {

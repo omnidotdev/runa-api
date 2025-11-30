@@ -1,13 +1,12 @@
 import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
-import { makeWrapPlansPlugin } from "postgraphile/utils";
+import { wrapPlans } from "postgraphile/utils";
 import { match } from "ts-pattern";
 
 import { BASIC_TIER_MAX_PROJECTS, FREE_TIER_MAX_PROJECTS } from "./constants";
 
 import type { InsertProject } from "lib/db/schema";
-import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
-import type { ExecutableStep, FieldArgs } from "postgraphile/grafast";
+import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
@@ -20,12 +19,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       BASIC_TIER_MAX_PROJECTS,
       propName,
       scope,
-    ) =>
-      // biome-ignore lint: no exported plan type
-      (plan: any, _: ExecutableStep, fieldArgs: FieldArgs) => {
+    ): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
-        const $observer = context<GraphQLContext>().get("observer");
-        const $db = context<GraphQLContext>().get("db");
+        const $observer = context().get("observer");
+        const $db = context().get("db");
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
@@ -110,7 +108,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     ],
   );
 
-export default makeWrapPlansPlugin({
+export default wrapPlans({
   Mutation: {
     createProject: validatePermissions("project", "create"),
     updateProject: validatePermissions("rowId", "update"),
