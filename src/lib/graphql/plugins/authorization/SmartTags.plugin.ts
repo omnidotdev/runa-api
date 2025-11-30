@@ -8,12 +8,21 @@ export default jsonPgSmartTags({
         attribute: {
           tier: {
             tags: {
-              behavior: "-insert -update",
+              behavior: "-insert -update +orderBy",
             },
           },
           subscription_id: {
             tags: {
               behavior: "-insert -update",
+            },
+          },
+        },
+      },
+      workspace_user: {
+        attribute: {
+          role: {
+            tags: {
+              behavior: "+orderBy",
             },
           },
         },

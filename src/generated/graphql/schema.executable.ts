@@ -917,7 +917,9 @@ const spec_workspaceUser = {
       notNull: true,
       hasDefault: true,
       extensions: {
-        tags: {},
+        tags: {
+          behavior: "+orderBy"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -1582,7 +1584,7 @@ const spec_workspace = {
       hasDefault: true,
       extensions: {
         tags: {
-          behavior: "-insert -update"
+          behavior: "-insert -update +orderBy"
         },
         canSelect: true,
         canInsert: true,
@@ -13606,6 +13608,8 @@ enum WorkspaceUserOrderBy {
   USER_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  ROLE_ASC
+  ROLE_DESC
 }
 
 """A connection to a list of \`UserPreference\` values."""
@@ -15463,6 +15467,8 @@ enum WorkspaceOrderBy {
   VIEW_MODE_DESC
   SLUG_ASC
   SLUG_DESC
+  TIER_ASC
+  TIER_DESC
   SUBSCRIPTION_ID_ASC
   SUBSCRIPTION_ID_DESC
   PROJECTS_COUNT_ASC
@@ -48675,6 +48681,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TIER_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "tier",
+          direction: "ASC"
+        });
+      },
+      TIER_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "tier",
+          direction: "DESC"
+        });
+      },
       UPDATED_AT_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "updated_at",
@@ -48960,6 +48978,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           });
         });
         queryBuilder.setOrderIsUnique();
+      },
+      ROLE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "role",
+          direction: "ASC"
+        });
+      },
+      ROLE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "role",
+          direction: "DESC"
+        });
       },
       USER_ID_ASC(queryBuilder) {
         queryBuilder.orderBy({
