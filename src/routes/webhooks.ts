@@ -30,9 +30,25 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
           console.log(event.data);
           break;
         }
+        case "customer.subscription.updated": {
+          if (event.data.object.metadata.omniProduct !== productName) break;
+
+          // biome-ignore lint: TODO: remove
+          console.log(event.data);
+          break;
+        }
+        case "customer.subscription.deleted": {
+          if (event.data.object.metadata.omniProduct !== productName) break;
+
+          // biome-ignore lint: TODO: remove
+          console.log(event.data);
+          break;
+        }
         default:
           break;
       }
+
+      return status(200, "Webhook event consumed");
     } catch (err) {
       console.error(err);
       return status(500, "Internal Server Error");
