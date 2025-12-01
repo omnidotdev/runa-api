@@ -17,6 +17,7 @@ import {
 } from "lib/config/env.config";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugins, useAuth } from "lib/graphql/plugins";
+import { webhooks } from "routes/webhooks";
 
 /**
  * Elysia server.
@@ -40,6 +41,7 @@ const app = new Elysia({
       methods: ["GET", "POST", "OPTIONS"],
     }),
   )
+  .use(webhooks)
   .use(
     yoga({
       schema,

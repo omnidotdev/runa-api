@@ -17,7 +17,12 @@
               ":BLANK_LINE:",
               {
                 "type": false,
-                "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:", "!lib/**"]
+                "source": [
+                  ":PACKAGE:",
+                  ":PACKAGE_WITH_PROTOCOL:",
+                  "!lib/**",
+                  "!routes/**"
+                ]
               },
               ":BLANK_LINE:",
               { "type": false, "source": ["**"] },
