@@ -13,6 +13,8 @@ export const {
   CORS_ALLOWED_ORIGINS,
   PROTECT_ROUTES,
   AUTH_DEBUG,
+  STRIPE_API_KEY,
+  STRIPE_WEBHOOK_SECRET,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development",
