@@ -2,7 +2,6 @@
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertExecutableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isExecutableStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
-import { polar } from "lib/polar/sdk";
 import { sql } from "pg-sql2";
 import { match } from "ts-pattern";
 const nodeIdHandler_Query = {
@@ -1594,7 +1593,7 @@ const spec_workspace = {
     },
     subscription_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: false,
       hasDefault: false,
       extensions: {
@@ -6536,9 +6535,6 @@ const planWrapper14 = (plan, _, fieldArgs) => {
       });
       if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role !== "owner") throw Error("Unauthorized");
-      if ("create" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
-        id: workspace.subscriptionId
-      });
     }
   });
   return plan();
@@ -7346,9 +7342,6 @@ const planWrapper28 = (plan, _, fieldArgs) => {
       });
       if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role !== "owner") throw Error("Unauthorized");
-      if ("update" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
-        id: workspace.subscriptionId
-      });
     }
   });
   return plan();
@@ -8156,9 +8149,6 @@ const planWrapper42 = (plan, _, fieldArgs) => {
       });
       if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role !== "owner") throw Error("Unauthorized");
-      if ("delete" === "delete" && !!workspace.subscriptionId) await polar.subscriptions.revoke({
-        id: workspace.subscriptionId
-      });
     }
   });
   return plan();
@@ -9141,7 +9131,7 @@ type Workspace implements Node {
   viewMode: String!
   slug: String!
   tier: Tier!
-  subscriptionId: UUID
+  subscriptionId: String
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -10788,7 +10778,7 @@ input WorkspaceFilter {
   tier: TierFilter
 
   """Filter by the object’s \`subscriptionId\` field."""
-  subscriptionId: UUIDFilter
+  subscriptionId: StringFilter
 
   """Filter by the object’s \`projects\` relation."""
   projects: WorkspaceToManyProjectFilter
@@ -15457,7 +15447,7 @@ input WorkspaceCondition {
   tier: Tier
 
   """Checks for equality with the object’s \`subscriptionId\` field."""
-  subscriptionId: UUID
+  subscriptionId: String
 }
 
 """Methods to use when ordering \`Workspace\`."""
@@ -24196,7 +24186,7 @@ ${String(oldPlan23)}`);
       },
       subscriptionId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("subscription_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       tier($pgSelectSingle) {
@@ -36869,7 +36859,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "subscription_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -47020,7 +47010,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       SUBSCRIPTION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("subscription_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       TIER($pgSelect) {

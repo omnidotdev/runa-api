@@ -13,7 +13,6 @@ import {
   FREE_TIER_MAX_PROJECTS,
   FREE_TIER_MAX_TASKS,
 } from "lib/graphql/plugins/authorization/constants";
-import { polar } from "lib/polar/sdk";
 
 /**
  * Generate a GraphQL schema from a Postgres database.
@@ -37,7 +36,6 @@ const generateGraphqlSchema = async () => {
       "graphile-export": { EXPORTABLE },
       "postgraphile/grafast": { context, sideEffect },
       "ts-pattern": { match },
-      "lib/polar/sdk": { polar },
       "./constants": {
         FREE_TIER_MAX_PROJECTS,
         FREE_TIER_MAX_TASKS,

@@ -4,7 +4,6 @@ import {
   pgTable,
   text,
   uniqueIndex,
-  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -33,7 +32,7 @@ export const workspaceTable = pgTable(
       .notNull(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     tier: tier().notNull().default("free"),
-    subscriptionId: uuid(),
+    subscriptionId: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

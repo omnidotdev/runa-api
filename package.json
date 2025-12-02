@@ -49,7 +49,6 @@
     "@graphile/pg-aggregates": "^0.2.0-rc.1",
     "@graphile/simplify-inflection": "^8.0.0-rc.2",
     "@graphql-yoga/plugin-disable-introspection": "^2.18.0",
-    "@polar-sh/elysia": "^0.2.3",
     "@tanstack/query-core": "^5.90.11",
     "drizzle-orm": "^0.44.7",
     "elysia": "^1.4.16",
@@ -60,6 +59,7 @@
     "pg": "^8.16.3",
     "postgraphile": "^5.0.0-rc.3",
     "postgraphile-plugin-connection-filter": "^3.0.0-rc.1",
+    "stripe": "^20.0.0",
     "ts-pattern": "^5.9.0",
     "zod": "4.1.13"
   }
