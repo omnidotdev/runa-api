@@ -1,0 +1,1 @@
+ALTER TABLE "workspace" ALTER COLUMN "subscription_id" SET DATA TYPE text;

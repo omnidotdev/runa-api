@@ -27,6 +27,6 @@ local_resource(
 
 local_resource(
     "payment-webhooks-tunnel-%s" % project_name,
-    serve_cmd="stripe listen --forward-to localhost:%s/webhooks/stripe" % port,
+    serve_cmd="stripe listen --forward-to https://localhost:%s/webhooks/stripe" % port,
     labels=[project_name],
 )
