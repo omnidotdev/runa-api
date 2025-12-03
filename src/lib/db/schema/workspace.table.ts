@@ -10,8 +10,8 @@ import {
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { invitationsTable } from "./invitation.table";
 import { projectTable } from "./project.table";
-import { projectColumnTable } from "./project_column.table";
-import { workspaceUserTable } from "./workspace_users.table";
+import { projectColumnTable } from "./projectColumn.table";
+import { workspaceUserTable } from "./workspaceUser.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
