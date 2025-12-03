@@ -13,7 +13,7 @@ import {
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { columnTable } from "./column.table";
 import { labelTable } from "./label.table";
-import { projectColumnTable } from "./project_column.table";
+import { projectColumnTable } from "./projectColumn.table";
 import { taskTable } from "./task.table";
 import { workspaceTable } from "./workspace.table";
 
