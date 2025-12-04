@@ -5,7 +5,7 @@ import app from "lib/config/app.config";
 import { STRIPE_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool as db } from "lib/db/db";
 import { workspaceTable } from "lib/db/schema";
-import { stripe } from "lib/payments";
+import payments from "lib/payments";
 
 import type { SelectWorkspace } from "lib/db/schema";
 
@@ -20,7 +20,7 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
     try {
       const body = await request.text();
 
-      const event = await stripe.webhooks.constructEventAsync(
+      const event = await payments.webhooks.constructEventAsync(
         body,
         signature,
         STRIPE_WEBHOOK_SECRET as string,
