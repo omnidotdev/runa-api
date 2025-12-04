@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import app from "lib/config/app.config";
@@ -30,47 +30,56 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
         case "customer.subscription.created": {
           if (event.data.object.metadata.omniProduct !== productName) break;
 
-          const price = event.data.object.items.data[0].price;
+          const subscription = await payments.subscriptions.retrieve(
+            event.data.object.id,
+          );
+          const tier = subscription.items.data[0].price.metadata
+            .tier as SelectWorkspace["tier"];
+          const workspaceId = subscription.metadata.workspaceId;
 
-          const workspaceId = event.data.object.metadata.workspaceId;
-          const subscriptionId = event.data.object.id;
-          const tier = price.metadata.tier as SelectWorkspace["tier"];
-
-          await db
-            .update(workspaceTable)
-            .set({ tier, subscriptionId })
-            .where(eq(workspaceTable.id, workspaceId));
+          if (subscription.status === "active") {
+            await db
+              .update(workspaceTable)
+              .set({ tier, subscriptionId: subscription.id })
+              .where(eq(workspaceTable.id, workspaceId));
+          }
 
           break;
         }
         case "customer.subscription.updated": {
           if (event.data.object.metadata.omniProduct !== productName) break;
 
-          const price = event.data.object.items.data[0].price;
-          const workspaceId = event.data.object.metadata.workspaceId;
+          const subscription = await payments.subscriptions.retrieve(
+            event.data.object.id,
+          );
+          const workspaceId = subscription.metadata.workspaceId;
 
-          if (
-            event.data.object.status === "active" &&
-            event.data.previous_attributes?.items
-          ) {
-            const previousTier =
-              event.data.previous_attributes.items.data[0].price.metadata.tier;
-            const currentTier = price.metadata.tier;
+          if (subscription.status === "active") {
+            const tier = subscription.items.data[0].price.metadata
+              .tier as SelectWorkspace["tier"];
 
-            if (previousTier !== currentTier) {
-              await db
-                .update(workspaceTable)
-                .set({ tier: currentTier as SelectWorkspace["tier"] })
-                .where(eq(workspaceTable.id, workspaceId));
-            }
+            await db
+              .update(workspaceTable)
+              .set({ tier })
+              .where(
+                and(
+                  eq(workspaceTable.id, workspaceId),
+                  eq(workspaceTable.subscriptionId, subscription.id),
+                ),
+              );
           }
 
           // NB: If the status of the subscription is deemed `unpaid`, we eagerly set the tier to `free` but keep the current subscription ID attached to the workspace.
-          if (event.data.object.status === "unpaid") {
+          if (subscription.status === "unpaid") {
             await db
               .update(workspaceTable)
               .set({ tier: "free" })
-              .where(eq(workspaceTable.id, workspaceId));
+              .where(
+                and(
+                  eq(workspaceTable.id, workspaceId),
+                  eq(workspaceTable.subscriptionId, subscription.id),
+                ),
+              );
           }
 
           break;
@@ -78,12 +87,22 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
         case "customer.subscription.deleted": {
           if (event.data.object.metadata.omniProduct !== productName) break;
 
-          const workspaceId = event.data.object.metadata.workspaceId;
+          const subscription = await payments.subscriptions.retrieve(
+            event.data.object.id,
+          );
+          const workspaceId = subscription.metadata.workspaceId;
 
-          await db
-            .update(workspaceTable)
-            .set({ tier: "free", subscriptionId: null })
-            .where(eq(workspaceTable.id, workspaceId));
+          if (subscription.status === "canceled") {
+            await db
+              .update(workspaceTable)
+              .set({ tier: "free", subscriptionId: null })
+              .where(
+                and(
+                  eq(workspaceTable.id, workspaceId),
+                  eq(workspaceTable.subscriptionId, subscription.id),
+                ),
+              );
+          }
 
           break;
         }
