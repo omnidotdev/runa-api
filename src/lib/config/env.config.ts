@@ -13,13 +13,10 @@ export const {
   CORS_ALLOWED_ORIGINS,
   PROTECT_ROUTES,
   AUTH_DEBUG,
-  POLAR_ACCESS_TOKEN,
-  POLAR_WEBHOOK_SECRET,
-  CHECKOUT_SUCCESS_URL,
-  ENABLE_POLAR_SANDBOX,
+  STRIPE_API_KEY,
+  STRIPE_WEBHOOK_SECRET,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development",
   isProdEnv = NODE_ENV === "production",
-  protectRoutes = isProdEnv || PROTECT_ROUTES === "true",
-  enablePolarSandbox = ENABLE_POLAR_SANDBOX === "true";
+  protectRoutes = isProdEnv || PROTECT_ROUTES === "true";

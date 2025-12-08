@@ -10,7 +10,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const role = pgEnum("role", ["owner", "admin", "member"]);
 
 /**
- * Workspace users junction table.
+ * Workspace user junction table.
  */
 export const workspaceUserTable = pgTable(
   "workspace_user",

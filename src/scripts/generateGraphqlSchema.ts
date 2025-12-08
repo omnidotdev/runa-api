@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync } from "node:fs";
+
 import { EXPORTABLE, exportSchema } from "graphile-export";
 import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
@@ -12,7 +13,6 @@ import {
   FREE_TIER_MAX_PROJECTS,
   FREE_TIER_MAX_TASKS,
 } from "lib/graphql/plugins/authorization/constants";
-import { polar } from "lib/polar/sdk";
 
 /**
  * Generate a GraphQL schema from a Postgres database.
@@ -36,7 +36,6 @@ const generateGraphqlSchema = async () => {
       "graphile-export": { EXPORTABLE },
       "postgraphile/grafast": { context, sideEffect },
       "ts-pattern": { match },
-      "lib/polar/sdk": { polar },
       "./constants": {
         FREE_TIER_MAX_PROJECTS,
         FREE_TIER_MAX_TASKS,
@@ -48,7 +47,7 @@ const generateGraphqlSchema = async () => {
 
   await replaceInFile({
     files: schemaFilePath,
-    from: /\/\* eslint-disable graphile-export\/export-instances, graphile-export\/export-methods, graphile-export\/exhaustive-deps \*\//g,
+    from: /\/\* eslint-disable graphile-export\/export-instances, graphile-export\/export-methods, graphile-export\/export-plans, graphile-export\/exhaustive-deps \*\//g,
     to: "// @ts-nocheck",
   });
 };

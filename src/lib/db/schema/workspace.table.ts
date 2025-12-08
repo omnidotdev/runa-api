@@ -4,15 +4,14 @@ import {
   pgTable,
   text,
   uniqueIndex,
-  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { invitationsTable } from "./invitation.table";
 import { projectTable } from "./project.table";
-import { projectColumnTable } from "./project_column.table";
-import { workspaceUserTable } from "./workspace_users.table";
+import { projectColumnTable } from "./projectColumn.table";
+import { workspaceUserTable } from "./workspaceUser.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -33,7 +32,7 @@ export const workspaceTable = pgTable(
       .notNull(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     tier: tier().notNull().default("free"),
-    subscriptionId: uuid(),
+    subscriptionId: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

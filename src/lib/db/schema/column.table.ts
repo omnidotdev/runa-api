@@ -7,9 +7,9 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { projectTable } from "./project.table";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { projectTable } from "./project.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 

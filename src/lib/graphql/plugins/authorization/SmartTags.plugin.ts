@@ -1,6 +1,6 @@
-import { makeJSONPgSmartTagsPlugin } from "postgraphile/utils";
+import { jsonPgSmartTags } from "postgraphile/utils";
 
-export default makeJSONPgSmartTagsPlugin({
+export default jsonPgSmartTags({
   version: 1,
   config: {
     class: {
@@ -8,12 +8,21 @@ export default makeJSONPgSmartTagsPlugin({
         attribute: {
           tier: {
             tags: {
-              behavior: "-insert -update",
+              behavior: "-insert -update +orderBy",
             },
           },
           subscription_id: {
             tags: {
               behavior: "-insert -update",
+            },
+          },
+        },
+      },
+      workspace_user: {
+        attribute: {
+          role: {
+            tags: {
+              behavior: "+orderBy",
             },
           },
         },
