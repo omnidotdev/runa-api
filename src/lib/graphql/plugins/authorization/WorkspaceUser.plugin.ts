@@ -89,7 +89,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               },
             });
 
-            if (!member) throw new Error("Unauthorized");
+            if (!member || member.role === "member")
+              throw new Error("Unauthorized");
 
             if (scope === "update") {
               const role = (input as InsertWorkspaceUser).role;
