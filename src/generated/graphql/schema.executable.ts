@@ -6342,9 +6342,10 @@ const planWrapper9 = (plan, _, fieldArgs) => {
           }
         }
       });
-      if (!member) throw Error("Unauthorized");
+      if (!member || member.role === "member") throw Error("Unauthorized");
       if ("create" === "update") {
-        if (input.role) {
+        const role = input.role;
+        if (role && role !== "member") {
           const numberOfAdmins = member.workspace.workspaceUsers.filter(member => member.role !== "member").length;
           if (member.workspace.tier === "free" && numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
           if (member.workspace.tier === "basic" && numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
@@ -7184,9 +7185,10 @@ const planWrapper23 = (plan, _, fieldArgs) => {
           }
         }
       });
-      if (!member) throw Error("Unauthorized");
+      if (!member || member.role === "member") throw Error("Unauthorized");
       if ("update" === "update") {
-        if (input.role) {
+        const role = input.role;
+        if (role && role !== "member") {
           const numberOfAdmins = member.workspace.workspaceUsers.filter(member => member.role !== "member").length;
           if (member.workspace.tier === "free" && numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
           if (member.workspace.tier === "basic" && numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
@@ -8056,9 +8058,10 @@ const planWrapper37 = (plan, _, fieldArgs) => {
           }
         }
       });
-      if (!member) throw Error("Unauthorized");
+      if (!member || member.role === "member") throw Error("Unauthorized");
       if ("delete" === "update") {
-        if (input.role) {
+        const role = input.role;
+        if (role && role !== "member") {
           const numberOfAdmins = member.workspace.workspaceUsers.filter(member => member.role !== "member").length;
           if (member.workspace.tier === "free" && numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
           if (member.workspace.tier === "basic" && numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
