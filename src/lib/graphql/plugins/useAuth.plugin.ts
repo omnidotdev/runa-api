@@ -56,12 +56,6 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
         const idToken: jose.JWTPayload = await response.json();
 
         // TODO: research practices for further token validation
-        // TODO validate token, currently major security flaw (pending BA OIDC JWKS support: https://www.better-auth.com/docs/plugins/oidc-provider#jwks-endpoint-not-fully-implemented) (https://linear.app/omnidev/issue/OMNI-302/validate-id-token-with-jwks)
-        // make sure to verify at least sig, iss, aud, exp against IDP...maybe more (research). Reject otherwise
-        // const jwks = jose.createRemoteJWKSet(new URL(`${AUTH_BASE_URL}/jwks`));
-        // const { payload } = await jose.jwtVerify(JSON.stringify(idToken), jwks);
-        // if (!payload) throw new Error("Failed to verify token");
-
         return idToken;
       },
     });

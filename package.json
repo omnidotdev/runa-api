@@ -14,7 +14,7 @@
     "check": "biome check",
     "db:setup": "bun src/scripts/db/setupDatabase.ts",
     "db:check": "bun --env-file .env.local drizzle-kit check --config src/lib/config/drizzle.config.ts",
-    "db:generate": "drizzle-kit generate --config src/lib/config/drizzle.config.ts",
+    "db:generate": "bun --env-file .env.local drizzle-kit generate --config src/lib/config/drizzle.config.ts",
     "db:migrate": "bun --env-file .env.local drizzle-kit migrate --config src/lib/config/drizzle.config.ts && GRAPHILE_ENV=development bun graphile:generate",
     "db:migrate:drop": "bun --env-file .env.local drizzle-kit drop --config src/lib/config/drizzle.config.ts",
     "db:pull": "bun --env-file .env.local drizzle-kit introspect --config src/lib/config/drizzle.config.ts",
