@@ -50,7 +50,7 @@
     "@graphile/simplify-inflection": "^8.0.0-rc.2",
     "@graphql-yoga/plugin-disable-introspection": "^2.18.0",
     "@tanstack/query-core": "^5.90.11",
-    "drizzle-orm": "^0.44.7",
+    "drizzle-orm": "^0.45.0",
     "elysia": "^1.4.16",
     "graphile-export": "^1.0.0-rc.2",
     "graphql": "^16.12.0",
