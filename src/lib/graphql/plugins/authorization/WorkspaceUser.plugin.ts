@@ -94,7 +94,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (scope === "update") {
               const role = (input as InsertWorkspaceUser).role;
 
-              if (role) {
+              if (role && role !== "member") {
                 const numberOfAdmins = member.workspace.workspaceUsers.filter(
                   (member) => member.role !== "member",
                 ).length;
