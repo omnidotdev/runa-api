@@ -6298,7 +6298,10 @@ const planWrapper9 = (plan, _, fieldArgs) => {
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const workspaceId = input.workspaceId,
+      const {
+          workspaceId,
+          role
+        } = input,
         workspace = await db.query.workspaceTable.findFirst({
           where(table, {
             eq
@@ -6310,8 +6313,43 @@ const planWrapper9 = (plan, _, fieldArgs) => {
           }
         });
       if (!workspace) throw Error("Unauthorized");
-      if (workspace.tier === "free" && workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
-      if (workspace.tier === "basic" && workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+      if (workspace.tier === "free") {
+        if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+        if (role) {
+          if (numberOfAdmins >= 1 && role !== "member") throw Error("Maximum number of admins reached");
+        }
+      }
+      if (workspace.tier === "basic") {
+        if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+        if (role) {
+          if (numberOfAdmins >= 3 && role !== "member") throw Error("Maximum number of admins reached");
+        }
+      }
+    } else {
+      const member = await db.query.workspaceUserTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.userId, observer.id);
+        },
+        with: {
+          workspace: {
+            with: {
+              workspaceUsers: !0
+            }
+          }
+        }
+      });
+      if (!member) throw Error("Unauthorized");
+      if ("create" === "update") {
+        if (input.role) {
+          const numberOfAdmins = member.workspace.workspaceUsers.filter(member => member.role !== "member").length;
+          if (member.workspace.tier === "free" && numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
+          if (member.workspace.tier === "basic" && numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
+        }
+      }
     }
   });
   return plan();
@@ -7096,13 +7134,16 @@ const oldPlan23 = (_$root, args) => {
   });
 };
 const planWrapper23 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
+  const $input = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
-      const workspaceId = input.workspaceId,
+      const {
+          workspaceId,
+          role
+        } = input,
         workspace = await db.query.workspaceTable.findFirst({
           where(table, {
             eq
@@ -7114,8 +7155,43 @@ const planWrapper23 = (plan, _, fieldArgs) => {
           }
         });
       if (!workspace) throw Error("Unauthorized");
-      if (workspace.tier === "free" && workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
-      if (workspace.tier === "basic" && workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+      if (workspace.tier === "free") {
+        if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+        if (role) {
+          if (numberOfAdmins >= 1 && role !== "member") throw Error("Maximum number of admins reached");
+        }
+      }
+      if (workspace.tier === "basic") {
+        if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+        if (role) {
+          if (numberOfAdmins >= 3 && role !== "member") throw Error("Maximum number of admins reached");
+        }
+      }
+    } else {
+      const member = await db.query.workspaceUserTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.userId, observer.id);
+        },
+        with: {
+          workspace: {
+            with: {
+              workspaceUsers: !0
+            }
+          }
+        }
+      });
+      if (!member) throw Error("Unauthorized");
+      if ("update" === "update") {
+        if (input.role) {
+          const numberOfAdmins = member.workspace.workspaceUsers.filter(member => member.role !== "member").length;
+          if (member.workspace.tier === "free" && numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
+          if (member.workspace.tier === "basic" && numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
+        }
+      }
     }
   });
   return plan();
@@ -7930,13 +8006,16 @@ const oldPlan37 = (_$root, args) => {
   });
 };
 const planWrapper37 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
+  const $input = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
-      const workspaceId = input.workspaceId,
+      const {
+          workspaceId,
+          role
+        } = input,
         workspace = await db.query.workspaceTable.findFirst({
           where(table, {
             eq
@@ -7948,8 +8027,43 @@ const planWrapper37 = (plan, _, fieldArgs) => {
           }
         });
       if (!workspace) throw Error("Unauthorized");
-      if (workspace.tier === "free" && workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
-      if (workspace.tier === "basic" && workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+      if (workspace.tier === "free") {
+        if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+        if (role) {
+          if (numberOfAdmins >= 1 && role !== "member") throw Error("Maximum number of admins reached");
+        }
+      }
+      if (workspace.tier === "basic") {
+        if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+        if (role) {
+          if (numberOfAdmins >= 3 && role !== "member") throw Error("Maximum number of admins reached");
+        }
+      }
+    } else {
+      const member = await db.query.workspaceUserTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.userId, observer.id);
+        },
+        with: {
+          workspace: {
+            with: {
+              workspaceUsers: !0
+            }
+          }
+        }
+      });
+      if (!member) throw Error("Unauthorized");
+      if ("delete" === "update") {
+        if (input.role) {
+          const numberOfAdmins = member.workspace.workspaceUsers.filter(member => member.role !== "member").length;
+          if (member.workspace.tier === "free" && numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
+          if (member.workspace.tier === "basic" && numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
+        }
+      }
     }
   });
   return plan();
