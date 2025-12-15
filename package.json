@@ -61,6 +61,6 @@
     "postgraphile-plugin-connection-filter": "^3.0.0-rc.1",
     "stripe": "^20.0.0",
     "ts-pattern": "^5.9.0",
-    "zod": "4.1.13"
+    "zod": "4.2.0"
   }
 }
