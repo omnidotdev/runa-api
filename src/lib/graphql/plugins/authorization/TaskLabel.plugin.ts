@@ -16,6 +16,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
+
+          // TODO: tier based permissions
         });
 
         return plan();

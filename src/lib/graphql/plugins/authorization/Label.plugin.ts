@@ -2,13 +2,22 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { BASIC_TIER_MAX_LABELS, FREE_TIER_MAX_LABELS } from "./constants";
+
 import type { InsertLabel } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      propName,
+      scope,
+      FREE_TIER_MAX_LABELS,
+      BASIC_TIER_MAX_LABELS,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -36,7 +45,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               },
             });
 
-            // TODO: determine proper permissions
             if (!label?.project.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
@@ -48,6 +56,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const project = await db.query.projectTable.findFirst({
               where: (table, { eq }) => eq(table.id, projectId),
               with: {
+                labels: true,
                 workspace: {
                   with: {
                     workspaceUsers: {
@@ -61,15 +70,33 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!project?.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
-            // TODO: determine proper permissions
             if (project.workspace.workspaceUsers[0].role === "member")
               throw new Error("Unauthorized");
+
+            if (
+              project.workspace.tier === "free" &&
+              project.labels.length >= FREE_TIER_MAX_LABELS
+            )
+              throw new Error("Maximum number of labels reached");
+
+            if (
+              project.workspace.tier === "basic" &&
+              project.labels.length >= BASIC_TIER_MAX_LABELS
+            )
+              throw new Error("Maximum number of labels reached");
           }
         });
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      propName,
+      scope,
+      FREE_TIER_MAX_LABELS,
+      BASIC_TIER_MAX_LABELS,
+    ],
   );
 
 export default wrapPlans({

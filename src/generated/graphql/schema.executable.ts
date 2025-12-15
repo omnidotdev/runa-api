@@ -149,7 +149,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "17763",
+    oid: "21483",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -232,7 +232,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "17883",
+    oid: "21603",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -327,7 +327,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "17546",
+    oid: "21266",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -422,7 +422,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "17920",
+    oid: "21640",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -517,7 +517,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "17749",
+    oid: "21469",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -624,7 +624,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "17617",
+    oid: "21337",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -731,7 +731,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "17570",
+    oid: "21290",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -838,7 +838,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "17557",
+    oid: "21277",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -859,7 +859,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "17966",
+    oid: "21686",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -928,7 +928,7 @@ const spec_workspaceUser = {
   },
   description: undefined,
   extensions: {
-    oid: "17644",
+    oid: "21364",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1035,7 +1035,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "17814",
+    oid: "21534",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1170,7 +1170,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "17831",
+    oid: "21551",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1190,7 +1190,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team"],
   description: undefined,
   extensions: {
-    oid: "17957",
+    oid: "21677",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1330,7 +1330,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "17583",
+    oid: "21303",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1485,7 +1485,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "17598",
+    oid: "21318",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1608,7 +1608,7 @@ const spec_workspace = {
   },
   description: undefined,
   extensions: {
-    oid: "17632",
+    oid: "21352",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5936,31 +5936,36 @@ const planWrapper3 = (plan, _, fieldArgs) => {
       if (!assignee?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (assignee.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
     } else {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          with: {
+            assignees: !0,
+            project: {
+              with: {
+                workspace: {
+                  with: {
+                    workspaceUsers: {
+                      where(table, {
+                        eq
+                      }) {
+                        return eq(table.userId, observer.id);
+                      }
                     }
                   }
                 }
               }
             }
           }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+      const tier = task?.project?.workspace.tier;
+      if (tier === "free" && task.assignees.length >= 1) throw Error("Maximum number of assignees reached");
+      if (tier === "basic" && task.assignees.length >= 3) throw Error("Maximum number of assigness reached");
     }
   });
   return plan();
@@ -6096,6 +6101,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
             return eq(table.id, projectId);
           },
           with: {
+            labels: !0,
             workspace: {
               with: {
                 workspaceUsers: {
@@ -6111,6 +6117,8 @@ const planWrapper5 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (project.workspace.tier === "free" && project.labels.length >= 10) throw Error("Maximum number of labels reached");
+      if (project.workspace.tier === "basic" && project.labels.length >= 50) throw Error("Maximum number of labels reached");
     }
   });
   return plan();
@@ -6254,6 +6262,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
             return eq(table.id, projectId);
           },
           with: {
+            columns: !0,
             workspace: {
               with: {
                 workspaceUsers: {
@@ -6269,6 +6278,8 @@ const planWrapper8 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (project.workspace.tier === "free" && project.columns.length >= 5) throw Error("Maximum number of columns reached");
+      if (project.workspace.tier === "basic" && project.columns.length >= 20) throw Error("Maximum number of columns reached");
     }
   });
   return plan();
@@ -6286,6 +6297,22 @@ const planWrapper9 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
+    if ("create" === "create") {
+      const workspaceId = input.workspaceId,
+        workspace = await db.query.workspaceTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, workspaceId);
+          },
+          with: {
+            workspaceUsers: !0
+          }
+        });
+      if (!workspace) throw Error("Unauthorized");
+      if (workspace.tier === "free" && workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+      if (workspace.tier === "basic" && workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+    }
   });
   return plan();
 };
@@ -6676,31 +6703,36 @@ const planWrapper17 = (plan, _, fieldArgs) => {
       if (!assignee?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (assignee.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
     } else {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          with: {
+            assignees: !0,
+            project: {
+              with: {
+                workspace: {
+                  with: {
+                    workspaceUsers: {
+                      where(table, {
+                        eq
+                      }) {
+                        return eq(table.userId, observer.id);
+                      }
                     }
                   }
                 }
               }
             }
           }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+      const tier = task?.project?.workspace.tier;
+      if (tier === "free" && task.assignees.length >= 1) throw Error("Maximum number of assignees reached");
+      if (tier === "basic" && task.assignees.length >= 3) throw Error("Maximum number of assigness reached");
     }
   });
   return plan();
@@ -6848,6 +6880,7 @@ const planWrapper19 = (plan, _, fieldArgs) => {
             return eq(table.id, projectId);
           },
           with: {
+            labels: !0,
             workspace: {
               with: {
                 workspaceUsers: {
@@ -6863,6 +6896,8 @@ const planWrapper19 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (project.workspace.tier === "free" && project.labels.length >= 10) throw Error("Maximum number of labels reached");
+      if (project.workspace.tier === "basic" && project.labels.length >= 50) throw Error("Maximum number of labels reached");
     }
   });
   return plan();
@@ -7024,6 +7059,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
             return eq(table.id, projectId);
           },
           with: {
+            columns: !0,
             workspace: {
               with: {
                 workspaceUsers: {
@@ -7039,6 +7075,8 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (project.workspace.tier === "free" && project.columns.length >= 5) throw Error("Maximum number of columns reached");
+      if (project.workspace.tier === "basic" && project.columns.length >= 20) throw Error("Maximum number of columns reached");
     }
   });
   return plan();
@@ -7063,6 +7101,22 @@ const planWrapper23 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
+    if ("update" === "create") {
+      const workspaceId = input.workspaceId,
+        workspace = await db.query.workspaceTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, workspaceId);
+          },
+          with: {
+            workspaceUsers: !0
+          }
+        });
+      if (!workspace) throw Error("Unauthorized");
+      if (workspace.tier === "free" && workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+      if (workspace.tier === "basic" && workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+    }
   });
   return plan();
 };
@@ -7483,31 +7537,36 @@ const planWrapper31 = (plan, _, fieldArgs) => {
       if (!assignee?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (assignee.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
     } else {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          with: {
+            assignees: !0,
+            project: {
+              with: {
+                workspace: {
+                  with: {
+                    workspaceUsers: {
+                      where(table, {
+                        eq
+                      }) {
+                        return eq(table.userId, observer.id);
+                      }
                     }
                   }
                 }
               }
             }
           }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+      const tier = task?.project?.workspace.tier;
+      if (tier === "free" && task.assignees.length >= 1) throw Error("Maximum number of assignees reached");
+      if (tier === "basic" && task.assignees.length >= 3) throw Error("Maximum number of assigness reached");
     }
   });
   return plan();
@@ -7655,6 +7714,7 @@ const planWrapper33 = (plan, _, fieldArgs) => {
             return eq(table.id, projectId);
           },
           with: {
+            labels: !0,
             workspace: {
               with: {
                 workspaceUsers: {
@@ -7670,6 +7730,8 @@ const planWrapper33 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (project.workspace.tier === "free" && project.labels.length >= 10) throw Error("Maximum number of labels reached");
+      if (project.workspace.tier === "basic" && project.labels.length >= 50) throw Error("Maximum number of labels reached");
     }
   });
   return plan();
@@ -7831,6 +7893,7 @@ const planWrapper36 = (plan, _, fieldArgs) => {
             return eq(table.id, projectId);
           },
           with: {
+            columns: !0,
             workspace: {
               with: {
                 workspaceUsers: {
@@ -7846,6 +7909,8 @@ const planWrapper36 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (project.workspace.tier === "free" && project.columns.length >= 5) throw Error("Maximum number of columns reached");
+      if (project.workspace.tier === "basic" && project.columns.length >= 20) throw Error("Maximum number of columns reached");
     }
   });
   return plan();
@@ -7870,6 +7935,22 @@ const planWrapper37 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
+    if ("delete" === "create") {
+      const workspaceId = input.workspaceId,
+        workspace = await db.query.workspaceTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, workspaceId);
+          },
+          with: {
+            workspaceUsers: !0
+          }
+        });
+      if (!workspace) throw Error("Unauthorized");
+      if (workspace.tier === "free" && workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+      if (workspace.tier === "basic" && workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+    }
   });
   return plan();
 };

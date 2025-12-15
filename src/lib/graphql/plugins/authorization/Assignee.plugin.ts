@@ -2,13 +2,22 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { BASIC_TIER_MAX_ASSIGNEES, FREE_TIER_MAX_ASSIGNEES } from "./constants";
+
 import type { InsertAssignee } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      propName,
+      scope,
+      FREE_TIER_MAX_ASSIGNEES,
+      BASIC_TIER_MAX_ASSIGNEES,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -43,7 +52,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!assignee?.task.project.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
-            // TODO: determine proper permissions
             if (
               assignee.task.project.workspace.workspaceUsers[0].role ===
               "member"
@@ -55,6 +63,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const task = await db.query.taskTable.findFirst({
               where: (table, { eq }) => eq(table.id, taskId),
               with: {
+                assignees: true,
                 project: {
                   with: {
                     workspace: {
@@ -73,13 +82,32 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!task?.project.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
-            // TODO: extra permissions to assign to tasks?
+            const tier = task?.project?.workspace.tier;
+
+            if (
+              tier === "free" &&
+              task.assignees.length >= FREE_TIER_MAX_ASSIGNEES
+            )
+              throw new Error("Maximum number of assignees reached");
+
+            if (
+              tier === "basic" &&
+              task.assignees.length >= BASIC_TIER_MAX_ASSIGNEES
+            )
+              throw new Error("Maximum number of assigness reached");
           }
         });
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      propName,
+      scope,
+      FREE_TIER_MAX_ASSIGNEES,
+      BASIC_TIER_MAX_ASSIGNEES,
+    ],
   );
 
 export default wrapPlans({
