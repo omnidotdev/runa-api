@@ -1,99 +1,87 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
-	"vcs": {
-		"enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true
-	},
-	"assist": {
-		"actions": {
-			"source": {
-				"organizeImports": {
-					"level": "on",
-					"options": {
-						"identifierOrder": "lexicographic",
-						"groups": [
-							{
-								"type": false,
-								"source": [
-									":BUN:",
-									":NODE:"
-								]
-							},
-							":BLANK_LINE:",
-							{
-								"type": false,
-								"source": [
-									":PACKAGE:",
-									":PACKAGE_WITH_PROTOCOL:",
-									"!lib/**",
-									"!routes/**"
-								]
-							},
-							":BLANK_LINE:",
-							{
-								"type": false,
-								"source": [
-									"**"
-								]
-							},
-							":BLANK_LINE:",
-							{
-								"type": true
-							}
-						]
-					}
-				}
-			}
-		}
-	},
-	"files": {
-		"ignoreUnknown": false,
-		"includes": [
-			"**",
-			"!!src/generated",
-			"!!src/lib/db/drizzle"
-		]
-	},
-	"formatter": {
-		"indentStyle": "space",
-		"lineWidth": 80,
-		"indentWidth": 2
-	},
-	"linter": {
-		"rules": {
-			"correctness": {
-				"noUnusedImports": {
-					"fix": "safe",
-					"level": "error"
-				},
-				"noUnusedVariables": {
-					"level": "error",
-					"options": {
-						"ignoreRestSiblings": true
-					}
-				}
-			},
-			"style": {
-				"noNonNullAssertion": "off",
-				"useImportType": {
-					"level": "error",
-					"options": {
-						"style": "separatedType"
-					}
-				}
-			},
-			"suspicious": {
-				"noConsole": {
-					"level": "error",
-					"options": {
-						"allow": [
-							"error",
-							"warn"
-						]
-					}
-				}
-			}
-		}
-	}
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "identifierOrder": "lexicographic",
+            "groups": [
+              {
+                "type": false,
+                "source": [":BUN:", ":NODE:"]
+              },
+              ":BLANK_LINE:",
+              {
+                "type": false,
+                "source": [
+                  ":PACKAGE:",
+                  ":PACKAGE_WITH_PROTOCOL:",
+                  "!lib/**",
+                  "!routes/**"
+                ]
+              },
+              ":BLANK_LINE:",
+              {
+                "type": false,
+                "source": ["**"]
+              },
+              ":BLANK_LINE:",
+              {
+                "type": true
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": ["**", "!!src/generated", "!!src/lib/db/drizzle"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "lineWidth": 80,
+    "indentWidth": 2
+  },
+  "linter": {
+    "rules": {
+      "correctness": {
+        "noUnusedImports": {
+          "fix": "safe",
+          "level": "error"
+        },
+        "noUnusedVariables": {
+          "level": "error",
+          "options": {
+            "ignoreRestSiblings": true
+          }
+        }
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useImportType": {
+          "level": "error",
+          "options": {
+            "style": "separatedType"
+          }
+        }
+      },
+      "suspicious": {
+        "noConsole": {
+          "level": "error",
+          "options": {
+            "allow": ["error", "warn"]
+          }
+        }
+      }
+    }
+  }
 }
