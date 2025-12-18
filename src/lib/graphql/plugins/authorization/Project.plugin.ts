@@ -108,10 +108,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     ],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for projects.
+ */
+const ProjectPlugin = wrapPlans({
   Mutation: {
     createProject: validatePermissions("project", "create"),
     updateProject: validatePermissions("rowId", "update"),
     deleteProject: validatePermissions("rowId", "delete"),
   },
 });
+
+export default ProjectPlugin;

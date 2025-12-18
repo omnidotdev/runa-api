@@ -60,10 +60,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for invitations.
+ */
+const InvitationPlugin = wrapPlans({
   Mutation: {
     createInvitation: validatePermissions("invitation", "create"),
     updateInvitation: validatePermissions("rowId", "update"),
     deleteInvitation: validatePermissions("rowId", "delete"),
   },
 });
+
+export default InvitationPlugin;

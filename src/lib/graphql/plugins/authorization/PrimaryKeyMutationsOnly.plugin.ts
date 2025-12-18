@@ -1,10 +1,11 @@
+// TODO deduplicate with Backfeed
+
 /**
- * Plugin that restricts the optionality for mutations to only expose those that are linked by a primary key.
+ * Authorization plugin for primary key mutations. Exposes only mutations linked by a primary key.
  */
 const PrimaryKeyMutationsOnlyPlugin: GraphileConfig.Plugin = {
   name: "PrimaryKeyMutationsOnlyPlugin",
   version: "0.0.0",
-
   gather: {
     hooks: {
       pgIntrospection_introspection(_info, event) {

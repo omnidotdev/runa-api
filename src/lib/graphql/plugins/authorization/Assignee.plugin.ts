@@ -110,10 +110,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     ],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for assignees.
+ */
+const AssigneePlugin = wrapPlans({
   Mutation: {
     createAssignee: validatePermissions("assignee", "create"),
     updateAssignee: validatePermissions("rowId", "update"),
     deleteAssignee: validatePermissions("rowId", "delete"),
   },
 });
+
+export default AssigneePlugin;

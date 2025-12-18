@@ -8,25 +8,33 @@ import type { MutationScope } from "./types";
 // TODO: discuss permissions
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (context, sideEffect, propName, _scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
-        });
+        sideEffect(
+          [$input, $observer, $db],
+          async ([_input, observer, _db]) => {
+            if (!observer) throw new Error("Unauthorized");
+          },
+        );
 
         return plan();
       },
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for users.
+ */
+const UserPlugin = wrapPlans({
   Mutation: {
     createUser: validatePermissions("user", "create"),
     updateUser: validatePermissions("rowId", "update"),
     deleteUser: validatePermissions("rowId", "delete"),
   },
 });
+
+export default UserPlugin;

@@ -20,7 +20,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       context,
       sideEffect,
       propName,
-      scope,
+      _scope,
       FREE_TIER_MAX_MEMBERS,
       FREE_TIER_MAX_ADMINS,
       BASIC_TIER_MAX_MEMBERS,
@@ -130,10 +130,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     ],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for workspace users.
+ */
+const WorkspaceUserPlugin = wrapPlans({
   Mutation: {
     createWorkspaceUser: validatePermissions("workspaceUser", "create"),
     updateWorkspaceUser: validatePermissions("patch", "update"),
     deleteWorkspaceUser: validatePermissions("patch", "delete"),
   },
 });
+
+export default WorkspaceUserPlugin;
