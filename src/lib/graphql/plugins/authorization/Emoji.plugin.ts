@@ -88,10 +88,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for emojis.
+ */
+const EmojiPlugin = wrapPlans({
   Mutation: {
     createEmoji: validatePermissions("emoji", "create"),
     updateEmoji: validatePermissions("rowId", "update"),
     deleteEmoji: validatePermissions("rowId", "delete"),
   },
 });
+
+export default EmojiPlugin;

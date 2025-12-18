@@ -41,10 +41,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for workspaces.
+ */
+const WorkspacePlugin = wrapPlans({
   Mutation: {
     createWorkspace: validatePermissions("workspace", "create"),
     updateWorkspace: validatePermissions("rowId", "update"),
     deleteWorkspace: validatePermissions("rowId", "delete"),
   },
 });
+
+export default WorkspacePlugin;

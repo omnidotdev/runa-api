@@ -71,10 +71,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for columns.
+ */
+const ColumnPlugin = wrapPlans({
   Mutation: {
     createColumn: validatePermissions("column", "create"),
     updateColumn: validatePermissions("rowId", "update"),
     deleteColumn: validatePermissions("rowId", "delete"),
   },
 });
+
+export default ColumnPlugin;

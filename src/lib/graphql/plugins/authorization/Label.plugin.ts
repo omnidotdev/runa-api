@@ -72,10 +72,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for labels.
+ */
+const LabelPlugin = wrapPlans({
   Mutation: {
     createLabel: validatePermissions("label", "create"),
     updateLabel: validatePermissions("rowId", "update"),
     deleteLabel: validatePermissions("rowId", "delete"),
   },
 });
+
+export default LabelPlugin;

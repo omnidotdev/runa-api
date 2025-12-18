@@ -14,19 +14,27 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
-        });
+        sideEffect(
+          [$input, $observer, $db],
+          async ([_input, observer, _db]) => {
+            if (!observer) throw new Error("Unauthorized");
+          },
+        );
 
         return plan();
       },
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for workspace users.
+ */
+const WorkspaceUserPlugin = wrapPlans({
   Mutation: {
     createWorkspaceUser: validatePermissions("workspaceUser", "create"),
     updateWorkspaceUser: validatePermissions("rowId", "update"),
     deleteWorkspaceUser: validatePermissions("rowId", "delete"),
   },
 });
+
+export default WorkspaceUserPlugin;
