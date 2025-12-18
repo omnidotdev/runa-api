@@ -23,10 +23,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for task labels.
+ */
+const TaskLabelPlugin = wrapPlans({
   Mutation: {
-    createWorkspaceUser: validatePermissions("workspaceUser", "create"),
-    updateWorkspaceUser: validatePermissions("rowId", "update"),
-    deleteWorkspaceUser: validatePermissions("rowId", "delete"),
+    createTaskLabel: validatePermissions("taskLabel", "create"),
+    updateTaskLabel: validatePermissions("rowId", "update"),
+    deleteTaskLabel: validatePermissions("rowId", "delete"),
   },
 });
+
+export default TaskLabelPlugin;

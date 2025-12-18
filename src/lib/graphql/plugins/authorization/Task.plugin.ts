@@ -110,10 +110,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     ],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for tasks.
+ */
+const TaskPlugin = wrapPlans({
   Mutation: {
     createTask: validatePermissions("task", "create"),
     updateTask: validatePermissions("rowId", "update"),
     deleteTask: validatePermissions("rowId", "delete"),
   },
 });
+
+export default TaskPlugin;

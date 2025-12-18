@@ -79,10 +79,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for posts.
+ */
+const PostPlugin = wrapPlans({
   Mutation: {
     createPost: validatePermissions("post", "create"),
     updatePost: validatePermissions("rowId", "update"),
     deletePost: validatePermissions("rowId", "delete"),
   },
 });
+
+export default PostPlugin;

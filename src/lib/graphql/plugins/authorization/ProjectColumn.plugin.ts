@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertColumn } from "lib/db/schema";
+import type { InsertProjectColumn } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -18,34 +18,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (!observer) throw new Error("Unauthorized");
 
           if (scope !== "create") {
-            const column = await db.query.columnTable.findFirst({
+            const projectColumn = await db.query.projectColumnTable.findFirst({
               where: (table, { eq }) => eq(table.id, input),
-              with: {
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        workspaceUsers: {
-                          where: (table, { eq }) =>
-                            eq(table.userId, observer.id),
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            });
-            if (!column?.project.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            // TODO: determine proper permissions
-            if (column.project.workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
-          } else {
-            const projectId = (input as InsertColumn).projectId;
-
-            const project = await db.query.projectTable.findFirst({
-              where: (table, { eq }) => eq(table.id, projectId),
               with: {
                 workspace: {
                   with: {
@@ -57,11 +31,29 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               },
             });
 
-            if (!project?.workspace.workspaceUsers.length)
+            if (!projectColumn?.workspace.workspaceUsers.length)
+              throw new Error("Unauthorized");
+
+            // TODO: determine permissions
+            if (projectColumn.workspace.workspaceUsers[0].role !== "owner")
+              throw new Error("Unauthorized");
+          } else {
+            const workspaceId = (input as InsertProjectColumn).workspaceId;
+
+            const workspace = await db.query.workspaceTable.findFirst({
+              where: (table, { eq }) => eq(table.id, workspaceId),
+              with: {
+                workspaceUsers: {
+                  where: (table, { eq }) => eq(table.userId, observer.id),
+                },
+              },
+            });
+
+            if (!workspace?.workspaceUsers.length)
               throw new Error("Unauthorized");
 
             // TODO: determine proper permissions
-            if (project.workspace.workspaceUsers[0].role === "member")
+            if (workspace.workspaceUsers[0].role !== "owner")
               throw new Error("Unauthorized");
           }
         });
@@ -71,10 +63,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for project columns.
+ */
+const ProjectColumnPlugin = wrapPlans({
   Mutation: {
-    createColumn: validatePermissions("column", "create"),
-    updateColumn: validatePermissions("rowId", "update"),
-    deleteColumn: validatePermissions("rowId", "delete"),
+    createProjectColumn: validatePermissions("projectColumn", "create"),
+    updateProjectColumn: validatePermissions("rowId", "update"),
+    deleteProjectColumn: validatePermissions("rowId", "delete"),
   },
 });
+
+export default ProjectColumnPlugin;

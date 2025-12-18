@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import type { InsertEmoji } from "lib/db/schema";
+import type { InsertAssignee } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -18,46 +18,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (!observer) throw new Error("Unauthorized");
 
           if (scope !== "create") {
-            const emoji = await db.query.emojiTable.findFirst({
+            const assignee = await db.query.assigneeTable.findFirst({
               where: (table, { eq }) => eq(table.id, input),
-              with: {
-                post: {
-                  with: {
-                    task: {
-                      with: {
-                        project: {
-                          with: {
-                            workspace: {
-                              with: {
-                                workspaceUsers: {
-                                  where: (table, { eq }) =>
-                                    eq(table.userId, observer.id),
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            });
-
-            if (!emoji?.post.task.project.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            if (
-              emoji.userId !== observer.id &&
-              emoji.post.task.project.workspace.workspaceUsers[0].role ===
-                "member"
-            )
-              throw new Error("Unauthorized");
-          } else {
-            const postId = (input as InsertEmoji).postId;
-
-            const post = await db.query.postTable.findFirst({
-              where: (table, { eq }) => eq(table.id, postId),
               with: {
                 task: {
                   with: {
@@ -78,8 +40,40 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               },
             });
 
-            if (!post?.task.project.workspace.workspaceUsers.length)
+            if (!assignee?.task.project.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
+
+            // TODO: determine proper permissions
+            if (
+              assignee.task.project.workspace.workspaceUsers[0].role ===
+              "member"
+            )
+              throw new Error("Unauthorized");
+          } else {
+            const taskId = (input as InsertAssignee).taskId;
+
+            const task = await db.query.taskTable.findFirst({
+              where: (table, { eq }) => eq(table.id, taskId),
+              with: {
+                project: {
+                  with: {
+                    workspace: {
+                      with: {
+                        workspaceUsers: {
+                          where: (table, { eq }) =>
+                            eq(table.userId, observer.id),
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            });
+
+            if (!task?.project.workspace.workspaceUsers.length)
+              throw new Error("Unauthorized");
+
+            // TODO: extra permissions to assign to tasks?
           }
         });
 
@@ -88,10 +82,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for assignees.
+ */
+const AssigneePlugin = wrapPlans({
   Mutation: {
-    createEmoji: validatePermissions("emoji", "create"),
-    updateEmoji: validatePermissions("rowId", "update"),
-    deleteEmoji: validatePermissions("rowId", "delete"),
+    createAssignee: validatePermissions("assignee", "create"),
+    updateAssignee: validatePermissions("rowId", "update"),
+    deleteAssignee: validatePermissions("rowId", "delete"),
   },
 });
+
+export default AssigneePlugin;

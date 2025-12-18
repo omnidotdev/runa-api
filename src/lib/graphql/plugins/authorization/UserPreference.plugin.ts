@@ -23,10 +23,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [context, sideEffect, propName, scope],
   );
 
-export default wrapPlans({
+/**
+ * Authorization plugin for user preferences.
+ */
+const UserPreferencePlugin = wrapPlans({
   Mutation: {
     createUserPreference: validatePermissions("userPreference", "create"),
     updateUserPreference: validatePermissions("rowId", "update"),
     deleteUserPreference: validatePermissions("rowId", "delete"),
   },
 });
+
+export default UserPreferencePlugin;

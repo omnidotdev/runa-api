@@ -7,7 +7,7 @@ export { default as PostPlugin } from "./Post.plugin";
 export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsOnly.plugin";
 export { default as ProjectPlugin } from "./Project.plugin";
 export { default as ProjectColumnPlugin } from "./ProjectColumn.plugin";
-export { default as SmartTagsPlugin } from "./SmartTags.plugin";
+export { default as SmartTagPlugin } from "./SmartTag.plugin";
 export { default as TaskPlugin } from "./Task.plugin";
 export { default as TaskLabelPlugin } from "./TaskLabel.plugin";
 export { default as UserPlugin } from "./User.plugin";
