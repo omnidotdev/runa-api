@@ -11,7 +11,6 @@ import {
 
 import type { InsertWorkspaceUser } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
-import type { MutationScope } from "./types";
 
 /**
  * Validates workspace user permissions for create and update.
