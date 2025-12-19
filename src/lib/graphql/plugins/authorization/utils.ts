@@ -4,8 +4,8 @@
 
 import { hasMinRole, isAdminOrOwner } from "./permissions";
 
-import type { Role } from "./permissions";
 import type { dbPool } from "lib/db/db";
+import type { Role } from "./permissions";
 
 type DbType = typeof dbPool;
 
