@@ -9,10 +9,10 @@ import type { MutationScope } from "./types";
 /**
  * Validates invitation permissions.
  *
- * Invitations require admin+ role.
+ * Invitations require admin+ role, with exceptions:
  * - Create: Admin+ can invite new members
  * - Update: Admin+ can modify invitations
- * - Delete: Admin+ can revoke invitations
+ * - Delete: Admin+ can revoke invitations, OR the invitee can delete their own invitation
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
@@ -44,7 +44,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (workspace.workspaceUsers[0].role === "member")
               throw new Error("Unauthorized");
           } else {
-            // for update/delete, verify workspace membership and admin+ role
+            // for update/delete, verify permissions
             const invitation = await db.query.invitationsTable.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
@@ -58,7 +58,18 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               },
             });
 
-            if (!invitation?.workspace.workspaceUsers.length)
+            if (!invitation) throw new Error("Unauthorized");
+
+            // Special case: Allow user to delete their own invitation (after accepting or rejecting)
+            const isOwnInvitation = invitation.email === observer.email;
+
+            if (scope === "delete" && isOwnInvitation) {
+              // User can delete their own invitation
+              return;
+            }
+
+            // Otherwise, require workspace membership with admin+ role
+            if (!invitation.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
             // admin+ can modify/delete invitations

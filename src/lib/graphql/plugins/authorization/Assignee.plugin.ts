@@ -8,6 +8,12 @@ import type { InsertAssignee } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validates assignee permissions.
+ *
+ * - Create: Any workspace member can assign users to tasks (with tier limits)
+ * - Update/Delete: Any workspace member can modify/remove assignees
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
@@ -27,6 +33,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (!observer) throw new Error("Unauthorized");
 
           if (scope !== "create") {
+            // For update/delete, verify workspace membership
             const assignee = await db.query.assigneeTable.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
@@ -52,11 +59,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!assignee?.task.project.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
-            if (
-              assignee.task.project.workspace.workspaceUsers[0].role ===
-              "member"
-            )
-              throw new Error("Unauthorized");
+            // Any workspace member can modify/remove assignees
           } else {
             const taskId = (input as InsertAssignee).taskId;
 
@@ -94,7 +97,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               tier === "basic" &&
               task.assignees.length >= BASIC_TIER_MAX_ASSIGNEES
             )
-              throw new Error("Maximum number of assigness reached");
+              throw new Error("Maximum number of assignees reached");
           }
         });
 

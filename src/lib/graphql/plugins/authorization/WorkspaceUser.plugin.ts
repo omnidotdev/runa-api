@@ -66,7 +66,21 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               newMemberUserId === observer.id &&
               newMemberRole === "owner";
 
-            if (!isInitialOwnerSetup) {
+            // Special case: Allow user to accept their own invitation
+            let isAcceptingInvitation = false;
+            if (newMemberUserId === observer.id) {
+              const pendingInvitation =
+                await db.query.invitationsTable.findFirst({
+                  where: (table, { eq, and }) =>
+                    and(
+                      eq(table.workspaceId, workspaceId),
+                      eq(table.email, observer.email),
+                    ),
+                });
+              isAcceptingInvitation = !!pendingInvitation;
+            }
+
+            if (!isInitialOwnerSetup && !isAcceptingInvitation) {
               // Verify caller is a member and has admin+ role
               const callerMembership = workspace.workspaceUsers.find(
                 (wu) => wu.userId === observer.id,
