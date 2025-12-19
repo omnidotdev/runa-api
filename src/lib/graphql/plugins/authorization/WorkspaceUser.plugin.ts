@@ -14,19 +14,17 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates workspace user permissions.
+ * Validates workspace user permissions for create and update.
  *
  * Team management requires admin+ role.
  * - Create: Admin+ can add members (with tier limits)
  * - Update: Admin+ can change roles (except owner roles)
- * - Delete: Admin+ can remove members (except owners)
  *
  * Special rules:
  * - Cannot modify owner roles
- * - Cannot remove owners
  * - Tier-based limits on members and admins
  */
-const validatePermissions = (propName: string, scope: MutationScope) =>
+const validatePermissions = (propName: string, scope: "create" | "update") =>
   EXPORTABLE(
     (
       context,
@@ -120,7 +118,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               }
             }
           } else {
-            // For update/delete, input contains workspaceId and userId of target
+            // For update, input is the patch object with workspaceId and userId
             const targetWorkspaceId = (input as InsertWorkspaceUser)
               .workspaceId;
             const targetUserId = (input as InsertWorkspaceUser).userId;
@@ -150,44 +148,42 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!targetMember) throw new Error("Not found");
 
-            // Cannot modify or remove owners
+            // Cannot modify owners
             if (targetMember.role === "owner") {
               throw new Error("Cannot modify owner");
             }
 
-            // For update, check tier limits for admin promotions
-            if (scope === "update") {
-              const newRole = (input as InsertWorkspaceUser).role;
+            // Check tier limits for admin promotions
+            const newRole = (input as InsertWorkspaceUser).role;
 
-              if (newRole && newRole !== "member") {
-                const numberOfAdmins = workspace.workspaceUsers.filter(
-                  (member) => member.role !== "member",
-                ).length;
+            if (newRole && newRole !== "member") {
+              const numberOfAdmins = workspace.workspaceUsers.filter(
+                (member) => member.role !== "member",
+              ).length;
 
-                // If promoting to admin/owner, check limits
-                // (but exclude current target if they're already an admin)
-                const currentIsAdmin = targetMember.role !== "member";
-                const effectiveAdminCount = currentIsAdmin
-                  ? numberOfAdmins
-                  : numberOfAdmins + 1;
+              // If promoting to admin/owner, check limits
+              // (but exclude current target if they're already an admin)
+              const currentIsAdmin = targetMember.role !== "member";
+              const effectiveAdminCount = currentIsAdmin
+                ? numberOfAdmins
+                : numberOfAdmins + 1;
 
-                if (
-                  workspace.tier === "free" &&
-                  effectiveAdminCount > FREE_TIER_MAX_ADMINS
-                )
-                  throw new Error("Maximum number of admins reached");
+              if (
+                workspace.tier === "free" &&
+                effectiveAdminCount > FREE_TIER_MAX_ADMINS
+              )
+                throw new Error("Maximum number of admins reached");
 
-                if (
-                  workspace.tier === "basic" &&
-                  effectiveAdminCount > BASIC_TIER_MAX_ADMINS
-                )
-                  throw new Error("Maximum number of admins reached");
-              }
+              if (
+                workspace.tier === "basic" &&
+                effectiveAdminCount > BASIC_TIER_MAX_ADMINS
+              )
+                throw new Error("Maximum number of admins reached");
+            }
 
-              // Cannot promote to owner
-              if (newRole === "owner") {
-                throw new Error("Cannot promote to owner");
-              }
+            // Cannot promote to owner
+            if (newRole === "owner") {
+              throw new Error("Cannot promote to owner");
             }
           }
         });
@@ -207,6 +203,63 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
+ * Validates workspace user delete permissions.
+ *
+ * Delete mutation has userId and workspaceId directly on input (not nested in patch).
+ * - Admin+ can remove members (except owners)
+ */
+const validateDeletePermissions = (): PlanWrapperFn =>
+  EXPORTABLE(
+    (context, sideEffect): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
+        const $workspaceId = fieldArgs.getRaw(["input", "workspaceId"]);
+        const $userId = fieldArgs.getRaw(["input", "userId"]);
+        const $observer = context().get("observer");
+        const $db = context().get("db");
+
+        sideEffect(
+          [$workspaceId, $userId, $observer, $db],
+          async ([workspaceId, userId, observer, db]) => {
+            if (!observer) throw new Error("Unauthorized");
+
+            const workspace = await db.query.workspaceTable.findFirst({
+              where: (table, { eq }) => eq(table.id, workspaceId),
+              with: {
+                workspaceUsers: true,
+              },
+            });
+
+            if (!workspace) throw new Error("Unauthorized");
+
+            // Verify caller is a member and has admin+ role
+            const callerMembership = workspace.workspaceUsers.find(
+              (wu) => wu.userId === observer.id,
+            );
+
+            if (!callerMembership) throw new Error("Unauthorized");
+            if (callerMembership.role === "member")
+              throw new Error("Unauthorized");
+
+            // Find the target member
+            const targetMember = workspace.workspaceUsers.find(
+              (wu) => wu.userId === userId,
+            );
+
+            if (!targetMember) throw new Error("Not found");
+
+            // Cannot remove owners
+            if (targetMember.role === "owner") {
+              throw new Error("Cannot remove owner");
+            }
+          },
+        );
+
+        return plan();
+      },
+    [context, sideEffect],
+  );
+
+/**
  * Authorization plugin for workspace users (team management).
  *
  * Enforces admin+ requirement for team management.
@@ -217,7 +270,7 @@ const WorkspaceUserPlugin = wrapPlans({
   Mutation: {
     createWorkspaceUser: validatePermissions("workspaceUser", "create"),
     updateWorkspaceUser: validatePermissions("patch", "update"),
-    deleteWorkspaceUser: validatePermissions("patch", "delete"),
+    deleteWorkspaceUser: validateDeletePermissions(),
   },
 });
 
