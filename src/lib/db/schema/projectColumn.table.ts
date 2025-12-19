@@ -29,7 +29,11 @@ export const projectColumnTable = pgTable(
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), index().on(table.workspaceId)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    index().on(table.workspaceId),
+    index().on(table.workspaceId, table.index),
+  ],
 );
 
 export const projectColumnRelations = relations(

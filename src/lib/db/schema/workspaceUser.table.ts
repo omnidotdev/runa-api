@@ -23,6 +23,7 @@ export const workspaceUserTable = pgTable(
       .references(() => userTable.id, { onDelete: "cascade" }),
     role: role().notNull().default("member"),
     createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
   },
   (table) => [
     primaryKey({ columns: [table.workspaceId, table.userId] }),

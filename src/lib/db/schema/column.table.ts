@@ -29,7 +29,11 @@ export const columnTable = pgTable(
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), index().on(table.projectId)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    index().on(table.projectId),
+    index().on(table.projectId, table.index),
+  ],
 );
 
 export const columnRelations = relations(columnTable, ({ one }) => ({

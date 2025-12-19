@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
-import { index, pgTable, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, primaryKey, unique, uuid } from "drizzle-orm/pg-core";
 
-import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { generateDefaultDate } from "lib/db/util";
 import { labelTable } from "./label.table";
 import { taskTable } from "./task.table";
 
@@ -13,7 +13,6 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm/table";
 export const taskLabelTable = pgTable(
   "task_label",
   {
-    id: generateDefaultId(),
     taskId: uuid()
       .notNull()
       .references(() => taskTable.id, { onDelete: "cascade" }),
@@ -24,7 +23,8 @@ export const taskLabelTable = pgTable(
     updatedAt: generateDefaultDate(),
   },
   (table) => [
-    uniqueIndex().on(table.id),
+    primaryKey({ columns: [table.taskId, table.labelId] }),
+    unique().on(table.taskId, table.labelId),
     index().on(table.taskId),
     index().on(table.labelId),
   ],

@@ -2,12 +2,13 @@ import { relations } from "drizzle-orm";
 import {
   index,
   pgTable,
+  primaryKey,
   timestamp,
-  uniqueIndex,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 
-import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { generateDefaultDate } from "lib/db/util";
 import { taskTable } from "./task.table";
 import { userTable } from "./user.table";
 
@@ -19,13 +20,12 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export const assigneeTable = pgTable(
   "assignee",
   {
-    id: generateDefaultId(),
-    userId: uuid()
-      .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" }),
     taskId: uuid()
       .notNull()
       .references(() => taskTable.id, { onDelete: "cascade" }),
+    userId: uuid()
+      .notNull()
+      .references(() => userTable.id, { onDelete: "cascade" }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
     deletedAt: timestamp({
@@ -35,9 +35,10 @@ export const assigneeTable = pgTable(
     }),
   },
   (table) => [
-    uniqueIndex().on(table.id),
-    index().on(table.userId),
+    primaryKey({ columns: [table.taskId, table.userId] }),
+    unique().on(table.taskId, table.userId),
     index().on(table.taskId),
+    index().on(table.userId),
   ],
 );
 
