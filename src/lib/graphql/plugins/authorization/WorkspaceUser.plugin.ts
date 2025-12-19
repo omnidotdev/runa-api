@@ -48,6 +48,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
           if (scope === "create") {
             const workspaceId = (input as InsertWorkspaceUser).workspaceId;
+            const newMemberUserId = (input as InsertWorkspaceUser).userId;
             const newMemberRole = (input as InsertWorkspaceUser).role;
 
             const workspace = await db.query.workspaceTable.findFirst({
@@ -59,14 +60,22 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (!workspace) throw new Error("Unauthorized");
 
-            // Verify caller is a member and has admin+ role
-            const callerMembership = workspace.workspaceUsers.find(
-              (wu) => wu.userId === observer.id,
-            );
+            // Special case: Allow adding yourself as owner to an empty workspace (initial setup)
+            const isInitialOwnerSetup =
+              workspace.workspaceUsers.length === 0 &&
+              newMemberUserId === observer.id &&
+              newMemberRole === "owner";
 
-            if (!callerMembership) throw new Error("Unauthorized");
-            if (callerMembership.role === "member")
-              throw new Error("Unauthorized");
+            if (!isInitialOwnerSetup) {
+              // Verify caller is a member and has admin+ role
+              const callerMembership = workspace.workspaceUsers.find(
+                (wu) => wu.userId === observer.id,
+              );
+
+              if (!callerMembership) throw new Error("Unauthorized");
+              if (callerMembership.role === "member")
+                throw new Error("Unauthorized");
+            }
 
             // Tier-based member limits
             if (workspace.tier === "free") {
