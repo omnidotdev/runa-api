@@ -6,6 +6,14 @@ import type { InsertProjectColumn } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate project column permissions.
+ *
+ * Project columns require admin+ role.
+ * - Create: Admin+ can create project columns
+ * - Update: Admin+ can modify project columns
+ * - Delete: Admin+ can delete project columns
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (context, sideEffect, propName, scope): PlanWrapperFn =>
@@ -17,7 +25,26 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
 
-          if (scope !== "create") {
+          if (scope === "create") {
+            const workspaceId = (input as InsertProjectColumn).workspaceId;
+
+            const workspace = await db.query.workspaceTable.findFirst({
+              where: (table, { eq }) => eq(table.id, workspaceId),
+              with: {
+                workspaceUsers: {
+                  where: (table, { eq }) => eq(table.userId, observer.id),
+                },
+              },
+            });
+
+            if (!workspace?.workspaceUsers.length)
+              throw new Error("Unauthorized");
+
+            // admin+ can create project columns
+            if (workspace.workspaceUsers[0].role === "member")
+              throw new Error("Unauthorized");
+          } else {
+            // for update/delete, verify workspace membership and admin+ role
             const projectColumn = await db.query.projectColumnTable.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
@@ -34,26 +61,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!projectColumn?.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
-            // TODO: determine permissions
-            if (projectColumn.workspace.workspaceUsers[0].role !== "owner")
-              throw new Error("Unauthorized");
-          } else {
-            const workspaceId = (input as InsertProjectColumn).workspaceId;
-
-            const workspace = await db.query.workspaceTable.findFirst({
-              where: (table, { eq }) => eq(table.id, workspaceId),
-              with: {
-                workspaceUsers: {
-                  where: (table, { eq }) => eq(table.userId, observer.id),
-                },
-              },
-            });
-
-            if (!workspace?.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            // TODO: determine proper permissions
-            if (workspace.workspaceUsers[0].role !== "owner")
+            // admin+ can modify/delete project columns
+            if (projectColumn.workspace.workspaceUsers[0].role === "member")
               throw new Error("Unauthorized");
           }
         });
@@ -65,6 +74,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
 /**
  * Authorization plugin for project columns.
+ *
+ * Enforces admin+ requirement for project column management.
  */
 const ProjectColumnPlugin = wrapPlans({
   Mutation: {

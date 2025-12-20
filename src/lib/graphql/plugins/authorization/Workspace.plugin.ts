@@ -5,6 +5,13 @@ import { wrapPlans } from "postgraphile/utils";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate workspace permissions.
+ *
+ * - Create: Any authenticated user can create a workspace
+ * - Update: Admin+ can update workspace settings
+ * - Delete: Owner only (cannot be delegated)
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (context, sideEffect, propName, scope): PlanWrapperFn =>
@@ -31,8 +38,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             const role = workspace.workspaceUsers[0].role;
 
-            // TODO: determine proper permissions for admins when it comes to updating / deleting workspaces
-            if (role !== "owner") throw new Error("Unauthorized");
+            if (scope === "delete") {
+              // only owner can delete workspace
+              if (role !== "owner") throw new Error("Unauthorized");
+            } else if (scope === "update") {
+              // admin+ can update workspace
+              if (role === "member") throw new Error("Unauthorized");
+            }
           }
         });
 
@@ -43,6 +55,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
 /**
  * Authorization plugin for workspaces.
+ *
+ * - Create: Any authenticated user
+ * - Update: Admin+ role required
+ * - Delete: Owner only
  */
 const WorkspacePlugin = wrapPlans({
   Mutation: {

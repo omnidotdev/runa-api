@@ -13,7 +13,10 @@
           "options": {
             "identifierOrder": "lexicographic",
             "groups": [
-              { "type": false, "source": [":BUN:", ":NODE:"] },
+              {
+                "type": false,
+                "source": [":BUN:", ":NODE:"]
+              },
               ":BLANK_LINE:",
               {
                 "type": false,
@@ -25,9 +28,14 @@
                 ]
               },
               ":BLANK_LINE:",
-              { "type": false, "source": ["**"] },
+              {
+                "type": false,
+                "source": ["**"]
+              },
               ":BLANK_LINE:",
-              { "type": true }
+              {
+                "type": true
+              }
             ]
           }
         }
@@ -46,8 +54,12 @@
   "linter": {
     "rules": {
       "correctness": {
-        "noUnusedImports": { "fix": "safe", "level": "error" },
+        "noUnusedImports": {
+          "fix": "safe",
+          "level": "error"
+        },
         "noUnusedVariables": {
+          "level": "error",
           "options": {
             "ignoreRestSiblings": true
           }
@@ -57,13 +69,17 @@
         "noNonNullAssertion": "off",
         "useImportType": {
           "level": "error",
-          "options": { "style": "separatedType" }
+          "options": {
+            "style": "separatedType"
+          }
         }
       },
       "suspicious": {
         "noConsole": {
           "level": "error",
-          "options": { "allow": ["error", "warn"] }
+          "options": {
+            "allow": ["error", "warn"]
+          }
         }
       }
     }

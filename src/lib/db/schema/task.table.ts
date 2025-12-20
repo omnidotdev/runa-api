@@ -50,6 +50,7 @@ export const taskTable = pgTable(
     index().on(table.authorId),
     index().on(table.projectId),
     index().on(table.columnId),
+    index().on(table.columnId, table.columnIndex),
   ],
 );
 

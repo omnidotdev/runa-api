@@ -9,6 +9,14 @@ import type { InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate project permissions.
+ *
+ * Projects require admin+ role for mutations.
+ * - Create: Admin+ can create projects (with tier limits)
+ * - Update: Admin+ can modify projects
+ * - Delete: Admin+ can delete projects
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
@@ -28,7 +36,45 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
 
-          if (scope !== "create") {
+          if (scope === "create") {
+            const workspaceId = (input as InsertProject).workspaceId;
+
+            const workspace = await db.query.workspaceTable.findFirst({
+              where: (table, { eq }) => eq(table.id, workspaceId),
+              with: {
+                workspaceUsers: {
+                  where: (table, { eq }) => eq(table.userId, observer.id),
+                },
+                projects: true,
+              },
+            });
+
+            if (!workspace?.workspaceUsers?.length)
+              throw new Error("Unauthorized");
+
+            // admin+ can create projects
+            if (workspace.workspaceUsers[0].role === "member")
+              throw new Error("Unauthorized");
+
+            // tier-based project limits
+            const tier = workspace.tier;
+
+            const withinLimit = match(tier)
+              .with(
+                "free",
+                () => workspace.projects.length < FREE_TIER_MAX_PROJECTS,
+              )
+              .with(
+                "basic",
+                () => workspace.projects.length < BASIC_TIER_MAX_PROJECTS,
+              )
+              .with("team", () => true)
+              .exhaustive();
+
+            if (!withinLimit)
+              throw new Error("Maximum number of projects reached");
+          } else {
+            // for update/delete, verify workspace membership and admin+ role
             const project = await db.query.projectTable.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
@@ -45,53 +91,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!project?.workspace?.workspaceUsers?.length)
               throw new Error("Unauthorized");
 
-            // TODO: determine proper permissions
-            if (
-              scope === "delete" &&
-              project.workspace.workspaceUsers[0].role !== "owner"
-            )
+            // admin+ can update/delete projects
+            if (project.workspace.workspaceUsers[0].role === "member")
               throw new Error("Unauthorized");
-
-            if (
-              scope === "update" &&
-              project.workspace.workspaceUsers[0].role === "member"
-            )
-              throw new Error("Unauthorized");
-          } else {
-            const workspaceId = (input as InsertProject).workspaceId;
-
-            const workspace = await db.query.workspaceTable.findFirst({
-              where: (table, { eq }) => eq(table.id, workspaceId),
-              with: {
-                workspaceUsers: {
-                  where: (table, { eq }) => eq(table.userId, observer.id),
-                },
-                projects: true,
-              },
-            });
-
-            if (!workspace?.workspaceUsers?.length)
-              throw new Error("Unauthorized");
-
-            // TODO: determine proper permissions, including tier based
-            if (workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
-
-            const tier = workspace.tier;
-
-            const permission = match(tier)
-              .with(
-                "free",
-                () => workspace.projects.length < FREE_TIER_MAX_PROJECTS,
-              )
-              .with(
-                "basic",
-                () => workspace.projects.length < BASIC_TIER_MAX_PROJECTS,
-              )
-              .with("team", () => true)
-              .exhaustive();
-
-            if (!permission) throw new Error("Unauthorized");
           }
         });
 
@@ -110,6 +112,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
 /**
  * Authorization plugin for projects.
+ *
+ * Enforces admin+ requirement for project management.
+ * Enforces tier-based project limits.
  */
 const ProjectPlugin = wrapPlans({
   Mutation: {

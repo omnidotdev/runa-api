@@ -6,6 +6,13 @@ import type { InsertPost } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate post (comment) permissions.
+ *
+ * - Create: Any workspace member can create posts
+ * - Update: Post author OR admin+ can modify posts
+ * - Delete: Post author OR admin+ can delete posts
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (context, sideEffect, propName, scope): PlanWrapperFn =>
@@ -17,7 +24,31 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
           if (!observer) throw new Error("Unauthorized");
 
-          if (scope !== "create") {
+          if (scope === "create") {
+            const taskId = (input as InsertPost).taskId;
+
+            const task = await db.query.taskTable.findFirst({
+              where: (table, { eq }) => eq(table.id, taskId),
+              with: {
+                project: {
+                  with: {
+                    workspace: {
+                      with: {
+                        workspaceUsers: {
+                          where: (table, { eq }) =>
+                            eq(table.userId, observer.id),
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            });
+
+            if (!task?.project.workspace.workspaceUsers.length)
+              throw new Error("Unauthorized");
+          } else {
+            // for update/delete, verify membership and author/admin+ permission
             const post = await db.query.postTable.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               with: {
@@ -43,33 +74,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!post?.task.project.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
+            // author or admin+ can modify/delete posts
             if (
               post.authorId !== observer.id &&
               post.task.project.workspace.workspaceUsers[0].role === "member"
             )
-              throw new Error("Unauthorized");
-          } else {
-            const taskId = (input as InsertPost).taskId;
-
-            const task = await db.query.taskTable.findFirst({
-              where: (table, { eq }) => eq(table.id, taskId),
-              with: {
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        workspaceUsers: {
-                          where: (table, { eq }) =>
-                            eq(table.userId, observer.id),
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            });
-
-            if (!task?.project.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
           }
         });
@@ -80,7 +89,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
   );
 
 /**
- * Authorization plugin for posts.
+ * Authorization plugin for posts (comments).
+ *
+ * Any member can create posts. Update/delete requires author or admin+ role.
  */
 const PostPlugin = wrapPlans({
   Mutation: {
