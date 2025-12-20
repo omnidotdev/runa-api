@@ -1,10 +1,8 @@
-import { count, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 import { match } from "ts-pattern";
 
-import { projectTable } from "lib/db/schema";
 import { BASIC_TIER_MAX_PROJECTS, FREE_TIER_MAX_PROJECTS } from "./constants";
 
 import type { InsertProject } from "lib/db/schema";
@@ -25,9 +23,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       match,
       context,
       sideEffect,
-      count,
-      eq,
-      projectTable,
       FREE_TIER_MAX_PROJECTS,
       BASIC_TIER_MAX_PROJECTS,
       propName,
@@ -37,66 +32,75 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
+        const $withPgClient = context().get("withPgClient");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        sideEffect(
+          [$input, $observer, $db, $withPgClient],
+          async ([input, observer, db, withPgClient]) => {
+            if (!observer) throw new Error("Unauthorized");
 
-          if (scope === "create") {
-            const workspaceId = (input as InsertProject).workspaceId;
+            if (scope === "create") {
+              const workspaceId = (input as InsertProject).workspaceId;
 
-            // Get workspace with membership check
-            const workspace = await db.query.workspaceTable.findFirst({
-              where: (table, { eq }) => eq(table.id, workspaceId),
-              with: {
-                workspaceUsers: {
-                  where: (table, { eq }) => eq(table.userId, observer.id),
+              // Get workspace with membership check
+              const workspace = await db.query.workspaceTable.findFirst({
+                where: (table, { eq }) => eq(table.id, workspaceId),
+                with: {
+                  workspaceUsers: {
+                    where: (table, { eq }) => eq(table.userId, observer.id),
+                  },
                 },
-              },
-            });
+              });
 
-            if (!workspace?.workspaceUsers?.length)
-              throw new Error("Unauthorized");
+              if (!workspace?.workspaceUsers?.length)
+                throw new Error("Unauthorized");
 
-            // admin+ can create projects
-            if (workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
+              // admin+ can create projects
+              if (workspace.workspaceUsers[0].role === "member")
+                throw new Error("Unauthorized");
 
-            const [{ totalProjects }] = await db
-              .select({ totalProjects: count() })
-              .from(projectTable)
-              .where(eq(projectTable.workspaceId, workspaceId));
+              const totalProjects = await withPgClient(null, async (client) => {
+                const result = await client.query({
+                  text: "SELECT count(*)::int as total FROM project WHERE workspace_id = $1",
+                  values: [workspaceId],
+                });
+                return (
+                  (result.rows[0] as { total: number } | undefined)?.total ?? 0
+                );
+              });
 
-            const withinLimit = match(workspace.tier)
-              .with("free", () => totalProjects < FREE_TIER_MAX_PROJECTS)
-              .with("basic", () => totalProjects < BASIC_TIER_MAX_PROJECTS)
-              .with("team", () => true)
-              .exhaustive();
+              const withinLimit = match(workspace.tier)
+                .with("free", () => totalProjects < FREE_TIER_MAX_PROJECTS)
+                .with("basic", () => totalProjects < BASIC_TIER_MAX_PROJECTS)
+                .with("team", () => true)
+                .exhaustive();
 
-            if (!withinLimit)
-              throw new Error("Maximum number of projects reached");
-          } else {
-            // for update/delete, verify workspace membership and admin+ role
-            const project = await db.query.projectTable.findFirst({
-              where: (table, { eq }) => eq(table.id, input),
-              with: {
-                workspace: {
-                  with: {
-                    workspaceUsers: {
-                      where: (table, { eq }) => eq(table.userId, observer.id),
+              if (!withinLimit)
+                throw new Error("Maximum number of projects reached");
+            } else {
+              // for update/delete, verify workspace membership and admin+ role
+              const project = await db.query.projectTable.findFirst({
+                where: (table, { eq }) => eq(table.id, input),
+                with: {
+                  workspace: {
+                    with: {
+                      workspaceUsers: {
+                        where: (table, { eq }) => eq(table.userId, observer.id),
+                      },
                     },
                   },
                 },
-              },
-            });
+              });
 
-            if (!project?.workspace?.workspaceUsers?.length)
-              throw new Error("Unauthorized");
+              if (!project?.workspace?.workspaceUsers?.length)
+                throw new Error("Unauthorized");
 
-            // admin+ can update/delete projects
-            if (project.workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
-          }
-        });
+              // admin+ can update/delete projects
+              if (project.workspace.workspaceUsers[0].role === "member")
+                throw new Error("Unauthorized");
+            }
+          },
+        );
 
         return plan();
       },
@@ -104,9 +108,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       match,
       context,
       sideEffect,
-      count,
-      eq,
-      projectTable,
       FREE_TIER_MAX_PROJECTS,
       BASIC_TIER_MAX_PROJECTS,
       propName,

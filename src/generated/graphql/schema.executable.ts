@@ -6556,8 +6556,9 @@ function oldPlan12(_, args) {
 const planWrapper12 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "project"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $withPgClient = context().get("withPgClient");
+  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const workspaceId = input.workspaceId,
@@ -6574,14 +6575,18 @@ const planWrapper12 = (plan, _, fieldArgs) => {
               }) {
                 return eq(table.userId, observer.id);
               }
-            },
-            projects: !0
+            }
           }
         });
       if (!workspace?.workspaceUsers?.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      const tier = workspace.tier;
-      if (!match(tier).with("free", () => workspace.projects.length < 2).with("basic", () => workspace.projects.length < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      const totalProjects = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT count(*)::int as total FROM project WHERE workspace_id = $1",
+          values: [workspaceId]
+        })).rows[0]?.total ?? 0;
+      });
+      if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -6619,8 +6624,9 @@ function oldPlan13(_, args) {
 const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "task"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $withPgClient = context().get("withPgClient");
+  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const projectId = input.projectId,
@@ -6639,18 +6645,20 @@ const planWrapper13 = (plan, _, fieldArgs) => {
                   }) {
                     return eq(table.userId, observer.id);
                   }
-                },
-                projects: {
-                  with: {
-                    tasks: !0
-                  }
                 }
               }
             }
           }
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
+      const totalTasks = await withPgClient(null, async client => {
+        return (await client.query({
+          text: `SELECT count(*)::int as total FROM task
+                         INNER JOIN project ON task.project_id = project.id
+                         WHERE project.workspace_id = $1`,
+          values: [project.workspace.id]
+        })).rows[0]?.total ?? 0;
+      });
       if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
     } else {
       const task = await db.query.taskTable.findFirst({
@@ -7533,8 +7541,9 @@ const oldPlan26 = (_$root, args) => {
 const planWrapper26 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $withPgClient = context().get("withPgClient");
+  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const workspaceId = input.workspaceId,
@@ -7551,14 +7560,18 @@ const planWrapper26 = (plan, _, fieldArgs) => {
               }) {
                 return eq(table.userId, observer.id);
               }
-            },
-            projects: !0
+            }
           }
         });
       if (!workspace?.workspaceUsers?.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      const tier = workspace.tier;
-      if (!match(tier).with("free", () => workspace.projects.length < 2).with("basic", () => workspace.projects.length < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      const totalProjects = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT count(*)::int as total FROM project WHERE workspace_id = $1",
+          values: [workspaceId]
+        })).rows[0]?.total ?? 0;
+      });
+      if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -7602,8 +7615,9 @@ const oldPlan27 = (_$root, args) => {
 const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $withPgClient = context().get("withPgClient");
+  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const projectId = input.projectId,
@@ -7622,18 +7636,20 @@ const planWrapper27 = (plan, _, fieldArgs) => {
                   }) {
                     return eq(table.userId, observer.id);
                   }
-                },
-                projects: {
-                  with: {
-                    tasks: !0
-                  }
                 }
               }
             }
           }
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
+      const totalTasks = await withPgClient(null, async client => {
+        return (await client.query({
+          text: `SELECT count(*)::int as total FROM task
+                         INNER JOIN project ON task.project_id = project.id
+                         WHERE project.workspace_id = $1`,
+          values: [project.workspace.id]
+        })).rows[0]?.total ?? 0;
+      });
       if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
     } else {
       const task = await db.query.taskTable.findFirst({
@@ -8463,8 +8479,9 @@ const oldPlan40 = (_$root, args) => {
 const planWrapper40 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $withPgClient = context().get("withPgClient");
+  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
       const workspaceId = input.workspaceId,
@@ -8481,14 +8498,18 @@ const planWrapper40 = (plan, _, fieldArgs) => {
               }) {
                 return eq(table.userId, observer.id);
               }
-            },
-            projects: !0
+            }
           }
         });
       if (!workspace?.workspaceUsers?.length) throw Error("Unauthorized");
       if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      const tier = workspace.tier;
-      if (!match(tier).with("free", () => workspace.projects.length < 2).with("basic", () => workspace.projects.length < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      const totalProjects = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT count(*)::int as total FROM project WHERE workspace_id = $1",
+          values: [workspaceId]
+        })).rows[0]?.total ?? 0;
+      });
+      if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -8532,8 +8553,9 @@ const oldPlan41 = (_$root, args) => {
 const planWrapper41 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $withPgClient = context().get("withPgClient");
+  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
       const projectId = input.projectId,
@@ -8552,18 +8574,20 @@ const planWrapper41 = (plan, _, fieldArgs) => {
                   }) {
                     return eq(table.userId, observer.id);
                   }
-                },
-                projects: {
-                  with: {
-                    tasks: !0
-                  }
                 }
               }
             }
           }
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const totalTasks = project.workspace.projects.reduce((acc, project) => acc + project.tasks.length, 0);
+      const totalTasks = await withPgClient(null, async client => {
+        return (await client.query({
+          text: `SELECT count(*)::int as total FROM task
+                         INNER JOIN project ON task.project_id = project.id
+                         WHERE project.workspace_id = $1`,
+          values: [project.workspace.id]
+        })).rows[0]?.total ?? 0;
+      });
       if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
     } else {
       const task = await db.query.taskTable.findFirst({
