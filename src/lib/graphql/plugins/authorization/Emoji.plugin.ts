@@ -7,7 +7,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates emoji (reaction) permissions.
+ * Validate emoji (reaction) permissions.
  *
  * - Create: Any workspace member can add reactions
  * - Update: Emoji owner OR admin+ can modify reactions

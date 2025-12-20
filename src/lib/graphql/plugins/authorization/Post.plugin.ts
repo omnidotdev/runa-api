@@ -7,7 +7,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates post (comment) permissions.
+ * Validate post (comment) permissions.
  *
  * - Create: Any workspace member can create posts
  * - Update: Post author OR admin+ can modify posts

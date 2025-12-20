@@ -7,7 +7,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates task label permissions.
+ * Validate task label permissions.
  *
  * Task labels require workspace membership.
  * - Create: Any workspace member can add labels to tasks

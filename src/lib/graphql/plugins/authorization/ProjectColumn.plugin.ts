@@ -7,7 +7,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates project column permissions.
+ * Validate project column permissions.
  *
  * Project columns require admin+ role.
  * - Create: Admin+ can create project columns

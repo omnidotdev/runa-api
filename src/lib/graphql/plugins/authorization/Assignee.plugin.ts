@@ -9,7 +9,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates assignee permissions.
+ * Validate assignee permissions.
  *
  * - Create: Any workspace member can assign users to tasks (with tier limits)
  * - Update/Delete: Any workspace member can modify/remove assignees

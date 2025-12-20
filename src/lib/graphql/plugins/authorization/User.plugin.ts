@@ -6,7 +6,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates user permissions.
+ * Validate user permissions.
  *
  * Users can only modify themselves (self-only operations).
  * - Create: Blocked (users are created via OAuth flow)

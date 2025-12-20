@@ -10,7 +10,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates task permissions.
+ * Validate task permissions.
  *
  * - Create: Any workspace member can create tasks (with tier limits)
  * - Update: Task author OR admin+ can modify tasks

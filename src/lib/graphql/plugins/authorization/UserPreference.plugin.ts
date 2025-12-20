@@ -7,7 +7,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates user preference permissions.
+ * Validate user preference permissions.
  *
  * Users can only manage their own preferences (self-only operations).
  * - Create: Self-only (userId must match observer)

@@ -10,7 +10,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates project permissions.
+ * Validate project permissions.
  *
  * Projects require admin+ role for mutations.
  * - Create: Admin+ can create projects (with tier limits)

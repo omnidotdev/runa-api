@@ -6,7 +6,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates workspace permissions.
+ * Validate workspace permissions.
  *
  * - Create: Any authenticated user can create a workspace
  * - Update: Admin+ can update workspace settings

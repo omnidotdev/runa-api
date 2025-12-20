@@ -7,7 +7,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validates invitation permissions.
+ * Validate invitation permissions.
  *
  * Invitations require admin+ role, with exceptions:
  * - Create: Admin+ can invite new members

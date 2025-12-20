@@ -13,7 +13,7 @@ import type { InsertWorkspaceUser } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
- * Validates workspace user permissions for create and update.
+ * Validate workspace user permissions for create and update.
  *
  * Team management requires admin+ role.
  * - Create: Admin+ can add members (with tier limits)
@@ -202,7 +202,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
   );
 
 /**
- * Validates workspace user delete permissions.
+ * Validate workspace user delete permissions.
  *
  * Delete mutation has userId and workspaceId directly on input (not nested in patch).
  * - Admin+ can remove members (except owners)
