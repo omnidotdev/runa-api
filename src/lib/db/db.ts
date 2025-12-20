@@ -20,6 +20,10 @@ export const pgClient = new Client({
  */
 export const pgPool = new Pool({
   connectionString: DATABASE_URL,
+  max: 20,
+  idleTimeoutMillis: 30_000,
+  connectionTimeoutMillis: 5_000,
+  statement_timeout: 10_000,
 });
 
 /**
