@@ -1,8 +1,10 @@
+import { count, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 import { match } from "ts-pattern";
 
+import { projectTable, taskTable } from "lib/db/schema";
 import { BASIC_TIER_MAX_TASKS, FREE_TIER_MAX_TASKS } from "./constants";
 
 import type { InsertTask } from "lib/db/schema";
@@ -22,6 +24,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       match,
       context,
       sideEffect,
+      count,
+      eq,
+      taskTable,
+      projectTable,
       FREE_TIER_MAX_TASKS,
       BASIC_TIER_MAX_TASKS,
       propName,
@@ -38,6 +44,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (scope === "create") {
             const projectId = (input as InsertTask).projectId;
 
+            // Get project with workspace membership check
             const project = await db.query.projectTable.findFirst({
               where: (table, { eq }) => eq(table.id, projectId),
               with: {
@@ -45,11 +52,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                   with: {
                     workspaceUsers: {
                       where: (table, { eq }) => eq(table.userId, observer.id),
-                    },
-                    projects: {
-                      with: {
-                        tasks: true,
-                      },
                     },
                   },
                 },
@@ -59,13 +61,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!project?.workspace.workspaceUsers.length)
               throw new Error("Unauthorized");
 
-            // tier-based task limits (workspace-wide)
-            const allWorkspaceProjects = project.workspace.projects;
-
-            const totalTasks = allWorkspaceProjects.reduce(
-              (acc, project) => acc + project.tasks.length,
-              0,
-            );
+            const [{ totalTasks }] = await db
+              .select({ totalTasks: count() })
+              .from(taskTable)
+              .innerJoin(projectTable, eq(taskTable.projectId, projectTable.id))
+              .where(eq(projectTable.workspaceId, project.workspace.id));
 
             const withinLimit = match(project.workspace.tier)
               .with("free", () => totalTasks < FREE_TIER_MAX_TASKS)
@@ -113,6 +113,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       match,
       context,
       sideEffect,
+      count,
+      eq,
+      taskTable,
+      projectTable,
       FREE_TIER_MAX_TASKS,
       BASIC_TIER_MAX_TASKS,
       propName,

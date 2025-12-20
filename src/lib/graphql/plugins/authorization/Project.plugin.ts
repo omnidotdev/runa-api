@@ -1,8 +1,10 @@
+import { count, eq } from "drizzle-orm";
 import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 import { match } from "ts-pattern";
 
+import { projectTable } from "lib/db/schema";
 import { BASIC_TIER_MAX_PROJECTS, FREE_TIER_MAX_PROJECTS } from "./constants";
 
 import type { InsertProject } from "lib/db/schema";
@@ -23,6 +25,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       match,
       context,
       sideEffect,
+      count,
+      eq,
+      projectTable,
       FREE_TIER_MAX_PROJECTS,
       BASIC_TIER_MAX_PROJECTS,
       propName,
@@ -39,13 +44,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (scope === "create") {
             const workspaceId = (input as InsertProject).workspaceId;
 
+            // Get workspace with membership check
             const workspace = await db.query.workspaceTable.findFirst({
               where: (table, { eq }) => eq(table.id, workspaceId),
               with: {
                 workspaceUsers: {
                   where: (table, { eq }) => eq(table.userId, observer.id),
                 },
-                projects: true,
               },
             });
 
@@ -56,18 +61,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (workspace.workspaceUsers[0].role === "member")
               throw new Error("Unauthorized");
 
-            // tier-based project limits
-            const tier = workspace.tier;
+            const [{ totalProjects }] = await db
+              .select({ totalProjects: count() })
+              .from(projectTable)
+              .where(eq(projectTable.workspaceId, workspaceId));
 
-            const withinLimit = match(tier)
-              .with(
-                "free",
-                () => workspace.projects.length < FREE_TIER_MAX_PROJECTS,
-              )
-              .with(
-                "basic",
-                () => workspace.projects.length < BASIC_TIER_MAX_PROJECTS,
-              )
+            const withinLimit = match(workspace.tier)
+              .with("free", () => totalProjects < FREE_TIER_MAX_PROJECTS)
+              .with("basic", () => totalProjects < BASIC_TIER_MAX_PROJECTS)
               .with("team", () => true)
               .exhaustive();
 
@@ -103,6 +104,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       match,
       context,
       sideEffect,
+      count,
+      eq,
+      projectTable,
       FREE_TIER_MAX_PROJECTS,
       BASIC_TIER_MAX_PROJECTS,
       propName,
