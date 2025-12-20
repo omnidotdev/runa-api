@@ -51,8 +51,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             }
           } else {
             // For update/delete, get the task label and verify membership + author/admin
+            // input is { taskId, labelId } for composite key tables
+            const { taskId, labelId } = input as {
+              taskId: string;
+              labelId: string;
+            };
             const taskLabel = await db.query.taskLabelTable.findFirst({
-              where: (table, { eq }) => eq(table.id, input),
+              where: (table, { and, eq }) =>
+                and(eq(table.taskId, taskId), eq(table.labelId, labelId)),
               with: {
                 task: {
                   with: {

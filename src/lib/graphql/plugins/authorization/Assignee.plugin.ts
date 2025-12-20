@@ -34,8 +34,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
           if (scope !== "create") {
             // For update/delete, verify workspace membership
+            // input is { taskId, userId } for composite key tables
+            const { taskId, userId } = input as {
+              taskId: string;
+              userId: string;
+            };
             const assignee = await db.query.assigneeTable.findFirst({
-              where: (table, { eq }) => eq(table.id, input),
+              where: (table, { and, eq }) =>
+                and(eq(table.taskId, taskId), eq(table.userId, userId)),
               with: {
                 task: {
                   with: {
