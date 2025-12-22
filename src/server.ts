@@ -17,7 +17,7 @@ import {
 } from "lib/config/env.config";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
-import { webhooks } from "routes/webhooks";
+import webhooks from "webhooks";
 
 /**
  * Elysia server.

@@ -9,7 +9,11 @@ import payments from "lib/payments";
 
 import type { SelectWorkspace } from "lib/db/schema";
 
-export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
+/**
+ * Webhooks Elysia instance (effectively used as a plugin).
+ * @see https://hookdeck.com/webhooks/guides/what-are-webhooks-how-they-work
+ */
+const webhooks = new Elysia({ prefix: "/webhooks" }).post(
   "/stripe",
   async ({ request, headers, status }) => {
     const productName = app.name.toLowerCase();
@@ -28,21 +32,23 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
 
       switch (event.type) {
         case "customer.subscription.created": {
+          // TODO less vendor-specific for self-hosting fam
           if (event.data.object.metadata.omniProduct !== productName) break;
 
           const subscription = await payments.subscriptions.retrieve(
             event.data.object.id,
           );
+
           const tier = subscription.items.data[0].price.metadata
             .tier as SelectWorkspace["tier"];
+
           const workspaceId = subscription.metadata.workspaceId;
 
-          if (subscription.status === "active") {
+          if (subscription.status === "active")
             await db
               .update(workspaceTable)
               .set({ tier, subscriptionId: subscription.id })
               .where(eq(workspaceTable.id, workspaceId));
-          }
 
           break;
         }
@@ -52,6 +58,7 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
           const subscription = await payments.subscriptions.retrieve(
             event.data.object.id,
           );
+
           const workspaceId = subscription.metadata.workspaceId;
 
           if (subscription.status === "active") {
@@ -70,7 +77,7 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
           }
 
           // NB: If the status of the subscription is deemed `unpaid`, we eagerly set the tier to `free` but keep the current subscription ID attached to the workspace.
-          if (subscription.status === "unpaid") {
+          if (subscription.status === "unpaid")
             await db
               .update(workspaceTable)
               .set({ tier: "free" })
@@ -80,7 +87,6 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
                   eq(workspaceTable.subscriptionId, subscription.id),
                 ),
               );
-          }
 
           break;
         }
@@ -90,9 +96,10 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
           const subscription = await payments.subscriptions.retrieve(
             event.data.object.id,
           );
+
           const workspaceId = subscription.metadata.workspaceId;
 
-          if (subscription.status === "canceled") {
+          if (subscription.status === "canceled")
             await db
               .update(workspaceTable)
               .set({ tier: "free", subscriptionId: null })
@@ -102,7 +109,6 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
                   eq(workspaceTable.subscriptionId, subscription.id),
                 ),
               );
-          }
 
           break;
         }
@@ -122,3 +128,5 @@ export const webhooks = new Elysia({ prefix: "/webhooks" }).post(
     }),
   },
 );
+
+export default webhooks;
