@@ -11,7 +11,7 @@ export const userTable = pgTable(
   "user",
   {
     id: generateDefaultId(),
-    // external ID used by identity provider
+    // identity provider ID mapped to `sub` claim from ID token
     identityProviderId: uuid().notNull().unique(),
     name: text().notNull(),
     avatarUrl: text(),
