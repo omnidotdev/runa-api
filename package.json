@@ -58,7 +58,7 @@
     "drizzle-kit": "^0.31.8",
     "drizzle-seed": "^0.3.1",
     "husky": "^9.1.7",
-    "knip": "^5.76.1",
+    "knip": "^5.76.2",
     "replace-in-file": "^8.4.0",
     "typescript": "^5.9.3"
   },
