@@ -6431,6 +6431,7 @@ function oldPlan10(_, args) {
     result: $insert
   });
 }
+const billingBypassSlugs = [];
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspaceUser"]),
     $observer = context().get("observer"),
@@ -6469,18 +6470,20 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         if (!callerMembership) throw Error("Unauthorized");
         if (callerMembership.role === "member") throw Error("Unauthorized");
       }
-      if (workspace.tier === "free") {
-        if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
-        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
-        if (newMemberRole && newMemberRole !== "member") {
-          if (numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
+      if (!billingBypassSlugs.includes(workspace.slug)) {
+        if (workspace.tier === "free") {
+          if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+          const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+          if (newMemberRole && newMemberRole !== "member") {
+            if (numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
+          }
         }
-      }
-      if (workspace.tier === "basic") {
-        if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
-        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
-        if (newMemberRole && newMemberRole !== "member") {
-          if (numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
+        if (workspace.tier === "basic") {
+          if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+          const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+          if (newMemberRole && newMemberRole !== "member") {
+            if (numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
+          }
         }
       }
     } else {
@@ -6506,7 +6509,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
       if (!targetMember) throw Error("Not found");
       if (targetMember.role === "owner") throw Error("Cannot modify owner");
       const newRole = input.role;
-      if (newRole && newRole !== "member") {
+      if (newRole && newRole !== "member" && !billingBypassSlugs.includes(workspace.slug)) {
         const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length,
           effectiveAdminCount = targetMember.role !== "member" ? numberOfAdmins : numberOfAdmins + 1;
         if (workspace.tier === "free" && effectiveAdminCount > 1) throw Error("Maximum number of admins reached");
@@ -6586,7 +6589,9 @@ const planWrapper12 = (plan, _, fieldArgs) => {
           values: [workspaceId]
         })).rows[0]?.total ?? 0;
       });
-      if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      if (!billingBypassSlugs.includes(workspace.slug)) {
+        if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      }
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -6659,7 +6664,9 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           values: [project.workspace.id]
         })).rows[0]?.total ?? 0;
       });
-      if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
+      if (!billingBypassSlugs.includes(project.workspace.slug)) {
+        if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
+      }
     } else {
       const task = await db.query.taskTable.findFirst({
         where(table, {
@@ -7442,18 +7449,20 @@ const planWrapper24 = (plan, _, fieldArgs) => {
         if (!callerMembership) throw Error("Unauthorized");
         if (callerMembership.role === "member") throw Error("Unauthorized");
       }
-      if (workspace.tier === "free") {
-        if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
-        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
-        if (newMemberRole && newMemberRole !== "member") {
-          if (numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
+      if (!billingBypassSlugs.includes(workspace.slug)) {
+        if (workspace.tier === "free") {
+          if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+          const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+          if (newMemberRole && newMemberRole !== "member") {
+            if (numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
+          }
         }
-      }
-      if (workspace.tier === "basic") {
-        if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
-        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
-        if (newMemberRole && newMemberRole !== "member") {
-          if (numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
+        if (workspace.tier === "basic") {
+          if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
+          const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+          if (newMemberRole && newMemberRole !== "member") {
+            if (numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
+          }
         }
       }
     } else {
@@ -7479,7 +7488,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
       if (!targetMember) throw Error("Not found");
       if (targetMember.role === "owner") throw Error("Cannot modify owner");
       const newRole = input.role;
-      if (newRole && newRole !== "member") {
+      if (newRole && newRole !== "member" && !billingBypassSlugs.includes(workspace.slug)) {
         const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length,
           effectiveAdminCount = targetMember.role !== "member" ? numberOfAdmins : numberOfAdmins + 1;
         if (workspace.tier === "free" && effectiveAdminCount > 1) throw Error("Maximum number of admins reached");
@@ -7571,7 +7580,9 @@ const planWrapper26 = (plan, _, fieldArgs) => {
           values: [workspaceId]
         })).rows[0]?.total ?? 0;
       });
-      if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      if (!billingBypassSlugs.includes(workspace.slug)) {
+        if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      }
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -7650,7 +7661,9 @@ const planWrapper27 = (plan, _, fieldArgs) => {
           values: [project.workspace.id]
         })).rows[0]?.total ?? 0;
       });
-      if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
+      if (!billingBypassSlugs.includes(project.workspace.slug)) {
+        if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
+      }
     } else {
       const task = await db.query.taskTable.findFirst({
         where(table, {
@@ -8509,7 +8522,9 @@ const planWrapper40 = (plan, _, fieldArgs) => {
           values: [workspaceId]
         })).rows[0]?.total ?? 0;
       });
-      if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      if (!billingBypassSlugs.includes(workspace.slug)) {
+        if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
+      }
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -8588,7 +8603,9 @@ const planWrapper41 = (plan, _, fieldArgs) => {
           values: [project.workspace.id]
         })).rows[0]?.total ?? 0;
       });
-      if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
+      if (!billingBypassSlugs.includes(project.workspace.slug)) {
+        if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
+      }
     } else {
       const task = await db.query.taskTable.findFirst({
         where(table, {

@@ -5,9 +5,9 @@ import { wrapPlans } from "postgraphile/utils";
 import {
   BASIC_TIER_MAX_ADMINS,
   BASIC_TIER_MAX_MEMBERS,
+  billingBypassSlugs,
   FREE_TIER_MAX_ADMINS,
   FREE_TIER_MAX_MEMBERS,
-  isBillingExempt,
 } from "./constants";
 
 import type { InsertWorkspaceUser } from "lib/db/schema";
@@ -35,7 +35,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
       FREE_TIER_MAX_ADMINS,
       BASIC_TIER_MAX_MEMBERS,
       BASIC_TIER_MAX_ADMINS,
-      isBillingExempt,
+      billingBypassSlugs,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
@@ -90,8 +90,8 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
                 throw new Error("Unauthorized");
             }
 
-            // bypass tier limits for exempt workspaces
-            if (!isBillingExempt(workspace.slug)) {
+            // Bypass tier limits for exempt workspaces
+            if (!billingBypassSlugs.includes(workspace.slug)) {
               // Tier-based member limits
               if (workspace.tier === "free") {
                 if (workspace.workspaceUsers.length >= FREE_TIER_MAX_MEMBERS)
@@ -163,7 +163,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
             if (
               newRole &&
               newRole !== "member" &&
-              !isBillingExempt(workspace.slug)
+              !billingBypassSlugs.includes(workspace.slug)
             ) {
               const numberOfAdmins = workspace.workspaceUsers.filter(
                 (member) => member.role !== "member",
@@ -207,7 +207,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
       FREE_TIER_MAX_ADMINS,
       BASIC_TIER_MAX_MEMBERS,
       BASIC_TIER_MAX_ADMINS,
-      isBillingExempt,
+      billingBypassSlugs,
     ],
   );
 

@@ -4,18 +4,14 @@ import { BILLING_BYPASS_SLUGS } from "lib/config/env.config";
  * Workspace slugs that bypass all billing/tier limits.
  * Configured via BILLING_BYPASS_SLUGS env var (comma-separated).
  * TODO: Replace with dynamic authZ plugin system
+ *
+ * NOTE: Exported as array for use in EXPORTABLE functions.
+ * Use `billingBypassSlugs.includes(slug)` inline within EXPORTABLE blocks.
  */
-const billingBypassSlugs: Set<string> = new Set(
+export const billingBypassSlugs: string[] =
   BILLING_BYPASS_SLUGS?.split(",")
     .map((s) => s.trim())
-    .filter(Boolean) ?? [],
-);
-
-/**
- * Check if a workspace should bypass billing limits.
- */
-export const isBillingExempt = (slug: string): boolean =>
-  billingBypassSlugs.has(slug);
+    .filter(Boolean) ?? [];
 
 export const FREE_TIER_MAX_PROJECTS = 2;
 export const FREE_TIER_MAX_TASKS = 500;

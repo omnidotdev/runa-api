@@ -5,8 +5,8 @@ import { match } from "ts-pattern";
 
 import {
   BASIC_TIER_MAX_TASKS,
+  billingBypassSlugs,
   FREE_TIER_MAX_TASKS,
-  isBillingExempt,
 } from "./constants";
 
 import type { InsertTask } from "lib/db/schema";
@@ -28,7 +28,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       sideEffect,
       FREE_TIER_MAX_TASKS,
       BASIC_TIER_MAX_TASKS,
-      isBillingExempt,
+      billingBypassSlugs,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -75,8 +75,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
               });
 
-              // bypass tier limits for exempt workspaces
-              if (!isBillingExempt(project.workspace.slug)) {
+              // Bypass tier limits for exempt workspaces
+              if (!billingBypassSlugs.includes(project.workspace.slug)) {
                 const withinLimit = match(project.workspace.tier)
                   .with("free", () => totalTasks < FREE_TIER_MAX_TASKS)
                   .with("basic", () => totalTasks < BASIC_TIER_MAX_TASKS)
@@ -127,7 +127,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       sideEffect,
       FREE_TIER_MAX_TASKS,
       BASIC_TIER_MAX_TASKS,
-      isBillingExempt,
+      billingBypassSlugs,
       propName,
       scope,
     ],
