@@ -5,9 +5,9 @@ import { wrapPlans } from "postgraphile/utils";
 import {
   BASIC_TIER_MAX_ADMINS,
   BASIC_TIER_MAX_MEMBERS,
-  billingBypassSlugs,
   FREE_TIER_MAX_ADMINS,
   FREE_TIER_MAX_MEMBERS,
+  billingBypassSlugs,
 } from "./constants";
 
 import type { InsertWorkspaceUser } from "lib/db/schema";

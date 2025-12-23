@@ -5,8 +5,8 @@ import { match } from "ts-pattern";
 
 import {
   BASIC_TIER_MAX_PROJECTS,
-  billingBypassSlugs,
   FREE_TIER_MAX_PROJECTS,
+  billingBypassSlugs,
 } from "./constants";
 
 import type { InsertProject } from "lib/db/schema";

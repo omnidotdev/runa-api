@@ -5,8 +5,8 @@ import { match } from "ts-pattern";
 
 import {
   BASIC_TIER_MAX_TASKS,
-  billingBypassSlugs,
   FREE_TIER_MAX_TASKS,
+  billingBypassSlugs,
 } from "./constants";
 
 import type { InsertTask } from "lib/db/schema";

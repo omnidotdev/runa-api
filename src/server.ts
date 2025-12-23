@@ -7,6 +7,7 @@ import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspect
 import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
+import webhooks from "webhooks";
 
 import appConfig from "lib/config/app.config";
 import {
@@ -17,7 +18,6 @@ import {
 } from "lib/config/env.config";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
-import webhooks from "webhooks";
 
 /**
  * Elysia server.
