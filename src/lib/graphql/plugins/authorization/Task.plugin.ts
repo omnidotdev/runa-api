@@ -3,7 +3,11 @@ import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 import { match } from "ts-pattern";
 
-import { BASIC_TIER_MAX_TASKS, FREE_TIER_MAX_TASKS } from "./constants";
+import {
+  BASIC_TIER_MAX_TASKS,
+  FREE_TIER_MAX_TASKS,
+  isBillingExempt,
+} from "./constants";
 
 import type { InsertTask } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -24,6 +28,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       sideEffect,
       FREE_TIER_MAX_TASKS,
       BASIC_TIER_MAX_TASKS,
+      isBillingExempt,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -70,14 +75,17 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
               });
 
-              const withinLimit = match(project.workspace.tier)
-                .with("free", () => totalTasks < FREE_TIER_MAX_TASKS)
-                .with("basic", () => totalTasks < BASIC_TIER_MAX_TASKS)
-                .with("team", () => true)
-                .exhaustive();
+              // bypass tier limits for exempt workspaces
+              if (!isBillingExempt(project.workspace.slug)) {
+                const withinLimit = match(project.workspace.tier)
+                  .with("free", () => totalTasks < FREE_TIER_MAX_TASKS)
+                  .with("basic", () => totalTasks < BASIC_TIER_MAX_TASKS)
+                  .with("team", () => true)
+                  .exhaustive();
 
-              if (!withinLimit)
-                throw new Error("Maximum number of tasks reached");
+                if (!withinLimit)
+                  throw new Error("Maximum number of tasks reached");
+              }
             } else {
               // for update/delete, verify membership and author/admin+ permission
               const task = await db.query.taskTable.findFirst({
@@ -119,6 +127,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       sideEffect,
       FREE_TIER_MAX_TASKS,
       BASIC_TIER_MAX_TASKS,
+      isBillingExempt,
       propName,
       scope,
     ],

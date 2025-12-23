@@ -3,7 +3,11 @@ import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 import { match } from "ts-pattern";
 
-import { BASIC_TIER_MAX_PROJECTS, FREE_TIER_MAX_PROJECTS } from "./constants";
+import {
+  BASIC_TIER_MAX_PROJECTS,
+  FREE_TIER_MAX_PROJECTS,
+  isBillingExempt,
+} from "./constants";
 
 import type { InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -25,6 +29,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       sideEffect,
       FREE_TIER_MAX_PROJECTS,
       BASIC_TIER_MAX_PROJECTS,
+      isBillingExempt,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -69,14 +74,17 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
               });
 
-              const withinLimit = match(workspace.tier)
-                .with("free", () => totalProjects < FREE_TIER_MAX_PROJECTS)
-                .with("basic", () => totalProjects < BASIC_TIER_MAX_PROJECTS)
-                .with("team", () => true)
-                .exhaustive();
+              // bypass tier limits for exempt workspaces
+              if (!isBillingExempt(workspace.slug)) {
+                const withinLimit = match(workspace.tier)
+                  .with("free", () => totalProjects < FREE_TIER_MAX_PROJECTS)
+                  .with("basic", () => totalProjects < BASIC_TIER_MAX_PROJECTS)
+                  .with("team", () => true)
+                  .exhaustive();
 
-              if (!withinLimit)
-                throw new Error("Maximum number of projects reached");
+                if (!withinLimit)
+                  throw new Error("Maximum number of projects reached");
+              }
             } else {
               // for update/delete, verify workspace membership and admin+ role
               const project = await db.query.projectTable.findFirst({
@@ -110,6 +118,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       sideEffect,
       FREE_TIER_MAX_PROJECTS,
       BASIC_TIER_MAX_PROJECTS,
+      isBillingExempt,
       propName,
       scope,
     ],
