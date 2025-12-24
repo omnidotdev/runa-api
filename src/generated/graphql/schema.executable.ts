@@ -6431,7 +6431,7 @@ function oldPlan10(_, args) {
     result: $insert
   });
 }
-const billingBypassSlugs = [];
+const billingBypassSlugs = ["omni"];
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspaceUser"]),
     $observer = context().get("observer"),
