@@ -33,6 +33,7 @@ export const workspaceTable = pgTable(
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     tier: tier().notNull().default("free"),
     subscriptionId: text(),
+    billingAccountId: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

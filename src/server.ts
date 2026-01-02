@@ -7,7 +7,6 @@ import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspect
 import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
-import webhooks from "webhooks";
 
 import appConfig from "lib/config/app.config";
 import {
@@ -16,6 +15,7 @@ import {
   isDevEnv,
   isProdEnv,
 } from "lib/config/env.config";
+import entitlementsWebhook from "lib/entitlements/webhooks";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 
@@ -41,7 +41,7 @@ const app = new Elysia({
       methods: ["GET", "POST", "OPTIONS"],
     }),
   )
-  .use(webhooks)
+  .use(entitlementsWebhook)
   .use(
     yoga({
       schema,

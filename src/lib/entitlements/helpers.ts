@@ -1,0 +1,142 @@
+/**
+ * High-level entitlement check helpers for authorization plugins.
+ * Wraps the entitlements client with caching.
+ */
+
+import { getCached, setCached } from "./cache";
+import { getEntitlements } from "./client";
+
+import type { SelectWorkspace } from "lib/db/schema";
+
+/** Runa product ID for entitlements */
+const PRODUCT_ID = "runa";
+
+/** Cache key prefix */
+const CACHE_PREFIX = "workspace";
+
+/** Tier type matching workspace schema */
+type Tier = SelectWorkspace["tier"];
+
+/** Default limits when entitlements service is unavailable or entitlement not found */
+const DEFAULT_LIMITS: Record<string, Record<Tier, number>> = {
+  max_projects: { free: 2, basic: 10, team: -1 },
+  max_tasks: { free: 500, basic: 2000, team: -1 },
+  max_columns: { free: 5, basic: 20, team: -1 },
+  max_labels: { free: 10, basic: 50, team: -1 },
+  max_assignees: { free: 1, basic: 3, team: -1 },
+  max_members: { free: 3, basic: 10, team: -1 },
+  max_admins: { free: 1, basic: 3, team: -1 },
+};
+
+interface CachedEntitlements {
+  tier: Tier;
+  limits: Record<string, number>;
+  version: number;
+}
+
+/**
+ * Fetch and cache entitlements for a workspace.
+ */
+const fetchWorkspaceEntitlements = async (
+  workspaceId: string,
+): Promise<CachedEntitlements | null> => {
+  const cacheKey = `${CACHE_PREFIX}:${workspaceId}`;
+
+  // Check cache first
+  const cached = getCached<CachedEntitlements>(cacheKey);
+  if (cached) return cached;
+
+  // Fetch from entitlements service
+  const response = await getEntitlements("workspace", workspaceId, PRODUCT_ID);
+
+  if (!response) return null;
+
+  // Parse entitlements into a usable format
+  const entitlements: CachedEntitlements = {
+    tier: "free",
+    limits: {},
+    version: response.entitlementVersion,
+  };
+
+  for (const ent of response.entitlements) {
+    if (ent.featureKey === "tier") {
+      entitlements.tier = (ent.value as Tier) ?? "free";
+    } else if (ent.featureKey.startsWith("max_")) {
+      entitlements.limits[ent.featureKey] =
+        typeof ent.value === "number" ? ent.value : Number(ent.value) || -1;
+    }
+  }
+
+  // Cache the result
+  setCached(cacheKey, entitlements, response.entitlementVersion);
+
+  return entitlements;
+};
+
+/**
+ * Get a specific limit for a workspace.
+ * Returns -1 for unlimited, or the limit number.
+ * Falls back to default limits based on tier if entitlements service unavailable.
+ */
+const getWorkspaceLimit = async (
+  workspaceId: string,
+  limitKey: string,
+  fallbackTier: Tier = "free",
+): Promise<number> => {
+  const entitlements = await fetchWorkspaceEntitlements(workspaceId);
+
+  if (entitlements) {
+    // Check if we have a specific limit set
+    if (limitKey in entitlements.limits) {
+      return entitlements.limits[limitKey];
+    }
+
+    // Fall back to default for tier
+    return DEFAULT_LIMITS[limitKey]?.[entitlements.tier] ?? -1;
+  }
+
+  // Entitlements service unavailable - use fallback tier defaults
+  return DEFAULT_LIMITS[limitKey]?.[fallbackTier] ?? -1;
+};
+
+/**
+ * Check if a workspace is within its limit for a resource.
+ * Returns true if the current count is below the limit.
+ * Returns true if the limit is -1 (unlimited).
+ */
+export async function checkWorkspaceLimit(
+  workspaceId: string,
+  limitKey: string,
+  currentCount: number,
+  fallbackTier: Tier = "free",
+): Promise<boolean> {
+  const limit = await getWorkspaceLimit(workspaceId, limitKey, fallbackTier);
+
+  // -1 means unlimited
+  if (limit === -1) return true;
+
+  return currentCount < limit;
+}
+
+/**
+ * Check if a workspace is within its limit, using workspace object for fallback.
+ * This is the primary function for authorization plugins.
+ */
+export async function isWithinLimit(
+  workspace: { id: string; tier: Tier; slug: string },
+  limitKey: string,
+  currentCount: number,
+  billingBypassSlugs: string[] = [],
+): Promise<boolean> {
+  // Bypass check for exempt workspaces
+  if (billingBypassSlugs.includes(workspace.slug)) {
+    return true;
+  }
+
+  return checkWorkspaceLimit(
+    workspace.id,
+    limitKey,
+    currentCount,
+    workspace.tier,
+  );
+}

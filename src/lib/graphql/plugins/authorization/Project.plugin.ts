@@ -1,13 +1,9 @@
 import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
-import { match } from "ts-pattern";
 
-import {
-  BASIC_TIER_MAX_PROJECTS,
-  FREE_TIER_MAX_PROJECTS,
-  billingBypassSlugs,
-} from "./constants";
+import { isWithinLimit } from "lib/entitlements";
+import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
 import type { InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -24,11 +20,10 @@ import type { MutationScope } from "./types";
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
-      match,
       context,
       sideEffect,
-      FREE_TIER_MAX_PROJECTS,
-      BASIC_TIER_MAX_PROJECTS,
+      isWithinLimit,
+      FEATURE_KEYS,
       billingBypassSlugs,
       propName,
       scope,
@@ -74,17 +69,16 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
               });
 
-              // Bypass tier limits for exempt workspaces
-              if (!billingBypassSlugs.includes(workspace.slug)) {
-                const withinLimit = match(workspace.tier)
-                  .with("free", () => totalProjects < FREE_TIER_MAX_PROJECTS)
-                  .with("basic", () => totalProjects < BASIC_TIER_MAX_PROJECTS)
-                  .with("team", () => true)
-                  .exhaustive();
+              // Check limit via entitlements service
+              const withinLimit = await isWithinLimit(
+                workspace,
+                FEATURE_KEYS.MAX_PROJECTS,
+                totalProjects,
+                billingBypassSlugs,
+              );
 
-                if (!withinLimit)
-                  throw new Error("Maximum number of projects reached");
-              }
+              if (!withinLimit)
+                throw new Error("Maximum number of projects reached");
             } else {
               // for update/delete, verify workspace membership and admin+ role
               const project = await db.query.projectTable.findFirst({
@@ -113,11 +107,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         return plan();
       },
     [
-      match,
       context,
       sideEffect,
-      FREE_TIER_MAX_PROJECTS,
-      BASIC_TIER_MAX_PROJECTS,
+      isWithinLimit,
+      FEATURE_KEYS,
       billingBypassSlugs,
       propName,
       scope,

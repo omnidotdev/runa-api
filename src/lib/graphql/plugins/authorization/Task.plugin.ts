@@ -1,13 +1,9 @@
 import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
-import { match } from "ts-pattern";
 
-import {
-  BASIC_TIER_MAX_TASKS,
-  FREE_TIER_MAX_TASKS,
-  billingBypassSlugs,
-} from "./constants";
+import { isWithinLimit } from "lib/entitlements";
+import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
 import type { InsertTask } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -23,11 +19,10 @@ import type { MutationScope } from "./types";
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
-      match,
       context,
       sideEffect,
-      FREE_TIER_MAX_TASKS,
-      BASIC_TIER_MAX_TASKS,
+      isWithinLimit,
+      FEATURE_KEYS,
       billingBypassSlugs,
       propName,
       scope,
@@ -75,17 +70,16 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
               });
 
-              // Bypass tier limits for exempt workspaces
-              if (!billingBypassSlugs.includes(project.workspace.slug)) {
-                const withinLimit = match(project.workspace.tier)
-                  .with("free", () => totalTasks < FREE_TIER_MAX_TASKS)
-                  .with("basic", () => totalTasks < BASIC_TIER_MAX_TASKS)
-                  .with("team", () => true)
-                  .exhaustive();
+              // Check limit via entitlements service
+              const withinLimit = await isWithinLimit(
+                project.workspace,
+                FEATURE_KEYS.MAX_TASKS,
+                totalTasks,
+                billingBypassSlugs,
+              );
 
-                if (!withinLimit)
-                  throw new Error("Maximum number of tasks reached");
-              }
+              if (!withinLimit)
+                throw new Error("Maximum number of tasks reached");
             } else {
               // for update/delete, verify membership and author/admin+ permission
               const task = await db.query.taskTable.findFirst({
@@ -122,11 +116,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         return plan();
       },
     [
-      match,
       context,
       sideEffect,
-      FREE_TIER_MAX_TASKS,
-      BASIC_TIER_MAX_TASKS,
+      isWithinLimit,
+      FEATURE_KEYS,
       billingBypassSlugs,
       propName,
       scope,

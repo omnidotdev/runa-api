@@ -162,6 +162,13 @@
       "when": 1766180534710,
       "tag": "0022_absurd_triton",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1767392417034,
+      "tag": "0023_curious_black_panther",
+      "breakpoints": true
     }
   ]
 }

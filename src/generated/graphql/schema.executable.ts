@@ -1,9 +1,10 @@
 // @ts-nocheck
+import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertExecutableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isExecutableStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
+import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
 import { sql } from "pg-sql2";
-import { match } from "ts-pattern";
 const nodeIdHandler_Query = {
   typeName: "Query",
   codec: {
@@ -1588,6 +1589,18 @@ const spec_workspace = {
         tags: {
           behavior: "-insert -update"
         },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    billing_account_id: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -5131,6 +5144,11 @@ const colSpec66 = {
   attributeName: "subscription_id",
   attribute: spec_workspace.attributes.subscription_id
 };
+const colSpec67 = {
+  fieldName: "billingAccountId",
+  attributeName: "billing_account_id",
+  attribute: spec_workspace.attributes.billing_account_id
+};
 function assertAllowed53(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5236,37 +5254,37 @@ function assertAllowed57(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec67 = {
+const colSpec68 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_projectColumn.attributes.id
 };
-const colSpec68 = {
+const colSpec69 = {
   fieldName: "emoji",
   attributeName: "emoji",
   attribute: spec_projectColumn.attributes.emoji
 };
-const colSpec69 = {
+const colSpec70 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_projectColumn.attributes.title
 };
-const colSpec70 = {
+const colSpec71 = {
   fieldName: "workspaceId",
   attributeName: "workspace_id",
   attribute: spec_projectColumn.attributes.workspace_id
 };
-const colSpec71 = {
+const colSpec72 = {
   fieldName: "index",
   attributeName: "index",
   attribute: spec_projectColumn.attributes.index
 };
-const colSpec72 = {
+const colSpec73 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectColumn.attributes.created_at
 };
-const colSpec73 = {
+const colSpec74 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_projectColumn.attributes.updated_at
@@ -5326,27 +5344,27 @@ function assertAllowed62(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec74 = {
+const colSpec75 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_invitation.attributes.id
 };
-const colSpec75 = {
+const colSpec76 = {
   fieldName: "workspaceId",
   attributeName: "workspace_id",
   attribute: spec_invitation.attributes.workspace_id
 };
-const colSpec76 = {
+const colSpec77 = {
   fieldName: "email",
   attributeName: "email",
   attribute: spec_invitation.attributes.email
 };
-const colSpec77 = {
+const colSpec78 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_invitation.attributes.created_at
 };
-const colSpec78 = {
+const colSpec79 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_invitation.attributes.updated_at
@@ -5384,42 +5402,42 @@ function assertAllowed65(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec79 = {
+const colSpec80 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_userPreference.attributes.id
 };
-const colSpec80 = {
+const colSpec81 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_userPreference.attributes.user_id
 };
-const colSpec81 = {
+const colSpec82 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_userPreference.attributes.project_id
 };
-const colSpec82 = {
+const colSpec83 = {
   fieldName: "hiddenColumnIds",
   attributeName: "hidden_column_ids",
   attribute: spec_userPreference.attributes.hidden_column_ids
 };
-const colSpec83 = {
+const colSpec84 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_userPreference.attributes.created_at
 };
-const colSpec84 = {
+const colSpec85 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_userPreference.attributes.updated_at
 };
-const colSpec85 = {
+const colSpec86 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_userPreference.attributes.view_mode
 };
-const colSpec86 = {
+const colSpec87 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_userPreference.attributes.color
@@ -5531,22 +5549,22 @@ function assertAllowed70(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec87 = {
+const colSpec88 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_taskLabel.attributes.task_id
 };
-const colSpec88 = {
+const colSpec89 = {
   fieldName: "labelId",
   attributeName: "label_id",
   attribute: spec_taskLabel.attributes.label_id
 };
-const colSpec89 = {
+const colSpec90 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_taskLabel.attributes.created_at
 };
-const colSpec90 = {
+const colSpec91 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_taskLabel.attributes.updated_at
@@ -5573,32 +5591,32 @@ function assertAllowed72(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec91 = {
+const colSpec92 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_label.attributes.id
 };
-const colSpec92 = {
+const colSpec93 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_label.attributes.name
 };
-const colSpec93 = {
+const colSpec94 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_label.attributes.color
 };
-const colSpec94 = {
+const colSpec95 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_label.attributes.project_id
 };
-const colSpec95 = {
+const colSpec96 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_label.attributes.created_at
 };
-const colSpec96 = {
+const colSpec97 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_label.attributes.updated_at
@@ -6040,9 +6058,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
           }
         });
       if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const tier = task?.project?.workspace.tier;
-      if (tier === "free" && task.assignees.length >= 1) throw Error("Maximum number of assignees reached");
-      if (tier === "basic" && task.assignees.length >= 3) throw Error("Maximum number of assignees reached");
+      if (!(await isWithinLimit(task.project.workspace, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassSlugs))) throw Error("Maximum number of assignees reached");
     }
   });
   return plan();
@@ -6194,8 +6210,7 @@ const planWrapper5 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      if (project.workspace.tier === "free" && project.labels.length >= 10) throw Error("Maximum number of labels reached");
-      if (project.workspace.tier === "basic" && project.labels.length >= 50) throw Error("Maximum number of labels reached");
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassSlugs))) throw Error("Maximum number of labels reached");
     }
   });
   return plan();
@@ -6358,8 +6373,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      if (project.workspace.tier === "free" && project.columns.length >= 5) throw Error("Maximum number of columns reached");
-      if (project.workspace.tier === "basic" && project.columns.length >= 20) throw Error("Maximum number of columns reached");
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_COLUMNS, project.columns.length, billingBypassSlugs))) throw Error("Maximum number of columns reached");
     }
   });
   return plan();
@@ -6431,7 +6445,6 @@ function oldPlan10(_, args) {
     result: $insert
   });
 }
-const billingBypassSlugs = ["omni"];
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspaceUser"]),
     $observer = context().get("observer"),
@@ -6471,19 +6484,10 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         if (callerMembership.role === "member") throw Error("Unauthorized");
       }
       if (!billingBypassSlugs.includes(workspace.slug)) {
-        if (workspace.tier === "free") {
-          if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+        if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_MEMBERS, workspace.workspaceUsers.length, workspace.tier))) throw Error("Maximum number of members reached");
+        if (newMemberRole && newMemberRole !== "member") {
           const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
-          if (newMemberRole && newMemberRole !== "member") {
-            if (numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
-          }
-        }
-        if (workspace.tier === "basic") {
-          if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
-          const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
-          if (newMemberRole && newMemberRole !== "member") {
-            if (numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
-          }
+          if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_ADMINS, numberOfAdmins, workspace.tier))) throw Error("Maximum number of admins reached");
         }
       }
     } else {
@@ -6511,9 +6515,8 @@ const planWrapper10 = (plan, _, fieldArgs) => {
       const newRole = input.role;
       if (newRole && newRole !== "member" && !billingBypassSlugs.includes(workspace.slug)) {
         const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length,
-          effectiveAdminCount = targetMember.role !== "member" ? numberOfAdmins : numberOfAdmins + 1;
-        if (workspace.tier === "free" && effectiveAdminCount > 1) throw Error("Maximum number of admins reached");
-        if (workspace.tier === "basic" && effectiveAdminCount > 3) throw Error("Maximum number of admins reached");
+          effectiveAdminCount = targetMember.role !== "member" ? numberOfAdmins : numberOfAdmins;
+        if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_ADMINS, effectiveAdminCount, workspace.tier))) throw Error("Maximum number of admins reached");
       }
       if (newRole === "owner") throw Error("Cannot promote to owner");
     }
@@ -6589,9 +6592,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
           values: [workspaceId]
         })).rows[0]?.total ?? 0;
       });
-      if (!billingBypassSlugs.includes(workspace.slug)) {
-        if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
-      }
+      if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassSlugs))) throw Error("Maximum number of projects reached");
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -6664,9 +6665,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           values: [project.workspace.id]
         })).rows[0]?.total ?? 0;
       });
-      if (!billingBypassSlugs.includes(project.workspace.slug)) {
-        if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
-      }
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_TASKS, totalTasks, billingBypassSlugs))) throw Error("Maximum number of tasks reached");
     } else {
       const task = await db.query.taskTable.findFirst({
         where(table, {
@@ -6977,9 +6976,7 @@ const planWrapper17 = (plan, _, fieldArgs) => {
           }
         });
       if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const tier = task?.project?.workspace.tier;
-      if (tier === "free" && task.assignees.length >= 1) throw Error("Maximum number of assignees reached");
-      if (tier === "basic" && task.assignees.length >= 3) throw Error("Maximum number of assignees reached");
+      if (!(await isWithinLimit(task.project.workspace, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassSlugs))) throw Error("Maximum number of assignees reached");
     }
   });
   return plan();
@@ -7143,8 +7140,7 @@ const planWrapper19 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      if (project.workspace.tier === "free" && project.labels.length >= 10) throw Error("Maximum number of labels reached");
-      if (project.workspace.tier === "basic" && project.labels.length >= 50) throw Error("Maximum number of labels reached");
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassSlugs))) throw Error("Maximum number of labels reached");
     }
   });
   return plan();
@@ -7325,8 +7321,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      if (project.workspace.tier === "free" && project.columns.length >= 5) throw Error("Maximum number of columns reached");
-      if (project.workspace.tier === "basic" && project.columns.length >= 20) throw Error("Maximum number of columns reached");
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_COLUMNS, project.columns.length, billingBypassSlugs))) throw Error("Maximum number of columns reached");
     }
   });
   return plan();
@@ -7450,19 +7445,10 @@ const planWrapper24 = (plan, _, fieldArgs) => {
         if (callerMembership.role === "member") throw Error("Unauthorized");
       }
       if (!billingBypassSlugs.includes(workspace.slug)) {
-        if (workspace.tier === "free") {
-          if (workspace.workspaceUsers.length >= 3) throw Error("Maximum number of members reached");
+        if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_MEMBERS, workspace.workspaceUsers.length, workspace.tier))) throw Error("Maximum number of members reached");
+        if (newMemberRole && newMemberRole !== "member") {
           const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
-          if (newMemberRole && newMemberRole !== "member") {
-            if (numberOfAdmins >= 1) throw Error("Maximum number of admins reached");
-          }
-        }
-        if (workspace.tier === "basic") {
-          if (workspace.workspaceUsers.length >= 10) throw Error("Maximum number of members reached");
-          const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
-          if (newMemberRole && newMemberRole !== "member") {
-            if (numberOfAdmins >= 3) throw Error("Maximum number of admins reached");
-          }
+          if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_ADMINS, numberOfAdmins, workspace.tier))) throw Error("Maximum number of admins reached");
         }
       }
     } else {
@@ -7490,9 +7476,8 @@ const planWrapper24 = (plan, _, fieldArgs) => {
       const newRole = input.role;
       if (newRole && newRole !== "member" && !billingBypassSlugs.includes(workspace.slug)) {
         const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length,
-          effectiveAdminCount = targetMember.role !== "member" ? numberOfAdmins : numberOfAdmins + 1;
-        if (workspace.tier === "free" && effectiveAdminCount > 1) throw Error("Maximum number of admins reached");
-        if (workspace.tier === "basic" && effectiveAdminCount > 3) throw Error("Maximum number of admins reached");
+          effectiveAdminCount = targetMember.role !== "member" ? numberOfAdmins : numberOfAdmins;
+        if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_ADMINS, effectiveAdminCount, workspace.tier))) throw Error("Maximum number of admins reached");
       }
       if (newRole === "owner") throw Error("Cannot promote to owner");
     }
@@ -7580,9 +7565,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
           values: [workspaceId]
         })).rows[0]?.total ?? 0;
       });
-      if (!billingBypassSlugs.includes(workspace.slug)) {
-        if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
-      }
+      if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassSlugs))) throw Error("Maximum number of projects reached");
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -7661,9 +7644,7 @@ const planWrapper27 = (plan, _, fieldArgs) => {
           values: [project.workspace.id]
         })).rows[0]?.total ?? 0;
       });
-      if (!billingBypassSlugs.includes(project.workspace.slug)) {
-        if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
-      }
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_TASKS, totalTasks, billingBypassSlugs))) throw Error("Maximum number of tasks reached");
     } else {
       const task = await db.query.taskTable.findFirst({
         where(table, {
@@ -7980,9 +7961,7 @@ const planWrapper31 = (plan, _, fieldArgs) => {
           }
         });
       if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const tier = task?.project?.workspace.tier;
-      if (tier === "free" && task.assignees.length >= 1) throw Error("Maximum number of assignees reached");
-      if (tier === "basic" && task.assignees.length >= 3) throw Error("Maximum number of assignees reached");
+      if (!(await isWithinLimit(task.project.workspace, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassSlugs))) throw Error("Maximum number of assignees reached");
     }
   });
   return plan();
@@ -8146,8 +8125,7 @@ const planWrapper33 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      if (project.workspace.tier === "free" && project.labels.length >= 10) throw Error("Maximum number of labels reached");
-      if (project.workspace.tier === "basic" && project.labels.length >= 50) throw Error("Maximum number of labels reached");
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassSlugs))) throw Error("Maximum number of labels reached");
     }
   });
   return plan();
@@ -8328,8 +8306,7 @@ const planWrapper36 = (plan, _, fieldArgs) => {
         });
       if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
       if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-      if (project.workspace.tier === "free" && project.columns.length >= 5) throw Error("Maximum number of columns reached");
-      if (project.workspace.tier === "basic" && project.columns.length >= 20) throw Error("Maximum number of columns reached");
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_COLUMNS, project.columns.length, billingBypassSlugs))) throw Error("Maximum number of columns reached");
     }
   });
   return plan();
@@ -8522,9 +8499,7 @@ const planWrapper40 = (plan, _, fieldArgs) => {
           values: [workspaceId]
         })).rows[0]?.total ?? 0;
       });
-      if (!billingBypassSlugs.includes(workspace.slug)) {
-        if (!match(workspace.tier).with("free", () => totalProjects < 2).with("basic", () => totalProjects < 10).with("team", () => !0).exhaustive()) throw Error("Maximum number of projects reached");
-      }
+      if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassSlugs))) throw Error("Maximum number of projects reached");
     } else {
       const project = await db.query.projectTable.findFirst({
         where(table, {
@@ -8603,9 +8578,7 @@ const planWrapper41 = (plan, _, fieldArgs) => {
           values: [project.workspace.id]
         })).rows[0]?.total ?? 0;
       });
-      if (!billingBypassSlugs.includes(project.workspace.slug)) {
-        if (!match(project.workspace.tier).with("free", () => totalTasks < 500).with("basic", () => totalTasks < 2000).with("team", () => !0).exhaustive()) throw Error("Maximum number of tasks reached");
-      }
+      if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_TASKS, totalTasks, billingBypassSlugs))) throw Error("Maximum number of tasks reached");
     } else {
       const task = await db.query.taskTable.findFirst({
         where(table, {
@@ -9668,6 +9641,7 @@ type Workspace implements Node {
   slug: String!
   tier: Tier!
   subscriptionId: String
+  billingAccountId: String
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -11314,6 +11288,9 @@ input WorkspaceFilter {
 
   """Filter by the object’s \`subscriptionId\` field."""
   subscriptionId: StringFilter
+
+  """Filter by the object’s \`billingAccountId\` field."""
+  billingAccountId: StringFilter
 
   """Filter by the object’s \`projects\` relation."""
   projects: WorkspaceToManyProjectFilter
@@ -15874,6 +15851,9 @@ type WorkspaceDistinctCountAggregates {
 
   """Distinct count of subscriptionId across the matching connection"""
   subscriptionId: BigInt
+
+  """Distinct count of billingAccountId across the matching connection"""
+  billingAccountId: BigInt
 }
 
 """Grouping methods for \`Workspace\` for usage during aggregation."""
@@ -15888,6 +15868,7 @@ enum WorkspaceGroupBy {
   VIEW_MODE
   TIER
   SUBSCRIPTION_ID
+  BILLING_ACCOUNT_ID
 }
 
 """Conditions for \`Workspace\` aggregates."""
@@ -15978,6 +15959,9 @@ input WorkspaceCondition {
 
   """Checks for equality with the object’s \`subscriptionId\` field."""
   subscriptionId: String
+
+  """Checks for equality with the object’s \`billingAccountId\` field."""
+  billingAccountId: String
 }
 
 """Methods to use when ordering \`Workspace\`."""
@@ -16001,6 +15985,8 @@ enum WorkspaceOrderBy {
   TIER_DESC
   SUBSCRIPTION_ID_ASC
   SUBSCRIPTION_ID_DESC
+  BILLING_ACCOUNT_ID_ASC
+  BILLING_ACCOUNT_ID_DESC
   PROJECTS_COUNT_ASC
   PROJECTS_COUNT_DESC
   PROJECTS_SUM_COLUMN_INDEX_ASC
@@ -17308,6 +17294,7 @@ input WorkspaceInput {
   updatedAt: Datetime
   viewMode: String
   slug: String!
+  billingAccountId: String
 }
 
 """The output of our update \`TaskLabel\` mutation."""
@@ -18266,6 +18253,7 @@ input WorkspacePatch {
   updatedAt: Datetime
   viewMode: String
   slug: String
+  billingAccountId: String
 }
 
 """All input for the \`updateWorkspace\` mutation."""
@@ -24468,6 +24456,9 @@ ${String(oldPlan24)}`);
   Workspace: {
     assertStep: assertPgClassSingleStep,
     plans: {
+      billingAccountId($record) {
+        return $record.get("billing_account_id");
+      },
       createdAt($record) {
         return $record.get("created_at");
       },
@@ -24704,6 +24695,11 @@ ${String(oldPlan24)}`);
   },
   WorkspaceDistinctCountAggregates: {
     plans: {
+      billingAccountId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("billing_account_id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
       createdAt($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
@@ -28175,7 +28171,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec77;
+        condition.extensions.pgFilterAttribute = colSpec78;
         return condition;
       },
       email(queryBuilder, value) {
@@ -28183,7 +28179,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec76;
+        condition.extensions.pgFilterAttribute = colSpec77;
         return condition;
       },
       not($where, value) {
@@ -28202,7 +28198,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec74;
+        condition.extensions.pgFilterAttribute = colSpec75;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -28210,7 +28206,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec78;
+        condition.extensions.pgFilterAttribute = colSpec79;
         return condition;
       },
       workspace($where, value) {
@@ -28231,7 +28227,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec75;
+        condition.extensions.pgFilterAttribute = colSpec76;
         return condition;
       }
     }
@@ -28609,7 +28605,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec93;
+        condition.extensions.pgFilterAttribute = colSpec94;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -28617,7 +28613,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec95;
+        condition.extensions.pgFilterAttribute = colSpec96;
         return condition;
       },
       name(queryBuilder, value) {
@@ -28625,7 +28621,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec92;
+        condition.extensions.pgFilterAttribute = colSpec93;
         return condition;
       },
       not($where, value) {
@@ -28657,7 +28653,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec94;
+        condition.extensions.pgFilterAttribute = colSpec95;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -28665,7 +28661,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec91;
+        condition.extensions.pgFilterAttribute = colSpec92;
         return condition;
       },
       taskLabels($where, value) {
@@ -28697,7 +28693,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec96;
+        condition.extensions.pgFilterAttribute = colSpec97;
         return condition;
       }
     }
@@ -29917,7 +29913,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec72;
+        condition.extensions.pgFilterAttribute = colSpec73;
         return condition;
       },
       emoji(queryBuilder, value) {
@@ -29925,7 +29921,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec68;
+        condition.extensions.pgFilterAttribute = colSpec69;
         return condition;
       },
       index(queryBuilder, value) {
@@ -29933,7 +29929,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec71;
+        condition.extensions.pgFilterAttribute = colSpec72;
         return condition;
       },
       not($where, value) {
@@ -29976,7 +29972,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec67;
+        condition.extensions.pgFilterAttribute = colSpec68;
         return condition;
       },
       title(queryBuilder, value) {
@@ -29984,7 +29980,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec69;
+        condition.extensions.pgFilterAttribute = colSpec70;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -29992,7 +29988,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec73;
+        condition.extensions.pgFilterAttribute = colSpec74;
         return condition;
       },
       workspace($where, value) {
@@ -30013,7 +30009,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec70;
+        condition.extensions.pgFilterAttribute = colSpec71;
         return condition;
       }
     }
@@ -34189,7 +34185,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec89;
+        condition.extensions.pgFilterAttribute = colSpec90;
         return condition;
       },
       label($where, value) {
@@ -34210,7 +34206,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec88;
+        condition.extensions.pgFilterAttribute = colSpec89;
         return condition;
       },
       not($where, value) {
@@ -34242,7 +34238,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec87;
+        condition.extensions.pgFilterAttribute = colSpec88;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -34250,7 +34246,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec90;
+        condition.extensions.pgFilterAttribute = colSpec91;
         return condition;
       }
     }
@@ -36149,7 +36145,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec86;
+        condition.extensions.pgFilterAttribute = colSpec87;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -36157,7 +36153,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec83;
+        condition.extensions.pgFilterAttribute = colSpec84;
         return condition;
       },
       hiddenColumnIds(queryBuilder, value) {
@@ -36165,7 +36161,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec82;
+        condition.extensions.pgFilterAttribute = colSpec83;
         return condition;
       },
       not($where, value) {
@@ -36197,7 +36193,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec81;
+        condition.extensions.pgFilterAttribute = colSpec82;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -36205,7 +36201,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec79;
+        condition.extensions.pgFilterAttribute = colSpec80;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -36213,7 +36209,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec84;
+        condition.extensions.pgFilterAttribute = colSpec85;
         return condition;
       },
       user($where, value) {
@@ -36234,7 +36230,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec80;
+        condition.extensions.pgFilterAttribute = colSpec81;
         return condition;
       },
       viewMode(queryBuilder, value) {
@@ -36242,7 +36238,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec85;
+        condition.extensions.pgFilterAttribute = colSpec86;
         return condition;
       }
     }
@@ -37290,6 +37286,15 @@ export const inputObjects = {
   },
   WorkspaceCondition: {
     plans: {
+      billingAccountId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "billing_account_id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
       createdAt($condition, val) {
         $condition.where({
           type: "attribute",
@@ -37370,6 +37375,14 @@ export const inputObjects = {
         assertAllowed54(value, "list");
         if (value == null) return;
         return $where.andPlan();
+      },
+      billingAccountId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec67;
+        return condition;
       },
       createdAt(queryBuilder, value) {
         if (value === void 0) return;
@@ -37710,6 +37723,12 @@ export const inputObjects = {
   WorkspaceInput: {
     baked: createObjectAndApplyChildren,
     plans: {
+      billingAccountId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("billing_account_id", bakedInputRuntime(schema, field.type, val));
+      },
       createdAt(obj, val, {
         field,
         schema
@@ -37751,6 +37770,12 @@ export const inputObjects = {
   WorkspacePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
+      billingAccountId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("billing_account_id", bakedInputRuntime(schema, field.type, val));
+      },
       createdAt(obj, val, {
         field,
         schema
@@ -47400,6 +47425,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   },
   WorkspaceGroupBy: {
     values: {
+      BILLING_ACCOUNT_ID($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("billing_account_id")}`,
+          codec: TYPES.text
+        });
+      },
       CREATED_AT($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
@@ -47464,6 +47495,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
   },
   WorkspaceOrderBy: {
     values: {
+      BILLING_ACCOUNT_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "billing_account_id",
+          direction: "ASC"
+        });
+      },
+      BILLING_ACCOUNT_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "billing_account_id",
+          direction: "DESC"
+        });
+      },
       CREATED_AT_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "created_at",
