@@ -2,13 +2,8 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import {
-  BASIC_TIER_MAX_ADMINS,
-  BASIC_TIER_MAX_MEMBERS,
-  FREE_TIER_MAX_ADMINS,
-  FREE_TIER_MAX_MEMBERS,
-  billingBypassSlugs,
-} from "./constants";
+import { checkWorkspaceLimit } from "lib/entitlements";
+import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
 import type { InsertWorkspaceUser } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -29,13 +24,11 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
     (
       context,
       sideEffect,
+      checkWorkspaceLimit,
+      FEATURE_KEYS,
+      billingBypassSlugs,
       propName,
       scope,
-      FREE_TIER_MAX_MEMBERS,
-      FREE_TIER_MAX_ADMINS,
-      BASIC_TIER_MAX_MEMBERS,
-      BASIC_TIER_MAX_ADMINS,
-      billingBypassSlugs,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
@@ -90,35 +83,34 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
                 throw new Error("Unauthorized");
             }
 
-            // Bypass tier limits for exempt workspaces
+            // Check tier limits via entitlements service (bypass for exempt workspaces)
             if (!billingBypassSlugs.includes(workspace.slug)) {
-              // Tier-based member limits
-              if (workspace.tier === "free") {
-                if (workspace.workspaceUsers.length >= FREE_TIER_MAX_MEMBERS)
-                  throw new Error("Maximum number of members reached");
+              // Check member limit
+              const withinMemberLimit = await checkWorkspaceLimit(
+                workspace.id,
+                FEATURE_KEYS.MAX_MEMBERS,
+                workspace.workspaceUsers.length,
+                workspace.tier as "free" | "basic" | "team",
+              );
 
+              if (!withinMemberLimit)
+                throw new Error("Maximum number of members reached");
+
+              // Check admin limit if adding as admin+
+              if (newMemberRole && newMemberRole !== "member") {
                 const numberOfAdmins = workspace.workspaceUsers.filter(
                   (member) => member.role !== "member",
                 ).length;
 
-                if (newMemberRole && newMemberRole !== "member") {
-                  if (numberOfAdmins >= FREE_TIER_MAX_ADMINS)
-                    throw new Error("Maximum number of admins reached");
-                }
-              }
+                const withinAdminLimit = await checkWorkspaceLimit(
+                  workspace.id,
+                  FEATURE_KEYS.MAX_ADMINS,
+                  numberOfAdmins,
+                  workspace.tier as "free" | "basic" | "team",
+                );
 
-              if (workspace.tier === "basic") {
-                if (workspace.workspaceUsers.length >= BASIC_TIER_MAX_MEMBERS)
-                  throw new Error("Maximum number of members reached");
-
-                const numberOfAdmins = workspace.workspaceUsers.filter(
-                  (member) => member.role !== "member",
-                ).length;
-
-                if (newMemberRole && newMemberRole !== "member") {
-                  if (numberOfAdmins >= BASIC_TIER_MAX_ADMINS)
-                    throw new Error("Maximum number of admins reached");
-                }
+                if (!withinAdminLimit)
+                  throw new Error("Maximum number of admins reached");
               }
             }
           } else {
@@ -174,18 +166,16 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
               const currentIsAdmin = targetMember.role !== "member";
               const effectiveAdminCount = currentIsAdmin
                 ? numberOfAdmins
-                : numberOfAdmins + 1;
+                : numberOfAdmins;
 
-              if (
-                workspace.tier === "free" &&
-                effectiveAdminCount > FREE_TIER_MAX_ADMINS
-              )
-                throw new Error("Maximum number of admins reached");
+              const withinAdminLimit = await checkWorkspaceLimit(
+                workspace.id,
+                FEATURE_KEYS.MAX_ADMINS,
+                effectiveAdminCount,
+                workspace.tier as "free" | "basic" | "team",
+              );
 
-              if (
-                workspace.tier === "basic" &&
-                effectiveAdminCount > BASIC_TIER_MAX_ADMINS
-              )
+              if (!withinAdminLimit)
                 throw new Error("Maximum number of admins reached");
             }
 
@@ -201,13 +191,11 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
     [
       context,
       sideEffect,
+      checkWorkspaceLimit,
+      FEATURE_KEYS,
+      billingBypassSlugs,
       propName,
       scope,
-      FREE_TIER_MAX_MEMBERS,
-      FREE_TIER_MAX_ADMINS,
-      BASIC_TIER_MAX_MEMBERS,
-      BASIC_TIER_MAX_ADMINS,
-      billingBypassSlugs,
     ],
   );
 

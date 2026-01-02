@@ -1,0 +1,1 @@
+ALTER TABLE "workspace" ADD COLUMN "billing_account_id" text;

@@ -2,7 +2,8 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { BASIC_TIER_MAX_COLUMNS, FREE_TIER_MAX_COLUMNS } from "./constants";
+import { isWithinLimit } from "lib/entitlements";
+import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
 import type { InsertColumn } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -13,10 +14,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     (
       context,
       sideEffect,
+      isWithinLimit,
+      FEATURE_KEYS,
+      billingBypassSlugs,
       propName,
       scope,
-      FREE_TIER_MAX_COLUMNS,
-      BASIC_TIER_MAX_COLUMNS,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
@@ -73,16 +75,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (project.workspace.workspaceUsers[0].role === "member")
               throw new Error("Unauthorized");
 
-            if (
-              project.workspace.tier === "free" &&
-              project.columns.length >= FREE_TIER_MAX_COLUMNS
-            )
-              throw new Error("Maximum number of columns reached");
+            // Check limit via entitlements service
+            const withinLimit = await isWithinLimit(
+              project.workspace,
+              FEATURE_KEYS.MAX_COLUMNS,
+              project.columns.length,
+              billingBypassSlugs,
+            );
 
-            if (
-              project.workspace.tier === "basic" &&
-              project.columns.length >= BASIC_TIER_MAX_COLUMNS
-            )
+            if (!withinLimit)
               throw new Error("Maximum number of columns reached");
           }
         });
@@ -92,10 +93,11 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
+      isWithinLimit,
+      FEATURE_KEYS,
+      billingBypassSlugs,
       propName,
       scope,
-      FREE_TIER_MAX_COLUMNS,
-      BASIC_TIER_MAX_COLUMNS,
     ],
   );
 

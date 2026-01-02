@@ -4,24 +4,12 @@ import { EXPORTABLE, exportSchema } from "graphile-export";
 import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
-import { match } from "ts-pattern";
 
 import graphilePreset from "lib/config/graphile.config";
+import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
 import {
-  BASIC_TIER_MAX_ADMINS,
-  BASIC_TIER_MAX_ASSIGNEES,
-  BASIC_TIER_MAX_COLUMNS,
-  BASIC_TIER_MAX_LABELS,
-  BASIC_TIER_MAX_MEMBERS,
-  BASIC_TIER_MAX_PROJECTS,
-  BASIC_TIER_MAX_TASKS,
-  FREE_TIER_MAX_ADMINS,
-  FREE_TIER_MAX_ASSIGNEES,
-  FREE_TIER_MAX_COLUMNS,
-  FREE_TIER_MAX_LABELS,
-  FREE_TIER_MAX_MEMBERS,
-  FREE_TIER_MAX_PROJECTS,
-  FREE_TIER_MAX_TASKS,
+  FEATURE_KEYS,
+  billingBypassSlugs,
 } from "lib/graphql/plugins/authorization/constants";
 
 /**
@@ -45,22 +33,10 @@ const generateGraphqlSchema = async () => {
     modules: {
       "graphile-export": { EXPORTABLE },
       "postgraphile/grafast": { context, sideEffect },
-      "ts-pattern": { match },
+      "lib/entitlements": { isWithinLimit, checkWorkspaceLimit },
       "./constants": {
-        FREE_TIER_MAX_PROJECTS,
-        FREE_TIER_MAX_TASKS,
-        FREE_TIER_MAX_ASSIGNEES,
-        FREE_TIER_MAX_COLUMNS,
-        FREE_TIER_MAX_LABELS,
-        FREE_TIER_MAX_MEMBERS,
-        FREE_TIER_MAX_ADMINS,
-        BASIC_TIER_MAX_PROJECTS,
-        BASIC_TIER_MAX_TASKS,
-        BASIC_TIER_MAX_ASSIGNEES,
-        BASIC_TIER_MAX_COLUMNS,
-        BASIC_TIER_MAX_LABELS,
-        BASIC_TIER_MAX_MEMBERS,
-        BASIC_TIER_MAX_ADMINS,
+        FEATURE_KEYS,
+        billingBypassSlugs,
       },
     },
   });
