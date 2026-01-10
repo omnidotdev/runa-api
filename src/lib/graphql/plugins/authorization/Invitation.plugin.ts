@@ -2,85 +2,94 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+
 import type { InsertInvitation } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate invitation permissions.
+ * Validate invitation permissions via Warden.
  *
- * Invitations require admin+ role, with exceptions:
- * - Create: Admin+ can invite new members
- * - Update: Admin+ can modify invitations
- * - Delete: Admin+ can revoke invitations, OR the invitee can delete their own invitation
+ * - Create: Admin permission on workspace required
+ * - Update: Admin permission on workspace required
+ * - Delete: Admin permission on workspace required, OR invitee can delete own invitation
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        const $authzCache = context().get("authzCache");
 
-          if (scope === "create") {
-            const workspaceId = (input as InsertInvitation).workspaceId;
+        sideEffect(
+          [$input, $observer, $db, $authzCache],
+          async ([input, observer, db, authzCache]) => {
+            if (!observer) throw new Error("Unauthorized");
 
-            const workspace = await db.query.workspaceTable.findFirst({
-              where: (table, { eq }) => eq(table.id, workspaceId),
-              with: {
-                workspaceUsers: {
-                  where: (table, { eq }) => eq(table.userId, observer.id),
-                },
-              },
-            });
+            if (scope === "create") {
+              const workspaceId = (input as InsertInvitation).workspaceId;
 
-            if (!workspace?.workspaceUsers.length)
-              throw new Error("Unauthorized");
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "workspace",
+                workspaceId,
+                "admin",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            } else {
+              // Get invitation to check ownership and workspace
+              const invitation = await db.query.invitationsTable.findFirst({
+                where: (table, { eq }) => eq(table.id, input),
+                columns: { email: true, workspaceId: true },
+              });
+              if (!invitation) throw new Error("Invitation not found");
 
-            // admin+ can create invitations
-            if (workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
-          } else {
-            // for update/delete, verify permissions
-            const invitation = await db.query.invitationsTable.findFirst({
-              where: (table, { eq }) => eq(table.id, input),
-              with: {
-                workspace: {
-                  with: {
-                    workspaceUsers: {
-                      where: (table, { eq }) => eq(table.userId, observer.id),
-                    },
-                  },
-                },
-              },
-            });
+              // Special case: Allow user to delete their own invitation
+              const isOwnInvitation = invitation.email === observer.email;
+              if (scope === "delete" && isOwnInvitation) {
+                return;
+              }
 
-            if (!invitation) throw new Error("Unauthorized");
-
-            // Special case: Allow user to delete their own invitation (after accepting or rejecting)
-            const isOwnInvitation = invitation.email === observer.email;
-
-            if (scope === "delete" && isOwnInvitation) {
-              // User can delete their own invitation
-              return;
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "workspace",
+                invitation.workspaceId,
+                "admin",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
             }
-
-            // Otherwise, require workspace membership with admin+ role
-            if (!invitation.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            // admin+ can modify/delete invitations
-            if (invitation.workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
-          }
-        });
+          },
+        );
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**

@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  index,
   pgEnum,
   pgTable,
   text,
@@ -24,6 +25,8 @@ export const workspaceTable = pgTable(
   "workspace",
   {
     id: generateDefaultId(),
+    // FK to Gatekeeper organization - workspaces belong to orgs
+    organizationId: text("organization_id"),
     name: text().notNull(),
     slug: text()
       // TODO
@@ -32,12 +35,15 @@ export const workspaceTable = pgTable(
       .notNull(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     tier: tier().notNull().default("free"),
-    subscriptionId: text(),
     billingAccountId: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
-  (table) => [uniqueIndex().on(table.id), uniqueIndex().on(table.slug)],
+  (table) => [
+    uniqueIndex().on(table.id),
+    uniqueIndex().on(table.slug), // Keep global uniqueness until migration complete
+    index("workspace_organization_id_idx").on(table.organizationId),
+  ],
 );
 
 export const workspaceRelations = relations(workspaceTable, ({ many }) => ({

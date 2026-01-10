@@ -15,11 +15,6 @@ const SmartTagPlugin = jsonPgSmartTags({
               behavior: "-insert -update +orderBy",
             },
           },
-          subscription_id: {
-            tags: {
-              behavior: "-insert -update",
-            },
-          },
         },
       },
       workspace_user: {

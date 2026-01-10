@@ -18,6 +18,8 @@ declare global {
     interface Context {
       observer: SelectUser | null;
       db: typeof dbPool;
+      /** Request-scoped permission cache to avoid duplicate Warden calls within a single GraphQL request. */
+      authzCache: Map<string, boolean>;
     }
   }
 }
@@ -35,6 +37,8 @@ export interface GraphQLContext {
   pgSettings: Record<string, string | undefined> | null;
   /** Postgres subscription client for the current request, injected by Postgraphile. */
   pgSubscriber: PgSubscriber | null;
+  /** Request-scoped permission cache to avoid duplicate Warden calls within a single GraphQL request. */
+  authzCache: Map<string, boolean>;
 }
 
 /**
@@ -49,6 +53,7 @@ const createGraphqlContext = async ({
   request,
   db: dbPool,
   withPgClient,
+  authzCache: new Map<string, boolean>(),
 });
 
 export default createGraphqlContext;

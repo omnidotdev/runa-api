@@ -2,21 +2,30 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+
 import type { InsertProjectColumn } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate project column permissions.
+ * Validate project column permissions via Warden.
  *
- * Project columns require admin+ role.
- * - Create: Admin+ can create project columns
- * - Update: Admin+ can modify project columns
- * - Delete: Admin+ can delete project columns
+ * - Create: Admin permission on workspace required
+ * - Update: Admin permission on workspace required
+ * - Delete: Admin permission on workspace required
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -28,48 +37,46 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (scope === "create") {
             const workspaceId = (input as InsertProjectColumn).workspaceId;
 
-            const workspace = await db.query.workspaceTable.findFirst({
-              where: (table, { eq }) => eq(table.id, workspaceId),
-              with: {
-                workspaceUsers: {
-                  where: (table, { eq }) => eq(table.userId, observer.id),
-                },
-              },
-            });
-
-            if (!workspace?.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            // admin+ can create project columns
-            if (workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
+            const allowed = await checkPermission(
+              AUTHZ_ENABLED,
+              AUTHZ_PROVIDER_URL,
+              observer.id,
+              "workspace",
+              workspaceId,
+              "admin",
+            );
+            if (!allowed) throw new Error("Unauthorized");
           } else {
-            // for update/delete, verify workspace membership and admin+ role
+            // Get project column to find workspace for AuthZ check
             const projectColumn = await db.query.projectColumnTable.findFirst({
               where: (table, { eq }) => eq(table.id, input),
-              with: {
-                workspace: {
-                  with: {
-                    workspaceUsers: {
-                      where: (table, { eq }) => eq(table.userId, observer.id),
-                    },
-                  },
-                },
-              },
+              columns: { workspaceId: true },
             });
+            if (!projectColumn) throw new Error("Project column not found");
 
-            if (!projectColumn?.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            // admin+ can modify/delete project columns
-            if (projectColumn.workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
+            const allowed = await checkPermission(
+              AUTHZ_ENABLED,
+              AUTHZ_PROVIDER_URL,
+              observer.id,
+              "workspace",
+              projectColumn.workspaceId,
+              "admin",
+            );
+            if (!allowed) throw new Error("Unauthorized");
           }
         });
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**

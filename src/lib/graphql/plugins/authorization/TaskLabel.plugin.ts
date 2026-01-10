@@ -2,20 +2,30 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+
 import type { InsertTaskLabel } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate task label permissions.
+ * Validate task label permissions via Warden.
  *
- * Task labels require workspace membership.
- * - Create: Any workspace member can add labels to tasks
- * - Update/Delete: Task author OR admin+ can modify labels
+ * - Create: Member permission on project required
+ * - Update: Member permission on project required
+ * - Delete: Member permission on project required
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -25,77 +35,58 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (!observer) throw new Error("Unauthorized");
 
           if (scope === "create") {
-            // For create, get the task and verify workspace membership
             const taskId = (input as InsertTaskLabel).taskId;
 
+            // Get task to find project for AuthZ check
             const task = await db.query.taskTable.findFirst({
               where: (table, { eq }) => eq(table.id, taskId),
-              with: {
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        workspaceUsers: {
-                          where: (table, { eq }) =>
-                            eq(table.userId, observer.id),
-                        },
-                      },
-                    },
-                  },
-                },
-              },
+              columns: { projectId: true },
             });
+            if (!task) throw new Error("Task not found");
 
-            if (!task?.project.workspace.workspaceUsers.length) {
-              throw new Error("Unauthorized");
-            }
+            const allowed = await checkPermission(
+              AUTHZ_ENABLED,
+              AUTHZ_PROVIDER_URL,
+              observer.id,
+              "project",
+              task.projectId,
+              "member",
+            );
+            if (!allowed) throw new Error("Unauthorized");
           } else {
-            // For update/delete, get the task label and verify membership + author/admin
             // input is { taskId, labelId } for composite key tables
-            const { taskId, labelId } = input as {
-              taskId: string;
-              labelId: string;
-            };
-            const taskLabel = await db.query.taskLabelTable.findFirst({
-              where: (table, { and, eq }) =>
-                and(eq(table.taskId, taskId), eq(table.labelId, labelId)),
-              with: {
-                task: {
-                  with: {
-                    project: {
-                      with: {
-                        workspace: {
-                          with: {
-                            workspaceUsers: {
-                              where: (table, { eq }) =>
-                                eq(table.userId, observer.id),
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
+            const { taskId } = input as { taskId: string; labelId: string };
+
+            // Get task to find project for AuthZ check
+            const task = await db.query.taskTable.findFirst({
+              where: (table, { eq }) => eq(table.id, taskId),
+              columns: { projectId: true },
             });
+            if (!task) throw new Error("Task not found");
 
-            if (!taskLabel?.task.project.workspace.workspaceUsers.length) {
-              throw new Error("Unauthorized");
-            }
-
-            const role =
-              taskLabel.task.project.workspace.workspaceUsers[0].role;
-
-            // Task author or admin+ can modify labels
-            if (taskLabel.task.authorId !== observer.id && role === "member") {
-              throw new Error("Unauthorized");
-            }
+            const allowed = await checkPermission(
+              AUTHZ_ENABLED,
+              AUTHZ_PROVIDER_URL,
+              observer.id,
+              "project",
+              task.projectId,
+              "member",
+            );
+            if (!allowed) throw new Error("Unauthorized");
           }
         });
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**

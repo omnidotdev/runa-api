@@ -2,6 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
@@ -10,16 +11,20 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate assignee permissions.
+ * Validate assignee permissions via Warden.
  *
- * - Create: Any workspace member can assign users to tasks (with tier limits)
- * - Update/Delete: Any workspace member can modify/remove assignees
+ * - Create: Member permission on project required (with tier limits)
+ * - Update: Member permission on project required
+ * - Delete: Member permission on project required
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassSlugs,
@@ -31,86 +36,78 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        const $authzCache = context().get("authzCache");
 
-          if (scope !== "create") {
-            // For update/delete, verify workspace membership
-            // input is { taskId, userId } for composite key tables
-            const { taskId, userId } = input as {
-              taskId: string;
-              userId: string;
-            };
-            const assignee = await db.query.assigneeTable.findFirst({
-              where: (table, { and, eq }) =>
-                and(eq(table.taskId, taskId), eq(table.userId, userId)),
-              with: {
-                task: {
-                  with: {
-                    project: {
-                      with: {
-                        workspace: {
-                          with: {
-                            workspaceUsers: {
-                              where: (table, { eq }) =>
-                                eq(table.userId, observer.id),
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
+        sideEffect(
+          [$input, $observer, $db, $authzCache],
+          async ([input, observer, db, authzCache]) => {
+            if (!observer) throw new Error("Unauthorized");
+
+            if (scope !== "create") {
+              // input is { taskId, userId } for composite key tables
+              const { taskId } = input as { taskId: string; userId: string };
+
+              // Get task to find project for AuthZ check
+              const task = await db.query.taskTable.findFirst({
+                where: (table, { eq }) => eq(table.id, taskId),
+                columns: { projectId: true },
+              });
+              if (!task) throw new Error("Task not found");
+
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                task.projectId,
+                "member",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            } else {
+              const taskId = (input as InsertAssignee).taskId;
+
+              // Get task with assignees and workspace for tier limit check
+              const task = await db.query.taskTable.findFirst({
+                where: (table, { eq }) => eq(table.id, taskId),
+                with: {
+                  assignees: true,
+                  project: { with: { workspace: true } },
                 },
-              },
-            });
+              });
+              if (!task) throw new Error("Task not found");
 
-            if (!assignee?.task.project.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                task.project.id,
+                "member",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
 
-            // Any workspace member can modify/remove assignees
-          } else {
-            const taskId = (input as InsertAssignee).taskId;
-
-            const task = await db.query.taskTable.findFirst({
-              where: (table, { eq }) => eq(table.id, taskId),
-              with: {
-                assignees: true,
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        workspaceUsers: {
-                          where: (table, { eq }) =>
-                            eq(table.userId, observer.id),
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            });
-
-            if (!task?.project.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            // Check limit via entitlements service
-            const withinLimit = await isWithinLimit(
-              task.project.workspace,
-              FEATURE_KEYS.MAX_ASSIGNEES,
-              task.assignees.length,
-              billingBypassSlugs,
-            );
-
-            if (!withinLimit)
-              throw new Error("Maximum number of assignees reached");
-          }
-        });
+              const withinLimit = await isWithinLimit(
+                task.project.workspace,
+                FEATURE_KEYS.MAX_ASSIGNEES,
+                task.assignees.length,
+                billingBypassSlugs,
+              );
+              if (!withinLimit)
+                throw new Error("Maximum number of assignees reached");
+            }
+          },
+        );
 
         return plan();
       },
     [
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassSlugs,

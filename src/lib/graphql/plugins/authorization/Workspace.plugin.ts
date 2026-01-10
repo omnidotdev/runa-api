@@ -2,55 +2,66 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate workspace permissions.
+ * Validate workspace permissions via Warden.
  *
  * - Create: Any authenticated user can create a workspace
- * - Update: Admin+ can update workspace settings
- * - Delete: Owner only (cannot be delegated)
+ * - Update: Admin+ permission required
+ * - Delete: Owner permission required
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
-        const $db = context().get("db");
+        const $authzCache = context().get("authzCache");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        sideEffect(
+          [$input, $observer, $authzCache],
+          async ([input, observer, authzCache]) => {
+            if (!observer) throw new Error("Unauthorized");
 
-          if (scope !== "create") {
-            const workspace = await db.query.workspaceTable.findFirst({
-              where: (table, { eq }) => eq(table.id, input),
-              with: {
-                workspaceUsers: {
-                  where: (table, { eq }) => eq(table.userId, observer.id),
-                },
-              },
-            });
-
-            if (!workspace || !workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            const role = workspace.workspaceUsers[0].role;
-
-            if (scope === "delete") {
-              // only owner can delete workspace
-              if (role !== "owner") throw new Error("Unauthorized");
-            } else if (scope === "update") {
-              // admin+ can update workspace
-              if (role === "member") throw new Error("Unauthorized");
+            if (scope !== "create") {
+              const requiredPermission = scope === "delete" ? "owner" : "admin";
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "workspace",
+                input as string,
+                requiredPermission,
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
             }
-          }
-        });
+          },
+        );
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**

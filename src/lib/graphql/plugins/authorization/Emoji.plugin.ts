@@ -2,99 +2,97 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+
 import type { InsertEmoji } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate emoji (reaction) permissions.
+ * Validate emoji (reaction) permissions via Warden.
  *
- * - Create: Any workspace member can add reactions
- * - Update: Emoji owner OR admin+ can modify reactions
- * - Delete: Emoji owner OR admin+ can remove reactions
+ * - Create: Member permission on project required
+ * - Update: Member permission on project required
+ * - Delete: Member permission on project required
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (context, sideEffect, propName, scope): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        const $authzCache = context().get("authzCache");
 
-          if (scope === "create") {
-            const postId = (input as InsertEmoji).postId;
+        sideEffect(
+          [$input, $observer, $db, $authzCache],
+          async ([input, observer, db, authzCache]) => {
+            if (!observer) throw new Error("Unauthorized");
 
-            const post = await db.query.postTable.findFirst({
-              where: (table, { eq }) => eq(table.id, postId),
-              with: {
-                task: {
-                  with: {
-                    project: {
-                      with: {
-                        workspace: {
-                          with: {
-                            workspaceUsers: {
-                              where: (table, { eq }) =>
-                                eq(table.userId, observer.id),
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
+            if (scope === "create") {
+              const postId = (input as InsertEmoji).postId;
+
+              // Get post to find project for AuthZ check
+              const post = await db.query.postTable.findFirst({
+                where: (table, { eq }) => eq(table.id, postId),
+                with: { task: { columns: { projectId: true } } },
+              });
+              if (!post) throw new Error("Post not found");
+
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                post.task.projectId,
+                "member",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            } else {
+              // Get emoji to find project for AuthZ check
+              const emoji = await db.query.emojiTable.findFirst({
+                where: (table, { eq }) => eq(table.id, input),
+                with: {
+                  post: { with: { task: { columns: { projectId: true } } } },
                 },
-              },
-            });
+              });
+              if (!emoji) throw new Error("Emoji not found");
 
-            if (!post?.task.project.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
-          } else {
-            // for update/delete, verify membership and owner/admin+ permission
-            const emoji = await db.query.emojiTable.findFirst({
-              where: (table, { eq }) => eq(table.id, input),
-              with: {
-                post: {
-                  with: {
-                    task: {
-                      with: {
-                        project: {
-                          with: {
-                            workspace: {
-                              with: {
-                                workspaceUsers: {
-                                  where: (table, { eq }) =>
-                                    eq(table.userId, observer.id),
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            });
-
-            if (!emoji?.post.task.project.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
-
-            // emoji owner or admin+ can modify/delete reactions
-            if (
-              emoji.userId !== observer.id &&
-              emoji.post.task.project.workspace.workspaceUsers[0].role ===
-                "member"
-            )
-              throw new Error("Unauthorized");
-          }
-        });
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                emoji.post.task.projectId,
+                "member",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            }
+          },
+        );
 
         return plan();
       },
-    [context, sideEffect, propName, scope],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+      propName,
+      scope,
+    ],
   );
 
 /**

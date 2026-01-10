@@ -2,6 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
@@ -10,17 +11,20 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate task permissions.
+ * Validate task permissions via Warden.
  *
- * - Create: Any workspace member can create tasks (with tier limits)
- * - Update: Task author OR admin+ can modify tasks
- * - Delete: Task author OR admin+ can delete tasks
+ * - Create: Editor permission on project required (with tier limits)
+ * - Update: Editor permission on project required
+ * - Delete: Editor permission on project required
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassSlugs,
@@ -32,31 +36,33 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $observer = context().get("observer");
         const $db = context().get("db");
         const $withPgClient = context().get("withPgClient");
+        const $authzCache = context().get("authzCache");
 
         sideEffect(
-          [$input, $observer, $db, $withPgClient],
-          async ([input, observer, db, withPgClient]) => {
+          [$input, $observer, $db, $withPgClient, $authzCache],
+          async ([input, observer, db, withPgClient, authzCache]) => {
             if (!observer) throw new Error("Unauthorized");
 
             if (scope === "create") {
               const projectId = (input as InsertTask).projectId;
 
-              // Get project with workspace membership check
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                projectId,
+                "editor",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+
+              // Get project with workspace for tier limit check
               const project = await db.query.projectTable.findFirst({
                 where: (table, { eq }) => eq(table.id, projectId),
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where: (table, { eq }) => eq(table.userId, observer.id),
-                      },
-                    },
-                  },
-                },
+                with: { workspace: true },
               });
-
-              if (!project?.workspace.workspaceUsers.length)
-                throw new Error("Unauthorized");
+              if (!project) throw new Error("Project not found");
 
               const totalTasks = await withPgClient(null, async (client) => {
                 const result = await client.query({
@@ -70,45 +76,32 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
               });
 
-              // Check limit via entitlements service
               const withinLimit = await isWithinLimit(
                 project.workspace,
                 FEATURE_KEYS.MAX_TASKS,
                 totalTasks,
                 billingBypassSlugs,
               );
-
               if (!withinLimit)
                 throw new Error("Maximum number of tasks reached");
             } else {
-              // for update/delete, verify membership and author/admin+ permission
+              // Get task to find associated project for permission check
               const task = await db.query.taskTable.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
-                with: {
-                  project: {
-                    with: {
-                      workspace: {
-                        with: {
-                          workspaceUsers: {
-                            where: (table, { eq }) =>
-                              eq(table.userId, observer.id),
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
+                columns: { projectId: true },
               });
+              if (!task) throw new Error("Task not found");
 
-              if (!task?.project.workspace.workspaceUsers.length)
-                throw new Error("Unauthorized");
-
-              // author or admin+ can modify/delete tasks
-              if (
-                task.authorId !== observer.id &&
-                task.project.workspace.workspaceUsers[0].role === "member"
-              )
-                throw new Error("Unauthorized");
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                task.projectId,
+                "editor",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
             }
           },
         );
@@ -118,6 +111,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassSlugs,

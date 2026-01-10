@@ -2,6 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
@@ -9,11 +10,21 @@ import type { InsertColumn } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
+/**
+ * Validate column permissions via Warden.
+ *
+ * - Create: Admin permission on project required (with tier limits)
+ * - Update: Admin permission on project required
+ * - Delete: Admin permission on project required
+ */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassSlugs,
@@ -25,74 +36,72 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $observer = context().get("observer");
         const $db = context().get("db");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        const $authzCache = context().get("authzCache");
 
-          if (scope !== "create") {
-            const column = await db.query.columnTable.findFirst({
-              where: (table, { eq }) => eq(table.id, input),
-              with: {
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        workspaceUsers: {
-                          where: (table, { eq }) =>
-                            eq(table.userId, observer.id),
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            });
+        sideEffect(
+          [$input, $observer, $db, $authzCache],
+          async ([input, observer, db, authzCache]) => {
+            if (!observer) throw new Error("Unauthorized");
 
-            if (!column?.project.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
+            if (scope !== "create") {
+              // Get column to find project for AuthZ check
+              const column = await db.query.columnTable.findFirst({
+                where: (table, { eq }) => eq(table.id, input),
+                columns: { projectId: true },
+              });
+              if (!column) throw new Error("Column not found");
 
-            if (column.project.workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
-          } else {
-            const projectId = (input as InsertColumn).projectId;
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                column.projectId,
+                "admin",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            } else {
+              const projectId = (input as InsertColumn).projectId;
 
-            const project = await db.query.projectTable.findFirst({
-              where: (table, { eq }) => eq(table.id, projectId),
-              with: {
-                columns: true,
-                workspace: {
-                  with: {
-                    workspaceUsers: {
-                      where: (table, { eq }) => eq(table.userId, observer.id),
-                    },
-                  },
-                },
-              },
-            });
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                projectId,
+                "admin",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
 
-            if (!project?.workspace.workspaceUsers.length)
-              throw new Error("Unauthorized");
+              // Get project with columns and workspace for tier limit check
+              const project = await db.query.projectTable.findFirst({
+                where: (table, { eq }) => eq(table.id, projectId),
+                with: { columns: true, workspace: true },
+              });
+              if (!project) throw new Error("Project not found");
 
-            if (project.workspace.workspaceUsers[0].role === "member")
-              throw new Error("Unauthorized");
-
-            // Check limit via entitlements service
-            const withinLimit = await isWithinLimit(
-              project.workspace,
-              FEATURE_KEYS.MAX_COLUMNS,
-              project.columns.length,
-              billingBypassSlugs,
-            );
-
-            if (!withinLimit)
-              throw new Error("Maximum number of columns reached");
-          }
-        });
+              const withinLimit = await isWithinLimit(
+                project.workspace,
+                FEATURE_KEYS.MAX_COLUMNS,
+                project.columns.length,
+                billingBypassSlugs,
+              );
+              if (!withinLimit)
+                throw new Error("Maximum number of columns reached");
+            }
+          },
+        );
 
         return plan();
       },
     [
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassSlugs,

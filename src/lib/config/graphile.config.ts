@@ -22,6 +22,7 @@ import {
   WorkspacePlugin,
   WorkspaceUserPlugin,
 } from "lib/graphql/plugins/authorization";
+import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
 /**
@@ -35,6 +36,7 @@ const graphilePreset: GraphileConfig.Preset = {
     PgAggregatesPreset,
   ],
   plugins: [
+    // Authorization plugins (pre-mutation validation)
     AssigneePlugin,
     ColumnPlugin,
     EmojiPlugin,
@@ -51,6 +53,8 @@ const graphilePreset: GraphileConfig.Preset = {
     UserPreferencePlugin,
     WorkspacePlugin,
     WorkspaceUserPlugin,
+    // AuthZ sync plugin (post-mutation sync to Warden)
+    AuthzSyncPlugin,
   ],
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   schema: {

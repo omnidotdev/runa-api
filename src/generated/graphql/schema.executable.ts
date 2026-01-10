@@ -3,6 +3,7 @@ import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertExecutableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isExecutableStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission, deleteTuples, writeTuples } from "lib/authz";
 import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
 import { sql } from "pg-sql2";
 const nodeIdHandler_Query = {
@@ -138,7 +139,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "189713",
+    oid: "229705",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -221,7 +222,7 @@ const spec_invitation = {
   },
   description: undefined,
   extensions: {
-    oid: "189833",
+    oid: "229825",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -304,7 +305,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "189496",
+    oid: "229489",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -399,7 +400,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "189870",
+    oid: "229862",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -494,7 +495,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "189699",
+    oid: "229691",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -601,7 +602,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "189567",
+    oid: "229560",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -708,7 +709,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "189520",
+    oid: "229513",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -815,7 +816,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "189507",
+    oid: "229500",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -922,7 +923,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "189764",
+    oid: "229756",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -943,7 +944,7 @@ const roleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "189916",
+    oid: "229908",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1024,7 +1025,7 @@ const spec_workspaceUser = {
   },
   description: undefined,
   extensions: {
-    oid: "189594",
+    oid: "229587",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1159,7 +1160,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "189781",
+    oid: "229773",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1179,7 +1180,7 @@ const tierCodec = enumCodec({
   values: ["free", "basic", "team"],
   description: undefined,
   extensions: {
-    oid: "189907",
+    oid: "229899",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1319,7 +1320,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "189533",
+    oid: "229526",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1474,7 +1475,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "189548",
+    oid: "229541",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1580,21 +1581,19 @@ const spec_workspace = {
         canUpdate: true
       }
     },
-    subscription_id: {
+    billing_account_id: {
       description: undefined,
       codec: TYPES.text,
       notNull: false,
       hasDefault: false,
       extensions: {
-        tags: {
-          behavior: "-insert -update"
-        },
+        tags: {},
         canSelect: true,
         canInsert: true,
         canUpdate: true
       }
     },
-    billing_account_id: {
+    organization_id: {
       description: undefined,
       codec: TYPES.text,
       notNull: false,
@@ -1609,7 +1608,7 @@ const spec_workspace = {
   },
   description: undefined,
   extensions: {
-    oid: "189582",
+    oid: "229575",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5140,14 +5139,14 @@ const colSpec65 = {
   attribute: spec_workspace.attributes.tier
 };
 const colSpec66 = {
-  fieldName: "subscriptionId",
-  attributeName: "subscription_id",
-  attribute: spec_workspace.attributes.subscription_id
-};
-const colSpec67 = {
   fieldName: "billingAccountId",
   attributeName: "billing_account_id",
   attribute: spec_workspace.attributes.billing_account_id
+};
+const colSpec67 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_workspace.attributes.organization_id
 };
 function assertAllowed53(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -5854,68 +5853,35 @@ const planWrapper = (plan, _, fieldArgs) => {
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-    } else {
-      const {
-          taskId,
-          labelId
-        } = input,
-        taskLabel = await db.query.taskLabelTable.findFirst({
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
           where(table, {
-            and,
             eq
           }) {
-            return and(eq(table.taskId, taskId), eq(table.labelId, labelId));
+            return eq(table.id, taskId);
           },
-          with: {
-            task: {
-              with: {
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        workspaceUsers: {
-                          where(table, {
-                            eq
-                          }) {
-                            return eq(table.userId, observer.id);
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+          columns: {
+            projectId: !0
           }
         });
-      if (!taskLabel?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const role = taskLabel.task.project.workspace.workspaceUsers[0].role;
-      if (taskLabel.task.authorId !== observer.id && role === "member") throw Error("Unauthorized");
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+    } else {
+      const {
+          taskId
+        } = input,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5930,29 +5896,13 @@ function oldPlan2(_, args) {
 const planWrapper2 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "invitation"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const invitation = await db.query.invitationsTable.findFirst({
         where(table, {
@@ -5960,25 +5910,15 @@ const planWrapper2 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
+        columns: {
+          email: !0,
+          workspaceId: !0
         }
       });
-      if (!invitation) throw Error("Unauthorized");
+      if (!invitation) throw Error("Invitation not found");
       const isOwnInvitation = invitation.email === observer.email;
       if ("create" === "delete" && isOwnInvitation) return;
-      if (!invitation.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (invitation.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", invitation.workspaceId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5993,43 +5933,26 @@ function oldPlan3(_, args) {
 const planWrapper3 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "assignee"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" !== "create") {
       const {
-        taskId,
-        userId
-      } = input;
-      if (!(await db.query.assigneeTable.findFirst({
-        where(table, {
-          and,
-          eq
-        }) {
-          return and(eq(table.taskId, taskId), eq(table.userId, userId));
-        },
-        with: {
-          task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+          taskId
+        } = input,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
           }
-        }
-      }))?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.taskTable.findFirst({
@@ -6042,22 +5965,13 @@ const planWrapper3 = (plan, _, fieldArgs) => {
             assignees: !0,
             project: {
               with: {
-                workspace: {
-                  with: {
-                    workspaceUsers: {
-                      where(table, {
-                        eq
-                      }) {
-                        return eq(table.userId, observer.id);
-                      }
-                    }
-                  }
-                }
+                workspace: !0
               }
             }
           }
         });
-      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit(task.project.workspace, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassSlugs))) throw Error("Maximum number of assignees reached");
     }
   });
@@ -6073,39 +5987,28 @@ function oldPlan4(_, args) {
 const planWrapper4 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "emoji"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const postId = input.postId;
-      if (!(await db.query.postTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, postId);
-        },
-        with: {
-          task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
+      const postId = input.postId,
+        post = await db.query.postTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, postId);
+          },
+          with: {
+            task: {
+              columns: {
+                projectId: !0
               }
             }
           }
-        }
-      }))?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!post) throw Error("Post not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojiTable.findFirst({
         where(table, {
@@ -6117,30 +6020,16 @@ const planWrapper4 = (plan, _, fieldArgs) => {
           post: {
             with: {
               task: {
-                with: {
-                  project: {
-                    with: {
-                      workspace: {
-                        with: {
-                          workspaceUsers: {
-                            where(table, {
-                              eq
-                            }) {
-                              return eq(table.userId, observer.id);
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                columns: {
+                  projectId: !0
                 }
               }
             }
           }
         }
       });
-      if (!emoji?.post.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (emoji.userId !== observer.id && emoji.post.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!emoji) throw Error("Emoji not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6155,8 +6044,9 @@ function oldPlan5(_, args) {
 const planWrapper5 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "label"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" !== "create") {
       const label = await db.query.labelTable.findFirst({
@@ -6165,51 +6055,27 @@ const planWrapper5 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!label?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (label.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!label) throw Error("Label not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            labels: !0,
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          labels: !0,
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassSlugs))) throw Error("Maximum number of labels reached");
     }
   });
@@ -6244,35 +6110,24 @@ function oldPlan7(_, args) {
 const planWrapper7 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "post"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
           }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.postTable.findFirst({
         where(table, {
@@ -6282,28 +6137,14 @@ const planWrapper7 = (plan, _, fieldArgs) => {
         },
         with: {
           task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+            columns: {
+              projectId: !0
             }
           }
         }
       });
-      if (!post?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (post.authorId !== observer.id && post.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!post) throw Error("Post not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6318,8 +6159,9 @@ function oldPlan8(_, args) {
 const planWrapper8 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "column"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" !== "create") {
       const column = await db.query.columnTable.findFirst({
@@ -6328,51 +6170,27 @@ const planWrapper8 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!column?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (column.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!column) throw Error("Column not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            columns: !0,
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          columns: !0,
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_COLUMNS, project.columns.length, billingBypassSlugs))) throw Error("Maximum number of columns reached");
     }
   });
@@ -6392,25 +6210,8 @@ const planWrapper9 = (plan, _, fieldArgs) => {
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin"))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumnTable.findFirst({
         where(table, {
@@ -6418,27 +6219,17 @@ const planWrapper9 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
+        columns: {
+          workspaceId: !0
         }
       });
-      if (!projectColumn?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (projectColumn.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!projectColumn) throw Error("Project column not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", projectColumn.workspaceId, "admin"))) throw Error("Unauthorized");
     }
   });
   return plan();
 };
-function oldPlan10(_, args) {
+function oldPlan11(_, args) {
   const $insert = pgInsertSingle(resource_workspace_userPgResource, Object.create(null));
   args.apply($insert);
   return object({
@@ -6448,8 +6239,9 @@ function oldPlan10(_, args) {
 const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspaceUser"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const {
@@ -6467,7 +6259,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
             workspaceUsers: !0
           }
         });
-      if (!workspace) throw Error("Unauthorized");
+      if (!workspace) throw Error("Workspace not found");
       const isInitialOwnerSetup = workspace.workspaceUsers.length === 0 && newMemberUserId === observer.id && newMemberRole === "owner";
       let isAcceptingInvitation = !1;
       if (newMemberUserId === observer.id) isAcceptingInvitation = !!(await db.query.invitationsTable.findFirst({
@@ -6479,9 +6271,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         }
       }));
       if (!isInitialOwnerSetup && !isAcceptingInvitation) {
-        const callerMembership = workspace.workspaceUsers.find(wu => wu.userId === observer.id);
-        if (!callerMembership) throw Error("Unauthorized");
-        if (callerMembership.role === "member") throw Error("Unauthorized");
+        if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
       }
       if (!billingBypassSlugs.includes(workspace.slug)) {
         if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_MEMBERS, workspace.workspaceUsers.length, workspace.tier))) throw Error("Maximum number of members reached");
@@ -6492,45 +6282,84 @@ const planWrapper10 = (plan, _, fieldArgs) => {
       }
     } else {
       const {
-          workspaceId: targetWorkspaceId,
-          userId: targetUserId
-        } = input,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, targetWorkspaceId);
-          },
-          with: {
-            workspaceUsers: !0
-          }
-        });
-      if (!workspace) throw Error("Unauthorized");
-      const callerMembership = workspace.workspaceUsers.find(wu => wu.userId === observer.id);
-      if (!callerMembership) throw Error("Unauthorized");
-      if (callerMembership.role === "member") throw Error("Unauthorized");
+        workspaceId: targetWorkspaceId,
+        userId: targetUserId
+      } = input;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", targetWorkspaceId, "admin", authzCache))) throw Error("Unauthorized");
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, targetWorkspaceId);
+        },
+        with: {
+          workspaceUsers: !0
+        }
+      });
+      if (!workspace) throw Error("Workspace not found");
       const targetMember = workspace.workspaceUsers.find(wu => wu.userId === targetUserId);
       if (!targetMember) throw Error("Not found");
       if (targetMember.role === "owner") throw Error("Cannot modify owner");
       const newRole = input.role;
       if (newRole && newRole !== "member" && !billingBypassSlugs.includes(workspace.slug)) {
-        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length,
-          effectiveAdminCount = targetMember.role !== "member" ? numberOfAdmins : numberOfAdmins;
-        if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_ADMINS, effectiveAdminCount, workspace.tier))) throw Error("Maximum number of admins reached");
+        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+        if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_ADMINS, numberOfAdmins, workspace.tier))) throw Error("Maximum number of admins reached");
       }
       if (newRole === "owner") throw Error("Cannot promote to owner");
     }
   });
   return plan();
 };
-function oldPlan11(_, args) {
+function oldPlan10(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan11.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at ${"Mutation"}.${"createWorkspaceUser"}, but that function did not return a step!
+${String(oldPlan11)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper11 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $input = fieldArgs.getRaw(["input", "workspaceUser"]);
+  sideEffect([$result, $input], async ([result, input]) => {
+    if (!result) return;
+    if ("true" !== "true") return;
+    if (!AUTHZ_PROVIDER_URL) return;
+    const {
+      userId,
+      workspaceId,
+      role
+    } = input;
+    try {
+      await writeTuples(AUTHZ_PROVIDER_URL, [{
+        user: `user:${userId}`,
+        relation: role,
+        object: `workspace:${workspaceId}`
+      }]);
+    } catch (error) {
+      console.error("[AuthZ Sync] Failed to sync workspace membership:", error);
+    }
+  });
+  return $result;
+};
+function oldPlan12(_, args) {
   const $insert = pgInsertSingle(resource_user_preferencePgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper11 = (plan, _, fieldArgs) => {
+const planWrapper12 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "userPreference"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -6552,40 +6381,32 @@ const planWrapper11 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan12(_, args) {
+function oldPlan14(_, args) {
   const $insert = pgInsertSingle(resource_projectPgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper12 = (plan, _, fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "project"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $withPgClient = context().get("withPgClient");
-  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers?.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, workspaceId);
+        }
+      });
+      if (!workspace) throw Error("Workspace not found");
       const totalProjects = await withPgClient(null, async client => {
         return (await client.query({
           text: "SELECT count(*)::int as total FROM project WHERE workspace_id = $1",
@@ -6593,70 +6414,84 @@ const planWrapper12 = (plan, _, fieldArgs) => {
         })).rows[0]?.total ?? 0;
       });
       if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassSlugs))) throw Error("Maximum number of projects reached");
-    } else {
-      const project = await db.query.projectTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
-        }
-      });
-      if (!project?.workspace?.workspaceUsers?.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-    }
+    } else if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", input, "admin", authzCache))) throw Error("Unauthorized");
   });
   return plan();
 };
-function oldPlan13(_, args) {
+function oldPlan13(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan14.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at ${"Mutation"}.${"createProject"}, but that function did not return a step!
+${String(oldPlan14)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper14 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $input = fieldArgs.getRaw(["input", "project"]);
+  sideEffect([$result, $input], async ([result, input]) => {
+    if (!result) return;
+    if ("true" !== "true") return;
+    if (!AUTHZ_PROVIDER_URL) return;
+    const {
+        workspaceId
+      } = input,
+      projectId = result?.id;
+    if (!projectId) {
+      console.error("[AuthZ Sync] Project ID not found in result");
+      return;
+    }
+    try {
+      await writeTuples(AUTHZ_PROVIDER_URL, [{
+        user: `workspace:${workspaceId}`,
+        relation: "workspace",
+        object: `project:${projectId}`
+      }]);
+    } catch (error) {
+      console.error("[AuthZ Sync] Failed to sync project creation:", error);
+    }
+  });
+  return $result;
+};
+function oldPlan15(_, args) {
   const $insert = pgInsertSingle(resource_taskPgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper13 = (plan, _, fieldArgs) => {
+const planWrapper15 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "task"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $withPgClient = context().get("withPgClient");
-  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       const totalTasks = await withPgClient(null, async client => {
         return (await client.query({
           text: `SELECT count(*)::int as total FROM task
@@ -6673,321 +6508,86 @@ const planWrapper13 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (task.authorId !== observer.id && task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
 };
-function oldPlan14(_, args) {
+function oldPlan17(_, args) {
   const $insert = pgInsertSingle(resource_workspacePgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper14 = (plan, _, fieldArgs) => {
+const planWrapper16 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "workspace"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $authzCache], async ([input, observer, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" !== "create") {
-      const workspace = await db.query.workspaceTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspaceUsers: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const role = workspace.workspaceUsers[0].role;
-      if ("create" === "delete") {
-        if (role !== "owner") throw Error("Unauthorized");
-      } else if ("create" === "update") {
-        if (role === "member") throw Error("Unauthorized");
-      }
+      const requiredPermission = "create" === "delete" ? "owner" : "admin";
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", input, requiredPermission, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
+};
+function oldPlan16(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan17.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at ${"Mutation"}.${"createWorkspace"}, but that function did not return a step!
+${String(oldPlan17)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper17 = (plan, _, _fieldArgs) => {
+  const $result = plan(),
+    $observer = context().get("observer");
+  sideEffect([$result, $observer], async ([result, observer]) => {
+    if (!result || !observer) return;
+    if ("true" !== "true") return;
+    if (!AUTHZ_PROVIDER_URL) return;
+    const workspaceId = result?.id;
+    if (!workspaceId) {
+      console.error("[AuthZ Sync] Workspace ID not found in result");
+      return;
+    }
+    try {
+      await writeTuples(AUTHZ_PROVIDER_URL, [{
+        user: `user:${observer.id}`,
+        relation: "owner",
+        object: `workspace:${workspaceId}`
+      }]);
+    } catch (error) {
+      console.error("[AuthZ Sync] Failed to sync workspace creation:", error);
+    }
+  });
+  return $result;
 };
 const specFromArgs_TaskLabel = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TaskLabel, $nodeId);
 };
-const oldPlan15 = (_$root, args) => {
+const oldPlan18 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_task_labelPgResource, {
     task_id: args.getRaw(['input', "taskId"]),
     label_id: args.getRaw(['input', "labelId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper15 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if ("update" === "create") {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-    } else {
-      const {
-          taskId,
-          labelId
-        } = input,
-        taskLabel = await db.query.taskLabelTable.findFirst({
-          where(table, {
-            and,
-            eq
-          }) {
-            return and(eq(table.taskId, taskId), eq(table.labelId, labelId));
-          },
-          with: {
-            task: {
-              with: {
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        workspaceUsers: {
-                          where(table, {
-                            eq
-                          }) {
-                            return eq(table.userId, observer.id);
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!taskLabel?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const role = taskLabel.task.project.workspace.workspaceUsers[0].role;
-      if (taskLabel.task.authorId !== observer.id && role === "member") throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const specFromArgs_Invitation = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Invitation, $nodeId);
-};
-const oldPlan16 = (_$root, args) => {
-  const $update = pgUpdateSingle(resource_invitationPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper16 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if ("update" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-    } else {
-      const invitation = await db.query.invitationsTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
-        }
-      });
-      if (!invitation) throw Error("Unauthorized");
-      const isOwnInvitation = invitation.email === observer.email;
-      if ("update" === "delete" && isOwnInvitation) return;
-      if (!invitation.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (invitation.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const specFromArgs_Assignee = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Assignee, $nodeId);
-};
-const oldPlan17 = (_$root, args) => {
-  const $update = pgUpdateSingle(resource_assigneePgResource, {
-    task_id: args.getRaw(['input', "taskId"]),
-    user_id: args.getRaw(['input', "userId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper17 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if ("update" !== "create") {
-      const {
-        taskId,
-        userId
-      } = input;
-      if (!(await db.query.assigneeTable.findFirst({
-        where(table, {
-          and,
-          eq
-        }) {
-          return and(eq(table.taskId, taskId), eq(table.userId, userId));
-        },
-        with: {
-          task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }))?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-    } else {
-      const taskId = input.taskId,
-        task = await db.query.taskTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, taskId);
-          },
-          with: {
-            assignees: !0,
-            project: {
-              with: {
-                workspace: {
-                  with: {
-                    workspaceUsers: {
-                      where(table, {
-                        eq
-                      }) {
-                        return eq(table.userId, observer.id);
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (!(await isWithinLimit(task.project.workspace, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassSlugs))) throw Error("Maximum number of assignees reached");
-    }
-  });
-  return plan();
-};
-const specFromArgs_Emoji = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
-};
-const oldPlan18 = (_$root, args) => {
-  const $update = pgUpdateSingle(resource_emojiPgResource, {
-    id: args.getRaw(['input', "rowId"])
   });
   args.apply($update);
   return object({
@@ -7001,35 +6601,181 @@ const planWrapper18 = (plan, _, fieldArgs) => {
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
-      const postId = input.postId;
-      if (!(await db.query.postTable.findFirst({
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+    } else {
+      const {
+          taskId
+        } = input,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Invitation = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Invitation, $nodeId);
+};
+const oldPlan19 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_invitationPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper19 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    if (!observer) throw Error("Unauthorized");
+    if ("update" === "create") {
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
+    } else {
+      const invitation = await db.query.invitationsTable.findFirst({
         where(table, {
           eq
         }) {
-          return eq(table.id, postId);
+          return eq(table.id, input);
         },
-        with: {
-          task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
+        columns: {
+          email: !0,
+          workspaceId: !0
+        }
+      });
+      if (!invitation) throw Error("Invitation not found");
+      const isOwnInvitation = invitation.email === observer.email;
+      if ("update" === "delete" && isOwnInvitation) return;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", invitation.workspaceId, "admin", authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Assignee = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Assignee, $nodeId);
+};
+const oldPlan20 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_assigneePgResource, {
+    task_id: args.getRaw(['input', "taskId"]),
+    user_id: args.getRaw(['input', "userId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper20 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    if (!observer) throw Error("Unauthorized");
+    if ("update" !== "create") {
+      const {
+          taskId
+        } = input,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+    } else {
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          with: {
+            assignees: !0,
+            project: {
+              with: {
+                workspace: !0
               }
             }
           }
-        }
-      }))?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await isWithinLimit(task.project.workspace, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassSlugs))) throw Error("Maximum number of assignees reached");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Emoji = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
+};
+const oldPlan21 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_emojiPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper21 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    if (!observer) throw Error("Unauthorized");
+    if ("update" === "create") {
+      const postId = input.postId,
+        post = await db.query.postTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, postId);
+          },
+          with: {
+            task: {
+              columns: {
+                projectId: !0
+              }
+            }
+          }
+        });
+      if (!post) throw Error("Post not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojiTable.findFirst({
         where(table, {
@@ -7041,30 +6787,16 @@ const planWrapper18 = (plan, _, fieldArgs) => {
           post: {
             with: {
               task: {
-                with: {
-                  project: {
-                    with: {
-                      workspace: {
-                        with: {
-                          workspaceUsers: {
-                            where(table, {
-                              eq
-                            }) {
-                              return eq(table.userId, observer.id);
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                columns: {
+                  projectId: !0
                 }
               }
             }
           }
         }
       });
-      if (!emoji?.post.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (emoji.userId !== observer.id && emoji.post.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!emoji) throw Error("Emoji not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -7073,7 +6805,7 @@ const specFromArgs_Label = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Label, $nodeId);
 };
-const oldPlan19 = (_$root, args) => {
+const oldPlan22 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7082,11 +6814,12 @@ const oldPlan19 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper19 = (plan, _, fieldArgs) => {
+const planWrapper22 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" !== "create") {
       const label = await db.query.labelTable.findFirst({
@@ -7095,51 +6828,27 @@ const planWrapper19 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!label?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (label.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!label) throw Error("Label not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            labels: !0,
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          labels: !0,
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassSlugs))) throw Error("Maximum number of labels reached");
     }
   });
@@ -7149,7 +6858,7 @@ const specFromArgs_User = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan20 = (_$root, args) => {
+const oldPlan23 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7158,7 +6867,7 @@ const oldPlan20 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper20 = (plan, _, fieldArgs) => {
+const planWrapper23 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -7174,7 +6883,7 @@ const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan21 = (_$root, args) => {
+const oldPlan24 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7183,38 +6892,27 @@ const oldPlan21 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper21 = (plan, _, fieldArgs) => {
+const planWrapper24 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
           }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.postTable.findFirst({
         where(table, {
@@ -7224,28 +6922,14 @@ const planWrapper21 = (plan, _, fieldArgs) => {
         },
         with: {
           task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+            columns: {
+              projectId: !0
             }
           }
         }
       });
-      if (!post?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (post.authorId !== observer.id && post.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!post) throw Error("Post not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -7254,7 +6938,7 @@ const specFromArgs_Column = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Column, $nodeId);
 };
-const oldPlan22 = (_$root, args) => {
+const oldPlan25 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7263,11 +6947,12 @@ const oldPlan22 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper22 = (plan, _, fieldArgs) => {
+const planWrapper25 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" !== "create") {
       const column = await db.query.columnTable.findFirst({
@@ -7276,51 +6961,27 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!column?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (column.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!column) throw Error("Column not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            columns: !0,
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          columns: !0,
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_COLUMNS, project.columns.length, billingBypassSlugs))) throw Error("Maximum number of columns reached");
     }
   });
@@ -7330,7 +6991,7 @@ const specFromArgs_ProjectColumn = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
 };
-const oldPlan23 = (_$root, args) => {
+const oldPlan26 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7339,32 +7000,15 @@ const oldPlan23 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper23 = (plan, _, fieldArgs) => {
+const planWrapper26 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin"))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumnTable.findFirst({
         where(table, {
@@ -7372,22 +7016,12 @@ const planWrapper23 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
+        columns: {
+          workspaceId: !0
         }
       });
-      if (!projectColumn?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (projectColumn.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!projectColumn) throw Error("Project column not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", projectColumn.workspaceId, "admin"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -7396,7 +7030,7 @@ const specFromArgs_WorkspaceUser = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_WorkspaceUser, $nodeId);
 };
-const oldPlan24 = (_$root, args) => {
+const oldPlan28 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_workspace_userPgResource, {
     workspace_id: args.getRaw(['input', "workspaceId"]),
     user_id: args.getRaw(['input', "userId"])
@@ -7406,11 +7040,12 @@ const oldPlan24 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper24 = (plan, _, fieldArgs) => {
+const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const {
@@ -7428,7 +7063,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
             workspaceUsers: !0
           }
         });
-      if (!workspace) throw Error("Unauthorized");
+      if (!workspace) throw Error("Workspace not found");
       const isInitialOwnerSetup = workspace.workspaceUsers.length === 0 && newMemberUserId === observer.id && newMemberRole === "owner";
       let isAcceptingInvitation = !1;
       if (newMemberUserId === observer.id) isAcceptingInvitation = !!(await db.query.invitationsTable.findFirst({
@@ -7440,9 +7075,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
         }
       }));
       if (!isInitialOwnerSetup && !isAcceptingInvitation) {
-        const callerMembership = workspace.workspaceUsers.find(wu => wu.userId === observer.id);
-        if (!callerMembership) throw Error("Unauthorized");
-        if (callerMembership.role === "member") throw Error("Unauthorized");
+        if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
       }
       if (!billingBypassSlugs.includes(workspace.slug)) {
         if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_MEMBERS, workspace.workspaceUsers.length, workspace.tier))) throw Error("Maximum number of members reached");
@@ -7453,42 +7086,95 @@ const planWrapper24 = (plan, _, fieldArgs) => {
       }
     } else {
       const {
-          workspaceId: targetWorkspaceId,
-          userId: targetUserId
-        } = input,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, targetWorkspaceId);
-          },
-          with: {
-            workspaceUsers: !0
-          }
-        });
-      if (!workspace) throw Error("Unauthorized");
-      const callerMembership = workspace.workspaceUsers.find(wu => wu.userId === observer.id);
-      if (!callerMembership) throw Error("Unauthorized");
-      if (callerMembership.role === "member") throw Error("Unauthorized");
+        workspaceId: targetWorkspaceId,
+        userId: targetUserId
+      } = input;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", targetWorkspaceId, "admin", authzCache))) throw Error("Unauthorized");
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, targetWorkspaceId);
+        },
+        with: {
+          workspaceUsers: !0
+        }
+      });
+      if (!workspace) throw Error("Workspace not found");
       const targetMember = workspace.workspaceUsers.find(wu => wu.userId === targetUserId);
       if (!targetMember) throw Error("Not found");
       if (targetMember.role === "owner") throw Error("Cannot modify owner");
       const newRole = input.role;
       if (newRole && newRole !== "member" && !billingBypassSlugs.includes(workspace.slug)) {
-        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length,
-          effectiveAdminCount = targetMember.role !== "member" ? numberOfAdmins : numberOfAdmins;
-        if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_ADMINS, effectiveAdminCount, workspace.tier))) throw Error("Maximum number of admins reached");
+        const numberOfAdmins = workspace.workspaceUsers.filter(member => member.role !== "member").length;
+        if (!(await checkWorkspaceLimit(workspace.id, FEATURE_KEYS.MAX_ADMINS, numberOfAdmins, workspace.tier))) throw Error("Maximum number of admins reached");
       }
       if (newRole === "owner") throw Error("Cannot promote to owner");
     }
   });
   return plan();
 };
+function oldPlan27(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan28.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at ${"Mutation"}.${"updateWorkspaceUser"}, but that function did not return a step!
+${String(oldPlan28)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper28 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $input = fieldArgs.getRaw(["input", "patch"]),
+    $db = context().get("db");
+  sideEffect([$result, $input, $db], async ([result, input, db]) => {
+    if (!result) return;
+    if ("true" !== "true") return;
+    if (!AUTHZ_PROVIDER_URL) return;
+    const {
+        userId,
+        workspaceId,
+        role: newRole
+      } = input,
+      previousRole = (await db.query.workspaceUserTable.findFirst({
+        where(table, {
+          and,
+          eq
+        }) {
+          return and(eq(table.userId, userId), eq(table.workspaceId, workspaceId));
+        }
+      }))?.role;
+    try {
+      if (previousRole) await deleteTuples(AUTHZ_PROVIDER_URL, [{
+        user: `user:${userId}`,
+        relation: previousRole,
+        object: `workspace:${workspaceId}`
+      }]);
+      if (newRole) await writeTuples(AUTHZ_PROVIDER_URL, [{
+        user: `user:${userId}`,
+        relation: newRole,
+        object: `workspace:${workspaceId}`
+      }]);
+    } catch (error) {
+      console.error("[AuthZ Sync] Failed to sync workspace membership update:", error);
+    }
+  });
+  return $result;
+};
 const specFromArgs_UserPreference = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
 };
-const oldPlan25 = (_$root, args) => {
+const oldPlan29 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7497,7 +7183,7 @@ const oldPlan25 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper25 = (plan, _, fieldArgs) => {
+const planWrapper29 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -7523,7 +7209,7 @@ const specFromArgs_Project = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
 };
-const oldPlan26 = (_$root, args) => {
+const oldPlan30 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7532,33 +7218,25 @@ const oldPlan26 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper26 = (plan, _, fieldArgs) => {
+const planWrapper30 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $withPgClient = context().get("withPgClient");
-  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers?.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, workspaceId);
+        }
+      });
+      if (!workspace) throw Error("Workspace not found");
       const totalProjects = await withPgClient(null, async client => {
         return (await client.query({
           text: "SELECT count(*)::int as total FROM project WHERE workspace_id = $1",
@@ -7566,30 +7244,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
         })).rows[0]?.total ?? 0;
       });
       if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassSlugs))) throw Error("Maximum number of projects reached");
-    } else {
-      const project = await db.query.projectTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
-        }
-      });
-      if (!project?.workspace?.workspaceUsers?.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-    }
+    } else if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", input, "admin", authzCache))) throw Error("Unauthorized");
   });
   return plan();
 };
@@ -7597,7 +7252,7 @@ const specFromArgs_Task = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Task, $nodeId);
 };
-const oldPlan27 = (_$root, args) => {
+const oldPlan31 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7606,36 +7261,28 @@ const oldPlan27 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper27 = (plan, _, fieldArgs) => {
+const planWrapper31 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $withPgClient = context().get("withPgClient");
-  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       const totalTasks = await withPgClient(null, async client => {
         return (await client.query({
           text: `SELECT count(*)::int as total FROM task
@@ -7652,26 +7299,12 @@ const planWrapper27 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (task.authorId !== observer.id && task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -7680,7 +7313,7 @@ const specFromArgs_Workspace = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Workspace, $nodeId);
 };
-const oldPlan28 = (_$root, args) => {
+const oldPlan32 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_workspacePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7689,36 +7322,15 @@ const oldPlan28 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper28 = (plan, _, fieldArgs) => {
+const planWrapper32 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $authzCache], async ([input, observer, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" !== "create") {
-      const workspace = await db.query.workspaceTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspaceUsers: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const role = workspace.workspaceUsers[0].role;
-      if ("update" === "delete") {
-        if (role !== "owner") throw Error("Unauthorized");
-      } else if ("update" === "update") {
-        if (role === "member") throw Error("Unauthorized");
-      }
+      const requiredPermission = "update" === "delete" ? "owner" : "admin";
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", input, requiredPermission, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -7727,340 +7339,10 @@ const specFromArgs_TaskLabel2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TaskLabel, $nodeId);
 };
-const oldPlan29 = (_$root, args) => {
+const oldPlan33 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_task_labelPgResource, {
     task_id: args.getRaw(['input', "taskId"]),
     label_id: args.getRaw(['input', "labelId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper29 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if ("delete" === "create") {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-    } else {
-      const {
-          taskId,
-          labelId
-        } = input,
-        taskLabel = await db.query.taskLabelTable.findFirst({
-          where(table, {
-            and,
-            eq
-          }) {
-            return and(eq(table.taskId, taskId), eq(table.labelId, labelId));
-          },
-          with: {
-            task: {
-              with: {
-                project: {
-                  with: {
-                    workspace: {
-                      with: {
-                        workspaceUsers: {
-                          where(table, {
-                            eq
-                          }) {
-                            return eq(table.userId, observer.id);
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!taskLabel?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const role = taskLabel.task.project.workspace.workspaceUsers[0].role;
-      if (taskLabel.task.authorId !== observer.id && role === "member") throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const specFromArgs_Invitation2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Invitation, $nodeId);
-};
-const oldPlan30 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_invitationPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper30 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if ("delete" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-    } else {
-      const invitation = await db.query.invitationsTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
-        }
-      });
-      if (!invitation) throw Error("Unauthorized");
-      const isOwnInvitation = invitation.email === observer.email;
-      if ("delete" === "delete" && isOwnInvitation) return;
-      if (!invitation.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (invitation.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const specFromArgs_Assignee2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Assignee, $nodeId);
-};
-const oldPlan31 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_assigneePgResource, {
-    task_id: args.getRaw(['input', "taskId"]),
-    user_id: args.getRaw(['input', "userId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper31 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if ("delete" !== "create") {
-      const {
-        taskId,
-        userId
-      } = input;
-      if (!(await db.query.assigneeTable.findFirst({
-        where(table, {
-          and,
-          eq
-        }) {
-          return and(eq(table.taskId, taskId), eq(table.userId, userId));
-        },
-        with: {
-          task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }))?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-    } else {
-      const taskId = input.taskId,
-        task = await db.query.taskTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, taskId);
-          },
-          with: {
-            assignees: !0,
-            project: {
-              with: {
-                workspace: {
-                  with: {
-                    workspaceUsers: {
-                      where(table, {
-                        eq
-                      }) {
-                        return eq(table.userId, observer.id);
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (!(await isWithinLimit(task.project.workspace, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassSlugs))) throw Error("Maximum number of assignees reached");
-    }
-  });
-  return plan();
-};
-const specFromArgs_Emoji2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
-};
-const oldPlan32 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_emojiPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper32 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if ("delete" === "create") {
-      const postId = input.postId;
-      if (!(await db.query.postTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, postId);
-        },
-        with: {
-          task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }))?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-    } else {
-      const emoji = await db.query.emojiTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          post: {
-            with: {
-              task: {
-                with: {
-                  project: {
-                    with: {
-                      workspace: {
-                        with: {
-                          workspaceUsers: {
-                            where(table, {
-                              eq
-                            }) {
-                              return eq(table.userId, observer.id);
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      });
-      if (!emoji?.post.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (emoji.userId !== observer.id && emoji.post.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const specFromArgs_Label2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Label, $nodeId);
-};
-const oldPlan33 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_labelPgResource, {
-    id: args.getRaw(['input', "rowId"])
   });
   args.apply($delete);
   return object({
@@ -8073,6 +7355,227 @@ const planWrapper33 = (plan, _, fieldArgs) => {
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
+    if ("delete" === "create") {
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+    } else {
+      const {
+          taskId
+        } = input,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Invitation2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Invitation, $nodeId);
+};
+const oldPlan34 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_invitationPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper34 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    if (!observer) throw Error("Unauthorized");
+    if ("delete" === "create") {
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
+    } else {
+      const invitation = await db.query.invitationsTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          email: !0,
+          workspaceId: !0
+        }
+      });
+      if (!invitation) throw Error("Invitation not found");
+      const isOwnInvitation = invitation.email === observer.email;
+      if ("delete" === "delete" && isOwnInvitation) return;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", invitation.workspaceId, "admin", authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Assignee2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Assignee, $nodeId);
+};
+const oldPlan35 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_assigneePgResource, {
+    task_id: args.getRaw(['input', "taskId"]),
+    user_id: args.getRaw(['input', "userId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper35 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    if (!observer) throw Error("Unauthorized");
+    if ("delete" !== "create") {
+      const {
+          taskId
+        } = input,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+    } else {
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          with: {
+            assignees: !0,
+            project: {
+              with: {
+                workspace: !0
+              }
+            }
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await isWithinLimit(task.project.workspace, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassSlugs))) throw Error("Maximum number of assignees reached");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Emoji2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
+};
+const oldPlan36 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_emojiPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper36 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    if (!observer) throw Error("Unauthorized");
+    if ("delete" === "create") {
+      const postId = input.postId,
+        post = await db.query.postTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, postId);
+          },
+          with: {
+            task: {
+              columns: {
+                projectId: !0
+              }
+            }
+          }
+        });
+      if (!post) throw Error("Post not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+    } else {
+      const emoji = await db.query.emojiTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        with: {
+          post: {
+            with: {
+              task: {
+                columns: {
+                  projectId: !0
+                }
+              }
+            }
+          }
+        }
+      });
+      if (!emoji) throw Error("Emoji not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_Label2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Label, $nodeId);
+};
+const oldPlan37 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_labelPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper37 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    if (!observer) throw Error("Unauthorized");
     if ("delete" !== "create") {
       const label = await db.query.labelTable.findFirst({
         where(table, {
@@ -8080,51 +7583,27 @@ const planWrapper33 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!label?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (label.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!label) throw Error("Label not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            labels: !0,
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          labels: !0,
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassSlugs))) throw Error("Maximum number of labels reached");
     }
   });
@@ -8134,7 +7613,7 @@ const specFromArgs_User2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan34 = (_$root, args) => {
+const oldPlan38 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8143,7 +7622,7 @@ const oldPlan34 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper34 = (plan, _, fieldArgs) => {
+const planWrapper38 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -8159,7 +7638,7 @@ const specFromArgs_Post2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan35 = (_$root, args) => {
+const oldPlan39 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8168,38 +7647,27 @@ const oldPlan35 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper35 = (plan, _, fieldArgs) => {
+const planWrapper39 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
-      const taskId = input.taskId;
-      if (!(await db.query.taskTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, taskId);
-        },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
+      const taskId = input.taskId,
+        task = await db.query.taskTable.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
           }
-        }
-      }))?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.postTable.findFirst({
         where(table, {
@@ -8209,28 +7677,14 @@ const planWrapper35 = (plan, _, fieldArgs) => {
         },
         with: {
           task: {
-            with: {
-              project: {
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where(table, {
-                          eq
-                        }) {
-                          return eq(table.userId, observer.id);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+            columns: {
+              projectId: !0
             }
           }
         }
       });
-      if (!post?.task.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (post.authorId !== observer.id && post.task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!post) throw Error("Post not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -8239,7 +7693,7 @@ const specFromArgs_Column2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Column, $nodeId);
 };
-const oldPlan36 = (_$root, args) => {
+const oldPlan40 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8248,11 +7702,12 @@ const oldPlan36 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper36 = (plan, _, fieldArgs) => {
+const planWrapper40 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" !== "create") {
       const column = await db.query.columnTable.findFirst({
@@ -8261,51 +7716,27 @@ const planWrapper36 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!column?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (column.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!column) throw Error("Column not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            columns: !0,
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          columns: !0,
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       if (!(await isWithinLimit(project.workspace, FEATURE_KEYS.MAX_COLUMNS, project.columns.length, billingBypassSlugs))) throw Error("Maximum number of columns reached");
     }
   });
@@ -8315,7 +7746,7 @@ const specFromArgs_ProjectColumn2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
 };
-const oldPlan37 = (_$root, args) => {
+const oldPlan41 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8324,32 +7755,15 @@ const oldPlan37 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper37 = (plan, _, fieldArgs) => {
+const planWrapper41 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin"))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumnTable.findFirst({
         where(table, {
@@ -8357,22 +7771,12 @@ const planWrapper37 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
+        columns: {
+          workspaceId: !0
         }
       });
-      if (!projectColumn?.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (projectColumn.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!projectColumn) throw Error("Project column not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", projectColumn.workspaceId, "admin"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -8381,7 +7785,7 @@ const specFromArgs_WorkspaceUser2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_WorkspaceUser, $nodeId);
 };
-const oldPlan38 = (_$root, args) => {
+const oldPlan43 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_workspace_userPgResource, {
     workspace_id: args.getRaw(['input', "workspaceId"]),
     user_id: args.getRaw(['input', "userId"])
@@ -8391,13 +7795,15 @@ const oldPlan38 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper38 = (plan, _, fieldArgs) => {
+const planWrapper42 = (plan, _, fieldArgs) => {
   const $workspaceId = fieldArgs.getRaw(["input", "workspaceId"]),
     $userId = fieldArgs.getRaw(["input", "userId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$workspaceId, $userId, $observer, $db], async ([workspaceId, userId, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$workspaceId, $userId, $observer, $db, $authzCache], async ([workspaceId, userId, observer, db, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
     const workspace = await db.query.workspaceTable.findFirst({
       where(table, {
         eq
@@ -8408,21 +7814,65 @@ const planWrapper38 = (plan, _, fieldArgs) => {
         workspaceUsers: !0
       }
     });
-    if (!workspace) throw Error("Unauthorized");
-    const callerMembership = workspace.workspaceUsers.find(wu => wu.userId === observer.id);
-    if (!callerMembership) throw Error("Unauthorized");
-    if (callerMembership.role === "member") throw Error("Unauthorized");
+    if (!workspace) throw Error("Workspace not found");
     const targetMember = workspace.workspaceUsers.find(wu => wu.userId === userId);
     if (!targetMember) throw Error("Not found");
     if (targetMember.role === "owner") throw Error("Cannot remove owner");
   });
   return plan();
 };
+function oldPlan42(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan43.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteWorkspaceUser"}, but that function did not return a step!
+${String(oldPlan43)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper42(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper43 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $userId = fieldArgs.getRaw(["input", "userId"]),
+    $workspaceId = fieldArgs.getRaw(["input", "workspaceId"]),
+    $db = context().get("db");
+  sideEffect([$result, $userId, $workspaceId, $db], async ([result, userId, workspaceId, db]) => {
+    if (!result) return;
+    if ("true" !== "true") return;
+    if (!AUTHZ_PROVIDER_URL) return;
+    const previousRole = (await db.query.workspaceUserTable.findFirst({
+      where(table, {
+        and,
+        eq
+      }) {
+        return and(eq(table.userId, userId), eq(table.workspaceId, workspaceId));
+      }
+    }))?.role;
+    try {
+      if (previousRole) await deleteTuples(AUTHZ_PROVIDER_URL, [{
+        user: `user:${userId}`,
+        relation: previousRole,
+        object: `workspace:${workspaceId}`
+      }]);
+    } catch (error) {
+      console.error("[AuthZ Sync] Failed to sync workspace membership deletion:", error);
+    }
+  });
+  return $result;
+};
 const specFromArgs_UserPreference2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
 };
-const oldPlan39 = (_$root, args) => {
+const oldPlan44 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8431,7 +7881,7 @@ const oldPlan39 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper39 = (plan, _, fieldArgs) => {
+const planWrapper44 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -8457,7 +7907,7 @@ const specFromArgs_Project2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
 };
-const oldPlan40 = (_$root, args) => {
+const oldPlan46 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8466,33 +7916,25 @@ const oldPlan40 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper40 = (plan, _, fieldArgs) => {
+const planWrapper45 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $withPgClient = context().get("withPgClient");
-  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
-      const workspaceId = input.workspaceId,
-        workspace = await db.query.workspaceTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, workspaceId);
-          },
-          with: {
-            workspaceUsers: {
-              where(table, {
-                eq
-              }) {
-                return eq(table.userId, observer.id);
-              }
-            }
-          }
-        });
-      if (!workspace?.workspaceUsers?.length) throw Error("Unauthorized");
-      if (workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      const workspaceId = input.workspaceId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", workspaceId, "admin", authzCache))) throw Error("Unauthorized");
+      const workspace = await db.query.workspaceTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, workspaceId);
+        }
+      });
+      if (!workspace) throw Error("Workspace not found");
       const totalProjects = await withPgClient(null, async client => {
         return (await client.query({
           text: "SELECT count(*)::int as total FROM project WHERE workspace_id = $1",
@@ -8500,38 +7942,61 @@ const planWrapper40 = (plan, _, fieldArgs) => {
         })).rows[0]?.total ?? 0;
       });
       if (!(await isWithinLimit(workspace, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassSlugs))) throw Error("Maximum number of projects reached");
-    } else {
-      const project = await db.query.projectTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspace: {
-            with: {
-              workspaceUsers: {
-                where(table, {
-                  eq
-                }) {
-                  return eq(table.userId, observer.id);
-                }
-              }
-            }
-          }
-        }
-      });
-      if (!project?.workspace?.workspaceUsers?.length) throw Error("Unauthorized");
-      if (project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
-    }
+    } else if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", input, "admin", authzCache))) throw Error("Unauthorized");
   });
   return plan();
+};
+function oldPlan45(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan46.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
+${String(oldPlan46)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper45(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper46 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $projectId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db");
+  sideEffect([$result, $projectId, $db], async ([result, projectId, db]) => {
+    if (!result) return;
+    if ("true" !== "true") return;
+    if (!AUTHZ_PROVIDER_URL) return;
+    const project = await db.query.projectTable.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, projectId);
+      }
+    });
+    if (!project) return;
+    try {
+      await deleteTuples(AUTHZ_PROVIDER_URL, [{
+        user: `workspace:${project.workspaceId}`,
+        relation: "workspace",
+        object: `project:${projectId}`
+      }]);
+    } catch (error) {
+      console.error("[AuthZ Sync] Failed to sync project deletion:", error);
+    }
+  });
+  return $result;
 };
 const specFromArgs_Task2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Task, $nodeId);
 };
-const oldPlan41 = (_$root, args) => {
+const oldPlan47 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8540,36 +8005,28 @@ const oldPlan41 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper41 = (plan, _, fieldArgs) => {
+const planWrapper47 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $withPgClient = context().get("withPgClient");
-  sideEffect([$input, $observer, $db, $withPgClient], async ([input, observer, db, withPgClient]) => {
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
-      const projectId = input.projectId,
-        project = await db.query.projectTable.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, projectId);
-          },
-          with: {
-            workspace: {
-              with: {
-                workspaceUsers: {
-                  where(table, {
-                    eq
-                  }) {
-                    return eq(table.userId, observer.id);
-                  }
-                }
-              }
-            }
-          }
-        });
-      if (!project?.workspace.workspaceUsers.length) throw Error("Unauthorized");
+      const projectId = input.projectId;
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projectTable.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          workspace: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
       const totalTasks = await withPgClient(null, async client => {
         return (await client.query({
           text: `SELECT count(*)::int as total FROM task
@@ -8586,26 +8043,12 @@ const planWrapper41 = (plan, _, fieldArgs) => {
         }) {
           return eq(table.id, input);
         },
-        with: {
-          project: {
-            with: {
-              workspace: {
-                with: {
-                  workspaceUsers: {
-                    where(table, {
-                      eq
-                    }) {
-                      return eq(table.userId, observer.id);
-                    }
-                  }
-                }
-              }
-            }
-          }
+        columns: {
+          projectId: !0
         }
       });
-      if (!task?.project.workspace.workspaceUsers.length) throw Error("Unauthorized");
-      if (task.authorId !== observer.id && task.project.workspace.workspaceUsers[0].role === "member") throw Error("Unauthorized");
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -8614,7 +8057,7 @@ const specFromArgs_Workspace2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Workspace, $nodeId);
 };
-const oldPlan42 = (_$root, args) => {
+const oldPlan48 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_workspacePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8623,36 +8066,15 @@ const oldPlan42 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper42 = (plan, _, fieldArgs) => {
+const planWrapper48 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $authzCache = context().get("authzCache");
+  sideEffect([$input, $observer, $authzCache], async ([input, observer, authzCache]) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" !== "create") {
-      const workspace = await db.query.workspaceTable.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        with: {
-          workspaceUsers: {
-            where(table, {
-              eq
-            }) {
-              return eq(table.userId, observer.id);
-            }
-          }
-        }
-      });
-      if (!workspace || !workspace.workspaceUsers.length) throw Error("Unauthorized");
-      const role = workspace.workspaceUsers[0].role;
-      if ("delete" === "delete") {
-        if (role !== "owner") throw Error("Unauthorized");
-      } else if ("delete" === "update") {
-        if (role === "member") throw Error("Unauthorized");
-      }
+      const requiredPermission = "delete" === "delete" ? "owner" : "admin";
+      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, observer.id, "workspace", input, requiredPermission, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -9640,8 +9062,8 @@ type Workspace implements Node {
   viewMode: String!
   slug: String!
   tier: Tier!
-  subscriptionId: String
   billingAccountId: String
+  organizationId: String
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -11286,11 +10708,11 @@ input WorkspaceFilter {
   """Filter by the object’s \`tier\` field."""
   tier: TierFilter
 
-  """Filter by the object’s \`subscriptionId\` field."""
-  subscriptionId: StringFilter
-
   """Filter by the object’s \`billingAccountId\` field."""
   billingAccountId: StringFilter
+
+  """Filter by the object’s \`organizationId\` field."""
+  organizationId: StringFilter
 
   """Filter by the object’s \`projects\` relation."""
   projects: WorkspaceToManyProjectFilter
@@ -15849,11 +15271,11 @@ type WorkspaceDistinctCountAggregates {
   """Distinct count of tier across the matching connection"""
   tier: BigInt
 
-  """Distinct count of subscriptionId across the matching connection"""
-  subscriptionId: BigInt
-
   """Distinct count of billingAccountId across the matching connection"""
   billingAccountId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
 }
 
 """Grouping methods for \`Workspace\` for usage during aggregation."""
@@ -15867,8 +15289,8 @@ enum WorkspaceGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
   VIEW_MODE
   TIER
-  SUBSCRIPTION_ID
   BILLING_ACCOUNT_ID
+  ORGANIZATION_ID
 }
 
 """Conditions for \`Workspace\` aggregates."""
@@ -15957,11 +15379,11 @@ input WorkspaceCondition {
   """Checks for equality with the object’s \`tier\` field."""
   tier: Tier
 
-  """Checks for equality with the object’s \`subscriptionId\` field."""
-  subscriptionId: String
-
   """Checks for equality with the object’s \`billingAccountId\` field."""
   billingAccountId: String
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: String
 }
 
 """Methods to use when ordering \`Workspace\`."""
@@ -15983,10 +15405,10 @@ enum WorkspaceOrderBy {
   SLUG_DESC
   TIER_ASC
   TIER_DESC
-  SUBSCRIPTION_ID_ASC
-  SUBSCRIPTION_ID_DESC
   BILLING_ACCOUNT_ID_ASC
   BILLING_ACCOUNT_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
   PROJECTS_COUNT_ASC
   PROJECTS_COUNT_DESC
   PROJECTS_SUM_COLUMN_INDEX_ASC
@@ -17295,6 +16717,7 @@ input WorkspaceInput {
   viewMode: String
   slug: String!
   billingAccountId: String
+  organizationId: String
 }
 
 """The output of our update \`TaskLabel\` mutation."""
@@ -18254,6 +17677,7 @@ input WorkspacePatch {
   viewMode: String
   slug: String
   billingAccountId: String
+  organizationId: String
 }
 
 """All input for the \`updateWorkspace\` mutation."""
@@ -19892,17 +19316,17 @@ ${String(oldPlan7)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan12.apply(this, args);
+                $prev = oldPlan13.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createProject"}, but that function did not return a step!
-${String(oldPlan12)}`);
+${String(oldPlan13)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19942,17 +19366,17 @@ ${String(oldPlan9)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan13.apply(this, args);
+                $prev = oldPlan15.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createTask"}, but that function did not return a step!
-${String(oldPlan13)}`);
+${String(oldPlan15)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20017,17 +19441,17 @@ ${String(oldPlan6)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan12.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createUserPreference"}, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan12)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20042,17 +19466,17 @@ ${String(oldPlan11)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan14.apply(this, args);
+                $prev = oldPlan16.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createWorkspace"}, but that function did not return a step!
-${String(oldPlan14)}`);
+${String(oldPlan16)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20077,7 +19501,7 @@ ${String(oldPlan10)}`);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20092,17 +19516,17 @@ ${String(oldPlan10)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan31.apply(this, args);
+                $prev = oldPlan35.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteAssignee"}, but that function did not return a step!
-${String(oldPlan31)}`);
+${String(oldPlan35)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20131,17 +19555,17 @@ ${String(oldPlan31)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan36.apply(this, args);
+                $prev = oldPlan40.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteColumn"}, but that function did not return a step!
-${String(oldPlan36)}`);
+${String(oldPlan40)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20170,17 +19594,17 @@ ${String(oldPlan36)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan32.apply(this, args);
+                $prev = oldPlan36.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteEmoji"}, but that function did not return a step!
-${String(oldPlan32)}`);
+${String(oldPlan36)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20209,17 +19633,17 @@ ${String(oldPlan32)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan30.apply(this, args);
+                $prev = oldPlan34.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteInvitation"}, but that function did not return a step!
-${String(oldPlan30)}`);
+${String(oldPlan34)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20248,17 +19672,17 @@ ${String(oldPlan30)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
+                $prev = oldPlan37.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteLabel"}, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan37)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20287,17 +19711,17 @@ ${String(oldPlan33)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan35.apply(this, args);
+                $prev = oldPlan39.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePost"}, but that function did not return a step!
-${String(oldPlan35)}`);
+${String(oldPlan39)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20326,17 +19750,17 @@ ${String(oldPlan35)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan40.apply(this, args);
+                $prev = oldPlan45.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
-${String(oldPlan40)}`);
+${String(oldPlan45)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper46(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20365,17 +19789,17 @@ ${String(oldPlan40)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan37.apply(this, args);
+                $prev = oldPlan41.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProjectColumn"}, but that function did not return a step!
-${String(oldPlan37)}`);
+${String(oldPlan41)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20404,17 +19828,17 @@ ${String(oldPlan37)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan41.apply(this, args);
+                $prev = oldPlan47.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteTask"}, but that function did not return a step!
-${String(oldPlan41)}`);
+${String(oldPlan47)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper47(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20443,17 +19867,17 @@ ${String(oldPlan41)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan29.apply(this, args);
+                $prev = oldPlan33.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteTaskLabel"}, but that function did not return a step!
-${String(oldPlan29)}`);
+${String(oldPlan33)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20482,17 +19906,17 @@ ${String(oldPlan29)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan34.apply(this, args);
+                $prev = oldPlan38.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUser"}, but that function did not return a step!
-${String(oldPlan34)}`);
+${String(oldPlan38)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20521,17 +19945,17 @@ ${String(oldPlan34)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan39.apply(this, args);
+                $prev = oldPlan44.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUserPreference"}, but that function did not return a step!
-${String(oldPlan39)}`);
+${String(oldPlan44)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper44(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20560,17 +19984,17 @@ ${String(oldPlan39)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan42.apply(this, args);
+                $prev = oldPlan48.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteWorkspace"}, but that function did not return a step!
-${String(oldPlan42)}`);
+${String(oldPlan48)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper42(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper48(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20599,17 +20023,17 @@ ${String(oldPlan42)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan38.apply(this, args);
+                $prev = oldPlan42.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteWorkspaceUser"}, but that function did not return a step!
-${String(oldPlan38)}`);
+${String(oldPlan42)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20638,17 +20062,17 @@ ${String(oldPlan38)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan17.apply(this, args);
+                $prev = oldPlan20.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateAssignee"}, but that function did not return a step!
-${String(oldPlan17)}`);
+${String(oldPlan20)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20677,17 +20101,17 @@ ${String(oldPlan17)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan22.apply(this, args);
+                $prev = oldPlan25.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateColumn"}, but that function did not return a step!
-${String(oldPlan22)}`);
+${String(oldPlan25)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20716,17 +20140,17 @@ ${String(oldPlan22)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan18.apply(this, args);
+                $prev = oldPlan21.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateEmoji"}, but that function did not return a step!
-${String(oldPlan18)}`);
+${String(oldPlan21)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20755,17 +20179,17 @@ ${String(oldPlan18)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan16.apply(this, args);
+                $prev = oldPlan19.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateInvitation"}, but that function did not return a step!
-${String(oldPlan16)}`);
+${String(oldPlan19)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20794,17 +20218,17 @@ ${String(oldPlan16)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan19.apply(this, args);
+                $prev = oldPlan22.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateLabel"}, but that function did not return a step!
-${String(oldPlan19)}`);
+${String(oldPlan22)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20833,17 +20257,17 @@ ${String(oldPlan19)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan21.apply(this, args);
+                $prev = oldPlan24.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePost"}, but that function did not return a step!
-${String(oldPlan21)}`);
+${String(oldPlan24)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20872,17 +20296,17 @@ ${String(oldPlan21)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan26.apply(this, args);
+                $prev = oldPlan30.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
-${String(oldPlan26)}`);
+${String(oldPlan30)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20911,17 +20335,17 @@ ${String(oldPlan26)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan23.apply(this, args);
+                $prev = oldPlan26.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProjectColumn"}, but that function did not return a step!
-${String(oldPlan23)}`);
+${String(oldPlan26)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20950,17 +20374,17 @@ ${String(oldPlan23)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan27.apply(this, args);
+                $prev = oldPlan31.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateTask"}, but that function did not return a step!
-${String(oldPlan27)}`);
+${String(oldPlan31)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20989,17 +20413,17 @@ ${String(oldPlan27)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan15.apply(this, args);
+                $prev = oldPlan18.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateTaskLabel"}, but that function did not return a step!
-${String(oldPlan15)}`);
+${String(oldPlan18)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21028,17 +20452,17 @@ ${String(oldPlan15)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan20.apply(this, args);
+                $prev = oldPlan23.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUser"}, but that function did not return a step!
-${String(oldPlan20)}`);
+${String(oldPlan23)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21067,17 +20491,17 @@ ${String(oldPlan20)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan25.apply(this, args);
+                $prev = oldPlan29.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUserPreference"}, but that function did not return a step!
-${String(oldPlan25)}`);
+${String(oldPlan29)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21106,17 +20530,17 @@ ${String(oldPlan25)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan28.apply(this, args);
+                $prev = oldPlan32.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateWorkspace"}, but that function did not return a step!
-${String(oldPlan28)}`);
+${String(oldPlan32)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21145,17 +20569,17 @@ ${String(oldPlan28)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan24.apply(this, args);
+                $prev = oldPlan27.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateWorkspaceUser"}, but that function did not return a step!
-${String(oldPlan24)}`);
+${String(oldPlan27)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24508,6 +23932,9 @@ ${String(oldPlan24)}`);
           }
         }
       },
+      organizationId($record) {
+        return $record.get("organization_id");
+      },
       projectColumns: {
         plan($record) {
           const $records = resource_project_columnPgResource.find({
@@ -24594,9 +24021,6 @@ ${String(oldPlan24)}`);
       },
       rowId($record) {
         return $record.get("id");
-      },
-      subscriptionId($record) {
-        return $record.get("subscription_id");
       },
       updatedAt($record) {
         return $record.get("updated_at");
@@ -24710,6 +24134,11 @@ ${String(oldPlan24)}`);
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
+      organizationId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
       rowId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
@@ -24717,11 +24146,6 @@ ${String(oldPlan24)}`);
       },
       slug($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("slug")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      subscriptionId($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("subscription_id")}`,
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
@@ -37313,6 +36737,15 @@ export const inputObjects = {
           }
         });
       },
+      organizationId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "organization_id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
       rowId($condition, val) {
         $condition.where({
           type: "attribute",
@@ -37326,15 +36759,6 @@ export const inputObjects = {
         $condition.where({
           type: "attribute",
           attribute: "slug",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
-          }
-        });
-      },
-      subscriptionId($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "subscription_id",
           callback(expression) {
             return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
@@ -37381,7 +36805,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec67;
+        condition.extensions.pgFilterAttribute = colSpec66;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -37434,6 +36858,14 @@ export const inputObjects = {
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
+      },
+      organizationId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec67;
+        return condition;
       },
       projectColumns($where, value) {
         assertAllowed53(value, "object");
@@ -37497,14 +36929,6 @@ export const inputObjects = {
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
         condition.extensions.pgFilterAttribute = colSpec64;
-        return condition;
-      },
-      subscriptionId(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec66;
         return condition;
       },
       tier(queryBuilder, value) {
@@ -37741,6 +37165,12 @@ export const inputObjects = {
       }) {
         obj.set("name", bakedInputRuntime(schema, field.type, val));
       },
+      organizationId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
+      },
       rowId(obj, val, {
         field,
         schema
@@ -37787,6 +37217,12 @@ export const inputObjects = {
         schema
       }) {
         obj.set("name", bakedInputRuntime(schema, field.type, val));
+      },
+      organizationId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
       },
       rowId(obj, val, {
         field,
@@ -47455,9 +46891,9 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           codec: TYPES.text
         });
       },
-      SUBSCRIPTION_ID($pgSelect) {
+      ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("subscription_id")}`,
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
           codec: TYPES.text
         });
       },
@@ -47754,6 +47190,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       NAME_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "name",
+          direction: "DESC"
+        });
+      },
+      ORGANIZATION_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "organization_id",
+          direction: "ASC"
+        });
+      },
+      ORGANIZATION_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "organization_id",
           direction: "DESC"
         });
       },
@@ -49128,18 +48576,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
         queryBuilder.setOrderIsUnique();
-      },
-      SUBSCRIPTION_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "subscription_id",
-          direction: "ASC"
-        });
-      },
-      SUBSCRIPTION_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "subscription_id",
-          direction: "DESC"
-        });
       },
       TIER_ASC(queryBuilder) {
         queryBuilder.orderBy({

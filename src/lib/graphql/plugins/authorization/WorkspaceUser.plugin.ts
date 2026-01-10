@@ -2,6 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { checkWorkspaceLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
@@ -9,11 +10,10 @@ import type { InsertWorkspaceUser } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
- * Validate workspace user permissions for create and update.
+ * Validate workspace user permissions via Warden.
  *
- * Team management requires admin+ role.
- * - Create: Admin+ can add members (with tier limits)
- * - Update: Admin+ can change roles (except owner roles)
+ * - Create: Admin permission on workspace required (with tier limits)
+ * - Update: Admin permission on workspace required
  *
  * Special rules:
  * - Cannot modify owner roles
@@ -24,6 +24,9 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
     (
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       checkWorkspaceLimit,
       FEATURE_KEYS,
       billingBypassSlugs,
@@ -34,70 +37,126 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
+        const $authzCache = context().get("authzCache");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        sideEffect(
+          [$input, $observer, $db, $authzCache],
+          async ([input, observer, db, authzCache]) => {
+            if (!observer) throw new Error("Unauthorized");
 
-          if (scope === "create") {
-            const workspaceId = (input as InsertWorkspaceUser).workspaceId;
-            const newMemberUserId = (input as InsertWorkspaceUser).userId;
-            const newMemberRole = (input as InsertWorkspaceUser).role;
+            if (scope === "create") {
+              const workspaceId = (input as InsertWorkspaceUser).workspaceId;
+              const newMemberUserId = (input as InsertWorkspaceUser).userId;
+              const newMemberRole = (input as InsertWorkspaceUser).role;
 
-            const workspace = await db.query.workspaceTable.findFirst({
-              where: (table, { eq }) => eq(table.id, workspaceId),
-              with: {
-                workspaceUsers: true,
-              },
-            });
+              const workspace = await db.query.workspaceTable.findFirst({
+                where: (table, { eq }) => eq(table.id, workspaceId),
+                with: { workspaceUsers: true },
+              });
+              if (!workspace) throw new Error("Workspace not found");
 
-            if (!workspace) throw new Error("Unauthorized");
+              // Special case: Allow adding yourself as owner to an empty workspace (initial setup)
+              const isInitialOwnerSetup =
+                workspace.workspaceUsers.length === 0 &&
+                newMemberUserId === observer.id &&
+                newMemberRole === "owner";
 
-            // Special case: Allow adding yourself as owner to an empty workspace (initial setup)
-            const isInitialOwnerSetup =
-              workspace.workspaceUsers.length === 0 &&
-              newMemberUserId === observer.id &&
-              newMemberRole === "owner";
+              // Special case: Allow user to accept their own invitation
+              let isAcceptingInvitation = false;
+              if (newMemberUserId === observer.id) {
+                const pendingInvitation =
+                  await db.query.invitationsTable.findFirst({
+                    where: (table, { eq, and }) =>
+                      and(
+                        eq(table.workspaceId, workspaceId),
+                        eq(table.email, observer.email),
+                      ),
+                  });
+                isAcceptingInvitation = !!pendingInvitation;
+              }
 
-            // Special case: Allow user to accept their own invitation
-            let isAcceptingInvitation = false;
-            if (newMemberUserId === observer.id) {
-              const pendingInvitation =
-                await db.query.invitationsTable.findFirst({
-                  where: (table, { eq, and }) =>
-                    and(
-                      eq(table.workspaceId, workspaceId),
-                      eq(table.email, observer.email),
-                    ),
-                });
-              isAcceptingInvitation = !!pendingInvitation;
-            }
+              if (!isInitialOwnerSetup && !isAcceptingInvitation) {
+                const allowed = await checkPermission(
+                  AUTHZ_ENABLED,
+                  AUTHZ_PROVIDER_URL,
+                  observer.id,
+                  "workspace",
+                  workspaceId,
+                  "admin",
+                  authzCache,
+                );
+                if (!allowed) throw new Error("Unauthorized");
+              }
 
-            if (!isInitialOwnerSetup && !isAcceptingInvitation) {
-              // Verify caller is a member and has admin+ role
-              const callerMembership = workspace.workspaceUsers.find(
-                (wu) => wu.userId === observer.id,
+              // Check tier limits via entitlements service (bypass for exempt workspaces)
+              if (!billingBypassSlugs.includes(workspace.slug)) {
+                const withinMemberLimit = await checkWorkspaceLimit(
+                  workspace.id,
+                  FEATURE_KEYS.MAX_MEMBERS,
+                  workspace.workspaceUsers.length,
+                  workspace.tier as "free" | "basic" | "team",
+                );
+                if (!withinMemberLimit)
+                  throw new Error("Maximum number of members reached");
+
+                // Check admin limit if adding as admin+
+                if (newMemberRole && newMemberRole !== "member") {
+                  const numberOfAdmins = workspace.workspaceUsers.filter(
+                    (member) => member.role !== "member",
+                  ).length;
+
+                  const withinAdminLimit = await checkWorkspaceLimit(
+                    workspace.id,
+                    FEATURE_KEYS.MAX_ADMINS,
+                    numberOfAdmins,
+                    workspace.tier as "free" | "basic" | "team",
+                  );
+                  if (!withinAdminLimit)
+                    throw new Error("Maximum number of admins reached");
+                }
+              }
+            } else {
+              const targetWorkspaceId = (input as InsertWorkspaceUser)
+                .workspaceId;
+              const targetUserId = (input as InsertWorkspaceUser).userId;
+
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "workspace",
+                targetWorkspaceId,
+                "admin",
+                authzCache,
               );
+              if (!allowed) throw new Error("Unauthorized");
 
-              if (!callerMembership) throw new Error("Unauthorized");
-              if (callerMembership.role === "member")
-                throw new Error("Unauthorized");
-            }
+              // Get workspace with members for business logic checks
+              const workspace = await db.query.workspaceTable.findFirst({
+                where: (table, { eq }) => eq(table.id, targetWorkspaceId),
+                with: { workspaceUsers: true },
+              });
+              if (!workspace) throw new Error("Workspace not found");
 
-            // Check tier limits via entitlements service (bypass for exempt workspaces)
-            if (!billingBypassSlugs.includes(workspace.slug)) {
-              // Check member limit
-              const withinMemberLimit = await checkWorkspaceLimit(
-                workspace.id,
-                FEATURE_KEYS.MAX_MEMBERS,
-                workspace.workspaceUsers.length,
-                workspace.tier as "free" | "basic" | "team",
+              // Find the target member
+              const targetMember = workspace.workspaceUsers.find(
+                (wu) => wu.userId === targetUserId,
               );
+              if (!targetMember) throw new Error("Not found");
 
-              if (!withinMemberLimit)
-                throw new Error("Maximum number of members reached");
+              // Cannot modify owners
+              if (targetMember.role === "owner") {
+                throw new Error("Cannot modify owner");
+              }
 
-              // Check admin limit if adding as admin+
-              if (newMemberRole && newMemberRole !== "member") {
+              // Check tier limits for admin promotions
+              const newRole = (input as InsertWorkspaceUser).role;
+
+              if (
+                newRole &&
+                newRole !== "member" &&
+                !billingBypassSlugs.includes(workspace.slug)
+              ) {
                 const numberOfAdmins = workspace.workspaceUsers.filter(
                   (member) => member.role !== "member",
                 ).length;
@@ -108,89 +167,26 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
                   numberOfAdmins,
                   workspace.tier as "free" | "basic" | "team",
                 );
-
                 if (!withinAdminLimit)
                   throw new Error("Maximum number of admins reached");
               }
+
+              // Cannot promote to owner
+              if (newRole === "owner") {
+                throw new Error("Cannot promote to owner");
+              }
             }
-          } else {
-            // For update, input is the patch object with workspaceId and userId
-            const targetWorkspaceId = (input as InsertWorkspaceUser)
-              .workspaceId;
-            const targetUserId = (input as InsertWorkspaceUser).userId;
-
-            const workspace = await db.query.workspaceTable.findFirst({
-              where: (table, { eq }) => eq(table.id, targetWorkspaceId),
-              with: {
-                workspaceUsers: true,
-              },
-            });
-
-            if (!workspace) throw new Error("Unauthorized");
-
-            // Verify caller is a member and has admin+ role
-            const callerMembership = workspace.workspaceUsers.find(
-              (wu) => wu.userId === observer.id,
-            );
-
-            if (!callerMembership) throw new Error("Unauthorized");
-            if (callerMembership.role === "member")
-              throw new Error("Unauthorized");
-
-            // Find the target member
-            const targetMember = workspace.workspaceUsers.find(
-              (wu) => wu.userId === targetUserId,
-            );
-
-            if (!targetMember) throw new Error("Not found");
-
-            // Cannot modify owners
-            if (targetMember.role === "owner") {
-              throw new Error("Cannot modify owner");
-            }
-
-            // Check tier limits for admin promotions (bypass for exempt workspaces)
-            const newRole = (input as InsertWorkspaceUser).role;
-
-            if (
-              newRole &&
-              newRole !== "member" &&
-              !billingBypassSlugs.includes(workspace.slug)
-            ) {
-              const numberOfAdmins = workspace.workspaceUsers.filter(
-                (member) => member.role !== "member",
-              ).length;
-
-              // If promoting to admin/owner, check limits
-              // (but exclude current target if they're already an admin)
-              const currentIsAdmin = targetMember.role !== "member";
-              const effectiveAdminCount = currentIsAdmin
-                ? numberOfAdmins
-                : numberOfAdmins;
-
-              const withinAdminLimit = await checkWorkspaceLimit(
-                workspace.id,
-                FEATURE_KEYS.MAX_ADMINS,
-                effectiveAdminCount,
-                workspace.tier as "free" | "basic" | "team",
-              );
-
-              if (!withinAdminLimit)
-                throw new Error("Maximum number of admins reached");
-            }
-
-            // Cannot promote to owner
-            if (newRole === "owner") {
-              throw new Error("Cannot promote to owner");
-            }
-          }
-        });
+          },
+        );
 
         return plan();
       },
     [
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       checkWorkspaceLimit,
       FEATURE_KEYS,
       billingBypassSlugs,
@@ -200,48 +196,54 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
   );
 
 /**
- * Validate workspace user delete permissions.
+ * Validate workspace user delete permissions via Warden.
  *
- * Delete mutation has userId and workspaceId directly on input (not nested in patch).
- * - Admin+ can remove members (except owners)
+ * - Admin permission on workspace required
+ * - Cannot remove owners
  */
 const validateDeletePermissions = (): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $workspaceId = fieldArgs.getRaw(["input", "workspaceId"]);
         const $userId = fieldArgs.getRaw(["input", "userId"]);
         const $observer = context().get("observer");
         const $db = context().get("db");
+        const $authzCache = context().get("authzCache");
 
         sideEffect(
-          [$workspaceId, $userId, $observer, $db],
-          async ([workspaceId, userId, observer, db]) => {
+          [$workspaceId, $userId, $observer, $db, $authzCache],
+          async ([workspaceId, userId, observer, db, authzCache]) => {
             if (!observer) throw new Error("Unauthorized");
 
+            const allowed = await checkPermission(
+              AUTHZ_ENABLED,
+              AUTHZ_PROVIDER_URL,
+              observer.id,
+              "workspace",
+              workspaceId as string,
+              "admin",
+              authzCache,
+            );
+            if (!allowed) throw new Error("Unauthorized");
+
+            // Get workspace members to check target's role
             const workspace = await db.query.workspaceTable.findFirst({
               where: (table, { eq }) => eq(table.id, workspaceId),
-              with: {
-                workspaceUsers: true,
-              },
+              with: { workspaceUsers: true },
             });
-
-            if (!workspace) throw new Error("Unauthorized");
-
-            // Verify caller is a member and has admin+ role
-            const callerMembership = workspace.workspaceUsers.find(
-              (wu) => wu.userId === observer.id,
-            );
-
-            if (!callerMembership) throw new Error("Unauthorized");
-            if (callerMembership.role === "member")
-              throw new Error("Unauthorized");
+            if (!workspace) throw new Error("Workspace not found");
 
             // Find the target member
             const targetMember = workspace.workspaceUsers.find(
               (wu) => wu.userId === userId,
             );
-
             if (!targetMember) throw new Error("Not found");
 
             // Cannot remove owners
@@ -253,7 +255,7 @@ const validateDeletePermissions = (): PlanWrapperFn =>
 
         return plan();
       },
-    [context, sideEffect],
+    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission],
   );
 
 /**

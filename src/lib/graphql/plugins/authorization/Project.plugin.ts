@@ -2,6 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
+import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
@@ -10,18 +11,20 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate project permissions.
+ * Validate project permissions via Warden.
  *
- * Projects require admin+ role for mutations.
- * - Create: Admin+ can create projects (with tier limits)
- * - Update: Admin+ can modify projects
- * - Delete: Admin+ can delete projects
+ * - Create: Admin permission on workspace required (with tier limits)
+ * - Update: Admin permission on project required
+ * - Delete: Admin permission on project required
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassSlugs,
@@ -33,31 +36,32 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $observer = context().get("observer");
         const $db = context().get("db");
         const $withPgClient = context().get("withPgClient");
+        const $authzCache = context().get("authzCache");
 
         sideEffect(
-          [$input, $observer, $db, $withPgClient],
-          async ([input, observer, db, withPgClient]) => {
+          [$input, $observer, $db, $withPgClient, $authzCache],
+          async ([input, observer, db, withPgClient, authzCache]) => {
             if (!observer) throw new Error("Unauthorized");
 
             if (scope === "create") {
               const workspaceId = (input as InsertProject).workspaceId;
 
-              // Get workspace with membership check
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "workspace",
+                workspaceId,
+                "admin",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+
+              // Get workspace for tier limit check
               const workspace = await db.query.workspaceTable.findFirst({
                 where: (table, { eq }) => eq(table.id, workspaceId),
-                with: {
-                  workspaceUsers: {
-                    where: (table, { eq }) => eq(table.userId, observer.id),
-                  },
-                },
               });
-
-              if (!workspace?.workspaceUsers?.length)
-                throw new Error("Unauthorized");
-
-              // admin+ can create projects
-              if (workspace.workspaceUsers[0].role === "member")
-                throw new Error("Unauthorized");
+              if (!workspace) throw new Error("Workspace not found");
 
               const totalProjects = await withPgClient(null, async (client) => {
                 const result = await client.query({
@@ -69,37 +73,25 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
               });
 
-              // Check limit via entitlements service
               const withinLimit = await isWithinLimit(
                 workspace,
                 FEATURE_KEYS.MAX_PROJECTS,
                 totalProjects,
                 billingBypassSlugs,
               );
-
               if (!withinLimit)
                 throw new Error("Maximum number of projects reached");
             } else {
-              // for update/delete, verify workspace membership and admin+ role
-              const project = await db.query.projectTable.findFirst({
-                where: (table, { eq }) => eq(table.id, input),
-                with: {
-                  workspace: {
-                    with: {
-                      workspaceUsers: {
-                        where: (table, { eq }) => eq(table.userId, observer.id),
-                      },
-                    },
-                  },
-                },
-              });
-
-              if (!project?.workspace?.workspaceUsers?.length)
-                throw new Error("Unauthorized");
-
-              // admin+ can update/delete projects
-              if (project.workspace.workspaceUsers[0].role === "member")
-                throw new Error("Unauthorized");
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "project",
+                input as string,
+                "admin",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
             }
           },
         );
@@ -109,6 +101,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_PROVIDER_URL,
+      checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassSlugs,
