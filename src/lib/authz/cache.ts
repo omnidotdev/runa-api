@@ -66,6 +66,7 @@ export function setCachedPermission(
  * - `user123:workspace:` - All workspace permissions for user
  * - `user123:` - All permissions for user
  * - `:workspace:ws456:` - All permissions for workspace
+ * @knipignore
  */
 export function invalidatePermissionCache(pattern: string): void {
   for (const key of cache.keys()) {
@@ -78,6 +79,7 @@ export function invalidatePermissionCache(pattern: string): void {
 /**
  * Clear all cached permissions.
  * Useful for testing or emergency cache flush.
+ * @knipignore
  */
 export function clearPermissionCache(): void {
   cache.clear();

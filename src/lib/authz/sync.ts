@@ -13,14 +13,6 @@
 // Re-export for EXPORTABLE compatibility in plugins
 export { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL } from "lib/config/env.config";
 
-// Re-export cache functions for use in plugins
-export {
-  buildPermissionCacheKey,
-  getCachedPermission,
-  setCachedPermission,
-  invalidatePermissionCache,
-} from "./cache";
-
 /** Request timeout in milliseconds */
 const REQUEST_TIMEOUT_MS = 5000;
 
