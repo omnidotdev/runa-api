@@ -11,7 +11,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate project permissions via Warden.
+ * Validate project permissions via PDP.
  *
  * - Create: Admin permission on workspace required (with tier limits)
  * - Update: Admin permission on project required

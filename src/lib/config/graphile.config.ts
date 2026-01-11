@@ -53,7 +53,7 @@ const graphilePreset: GraphileConfig.Preset = {
     UserPreferencePlugin,
     WorkspacePlugin,
     WorkspaceUserPlugin,
-    // AuthZ sync plugin (post-mutation sync to Warden)
+    // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
   ],
   disablePlugins: ["PgIndexBehaviorsPlugin"],

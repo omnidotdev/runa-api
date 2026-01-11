@@ -5,6 +5,7 @@ import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
 
+import { getDefaultOrganization } from "lib/auth/organizations";
 import {
   AUTHZ_ENABLED,
   AUTHZ_PROVIDER_URL,
@@ -52,6 +53,7 @@ const generateGraphqlSchema = async () => {
         FEATURE_KEYS,
         billingBypassSlugs,
       },
+      "lib/auth/organizations": { getDefaultOrganization },
     },
   });
 

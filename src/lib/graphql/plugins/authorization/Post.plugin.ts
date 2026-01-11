@@ -9,7 +9,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate post (comment) permissions via Warden.
+ * Validate post (comment) permissions via PDP.
  *
  * - Create: Member permission on project required
  * - Update: Member permission on project required

@@ -15,7 +15,7 @@ export const {
   BILLING_BYPASS_SLUGS,
   ENTITLEMENTS_BASE_URL,
   ENTITLEMENTS_WEBHOOK_SECRET,
-  // AuthZ (Warden)
+  // AuthZ (PDP)
   AUTHZ_PROVIDER_URL,
   AUTHZ_ENABLED,
 } = process.env;

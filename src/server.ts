@@ -19,16 +19,20 @@ import {
 } from "lib/config/env.config";
 import entitlementsWebhook from "lib/entitlements/webhooks";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
-import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
+import {
+  armorPlugin,
+  authenticationPlugin,
+  organizationsPlugin,
+} from "lib/graphql/plugins";
 
 /** Health check timeout in milliseconds */
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
 
 /**
- * Verify Warden authz service is healthy before starting.
- * Fails startup if authz is enabled but Warden is unavailable.
+ * Verify PDP (authorization service) is healthy before starting.
+ * Fails startup if authz is enabled but PDP is unavailable.
  */
-async function verifyWardenHealth(): Promise<void> {
+async function verifyPdpHealth(): Promise<void> {
   if (AUTHZ_ENABLED !== "true" || !AUTHZ_PROVIDER_URL) {
     // biome-ignore lint/suspicious/noConsole: startup logging
     console.log("[AuthZ] Disabled or not configured, skipping health check");
@@ -41,18 +45,18 @@ async function verifyWardenHealth(): Promise<void> {
     });
 
     if (!response.ok) {
-      throw new Error(`Warden health check failed: ${response.status}`);
+      throw new Error(`PDP health check failed: ${response.status}`);
     }
 
     // biome-ignore lint/suspicious/noConsole: startup logging
-    console.log("[AuthZ] Warden health check passed");
+    console.log("[AuthZ] PDP health check passed");
   } catch (error) {
     const message =
       error instanceof Error
         ? error.message
         : "Unknown error during health check";
-    console.error(`[AuthZ] Warden health check failed: ${message}`);
-    throw new Error(`Warden unavailable: ${message}`);
+    console.error(`[AuthZ] PDP health check failed: ${message}`);
+    throw new Error(`PDP unavailable: ${message}`);
   }
 }
 
@@ -61,7 +65,7 @@ async function verifyWardenHealth(): Promise<void> {
  */
 async function startServer(): Promise<void> {
   // Preflight: verify external dependencies
-  await verifyWardenHealth();
+  await verifyPdpHealth();
 
   /**
    * Elysia server.
@@ -94,6 +98,7 @@ async function startServer(): Promise<void> {
         plugins: [
           ...armorPlugin,
           authenticationPlugin,
+          organizationsPlugin,
           // disable GraphQL schema introspection in production to mitigate reverse engineering
           isProdEnv && useDisableIntrospection(),
           isProdEnv &&

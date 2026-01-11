@@ -10,7 +10,7 @@ import type { InsertWorkspaceUser } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
- * Validate workspace user permissions via Warden.
+ * Validate workspace user permissions via PDP.
  *
  * - Create: Admin permission on workspace required (with tier limits)
  * - Update: Admin permission on workspace required
@@ -196,7 +196,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
   );
 
 /**
- * Validate workspace user delete permissions via Warden.
+ * Validate workspace user delete permissions via PDP.
  *
  * - Admin permission on workspace required
  * - Cannot remove owners

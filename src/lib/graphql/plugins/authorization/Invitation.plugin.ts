@@ -9,7 +9,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
 /**
- * Validate invitation permissions via Warden.
+ * Validate invitation permissions via PDP.
  *
  * - Create: Admin permission on workspace required
  * - Update: Admin permission on workspace required

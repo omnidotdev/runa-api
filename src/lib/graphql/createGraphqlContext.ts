@@ -3,6 +3,7 @@ import { createWithPgClient } from "postgraphile/adaptors/pg";
 import { dbPool, pgPool } from "lib/db/db";
 
 import type { YogaInitialContext } from "graphql-yoga";
+import type { OrganizationClaim } from "lib/auth/organizations";
 import type { SelectUser } from "lib/db/schema";
 import type { WithPgClient } from "postgraphile/@dataplan/pg";
 import type {
@@ -17,8 +18,9 @@ declare global {
   namespace Grafast {
     interface Context {
       observer: SelectUser | null;
+      organizations: OrganizationClaim[];
       db: typeof dbPool;
-      /** Request-scoped permission cache to avoid duplicate Warden calls within a single GraphQL request. */
+      /** Request-scoped permission cache to avoid duplicate PDP calls within a single GraphQL request. */
       authzCache: Map<string, boolean>;
     }
   }
@@ -27,6 +29,7 @@ declare global {
 export interface GraphQLContext {
   /** API observer, injected by the authentication plugin and controlled via `contextFieldName`. Related to the viewer pattern: https://wundergraph.com/blog/graphql_federation_viewer_pattern */
   observer: SelectUser | null;
+  organizations: OrganizationClaim[];
   /** Network request. */
   request: Request;
   /** Database. */
@@ -37,7 +40,7 @@ export interface GraphQLContext {
   pgSettings: Record<string, string | undefined> | null;
   /** Postgres subscription client for the current request, injected by Postgraphile. */
   pgSubscriber: PgSubscriber | null;
-  /** Request-scoped permission cache to avoid duplicate Warden calls within a single GraphQL request. */
+  /** Request-scoped permission cache to avoid duplicate PDP calls within a single GraphQL request. */
   authzCache: Map<string, boolean>;
 }
 
@@ -48,7 +51,10 @@ export interface GraphQLContext {
 const createGraphqlContext = async ({
   request,
 }: Omit<YogaInitialContext, "waitUntil">): Promise<
-  Omit<GraphQLContext, "observer" | "pgSettings" | "pgSubscriber">
+  Omit<
+    GraphQLContext,
+    "observer" | "organizations" | "pgSettings" | "pgSubscriber"
+  >
 > => ({
   request,
   db: dbPool,

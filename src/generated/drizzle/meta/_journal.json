@@ -183,6 +183,13 @@
       "when": 1768008397335,
       "tag": "0025_stale_viper",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1768115053279,
+      "tag": "0026_foamy_proudstar",
+      "breakpoints": true
     }
   ]
 }
