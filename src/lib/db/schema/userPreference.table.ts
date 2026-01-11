@@ -9,24 +9,24 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-import { projectTable } from "./project.table";
-import { userTable } from "./user.table";
+import { projects } from "./project.table";
+import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm/table";
 
 /**
  * User preferences table.
  */
-export const userPreferenceTable = pgTable(
+export const userPreferences = pgTable(
   "user_preference",
   {
     id: generateDefaultId(),
     userId: uuid()
       .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     projectId: uuid()
       .notNull()
-      .references(() => projectTable.id, { onDelete: "cascade" }),
+      .references(() => projects.id, { onDelete: "cascade" }),
     hiddenColumnIds: text().array().notNull().default([]),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     color: varchar({ length: 24 }),
@@ -41,5 +41,5 @@ export const userPreferenceTable = pgTable(
   ],
 );
 
-export type InsertUserPreference = InferInsertModel<typeof userPreferenceTable>;
-export type SelectUserPreference = InferSelectModel<typeof userPreferenceTable>;
+export type InsertUserPreference = InferInsertModel<typeof userPreferences>;
+export type SelectUserPreference = InferSelectModel<typeof userPreferences>;

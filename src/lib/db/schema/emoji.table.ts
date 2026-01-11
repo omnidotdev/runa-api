@@ -2,27 +2,27 @@ import { relations } from "drizzle-orm";
 import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-import { postTable } from "./post.table";
-import { userTable } from "./user.table";
+import { posts } from "./post.table";
+import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Emoji Table
  */
-export const emojiTable = pgTable(
+export const emojis = pgTable(
   "emoji",
   {
     id: generateDefaultId(),
     emoji: text(),
     postId: uuid()
       .notNull()
-      .references(() => postTable.id, {
+      .references(() => posts.id, {
         onDelete: "cascade",
       }),
     userId: uuid()
       .notNull()
-      .references(() => userTable.id, {
+      .references(() => users.id, {
         onDelete: "cascade",
       }),
     createdAt: generateDefaultDate(),
@@ -35,12 +35,12 @@ export const emojiTable = pgTable(
   ],
 );
 
-export const emojiRelations = relations(emojiTable, ({ one }) => ({
-  post: one(postTable, {
-    fields: [emojiTable.postId],
-    references: [postTable.id],
+export const emojiRelations = relations(emojis, ({ one }) => ({
+  post: one(posts, {
+    fields: [emojis.postId],
+    references: [posts.id],
   }),
 }));
 
-export type InsertEmoji = InferInsertModel<typeof emojiTable>;
-export type SelectEmoji = InferSelectModel<typeof emojiTable>;
+export type InsertEmoji = InferInsertModel<typeof emojis>;
+export type SelectEmoji = InferSelectModel<typeof emojis>;

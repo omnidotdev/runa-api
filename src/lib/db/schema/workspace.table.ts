@@ -4,15 +4,16 @@ import {
   pgEnum,
   pgTable,
   text,
+  unique,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-import { invitationsTable } from "./invitation.table";
-import { projectTable } from "./project.table";
-import { projectColumnTable } from "./projectColumn.table";
-import { workspaceUserTable } from "./workspaceUser.table";
+import { invitations } from "./invitation.table";
+import { members } from "./member.table";
+import { projects } from "./project.table";
+import { projectColumns } from "./projectColumn.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -21,7 +22,7 @@ export const tier = pgEnum("tier", ["free", "basic", "team"]);
 /**
  * Workspace table.
  */
-export const workspaceTable = pgTable(
+export const workspaces = pgTable(
   "workspace",
   {
     id: generateDefaultId(),
@@ -40,17 +41,17 @@ export const workspaceTable = pgTable(
   },
   (table) => [
     uniqueIndex().on(table.id),
-    uniqueIndex("workspace_slug_idx").on(table.slug),
+    unique().on(table.slug),
     index("workspace_organization_id_idx").on(table.organizationId),
   ],
 );
 
-export const workspaceRelations = relations(workspaceTable, ({ many }) => ({
-  workspaceUsers: many(workspaceUserTable),
-  projects: many(projectTable),
-  projectColumns: many(projectColumnTable),
-  invitations: many(invitationsTable),
+export const workspaceRelations = relations(workspaces, ({ many }) => ({
+  members: many(members),
+  projects: many(projects),
+  projectColumns: many(projectColumns),
+  invitations: many(invitations),
 }));
 
-export type InsertWorkspace = InferInsertModel<typeof workspaceTable>;
-export type SelectWorkspace = InferSelectModel<typeof workspaceTable>;
+export type InsertWorkspace = InferInsertModel<typeof workspaces>;
+export type SelectWorkspace = InferSelectModel<typeof workspaces>;

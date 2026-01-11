@@ -6,7 +6,7 @@ import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { checkWorkspaceLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
 
-import type { InsertWorkspaceUser } from "lib/db/schema";
+import type { InsertMember } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
@@ -45,33 +45,32 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
             if (!observer) throw new Error("Unauthorized");
 
             if (scope === "create") {
-              const workspaceId = (input as InsertWorkspaceUser).workspaceId;
-              const newMemberUserId = (input as InsertWorkspaceUser).userId;
-              const newMemberRole = (input as InsertWorkspaceUser).role;
+              const workspaceId = (input as InsertMember).workspaceId;
+              const newMemberUserId = (input as InsertMember).userId;
+              const newMemberRole = (input as InsertMember).role;
 
-              const workspace = await db.query.workspaceTable.findFirst({
+              const workspace = await db.query.workspaces.findFirst({
                 where: (table, { eq }) => eq(table.id, workspaceId),
-                with: { workspaceUsers: true },
+                with: { members: true },
               });
               if (!workspace) throw new Error("Workspace not found");
 
               // Special case: Allow adding yourself as owner to an empty workspace (initial setup)
               const isInitialOwnerSetup =
-                workspace.workspaceUsers.length === 0 &&
+                workspace.members.length === 0 &&
                 newMemberUserId === observer.id &&
                 newMemberRole === "owner";
 
               // Special case: Allow user to accept their own invitation
               let isAcceptingInvitation = false;
               if (newMemberUserId === observer.id) {
-                const pendingInvitation =
-                  await db.query.invitationsTable.findFirst({
-                    where: (table, { eq, and }) =>
-                      and(
-                        eq(table.workspaceId, workspaceId),
-                        eq(table.email, observer.email),
-                      ),
-                  });
+                const pendingInvitation = await db.query.invitations.findFirst({
+                  where: (table, { eq, and }) =>
+                    and(
+                      eq(table.workspaceId, workspaceId),
+                      eq(table.email, observer.email),
+                    ),
+                });
                 isAcceptingInvitation = !!pendingInvitation;
               }
 
@@ -93,7 +92,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
                 const withinMemberLimit = await checkWorkspaceLimit(
                   workspace.id,
                   FEATURE_KEYS.MAX_MEMBERS,
-                  workspace.workspaceUsers.length,
+                  workspace.members.length,
                   workspace.tier as "free" | "basic" | "team",
                 );
                 if (!withinMemberLimit)
@@ -101,7 +100,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
 
                 // Check admin limit if adding as admin+
                 if (newMemberRole && newMemberRole !== "member") {
-                  const numberOfAdmins = workspace.workspaceUsers.filter(
+                  const numberOfAdmins = workspace.members.filter(
                     (member) => member.role !== "member",
                   ).length;
 
@@ -116,9 +115,8 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
                 }
               }
             } else {
-              const targetWorkspaceId = (input as InsertWorkspaceUser)
-                .workspaceId;
-              const targetUserId = (input as InsertWorkspaceUser).userId;
+              const targetWorkspaceId = (input as InsertMember).workspaceId;
+              const targetUserId = (input as InsertMember).userId;
 
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
@@ -132,14 +130,14 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
               if (!allowed) throw new Error("Unauthorized");
 
               // Get workspace with members for business logic checks
-              const workspace = await db.query.workspaceTable.findFirst({
+              const workspace = await db.query.workspaces.findFirst({
                 where: (table, { eq }) => eq(table.id, targetWorkspaceId),
-                with: { workspaceUsers: true },
+                with: { members: true },
               });
               if (!workspace) throw new Error("Workspace not found");
 
               // Find the target member
-              const targetMember = workspace.workspaceUsers.find(
+              const targetMember = workspace.members.find(
                 (wu) => wu.userId === targetUserId,
               );
               if (!targetMember) throw new Error("Not found");
@@ -150,14 +148,14 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
               }
 
               // Check tier limits for admin promotions
-              const newRole = (input as InsertWorkspaceUser).role;
+              const newRole = (input as InsertMember).role;
 
               if (
                 newRole &&
                 newRole !== "member" &&
                 !billingBypassSlugs.includes(workspace.slug)
               ) {
-                const numberOfAdmins = workspace.workspaceUsers.filter(
+                const numberOfAdmins = workspace.members.filter(
                   (member) => member.role !== "member",
                 ).length;
 
@@ -234,14 +232,14 @@ const validateDeletePermissions = (): PlanWrapperFn =>
             if (!allowed) throw new Error("Unauthorized");
 
             // Get workspace members to check target's role
-            const workspace = await db.query.workspaceTable.findFirst({
+            const workspace = await db.query.workspaces.findFirst({
               where: (table, { eq }) => eq(table.id, workspaceId),
-              with: { workspaceUsers: true },
+              with: { members: true },
             });
             if (!workspace) throw new Error("Workspace not found");
 
             // Find the target member
-            const targetMember = workspace.workspaceUsers.find(
+            const targetMember = workspace.members.find(
               (wu) => wu.userId === userId,
             );
             if (!targetMember) throw new Error("Not found");

@@ -45,7 +45,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (scope !== "create") {
               // Get label to find project for AuthZ check
-              const label = await db.query.labelTable.findFirst({
+              const label = await db.query.labels.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
                 columns: { projectId: true },
               });
@@ -76,7 +76,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!allowed) throw new Error("Unauthorized");
 
               // Get project with labels and workspace for tier limit check
-              const project = await db.query.projectTable.findFirst({
+              const project = await db.query.projects.findFirst({
                 where: (table, { eq }) => eq(table.id, projectId),
                 with: { labels: true, workspace: true },
               });

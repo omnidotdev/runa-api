@@ -20,7 +20,7 @@ import {
 } from "lib/authz";
 
 import type { Role } from "lib/authz";
-import type { InsertProject, InsertWorkspaceUser } from "lib/db/schema";
+import type { InsertMember, InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
@@ -45,7 +45,7 @@ const syncCreateWorkspaceUser = (): PlanWrapperFn =>
           if (AUTHZ_ENABLED !== "true") return;
           if (!AUTHZ_PROVIDER_URL) return;
 
-          const { userId, workspaceId, role } = input as InsertWorkspaceUser;
+          const { userId, workspaceId, role } = input as InsertMember;
 
           try {
             await writeTuples(AUTHZ_PROVIDER_URL, [
@@ -92,14 +92,10 @@ const syncUpdateWorkspaceUser = (): PlanWrapperFn =>
           if (AUTHZ_ENABLED !== "true") return;
           if (!AUTHZ_PROVIDER_URL) return;
 
-          const {
-            userId,
-            workspaceId,
-            role: newRole,
-          } = input as InsertWorkspaceUser;
+          const { userId, workspaceId, role: newRole } = input as InsertMember;
 
           // Get the previous role to properly update tuples
-          const membership = await db.query.workspaceUserTable.findFirst({
+          const membership = await db.query.members.findFirst({
             where: (table, { and, eq }) =>
               and(eq(table.userId, userId), eq(table.workspaceId, workspaceId)),
           });
@@ -174,7 +170,7 @@ const syncDeleteWorkspaceUser = (): PlanWrapperFn =>
             if (!AUTHZ_PROVIDER_URL) return;
 
             // Get the role before deletion for proper tuple cleanup
-            const membership = await db.query.workspaceUserTable.findFirst({
+            const membership = await db.query.members.findFirst({
               where: (table, { and, eq }) =>
                 and(
                   eq(table.userId, userId as string),
@@ -284,7 +280,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
             if (!AUTHZ_PROVIDER_URL) return;
 
             // Get the workspace ID before deletion
-            const project = await db.query.projectTable.findFirst({
+            const project = await db.query.projects.findFirst({
               where: (table, { eq }) => eq(table.id, projectId as string),
             });
 

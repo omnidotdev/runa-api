@@ -53,7 +53,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!allowed) throw new Error("Unauthorized");
             } else {
               // Get invitation to check ownership and workspace
-              const invitation = await db.query.invitationsTable.findFirst({
+              const invitation = await db.query.invitations.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
                 columns: { email: true, workspaceId: true },
               });

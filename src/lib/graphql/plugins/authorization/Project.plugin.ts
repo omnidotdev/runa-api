@@ -58,7 +58,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!allowed) throw new Error("Unauthorized");
 
               // Get workspace for tier limit check
-              const workspace = await db.query.workspaceTable.findFirst({
+              const workspace = await db.query.workspaces.findFirst({
                 where: (table, { eq }) => eq(table.id, workspaceId),
               });
               if (!workspace) throw new Error("Workspace not found");

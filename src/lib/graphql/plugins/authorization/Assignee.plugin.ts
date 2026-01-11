@@ -48,7 +48,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const { taskId } = input as { taskId: string; userId: string };
 
               // Get task to find project for AuthZ check
-              const task = await db.query.taskTable.findFirst({
+              const task = await db.query.tasks.findFirst({
                 where: (table, { eq }) => eq(table.id, taskId),
                 columns: { projectId: true },
               });
@@ -68,7 +68,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const taskId = (input as InsertAssignee).taskId;
 
               // Get task with assignees and workspace for tier limit check
-              const task = await db.query.taskTable.findFirst({
+              const task = await db.query.tasks.findFirst({
                 where: (table, { eq }) => eq(table.id, taskId),
                 with: {
                   assignees: true,

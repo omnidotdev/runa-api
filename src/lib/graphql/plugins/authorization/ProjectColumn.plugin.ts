@@ -48,7 +48,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!allowed) throw new Error("Unauthorized");
           } else {
             // Get project column to find workspace for AuthZ check
-            const projectColumn = await db.query.projectColumnTable.findFirst({
+            const projectColumn = await db.query.projectColumns.findFirst({
               where: (table, { eq }) => eq(table.id, input),
               columns: { workspaceId: true },
             });

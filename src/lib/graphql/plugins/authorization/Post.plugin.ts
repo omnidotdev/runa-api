@@ -42,7 +42,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const taskId = (input as InsertPost).taskId;
 
               // Get task to find project for AuthZ check
-              const task = await db.query.taskTable.findFirst({
+              const task = await db.query.tasks.findFirst({
                 where: (table, { eq }) => eq(table.id, taskId),
                 columns: { projectId: true },
               });
@@ -60,7 +60,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!allowed) throw new Error("Unauthorized");
             } else {
               // Get post to find project for AuthZ check
-              const post = await db.query.postTable.findFirst({
+              const post = await db.query.posts.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
                 with: { task: { columns: { projectId: true } } },
               });

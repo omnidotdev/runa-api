@@ -42,7 +42,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const postId = (input as InsertEmoji).postId;
 
               // Get post to find project for AuthZ check
-              const post = await db.query.postTable.findFirst({
+              const post = await db.query.posts.findFirst({
                 where: (table, { eq }) => eq(table.id, postId),
                 with: { task: { columns: { projectId: true } } },
               });
@@ -60,7 +60,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!allowed) throw new Error("Unauthorized");
             } else {
               // Get emoji to find project for AuthZ check
-              const emoji = await db.query.emojiTable.findFirst({
+              const emoji = await db.query.emojis.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
                 with: {
                   post: { with: { task: { columns: { projectId: true } } } },

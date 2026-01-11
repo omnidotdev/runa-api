@@ -3,7 +3,7 @@ import { QueryClient } from "@tanstack/query-core";
 import ms from "ms";
 
 import { AUTH_BASE_URL, protectRoutes } from "lib/config/env.config";
-import { userTable } from "lib/db/schema";
+import { users } from "lib/db/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { InsertUser, SelectUser } from "lib/db/schema";
@@ -164,10 +164,10 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
     const { identityProviderId, ...rest } = insertedUser;
 
     const [user] = await ctx.db
-      .insert(userTable)
+      .insert(users)
       .values(insertedUser)
       .onConflictDoUpdate({
-        target: userTable.identityProviderId,
+        target: users.identityProviderId,
         set: {
           ...rest,
           updatedAt: new Date().toISOString(),

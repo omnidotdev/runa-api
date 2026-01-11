@@ -5,7 +5,7 @@ import { Elysia, t } from "elysia";
 
 import { ENTITLEMENTS_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { workspaceTable } from "lib/db/schema";
+import { workspaces } from "lib/db/schema";
 import { invalidateCache } from "./cache";
 
 interface EntitlementWebhookPayload {
@@ -105,9 +105,9 @@ const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
           if (body.billingAccountId && body.entityType === "workspace") {
             try {
               await dbPool
-                .update(workspaceTable)
+                .update(workspaces)
                 .set({ billingAccountId: body.billingAccountId })
-                .where(eq(workspaceTable.id, body.entityId));
+                .where(eq(workspaces.id, body.entityId));
 
               // biome-ignore lint/suspicious/noConsole: webhook logging
               console.log(

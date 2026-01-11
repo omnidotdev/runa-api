@@ -20,6 +20,6 @@ export const {
   AUTHZ_ENABLED,
 } = process.env;
 
-export const isDevEnv = NODE_ENV === "development",
-  isProdEnv = NODE_ENV === "production",
-  protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
+export const isDevEnv = NODE_ENV === "development";
+export const isProdEnv = NODE_ENV === "production";
+export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";

@@ -7,7 +7,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 /**
  * User table.
  */
-export const userTable = pgTable(
+export const users = pgTable(
   "user",
   {
     id: generateDefaultId(),
@@ -25,5 +25,5 @@ export const userTable = pgTable(
   ],
 );
 
-export type InsertUser = InferInsertModel<typeof userTable>;
-export type SelectUser = InferSelectModel<typeof userTable>;
+export type InsertUser = InferInsertModel<typeof users>;
+export type SelectUser = InferSelectModel<typeof users>;

@@ -38,7 +38,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const taskId = (input as InsertTaskLabel).taskId;
 
             // Get task to find project for AuthZ check
-            const task = await db.query.taskTable.findFirst({
+            const task = await db.query.tasks.findFirst({
               where: (table, { eq }) => eq(table.id, taskId),
               columns: { projectId: true },
             });
@@ -58,7 +58,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             const { taskId } = input as { taskId: string; labelId: string };
 
             // Get task to find project for AuthZ check
-            const task = await db.query.taskTable.findFirst({
+            const task = await db.query.tasks.findFirst({
               where: (table, { eq }) => eq(table.id, taskId),
               columns: { projectId: true },
             });

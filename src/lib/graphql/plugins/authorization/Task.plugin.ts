@@ -58,7 +58,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!allowed) throw new Error("Unauthorized");
 
               // Get project with workspace for tier limit check
-              const project = await db.query.projectTable.findFirst({
+              const project = await db.query.projects.findFirst({
                 where: (table, { eq }) => eq(table.id, projectId),
                 with: { workspace: true },
               });
@@ -86,7 +86,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 throw new Error("Maximum number of tasks reached");
             } else {
               // Get task to find associated project for permission check
-              const task = await db.query.taskTable.findFirst({
+              const task = await db.query.tasks.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
                 columns: { projectId: true },
               });

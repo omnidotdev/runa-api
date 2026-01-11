@@ -11,18 +11,18 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-import { columnTable } from "./column.table";
-import { labelTable } from "./label.table";
-import { projectColumnTable } from "./projectColumn.table";
-import { taskTable } from "./task.table";
-import { workspaceTable } from "./workspace.table";
+import { columns } from "./column.table";
+import { labels } from "./label.table";
+import { projectColumns } from "./projectColumn.table";
+import { tasks } from "./task.table";
+import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Project table.
  */
-export const projectTable = pgTable(
+export const projects = pgTable(
   "project",
   {
     id: generateDefaultId(),
@@ -31,14 +31,14 @@ export const projectTable = pgTable(
     prefix: varchar({ length: 10 }),
     slug: text()
       // TODO
-      // .generatedAlwaysAs((): SQL => generateSlug(projectTable.name))
+      // .generatedAlwaysAs((): SQL => generateSlug(projects.name))
       .notNull(),
     workspaceId: uuid()
       .notNull()
-      .references(() => workspaceTable.id, { onDelete: "cascade" }),
+      .references(() => workspaces.id, { onDelete: "cascade" }),
     projectColumnId: uuid()
       .notNull()
-      .references(() => projectColumnTable.id, { onDelete: "cascade" }),
+      .references(() => projectColumns.id, { onDelete: "cascade" }),
     columnIndex: integer().notNull().default(0),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
@@ -51,15 +51,15 @@ export const projectTable = pgTable(
   ],
 );
 
-export const projectRelations = relations(projectTable, ({ one, many }) => ({
-  workspace: one(workspaceTable, {
-    fields: [projectTable.workspaceId],
-    references: [workspaceTable.id],
+export const projectRelations = relations(projects, ({ one, many }) => ({
+  workspace: one(workspaces, {
+    fields: [projects.workspaceId],
+    references: [workspaces.id],
   }),
-  tasks: many(taskTable),
-  labels: many(labelTable),
-  columns: many(columnTable),
+  tasks: many(tasks),
+  labels: many(labels),
+  columns: many(columns),
 }));
 
-export type InsertProject = InferInsertModel<typeof projectTable>;
-export type SelectProject = InferSelectModel<typeof projectTable>;
+export type InsertProject = InferInsertModel<typeof projects>;
+export type SelectProject = InferSelectModel<typeof projects>;

@@ -9,23 +9,23 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate } from "lib/db/util";
-import { taskTable } from "./task.table";
-import { userTable } from "./user.table";
+import { tasks } from "./task.table";
+import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Assignee table.
  */
-export const assigneeTable = pgTable(
+export const assignees = pgTable(
   "assignee",
   {
     taskId: uuid()
       .notNull()
-      .references(() => taskTable.id, { onDelete: "cascade" }),
+      .references(() => tasks.id, { onDelete: "cascade" }),
     userId: uuid()
       .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
     deletedAt: timestamp({
@@ -42,12 +42,12 @@ export const assigneeTable = pgTable(
   ],
 );
 
-export const assigneeRelations = relations(assigneeTable, ({ one }) => ({
-  task: one(taskTable, {
-    fields: [assigneeTable.taskId],
-    references: [taskTable.id],
+export const assigneeRelations = relations(assignees, ({ one }) => ({
+  task: one(tasks, {
+    fields: [assignees.taskId],
+    references: [tasks.id],
   }),
 }));
 
-export type InsertAssignee = InferInsertModel<typeof assigneeTable>;
-export type SelectAssignee = InferSelectModel<typeof assigneeTable>;
+export type InsertAssignee = InferInsertModel<typeof assignees>;
+export type SelectAssignee = InferSelectModel<typeof assignees>;

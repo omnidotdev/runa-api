@@ -9,20 +9,20 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-import { workspaceTable } from "./workspace.table";
+import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Invitation table.
  */
-export const invitationsTable = pgTable(
+export const invitations = pgTable(
   "invitation",
   {
     id: generateDefaultId(),
     workspaceId: uuid()
       .notNull()
-      .references(() => workspaceTable.id, { onDelete: "cascade" }),
+      .references(() => workspaces.id, { onDelete: "cascade" }),
     email: text().notNull(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
@@ -34,15 +34,15 @@ export const invitationsTable = pgTable(
   ],
 );
 
-export const invitationRelations = relations(invitationsTable, ({ one }) => ({
-  workspace: one(workspaceTable, {
-    fields: [invitationsTable.workspaceId],
-    references: [workspaceTable.id],
+export const invitationRelations = relations(invitations, ({ one }) => ({
+  workspace: one(workspaces, {
+    fields: [invitations.workspaceId],
+    references: [workspaces.id],
   }),
 }));
 
 /**
  * Type helpers related to the invitation table.
  */
-export type InsertInvitation = InferInsertModel<typeof invitationsTable>;
-export type SelectInvitation = InferSelectModel<typeof invitationsTable>;
+export type InsertInvitation = InferInsertModel<typeof invitations>;
+export type SelectInvitation = InferSelectModel<typeof invitations>;

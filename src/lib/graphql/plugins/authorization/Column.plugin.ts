@@ -45,7 +45,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
             if (scope !== "create") {
               // Get column to find project for AuthZ check
-              const column = await db.query.columnTable.findFirst({
+              const column = await db.query.columns.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
                 columns: { projectId: true },
               });
@@ -76,7 +76,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!allowed) throw new Error("Unauthorized");
 
               // Get project with columns and workspace for tier limit check
-              const project = await db.query.projectTable.findFirst({
+              const project = await db.query.projects.findFirst({
                 where: (table, { eq }) => eq(table.id, projectId),
                 with: { columns: true, workspace: true },
               });

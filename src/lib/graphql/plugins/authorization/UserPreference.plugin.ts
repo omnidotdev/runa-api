@@ -33,7 +33,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             }
           } else {
             // For update/delete, verify the preference belongs to the observer
-            const preference = await db.query.userPreferenceTable.findFirst({
+            const preference = await db.query.userPreferences.findFirst({
               where: (table, { eq }) => eq(table.id, input),
             });
 

@@ -11,31 +11,31 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-import { assigneeTable } from "./assignee.table";
-import { columnTable } from "./column.table";
-import { postTable } from "./post.table";
-import { projectTable } from "./project.table";
-import { userTable } from "./user.table";
+import { assignees } from "./assignee.table";
+import { columns } from "./column.table";
+import { posts } from "./post.table";
+import { projects } from "./project.table";
+import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Task table.
  */
-export const taskTable = pgTable(
+export const tasks = pgTable(
   "task",
   {
     id: generateDefaultId(),
     content: text().notNull(),
     description: text().notNull(),
     priority: varchar({ length: 10 }).notNull().default("medium"),
-    authorId: uuid().references(() => userTable.id, { onDelete: "set null" }),
+    authorId: uuid().references(() => users.id, { onDelete: "set null" }),
     projectId: uuid()
       .notNull()
-      .references(() => projectTable.id, { onDelete: "cascade" }),
+      .references(() => projects.id, { onDelete: "cascade" }),
     columnId: uuid()
       .notNull()
-      .references(() => columnTable.id, { onDelete: "cascade" }),
+      .references(() => columns.id, { onDelete: "cascade" }),
     columnIndex: integer().notNull().default(0),
     dueDate: timestamp({
       precision: 6,
@@ -54,14 +54,14 @@ export const taskTable = pgTable(
   ],
 );
 
-export const taskRelations = relations(taskTable, ({ one, many }) => ({
-  project: one(projectTable, {
-    fields: [taskTable.projectId],
-    references: [projectTable.id],
+export const taskRelations = relations(tasks, ({ one, many }) => ({
+  project: one(projects, {
+    fields: [tasks.projectId],
+    references: [projects.id],
   }),
-  posts: many(postTable),
-  assignees: many(assigneeTable),
+  posts: many(posts),
+  assignees: many(assignees),
 }));
 
-export type InsertTask = InferInsertModel<typeof taskTable>;
-export type SelectTask = InferSelectModel<typeof taskTable>;
+export type InsertTask = InferInsertModel<typeof tasks>;
+export type SelectTask = InferSelectModel<typeof tasks>;

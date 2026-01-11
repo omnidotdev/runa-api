@@ -9,14 +9,14 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-import { projectTable } from "./project.table";
+import { projects } from "./project.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Column table.
  */
-export const columnTable = pgTable(
+export const columns = pgTable(
   "column",
   {
     id: generateDefaultId(),
@@ -24,7 +24,7 @@ export const columnTable = pgTable(
     title: text().notNull(),
     projectId: uuid()
       .notNull()
-      .references(() => projectTable.id, { onDelete: "cascade" }),
+      .references(() => projects.id, { onDelete: "cascade" }),
     index: integer().notNull().default(0),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
@@ -36,12 +36,12 @@ export const columnTable = pgTable(
   ],
 );
 
-export const columnRelations = relations(columnTable, ({ one }) => ({
-  project: one(projectTable, {
-    fields: [columnTable.projectId],
-    references: [projectTable.id],
+export const columnRelations = relations(columns, ({ one }) => ({
+  project: one(projects, {
+    fields: [columns.projectId],
+    references: [projects.id],
   }),
 }));
 
-export type InsertColumn = InferInsertModel<typeof columnTable>;
-export type SelectColumn = InferSelectModel<typeof columnTable>;
+export type InsertColumn = InferInsertModel<typeof columns>;
+export type SelectColumn = InferSelectModel<typeof columns>;

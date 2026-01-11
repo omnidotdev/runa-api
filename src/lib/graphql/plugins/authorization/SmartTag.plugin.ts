@@ -17,7 +17,7 @@ const SmartTagPlugin = jsonPgSmartTags({
           },
         },
       },
-      workspace_user: {
+      member: {
         attribute: {
           role: {
             tags: {
