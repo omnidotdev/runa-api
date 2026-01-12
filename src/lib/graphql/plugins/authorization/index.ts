@@ -13,4 +13,4 @@ export { default as TaskLabelPlugin } from "./TaskLabel.plugin";
 export { default as UserPlugin } from "./User.plugin";
 export { default as UserPreferencePlugin } from "./UserPreference.plugin";
 export { default as WorkspacePlugin } from "./Workspace.plugin";
-export { default as WorkspaceUserPlugin } from "./WorkspaceUser.plugin";
+export { default as MemberPlugin } from "./Member.plugin";

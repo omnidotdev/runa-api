@@ -10,6 +10,7 @@ import {
   EmojiPlugin,
   InvitationPlugin,
   LabelPlugin,
+  MemberPlugin,
   PostPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectColumnPlugin,
@@ -20,7 +21,6 @@ import {
   UserPlugin,
   UserPreferencePlugin,
   WorkspacePlugin,
-  WorkspaceUserPlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
@@ -52,7 +52,7 @@ const graphilePreset: GraphileConfig.Preset = {
     UserPlugin,
     UserPreferencePlugin,
     WorkspacePlugin,
-    WorkspaceUserPlugin,
+    MemberPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
   ],

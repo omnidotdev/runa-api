@@ -4,13 +4,14 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { checkWorkspaceLimit } from "lib/entitlements";
+import { AUTH_BASE_URL, addOrgMember } from "lib/idp/client";
 import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
 import type { InsertMember } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
- * Validate workspace user permissions via PDP.
+ * Validate member permissions via PDP.
  *
  * - Create: Admin permission on workspace required (with tier limits)
  * - Update: Admin permission on workspace required
@@ -28,6 +29,8 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
       AUTHZ_PROVIDER_URL,
       checkPermission,
       checkWorkspaceLimit,
+      AUTH_BASE_URL,
+      addOrgMember,
       FEATURE_KEYS,
       billingBypassOrgIds,
       propName,
@@ -85,6 +88,17 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
                   authzCache,
                 );
                 if (!allowed) throw new Error("Unauthorized");
+              }
+
+              // Sync org membership to IDP when accepting invitation
+              if (isAcceptingInvitation && AUTH_BASE_URL) {
+                addOrgMember(AUTH_BASE_URL, {
+                  organizationId: workspace.organizationId,
+                  userId: observer.id,
+                  role: "member",
+                }).catch((err) =>
+                  console.error("Failed to sync org membership to IDP:", err),
+                );
               }
 
               // Check tier limits via entitlements service (bypass for exempt orgs)
@@ -186,6 +200,8 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
       AUTHZ_PROVIDER_URL,
       checkPermission,
       checkWorkspaceLimit,
+      AUTH_BASE_URL,
+      addOrgMember,
       FEATURE_KEYS,
       billingBypassOrgIds,
       propName,
@@ -194,7 +210,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
   );
 
 /**
- * Validate workspace user delete permissions via PDP.
+ * Validate member delete permissions via PDP.
  *
  * - Admin permission on workspace required
  * - Cannot remove owners
@@ -257,18 +273,19 @@ const validateDeletePermissions = (): PlanWrapperFn =>
   );
 
 /**
- * Authorization plugin for workspace users (team management).
+ * Authorization plugin for members (team management).
  *
  * Enforces admin+ requirement for team management.
  * Protects owner roles from modification.
  * Enforces tier-based member and admin limits.
+ * Syncs org membership to IDP when accepting invitations.
  */
-const WorkspaceUserPlugin = wrapPlans({
+const MemberPlugin = wrapPlans({
   Mutation: {
-    createWorkspaceUser: validatePermissions("workspaceUser", "create"),
-    updateWorkspaceUser: validatePermissions("patch", "update"),
-    deleteWorkspaceUser: validateDeletePermissions(),
+    createMember: validatePermissions("member", "create"),
+    updateMember: validatePermissions("patch", "update"),
+    deleteMember: validateDeletePermissions(),
   },
 });
 
-export default WorkspaceUserPlugin;
+export default MemberPlugin;
