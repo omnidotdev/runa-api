@@ -17,7 +17,7 @@ import { projectColumns } from "./projectColumn.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-export const tier = pgEnum("tier", ["free", "basic", "team"]);
+export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
 
 /**
  * Workspace table.
@@ -35,6 +35,7 @@ export const workspaces = pgTable(
       .notNull(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     tier: tier().notNull().default("free"),
+    subscriptionId: text(),
     billingAccountId: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),

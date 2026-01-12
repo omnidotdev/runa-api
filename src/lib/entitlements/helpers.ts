@@ -19,13 +19,13 @@ type Tier = SelectWorkspace["tier"];
 
 /** Default limits when entitlements service is unavailable or entitlement not found */
 const DEFAULT_LIMITS: Record<string, Record<Tier, number>> = {
-  max_projects: { free: 2, basic: 10, team: -1 },
-  max_tasks: { free: 500, basic: 2000, team: -1 },
-  max_columns: { free: 5, basic: 20, team: -1 },
-  max_labels: { free: 10, basic: 50, team: -1 },
-  max_assignees: { free: 1, basic: 3, team: -1 },
-  max_members: { free: 3, basic: 10, team: -1 },
-  max_admins: { free: 1, basic: 3, team: -1 },
+  max_projects: { free: 2, basic: 10, team: -1, enterprise: -1 },
+  max_tasks: { free: 500, basic: 2000, team: -1, enterprise: -1 },
+  max_columns: { free: 5, basic: 20, team: -1, enterprise: -1 },
+  max_labels: { free: 10, basic: 50, team: -1, enterprise: -1 },
+  max_assignees: { free: 1, basic: 3, team: -1, enterprise: -1 },
+  max_members: { free: 3, basic: 10, team: -1, enterprise: -1 },
+  max_admins: { free: 1, basic: 3, team: -1, enterprise: -1 },
 };
 
 interface CachedEntitlements {

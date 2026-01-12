@@ -13,6 +13,14 @@
 // Re-export for EXPORTABLE compatibility in plugins
 export { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL } from "lib/config/env.config";
 
+/** @knipignore - re-exported for plugin compatibility */
+export {
+  buildPermissionCacheKey,
+  getCachedPermission,
+  invalidatePermissionCache,
+  setCachedPermission,
+} from "./cache";
+
 /** Request timeout in milliseconds */
 const REQUEST_TIMEOUT_MS = 5000;
 
