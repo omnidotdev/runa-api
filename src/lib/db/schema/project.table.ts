@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   index,
   integer,
   pgTable,
@@ -40,6 +41,8 @@ export const projects = pgTable(
       .notNull()
       .references(() => projectColumns.id, { onDelete: "cascade" }),
     columnIndex: integer().notNull().default(0),
+    // whether the project is publicly accessible (like Trello public boards)
+    isPublic: boolean().notNull().default(false),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

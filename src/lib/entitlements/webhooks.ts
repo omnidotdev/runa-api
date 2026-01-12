@@ -121,6 +121,36 @@ const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
               // Don't fail the webhook - billingAccountId sync is best-effort
             }
           }
+
+          // Sync tier to workspace if this is a tier entitlement update
+          if (
+            body.featureKey === "tier" &&
+            body.value &&
+            body.entityType === "workspace"
+          ) {
+            const tierValue = body.value as
+              | "free"
+              | "basic"
+              | "team"
+              | "enterprise";
+            try {
+              await dbPool
+                .update(workspaces)
+                .set({ tier: tierValue })
+                .where(eq(workspaces.id, body.entityId));
+
+              // biome-ignore lint/suspicious/noConsole: webhook logging
+              console.log(
+                `Updated tier to ${tierValue} for workspace ${body.entityId}`,
+              );
+            } catch (dbError) {
+              console.error(
+                `Failed to update tier for workspace ${body.entityId}:`,
+                dbError,
+              );
+              // Don't fail the webhook - tier sync is best-effort
+            }
+          }
           break;
         default:
           break;

@@ -27,7 +27,9 @@ interface UserInfoClaims {
   aud?: string | string[];
   exp?: number;
   iat?: number;
+  name?: string;
   preferred_username?: string;
+  picture?: string;
   email?: string;
   [OMNI_CLAIMS_ORGANIZATIONS]?: OrganizationClaim[];
 }
@@ -157,7 +159,8 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
 
     const insertedUser: InsertUser = {
       identityProviderId: claims.sub,
-      name: claims.preferred_username ?? claims.email,
+      name: claims.name ?? claims.preferred_username ?? claims.email,
+      avatarUrl: claims.picture,
       email: claims.email,
     };
 
@@ -189,12 +192,16 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
 
 /**
  * Authentication plugin.
+ *
+ * Uses "resolve-only" mode to allow unauthenticated queries (public board access).
+ * Mutations are protected by authorization plugins that check for observer.
+ *
  * @see https://the-guild.dev/graphql/envelop/plugins/use-generic-auth
  */
 const authenticationPlugin = useGenericAuth({
   contextFieldName: "observer",
   resolveUserFn: resolveUser,
-  mode: protectRoutes ? "protect-all" : "resolve-only",
+  mode: "resolve-only",
 });
 
 export default authenticationPlugin;

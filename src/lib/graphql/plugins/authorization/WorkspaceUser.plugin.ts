@@ -4,7 +4,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { checkWorkspaceLimit } from "lib/entitlements";
-import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
+import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
 import type { InsertMember } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -29,7 +29,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
       checkPermission,
       checkWorkspaceLimit,
       FEATURE_KEYS,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -87,8 +87,8 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
                 if (!allowed) throw new Error("Unauthorized");
               }
 
-              // Check tier limits via entitlements service (bypass for exempt workspaces)
-              if (!billingBypassSlugs.includes(workspace.slug)) {
+              // Check tier limits via entitlements service (bypass for exempt orgs)
+              if (!billingBypassOrgIds.includes(workspace.organizationId)) {
                 const withinMemberLimit = await checkWorkspaceLimit(
                   workspace.id,
                   FEATURE_KEYS.MAX_MEMBERS,
@@ -153,7 +153,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
               if (
                 newRole &&
                 newRole !== "member" &&
-                !billingBypassSlugs.includes(workspace.slug)
+                !billingBypassOrgIds.includes(workspace.organizationId)
               ) {
                 const numberOfAdmins = workspace.members.filter(
                   (member) => member.role !== "member",
@@ -187,7 +187,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
       checkPermission,
       checkWorkspaceLimit,
       FEATURE_KEYS,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       propName,
       scope,
     ],

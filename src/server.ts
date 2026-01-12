@@ -8,6 +8,7 @@ import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
+import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
   AUTHZ_ENABLED,
@@ -89,6 +90,7 @@ async function startServer(): Promise<void> {
         methods: ["GET", "POST", "OPTIONS"],
       }),
     )
+    .use(authzRoutes)
     .use(entitlementsWebhook)
     .use(
       yoga({

@@ -4,7 +4,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
-import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
+import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
 import type { InsertLabel } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -27,7 +27,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -86,7 +86,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 project.workspace,
                 FEATURE_KEYS.MAX_LABELS,
                 project.labels.length,
-                billingBypassSlugs,
+                billingBypassOrgIds,
               );
               if (!withinLimit)
                 throw new Error("Maximum number of labels reached");
@@ -104,7 +104,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       propName,
       scope,
     ],

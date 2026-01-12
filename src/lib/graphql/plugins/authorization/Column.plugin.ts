@@ -4,11 +4,34 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
-import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
+import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
-import type { InsertColumn } from "lib/db/schema";
+import type { InsertColumn, members } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
+
+/**
+ * Check if user has admin+ role on project's workspace via member table.
+ * This handles the race condition where tuple sync hasn't completed yet.
+ */
+const checkMemberTablePermission = async (
+  db: any,
+  userId: string,
+  projectId: string,
+): Promise<boolean> => {
+  // Get workspace from project
+  const project = await db.query.projects.findFirst({
+    where: (table: any, { eq }: any) => eq(table.id, projectId),
+    columns: { workspaceId: true },
+  });
+  if (!project) return false;
+
+  const membership = await db.query.members.findFirst({
+    where: (table: typeof members, { and, eq }: any) =>
+      and(eq(table.userId, userId), eq(table.workspaceId, project.workspaceId)),
+  });
+  return membership?.role === "owner" || membership?.role === "admin";
+};
 
 /**
  * Validate column permissions via PDP.
@@ -25,9 +48,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
+      checkMemberTablePermission,
       isWithinLimit,
       FEATURE_KEYS,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -51,7 +75,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               });
               if (!column) throw new Error("Column not found");
 
-              const allowed = await checkPermission(
+              let allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
@@ -60,11 +84,20 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "admin",
                 authzCache,
               );
+
+              // Fallback: check member table directly (handles race condition)
+              if (!allowed) {
+                allowed = await checkMemberTablePermission(
+                  db,
+                  observer.id,
+                  column.projectId,
+                );
+              }
               if (!allowed) throw new Error("Unauthorized");
             } else {
               const projectId = (input as InsertColumn).projectId;
 
-              const allowed = await checkPermission(
+              let allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
@@ -73,6 +106,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "admin",
                 authzCache,
               );
+
+              // Fallback: check member table directly (handles race condition)
+              if (!allowed) {
+                allowed = await checkMemberTablePermission(
+                  db,
+                  observer.id,
+                  projectId,
+                );
+              }
               if (!allowed) throw new Error("Unauthorized");
 
               // Get project with columns and workspace for tier limit check
@@ -86,7 +128,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 project.workspace,
                 FEATURE_KEYS.MAX_COLUMNS,
                 project.columns.length,
-                billingBypassSlugs,
+                billingBypassOrgIds,
               );
               if (!withinLimit)
                 throw new Error("Maximum number of columns reached");
@@ -102,9 +144,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
+      checkMemberTablePermission,
       isWithinLimit,
       FEATURE_KEYS,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       propName,
       scope,
     ],

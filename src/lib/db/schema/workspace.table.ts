@@ -4,7 +4,6 @@ import {
   pgEnum,
   pgTable,
   text,
-  unique,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -21,20 +20,21 @@ export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
 
 /**
  * Workspace table.
+ *
+ * Organization identity (name, slug) is owned by Gatekeeper (IDP).
+ * Apps resolve org name/slug from JWT claims, not DB.
+ * This table stores only app-specific settings.
  */
 export const workspaces = pgTable(
   "workspace",
   {
     id: generateDefaultId(),
-    // FK to IDP organization - workspaces belong to orgs
-    organizationId: text("organization_id").notNull(),
-    name: text().notNull(),
-    slug: text()
-      // TODO
-      // .generatedAlwaysAs((): SQL => generateSlug(workspaceTable.name))
-      .notNull(),
+    // FK to IDP organization - workspaces are 1:1 with orgs
+    // Org name/slug resolved from JWT claims at runtime
+    organizationId: text("organization_id").notNull().unique(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     tier: tier().notNull().default("free"),
+    // Cached from Aether, synced via webhook
     subscriptionId: text(),
     billingAccountId: text(),
     createdAt: generateDefaultDate(),
@@ -42,7 +42,6 @@ export const workspaces = pgTable(
   },
   (table) => [
     uniqueIndex().on(table.id),
-    unique().on(table.slug),
     index("workspace_organization_id_idx").on(table.organizationId),
   ],
 );

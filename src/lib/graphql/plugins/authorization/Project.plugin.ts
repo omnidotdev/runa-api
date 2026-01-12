@@ -4,11 +4,27 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
-import { FEATURE_KEYS, billingBypassSlugs } from "./constants";
+import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
-import type { InsertProject } from "lib/db/schema";
+import type { InsertProject, members } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
+
+/**
+ * Check if user has admin+ role in member table (fallback for race conditions).
+ * This handles the case where AuthzSync hasn't persisted the tuple yet.
+ */
+const checkMemberTablePermission = async (
+  db: any,
+  userId: string,
+  workspaceId: string,
+): Promise<boolean> => {
+  const membership = await db.query.members.findFirst({
+    where: (table: typeof members, { and, eq }: any) =>
+      and(eq(table.userId, userId), eq(table.workspaceId, workspaceId)),
+  });
+  return membership?.role === "owner" || membership?.role === "admin";
+};
 
 /**
  * Validate project permissions via PDP.
@@ -25,9 +41,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
+      checkMemberTablePermission,
       isWithinLimit,
       FEATURE_KEYS,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -46,7 +63,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (scope === "create") {
               const workspaceId = (input as InsertProject).workspaceId;
 
-              const allowed = await checkPermission(
+              // Check OpenFGA first
+              let allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
@@ -55,6 +73,16 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "admin",
                 authzCache,
               );
+
+              // Fallback: check member table directly (handles race condition
+              // where tuple sync hasn't completed yet)
+              if (!allowed) {
+                allowed = await checkMemberTablePermission(
+                  db,
+                  observer.id,
+                  workspaceId,
+                );
+              }
               if (!allowed) throw new Error("Unauthorized");
 
               // Get workspace for tier limit check
@@ -77,20 +105,39 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 workspace,
                 FEATURE_KEYS.MAX_PROJECTS,
                 totalProjects,
-                billingBypassSlugs,
+                billingBypassOrgIds,
               );
               if (!withinLimit)
                 throw new Error("Maximum number of projects reached");
             } else {
-              const allowed = await checkPermission(
+              // For update/delete, check permission on the project
+              const projectId = input as string;
+
+              let allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
                 "project",
-                input as string,
+                projectId,
                 "admin",
                 authzCache,
               );
+
+              // Fallback: check member table directly (handles race condition)
+              if (!allowed) {
+                // Get workspace from project to check membership
+                const project = await db.query.projects.findFirst({
+                  where: (table, { eq }) => eq(table.id, projectId),
+                  columns: { workspaceId: true },
+                });
+                if (project) {
+                  allowed = await checkMemberTablePermission(
+                    db,
+                    observer.id,
+                    project.workspaceId,
+                  );
+                }
+              }
               if (!allowed) throw new Error("Unauthorized");
             }
           },
@@ -104,9 +151,10 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
+      checkMemberTablePermission,
       isWithinLimit,
       FEATURE_KEYS,
-      billingBypassSlugs,
+      billingBypassOrgIds,
       propName,
       scope,
     ],

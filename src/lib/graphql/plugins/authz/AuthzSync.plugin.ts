@@ -37,7 +37,7 @@ const syncCreateWorkspaceUser = (): PlanWrapperFn =>
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
-        const $input = fieldArgs.getRaw(["input", "workspaceUser"]);
+        const $input = fieldArgs.getRaw(["input", "member"]);
 
         // Run sync after mutation succeeds
         sideEffect([$result, $input], async ([result, input]) => {
@@ -366,10 +366,10 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
  */
 const AuthzSyncPlugin = wrapPlans({
   Mutation: {
-    // Workspace membership
-    createWorkspaceUser: syncCreateWorkspaceUser(),
-    updateWorkspaceUser: syncUpdateWorkspaceUser(),
-    deleteWorkspaceUser: syncDeleteWorkspaceUser(),
+    // Workspace membership (member table)
+    createMember: syncCreateWorkspaceUser(),
+    updateMember: syncUpdateWorkspaceUser(),
+    deleteMember: syncDeleteWorkspaceUser(),
 
     // Workspaces
     createWorkspace: syncCreateWorkspace(),

@@ -204,6 +204,20 @@
       "when": 1768191234552,
       "tag": "0028_confused_texas_twister",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1768192379439,
+      "tag": "0029_condemned_orphan",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1768194172955,
+      "tag": "0030_dapper_serpent_society",
+      "breakpoints": true
     }
   ]
 }

@@ -17,7 +17,7 @@ import graphilePreset from "lib/config/graphile.config";
 import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
-  billingBypassSlugs,
+  billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 
 /**
@@ -51,7 +51,7 @@ const generateGraphqlSchema = async () => {
       "lib/entitlements": { isWithinLimit, checkWorkspaceLimit },
       "./constants": {
         FEATURE_KEYS,
-        billingBypassSlugs,
+        billingBypassOrgIds,
       },
       "lib/auth/organizations": { getDefaultOrganization },
     },
