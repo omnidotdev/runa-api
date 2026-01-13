@@ -4,20 +4,10 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { getDefaultOrganization } from "lib/auth/organizations";
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+import { validateOrgExists } from "lib/idp/validateOrg";
 
-import type { OrganizationClaim } from "lib/auth/organizations";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
-
-/**
- * Validate that user belongs to the specified organization.
- */
-const validateOrgMembership = (
-  organizations: OrganizationClaim[],
-  organizationId: string,
-): boolean => {
-  return organizations.some((org) => org.id === organizationId);
-};
 
 /**
  * Validate workspace permissions via PDP.
@@ -35,7 +25,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_PROVIDER_URL,
       checkPermission,
       getDefaultOrganization,
-      validateOrgMembership,
+      validateOrgExists,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -53,7 +43,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (scope === "create") {
               // For create, validate org is specified or use default
               // Note: We don't validate org membership here because:
-              // 1. JWT claims may be stale (user just created org in Gatekeeper)
+              // 1. JWT claims may be stale (user just created org in IDP)
               // 2. Creating a workspace is harmless - permissions come from member table
               // 3. User will add themselves as owner in the subsequent createWorkspaceUser call
               const workspaceInput = input as {
@@ -68,8 +58,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 throw new Error("No organization available");
               }
 
+              // Validate org exists in IDP (fail-open if IDP unavailable)
+              const orgExists = await validateOrgExists(targetOrgId);
+              if (!orgExists) {
+                throw new Error("Organization not found in identity provider");
+              }
+
               // Org ID is valid, allow workspace creation
-              // Actual access control happens via member table and OpenFGA
+              // Actual access control happens via member table and PDP
             } else {
               // For update/delete, check PDP permissions
               const requiredPermission = scope === "delete" ? "owner" : "admin";
@@ -96,7 +92,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_PROVIDER_URL,
       checkPermission,
       getDefaultOrganization,
-      validateOrgMembership,
+      validateOrgExists,
       propName,
       scope,
     ],

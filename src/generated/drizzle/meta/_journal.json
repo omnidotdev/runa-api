@@ -218,6 +218,13 @@
       "when": 1768194172955,
       "tag": "0030_dapper_serpent_society",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1768292913807,
+      "tag": "0031_jazzy_invisible_woman",
+      "breakpoints": true
     }
   ]
 }

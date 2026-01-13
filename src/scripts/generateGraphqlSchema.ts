@@ -14,11 +14,12 @@ import {
   writeTuples,
 } from "lib/authz";
 import graphilePreset from "lib/config/graphile.config";
-import { checkWorkspaceLimit, isWithinLimit } from "lib/entitlements";
+import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
+import { validateOrgExists } from "lib/idp/validateOrg";
 
 /**
  * Generate a GraphQL schema from a Postgres database.
@@ -48,12 +49,13 @@ const generateGraphqlSchema = async () => {
         writeTuples,
         deleteTuples,
       },
-      "lib/entitlements": { isWithinLimit, checkWorkspaceLimit },
+      "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "./constants": {
         FEATURE_KEYS,
         billingBypassOrgIds,
       },
       "lib/auth/organizations": { getDefaultOrganization },
+      "lib/idp/validateOrg": { validateOrgExists },
     },
   });
 

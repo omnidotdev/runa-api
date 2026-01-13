@@ -1,21 +1,22 @@
 /**
  * High-level entitlement check helpers for authorization plugins.
  * Wraps the entitlements client with caching.
+ *
+ * Entitlements are queried at the ORGANIZATION level, not workspace level.
+ * This enables bundle billing where one subscription covers all Omni products.
  */
 
 import { getCached, setCached } from "./cache";
 import { getEntitlements } from "./client";
 
-import type { SelectWorkspace } from "lib/db/schema";
-
 /** Runa product ID for entitlements */
 const PRODUCT_ID = "runa";
 
 /** Cache key prefix */
-const CACHE_PREFIX = "workspace";
+const CACHE_PREFIX = "organization";
 
-/** Tier type matching workspace schema */
-type Tier = SelectWorkspace["tier"];
+/** Tier type */
+type Tier = "free" | "basic" | "team" | "enterprise";
 
 /** Default limits when entitlements service is unavailable or entitlement not found */
 const DEFAULT_LIMITS: Record<string, Record<Tier, number>> = {
@@ -35,19 +36,24 @@ interface CachedEntitlements {
 }
 
 /**
- * Fetch and cache entitlements for a workspace.
+ * Fetch and cache entitlements for an organization.
+ * Entitlements are at the org level, enabling bundle billing.
  */
-const fetchWorkspaceEntitlements = async (
-  workspaceId: string,
-): Promise<CachedEntitlements | null> => {
-  const cacheKey = `${CACHE_PREFIX}:${workspaceId}`;
+async function fetchOrganizationEntitlements(
+  organizationId: string,
+): Promise<CachedEntitlements | null> {
+  const cacheKey = `${CACHE_PREFIX}:${organizationId}`;
 
   // Check cache first
   const cached = getCached<CachedEntitlements>(cacheKey);
   if (cached) return cached;
 
-  // Fetch from entitlements service
-  const response = await getEntitlements("workspace", workspaceId, PRODUCT_ID);
+  // Fetch from entitlements service using organization entity type
+  const response = await getEntitlements(
+    "organization",
+    organizationId,
+    PRODUCT_ID,
+  );
 
   if (!response) return null;
 
@@ -59,10 +65,13 @@ const fetchWorkspaceEntitlements = async (
   };
 
   for (const ent of response.entitlements) {
-    if (ent.featureKey === "tier") {
+    // Check product-specific tier first (runa:tier), then shared tier
+    if (ent.featureKey === `${PRODUCT_ID}:tier` || ent.featureKey === "tier") {
       entitlements.tier = (ent.value as Tier) ?? "free";
     } else if (ent.featureKey.startsWith("max_")) {
-      entitlements.limits[ent.featureKey] =
+      // Handle both product-specific (runa:max_projects) and shared (max_projects)
+      const key = ent.featureKey.replace(`${PRODUCT_ID}:`, "");
+      entitlements.limits[key] =
         typeof ent.value === "number" ? ent.value : Number(ent.value) || -1;
     }
   }
@@ -71,19 +80,19 @@ const fetchWorkspaceEntitlements = async (
   setCached(cacheKey, entitlements, response.entitlementVersion);
 
   return entitlements;
-};
+}
 
 /**
- * Get a specific limit for a workspace.
+ * Get a specific limit for an organization.
  * Returns -1 for unlimited, or the limit number.
  * Falls back to default limits based on tier if entitlements service unavailable.
  */
-const getWorkspaceLimit = async (
-  workspaceId: string,
+async function getOrganizationLimit(
+  organizationId: string,
   limitKey: string,
   fallbackTier: Tier = "free",
-): Promise<number> => {
-  const entitlements = await fetchWorkspaceEntitlements(workspaceId);
+): Promise<number> {
+  const entitlements = await fetchOrganizationEntitlements(organizationId);
 
   if (entitlements) {
     // Check if we have a specific limit set
@@ -97,20 +106,24 @@ const getWorkspaceLimit = async (
 
   // Entitlements service unavailable - use fallback tier defaults
   return DEFAULT_LIMITS[limitKey]?.[fallbackTier] ?? -1;
-};
+}
 
 /**
- * Check if a workspace is within its limit for a resource.
+ * Check if an organization is within its limit for a resource.
  * Returns true if the current count is below the limit.
  * Returns true if the limit is -1 (unlimited).
  */
-export async function checkWorkspaceLimit(
-  workspaceId: string,
+export async function checkOrganizationLimit(
+  organizationId: string,
   limitKey: string,
   currentCount: number,
   fallbackTier: Tier = "free",
 ): Promise<boolean> {
-  const limit = await getWorkspaceLimit(workspaceId, limitKey, fallbackTier);
+  const limit = await getOrganizationLimit(
+    organizationId,
+    limitKey,
+    fallbackTier,
+  );
 
   // -1 means unlimited
   if (limit === -1) return true;
@@ -119,11 +132,12 @@ export async function checkWorkspaceLimit(
 }
 
 /**
- * Check if a workspace is within its limit, using workspace object for fallback.
+ * Check if a workspace is within its limit.
+ * Queries entitlements at the organization level (bundle billing model).
  * This is the primary function for authorization plugins.
  */
 export async function isWithinLimit(
-  workspace: { id: string; tier: Tier; organizationId: string },
+  workspace: { id: string; organizationId: string },
   limitKey: string,
   currentCount: number,
   billingBypassOrgIds: string[] = [],
@@ -133,10 +147,22 @@ export async function isWithinLimit(
     return true;
   }
 
-  return checkWorkspaceLimit(
-    workspace.id,
+  return checkOrganizationLimit(
+    workspace.organizationId,
     limitKey,
     currentCount,
-    workspace.tier,
+    "free", // Default to free tier if Aether unavailable
   );
+}
+
+/**
+ * Get the tier for an organization.
+ * Useful for displaying tier in UI.
+ * @knipignore - exported for UI tier display
+ */
+export async function getOrganizationTier(
+  organizationId: string,
+): Promise<Tier> {
+  const entitlements = await fetchOrganizationEntitlements(organizationId);
+  return entitlements?.tier ?? "free";
 }

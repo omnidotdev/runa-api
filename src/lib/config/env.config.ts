@@ -18,6 +18,8 @@ export const {
   // AuthZ (PDP)
   AUTHZ_PROVIDER_URL,
   AUTHZ_ENABLED,
+  // Gatekeeper (IDP) webhook
+  GATEKEEPER_WEBHOOK_SECRET,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

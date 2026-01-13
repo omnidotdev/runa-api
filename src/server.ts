@@ -25,6 +25,7 @@ import {
   authenticationPlugin,
   organizationsPlugin,
 } from "lib/graphql/plugins";
+import idpWebhook from "lib/idp/webhooks";
 
 /** Health check timeout in milliseconds */
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
@@ -92,6 +93,7 @@ async function startServer(): Promise<void> {
     )
     .use(authzRoutes)
     .use(entitlementsWebhook)
+    .use(idpWebhook)
     .use(
       yoga({
         schema,

@@ -3,7 +3,7 @@ import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
-import { checkWorkspaceLimit } from "lib/entitlements";
+import { isWithinLimit } from "lib/entitlements";
 import { AUTH_BASE_URL, addOrgMember } from "lib/idp/client";
 import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
@@ -28,7 +28,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      checkWorkspaceLimit,
+      isWithinLimit,
       AUTH_BASE_URL,
       addOrgMember,
       FEATURE_KEYS,
@@ -101,32 +101,30 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
                 );
               }
 
-              // Check tier limits via entitlements service (bypass for exempt orgs)
-              if (!billingBypassOrgIds.includes(workspace.organizationId)) {
-                const withinMemberLimit = await checkWorkspaceLimit(
-                  workspace.id,
-                  FEATURE_KEYS.MAX_MEMBERS,
-                  workspace.members.length,
-                  workspace.tier as "free" | "basic" | "team",
+              // Check tier limits via entitlements service
+              const withinMemberLimit = await isWithinLimit(
+                workspace,
+                FEATURE_KEYS.MAX_MEMBERS,
+                workspace.members.length,
+                billingBypassOrgIds,
+              );
+              if (!withinMemberLimit)
+                throw new Error("Maximum number of members reached");
+
+              // Check admin limit if adding as admin+
+              if (newMemberRole && newMemberRole !== "member") {
+                const numberOfAdmins = workspace.members.filter(
+                  (member) => member.role !== "member",
+                ).length;
+
+                const withinAdminLimit = await isWithinLimit(
+                  workspace,
+                  FEATURE_KEYS.MAX_ADMINS,
+                  numberOfAdmins,
+                  billingBypassOrgIds,
                 );
-                if (!withinMemberLimit)
-                  throw new Error("Maximum number of members reached");
-
-                // Check admin limit if adding as admin+
-                if (newMemberRole && newMemberRole !== "member") {
-                  const numberOfAdmins = workspace.members.filter(
-                    (member) => member.role !== "member",
-                  ).length;
-
-                  const withinAdminLimit = await checkWorkspaceLimit(
-                    workspace.id,
-                    FEATURE_KEYS.MAX_ADMINS,
-                    numberOfAdmins,
-                    workspace.tier as "free" | "basic" | "team",
-                  );
-                  if (!withinAdminLimit)
-                    throw new Error("Maximum number of admins reached");
-                }
+                if (!withinAdminLimit)
+                  throw new Error("Maximum number of admins reached");
               }
             } else {
               const targetWorkspaceId = (input as InsertMember).workspaceId;
@@ -164,20 +162,16 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
               // Check tier limits for admin promotions
               const newRole = (input as InsertMember).role;
 
-              if (
-                newRole &&
-                newRole !== "member" &&
-                !billingBypassOrgIds.includes(workspace.organizationId)
-              ) {
+              if (newRole && newRole !== "member") {
                 const numberOfAdmins = workspace.members.filter(
                   (member) => member.role !== "member",
                 ).length;
 
-                const withinAdminLimit = await checkWorkspaceLimit(
-                  workspace.id,
+                const withinAdminLimit = await isWithinLimit(
+                  workspace,
                   FEATURE_KEYS.MAX_ADMINS,
                   numberOfAdmins,
-                  workspace.tier as "free" | "basic" | "team",
+                  billingBypassOrgIds,
                 );
                 if (!withinAdminLimit)
                   throw new Error("Maximum number of admins reached");
@@ -199,7 +193,7 @@ const validatePermissions = (propName: string, scope: "create" | "update") =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      checkWorkspaceLimit,
+      isWithinLimit,
       AUTH_BASE_URL,
       addOrgMember,
       FEATURE_KEYS,

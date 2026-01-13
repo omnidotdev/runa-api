@@ -309,7 +309,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
   );
 
 /**
- * Sync workspace creation - adds owner tuple.
+ * Sync workspace creation - adds organization→workspace tuple and owner tuple.
  */
 const syncCreateWorkspace = (): PlanWrapperFn =>
   EXPORTABLE(
@@ -320,38 +320,55 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
       AUTHZ_PROVIDER_URL,
       writeTuples,
     ): PlanWrapperFn =>
-      (plan, _, _fieldArgs) => {
+      (plan, _, fieldArgs) => {
         const $result = plan();
+        const $input = fieldArgs.getRaw(["input", "workspace"]);
         const $observer = context().get("observer");
 
-        sideEffect([$result, $observer], async ([result, observer]) => {
-          if (!result || !observer) return;
-          if (AUTHZ_ENABLED !== "true") return;
-          if (!AUTHZ_PROVIDER_URL) return;
+        sideEffect(
+          [$result, $input, $observer],
+          async ([result, input, observer]) => {
+            if (!result || !observer) return;
+            if (AUTHZ_ENABLED !== "true") return;
+            if (!AUTHZ_PROVIDER_URL) return;
 
-          const workspaceId = (result as { id?: string })?.id;
+            const workspaceId = (result as { id?: string })?.id;
+            const organizationId = (input as { organizationId?: string })
+              ?.organizationId;
 
-          if (!workspaceId) {
-            console.error("[AuthZ Sync] Workspace ID not found in result");
-            return;
-          }
+            if (!workspaceId) {
+              console.error("[AuthZ Sync] Workspace ID not found in result");
+              return;
+            }
 
-          try {
-            // The workspace creator becomes the owner
-            await writeTuples(AUTHZ_PROVIDER_URL, [
-              {
-                user: `user:${observer.id}`,
-                relation: "owner",
-                object: `workspace:${workspaceId}`,
-              },
-            ]);
-          } catch (error) {
-            console.error(
-              "[AuthZ Sync] Failed to sync workspace creation:",
-              error,
-            );
-          }
-        });
+            try {
+              const tuples = [
+                // The workspace creator becomes the owner
+                {
+                  user: `user:${observer.id}`,
+                  relation: "owner",
+                  object: `workspace:${workspaceId}`,
+                },
+              ];
+
+              // Link workspace to organization for permission inheritance
+              if (organizationId) {
+                tuples.push({
+                  user: `organization:${organizationId}`,
+                  relation: "organization",
+                  object: `workspace:${workspaceId}`,
+                });
+              }
+
+              await writeTuples(AUTHZ_PROVIDER_URL, tuples);
+            } catch (error) {
+              console.error(
+                "[AuthZ Sync] Failed to sync workspace creation:",
+                error,
+              );
+            }
+          },
+        );
 
         return $result;
       },

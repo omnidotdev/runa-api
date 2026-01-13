@@ -15,11 +15,13 @@ import type { MutationScope } from "./types";
  * This handles the case where AuthzSync hasn't persisted the tuple yet.
  */
 const checkMemberTablePermission = async (
+  // biome-ignore lint/suspicious/noExplicitAny: db type from postgraphile context
   db: any,
   userId: string,
   workspaceId: string,
 ): Promise<boolean> => {
   const membership = await db.query.members.findFirst({
+    // biome-ignore lint/suspicious/noExplicitAny: drizzle query builder callback
     where: (table: typeof members, { and, eq }: any) =>
       and(eq(table.userId, userId), eq(table.workspaceId, workspaceId)),
   });

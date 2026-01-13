@@ -4,6 +4,7 @@ import {
   pgEnum,
   pgTable,
   text,
+  timestamp,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -33,12 +34,20 @@ export const workspaces = pgTable(
     // Org name/slug resolved from JWT claims at runtime
     organizationId: text("organization_id").notNull().unique(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
+    /**
+     * @deprecated Tier is now managed by Aether at the organization level.
+     * Use getOrganizationTier() from lib/entitlements instead.
+     * This column will be removed in a future migration.
+     */
     tier: tier().notNull().default("free"),
     // Cached from Aether, synced via webhook
     subscriptionId: text(),
     billingAccountId: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
+    // Soft delete fields - set when IDP organization is deleted
+    deletedAt: timestamp("deleted_at"),
+    deletionReason: text("deletion_reason"),
   },
   (table) => [
     uniqueIndex().on(table.id),

@@ -15,18 +15,21 @@ import type { MutationScope } from "./types";
  * This handles the race condition where tuple sync hasn't completed yet.
  */
 const checkMemberTablePermission = async (
+  // biome-ignore lint/suspicious/noExplicitAny: db type from postgraphile context
   db: any,
   userId: string,
   projectId: string,
 ): Promise<boolean> => {
   // Get workspace from project
   const project = await db.query.projects.findFirst({
+    // biome-ignore lint/suspicious/noExplicitAny: drizzle query builder callback
     where: (table: any, { eq }: any) => eq(table.id, projectId),
     columns: { workspaceId: true },
   });
   if (!project) return false;
 
   const membership = await db.query.members.findFirst({
+    // biome-ignore lint/suspicious/noExplicitAny: drizzle query builder callback
     where: (table: typeof members, { and, eq }: any) =>
       and(eq(table.userId, userId), eq(table.workspaceId, project.workspaceId)),
   });
