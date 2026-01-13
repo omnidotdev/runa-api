@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 
 import { dbPool } from "lib/db/db";
-import { members, projects, workspaces } from "lib/db/schema";
+import { projects, workspaces } from "lib/db/schema";
 
 interface TupleKey {
   user: string;
@@ -12,22 +12,16 @@ interface TupleKey {
 /**
  * Export all authorization tuples from Runa's source of truth.
  * Used by warden-api to rebuild OpenFGA tuples.
+ *
+ * Note: Member tuples (user→organization relationships) are NOT exported here.
+ * Those are managed by IDP (Gatekeeper), which is the source of truth for
+ * organization membership. This endpoint only exports Runa-specific resource
+ * relationships (workspace→organization, project→workspace).
  */
 async function exportAllTuples(): Promise<TupleKey[]> {
   const tuples: TupleKey[] = [];
 
-  // 1. Workspace memberships (member table)
-  // user:X has role on workspace:Y
-  const allMembers = await dbPool.select().from(members);
-  for (const m of allMembers) {
-    tuples.push({
-      user: `user:${m.userId}`,
-      relation: m.role,
-      object: `workspace:${m.workspaceId}`,
-    });
-  }
-
-  // 2. Project-workspace relationships (project table)
+  // 1. Project-workspace relationships (project table)
   // workspace:X has 'workspace' relation on project:Y
   const allProjects = await dbPool.select().from(projects);
   for (const p of allProjects) {
@@ -38,7 +32,7 @@ async function exportAllTuples(): Promise<TupleKey[]> {
     });
   }
 
-  // 3. Workspace-organization relationships (workspace table)
+  // 2. Workspace-organization relationships (workspace table)
   // organization:X has 'organization' relation on workspace:Y
   const allWorkspaces = await dbPool.select().from(workspaces);
   for (const w of allWorkspaces) {

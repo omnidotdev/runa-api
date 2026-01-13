@@ -17,15 +17,6 @@ const SmartTagPlugin = jsonPgSmartTags({
           },
         },
       },
-      member: {
-        attribute: {
-          role: {
-            tags: {
-              behavior: "+orderBy",
-            },
-          },
-        },
-      },
     },
   },
 });

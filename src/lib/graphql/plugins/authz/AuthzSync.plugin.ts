@@ -1,11 +1,12 @@
 /**
  * AuthZ Sync Plugin
  *
- * Syncs Runa mutations to the authorization store (PDP/OpenFGA).
+ * Syncs Runa resource mutations to the authorization store (PDP/OpenFGA).
  * Uses sideEffect to run sync logic after mutations complete.
  *
- * This is a Pattern A implementation - sync happens alongside mutations.
- * TODO: Replace with Vortex event-driven sync for durability.
+ * Note: Organization membership is managed by IDP (Gatekeeper), which syncs
+ * member tuples directly to the AuthZ store. This plugin only handles
+ * Runa-specific resources (workspaces, projects).
  */
 
 import { EXPORTABLE } from "graphile-export";
@@ -19,190 +20,8 @@ import {
   writeTuples,
 } from "lib/authz";
 
-import type { Role } from "lib/authz";
-import type { InsertMember, InsertProject } from "lib/db/schema";
+import type { InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
-
-/**
- * Sync workspace membership creation to authz store.
- */
-const syncCreateWorkspaceUser = (): PlanWrapperFn =>
-  EXPORTABLE(
-    (
-      _context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
-      writeTuples,
-    ): PlanWrapperFn =>
-      (plan, _, fieldArgs) => {
-        const $result = plan();
-        const $input = fieldArgs.getRaw(["input", "member"]);
-
-        // Run sync after mutation succeeds
-        sideEffect([$result, $input], async ([result, input]) => {
-          if (!result) return; // Mutation failed
-          if (AUTHZ_ENABLED !== "true") return;
-          if (!AUTHZ_PROVIDER_URL) return;
-
-          const { userId, workspaceId, role } = input as InsertMember;
-
-          try {
-            await writeTuples(AUTHZ_PROVIDER_URL, [
-              {
-                user: `user:${userId}`,
-                relation: role as string,
-                object: `workspace:${workspaceId}`,
-              },
-            ]);
-          } catch (error) {
-            // Log but don't fail the mutation - sync can be retried
-            console.error(
-              "[AuthZ Sync] Failed to sync workspace membership:",
-              error,
-            );
-          }
-        });
-
-        return $result;
-      },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, writeTuples],
-  );
-
-/**
- * Sync workspace membership update to authz store.
- */
-const syncUpdateWorkspaceUser = (): PlanWrapperFn =>
-  EXPORTABLE(
-    (
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
-      writeTuples,
-      deleteTuples,
-    ): PlanWrapperFn =>
-      (plan, _, fieldArgs) => {
-        const $result = plan();
-        const $input = fieldArgs.getRaw(["input", "patch"]);
-        const $db = context().get("db");
-
-        sideEffect([$result, $input, $db], async ([result, input, db]) => {
-          if (!result) return;
-          if (AUTHZ_ENABLED !== "true") return;
-          if (!AUTHZ_PROVIDER_URL) return;
-
-          const { userId, workspaceId, role: newRole } = input as InsertMember;
-
-          // Get the previous role to properly update tuples
-          const membership = await db.query.members.findFirst({
-            where: (table, { and, eq }) =>
-              and(eq(table.userId, userId), eq(table.workspaceId, workspaceId)),
-          });
-
-          const previousRole = membership?.role as Role | undefined;
-
-          try {
-            // Delete previous role tuple if exists
-            if (previousRole) {
-              await deleteTuples(AUTHZ_PROVIDER_URL, [
-                {
-                  user: `user:${userId}`,
-                  relation: previousRole,
-                  object: `workspace:${workspaceId}`,
-                },
-              ]);
-            }
-
-            // Write new role tuple
-            if (newRole) {
-              await writeTuples(AUTHZ_PROVIDER_URL, [
-                {
-                  user: `user:${userId}`,
-                  relation: newRole as string,
-                  object: `workspace:${workspaceId}`,
-                },
-              ]);
-            }
-          } catch (error) {
-            console.error(
-              "[AuthZ Sync] Failed to sync workspace membership update:",
-              error,
-            );
-          }
-        });
-
-        return $result;
-      },
-    [
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
-      writeTuples,
-      deleteTuples,
-    ],
-  );
-
-/**
- * Sync workspace membership deletion to authz store.
- */
-const syncDeleteWorkspaceUser = (): PlanWrapperFn =>
-  EXPORTABLE(
-    (
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
-      deleteTuples,
-    ): PlanWrapperFn =>
-      (plan, _, fieldArgs) => {
-        const $result = plan();
-        const $userId = fieldArgs.getRaw(["input", "userId"]);
-        const $workspaceId = fieldArgs.getRaw(["input", "workspaceId"]);
-        const $db = context().get("db");
-
-        sideEffect(
-          [$result, $userId, $workspaceId, $db],
-          async ([result, userId, workspaceId, db]) => {
-            if (!result) return;
-            if (AUTHZ_ENABLED !== "true") return;
-            if (!AUTHZ_PROVIDER_URL) return;
-
-            // Get the role before deletion for proper tuple cleanup
-            const membership = await db.query.members.findFirst({
-              where: (table, { and, eq }) =>
-                and(
-                  eq(table.userId, userId as string),
-                  eq(table.workspaceId, workspaceId as string),
-                ),
-            });
-
-            const previousRole = membership?.role as Role | undefined;
-
-            try {
-              if (previousRole) {
-                await deleteTuples(AUTHZ_PROVIDER_URL, [
-                  {
-                    user: `user:${userId}`,
-                    relation: previousRole,
-                    object: `workspace:${workspaceId}`,
-                  },
-                ]);
-              }
-            } catch (error) {
-              console.error(
-                "[AuthZ Sync] Failed to sync workspace membership deletion:",
-                error,
-              );
-            }
-          },
-        );
-
-        return $result;
-      },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, deleteTuples],
-  );
 
 /**
  * Sync project creation to authz store.
@@ -309,12 +128,12 @@ const syncDeleteProject = (): PlanWrapperFn =>
   );
 
 /**
- * Sync workspace creation - adds organization→workspace tuple and owner tuple.
+ * Sync workspace creation - adds organization→workspace tuple.
  */
 const syncCreateWorkspace = (): PlanWrapperFn =>
   EXPORTABLE(
     (
-      context,
+      _context,
       sideEffect,
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
@@ -323,52 +142,43 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $input = fieldArgs.getRaw(["input", "workspace"]);
-        const $observer = context().get("observer");
 
-        sideEffect(
-          [$result, $input, $observer],
-          async ([result, input, observer]) => {
-            if (!result || !observer) return;
-            if (AUTHZ_ENABLED !== "true") return;
-            if (!AUTHZ_PROVIDER_URL) return;
+        sideEffect([$result, $input], async ([result, input]) => {
+          if (!result) return;
+          if (AUTHZ_ENABLED !== "true") return;
+          if (!AUTHZ_PROVIDER_URL) return;
 
-            const workspaceId = (result as { id?: string })?.id;
-            const organizationId = (input as { organizationId?: string })
-              ?.organizationId;
+          const workspaceId = (result as { id?: string })?.id;
+          const organizationId = (input as { organizationId?: string })
+            ?.organizationId;
 
-            if (!workspaceId) {
-              console.error("[AuthZ Sync] Workspace ID not found in result");
-              return;
+          if (!workspaceId) {
+            console.error("[AuthZ Sync] Workspace ID not found in result");
+            return;
+          }
+
+          try {
+            const tuples = [];
+
+            // Link workspace to organization for permission inheritance
+            if (organizationId) {
+              tuples.push({
+                user: `organization:${organizationId}`,
+                relation: "organization",
+                object: `workspace:${workspaceId}`,
+              });
             }
 
-            try {
-              const tuples = [
-                // The workspace creator becomes the owner
-                {
-                  user: `user:${observer.id}`,
-                  relation: "owner",
-                  object: `workspace:${workspaceId}`,
-                },
-              ];
-
-              // Link workspace to organization for permission inheritance
-              if (organizationId) {
-                tuples.push({
-                  user: `organization:${organizationId}`,
-                  relation: "organization",
-                  object: `workspace:${workspaceId}`,
-                });
-              }
-
+            if (tuples.length > 0) {
               await writeTuples(AUTHZ_PROVIDER_URL, tuples);
-            } catch (error) {
-              console.error(
-                "[AuthZ Sync] Failed to sync workspace creation:",
-                error,
-              );
             }
-          },
-        );
+          } catch (error) {
+            console.error(
+              "[AuthZ Sync] Failed to sync workspace creation:",
+              error,
+            );
+          }
+        });
 
         return $result;
       },
@@ -378,16 +188,14 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
 /**
  * AuthZ Sync Plugin
  *
- * Syncs mutations to the authorization store.
+ * Syncs resource mutations to the authorization store.
  * Errors are logged but don't fail mutations - eventual consistency.
+ *
+ * Note: Member tuples (user→organization relationships) are synced by IDP,
+ * not by this plugin. This plugin only handles resource relationships.
  */
 const AuthzSyncPlugin = wrapPlans({
   Mutation: {
-    // Workspace membership (member table)
-    createMember: syncCreateWorkspaceUser(),
-    updateMember: syncUpdateWorkspaceUser(),
-    deleteMember: syncDeleteWorkspaceUser(),
-
     // Workspaces
     createWorkspace: syncCreateWorkspace(),
 

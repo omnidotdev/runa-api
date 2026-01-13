@@ -15,11 +15,15 @@ export const {
   BILLING_BYPASS_ORG_IDS,
   ENTITLEMENTS_BASE_URL,
   ENTITLEMENTS_WEBHOOK_SECRET,
-  // AuthZ (PDP)
-  AUTHZ_PROVIDER_URL,
+  // AuthZ - feature flag and PDP URL for permission checks
   AUTHZ_ENABLED,
-  // Gatekeeper (IDP) webhook
-  GATEKEEPER_WEBHOOK_SECRET,
+  AUTHZ_PROVIDER_URL,
+  // IDP webhook
+  IDP_WEBHOOK_SECRET,
+  // Vortex workflow engine (for authz tuple sync)
+  VORTEX_API_URL,
+  VORTEX_WEBHOOK_SECRET,
+  VORTEX_AUTHZ_WORKFLOW_ID,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

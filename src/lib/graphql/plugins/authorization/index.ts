@@ -1,9 +1,7 @@
 export { default as AssigneePlugin } from "./Assignee.plugin";
 export { default as ColumnPlugin } from "./Column.plugin";
 export { default as EmojiPlugin } from "./Emoji.plugin";
-export { default as InvitationPlugin } from "./Invitation.plugin";
 export { default as LabelPlugin } from "./Label.plugin";
-export { default as MemberPlugin } from "./Member.plugin";
 export { default as PostPlugin } from "./Post.plugin";
 export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsOnly.plugin";
 export { default as ProjectPlugin } from "./Project.plugin";

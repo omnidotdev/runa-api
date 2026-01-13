@@ -6,36 +6,9 @@ import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
-import type { InsertTask, members } from "lib/db/schema";
+import type { InsertTask } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
-
-/**
- * Check if user is a member of project's workspace via member table.
- * This handles the race condition where tuple sync hasn't completed yet.
- */
-const checkMemberTablePermission = async (
-  // biome-ignore lint/suspicious/noExplicitAny: db type from postgraphile context
-  db: any,
-  userId: string,
-  projectId: string,
-): Promise<boolean> => {
-  // Get workspace from project
-  const project = await db.query.projects.findFirst({
-    // biome-ignore lint/suspicious/noExplicitAny: drizzle query builder callback
-    where: (table: any, { eq }: any) => eq(table.id, projectId),
-    columns: { workspaceId: true },
-  });
-  if (!project) return false;
-
-  // Any member can create tasks (editor permission)
-  const membership = await db.query.members.findFirst({
-    // biome-ignore lint/suspicious/noExplicitAny: drizzle query builder callback
-    where: (table: typeof members, { and, eq }: any) =>
-      and(eq(table.userId, userId), eq(table.workspaceId, project.workspaceId)),
-  });
-  return !!membership;
-};
 
 /**
  * Validate task permissions via PDP.
@@ -43,6 +16,9 @@ const checkMemberTablePermission = async (
  * - Create: Editor permission on project required (with tier limits)
  * - Update: Editor permission on project required
  * - Delete: Editor permission on project required
+ *
+ * Note: Member tuples are synced to PDP by IDP (Gatekeeper), so we rely
+ * entirely on PDP checks. No local member table fallback.
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
@@ -52,7 +28,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      checkMemberTablePermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassOrgIds,
@@ -74,7 +49,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (scope === "create") {
               const projectId = (input as InsertTask).projectId;
 
-              let allowed = await checkPermission(
+              const allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
@@ -83,15 +58,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "editor",
                 authzCache,
               );
-
-              // Fallback: check member table directly (handles race condition)
-              if (!allowed) {
-                allowed = await checkMemberTablePermission(
-                  db,
-                  observer.id,
-                  projectId,
-                );
-              }
               if (!allowed) throw new Error("Unauthorized");
 
               // Get project with workspace for tier limit check
@@ -129,7 +95,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               });
               if (!task) throw new Error("Task not found");
 
-              let allowed = await checkPermission(
+              const allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
@@ -138,15 +104,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "editor",
                 authzCache,
               );
-
-              // Fallback: check member table directly (handles race condition)
-              if (!allowed) {
-                allowed = await checkMemberTablePermission(
-                  db,
-                  observer.id,
-                  task.projectId,
-                );
-              }
               if (!allowed) throw new Error("Unauthorized");
             }
           },
@@ -160,7 +117,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      checkMemberTablePermission,
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassOrgIds,

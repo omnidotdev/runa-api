@@ -4,7 +4,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
 
-import type { InsertProjectColumn, members } from "lib/db/schema";
+import type { InsertProjectColumn } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
 
@@ -14,25 +14,10 @@ import type { MutationScope } from "./types";
  * - Create: Admin permission on workspace required
  * - Update: Admin permission on workspace required
  * - Delete: Admin permission on workspace required
+ *
+ * Note: Member tuples are synced to PDP by IDP (Gatekeeper), so we rely
+ * entirely on PDP checks. No local member table fallback.
  */
-/**
- * Check if user has admin+ role in member table (fallback for race conditions).
- * This handles the case where AuthzSync hasn't persisted the tuple yet.
- */
-const checkMemberTablePermission = async (
-  // biome-ignore lint/suspicious/noExplicitAny: db type from postgraphile context
-  db: any,
-  userId: string,
-  workspaceId: string,
-): Promise<boolean> => {
-  const membership = await db.query.members.findFirst({
-    // biome-ignore lint/suspicious/noExplicitAny: drizzle query builder callback
-    where: (table: typeof members, { and, eq }: any) =>
-      and(eq(table.userId, userId), eq(table.workspaceId, workspaceId)),
-  });
-  return membership?.role === "owner" || membership?.role === "admin";
-};
-
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
@@ -41,7 +26,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      checkMemberTablePermission,
       propName,
       scope,
     ): PlanWrapperFn =>
@@ -56,7 +40,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
           if (scope === "create") {
             const workspaceId = (input as InsertProjectColumn).workspaceId;
 
-            // Check OpenFGA first
             const allowed = await checkPermission(
               AUTHZ_ENABLED,
               AUTHZ_PROVIDER_URL,
@@ -65,17 +48,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               workspaceId,
               "admin",
             );
-
-            // Fallback: check member table directly (handles race condition
-            // where tuple sync hasn't completed yet)
-            if (!allowed) {
-              const memberAllowed = await checkMemberTablePermission(
-                db,
-                observer.id,
-                workspaceId,
-              );
-              if (!memberAllowed) throw new Error("Unauthorized");
-            }
+            if (!allowed) throw new Error("Unauthorized");
           } else {
             // Get project column to find workspace for AuthZ check
             const projectColumn = await db.query.projectColumns.findFirst({
@@ -92,16 +65,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               projectColumn.workspaceId,
               "admin",
             );
-
-            // Fallback: check member table directly
-            if (!allowed) {
-              const memberAllowed = await checkMemberTablePermission(
-                db,
-                observer.id,
-                projectColumn.workspaceId,
-              );
-              if (!memberAllowed) throw new Error("Unauthorized");
-            }
+            if (!allowed) throw new Error("Unauthorized");
           }
         });
 
@@ -113,7 +77,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       AUTHZ_ENABLED,
       AUTHZ_PROVIDER_URL,
       checkPermission,
-      checkMemberTablePermission,
       propName,
       scope,
     ],
