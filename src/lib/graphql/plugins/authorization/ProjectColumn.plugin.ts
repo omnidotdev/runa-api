@@ -11,9 +11,9 @@ import type { MutationScope } from "./types";
 /**
  * Validate project column permissions via PDP.
  *
- * - Create: Admin permission on workspace required
- * - Update: Admin permission on workspace required
- * - Delete: Admin permission on workspace required
+ * - Create: Admin permission on organization required
+ * - Update: Admin permission on organization required
+ * - Delete: Admin permission on organization required
  *
  * Note: Member tuples are synced to PDP by IDP (Gatekeeper), so we rely
  * entirely on PDP checks. No local member table fallback.
@@ -33,41 +33,48 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
+        const $authzCache = context().get("authzCache");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        sideEffect(
+          [$input, $observer, $db, $authzCache],
+          async ([input, observer, db, authzCache]) => {
+            if (!observer) throw new Error("Unauthorized");
 
-          if (scope === "create") {
-            const workspaceId = (input as InsertProjectColumn).workspaceId;
+            if (scope === "create") {
+              const organizationId = (input as InsertProjectColumn)
+                .organizationId;
 
-            const allowed = await checkPermission(
-              AUTHZ_ENABLED,
-              AUTHZ_PROVIDER_URL,
-              observer.id,
-              "workspace",
-              workspaceId,
-              "admin",
-            );
-            if (!allowed) throw new Error("Unauthorized");
-          } else {
-            // Get project column to find workspace for AuthZ check
-            const projectColumn = await db.query.projectColumns.findFirst({
-              where: (table, { eq }) => eq(table.id, input),
-              columns: { workspaceId: true },
-            });
-            if (!projectColumn) throw new Error("Project column not found");
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "organization",
+                organizationId,
+                "admin",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            } else {
+              // Get project column to find organization for AuthZ check
+              const projectColumn = await db.query.projectColumns.findFirst({
+                where: (table, { eq }) => eq(table.id, input),
+                columns: { organizationId: true },
+              });
+              if (!projectColumn) throw new Error("Project column not found");
 
-            const allowed = await checkPermission(
-              AUTHZ_ENABLED,
-              AUTHZ_PROVIDER_URL,
-              observer.id,
-              "workspace",
-              projectColumn.workspaceId,
-              "admin",
-            );
-            if (!allowed) throw new Error("Unauthorized");
-          }
-        });
+              const allowed = await checkPermission(
+                AUTHZ_ENABLED,
+                AUTHZ_PROVIDER_URL,
+                observer.id,
+                "organization",
+                projectColumn.organizationId,
+                "admin",
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            }
+          },
+        );
 
         return plan();
       },

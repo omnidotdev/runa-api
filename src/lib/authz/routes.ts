@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 
 import { dbPool } from "lib/db/db";
-import { projects, workspaces } from "lib/db/schema";
+import { projects } from "lib/db/schema";
 
 interface TupleKey {
   user: string;
@@ -16,33 +16,24 @@ interface TupleKey {
  * Note: Member tuples (user→organization relationships) are NOT exported here.
  * Those are managed by IDP (Gatekeeper), which is the source of truth for
  * organization membership. This endpoint only exports Runa-specific resource
- * relationships (workspace→organization, project→workspace).
+ * relationships (organization→project).
+ *
+ * Authorization model:
+ * - organization:X has 'organization' relation on project:Y
+ * - No intermediate workspace - projects belong directly to organizations
  */
 async function exportAllTuples(): Promise<TupleKey[]> {
   const tuples: TupleKey[] = [];
 
-  // 1. Project-workspace relationships (project table)
-  // workspace:X has 'workspace' relation on project:Y
+  // Project-organization relationships (project table)
+  // organization:X has 'organization' relation on project:Y
   const allProjects = await dbPool.select().from(projects);
   for (const p of allProjects) {
     tuples.push({
-      user: `workspace:${p.workspaceId}`,
-      relation: "workspace",
+      user: `organization:${p.organizationId}`,
+      relation: "organization",
       object: `project:${p.id}`,
     });
-  }
-
-  // 2. Workspace-organization relationships (workspace table)
-  // organization:X has 'organization' relation on workspace:Y
-  const allWorkspaces = await dbPool.select().from(workspaces);
-  for (const w of allWorkspaces) {
-    if (w.organizationId) {
-      tuples.push({
-        user: `organization:${w.organizationId}`,
-        relation: "organization",
-        object: `workspace:${w.id}`,
-      });
-    }
   }
 
   return tuples;

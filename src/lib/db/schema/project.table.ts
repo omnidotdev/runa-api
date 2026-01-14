@@ -16,12 +16,14 @@ import { columns } from "./column.table";
 import { labels } from "./label.table";
 import { projectColumns } from "./projectColumn.table";
 import { tasks } from "./task.table";
-import { workspaces } from "./workspace.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Project table.
+ *
+ * Projects belong directly to organizations (via organizationId from JWT claims).
+ * No FK to settings table - settings are separate app preferences.
  */
 export const projects = pgTable(
   "project",
@@ -34,9 +36,8 @@ export const projects = pgTable(
       // TODO
       // .generatedAlwaysAs((): SQL => generateSlug(projects.name))
       .notNull(),
-    workspaceId: uuid()
-      .notNull()
-      .references(() => workspaces.id, { onDelete: "cascade" }),
+    // Organization ID from JWT claims - not a FK, just a reference
+    organizationId: text("organization_id").notNull(),
     projectColumnId: uuid()
       .notNull()
       .references(() => projectColumns.id, { onDelete: "cascade" }),
@@ -48,16 +49,16 @@ export const projects = pgTable(
   },
   (table) => [
     uniqueIndex().on(table.id),
-    index().on(table.workspaceId),
+    index("project_organization_id_idx").on(table.organizationId),
     index().on(table.projectColumnId),
-    unique().on(table.slug, table.workspaceId),
+    unique().on(table.slug, table.organizationId),
   ],
 );
 
 export const projectRelations = relations(projects, ({ one, many }) => ({
-  workspace: one(workspaces, {
-    fields: [projects.workspaceId],
-    references: [workspaces.id],
+  projectColumn: one(projectColumns, {
+    fields: [projects.projectColumnId],
+    references: [projectColumns.id],
   }),
   tasks: many(tasks),
   labels: many(labels),

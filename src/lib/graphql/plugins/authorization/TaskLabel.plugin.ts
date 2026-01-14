@@ -92,7 +92,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 /**
  * Authorization plugin for task labels.
  *
- * Enforces workspace membership. Update/delete requires task author or admin+ role.
+ * Enforces organization membership. Update/delete requires task author or admin+ role.
  */
 const TaskLabelPlugin = wrapPlans({
   Mutation: {

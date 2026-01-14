@@ -6,7 +6,11 @@
  *
  * Note: Organization membership is managed by IDP (Gatekeeper), which syncs
  * member tuples directly to the AuthZ store. This plugin only handles
- * Runa-specific resources (workspaces, projects).
+ * Runa-specific resources (projects).
+ *
+ * Authorization model:
+ * - organization → project (direct, no intermediate workspace)
+ * - Settings table is just app preferences, no auth tuples needed
  */
 
 import { EXPORTABLE } from "graphile-export";
@@ -25,6 +29,7 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
  * Sync project creation to authz store.
+ * Creates organization → project tuple for permission inheritance.
  */
 const syncCreateProject = (): PlanWrapperFn =>
   EXPORTABLE(
@@ -44,8 +49,7 @@ const syncCreateProject = (): PlanWrapperFn =>
           if (AUTHZ_ENABLED !== "true") return;
           if (!AUTHZ_PROVIDER_URL) return;
 
-          const { workspaceId } = input as InsertProject;
-          // The result should contain the created project's ID
+          const { organizationId } = input as InsertProject;
           const projectId = (result as { id?: string })?.id;
 
           if (!projectId) {
@@ -56,8 +60,8 @@ const syncCreateProject = (): PlanWrapperFn =>
           try {
             await writeTuples(AUTHZ_PROVIDER_URL, [
               {
-                user: `workspace:${workspaceId}`,
-                relation: "workspace",
+                user: `organization:${organizationId}`,
+                relation: "organization",
                 object: `project:${projectId}`,
               },
             ]);
@@ -98,7 +102,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
             if (AUTHZ_ENABLED !== "true") return;
             if (!AUTHZ_PROVIDER_URL) return;
 
-            // Get the workspace ID before deletion
+            // Get the organization ID before deletion
             const project = await db.query.projects.findFirst({
               where: (table, { eq }) => eq(table.id, projectId as string),
             });
@@ -108,8 +112,8 @@ const syncDeleteProject = (): PlanWrapperFn =>
             try {
               await deleteTuples(AUTHZ_PROVIDER_URL, [
                 {
-                  user: `workspace:${project.workspaceId}`,
-                  relation: "workspace",
+                  user: `organization:${project.organizationId}`,
+                  relation: "organization",
                   object: `project:${projectId}`,
                 },
               ]);
@@ -128,64 +132,6 @@ const syncDeleteProject = (): PlanWrapperFn =>
   );
 
 /**
- * Sync workspace creation - adds organization→workspace tuple.
- */
-const syncCreateWorkspace = (): PlanWrapperFn =>
-  EXPORTABLE(
-    (
-      _context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
-      writeTuples,
-    ): PlanWrapperFn =>
-      (plan, _, fieldArgs) => {
-        const $result = plan();
-        const $input = fieldArgs.getRaw(["input", "workspace"]);
-
-        sideEffect([$result, $input], async ([result, input]) => {
-          if (!result) return;
-          if (AUTHZ_ENABLED !== "true") return;
-          if (!AUTHZ_PROVIDER_URL) return;
-
-          const workspaceId = (result as { id?: string })?.id;
-          const organizationId = (input as { organizationId?: string })
-            ?.organizationId;
-
-          if (!workspaceId) {
-            console.error("[AuthZ Sync] Workspace ID not found in result");
-            return;
-          }
-
-          try {
-            const tuples = [];
-
-            // Link workspace to organization for permission inheritance
-            if (organizationId) {
-              tuples.push({
-                user: `organization:${organizationId}`,
-                relation: "organization",
-                object: `workspace:${workspaceId}`,
-              });
-            }
-
-            if (tuples.length > 0) {
-              await writeTuples(AUTHZ_PROVIDER_URL, tuples);
-            }
-          } catch (error) {
-            console.error(
-              "[AuthZ Sync] Failed to sync workspace creation:",
-              error,
-            );
-          }
-        });
-
-        return $result;
-      },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, writeTuples],
-  );
-
-/**
  * AuthZ Sync Plugin
  *
  * Syncs resource mutations to the authorization store.
@@ -196,10 +142,7 @@ const syncCreateWorkspace = (): PlanWrapperFn =>
  */
 const AuthzSyncPlugin = wrapPlans({
   Mutation: {
-    // Workspaces
-    createWorkspace: syncCreateWorkspace(),
-
-    // Projects
+    // Projects - linked directly to organizations
     createProject: syncCreateProject(),
     deleteProject: syncDeleteProject(),
   },

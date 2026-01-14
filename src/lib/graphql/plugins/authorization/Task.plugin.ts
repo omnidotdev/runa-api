@@ -60,10 +60,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               );
               if (!allowed) throw new Error("Unauthorized");
 
-              // Get project with workspace for tier limit check
+              // Get project for tier limit check
               const project = await db.query.projects.findFirst({
                 where: (table, { eq }) => eq(table.id, projectId),
-                with: { workspace: true },
               });
               if (!project) throw new Error("Project not found");
 
@@ -71,8 +70,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 const result = await client.query({
                   text: `SELECT count(*)::int as total FROM task
                          INNER JOIN project ON task.project_id = project.id
-                         WHERE project.workspace_id = $1`,
-                  values: [project.workspace.id],
+                         WHERE project.organization_id = $1`,
+                  values: [project.organizationId],
                 });
                 return (
                   (result.rows[0] as { total: number } | undefined)?.total ?? 0
@@ -80,7 +79,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               });
 
               const withinLimit = await isWithinLimit(
-                project.workspace,
+                { organizationId: project.organizationId },
                 FEATURE_KEYS.MAX_TASKS,
                 totalTasks,
                 billingBypassOrgIds,

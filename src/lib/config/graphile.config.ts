@@ -13,12 +13,12 @@ import {
   PrimaryKeyMutationsOnlyPlugin,
   ProjectColumnPlugin,
   ProjectPlugin,
+  SettingsPlugin,
   SmartTagPlugin,
   TaskLabelPlugin,
   TaskPlugin,
   UserPlugin,
   UserPreferencePlugin,
-  WorkspacePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
@@ -43,12 +43,12 @@ const graphilePreset: GraphileConfig.Preset = {
     PrimaryKeyMutationsOnlyPlugin,
     ProjectPlugin,
     ProjectColumnPlugin,
+    SettingsPlugin,
     SmartTagPlugin,
     TaskPlugin,
     TaskLabelPlugin,
     UserPlugin,
     UserPreferencePlugin,
-    WorkspacePlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
   ],

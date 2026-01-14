@@ -67,12 +67,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             } else {
               const taskId = (input as InsertAssignee).taskId;
 
-              // Get task with assignees and workspace for tier limit check
+              // Get task with assignees and project for tier limit check
               const task = await db.query.tasks.findFirst({
                 where: (table, { eq }) => eq(table.id, taskId),
                 with: {
                   assignees: true,
-                  project: { with: { workspace: true } },
+                  project: true,
                 },
               });
               if (!task) throw new Error("Task not found");
@@ -89,7 +89,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!allowed) throw new Error("Unauthorized");
 
               const withinLimit = await isWithinLimit(
-                task.project.workspace,
+                { organizationId: task.project.organizationId },
                 FEATURE_KEYS.MAX_ASSIGNEES,
                 task.assignees.length,
                 billingBypassOrgIds,

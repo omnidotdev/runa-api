@@ -5,16 +5,18 @@ import {
   pgTable,
   text,
   uniqueIndex,
-  uuid,
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
-import { workspaces } from "./workspace.table";
+import { projects } from "./project.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 /**
  * Project column table.
+ *
+ * Project columns are organization-level templates for categorizing projects.
+ * Referenced directly by organizationId from JWT claims.
  */
 export const projectColumns = pgTable(
   "project_column",
@@ -22,25 +24,21 @@ export const projectColumns = pgTable(
     id: generateDefaultId(),
     emoji: text(),
     title: text().notNull(),
-    workspaceId: uuid()
-      .notNull()
-      .references(() => workspaces.id, { onDelete: "cascade" }),
+    // Organization ID from JWT claims - not a FK, just a reference
+    organizationId: text("organization_id").notNull(),
     index: integer().notNull().default(0),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
-    index().on(table.workspaceId),
-    index().on(table.workspaceId, table.index),
+    index("project_column_organization_id_idx").on(table.organizationId),
+    index().on(table.organizationId, table.index),
   ],
 );
 
-export const projectColumnRelations = relations(projectColumns, ({ one }) => ({
-  workspace: one(workspaces, {
-    fields: [projectColumns.workspaceId],
-    references: [workspaces.id],
-  }),
+export const projectColumnRelations = relations(projectColumns, ({ many }) => ({
+  projects: many(projects),
 }));
 
 export type InsertProjectColumn = InferInsertModel<typeof projectColumns>;

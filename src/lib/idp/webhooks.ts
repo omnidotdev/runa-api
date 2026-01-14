@@ -2,7 +2,7 @@
  * IDP (Identity Provider) webhook handler.
  *
  * Receives organization lifecycle events from the IDP.
- * Handles soft-deletion of workspaces when organizations are deleted.
+ * Handles soft-deletion of settings when organizations are deleted.
  */
 
 import { createHmac, timingSafeEqual } from "node:crypto";
@@ -12,7 +12,7 @@ import { Elysia, t } from "elysia";
 
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { workspaces } from "lib/db/schema";
+import { settings } from "lib/db/schema";
 
 interface OrganizationDeletedPayload {
   eventType: "organization.deleted";
@@ -114,7 +114,7 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
 
 /**
  * Handle organization deleted event.
- * Soft-deletes the associated workspace.
+ * Soft-deletes the associated settings record.
  */
 async function handleOrganizationDeleted(
   payload: OrganizationDeletedPayload,
@@ -123,28 +123,28 @@ async function handleOrganizationDeleted(
 
   try {
     const result = await dbPool
-      .update(workspaces)
+      .update(settings)
       .set({
         deletedAt: new Date(deletedAt),
         deletionReason: "organization_deleted",
       })
-      .where(eq(workspaces.organizationId, organizationId))
-      .returning({ id: workspaces.id });
+      .where(eq(settings.organizationId, organizationId))
+      .returning({ id: settings.id });
 
     if (result.length > 0) {
       // biome-ignore lint/suspicious/noConsole: webhook logging
       console.log(
-        `Soft-deleted workspace ${result[0].id} (org ${organizationId} deleted)`,
+        `Soft-deleted settings ${result[0].id} (org ${organizationId} deleted)`,
       );
     } else {
       // biome-ignore lint/suspicious/noConsole: webhook logging
       console.log(
-        `No workspace found for deleted org ${organizationId} (may not exist in this app)`,
+        `No settings found for deleted org ${organizationId} (may not exist in this app)`,
       );
     }
   } catch (err) {
     console.error(
-      `Failed to soft-delete workspace for org ${organizationId}:`,
+      `Failed to soft-delete settings for org ${organizationId}:`,
       err,
     );
     throw err;

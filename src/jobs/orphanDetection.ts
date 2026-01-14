@@ -1,7 +1,7 @@
 /**
  * Orphan Detection Job
  *
- * Detects workspaces that reference organizations that no longer exist in the IDP.
+ * Detects settings records that reference organizations that no longer exist in the IDP.
  * Run this job periodically (e.g., daily via cron) to identify data inconsistencies.
  *
  * Usage:
@@ -35,10 +35,10 @@ const db = drizzle(DATABASE_URL, { schema });
 /** Request timeout in milliseconds */
 const REQUEST_TIMEOUT_MS = 5000;
 
-/** Batch size for processing workspaces */
+/** Batch size for processing settings */
 const BATCH_SIZE = 50;
 
-interface OrphanedWorkspace {
+interface OrphanedSettings {
   id: string;
   organizationId: string;
   createdAt: string;
@@ -68,15 +68,15 @@ async function checkOrgExists(organizationId: string): Promise<boolean> {
 }
 
 /**
- * Detect orphaned workspaces.
+ * Detect orphaned settings records.
  */
-async function detectOrphanedWorkspaces(): Promise<OrphanedWorkspace[]> {
+async function detectOrphanedSettings(): Promise<OrphanedSettings[]> {
   // biome-ignore lint/suspicious/noConsole: job logging
   console.log("Starting orphan detection job...");
 
-  // Get all active (non-deleted) workspaces
-  const workspaces = await db.query.workspaces.findMany({
-    where: isNull(schema.workspaces.deletedAt),
+  // Get all active (non-deleted) settings
+  const allSettings = await db.query.settings.findMany({
+    where: isNull(schema.settings.deletedAt),
     columns: {
       id: true,
       organizationId: true,
@@ -85,39 +85,39 @@ async function detectOrphanedWorkspaces(): Promise<OrphanedWorkspace[]> {
   });
 
   // biome-ignore lint/suspicious/noConsole: job logging
-  console.log(`Found ${workspaces.length} active workspaces to check`);
+  console.log(`Found ${allSettings.length} active settings records to check`);
 
-  const orphaned: OrphanedWorkspace[] = [];
+  const orphaned: OrphanedSettings[] = [];
   let checked = 0;
 
   // Process in batches to avoid overwhelming the IDP
-  for (let i = 0; i < workspaces.length; i += BATCH_SIZE) {
-    const batch = workspaces.slice(i, i + BATCH_SIZE);
+  for (let i = 0; i < allSettings.length; i += BATCH_SIZE) {
+    const batch = allSettings.slice(i, i + BATCH_SIZE);
 
-    // Check each workspace in the batch concurrently
+    // Check each settings record in the batch concurrently
     const results = await Promise.all(
-      batch.map(async (ws) => {
-        const exists = await checkOrgExists(ws.organizationId);
-        return { workspace: ws, exists };
+      batch.map(async (s) => {
+        const exists = await checkOrgExists(s.organizationId);
+        return { settings: s, exists };
       }),
     );
 
-    for (const { workspace, exists } of results) {
+    for (const { settings: s, exists } of results) {
       if (!exists) {
         orphaned.push({
-          id: workspace.id,
-          organizationId: workspace.organizationId,
-          createdAt: workspace.createdAt,
+          id: s.id,
+          organizationId: s.organizationId,
+          createdAt: s.createdAt,
         });
       }
     }
 
     checked += batch.length;
     // biome-ignore lint/suspicious/noConsole: job logging
-    console.log(`Checked ${checked}/${workspaces.length} workspaces`);
+    console.log(`Checked ${checked}/${allSettings.length} settings records`);
 
     // Small delay between batches to be gentle on the IDP
-    if (i + BATCH_SIZE < workspaces.length) {
+    if (i + BATCH_SIZE < allSettings.length) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
@@ -130,27 +130,27 @@ async function detectOrphanedWorkspaces(): Promise<OrphanedWorkspace[]> {
  */
 async function main(): Promise<void> {
   try {
-    const orphaned = await detectOrphanedWorkspaces();
+    const orphaned = await detectOrphanedSettings();
 
     if (orphaned.length === 0) {
       // biome-ignore lint/suspicious/noConsole: job logging
-      console.log("No orphaned workspaces detected");
+      console.log("No orphaned settings detected");
       return;
     }
 
     // biome-ignore lint/suspicious/noConsole: job logging
-    console.log(`\nDetected ${orphaned.length} orphaned workspace(s):`);
+    console.log(`\nDetected ${orphaned.length} orphaned settings record(s):`);
     // biome-ignore lint/suspicious/noConsole: job logging
     console.log("-------------------------------------------");
 
-    for (const ws of orphaned) {
+    for (const s of orphaned) {
       // biome-ignore lint/suspicious/noConsole: job logging
       console.log(
         JSON.stringify({
-          type: "orphaned_workspace",
-          workspaceId: ws.id,
-          organizationId: ws.organizationId,
-          createdAt: ws.createdAt,
+          type: "orphaned_settings",
+          settingsId: s.id,
+          organizationId: s.organizationId,
+          createdAt: s.createdAt,
           timestamp: new Date().toISOString(),
         }),
       );
@@ -160,11 +160,11 @@ async function main(): Promise<void> {
     console.log("-------------------------------------------");
     // biome-ignore lint/suspicious/noConsole: job logging
     console.log(
-      "\nAction required: Review these workspaces and consider soft-deleting them.",
+      "\nAction required: Review these settings and consider soft-deleting them.",
     );
     // biome-ignore lint/suspicious/noConsole: job logging
     console.log(
-      "To soft-delete, update the workspace with deletedAt and deletionReason='orphaned'",
+      "To soft-delete, update the settings with deletedAt and deletionReason='orphaned'",
     );
 
     // Exit with non-zero code to indicate orphans were found (useful for alerting)

@@ -13,7 +13,7 @@ import type { MutationScope } from "./types";
 /**
  * Validate project permissions via PDP.
  *
- * - Create: Admin permission on workspace required (with tier limits)
+ * - Create: Admin permission on organization required (with tier limits)
  * - Update: Admin permission on project required
  * - Delete: Admin permission on project required
  *
@@ -47,37 +47,39 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!observer) throw new Error("Unauthorized");
 
             if (scope === "create") {
-              const workspaceId = (input as InsertProject).workspaceId;
+              const organizationId = (input as InsertProject).organizationId;
 
+              // Check admin permission on organization
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
                 AUTHZ_PROVIDER_URL,
                 observer.id,
-                "workspace",
-                workspaceId,
+                "organization",
+                organizationId,
                 "admin",
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");
 
-              // Get workspace for tier limit check
-              const workspace = await db.query.workspaces.findFirst({
-                where: (table, { eq }) => eq(table.id, workspaceId),
+              // Get settings for tier limit check (may not exist yet)
+              const settings = await db.query.settings.findFirst({
+                where: (table, { eq }) =>
+                  eq(table.organizationId, organizationId),
               });
-              if (!workspace) throw new Error("Workspace not found");
 
               const totalProjects = await withPgClient(null, async (client) => {
                 const result = await client.query({
-                  text: "SELECT count(*)::int as total FROM project WHERE workspace_id = $1",
-                  values: [workspaceId],
+                  text: "SELECT count(*)::int as total FROM project WHERE organization_id = $1",
+                  values: [organizationId],
                 });
                 return (
                   (result.rows[0] as { total: number } | undefined)?.total ?? 0
                 );
               });
 
+              // Use settings for tier check, or allow if no settings yet (free tier)
               const withinLimit = await isWithinLimit(
-                workspace,
+                settings ?? { organizationId },
                 FEATURE_KEYS.MAX_PROJECTS,
                 totalProjects,
                 billingBypassOrgIds,

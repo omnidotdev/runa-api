@@ -75,15 +75,15 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               );
               if (!allowed) throw new Error("Unauthorized");
 
-              // Get project with labels and workspace for tier limit check
+              // Get project with labels for tier limit check
               const project = await db.query.projects.findFirst({
                 where: (table, { eq }) => eq(table.id, projectId),
-                with: { labels: true, workspace: true },
+                with: { labels: true },
               });
               if (!project) throw new Error("Project not found");
 
               const withinLimit = await isWithinLimit(
-                project.workspace,
+                { organizationId: project.organizationId },
                 FEATURE_KEYS.MAX_LABELS,
                 project.labels.length,
                 billingBypassOrgIds,

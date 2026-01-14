@@ -132,23 +132,28 @@ export async function checkOrganizationLimit(
 }
 
 /**
- * Check if a workspace is within its limit.
+ * Check if an organization is within its limit.
  * Queries entitlements at the organization level (bundle billing model).
  * This is the primary function for authorization plugins.
+ *
+ * @param entity - Object with organizationId (settings record or just { organizationId })
+ * @param limitKey - The limit key to check (e.g., 'max_projects')
+ * @param currentCount - Current count of resources
+ * @param billingBypassOrgIds - Organization IDs exempt from billing limits
  */
 export async function isWithinLimit(
-  workspace: { id: string; organizationId: string },
+  entity: { organizationId: string },
   limitKey: string,
   currentCount: number,
   billingBypassOrgIds: string[] = [],
 ): Promise<boolean> {
   // Bypass check for exempt organizations
-  if (billingBypassOrgIds.includes(workspace.organizationId)) {
+  if (billingBypassOrgIds.includes(entity.organizationId)) {
     return true;
   }
 
   return checkOrganizationLimit(
-    workspace.organizationId,
+    entity.organizationId,
     limitKey,
     currentCount,
     "free", // Default to free tier if Aether unavailable

@@ -5,7 +5,7 @@ import { Elysia, t } from "elysia";
 
 import { ENTITLEMENTS_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { workspaces } from "lib/db/schema";
+import { settings } from "lib/db/schema";
 import { invalidateCache } from "./cache";
 
 interface EntitlementWebhookPayload {
@@ -105,14 +105,13 @@ const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
           // biome-ignore lint/suspicious/noConsole: webhook logging
           console.log(`Cache invalidated for organization ${body.entityId}`);
 
-          // Sync billingAccountId to workspace if provided and entity is an organization
-          // Look up workspace by organizationId
+          // Sync billingAccountId to settings if provided and entity is an organization
           if (body.billingAccountId && body.entityType === "organization") {
             try {
               await dbPool
-                .update(workspaces)
+                .update(settings)
                 .set({ billingAccountId: body.billingAccountId })
-                .where(eq(workspaces.organizationId, body.entityId));
+                .where(eq(settings.organizationId, body.entityId));
 
               // biome-ignore lint/suspicious/noConsole: webhook logging
               console.log(
