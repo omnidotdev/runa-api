@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
   index,
-  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -15,14 +14,15 @@ import { projectColumns } from "./projectColumn.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-export const tier = pgEnum("tier", ["free", "basic", "team", "enterprise"]);
-
 /**
  * Workspace table.
  *
  * Organization identity (name, slug) is owned by Gatekeeper (IDP).
  * Apps resolve org name/slug from JWT claims, not DB.
  * This table stores only app-specific settings.
+ *
+ * Tier/entitlements are managed by Aether at the organization level.
+ * Use getOrganizationTier() from lib/entitlements for tier checks.
  */
 export const workspaces = pgTable(
   "workspace",
@@ -32,12 +32,6 @@ export const workspaces = pgTable(
     // Org name/slug resolved from JWT claims at runtime
     organizationId: text("organization_id").notNull().unique(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
-    /**
-     * @deprecated Tier is now managed by Aether at the organization level.
-     * Use getOrganizationTier() from lib/entitlements instead.
-     * This column will be removed in a future migration.
-     */
-    tier: tier().notNull().default("free"),
     // Cached from Aether, synced via webhook
     subscriptionId: text(),
     billingAccountId: text(),

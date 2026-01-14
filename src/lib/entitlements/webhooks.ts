@@ -48,7 +48,10 @@ const verifySignature = (
 
 /**
  * Entitlements webhook receiver.
- * Receives entitlement change events from the billing service.
+ * Receives entitlement change events from the billing service (Aether).
+ *
+ * Entitlements are managed at the ORGANIZATION level for bundle billing.
+ * This webhook invalidates cached entitlements when they change.
  */
 const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
   "/entitlements",
@@ -89,66 +92,38 @@ const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
         `Entitlement event received: ${body.eventType} for ${body.entityType}/${body.entityId}`,
       );
 
-      // Handle events - invalidate local cache and sync billingAccountId
+      // Handle events - invalidate local cache
       switch (body.eventType) {
         case "entitlement.created":
         case "entitlement.updated":
         case "entitlement.deleted":
-          // Invalidate all cached entitlements for this entity
-          invalidateCache(`workspace:${body.entityId}:*`);
-          invalidateCache(`workspace:${body.entityId}`);
+          // Entitlements are at the organization level (bundle billing)
+          // Invalidate cached entitlements for this organization
+          invalidateCache(`organization:${body.entityId}:*`);
+          invalidateCache(`organization:${body.entityId}`);
 
           // biome-ignore lint/suspicious/noConsole: webhook logging
-          console.log(`Cache invalidated for workspace ${body.entityId}`);
+          console.log(`Cache invalidated for organization ${body.entityId}`);
 
-          // Sync billingAccountId to workspace if provided
-          if (body.billingAccountId && body.entityType === "workspace") {
+          // Sync billingAccountId to workspace if provided and entity is an organization
+          // Look up workspace by organizationId
+          if (body.billingAccountId && body.entityType === "organization") {
             try {
               await dbPool
                 .update(workspaces)
                 .set({ billingAccountId: body.billingAccountId })
-                .where(eq(workspaces.id, body.entityId));
+                .where(eq(workspaces.organizationId, body.entityId));
 
               // biome-ignore lint/suspicious/noConsole: webhook logging
               console.log(
-                `Updated billingAccountId for workspace ${body.entityId}`,
+                `Updated billingAccountId for organization ${body.entityId}`,
               );
             } catch (dbError) {
               console.error(
-                `Failed to update billingAccountId for workspace ${body.entityId}:`,
+                `Failed to update billingAccountId for organization ${body.entityId}:`,
                 dbError,
               );
               // Don't fail the webhook - billingAccountId sync is best-effort
-            }
-          }
-
-          // Sync tier to workspace if this is a tier entitlement update
-          if (
-            body.featureKey === "tier" &&
-            body.value &&
-            body.entityType === "workspace"
-          ) {
-            const tierValue = body.value as
-              | "free"
-              | "basic"
-              | "team"
-              | "enterprise";
-            try {
-              await dbPool
-                .update(workspaces)
-                .set({ tier: tierValue })
-                .where(eq(workspaces.id, body.entityId));
-
-              // biome-ignore lint/suspicious/noConsole: webhook logging
-              console.log(
-                `Updated tier to ${tierValue} for workspace ${body.entityId}`,
-              );
-            } catch (dbError) {
-              console.error(
-                `Failed to update tier for workspace ${body.entityId}:`,
-                dbError,
-              );
-              // Don't fail the webhook - tier sync is best-effort
             }
           }
           break;

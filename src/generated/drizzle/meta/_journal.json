@@ -232,6 +232,20 @@
       "when": 1768339619355,
       "tag": "0032_careful_lenny_balinger",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1736812800000,
+      "tag": "0033_drop_tier_column",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1768362892979,
+      "tag": "0034_keen_shaman",
+      "breakpoints": true
     }
   ]
 }
