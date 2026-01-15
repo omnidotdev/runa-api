@@ -1,2 +1,2 @@
-ALTER TABLE "workspace" DROP COLUMN "tier";--> statement-breakpoint
-DROP TYPE "public"."tier";
+ALTER TABLE "workspace" DROP COLUMN IF EXISTS "tier";--> statement-breakpoint
+DROP TYPE IF EXISTS "public"."tier";

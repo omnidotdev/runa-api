@@ -139,7 +139,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "229705",
+    oid: "300037",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -222,7 +222,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "229489",
+    oid: "299821",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +317,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "229862",
+    oid: "300194",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -412,7 +412,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "229691",
+    oid: "300023",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -519,7 +519,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "229560",
+    oid: "299892",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -626,7 +626,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "229513",
+    oid: "299845",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -733,7 +733,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "229500",
+    oid: "299832",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -840,7 +840,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "229756",
+    oid: "300088",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -975,7 +975,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "229773",
+    oid: "300105",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1130,7 +1130,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "229541",
+    oid: "299873",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1285,7 +1285,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "229526",
+    oid: "299858",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1416,7 +1416,7 @@ const spec_settings = {
   },
   description: undefined,
   extensions: {
-    oid: "229575",
+    oid: "299907",
     isTableLike: true,
     pg: {
       serviceName: "main",
