@@ -139,7 +139,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "300037",
+    oid: "41395",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -222,7 +222,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "299821",
+    oid: "41178",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +317,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "300194",
+    oid: "41552",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -412,7 +412,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "300023",
+    oid: "41381",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -519,7 +519,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "299892",
+    oid: "41249",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -626,7 +626,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "299845",
+    oid: "41202",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -733,7 +733,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "299832",
+    oid: "41189",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -791,7 +791,7 @@ const spec_projectColumn = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -840,7 +840,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "300088",
+    oid: "41446",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -975,7 +975,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "300105",
+    oid: "41463",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1130,7 +1130,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "299873",
+    oid: "41230",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1200,7 +1200,7 @@ const spec_project = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -1285,7 +1285,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "299858",
+    oid: "41215",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1416,7 +1416,7 @@ const spec_settings = {
   },
   description: undefined,
   extensions: {
-    oid: "299907",
+    oid: "41264",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -6807,7 +6807,7 @@ type Query implements Node {
   project(rowId: UUID!): Project
 
   """Get a single \`Project\`."""
-  projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
 
   """Reads a single \`TaskLabel\` using its globally unique \`ID\`."""
   taskLabelById(
@@ -7392,7 +7392,7 @@ type Project implements Node {
   name: String!
   description: String
   prefix: String
-  organizationId: UUID!
+  organizationId: String!
   createdAt: Datetime!
   updatedAt: Datetime!
   projectColumnId: UUID!
@@ -7548,7 +7548,7 @@ type ProjectColumn implements Node {
   rowId: UUID!
   emoji: String
   title: String!
-  organizationId: UUID!
+  organizationId: String!
   index: Int!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -7910,7 +7910,7 @@ input ProjectCondition {
   prefix: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: UUID
+  organizationId: String
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
@@ -7948,7 +7948,7 @@ input ProjectFilter {
   prefix: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: UUIDFilter
+  organizationId: StringFilter
 
   """Filter by the object’s \`createdAt\` field."""
   createdAt: DatetimeFilter
@@ -9519,7 +9519,7 @@ input ProjectColumnFilter {
   title: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: UUIDFilter
+  organizationId: StringFilter
 
   """Filter by the object’s \`index\` field."""
   index: IntFilter
@@ -12670,7 +12670,7 @@ input ProjectColumnCondition {
   title: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: UUID
+  organizationId: String
 
   """Checks for equality with the object’s \`index\` field."""
   index: Int
@@ -13851,7 +13851,7 @@ input ProjectColumnInput {
   rowId: UUID
   emoji: String
   title: String!
-  organizationId: UUID!
+  organizationId: String!
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -14043,7 +14043,7 @@ input ProjectInput {
   name: String!
   description: String
   prefix: String
-  organizationId: UUID!
+  organizationId: String!
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID!
@@ -14582,7 +14582,7 @@ input ProjectColumnPatch {
   rowId: UUID
   emoji: String
   title: String
-  organizationId: UUID
+  organizationId: String
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -14868,7 +14868,7 @@ input ProjectPatch {
   name: String
   description: String
   prefix: String
-  organizationId: UUID
+  organizationId: String
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID
@@ -19021,7 +19021,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       rowId($pgSelectSingle) {
@@ -19157,7 +19157,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       prefix($pgSelectSingle) {
@@ -25206,7 +25206,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -25777,7 +25777,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -34459,7 +34459,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       TITLE($pgSelect) {
@@ -35401,7 +35401,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       PREFIX($pgSelect) {
