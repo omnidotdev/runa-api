@@ -10,10 +10,10 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { invalidatePermissionCache } from "lib/authz/cache";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { settings } from "lib/db/schema";
-import { invalidatePermissionCache } from "lib/authz/cache";
 
 interface OrganizationDeletedPayload {
   eventType: "organization.deleted";

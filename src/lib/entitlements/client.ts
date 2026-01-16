@@ -89,7 +89,10 @@ export async function getEntitlements(
   productId?: string,
 ): Promise<EntitlementsResult> {
   if (!ENTITLEMENTS_BASE_URL) {
-    return { status: "unavailable", error: "ENTITLEMENTS_BASE_URL not configured" };
+    return {
+      status: "unavailable",
+      error: "ENTITLEMENTS_BASE_URL not configured",
+    };
   }
 
   if (circuitBreaker.isOpen()) {
