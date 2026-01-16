@@ -88,10 +88,11 @@ const generateGraphqlSchema = async () => {
     to: 'import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission, deleteTuples, writeTuples } from "lib/authz";',
   });
 
-  // Fix checkPermission calls: checkPermission("true", "https://localhost:4100", ...) -> checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, ...)
+  // Fix checkPermission calls: checkPermission("...", "https://localhost:4100", ...) -> checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, ...)
+  // The first arg may be "true", "", or other values depending on env during generation
   await replaceInFile({
     files: schemaFilePath,
-    from: /"true", "https:\/\/localhost:4100"/g,
+    from: /"[^"]*", "https:\/\/localhost:4100"/g,
     to: "AUTHZ_ENABLED, AUTHZ_PROVIDER_URL",
   });
 
@@ -113,6 +114,14 @@ const generateGraphqlSchema = async () => {
     files: schemaFilePath,
     from: /if \(!"https:\/\/localhost:4100"\)/g,
     to: "if (!AUTHZ_PROVIDER_URL)",
+  });
+
+  // Fix AUTHZ_ENABLED guard: if ("..." !== "true") -> if (AUTHZ_ENABLED !== "true")
+  // The first value may be "", "true", or other values depending on env during generation
+  await replaceInFile({
+    files: schemaFilePath,
+    from: /if \("[^"]*" !== "true"\)/g,
+    to: 'if (AUTHZ_ENABLED !== "true")',
   });
 };
 
