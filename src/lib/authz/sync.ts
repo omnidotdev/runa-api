@@ -116,10 +116,11 @@ class CircuitBreaker {
 const circuitBreaker = new CircuitBreaker();
 
 /**
- * Write tuples to the authorization store via Vortex.
+ * Write tuples to the authorization store.
+ * Uses Vortex if configured, otherwise falls back to direct Warden API.
  * Exported for graphile-export EXPORTABLE compatibility.
  *
- * @param _providerUrl - Unused, kept for backward compatibility with existing plugins
+ * @param authzProviderUrl - Warden API URL (fallback when Vortex not configured)
  * @param tuples - The tuples to write
  * @param vortexApiUrl - Vortex API URL
  * @param vortexWorkflowId - Vortex workflow ID for authz sync
@@ -127,7 +128,7 @@ const circuitBreaker = new CircuitBreaker();
  * @param authzEnabled - Whether authz is enabled
  */
 export async function writeTuples(
-  _providerUrl: string,
+  authzProviderUrl: string | undefined,
   tuples: Array<{ user: string; relation: string; object: string }>,
   vortexApiUrl?: string,
   vortexWorkflowId?: string,
@@ -139,33 +140,65 @@ export async function writeTuples(
     return;
   }
 
-  // Skip if Vortex is not configured
-  if (!vortexApiUrl || !vortexWorkflowId || !vortexWebhookSecret) {
+  // Try Vortex first if configured
+  if (vortexApiUrl && vortexWorkflowId && vortexWebhookSecret) {
+    try {
+      const response = await fetch(
+        `${vortexApiUrl}/webhooks/workflow/${vortexWorkflowId}/${vortexWebhookSecret}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Event-Type": "authz.tuples.write",
+          },
+          body: JSON.stringify({
+            tuples,
+            timestamp: new Date().toISOString(),
+            source: "runa",
+          }),
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        },
+      );
+
+      if (response.ok) {
+        logAuthzEvent({
+          type: "tuple_write",
+          tupleCount: tuples.length,
+        });
+        return;
+      }
+      // Fall through to direct API on Vortex failure
+      logAuthzEvent({
+        type: "tuple_write",
+        tupleCount: tuples.length,
+        error: `Vortex returned ${response.status}, falling back to direct API`,
+      });
+    } catch (error) {
+      logAuthzEvent({
+        type: "tuple_write",
+        tupleCount: tuples.length,
+        error: `Vortex failed: ${error instanceof Error ? error.message : String(error)}, falling back to direct API`,
+      });
+    }
+  }
+
+  // Fallback: Direct Warden API
+  if (!authzProviderUrl) {
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
-      error: "Vortex not configured",
+      error: "Neither Vortex nor Warden API configured",
     });
     return;
   }
 
   try {
-    const response = await fetch(
-      `${vortexApiUrl}/webhooks/workflow/${vortexWorkflowId}/${vortexWebhookSecret}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Event-Type": "authz.tuples.write",
-        },
-        body: JSON.stringify({
-          tuples,
-          timestamp: new Date().toISOString(),
-          source: "runa",
-        }),
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-      },
-    );
+    const response = await fetch(`${authzProviderUrl}/tuples`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tuples }),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
 
     if (response.ok) {
       logAuthzEvent({
@@ -176,7 +209,7 @@ export async function writeTuples(
       logAuthzEvent({
         type: "tuple_write",
         tupleCount: tuples.length,
-        error: `Vortex returned ${response.status}`,
+        error: `Warden API returned ${response.status}`,
       });
     }
   } catch (error) {
@@ -189,10 +222,11 @@ export async function writeTuples(
 }
 
 /**
- * Delete tuples from the authorization store via Vortex.
+ * Delete tuples from the authorization store.
+ * Uses Vortex if configured, otherwise falls back to direct Warden API.
  * Exported for graphile-export EXPORTABLE compatibility.
  *
- * @param _providerUrl - Unused, kept for backward compatibility with existing plugins
+ * @param authzProviderUrl - Warden API URL (fallback when Vortex not configured)
  * @param tuples - The tuples to delete
  * @param vortexApiUrl - Vortex API URL
  * @param vortexWorkflowId - Vortex workflow ID for authz sync
@@ -200,7 +234,7 @@ export async function writeTuples(
  * @param authzEnabled - Whether authz is enabled
  */
 export async function deleteTuples(
-  _providerUrl: string,
+  authzProviderUrl: string | undefined,
   tuples: Array<{ user: string; relation: string; object: string }>,
   vortexApiUrl?: string,
   vortexWorkflowId?: string,
@@ -212,33 +246,65 @@ export async function deleteTuples(
     return;
   }
 
-  // Skip if Vortex is not configured
-  if (!vortexApiUrl || !vortexWorkflowId || !vortexWebhookSecret) {
+  // Try Vortex first if configured
+  if (vortexApiUrl && vortexWorkflowId && vortexWebhookSecret) {
+    try {
+      const response = await fetch(
+        `${vortexApiUrl}/webhooks/workflow/${vortexWorkflowId}/${vortexWebhookSecret}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Event-Type": "authz.tuples.delete",
+          },
+          body: JSON.stringify({
+            tuples,
+            timestamp: new Date().toISOString(),
+            source: "runa",
+          }),
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        },
+      );
+
+      if (response.ok) {
+        logAuthzEvent({
+          type: "tuple_delete",
+          tupleCount: tuples.length,
+        });
+        return;
+      }
+      // Fall through to direct API on Vortex failure
+      logAuthzEvent({
+        type: "tuple_delete",
+        tupleCount: tuples.length,
+        error: `Vortex returned ${response.status}, falling back to direct API`,
+      });
+    } catch (error) {
+      logAuthzEvent({
+        type: "tuple_delete",
+        tupleCount: tuples.length,
+        error: `Vortex failed: ${error instanceof Error ? error.message : String(error)}, falling back to direct API`,
+      });
+    }
+  }
+
+  // Fallback: Direct Warden API
+  if (!authzProviderUrl) {
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
-      error: "Vortex not configured",
+      error: "Neither Vortex nor Warden API configured",
     });
     return;
   }
 
   try {
-    const response = await fetch(
-      `${vortexApiUrl}/webhooks/workflow/${vortexWorkflowId}/${vortexWebhookSecret}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Event-Type": "authz.tuples.delete",
-        },
-        body: JSON.stringify({
-          tuples,
-          timestamp: new Date().toISOString(),
-          source: "runa",
-        }),
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-      },
-    );
+    const response = await fetch(`${authzProviderUrl}/tuples`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tuples }),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
 
     if (response.ok) {
       logAuthzEvent({
@@ -249,7 +315,7 @@ export async function deleteTuples(
       logAuthzEvent({
         type: "tuple_delete",
         tupleCount: tuples.length,
-        error: `Vortex returned ${response.status}`,
+        error: `Warden API returned ${response.status}`,
       });
     }
   } catch (error) {

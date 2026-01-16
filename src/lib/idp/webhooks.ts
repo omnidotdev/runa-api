@@ -13,6 +13,7 @@ import { Elysia, t } from "elysia";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { settings } from "lib/db/schema";
+import { invalidatePermissionCache } from "lib/authz/cache";
 
 interface OrganizationDeletedPayload {
   eventType: "organization.deleted";
@@ -21,7 +22,35 @@ interface OrganizationDeletedPayload {
   timestamp: string;
 }
 
-type IdpWebhookPayload = OrganizationDeletedPayload;
+interface MemberAddedPayload {
+  eventType: "member.added";
+  organizationId: string;
+  userId: string;
+  role: "owner" | "admin" | "member";
+  timestamp: string;
+}
+
+interface MemberRemovedPayload {
+  eventType: "member.removed";
+  organizationId: string;
+  userId: string;
+  timestamp: string;
+}
+
+interface MemberRoleChangedPayload {
+  eventType: "member.role_changed";
+  organizationId: string;
+  userId: string;
+  oldRole: "owner" | "admin" | "member";
+  newRole: "owner" | "admin" | "member";
+  timestamp: string;
+}
+
+type IdpWebhookPayload =
+  | OrganizationDeletedPayload
+  | MemberAddedPayload
+  | MemberRemovedPayload
+  | MemberRoleChangedPayload;
 
 /**
  * Verify HMAC-SHA256 signature from IDP.
@@ -92,6 +121,15 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
         case "organization.deleted":
           await handleOrganizationDeleted(body);
           break;
+        case "member.added":
+          await handleMemberAdded(body);
+          break;
+        case "member.removed":
+          await handleMemberRemoved(body);
+          break;
+        case "member.role_changed":
+          await handleMemberRoleChanged(body);
+          break;
         default:
           console.warn(`Unknown IDP event type: ${eventType}`);
       }
@@ -149,6 +187,63 @@ async function handleOrganizationDeleted(
     );
     throw err;
   }
+}
+
+/**
+ * Handle member added event.
+ * Invalidates permission cache for the user to pick up new permissions.
+ */
+async function handleMemberAdded(payload: MemberAddedPayload): Promise<void> {
+  const { organizationId, userId, role } = payload;
+
+  // Invalidate all cached permissions for this user in this org
+  // Pattern matches: userId:organization:orgId:*
+  invalidatePermissionCache(`${userId}:organization:${organizationId}:`);
+
+  // biome-ignore lint/suspicious/noConsole: webhook logging
+  console.log(
+    `Member ${userId} added to org ${organizationId} with role ${role} - cache invalidated`,
+  );
+}
+
+/**
+ * Handle member removed event.
+ * Invalidates permission cache for the user to revoke permissions.
+ */
+async function handleMemberRemoved(
+  payload: MemberRemovedPayload,
+): Promise<void> {
+  const { organizationId, userId } = payload;
+
+  // Invalidate all cached permissions for this user in this org
+  invalidatePermissionCache(`${userId}:organization:${organizationId}:`);
+
+  // Also invalidate project-level permissions for this user
+  // Since we can't enumerate all projects, invalidate all permissions for user
+  invalidatePermissionCache(`${userId}:`);
+
+  // biome-ignore lint/suspicious/noConsole: webhook logging
+  console.log(
+    `Member ${userId} removed from org ${organizationId} - cache invalidated`,
+  );
+}
+
+/**
+ * Handle member role changed event.
+ * Invalidates permission cache for the user to pick up new role permissions.
+ */
+async function handleMemberRoleChanged(
+  payload: MemberRoleChangedPayload,
+): Promise<void> {
+  const { organizationId, userId, oldRole, newRole } = payload;
+
+  // Invalidate all cached permissions for this user
+  invalidatePermissionCache(`${userId}:`);
+
+  // biome-ignore lint/suspicious/noConsole: webhook logging
+  console.log(
+    `Member ${userId} role changed in org ${organizationId}: ${oldRole} → ${newRole} - cache invalidated`,
+  );
 }
 
 export default idpWebhook;
