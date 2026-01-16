@@ -64,7 +64,6 @@ class EntitlementsCircuitBreaker {
     this.lastFailure = Date.now();
     if (this.failures >= CIRCUIT_BREAKER_THRESHOLD) {
       this.state = "open";
-      // biome-ignore lint/suspicious/noConsole: circuit breaker logging
       console.error(
         `[Entitlements] Circuit breaker OPEN after ${this.failures} failures`,
       );

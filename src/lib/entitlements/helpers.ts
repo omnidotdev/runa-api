@@ -4,6 +4,9 @@
  *
  * Entitlements are queried at the ORGANIZATION level, not workspace level.
  * This enables bundle billing where one subscription covers all Omni products.
+ *
+ * SECURITY: Fails CLOSED when Aether is unavailable.
+ * Users cannot access features without verified entitlements.
  */
 
 import { getCached, setCached } from "./cache";
@@ -18,15 +21,15 @@ const CACHE_PREFIX = "organization";
 /** Tier type */
 type Tier = "free" | "basic" | "team" | "enterprise";
 
-/** Default limits when entitlements service is unavailable or entitlement not found */
-const DEFAULT_LIMITS: Record<string, Record<Tier, number>> = {
-  max_projects: { free: 2, basic: 10, team: -1, enterprise: -1 },
-  max_tasks: { free: 500, basic: 2000, team: -1, enterprise: -1 },
-  max_columns: { free: 5, basic: 20, team: -1, enterprise: -1 },
-  max_labels: { free: 10, basic: 50, team: -1, enterprise: -1 },
-  max_assignees: { free: 1, basic: 3, team: -1, enterprise: -1 },
-  max_members: { free: 3, basic: 10, team: -1, enterprise: -1 },
-  max_admins: { free: 1, basic: 3, team: -1, enterprise: -1 },
+/** Default limits for FREE tier only (used when entitlements found but limit not specified) */
+const FREE_TIER_LIMITS: Record<string, number> = {
+  max_projects: 2,
+  max_tasks: 500,
+  max_columns: 5,
+  max_labels: 10,
+  max_assignees: 1,
+  max_members: 3,
+  max_admins: 1,
 };
 
 interface CachedEntitlements {
@@ -36,35 +39,54 @@ interface CachedEntitlements {
 }
 
 /**
+ * Result type for entitlement fetch.
+ * Distinguishes between successful fetch, not found, and service unavailable.
+ */
+type FetchResult =
+  | { status: "success"; entitlements: CachedEntitlements }
+  | { status: "not_found" }
+  | { status: "unavailable"; error: string };
+
+/**
  * Fetch and cache entitlements for an organization.
  * Entitlements are at the org level, enabling bundle billing.
+ *
+ * Returns a result object to let caller decide how to handle unavailability.
  */
 async function fetchOrganizationEntitlements(
   organizationId: string,
-): Promise<CachedEntitlements | null> {
+): Promise<FetchResult> {
   const cacheKey = `${CACHE_PREFIX}:${organizationId}`;
 
   // Check cache first
   const cached = getCached<CachedEntitlements>(cacheKey);
-  if (cached) return cached;
+  if (cached) {
+    return { status: "success", entitlements: cached };
+  }
 
   // Fetch from entitlements service using organization entity type
-  const response = await getEntitlements(
+  const result = await getEntitlements(
     "organization",
     organizationId,
     PRODUCT_ID,
   );
 
-  if (!response) return null;
+  if (result.status === "unavailable") {
+    return { status: "unavailable", error: result.error };
+  }
+
+  if (result.status === "not_found") {
+    return { status: "not_found" };
+  }
 
   // Parse entitlements into a usable format
   const entitlements: CachedEntitlements = {
     tier: "free",
     limits: {},
-    version: response.entitlementVersion,
+    version: result.data.entitlementVersion,
   };
 
-  for (const ent of response.entitlements) {
+  for (const ent of result.data.entitlements) {
     // Check product-specific tier first (runa:tier), then shared tier
     if (ent.featureKey === `${PRODUCT_ID}:tier` || ent.featureKey === "tier") {
       entitlements.tier = (ent.value as Tier) ?? "free";
@@ -77,53 +99,67 @@ async function fetchOrganizationEntitlements(
   }
 
   // Cache the result
-  setCached(cacheKey, entitlements, response.entitlementVersion);
+  setCached(cacheKey, entitlements, result.data.entitlementVersion);
 
-  return entitlements;
+  return { status: "success", entitlements };
+}
+
+/**
+ * Error thrown when entitlements service is unavailable.
+ * Callers should catch this and return appropriate error to user.
+ * @knipignore - exported for plugin error handling
+ */
+export class EntitlementsUnavailableError extends Error {
+  constructor(message: string) {
+    super(`Entitlements service unavailable: ${message}`);
+    this.name = "EntitlementsUnavailableError";
+  }
 }
 
 /**
  * Get a specific limit for an organization.
  * Returns -1 for unlimited, or the limit number.
- * Falls back to default limits based on tier if entitlements service unavailable.
+ *
+ * SECURITY: Throws EntitlementsUnavailableError if Aether is down.
+ * This ensures fail-closed behavior.
  */
 async function getOrganizationLimit(
   organizationId: string,
   limitKey: string,
-  fallbackTier: Tier = "free",
 ): Promise<number> {
-  const entitlements = await fetchOrganizationEntitlements(organizationId);
+  const result = await fetchOrganizationEntitlements(organizationId);
 
-  if (entitlements) {
-    // Check if we have a specific limit set
-    if (limitKey in entitlements.limits) {
-      return entitlements.limits[limitKey];
-    }
-
-    // Fall back to default for tier
-    return DEFAULT_LIMITS[limitKey]?.[entitlements.tier] ?? -1;
+  if (result.status === "unavailable") {
+    throw new EntitlementsUnavailableError(result.error);
   }
 
-  // Entitlements service unavailable - use fallback tier defaults
-  return DEFAULT_LIMITS[limitKey]?.[fallbackTier] ?? -1;
+  if (result.status === "not_found") {
+    // No billing account yet - use free tier limits
+    return FREE_TIER_LIMITS[limitKey] ?? -1;
+  }
+
+  // Check if we have a specific limit set
+  if (limitKey in result.entitlements.limits) {
+    return result.entitlements.limits[limitKey];
+  }
+
+  // Fall back to free tier default if limit not specified
+  return FREE_TIER_LIMITS[limitKey] ?? -1;
 }
 
 /**
  * Check if an organization is within its limit for a resource.
  * Returns true if the current count is below the limit.
  * Returns true if the limit is -1 (unlimited).
+ *
+ * SECURITY: Throws EntitlementsUnavailableError if Aether is down.
  */
 export async function checkOrganizationLimit(
   organizationId: string,
   limitKey: string,
   currentCount: number,
-  fallbackTier: Tier = "free",
 ): Promise<boolean> {
-  const limit = await getOrganizationLimit(
-    organizationId,
-    limitKey,
-    fallbackTier,
-  );
+  const limit = await getOrganizationLimit(organizationId, limitKey);
 
   // -1 means unlimited
   if (limit === -1) return true;
@@ -136,6 +172,10 @@ export async function checkOrganizationLimit(
  * Queries entitlements at the organization level (bundle billing model).
  * This is the primary function for authorization plugins.
  *
+ * SECURITY: Fails CLOSED when Aether is unavailable.
+ * Throws EntitlementsUnavailableError which should be caught by the plugin
+ * and returned as an error to the user.
+ *
  * @param entity - Object with organizationId (settings record or just { organizationId })
  * @param limitKey - The limit key to check (e.g., 'max_projects')
  * @param currentCount - Current count of resources
@@ -147,27 +187,35 @@ export async function isWithinLimit(
   currentCount: number,
   billingBypassOrgIds: string[] = [],
 ): Promise<boolean> {
-  // Bypass check for exempt organizations
+  // Bypass check for exempt organizations (e.g., Omni internal orgs)
   if (billingBypassOrgIds.includes(entity.organizationId)) {
     return true;
   }
 
-  return checkOrganizationLimit(
-    entity.organizationId,
-    limitKey,
-    currentCount,
-    "free", // Default to free tier if Aether unavailable
-  );
+  return checkOrganizationLimit(entity.organizationId, limitKey, currentCount);
 }
 
 /**
  * Get the tier for an organization.
  * Useful for displaying tier in UI.
+ *
+ * Returns "free" if org not found (no billing account yet).
+ * Throws EntitlementsUnavailableError if Aether is down.
+ *
  * @knipignore - exported for UI tier display
  */
 export async function getOrganizationTier(
   organizationId: string,
 ): Promise<Tier> {
-  const entitlements = await fetchOrganizationEntitlements(organizationId);
-  return entitlements?.tier ?? "free";
+  const result = await fetchOrganizationEntitlements(organizationId);
+
+  if (result.status === "unavailable") {
+    throw new EntitlementsUnavailableError(result.error);
+  }
+
+  if (result.status === "not_found") {
+    return "free";
+  }
+
+  return result.entitlements.tier;
 }

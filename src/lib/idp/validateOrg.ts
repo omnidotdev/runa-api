@@ -2,7 +2,9 @@
  * IDP organization validation.
  *
  * Validates that an organization exists in the IDP before creating workspaces.
- * Uses caching and fail-open circuit breaker for resilience.
+ *
+ * SECURITY: Fails CLOSED when IDP is unavailable.
+ * Cannot create resources for organizations we can't verify.
  */
 
 import { AUTH_BASE_URL } from "lib/config/env.config";
@@ -11,7 +13,13 @@ import { AUTH_BASE_URL } from "lib/config/env.config";
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 /** Request timeout in milliseconds */
-const REQUEST_TIMEOUT_MS = 3000;
+const REQUEST_TIMEOUT_MS = 5000;
+
+/** Circuit breaker failure threshold */
+const CIRCUIT_BREAKER_THRESHOLD = 5;
+
+/** Circuit breaker cooldown in milliseconds */
+const CIRCUIT_BREAKER_COOLDOWN_MS = 30000;
 
 /** Cache for organization existence checks */
 const orgExistsCache = new Map<
@@ -20,27 +28,80 @@ const orgExistsCache = new Map<
 >();
 
 /**
+ * Error thrown when IDP is unavailable.
+ * @knipignore - exported for plugin error handling
+ */
+export class IdpUnavailableError extends Error {
+  constructor(message: string) {
+    super(`IDP unavailable: ${message}`);
+    this.name = "IdpUnavailableError";
+  }
+}
+
+/**
+ * Circuit breaker for IDP calls.
+ */
+class IdpCircuitBreaker {
+  private failures = 0;
+  private state: "closed" | "open" | "half-open" = "closed";
+  private lastFailure = 0;
+
+  isOpen(): boolean {
+    if (this.state === "open") {
+      if (Date.now() - this.lastFailure > CIRCUIT_BREAKER_COOLDOWN_MS) {
+        this.state = "half-open";
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  recordSuccess(): void {
+    this.failures = 0;
+    this.state = "closed";
+  }
+
+  recordFailure(): void {
+    this.failures++;
+    this.lastFailure = Date.now();
+    if (this.failures >= CIRCUIT_BREAKER_THRESHOLD) {
+      this.state = "open";
+      console.error(
+        `[IDP] Circuit breaker OPEN after ${this.failures} failures`,
+      );
+    }
+  }
+}
+
+const circuitBreaker = new IdpCircuitBreaker();
+
+/**
  * Check if an organization exists in the IDP.
  *
  * - Caches positive results for 5 minutes
  * - Does NOT cache negative results (org might be in propagation delay)
- * - Fails open if IDP is unavailable (logs warning, returns true)
+ * - SECURITY: Fails CLOSED if IDP is unavailable (throws IdpUnavailableError)
  *
  * @param organizationId - The organization ID to validate
- * @returns true if org exists or IDP unavailable, false if org confirmed not to exist
+ * @returns true if org exists, false if org confirmed not to exist
+ * @throws IdpUnavailableError if IDP cannot be reached
  */
 export async function validateOrgExists(
   organizationId: string,
 ): Promise<boolean> {
   if (!AUTH_BASE_URL) {
-    console.warn("[IDP] AUTH_BASE_URL not configured, skipping org validation");
-    return true; // Fail open
+    throw new IdpUnavailableError("AUTH_BASE_URL not configured");
   }
 
   // Check cache first
   const cached = orgExistsCache.get(organizationId);
   if (cached && cached.expiresAt > Date.now()) {
     return cached.exists;
+  }
+
+  if (circuitBreaker.isOpen()) {
+    throw new IdpUnavailableError("Circuit breaker open");
   }
 
   try {
@@ -58,6 +119,7 @@ export async function validateOrgExists(
     );
 
     if (response.ok) {
+      circuitBreaker.recordSuccess();
       // Cache positive result
       orgExistsCache.set(organizationId, {
         exists: true,
@@ -67,23 +129,23 @@ export async function validateOrgExists(
     }
 
     if (response.status === 404) {
+      circuitBreaker.recordSuccess();
       // Org confirmed not to exist - don't cache (might be propagation delay)
       console.warn(`[IDP] Organization ${organizationId} not found in IDP`);
       return false;
     }
 
-    // Other error status - fail open
-    console.warn(
-      `[IDP] Unexpected response checking org ${organizationId}: ${response.status}`,
-    );
-    return true;
+    // Other error status - fail closed
+    circuitBreaker.recordFailure();
+    throw new IdpUnavailableError(`HTTP ${response.status}`);
   } catch (error) {
-    // Network error or timeout - fail open
+    if (error instanceof IdpUnavailableError) {
+      throw error;
+    }
+    // Network error or timeout - fail closed
+    circuitBreaker.recordFailure();
     const message = error instanceof Error ? error.message : String(error);
-    console.warn(
-      `[IDP] Failed to validate org ${organizationId}, failing open: ${message}`,
-    );
-    return true;
+    throw new IdpUnavailableError(message);
   }
 }
 
