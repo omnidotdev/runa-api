@@ -24,6 +24,9 @@ export const {
   VORTEX_API_URL,
   VORTEX_WEBHOOK_SECRET,
   VORTEX_AUTHZ_WORKFLOW_ID,
+  // Feature flags
+  FLAGS_API_HOST,
+  FLAGS_CLIENT_KEY,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

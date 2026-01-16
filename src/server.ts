@@ -26,6 +26,7 @@ import {
   organizationsPlugin,
 } from "lib/graphql/plugins";
 import idpWebhook from "lib/idp/webhooks";
+import { maintenanceMiddleware } from "lib/middleware/maintenance";
 
 /** Health check timeout in milliseconds */
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
@@ -85,6 +86,7 @@ async function startServer(): Promise<void> {
       },
     }),
   })
+    .use(maintenanceMiddleware)
     .use(
       cors({
         origin: CORS_ALLOWED_ORIGINS!.split(","),
