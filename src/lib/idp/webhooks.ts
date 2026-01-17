@@ -13,7 +13,14 @@ import { Elysia, t } from "elysia";
 import { invalidatePermissionCache } from "lib/authz/cache";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { settings } from "lib/db/schema";
+import { projectColumns, settings } from "lib/db/schema";
+
+interface OrganizationCreatedPayload {
+  eventType: "organization.created";
+  organizationId: string;
+  organizationType: "personal" | "team";
+  timestamp: string;
+}
 
 interface OrganizationDeletedPayload {
   eventType: "organization.deleted";
@@ -47,6 +54,7 @@ interface MemberRoleChangedPayload {
 }
 
 type IdpWebhookPayload =
+  | OrganizationCreatedPayload
   | OrganizationDeletedPayload
   | MemberAddedPayload
   | MemberRemovedPayload
@@ -118,6 +126,9 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
       );
 
       switch (body.eventType) {
+        case "organization.created":
+          await handleOrganizationCreated(body);
+          break;
         case "organization.deleted":
           await handleOrganizationDeleted(body);
           break;
@@ -149,6 +160,58 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
     }),
   },
 );
+
+/** Default project columns provisioned for every new organization. */
+const DEFAULT_PROJECT_COLUMNS = [
+  { emoji: "🗓", title: "Planned", index: 0 },
+  { emoji: "🚧", title: "In Progress", index: 1 },
+  { emoji: "✅", title: "Completed", index: 2 },
+] as const;
+
+/**
+ * Handle organization created event.
+ * Provisions default project columns for the organization.
+ */
+async function handleOrganizationCreated(
+  payload: OrganizationCreatedPayload,
+): Promise<void> {
+  const { organizationId, organizationType } = payload;
+
+  try {
+    // Check if columns already exist (handles webhook retries)
+    const existing = await dbPool.query.projectColumns.findFirst({
+      where: (table, { eq }) => eq(table.organizationId, organizationId),
+      columns: { id: true },
+    });
+
+    if (existing) {
+      // biome-ignore lint/suspicious/noConsole: webhook logging
+      console.log(
+        `Project columns already exist for org ${organizationId}, skipping`,
+      );
+      return;
+    }
+
+    await dbPool.insert(projectColumns).values(
+      DEFAULT_PROJECT_COLUMNS.map((col) => ({
+        organizationId,
+        emoji: col.emoji,
+        title: col.title,
+        index: col.index,
+      })),
+    );
+
+    // biome-ignore lint/suspicious/noConsole: webhook logging
+    console.log(
+      `Provisioned default project columns for ${organizationType} org ${organizationId}`,
+    );
+  } catch (err) {
+    console.error(
+      `Failed to provision project columns for org ${organizationId}:`,
+      err,
+    );
+  }
+}
 
 /**
  * Handle organization deleted event.

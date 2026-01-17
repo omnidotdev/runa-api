@@ -253,6 +253,13 @@
       "when": 1768378252594,
       "tag": "0035_bizarre_raider",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1768611850863,
+      "tag": "0036_premium_scarlet_witch",
+      "breakpoints": true
     }
   ]
 }

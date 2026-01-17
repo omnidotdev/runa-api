@@ -34,6 +34,11 @@ export const projectColumns = pgTable(
     uniqueIndex().on(table.id),
     index("project_column_organization_id_idx").on(table.organizationId),
     index().on(table.organizationId, table.index),
+    // Unique constraint for race condition safety during lazy init
+    uniqueIndex("project_column_organization_title_unique").on(
+      table.organizationId,
+      table.title,
+    ),
   ],
 );
 

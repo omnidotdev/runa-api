@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "project_column_organization_title_unique" ON "project_column" USING btree ("organization_id","title");
