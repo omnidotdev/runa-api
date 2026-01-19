@@ -15,6 +15,7 @@ export const {
   BILLING_BYPASS_ORG_IDS,
   BILLING_BASE_URL,
   BILLING_WEBHOOK_SECRET,
+  BILLING_SERVICE_API_KEY,
   // AuthZ - feature flag and PDP URL for permission checks
   AUTHZ_ENABLED,
   AUTHZ_API_URL,
