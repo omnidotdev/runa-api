@@ -8,7 +8,7 @@ import { replaceInFile } from "replace-in-file";
 import { getDefaultOrganization } from "lib/auth/organizations";
 import {
   AUTHZ_ENABLED,
-  AUTHZ_PROVIDER_URL,
+  AUTHZ_API_URL,
   checkPermission,
   deleteTuples,
   writeTuples,
@@ -44,7 +44,7 @@ const generateGraphqlSchema = async () => {
       "postgraphile/grafast": { context, sideEffect },
       "lib/authz": {
         AUTHZ_ENABLED,
-        AUTHZ_PROVIDER_URL,
+        AUTHZ_API_URL,
         checkPermission,
         writeTuples,
         deleteTuples,
@@ -85,35 +85,35 @@ const generateGraphqlSchema = async () => {
   await replaceInFile({
     files: schemaFilePath,
     from: /import \{ checkPermission, deleteTuples, writeTuples \} from "lib\/authz";/g,
-    to: 'import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission, deleteTuples, writeTuples } from "lib/authz";',
+    to: 'import { AUTHZ_ENABLED, AUTHZ_API_URL, checkPermission, deleteTuples, writeTuples } from "lib/authz";',
   });
 
-  // Fix checkPermission calls: checkPermission("...", "https://localhost:4100", ...) -> checkPermission(AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, ...)
+  // Fix checkPermission calls: checkPermission("...", "https://localhost:4100", ...) -> checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, ...)
   // The first arg may be "true", "", or other values depending on env during generation
   await replaceInFile({
     files: schemaFilePath,
     from: /"[^"]*", "https:\/\/localhost:4100"/g,
-    to: "AUTHZ_ENABLED, AUTHZ_PROVIDER_URL",
+    to: "AUTHZ_ENABLED, AUTHZ_API_URL",
   });
 
-  // Fix writeTuples/deleteTuples calls: writeTuples("https://localhost:4100", ...) -> writeTuples(AUTHZ_PROVIDER_URL, ...)
+  // Fix writeTuples/deleteTuples calls: writeTuples("https://localhost:4100", ...) -> writeTuples(AUTHZ_API_URL, ...)
   await replaceInFile({
     files: schemaFilePath,
     from: /writeTuples\("https:\/\/localhost:4100"/g,
-    to: "writeTuples(AUTHZ_PROVIDER_URL",
+    to: "writeTuples(AUTHZ_API_URL",
   });
 
   await replaceInFile({
     files: schemaFilePath,
     from: /deleteTuples\("https:\/\/localhost:4100"/g,
-    to: "deleteTuples(AUTHZ_PROVIDER_URL",
+    to: "deleteTuples(AUTHZ_API_URL",
   });
 
-  // Fix AUTHZ_PROVIDER_URL guard: if (!"https://localhost:4100") -> if (!AUTHZ_PROVIDER_URL)
+  // Fix AUTHZ_API_URL guard: if (!"https://localhost:4100") -> if (!AUTHZ_API_URL)
   await replaceInFile({
     files: schemaFilePath,
     from: /if \(!"https:\/\/localhost:4100"\)/g,
-    to: "if (!AUTHZ_PROVIDER_URL)",
+    to: "if (!AUTHZ_API_URL)",
   });
 
   // Fix AUTHZ_ENABLED guard: if ("..." !== "true") -> if (AUTHZ_ENABLED !== "true")

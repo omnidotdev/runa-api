@@ -1,4 +1,4 @@
-import { ENTITLEMENTS_BASE_URL } from "lib/config/env.config";
+import { BILLING_BASE_URL } from "lib/config/env.config";
 
 /** Request timeout in milliseconds */
 const REQUEST_TIMEOUT_MS = 5000;
@@ -87,10 +87,10 @@ export async function getEntitlements(
   entityId: string,
   productId?: string,
 ): Promise<EntitlementsResult> {
-  if (!ENTITLEMENTS_BASE_URL) {
+  if (!BILLING_BASE_URL) {
     return {
       status: "unavailable",
-      error: "ENTITLEMENTS_BASE_URL not configured",
+      error: "BILLING_BASE_URL not configured",
     };
   }
 
@@ -100,7 +100,7 @@ export async function getEntitlements(
 
   try {
     const url = new URL(
-      `${ENTITLEMENTS_BASE_URL}/entitlements/${entityType}/${entityId}`,
+      `${BILLING_BASE_URL}/entitlements/${entityType}/${entityId}`,
     );
     if (productId) {
       url.searchParams.set("productId", productId);

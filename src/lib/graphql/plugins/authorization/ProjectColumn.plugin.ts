@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+import { AUTHZ_ENABLED, AUTHZ_API_URL, checkPermission } from "lib/authz";
 
 import type { InsertProjectColumn } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -24,7 +24,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       checkPermission,
       propName,
       scope,
@@ -46,7 +46,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
-                AUTHZ_PROVIDER_URL,
+                AUTHZ_API_URL,
                 observer.id,
                 "organization",
                 organizationId,
@@ -64,7 +64,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
-                AUTHZ_PROVIDER_URL,
+                AUTHZ_API_URL,
                 observer.id,
                 "organization",
                 projectColumn.organizationId,
@@ -82,7 +82,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       checkPermission,
       propName,
       scope,

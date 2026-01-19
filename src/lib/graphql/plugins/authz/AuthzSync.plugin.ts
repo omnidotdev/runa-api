@@ -19,7 +19,7 @@ import { wrapPlans } from "postgraphile/utils";
 
 import {
   AUTHZ_ENABLED,
-  AUTHZ_PROVIDER_URL,
+  AUTHZ_API_URL,
   deleteTuples,
   writeTuples,
 } from "lib/authz";
@@ -37,7 +37,7 @@ const syncCreateProject = (): PlanWrapperFn =>
       _context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       writeTuples,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
@@ -47,7 +47,7 @@ const syncCreateProject = (): PlanWrapperFn =>
         sideEffect([$result, $input], async ([result, input]) => {
           if (!result) return;
           if (AUTHZ_ENABLED !== "true") return;
-          if (!AUTHZ_PROVIDER_URL) return;
+          if (!AUTHZ_API_URL) return;
 
           const { organizationId } = input as InsertProject;
           const projectId = (result as { id?: string })?.id;
@@ -58,7 +58,7 @@ const syncCreateProject = (): PlanWrapperFn =>
           }
 
           try {
-            await writeTuples(AUTHZ_PROVIDER_URL, [
+            await writeTuples(AUTHZ_API_URL, [
               {
                 user: `organization:${organizationId}`,
                 relation: "organization",
@@ -75,7 +75,7 @@ const syncCreateProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, writeTuples],
+    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_API_URL, writeTuples],
   );
 
 /**
@@ -87,7 +87,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
       context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       deleteTuples,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
@@ -100,7 +100,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
           async ([result, projectId, db]) => {
             if (!result) return;
             if (AUTHZ_ENABLED !== "true") return;
-            if (!AUTHZ_PROVIDER_URL) return;
+            if (!AUTHZ_API_URL) return;
 
             // Get the organization ID before deletion
             const project = await db.query.projects.findFirst({
@@ -110,7 +110,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
             if (!project) return;
 
             try {
-              await deleteTuples(AUTHZ_PROVIDER_URL, [
+              await deleteTuples(AUTHZ_API_URL, [
                 {
                   user: `organization:${project.organizationId}`,
                   relation: "organization",
@@ -128,7 +128,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, deleteTuples],
+    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_API_URL, deleteTuples],
   );
 
 /**

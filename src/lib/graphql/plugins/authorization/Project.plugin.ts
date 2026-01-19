@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { AUTHZ_ENABLED, AUTHZ_PROVIDER_URL, checkPermission } from "lib/authz";
+import { AUTHZ_ENABLED, AUTHZ_API_URL, checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
@@ -26,7 +26,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
@@ -52,7 +52,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               // Check admin permission on organization
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
-                AUTHZ_PROVIDER_URL,
+                AUTHZ_API_URL,
                 observer.id,
                 "organization",
                 organizationId,
@@ -92,7 +92,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               const allowed = await checkPermission(
                 AUTHZ_ENABLED,
-                AUTHZ_PROVIDER_URL,
+                AUTHZ_API_URL,
                 observer.id,
                 "project",
                 projectId,
@@ -110,7 +110,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       context,
       sideEffect,
       AUTHZ_ENABLED,
-      AUTHZ_PROVIDER_URL,
+      AUTHZ_API_URL,
       checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
