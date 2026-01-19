@@ -11,8 +11,17 @@
  * dev/prod parity by using a single code path (Vortex) rather than fallbacks.
  */
 
+import {
+  AUTHZ_API_URL as _AUTHZ_API_URL,
+  AUTHZ_ENABLED as _AUTHZ_ENABLED,
+  VORTEX_API_URL,
+  VORTEX_AUTHZ_WEBHOOK_SECRET,
+} from "lib/config/env.config";
+
 // Re-export for EXPORTABLE compatibility in plugins
-export { AUTHZ_API_URL, AUTHZ_ENABLED } from "lib/config/env.config";
+export const AUTHZ_API_URL = _AUTHZ_API_URL;
+export const AUTHZ_ENABLED = _AUTHZ_ENABLED;
+
 /** @knipignore - re-exported for plugin compatibility */
 export {
   buildPermissionCacheKey,
@@ -117,34 +126,26 @@ const circuitBreaker = new CircuitBreaker();
 
 /**
  * Write tuples to the authorization store.
- * Uses Vortex if configured, otherwise falls back to direct Warden API.
+ * Uses Vortex's dedicated authz endpoint if configured, otherwise falls back to direct Warden API.
  * Exported for graphile-export EXPORTABLE compatibility.
  *
  * @param authzProviderUrl - Warden API URL (fallback when Vortex not configured)
  * @param tuples - The tuples to write
- * @param vortexApiUrl - Vortex API URL
- * @param vortexWorkflowId - Vortex workflow ID for authz sync
- * @param vortexWebhookSecret - Vortex webhook secret
- * @param authzEnabled - Whether authz is enabled
  */
 export async function writeTuples(
   authzProviderUrl: string | undefined,
   tuples: Array<{ user: string; relation: string; object: string }>,
-  vortexApiUrl?: string,
-  vortexWorkflowId?: string,
-  vortexWebhookSecret?: string,
-  authzEnabled?: string,
 ): Promise<void> {
   // Skip if authz is disabled
-  if (authzEnabled !== "true") {
+  if (_AUTHZ_ENABLED !== "true") {
     return;
   }
 
-  // Try Vortex first if configured
-  if (vortexApiUrl && vortexWorkflowId && vortexWebhookSecret) {
+  // Try Vortex first if configured (uses dedicated /webhooks/authz endpoint)
+  if (VORTEX_API_URL && VORTEX_AUTHZ_WEBHOOK_SECRET) {
     try {
       const response = await fetch(
-        `${vortexApiUrl}/webhooks/workflow/${vortexWorkflowId}/${vortexWebhookSecret}`,
+        `${VORTEX_API_URL}/webhooks/authz/${VORTEX_AUTHZ_WEBHOOK_SECRET}`,
         {
           method: "POST",
           headers: {
@@ -223,34 +224,26 @@ export async function writeTuples(
 
 /**
  * Delete tuples from the authorization store.
- * Uses Vortex if configured, otherwise falls back to direct Warden API.
+ * Uses Vortex's dedicated authz endpoint if configured, otherwise falls back to direct Warden API.
  * Exported for graphile-export EXPORTABLE compatibility.
  *
  * @param authzProviderUrl - Warden API URL (fallback when Vortex not configured)
  * @param tuples - The tuples to delete
- * @param vortexApiUrl - Vortex API URL
- * @param vortexWorkflowId - Vortex workflow ID for authz sync
- * @param vortexWebhookSecret - Vortex webhook secret
- * @param authzEnabled - Whether authz is enabled
  */
 export async function deleteTuples(
   authzProviderUrl: string | undefined,
   tuples: Array<{ user: string; relation: string; object: string }>,
-  vortexApiUrl?: string,
-  vortexWorkflowId?: string,
-  vortexWebhookSecret?: string,
-  authzEnabled?: string,
 ): Promise<void> {
   // Skip if authz is disabled
-  if (authzEnabled !== "true") {
+  if (_AUTHZ_ENABLED !== "true") {
     return;
   }
 
-  // Try Vortex first if configured
-  if (vortexApiUrl && vortexWorkflowId && vortexWebhookSecret) {
+  // Try Vortex first if configured (uses dedicated /webhooks/authz endpoint)
+  if (VORTEX_API_URL && VORTEX_AUTHZ_WEBHOOK_SECRET) {
     try {
       const response = await fetch(
-        `${vortexApiUrl}/webhooks/workflow/${vortexWorkflowId}/${vortexWebhookSecret}`,
+        `${VORTEX_API_URL}/webhooks/authz/${VORTEX_AUTHZ_WEBHOOK_SECRET}`,
         {
           method: "POST",
           headers: {

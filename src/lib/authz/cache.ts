@@ -2,7 +2,7 @@
  * TTL-based permission cache for authZ checks.
  * Mirrors the pattern from entitlements/cache.ts.
  *
- * Caches permission check results with a 5-minute TTL to reduce
+ * Caches permission check results with a 2-minute TTL to reduce
  * redundant PDP calls across GraphQL requests.
  */
 
@@ -13,8 +13,8 @@ interface CacheEntry {
 
 const cache = new Map<string, CacheEntry>();
 
-/** Default TTL: 5 minutes */
-const DEFAULT_TTL_MS = 300_000;
+/** Default TTL: 2 minutes */
+const DEFAULT_TTL_MS = 120_000;
 
 /**
  * Build a cache key for a permission check.

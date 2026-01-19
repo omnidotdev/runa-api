@@ -21,10 +21,9 @@ export const {
   AUTHZ_API_URL,
   // IDP webhook
   IDP_WEBHOOK_SECRET,
-  // Vortex workflow engine (for authz tuple sync)
+  // Vortex workflow engine (for durable authz tuple sync)
   VORTEX_API_URL,
-  VORTEX_WEBHOOK_SECRET,
-  VORTEX_AUTHZ_WORKFLOW_ID,
+  VORTEX_AUTHZ_WEBHOOK_SECRET,
   // Feature flags
   FLAGS_API_HOST,
   FLAGS_CLIENT_KEY,

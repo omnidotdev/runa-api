@@ -11,8 +11,8 @@ interface CacheEntry<T> {
 
 const cache = new Map<string, CacheEntry<unknown>>();
 
-/** Default TTL: 60 seconds */
-const DEFAULT_TTL_MS = 60_000;
+/** Default TTL: 30 seconds */
+const DEFAULT_TTL_MS = 30_000;
 
 /**
  * Get a cached value if it exists and hasn't expired.
