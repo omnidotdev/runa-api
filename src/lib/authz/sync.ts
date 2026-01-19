@@ -12,7 +12,7 @@
  */
 
 // Re-export for EXPORTABLE compatibility in plugins
-export { AUTHZ_ENABLED, AUTHZ_API_URL } from "lib/config/env.config";
+export { AUTHZ_API_URL, AUTHZ_ENABLED } from "lib/config/env.config";
 /** @knipignore - re-exported for plugin compatibility */
 export {
   buildPermissionCacheKey,

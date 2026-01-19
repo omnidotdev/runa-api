@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { AUTHZ_ENABLED, AUTHZ_API_URL, checkPermission } from "lib/authz";
+import { AUTHZ_API_URL, AUTHZ_ENABLED, checkPermission } from "lib/authz";
 
 import type { InsertProjectColumn } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";

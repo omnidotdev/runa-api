@@ -7,8 +7,8 @@ import { replaceInFile } from "replace-in-file";
 
 import { getDefaultOrganization } from "lib/auth/organizations";
 import {
-  AUTHZ_ENABLED,
   AUTHZ_API_URL,
+  AUTHZ_ENABLED,
   checkPermission,
   deleteTuples,
   writeTuples,
