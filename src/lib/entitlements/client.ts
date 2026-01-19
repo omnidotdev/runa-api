@@ -1,4 +1,7 @@
-import { BILLING_BASE_URL, BILLING_SERVICE_API_KEY } from "lib/config/env.config";
+import {
+  BILLING_BASE_URL,
+  BILLING_SERVICE_API_KEY,
+} from "lib/config/env.config";
 
 /** Request timeout in milliseconds */
 const REQUEST_TIMEOUT_MS = 5000;
