@@ -139,7 +139,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "41395",
+    oid: "300037",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -222,7 +222,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "41178",
+    oid: "299821",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +317,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "41552",
+    oid: "300194",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -412,7 +412,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "41381",
+    oid: "300023",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -519,7 +519,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "41249",
+    oid: "299892",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -626,7 +626,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "41202",
+    oid: "299845",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -733,7 +733,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "41189",
+    oid: "299832",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -791,7 +791,7 @@ const spec_projectColumn = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.text,
+      codec: TYPES.uuid,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -840,7 +840,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "41446",
+    oid: "300088",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -975,7 +975,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "41463",
+    oid: "300105",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -989,6 +989,137 @@ const spec_userPreference = {
   executor: executor
 };
 const userPreferenceCodec = recordCodec(spec_userPreference);
+const settingsIdentifier = sql.identifier("public", "settings");
+const spec_settings = {
+  name: "settings",
+  identifier: settingsIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    view_mode: {
+      description: undefined,
+      codec: TYPES.varchar,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    billing_account_id: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    subscription_id: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    deleted_at: {
+      description: undefined,
+      codec: TYPES.timestamp,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    deletion_reason: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  description: undefined,
+  extensions: {
+    oid: "299907",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "settings"
+    },
+    tags: {
+      __proto__: null
+    }
+  },
+  executor: executor
+};
+const settingsCodec = recordCodec(spec_settings);
 const taskIdentifier = sql.identifier("public", "task");
 const spec_task = {
   name: "task",
@@ -1126,11 +1257,23 @@ const spec_task = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    number: {
+      description: undefined,
+      codec: TYPES.int,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   description: undefined,
   extensions: {
-    oid: "41230",
+    oid: "299873",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1200,7 +1343,7 @@ const spec_project = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.text,
+      codec: TYPES.uuid,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -1281,11 +1424,23 @@ const spec_project = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    next_task_number: {
+      description: undefined,
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   description: undefined,
   extensions: {
-    oid: "41215",
+    oid: "299858",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1299,137 +1454,6 @@ const spec_project = {
   executor: executor
 };
 const projectCodec = recordCodec(spec_project);
-const settingsIdentifier = sql.identifier("public", "settings");
-const spec_settings = {
-  name: "settings",
-  identifier: settingsIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    view_mode: {
-      description: undefined,
-      codec: TYPES.varchar,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    billing_account_id: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    subscription_id: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    deleted_at: {
-      description: undefined,
-      codec: TYPES.timestamp,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    deletion_reason: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  description: undefined,
-  extensions: {
-    oid: "41264",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "settings"
-    },
-    tags: {
-      __proto__: null
-    }
-  },
-  executor: executor
-};
-const settingsCodec = recordCodec(spec_settings);
 const task_labelUniques = [{
   isPrimary: true,
   attributes: ["task_id", "label_id"],
@@ -1804,6 +1828,26 @@ const registryConfig_pgResources_user_preference_user_preference = {
     canDelete: true
   }
 };
+const settingsUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
+}, {
+  isPrimary: false,
+  attributes: ["organization_id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
+    }
+  }
+}];
 const taskUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1811,6 +1855,16 @@ const taskUniques = [{
   extensions: {
     tags: {
       __proto__: null
+    }
+  }
+}, {
+  isPrimary: false,
+  attributes: ["project_id", "number"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
     }
   }
 }];
@@ -1840,26 +1894,6 @@ const registryConfig_pgResources_task_task = {
     canDelete: true
   }
 };
-const settingsUniques = [{
-  isPrimary: true,
-  attributes: ["id"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null
-    }
-  }
-}, {
-  isPrimary: false,
-  attributes: ["organization_id"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
-    }
-  }
-}];
 const projectUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1928,11 +1962,11 @@ const registryConfig = {
     userPreference: userPreferenceCodec,
     pgCatalogTextArray: pgCatalogTextArrayCodec,
     varchar: TYPES.varchar,
+    settings: settingsCodec,
+    timestamp: TYPES.timestamp,
     task: taskCodec,
     project: projectCodec,
-    bool: TYPES.boolean,
-    settings: settingsCodec,
-    timestamp: TYPES.timestamp
+    bool: TYPES.boolean
   },
   pgResources: {
     __proto__: null,
@@ -1945,7 +1979,6 @@ const registryConfig = {
     column: registryConfig_pgResources_column_column,
     project_column: registryConfig_pgResources_project_column_project_column,
     user_preference: registryConfig_pgResources_user_preference_user_preference,
-    task: registryConfig_pgResources_task_task,
     settings: {
       executor: executor,
       name: "settings",
@@ -1972,6 +2005,7 @@ const registryConfig = {
         canDelete: true
       }
     },
+    task: registryConfig_pgResources_task_task,
     project: registryConfig_pgResources_project_project
   },
   pgRelations: {
@@ -2501,8 +2535,8 @@ const resource_postPgResource = registry.pgResources["post"];
 const resource_columnPgResource = registry.pgResources["column"];
 const resource_project_columnPgResource = registry.pgResources["project_column"];
 const resource_user_preferencePgResource = registry.pgResources["user_preference"];
-const resource_taskPgResource = registry.pgResources["task"];
 const resource_settingsPgResource = registry.pgResources["settings"];
+const resource_taskPgResource = registry.pgResources["task"];
 const resource_projectPgResource = registry.pgResources["project"];
 const nodeIdHandler_TaskLabel = {
   typeName: "TaskLabel",
@@ -2757,32 +2791,6 @@ const nodeFetcher_UserPreference = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_UserPreference));
   return nodeIdHandler_UserPreference.get(nodeIdHandler_UserPreference.getSpec($decoded));
 };
-const nodeIdHandler_Task = {
-  typeName: "Task",
-  codec: nodeIdCodecs_base64JSON_base64JSON,
-  deprecationReason: undefined,
-  plan($record) {
-    return list([constant("Task", false), $record.get("id")]);
-  },
-  getSpec($list) {
-    return {
-      id: inhibitOnNull(access($list, [1]))
-    };
-  },
-  getIdentifiers(value) {
-    return value.slice(1);
-  },
-  get(spec) {
-    return resource_taskPgResource.get(spec);
-  },
-  match(obj) {
-    return obj[0] === "Task";
-  }
-};
-const nodeFetcher_Task = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Task));
-  return nodeIdHandler_Task.get(nodeIdHandler_Task.getSpec($decoded));
-};
 const nodeIdHandler_Setting = {
   typeName: "Setting",
   codec: nodeIdCodecs_base64JSON_base64JSON,
@@ -2808,6 +2816,32 @@ const nodeIdHandler_Setting = {
 const nodeFetcher_Setting = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Setting));
   return nodeIdHandler_Setting.get(nodeIdHandler_Setting.getSpec($decoded));
+};
+const nodeIdHandler_Task = {
+  typeName: "Task",
+  codec: nodeIdCodecs_base64JSON_base64JSON,
+  deprecationReason: undefined,
+  plan($record) {
+    return list([constant("Task", false), $record.get("id")]);
+  },
+  getSpec($list) {
+    return {
+      id: inhibitOnNull(access($list, [1]))
+    };
+  },
+  getIdentifiers(value) {
+    return value.slice(1);
+  },
+  get(spec) {
+    return resource_taskPgResource.get(spec);
+  },
+  match(obj) {
+    return obj[0] === "Task";
+  }
+};
+const nodeFetcher_Task = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Task));
+  return nodeIdHandler_Task.get(nodeIdHandler_Task.getSpec($decoded));
 };
 const nodeIdHandler_Project = {
   typeName: "Project",
@@ -2985,8 +3019,8 @@ const nodeIdHandlerByTypeName = {
   Column: nodeIdHandler_Column,
   ProjectColumn: nodeIdHandler_ProjectColumn,
   UserPreference: nodeIdHandler_UserPreference,
-  Task: nodeIdHandler_Task,
   Setting: nodeIdHandler_Setting,
+  Task: nodeIdHandler_Task,
   Project: nodeIdHandler_Project
 };
 const decodeNodeId = makeDecodeNodeId(Object.values(nodeIdHandlerByTypeName));
@@ -3312,6 +3346,11 @@ const colSpec11 = {
   fieldName: "isPublic",
   attributeName: "is_public",
   attribute: spec_project.attributes.is_public
+};
+const colSpec12 = {
+  fieldName: "nextTaskNumber",
+  attributeName: "next_task_number",
+  attribute: spec_project.attributes.next_task_number
 };
 function assertAllowed19(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -3943,37 +3982,37 @@ group by ())`;
     return this.parent.where(subquery);
   }
 };
-const colSpec12 = {
+const colSpec13 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_column.attributes.id
 };
-const colSpec13 = {
+const colSpec14 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_column.attributes.title
 };
-const colSpec14 = {
+const colSpec15 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_column.attributes.project_id
 };
-const colSpec15 = {
+const colSpec16 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_column.attributes.created_at
 };
-const colSpec16 = {
+const colSpec17 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_column.attributes.updated_at
 };
-const colSpec17 = {
+const colSpec18 = {
   fieldName: "index",
   attributeName: "index",
   attribute: spec_column.attributes.index
 };
-const colSpec18 = {
+const colSpec19 = {
   fieldName: "emoji",
   attributeName: "emoji",
   attribute: spec_column.attributes.emoji
@@ -4022,60 +4061,65 @@ function assertAllowed26(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec19 = {
+const colSpec20 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_task.attributes.id
 };
-const colSpec20 = {
+const colSpec21 = {
   fieldName: "content",
   attributeName: "content",
   attribute: spec_task.attributes.content
 };
-const colSpec21 = {
+const colSpec22 = {
   fieldName: "description",
   attributeName: "description",
   attribute: spec_task.attributes.description
 };
-const colSpec22 = {
+const colSpec23 = {
   fieldName: "priority",
   attributeName: "priority",
   attribute: spec_task.attributes.priority
 };
-const colSpec23 = {
+const colSpec24 = {
   fieldName: "authorId",
   attributeName: "author_id",
   attribute: spec_task.attributes.author_id
 };
-const colSpec24 = {
+const colSpec25 = {
   fieldName: "columnId",
   attributeName: "column_id",
   attribute: spec_task.attributes.column_id
 };
-const colSpec25 = {
+const colSpec26 = {
   fieldName: "dueDate",
   attributeName: "due_date",
   attribute: spec_task.attributes.due_date
 };
-const colSpec26 = {
+const colSpec27 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_task.attributes.created_at
 };
-const colSpec27 = {
+const colSpec28 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_task.attributes.updated_at
 };
-const colSpec28 = {
+const colSpec29 = {
   fieldName: "columnIndex",
   attributeName: "column_index",
   attribute: spec_task.attributes.column_index
 };
-const colSpec29 = {
+const colSpec30 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_task.attributes.project_id
+};
+const colSpec31 = {
+  fieldName: "number",
+  attributeName: "number",
+  attribute: spec_task.attributes.number
 };
 function assertAllowed27(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -4121,27 +4165,27 @@ function assertAllowed30(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec30 = {
+const colSpec32 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_assignee.attributes.user_id
 };
-const colSpec31 = {
+const colSpec33 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_assignee.attributes.task_id
 };
-const colSpec32 = {
+const colSpec34 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_assignee.attributes.created_at
 };
-const colSpec33 = {
+const colSpec35 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_assignee.attributes.updated_at
 };
-const colSpec34 = {
+const colSpec36 = {
   fieldName: "deletedAt",
   attributeName: "deleted_at",
   attribute: spec_assignee.attributes.deleted_at
@@ -4168,37 +4212,37 @@ function assertAllowed32(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec35 = {
+const colSpec37 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_user.attributes.id
 };
-const colSpec36 = {
+const colSpec38 = {
   fieldName: "identityProviderId",
   attributeName: "identity_provider_id",
   attribute: spec_user.attributes.identity_provider_id
 };
-const colSpec37 = {
+const colSpec39 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_user.attributes.name
 };
-const colSpec38 = {
+const colSpec40 = {
   fieldName: "avatarUrl",
   attributeName: "avatar_url",
   attribute: spec_user.attributes.avatar_url
 };
-const colSpec39 = {
+const colSpec41 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_user.attributes.created_at
 };
-const colSpec40 = {
+const colSpec42 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_user.attributes.updated_at
 };
-const colSpec41 = {
+const colSpec43 = {
   fieldName: "email",
   attributeName: "email",
   attribute: spec_user.attributes.email
@@ -4297,37 +4341,37 @@ function assertAllowed36(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec42 = {
+const colSpec44 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_post.attributes.id
 };
-const colSpec43 = {
+const colSpec45 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_post.attributes.title
 };
-const colSpec44 = {
+const colSpec46 = {
   fieldName: "description",
   attributeName: "description",
   attribute: spec_post.attributes.description
 };
-const colSpec45 = {
+const colSpec47 = {
   fieldName: "authorId",
   attributeName: "author_id",
   attribute: spec_post.attributes.author_id
 };
-const colSpec46 = {
+const colSpec48 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_post.attributes.task_id
 };
-const colSpec47 = {
+const colSpec49 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_post.attributes.created_at
 };
-const colSpec48 = {
+const colSpec50 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_post.attributes.updated_at
@@ -4376,32 +4420,32 @@ function assertAllowed40(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec49 = {
+const colSpec51 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_emoji.attributes.id
 };
-const colSpec50 = {
+const colSpec52 = {
   fieldName: "emoji",
   attributeName: "emoji",
   attribute: spec_emoji.attributes.emoji
 };
-const colSpec51 = {
+const colSpec53 = {
   fieldName: "postId",
   attributeName: "post_id",
   attribute: spec_emoji.attributes.post_id
 };
-const colSpec52 = {
+const colSpec54 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_emoji.attributes.user_id
 };
-const colSpec53 = {
+const colSpec55 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_emoji.attributes.created_at
 };
-const colSpec54 = {
+const colSpec56 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_emoji.attributes.updated_at
@@ -4500,42 +4544,42 @@ function assertAllowed44(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec55 = {
+const colSpec57 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_userPreference.attributes.id
 };
-const colSpec56 = {
+const colSpec58 = {
   fieldName: "userId",
   attributeName: "user_id",
   attribute: spec_userPreference.attributes.user_id
 };
-const colSpec57 = {
+const colSpec59 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_userPreference.attributes.project_id
 };
-const colSpec58 = {
+const colSpec60 = {
   fieldName: "hiddenColumnIds",
   attributeName: "hidden_column_ids",
   attribute: spec_userPreference.attributes.hidden_column_ids
 };
-const colSpec59 = {
+const colSpec61 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_userPreference.attributes.created_at
 };
-const colSpec60 = {
+const colSpec62 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_userPreference.attributes.updated_at
 };
-const colSpec61 = {
+const colSpec63 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_userPreference.attributes.view_mode
 };
-const colSpec62 = {
+const colSpec64 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_userPreference.attributes.color
@@ -4647,22 +4691,22 @@ function assertAllowed49(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec63 = {
+const colSpec65 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_taskLabel.attributes.task_id
 };
-const colSpec64 = {
+const colSpec66 = {
   fieldName: "labelId",
   attributeName: "label_id",
   attribute: spec_taskLabel.attributes.label_id
 };
-const colSpec65 = {
+const colSpec67 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_taskLabel.attributes.created_at
 };
-const colSpec66 = {
+const colSpec68 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_taskLabel.attributes.updated_at
@@ -4689,32 +4733,32 @@ function assertAllowed51(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec67 = {
+const colSpec69 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_label.attributes.id
 };
-const colSpec68 = {
+const colSpec70 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_label.attributes.name
 };
-const colSpec69 = {
+const colSpec71 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_label.attributes.color
 };
-const colSpec70 = {
+const colSpec72 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_label.attributes.project_id
 };
-const colSpec71 = {
+const colSpec73 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_label.attributes.created_at
 };
-const colSpec72 = {
+const colSpec74 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_label.attributes.updated_at
@@ -4796,37 +4840,37 @@ function assertAllowed58(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec73 = {
+const colSpec75 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_projectColumn.attributes.id
 };
-const colSpec74 = {
+const colSpec76 = {
   fieldName: "emoji",
   attributeName: "emoji",
   attribute: spec_projectColumn.attributes.emoji
 };
-const colSpec75 = {
+const colSpec77 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_projectColumn.attributes.title
 };
-const colSpec76 = {
+const colSpec78 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_projectColumn.attributes.organization_id
 };
-const colSpec77 = {
+const colSpec79 = {
   fieldName: "index",
   attributeName: "index",
   attribute: spec_projectColumn.attributes.index
 };
-const colSpec78 = {
+const colSpec80 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectColumn.attributes.created_at
 };
-const colSpec79 = {
+const colSpec81 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_projectColumn.attributes.updated_at
@@ -4990,47 +5034,47 @@ const relation13 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
 const relation14 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
 const relation15 = registry.pgRelations["user"]["emojisByTheirUserId"];
 const relation16 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
-const colSpec80 = {
+const colSpec82 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_settings.attributes.id
 };
-const colSpec81 = {
+const colSpec83 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_settings.attributes.created_at
 };
-const colSpec82 = {
+const colSpec84 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_settings.attributes.updated_at
 };
-const colSpec83 = {
+const colSpec85 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_settings.attributes.view_mode
 };
-const colSpec84 = {
+const colSpec86 = {
   fieldName: "billingAccountId",
   attributeName: "billing_account_id",
   attribute: spec_settings.attributes.billing_account_id
 };
-const colSpec85 = {
+const colSpec87 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_settings.attributes.organization_id
 };
-const colSpec86 = {
+const colSpec88 = {
   fieldName: "subscriptionId",
   attributeName: "subscription_id",
   attribute: spec_settings.attributes.subscription_id
 };
-const colSpec87 = {
+const colSpec89 = {
   fieldName: "deletedAt",
   attributeName: "deleted_at",
   attribute: spec_settings.attributes.deleted_at
 };
-const colSpec88 = {
+const colSpec90 = {
   fieldName: "deletionReason",
   attributeName: "deletion_reason",
   attribute: spec_settings.attributes.deletion_reason
@@ -5072,7 +5116,7 @@ const planWrapper = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -5088,7 +5132,7 @@ const planWrapper = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5122,7 +5166,7 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -5137,7 +5181,7 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -5176,7 +5220,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -5197,7 +5241,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5228,10 +5272,10 @@ const planWrapper4 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5296,7 +5340,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -5313,7 +5357,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5344,10 +5388,10 @@ const planWrapper7 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5382,7 +5426,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -5395,7 +5439,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5446,7 +5490,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5478,7 +5522,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5500,7 +5544,7 @@ const planWrapper11 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -5519,7 +5563,7 @@ const planWrapper11 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5548,7 +5592,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
   sideEffect([$result, $input], async ([result, input]) => {
     if (!result) return;
     if (AUTHZ_ENABLED !== "true") return;
-    if (!AUTHZ_API_URL) return;
+    if (!undefined) return;
     const {
         organizationId
       } = input,
@@ -5558,7 +5602,7 @@ const planWrapper12 = (plan, _, fieldArgs) => {
       return;
     }
     try {
-      await writeTuples(AUTHZ_API_URL, [{
+      await writeTuples(undefined, [{
         user: `organization:${organizationId}`,
         relation: "organization",
         object: `project:${projectId}`
@@ -5602,7 +5646,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -5618,7 +5662,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5659,7 +5703,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -5674,7 +5718,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -5719,7 +5763,7 @@ const planWrapper15 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -5740,7 +5784,7 @@ const planWrapper15 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5777,10 +5821,10 @@ const planWrapper16 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5857,7 +5901,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -5874,7 +5918,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5911,10 +5955,10 @@ const planWrapper19 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5955,7 +5999,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -5968,7 +6012,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6008,6 +6052,10 @@ const planWrapper21 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
+const specFromArgs_Setting = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Setting, $nodeId);
+};
 const specFromArgs_Task = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Task, $nodeId);
@@ -6031,7 +6079,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6063,14 +6111,10 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
-};
-const specFromArgs_Setting = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Setting, $nodeId);
 };
 const specFromArgs_Project = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -6095,7 +6139,7 @@ const planWrapper23 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -6114,7 +6158,7 @@ const planWrapper23 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6152,7 +6196,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -6168,7 +6212,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6209,7 +6253,7 @@ const planWrapper25 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -6224,7 +6268,7 @@ const planWrapper25 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -6269,7 +6313,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -6290,7 +6334,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6327,10 +6371,10 @@ const planWrapper27 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6407,7 +6451,7 @@ const planWrapper29 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -6424,7 +6468,7 @@ const planWrapper29 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6461,10 +6505,10 @@ const planWrapper30 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6505,7 +6549,7 @@ const planWrapper31 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -6518,7 +6562,7 @@ const planWrapper31 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6558,6 +6602,10 @@ const planWrapper32 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
+const specFromArgs_Setting2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Setting, $nodeId);
+};
 const specFromArgs_Task2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Task, $nodeId);
@@ -6581,7 +6629,7 @@ const planWrapper33 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6613,14 +6661,10 @@ const planWrapper33 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
-};
-const specFromArgs_Setting2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Setting, $nodeId);
 };
 const specFromArgs_Project2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -6645,7 +6689,7 @@ const planWrapper34 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -6664,7 +6708,7 @@ const planWrapper34 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6694,7 +6738,7 @@ const planWrapper35 = (plan, _, fieldArgs) => {
   sideEffect([$result, $projectId, $db], async ([result, projectId, db]) => {
     if (!result) return;
     if (AUTHZ_ENABLED !== "true") return;
-    if (!AUTHZ_API_URL) return;
+    if (!undefined) return;
     const project = await db.query.projects.findFirst({
       where(table, {
         eq
@@ -6704,7 +6748,7 @@ const planWrapper35 = (plan, _, fieldArgs) => {
     });
     if (!project) return;
     try {
-      await deleteTuples(AUTHZ_API_URL, [{
+      await deleteTuples(undefined, [{
         user: `organization:${project.organizationId}`,
         relation: "organization",
         object: `project:${projectId}`
@@ -6794,20 +6838,23 @@ type Query implements Node {
   """Get a single \`UserPreference\`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
-  """Get a single \`Task\`."""
-  task(rowId: UUID!): Task
-
   """Get a single \`Setting\`."""
   setting(rowId: UUID!): Setting
 
   """Get a single \`Setting\`."""
   settingByOrganizationId(organizationId: String!): Setting
 
+  """Get a single \`Task\`."""
+  task(rowId: UUID!): Task
+
+  """Get a single \`Task\`."""
+  taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
+
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
 
   """Get a single \`Project\`."""
-  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
+  projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
 
   """Reads a single \`TaskLabel\` using its globally unique \`ID\`."""
   taskLabelById(
@@ -6867,17 +6914,17 @@ type Query implements Node {
     id: ID!
   ): UserPreference
 
-  """Reads a single \`Task\` using its globally unique \`ID\`."""
-  taskById(
-    """The globally unique \`ID\` to be used in selecting a single \`Task\`."""
-    id: ID!
-  ): Task
-
   """Reads a single \`Setting\` using its globally unique \`ID\`."""
   settingById(
     """The globally unique \`ID\` to be used in selecting a single \`Setting\`."""
     id: ID!
   ): Setting
+
+  """Reads a single \`Task\` using its globally unique \`ID\`."""
+  taskById(
+    """The globally unique \`ID\` to be used in selecting a single \`Task\`."""
+    id: ID!
+  ): Task
 
   """Reads a single \`Project\` using its globally unique \`ID\`."""
   projectById(
@@ -7191,40 +7238,6 @@ type Query implements Node {
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
 
-  """Reads and enables pagination through a set of \`Task\`."""
-  tasks(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaskCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaskFilter
-
-    """The method to use when ordering \`Task\`."""
-    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaskConnection
-
   """Reads and enables pagination through a set of \`Setting\`."""
   settings(
     """Only read the first \`n\` values of the set."""
@@ -7258,6 +7271,40 @@ type Query implements Node {
     """The method to use when ordering \`Setting\`."""
     orderBy: [SettingOrderBy!] = [PRIMARY_KEY_ASC]
   ): SettingConnection
+
+  """Reads and enables pagination through a set of \`Task\`."""
+  tasks(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskFilter
+
+    """The method to use when ordering \`Task\`."""
+    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskConnection
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -7392,13 +7439,14 @@ type Project implements Node {
   name: String!
   description: String
   prefix: String
-  organizationId: String!
+  organizationId: UUID!
   createdAt: Datetime!
   updatedAt: Datetime!
   projectColumnId: UUID!
   slug: String!
   columnIndex: Int!
   isPublic: Boolean!
+  nextTaskNumber: Int!
 
   """Reads a single \`ProjectColumn\` that is related to this \`Project\`."""
   projectColumn: ProjectColumn
@@ -7548,7 +7596,7 @@ type ProjectColumn implements Node {
   rowId: UUID!
   emoji: String
   title: String!
-  organizationId: String!
+  organizationId: UUID!
   index: Int!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -7700,6 +7748,9 @@ type ProjectAggregates {
 type ProjectSumAggregates {
   """Sum of columnIndex across the matching connection"""
   columnIndex: BigInt!
+
+  """Sum of nextTaskNumber across the matching connection"""
+  nextTaskNumber: BigInt!
 }
 
 """
@@ -7742,21 +7793,33 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of isPublic across the matching connection"""
   isPublic: BigInt
+
+  """Distinct count of nextTaskNumber across the matching connection"""
+  nextTaskNumber: BigInt
 }
 
 type ProjectMinAggregates {
   """Minimum of columnIndex across the matching connection"""
   columnIndex: Int
+
+  """Minimum of nextTaskNumber across the matching connection"""
+  nextTaskNumber: Int
 }
 
 type ProjectMaxAggregates {
   """Maximum of columnIndex across the matching connection"""
   columnIndex: Int
+
+  """Maximum of nextTaskNumber across the matching connection"""
+  nextTaskNumber: Int
 }
 
 type ProjectAverageAggregates {
   """Mean average of columnIndex across the matching connection"""
   columnIndex: BigFloat
+
+  """Mean average of nextTaskNumber across the matching connection"""
+  nextTaskNumber: BigFloat
 }
 
 """
@@ -7769,6 +7832,11 @@ type ProjectStddevSampleAggregates {
   Sample standard deviation of columnIndex across the matching connection
   """
   columnIndex: BigFloat
+
+  """
+  Sample standard deviation of nextTaskNumber across the matching connection
+  """
+  nextTaskNumber: BigFloat
 }
 
 type ProjectStddevPopulationAggregates {
@@ -7776,16 +7844,27 @@ type ProjectStddevPopulationAggregates {
   Population standard deviation of columnIndex across the matching connection
   """
   columnIndex: BigFloat
+
+  """
+  Population standard deviation of nextTaskNumber across the matching connection
+  """
+  nextTaskNumber: BigFloat
 }
 
 type ProjectVarianceSampleAggregates {
   """Sample variance of columnIndex across the matching connection"""
   columnIndex: BigFloat
+
+  """Sample variance of nextTaskNumber across the matching connection"""
+  nextTaskNumber: BigFloat
 }
 
 type ProjectVariancePopulationAggregates {
   """Population variance of columnIndex across the matching connection"""
   columnIndex: BigFloat
+
+  """Population variance of nextTaskNumber across the matching connection"""
+  nextTaskNumber: BigFloat
 }
 
 """Grouping methods for \`Project\` for usage during aggregation."""
@@ -7804,6 +7883,7 @@ enum ProjectGroupBy {
   SLUG
   COLUMN_INDEX
   IS_PUBLIC
+  NEXT_TASK_NUMBER
 }
 
 """Conditions for \`Project\` aggregates."""
@@ -7825,6 +7905,7 @@ input ProjectHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 input HavingDatetimeFilter {
@@ -7849,48 +7930,56 @@ input ProjectHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  nextTaskNumber: HavingIntFilter
 }
 
 """
@@ -7910,7 +7999,7 @@ input ProjectCondition {
   prefix: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: String
+  organizationId: UUID
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
@@ -7929,6 +8018,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s \`isPublic\` field."""
   isPublic: Boolean
+
+  """Checks for equality with the object’s \`nextTaskNumber\` field."""
+  nextTaskNumber: Int
 }
 
 """
@@ -7948,7 +8040,7 @@ input ProjectFilter {
   prefix: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: StringFilter
+  organizationId: UUIDFilter
 
   """Filter by the object’s \`createdAt\` field."""
   createdAt: DatetimeFilter
@@ -7967,6 +8059,9 @@ input ProjectFilter {
 
   """Filter by the object’s \`isPublic\` field."""
   isPublic: BooleanFilter
+
+  """Filter by the object’s \`nextTaskNumber\` field."""
+  nextTaskNumber: IntFilter
 
   """Filter by the object’s \`columns\` relation."""
   columns: ProjectToManyColumnFilter
@@ -8431,6 +8526,9 @@ input TaskFilter {
 
   """Filter by the object’s \`projectId\` field."""
   projectId: UUIDFilter
+
+  """Filter by the object’s \`number\` field."""
+  number: IntFilter
 
   """Filter by the object’s \`assignees\` relation."""
   assignees: TaskToManyAssigneeFilter
@@ -8914,6 +9012,7 @@ input TaskAggregatesFilter {
 
 input TaskSumAggregateFilter {
   columnIndex: BigIntFilter
+  number: BigIntFilter
 }
 
 input TaskDistinctCountAggregateFilter {
@@ -8928,18 +9027,22 @@ input TaskDistinctCountAggregateFilter {
   updatedAt: BigIntFilter
   columnIndex: BigIntFilter
   projectId: BigIntFilter
+  number: BigIntFilter
 }
 
 input TaskMinAggregateFilter {
   columnIndex: IntFilter
+  number: IntFilter
 }
 
 input TaskMaxAggregateFilter {
   columnIndex: IntFilter
+  number: IntFilter
 }
 
 input TaskAverageAggregateFilter {
   columnIndex: BigFloatFilter
+  number: BigFloatFilter
 }
 
 """
@@ -8986,18 +9089,22 @@ input BigFloatFilter {
 
 input TaskStddevSampleAggregateFilter {
   columnIndex: BigFloatFilter
+  number: BigFloatFilter
 }
 
 input TaskStddevPopulationAggregateFilter {
   columnIndex: BigFloatFilter
+  number: BigFloatFilter
 }
 
 input TaskVarianceSampleAggregateFilter {
   columnIndex: BigFloatFilter
+  number: BigFloatFilter
 }
 
 input TaskVariancePopulationAggregateFilter {
   columnIndex: BigFloatFilter
+  number: BigFloatFilter
 }
 
 """
@@ -9519,7 +9626,7 @@ input ProjectColumnFilter {
   title: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: StringFilter
+  organizationId: UUIDFilter
 
   """Filter by the object’s \`index\` field."""
   index: IntFilter
@@ -9608,6 +9715,7 @@ input ProjectAggregatesFilter {
 
 input ProjectSumAggregateFilter {
   columnIndex: BigIntFilter
+  nextTaskNumber: BigIntFilter
 }
 
 input ProjectDistinctCountAggregateFilter {
@@ -9622,34 +9730,42 @@ input ProjectDistinctCountAggregateFilter {
   slug: BigIntFilter
   columnIndex: BigIntFilter
   isPublic: BigIntFilter
+  nextTaskNumber: BigIntFilter
 }
 
 input ProjectMinAggregateFilter {
   columnIndex: IntFilter
+  nextTaskNumber: IntFilter
 }
 
 input ProjectMaxAggregateFilter {
   columnIndex: IntFilter
+  nextTaskNumber: IntFilter
 }
 
 input ProjectAverageAggregateFilter {
   columnIndex: BigFloatFilter
+  nextTaskNumber: BigFloatFilter
 }
 
 input ProjectStddevSampleAggregateFilter {
   columnIndex: BigFloatFilter
+  nextTaskNumber: BigFloatFilter
 }
 
 input ProjectStddevPopulationAggregateFilter {
   columnIndex: BigFloatFilter
+  nextTaskNumber: BigFloatFilter
 }
 
 input ProjectVarianceSampleAggregateFilter {
   columnIndex: BigFloatFilter
+  nextTaskNumber: BigFloatFilter
 }
 
 input ProjectVariancePopulationAggregateFilter {
   columnIndex: BigFloatFilter
+  nextTaskNumber: BigFloatFilter
 }
 
 """Methods to use when ordering \`Project\`."""
@@ -9679,6 +9795,8 @@ enum ProjectOrderBy {
   COLUMN_INDEX_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
+  NEXT_TASK_NUMBER_ASC
+  NEXT_TASK_NUMBER_DESC
   COLUMNS_COUNT_ASC
   COLUMNS_COUNT_DESC
   COLUMNS_SUM_INDEX_ASC
@@ -9715,6 +9833,8 @@ enum ProjectOrderBy {
   TASKS_COUNT_DESC
   TASKS_SUM_COLUMN_INDEX_ASC
   TASKS_SUM_COLUMN_INDEX_DESC
+  TASKS_SUM_NUMBER_ASC
+  TASKS_SUM_NUMBER_DESC
   TASKS_DISTINCT_COUNT_ROW_ID_ASC
   TASKS_DISTINCT_COUNT_ROW_ID_DESC
   TASKS_DISTINCT_COUNT_CONTENT_ASC
@@ -9737,20 +9857,36 @@ enum ProjectOrderBy {
   TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC
   TASKS_DISTINCT_COUNT_PROJECT_ID_ASC
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASKS_DISTINCT_COUNT_NUMBER_ASC
+  TASKS_DISTINCT_COUNT_NUMBER_DESC
   TASKS_MIN_COLUMN_INDEX_ASC
   TASKS_MIN_COLUMN_INDEX_DESC
+  TASKS_MIN_NUMBER_ASC
+  TASKS_MIN_NUMBER_DESC
   TASKS_MAX_COLUMN_INDEX_ASC
   TASKS_MAX_COLUMN_INDEX_DESC
+  TASKS_MAX_NUMBER_ASC
+  TASKS_MAX_NUMBER_DESC
   TASKS_AVERAGE_COLUMN_INDEX_ASC
   TASKS_AVERAGE_COLUMN_INDEX_DESC
+  TASKS_AVERAGE_NUMBER_ASC
+  TASKS_AVERAGE_NUMBER_DESC
   TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
   TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
+  TASKS_STDDEV_SAMPLE_NUMBER_ASC
+  TASKS_STDDEV_SAMPLE_NUMBER_DESC
   TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC
   TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC
+  TASKS_STDDEV_POPULATION_NUMBER_ASC
+  TASKS_STDDEV_POPULATION_NUMBER_DESC
   TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
   TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
+  TASKS_VARIANCE_SAMPLE_NUMBER_ASC
+  TASKS_VARIANCE_SAMPLE_NUMBER_DESC
   TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
   TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
+  TASKS_VARIANCE_POPULATION_NUMBER_ASC
+  TASKS_VARIANCE_POPULATION_NUMBER_DESC
   LABELS_COUNT_ASC
   LABELS_COUNT_DESC
   LABELS_DISTINCT_COUNT_ROW_ID_ASC
@@ -9918,6 +10054,7 @@ type Task implements Node {
   updatedAt: Datetime!
   columnIndex: Int!
   projectId: UUID!
+  number: Int
 
   """Reads a single \`User\` that is related to this \`Task\`."""
   author: User
@@ -10927,6 +11064,9 @@ input TaskCondition {
 
   """Checks for equality with the object’s \`projectId\` field."""
   projectId: UUID
+
+  """Checks for equality with the object’s \`number\` field."""
+  number: Int
 }
 
 """Methods to use when ordering \`Task\`."""
@@ -10956,6 +11096,8 @@ enum TaskOrderBy {
   COLUMN_INDEX_DESC
   PROJECT_ID_ASC
   PROJECT_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
   ASSIGNEES_COUNT_ASC
   ASSIGNEES_COUNT_DESC
   ASSIGNEES_DISTINCT_COUNT_USER_ID_ASC
@@ -11448,6 +11590,9 @@ type TaskAggregates {
 type TaskSumAggregates {
   """Sum of columnIndex across the matching connection"""
   columnIndex: BigInt!
+
+  """Sum of number across the matching connection"""
+  number: BigInt!
 }
 
 type TaskDistinctCountAggregates {
@@ -11483,21 +11628,33 @@ type TaskDistinctCountAggregates {
 
   """Distinct count of projectId across the matching connection"""
   projectId: BigInt
+
+  """Distinct count of number across the matching connection"""
+  number: BigInt
 }
 
 type TaskMinAggregates {
   """Minimum of columnIndex across the matching connection"""
   columnIndex: Int
+
+  """Minimum of number across the matching connection"""
+  number: Int
 }
 
 type TaskMaxAggregates {
   """Maximum of columnIndex across the matching connection"""
   columnIndex: Int
+
+  """Maximum of number across the matching connection"""
+  number: Int
 }
 
 type TaskAverageAggregates {
   """Mean average of columnIndex across the matching connection"""
   columnIndex: BigFloat
+
+  """Mean average of number across the matching connection"""
+  number: BigFloat
 }
 
 type TaskStddevSampleAggregates {
@@ -11505,6 +11662,9 @@ type TaskStddevSampleAggregates {
   Sample standard deviation of columnIndex across the matching connection
   """
   columnIndex: BigFloat
+
+  """Sample standard deviation of number across the matching connection"""
+  number: BigFloat
 }
 
 type TaskStddevPopulationAggregates {
@@ -11512,16 +11672,25 @@ type TaskStddevPopulationAggregates {
   Population standard deviation of columnIndex across the matching connection
   """
   columnIndex: BigFloat
+
+  """Population standard deviation of number across the matching connection"""
+  number: BigFloat
 }
 
 type TaskVarianceSampleAggregates {
   """Sample variance of columnIndex across the matching connection"""
   columnIndex: BigFloat
+
+  """Sample variance of number across the matching connection"""
+  number: BigFloat
 }
 
 type TaskVariancePopulationAggregates {
   """Population variance of columnIndex across the matching connection"""
   columnIndex: BigFloat
+
+  """Population variance of number across the matching connection"""
+  number: BigFloat
 }
 
 """Grouping methods for \`Task\` for usage during aggregation."""
@@ -11542,6 +11711,7 @@ enum TaskGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
   COLUMN_INDEX
   PROJECT_ID
+  NUMBER
 }
 
 """Conditions for \`Task\` aggregates."""
@@ -11564,6 +11734,7 @@ input TaskHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 input TaskHavingDistinctCountInput {
@@ -11571,6 +11742,7 @@ input TaskHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 input TaskHavingMinInput {
@@ -11578,6 +11750,7 @@ input TaskHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 input TaskHavingMaxInput {
@@ -11585,6 +11758,7 @@ input TaskHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 input TaskHavingAverageInput {
@@ -11592,6 +11766,7 @@ input TaskHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 input TaskHavingStddevSampleInput {
@@ -11599,6 +11774,7 @@ input TaskHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 input TaskHavingStddevPopulationInput {
@@ -11606,6 +11782,7 @@ input TaskHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 input TaskHavingVarianceSampleInput {
@@ -11613,6 +11790,7 @@ input TaskHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 input TaskHavingVariancePopulationInput {
@@ -11620,6 +11798,7 @@ input TaskHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
   columnIndex: HavingIntFilter
+  number: HavingIntFilter
 }
 
 """A \`Column\` edge in the connection."""
@@ -11875,6 +12054,8 @@ enum ColumnOrderBy {
   TASKS_COUNT_DESC
   TASKS_SUM_COLUMN_INDEX_ASC
   TASKS_SUM_COLUMN_INDEX_DESC
+  TASKS_SUM_NUMBER_ASC
+  TASKS_SUM_NUMBER_DESC
   TASKS_DISTINCT_COUNT_ROW_ID_ASC
   TASKS_DISTINCT_COUNT_ROW_ID_DESC
   TASKS_DISTINCT_COUNT_CONTENT_ASC
@@ -11897,20 +12078,36 @@ enum ColumnOrderBy {
   TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC
   TASKS_DISTINCT_COUNT_PROJECT_ID_ASC
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASKS_DISTINCT_COUNT_NUMBER_ASC
+  TASKS_DISTINCT_COUNT_NUMBER_DESC
   TASKS_MIN_COLUMN_INDEX_ASC
   TASKS_MIN_COLUMN_INDEX_DESC
+  TASKS_MIN_NUMBER_ASC
+  TASKS_MIN_NUMBER_DESC
   TASKS_MAX_COLUMN_INDEX_ASC
   TASKS_MAX_COLUMN_INDEX_DESC
+  TASKS_MAX_NUMBER_ASC
+  TASKS_MAX_NUMBER_DESC
   TASKS_AVERAGE_COLUMN_INDEX_ASC
   TASKS_AVERAGE_COLUMN_INDEX_DESC
+  TASKS_AVERAGE_NUMBER_ASC
+  TASKS_AVERAGE_NUMBER_DESC
   TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
   TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
+  TASKS_STDDEV_SAMPLE_NUMBER_ASC
+  TASKS_STDDEV_SAMPLE_NUMBER_DESC
   TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC
   TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC
+  TASKS_STDDEV_POPULATION_NUMBER_ASC
+  TASKS_STDDEV_POPULATION_NUMBER_DESC
   TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
   TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
+  TASKS_VARIANCE_SAMPLE_NUMBER_ASC
+  TASKS_VARIANCE_SAMPLE_NUMBER_DESC
   TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
   TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
+  TASKS_VARIANCE_POPULATION_NUMBER_ASC
+  TASKS_VARIANCE_POPULATION_NUMBER_DESC
 }
 
 """A connection to a list of \`Label\` values."""
@@ -12348,6 +12545,8 @@ enum UserOrderBy {
   AUTHORED_TASKS_COUNT_DESC
   AUTHORED_TASKS_SUM_COLUMN_INDEX_ASC
   AUTHORED_TASKS_SUM_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_SUM_NUMBER_ASC
+  AUTHORED_TASKS_SUM_NUMBER_DESC
   AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_ASC
   AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_DESC
   AUTHORED_TASKS_DISTINCT_COUNT_CONTENT_ASC
@@ -12370,20 +12569,36 @@ enum UserOrderBy {
   AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC
   AUTHORED_TASKS_DISTINCT_COUNT_PROJECT_ID_ASC
   AUTHORED_TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_DESC
   AUTHORED_TASKS_MIN_COLUMN_INDEX_ASC
   AUTHORED_TASKS_MIN_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_MIN_NUMBER_ASC
+  AUTHORED_TASKS_MIN_NUMBER_DESC
   AUTHORED_TASKS_MAX_COLUMN_INDEX_ASC
   AUTHORED_TASKS_MAX_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_MAX_NUMBER_ASC
+  AUTHORED_TASKS_MAX_NUMBER_DESC
   AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_ASC
   AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_AVERAGE_NUMBER_ASC
+  AUTHORED_TASKS_AVERAGE_NUMBER_DESC
   AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
   AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_STDDEV_SAMPLE_NUMBER_ASC
+  AUTHORED_TASKS_STDDEV_SAMPLE_NUMBER_DESC
   AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC
   AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_STDDEV_POPULATION_NUMBER_ASC
+  AUTHORED_TASKS_STDDEV_POPULATION_NUMBER_DESC
   AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
   AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_VARIANCE_SAMPLE_NUMBER_ASC
+  AUTHORED_TASKS_VARIANCE_SAMPLE_NUMBER_DESC
   AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
   AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
+  AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_ASC
+  AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_DESC
   USER_PREFERENCES_COUNT_ASC
   USER_PREFERENCES_COUNT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_ASC
@@ -12670,7 +12885,7 @@ input ProjectColumnCondition {
   title: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: String
+  organizationId: UUID
 
   """Checks for equality with the object’s \`index\` field."""
   index: Int
@@ -12705,6 +12920,8 @@ enum ProjectColumnOrderBy {
   PROJECTS_COUNT_DESC
   PROJECTS_SUM_COLUMN_INDEX_ASC
   PROJECTS_SUM_COLUMN_INDEX_DESC
+  PROJECTS_SUM_NEXT_TASK_NUMBER_ASC
+  PROJECTS_SUM_NEXT_TASK_NUMBER_DESC
   PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
   PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
   PROJECTS_DISTINCT_COUNT_NAME_ASC
@@ -12727,20 +12944,36 @@ enum ProjectColumnOrderBy {
   PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC
   PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC
   PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC
+  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC
+  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
   PROJECTS_MIN_COLUMN_INDEX_ASC
   PROJECTS_MIN_COLUMN_INDEX_DESC
+  PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
+  PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
   PROJECTS_MAX_COLUMN_INDEX_ASC
   PROJECTS_MAX_COLUMN_INDEX_DESC
+  PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
+  PROJECTS_MAX_NEXT_TASK_NUMBER_DESC
   PROJECTS_AVERAGE_COLUMN_INDEX_ASC
   PROJECTS_AVERAGE_COLUMN_INDEX_DESC
+  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC
   PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
   PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
+  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC
   PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_ASC
   PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_DESC
+  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC
+  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC
   PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
   PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
+  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC
   PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
   PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
+  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC
+  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC
 }
 
 """A connection to a list of \`Setting\` values."""
@@ -13083,14 +13316,6 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
-  """Creates a single \`Task\`."""
-  createTask(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTaskInput!
-  ): CreateTaskPayload
-
   """Creates a single \`Setting\`."""
   createSetting(
     """
@@ -13098,6 +13323,14 @@ type Mutation {
     """
     input: CreateSettingInput!
   ): CreateSettingPayload
+
+  """Creates a single \`Task\`."""
+  createTask(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaskInput!
+  ): CreateTaskPayload
 
   """Creates a single \`Project\`."""
   createProject(
@@ -13255,22 +13488,6 @@ type Mutation {
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
 
-  """Updates a single \`Task\` using its globally unique id and a patch."""
-  updateTaskById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaskByIdInput!
-  ): UpdateTaskPayload
-
-  """Updates a single \`Task\` using a unique key and a patch."""
-  updateTask(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaskInput!
-  ): UpdateTaskPayload
-
   """Updates a single \`Setting\` using its globally unique id and a patch."""
   updateSettingById(
     """
@@ -13286,6 +13503,22 @@ type Mutation {
     """
     input: UpdateSettingInput!
   ): UpdateSettingPayload
+
+  """Updates a single \`Task\` using its globally unique id and a patch."""
+  updateTaskById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskByIdInput!
+  ): UpdateTaskPayload
+
+  """Updates a single \`Task\` using a unique key and a patch."""
+  updateTask(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskInput!
+  ): UpdateTaskPayload
 
   """Updates a single \`Project\` using its globally unique id and a patch."""
   updateProjectById(
@@ -13447,22 +13680,6 @@ type Mutation {
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
 
-  """Deletes a single \`Task\` using its globally unique id."""
-  deleteTaskById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaskByIdInput!
-  ): DeleteTaskPayload
-
-  """Deletes a single \`Task\` using a unique key."""
-  deleteTask(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaskInput!
-  ): DeleteTaskPayload
-
   """Deletes a single \`Setting\` using its globally unique id."""
   deleteSettingById(
     """
@@ -13478,6 +13695,22 @@ type Mutation {
     """
     input: DeleteSettingInput!
   ): DeleteSettingPayload
+
+  """Deletes a single \`Task\` using its globally unique id."""
+  deleteTaskById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskByIdInput!
+  ): DeleteTaskPayload
+
+  """Deletes a single \`Task\` using a unique key."""
+  deleteTask(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskInput!
+  ): DeleteTaskPayload
 
   """Deletes a single \`Project\` using its globally unique id."""
   deleteProjectById(
@@ -13851,7 +14084,7 @@ input ProjectColumnInput {
   rowId: UUID
   emoji: String
   title: String!
-  organizationId: String!
+  organizationId: UUID!
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -13904,56 +14137,6 @@ input UserPreferenceInput {
   color: String
 }
 
-"""The output of our create \`Task\` mutation."""
-type CreateTaskPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Task\` that was created by this mutation."""
-  task: Task
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Task\`. May be used by Relay 1."""
-  taskEdge(
-    """The method to use when ordering \`Task\`."""
-    orderBy: [TaskOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaskEdge
-}
-
-"""All input for the create \`Task\` mutation."""
-input CreateTaskInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Task\` to be created by this mutation."""
-  task: TaskInput!
-}
-
-"""An input for mutations affecting \`Task\`"""
-input TaskInput {
-  rowId: UUID
-  content: String!
-  description: String!
-  priority: String
-  authorId: UUID
-  columnId: UUID!
-  dueDate: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-  columnIndex: Int
-  projectId: UUID!
-}
-
 """The output of our create \`Setting\` mutation."""
 type CreateSettingPayload {
   """
@@ -14002,6 +14185,57 @@ input SettingInput {
   deletionReason: String
 }
 
+"""The output of our create \`Task\` mutation."""
+type CreateTaskPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Task\` that was created by this mutation."""
+  task: Task
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Task\`. May be used by Relay 1."""
+  taskEdge(
+    """The method to use when ordering \`Task\`."""
+    orderBy: [TaskOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskEdge
+}
+
+"""All input for the create \`Task\` mutation."""
+input CreateTaskInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Task\` to be created by this mutation."""
+  task: TaskInput!
+}
+
+"""An input for mutations affecting \`Task\`"""
+input TaskInput {
+  rowId: UUID
+  content: String!
+  description: String!
+  priority: String
+  authorId: UUID
+  columnId: UUID!
+  dueDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+  columnIndex: Int
+  projectId: UUID!
+  number: Int
+}
+
 """The output of our create \`Project\` mutation."""
 type CreateProjectPayload {
   """
@@ -14043,13 +14277,14 @@ input ProjectInput {
   name: String!
   description: String
   prefix: String
-  organizationId: String!
+  organizationId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID!
   slug: String!
   columnIndex: Int
   isPublic: Boolean
+  nextTaskNumber: Int
 }
 
 """The output of our update \`TaskLabel\` mutation."""
@@ -14582,7 +14817,7 @@ input ProjectColumnPatch {
   rowId: UUID
   emoji: String
   title: String
-  organizationId: String
+  organizationId: UUID
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -14674,78 +14909,6 @@ input UpdateUserPreferenceInput {
   patch: UserPreferencePatch!
 }
 
-"""The output of our update \`Task\` mutation."""
-type UpdateTaskPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Task\` that was updated by this mutation."""
-  task: Task
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Task\`. May be used by Relay 1."""
-  taskEdge(
-    """The method to use when ordering \`Task\`."""
-    orderBy: [TaskOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaskEdge
-}
-
-"""All input for the \`updateTaskById\` mutation."""
-input UpdateTaskByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Task\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Task\` being updated.
-  """
-  patch: TaskPatch!
-}
-
-"""Represents an update to a \`Task\`. Fields that are set will be updated."""
-input TaskPatch {
-  rowId: UUID
-  content: String
-  description: String
-  priority: String
-  authorId: UUID
-  columnId: UUID
-  dueDate: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-  columnIndex: Int
-  projectId: UUID
-}
-
-"""All input for the \`updateTask\` mutation."""
-input UpdateTaskInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Task\` being updated.
-  """
-  patch: TaskPatch!
-}
-
 """The output of our update \`Setting\` mutation."""
 type UpdateSettingPayload {
   """
@@ -14818,6 +14981,79 @@ input UpdateSettingInput {
   patch: SettingPatch!
 }
 
+"""The output of our update \`Task\` mutation."""
+type UpdateTaskPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Task\` that was updated by this mutation."""
+  task: Task
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Task\`. May be used by Relay 1."""
+  taskEdge(
+    """The method to use when ordering \`Task\`."""
+    orderBy: [TaskOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskEdge
+}
+
+"""All input for the \`updateTaskById\` mutation."""
+input UpdateTaskByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Task\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Task\` being updated.
+  """
+  patch: TaskPatch!
+}
+
+"""Represents an update to a \`Task\`. Fields that are set will be updated."""
+input TaskPatch {
+  rowId: UUID
+  content: String
+  description: String
+  priority: String
+  authorId: UUID
+  columnId: UUID
+  dueDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+  columnIndex: Int
+  projectId: UUID
+  number: Int
+}
+
+"""All input for the \`updateTask\` mutation."""
+input UpdateTaskInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Task\` being updated.
+  """
+  patch: TaskPatch!
+}
+
 """The output of our update \`Project\` mutation."""
 type UpdateProjectPayload {
   """
@@ -14868,13 +15104,14 @@ input ProjectPatch {
   name: String
   description: String
   prefix: String
-  organizationId: String
+  organizationId: UUID
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID
   slug: String
   columnIndex: Int
   isPublic: Boolean
+  nextTaskNumber: Int
 }
 
 """All input for the \`updateProject\` mutation."""
@@ -15326,54 +15563,6 @@ input DeleteUserPreferenceInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Task\` mutation."""
-type DeleteTaskPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Task\` that was deleted by this mutation."""
-  task: Task
-  deletedTaskId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Task\`. May be used by Relay 1."""
-  taskEdge(
-    """The method to use when ordering \`Task\`."""
-    orderBy: [TaskOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaskEdge
-}
-
-"""All input for the \`deleteTaskById\` mutation."""
-input DeleteTaskByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Task\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteTask\` mutation."""
-input DeleteTaskInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Setting\` mutation."""
 type DeleteSettingPayload {
   """
@@ -15414,6 +15603,54 @@ input DeleteSettingByIdInput {
 
 """All input for the \`deleteSetting\` mutation."""
 input DeleteSettingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Task\` mutation."""
+type DeleteTaskPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Task\` that was deleted by this mutation."""
+  task: Task
+  deletedTaskId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Task\`. May be used by Relay 1."""
+  taskEdge(
+    """The method to use when ordering \`Task\`."""
+    orderBy: [TaskOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskEdge
+}
+
+"""All input for the \`deleteTaskById\` mutation."""
+input DeleteTaskByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Task\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteTask\` mutation."""
+input DeleteTaskInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -15900,7 +16137,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed11(value, "object");
+              assertAllowed10(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -15922,6 +16159,15 @@ export const objects = {
       taskById(_$parent, args) {
         const $nodeId = args.getRaw("id");
         return nodeFetcher_Task($nodeId);
+      },
+      taskByProjectIdAndNumber(_$root, {
+        $projectId,
+        $number
+      }) {
+        return resource_taskPgResource.get({
+          project_id: $projectId,
+          number: $number
+        });
       },
       taskLabel(_$root, {
         $taskId,
@@ -16011,7 +16257,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed10(value, "object");
+              assertAllowed11(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -18704,6 +18950,9 @@ ${String(oldPlan21)}`);
           }
         }
       },
+      nextTaskNumber($record) {
+        return $record.get("next_task_number");
+      },
       organizationId($record) {
         return $record.get("organization_id");
       },
@@ -18856,6 +19105,11 @@ ${String(oldPlan21)}`);
     plans: {
       columnIndex($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
+          sqlAggregate = spec5.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
           sqlAggregate = spec5.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
@@ -19021,7 +19275,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       rowId($pgSelectSingle) {
@@ -19155,9 +19409,14 @@ ${String(oldPlan21)}`);
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       prefix($pgSelectSingle) {
@@ -19193,6 +19452,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec4.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.int);
+      },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
+          sqlAggregate = spec4.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.int);
       }
     }
   },
@@ -19200,6 +19464,11 @@ ${String(oldPlan21)}`);
     plans: {
       columnIndex($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
+          sqlAggregate = spec3.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.int);
+      },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
           sqlAggregate = spec3.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.int);
       }
@@ -19211,6 +19480,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec7.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
+          sqlAggregate = spec7.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
     }
   },
@@ -19218,6 +19492,11 @@ ${String(oldPlan21)}`);
     plans: {
       columnIndex($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
+          sqlAggregate = spec6.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
           sqlAggregate = spec6.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
@@ -19229,6 +19508,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
+          sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       }
     }
   },
@@ -19238,6 +19522,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec9.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
+          sqlAggregate = spec9.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
     }
   },
@@ -19245,6 +19534,11 @@ ${String(oldPlan21)}`);
     plans: {
       columnIndex($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
+          sqlAggregate = spec8.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      nextTaskNumber($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
           sqlAggregate = spec8.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
@@ -19605,6 +19899,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec5.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
+          sqlAggregate = spec5.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
     }
   },
@@ -19667,6 +19966,11 @@ ${String(oldPlan21)}`);
       dueDate($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("due_date")}`,
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       priority($pgSelectSingle) {
@@ -19797,6 +20101,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec4.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.int);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
+          sqlAggregate = spec4.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.int);
       }
     }
   },
@@ -19804,6 +20113,11 @@ ${String(oldPlan21)}`);
     plans: {
       columnIndex($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
+          sqlAggregate = spec3.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.int);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
           sqlAggregate = spec3.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.int);
       }
@@ -19815,6 +20129,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec7.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
+          sqlAggregate = spec7.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
     }
   },
@@ -19822,6 +20141,11 @@ ${String(oldPlan21)}`);
     plans: {
       columnIndex($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
+          sqlAggregate = spec6.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
           sqlAggregate = spec6.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
@@ -19833,6 +20157,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
+          sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       }
     }
   },
@@ -19842,6 +20171,11 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
           sqlAggregate = spec9.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
+          sqlAggregate = spec9.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
     }
   },
@@ -19849,6 +20183,11 @@ ${String(oldPlan21)}`);
     plans: {
       columnIndex($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("column_index")}`,
+          sqlAggregate = spec8.sqlAggregateWrap(sqlAttribute, TYPES.int);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
+      },
+      number($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("number")}`,
           sqlAggregate = spec8.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
@@ -20643,7 +20982,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec32;
+        condition.extensions.pgFilterAttribute = colSpec34;
         return condition;
       },
       deletedAt(queryBuilder, value) {
@@ -20651,7 +20990,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec34;
+        condition.extensions.pgFilterAttribute = colSpec36;
         return condition;
       },
       not($where, value) {
@@ -20683,7 +21022,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec31;
+        condition.extensions.pgFilterAttribute = colSpec33;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -20691,7 +21030,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec33;
+        condition.extensions.pgFilterAttribute = colSpec35;
         return condition;
       },
       user($where, value) {
@@ -20712,7 +21051,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec30;
+        condition.extensions.pgFilterAttribute = colSpec32;
         return condition;
       }
     }
@@ -22002,7 +22341,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec15;
+        condition.extensions.pgFilterAttribute = colSpec16;
         return condition;
       },
       emoji(queryBuilder, value) {
@@ -22010,7 +22349,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec18;
+        condition.extensions.pgFilterAttribute = colSpec19;
         return condition;
       },
       index(queryBuilder, value) {
@@ -22018,7 +22357,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec17;
+        condition.extensions.pgFilterAttribute = colSpec18;
         return condition;
       },
       not($where, value) {
@@ -22050,7 +22389,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec14;
+        condition.extensions.pgFilterAttribute = colSpec15;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -22058,7 +22397,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec12;
+        condition.extensions.pgFilterAttribute = colSpec13;
         return condition;
       },
       tasks($where, value) {
@@ -22090,7 +22429,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec13;
+        condition.extensions.pgFilterAttribute = colSpec14;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -22098,7 +22437,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec16;
+        condition.extensions.pgFilterAttribute = colSpec17;
         return condition;
       }
     }
@@ -23276,7 +23615,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec53;
+        condition.extensions.pgFilterAttribute = colSpec55;
         return condition;
       },
       emoji(queryBuilder, value) {
@@ -23284,7 +23623,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec50;
+        condition.extensions.pgFilterAttribute = colSpec52;
         return condition;
       },
       not($where, value) {
@@ -23316,7 +23655,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec51;
+        condition.extensions.pgFilterAttribute = colSpec53;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -23324,7 +23663,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec49;
+        condition.extensions.pgFilterAttribute = colSpec51;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -23332,7 +23671,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec54;
+        condition.extensions.pgFilterAttribute = colSpec56;
         return condition;
       },
       user($where, value) {
@@ -23353,7 +23692,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec52;
+        condition.extensions.pgFilterAttribute = colSpec54;
         return condition;
       }
     }
@@ -24067,7 +24406,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec69;
+        condition.extensions.pgFilterAttribute = colSpec71;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -24075,7 +24414,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec71;
+        condition.extensions.pgFilterAttribute = colSpec73;
         return condition;
       },
       name(queryBuilder, value) {
@@ -24083,7 +24422,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec68;
+        condition.extensions.pgFilterAttribute = colSpec70;
         return condition;
       },
       not($where, value) {
@@ -24115,7 +24454,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec70;
+        condition.extensions.pgFilterAttribute = colSpec72;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -24123,7 +24462,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec67;
+        condition.extensions.pgFilterAttribute = colSpec69;
         return condition;
       },
       taskLabels($where, value) {
@@ -24155,7 +24494,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec72;
+        condition.extensions.pgFilterAttribute = colSpec74;
         return condition;
       }
     }
@@ -24673,7 +25012,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec45;
+        condition.extensions.pgFilterAttribute = colSpec47;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -24681,7 +25020,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec47;
+        condition.extensions.pgFilterAttribute = colSpec49;
         return condition;
       },
       description(queryBuilder, value) {
@@ -24689,7 +25028,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec44;
+        condition.extensions.pgFilterAttribute = colSpec46;
         return condition;
       },
       emojis($where, value) {
@@ -24732,7 +25071,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec42;
+        condition.extensions.pgFilterAttribute = colSpec44;
         return condition;
       },
       task($where, value) {
@@ -24753,7 +25092,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec46;
+        condition.extensions.pgFilterAttribute = colSpec48;
         return condition;
       },
       title(queryBuilder, value) {
@@ -24761,7 +25100,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec43;
+        condition.extensions.pgFilterAttribute = colSpec45;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -24769,7 +25108,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec48;
+        condition.extensions.pgFilterAttribute = colSpec50;
         return condition;
       }
     }
@@ -25169,6 +25508,15 @@ export const inputObjects = {
           expression: spec5.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_project.attributes.column_index.codec)
         };
         return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec5.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -25206,7 +25554,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
           }
         });
       },
@@ -25251,7 +25599,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec78;
+        condition.extensions.pgFilterAttribute = colSpec80;
         return condition;
       },
       emoji(queryBuilder, value) {
@@ -25259,7 +25607,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec74;
+        condition.extensions.pgFilterAttribute = colSpec76;
         return condition;
       },
       index(queryBuilder, value) {
@@ -25267,7 +25615,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec77;
+        condition.extensions.pgFilterAttribute = colSpec79;
         return condition;
       },
       not($where, value) {
@@ -25286,7 +25634,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec76;
+        condition.extensions.pgFilterAttribute = colSpec78;
         return condition;
       },
       projects($where, value) {
@@ -25318,7 +25666,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec73;
+        condition.extensions.pgFilterAttribute = colSpec75;
         return condition;
       },
       title(queryBuilder, value) {
@@ -25326,7 +25674,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec75;
+        condition.extensions.pgFilterAttribute = colSpec77;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -25334,7 +25682,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec79;
+        condition.extensions.pgFilterAttribute = colSpec81;
         return condition;
       }
     }
@@ -25772,12 +26120,21 @@ export const inputObjects = {
           }
         });
       },
+      nextTaskNumber($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "next_task_number",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.int)}`;
+          }
+        });
+      },
       organizationId($condition, val) {
         $condition.where({
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
           }
         });
       },
@@ -25872,6 +26229,15 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("name")}`, spec_project.attributes.name.codec)
+        };
+        return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
         };
         return $col;
       },
@@ -26026,6 +26392,14 @@ export const inputObjects = {
         condition.extensions.pgFilterAttribute = colSpec2;
         return condition;
       },
+      nextTaskNumber(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec12;
+        return condition;
+      },
       not($where, value) {
         assertAllowed21(value, "object");
         if (value == null) return;
@@ -26160,6 +26534,11 @@ export const inputObjects = {
           aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
@@ -26177,6 +26556,11 @@ export const inputObjects = {
       createdAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
           aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -26235,6 +26619,11 @@ export const inputObjects = {
           aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
@@ -26252,6 +26641,11 @@ export const inputObjects = {
       createdAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
           aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -26273,6 +26667,11 @@ export const inputObjects = {
           aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
@@ -26290,6 +26689,11 @@ export const inputObjects = {
       createdAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
           aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -26311,6 +26715,11 @@ export const inputObjects = {
           aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
@@ -26330,6 +26739,11 @@ export const inputObjects = {
           aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_project.attributes.updated_at.codec);
@@ -26347,6 +26761,11 @@ export const inputObjects = {
       createdAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
           aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_project.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      nextTaskNumber($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("next_task_number")}`,
+          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_project.attributes.next_task_number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -26388,6 +26807,12 @@ export const inputObjects = {
         schema
       }) {
         obj.set("name", bakedInputRuntime(schema, field.type, val));
+      },
+      nextTaskNumber(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("next_task_number", bakedInputRuntime(schema, field.type, val));
       },
       organizationId(obj, val, {
         field,
@@ -26437,6 +26862,15 @@ export const inputObjects = {
           expression: spec4.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_project.attributes.column_index.codec)
         };
         return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.int,
+          expression: spec4.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -26448,6 +26882,15 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.int,
           expression: spec3.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_project.attributes.column_index.codec)
+        };
+        return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.int,
+          expression: spec3.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
         };
         return $col;
       }
@@ -26485,6 +26928,12 @@ export const inputObjects = {
         schema
       }) {
         obj.set("name", bakedInputRuntime(schema, field.type, val));
+      },
+      nextTaskNumber(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("next_task_number", bakedInputRuntime(schema, field.type, val));
       },
       organizationId(obj, val, {
         field,
@@ -26534,6 +26983,15 @@ export const inputObjects = {
           expression: spec7.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_project.attributes.column_index.codec)
         };
         return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec7.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -26547,6 +27005,15 @@ export const inputObjects = {
           expression: spec6.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_project.attributes.column_index.codec)
         };
         return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec6.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -26558,6 +27025,15 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_project.attributes.column_index.codec)
+        };
+        return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
         };
         return $col;
       }
@@ -26909,6 +27385,15 @@ export const inputObjects = {
           expression: spec9.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_project.attributes.column_index.codec)
         };
         return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec9.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -26920,6 +27405,15 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.numeric,
           expression: spec8.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_project.attributes.column_index.codec)
+        };
+        return $col;
+      },
+      nextTaskNumber($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec8.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)
         };
         return $col;
       }
@@ -27022,7 +27516,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec84;
+        condition.extensions.pgFilterAttribute = colSpec86;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -27030,7 +27524,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec81;
+        condition.extensions.pgFilterAttribute = colSpec83;
         return condition;
       },
       deletedAt(queryBuilder, value) {
@@ -27038,7 +27532,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec87;
+        condition.extensions.pgFilterAttribute = colSpec89;
         return condition;
       },
       deletionReason(queryBuilder, value) {
@@ -27046,7 +27540,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec88;
+        condition.extensions.pgFilterAttribute = colSpec90;
         return condition;
       },
       not($where, value) {
@@ -27065,7 +27559,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec85;
+        condition.extensions.pgFilterAttribute = colSpec87;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -27073,7 +27567,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec80;
+        condition.extensions.pgFilterAttribute = colSpec82;
         return condition;
       },
       subscriptionId(queryBuilder, value) {
@@ -27081,7 +27575,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec86;
+        condition.extensions.pgFilterAttribute = colSpec88;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -27089,7 +27583,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec82;
+        condition.extensions.pgFilterAttribute = colSpec84;
         return condition;
       },
       viewMode(queryBuilder, value) {
@@ -27097,7 +27591,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec83;
+        condition.extensions.pgFilterAttribute = colSpec85;
         return condition;
       }
     }
@@ -28810,6 +29304,15 @@ export const inputObjects = {
           expression: spec5.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
         };
         return $col;
+      },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec5.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -28875,6 +29378,15 @@ export const inputObjects = {
           attribute: "due_date",
           callback(expression) {
             return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+          }
+        });
+      },
+      number($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "number",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.int)}`;
           }
         });
       },
@@ -28981,6 +29493,15 @@ export const inputObjects = {
         };
         return $col;
       },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
+        };
+        return $col;
+      },
       priority($parent, input) {
         if (input == null) return;
         const $col = new PgCondition($parent);
@@ -29081,7 +29602,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec23;
+        condition.extensions.pgFilterAttribute = colSpec24;
         return condition;
       },
       column($where, value) {
@@ -29102,7 +29623,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec24;
+        condition.extensions.pgFilterAttribute = colSpec25;
         return condition;
       },
       columnIndex(queryBuilder, value) {
@@ -29110,7 +29631,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec28;
+        condition.extensions.pgFilterAttribute = colSpec29;
         return condition;
       },
       content(queryBuilder, value) {
@@ -29118,7 +29639,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec20;
+        condition.extensions.pgFilterAttribute = colSpec21;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -29126,7 +29647,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec26;
+        condition.extensions.pgFilterAttribute = colSpec27;
         return condition;
       },
       description(queryBuilder, value) {
@@ -29134,7 +29655,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec21;
+        condition.extensions.pgFilterAttribute = colSpec22;
         return condition;
       },
       dueDate(queryBuilder, value) {
@@ -29142,13 +29663,21 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec25;
+        condition.extensions.pgFilterAttribute = colSpec26;
         return condition;
       },
       not($where, value) {
         assertAllowed29(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
+      },
+      number(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec31;
+        return condition;
       },
       or($where, value) {
         assertAllowed29(value, "list");
@@ -29185,7 +29714,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec22;
+        condition.extensions.pgFilterAttribute = colSpec23;
         return condition;
       },
       project($where, value) {
@@ -29206,7 +29735,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec29;
+        condition.extensions.pgFilterAttribute = colSpec30;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -29214,7 +29743,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec19;
+        condition.extensions.pgFilterAttribute = colSpec20;
         return condition;
       },
       taskLabels($where, value) {
@@ -29246,7 +29775,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec27;
+        condition.extensions.pgFilterAttribute = colSpec28;
         return condition;
       }
     }
@@ -29266,6 +29795,11 @@ export const inputObjects = {
       dueDate($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("due_date")}`,
           aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -29290,6 +29824,11 @@ export const inputObjects = {
       dueDate($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("due_date")}`,
           aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -29353,6 +29892,11 @@ export const inputObjects = {
           aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_task.attributes.updated_at.codec);
@@ -29375,6 +29919,11 @@ export const inputObjects = {
       dueDate($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("due_date")}`,
           aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -29401,6 +29950,11 @@ export const inputObjects = {
           aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_task.attributes.updated_at.codec);
@@ -29423,6 +29977,11 @@ export const inputObjects = {
       dueDate($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("due_date")}`,
           aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -29449,6 +30008,11 @@ export const inputObjects = {
           aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_task.attributes.updated_at.codec);
@@ -29473,6 +30037,11 @@ export const inputObjects = {
           aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_task.attributes.updated_at.codec);
@@ -29495,6 +30064,11 @@ export const inputObjects = {
       dueDate($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("due_date")}`,
           aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_task.attributes.due_date.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      number($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("number")}`,
+          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_task.attributes.number.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -29548,6 +30122,12 @@ export const inputObjects = {
         schema
       }) {
         obj.set("due_date", bakedInputRuntime(schema, field.type, val));
+      },
+      number(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("number", bakedInputRuntime(schema, field.type, val));
       },
       priority(obj, val, {
         field,
@@ -29679,7 +30259,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec65;
+        condition.extensions.pgFilterAttribute = colSpec67;
         return condition;
       },
       label($where, value) {
@@ -29700,7 +30280,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec64;
+        condition.extensions.pgFilterAttribute = colSpec66;
         return condition;
       },
       not($where, value) {
@@ -29732,7 +30312,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec63;
+        condition.extensions.pgFilterAttribute = colSpec65;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -29740,7 +30320,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec66;
+        condition.extensions.pgFilterAttribute = colSpec68;
         return condition;
       }
     }
@@ -29976,6 +30556,15 @@ export const inputObjects = {
           expression: spec4.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
         };
         return $col;
+      },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.int,
+          expression: spec4.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -29987,6 +30576,15 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.int,
           expression: spec3.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+        };
+        return $col;
+      },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.int,
+          expression: spec3.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
         };
         return $col;
       }
@@ -30037,6 +30635,12 @@ export const inputObjects = {
       }) {
         obj.set("due_date", bakedInputRuntime(schema, field.type, val));
       },
+      number(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("number", bakedInputRuntime(schema, field.type, val));
+      },
       priority(obj, val, {
         field,
         schema
@@ -30073,6 +30677,15 @@ export const inputObjects = {
           expression: spec7.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
         };
         return $col;
+      },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec7.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -30086,6 +30699,15 @@ export const inputObjects = {
           expression: spec6.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
         };
         return $col;
+      },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec6.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -30097,6 +30719,15 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+        };
+        return $col;
+      },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
         };
         return $col;
       }
@@ -30364,6 +30995,15 @@ export const inputObjects = {
           expression: spec9.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
         };
         return $col;
+      },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec9.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
+        };
+        return $col;
       }
     }
   },
@@ -30375,6 +31015,15 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.numeric,
           expression: spec8.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("column_index")}`, spec_task.attributes.column_index.codec)
+        };
+        return $col;
+      },
+      number($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.numeric,
+          expression: spec8.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)
         };
         return $col;
       }
@@ -30771,7 +31420,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec38;
+        condition.extensions.pgFilterAttribute = colSpec40;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -30779,7 +31428,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec39;
+        condition.extensions.pgFilterAttribute = colSpec41;
         return condition;
       },
       email(queryBuilder, value) {
@@ -30787,7 +31436,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec41;
+        condition.extensions.pgFilterAttribute = colSpec43;
         return condition;
       },
       emojis($where, value) {
@@ -30819,7 +31468,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec36;
+        condition.extensions.pgFilterAttribute = colSpec38;
         return condition;
       },
       name(queryBuilder, value) {
@@ -30827,7 +31476,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec37;
+        condition.extensions.pgFilterAttribute = colSpec39;
         return condition;
       },
       not($where, value) {
@@ -30846,7 +31495,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec35;
+        condition.extensions.pgFilterAttribute = colSpec37;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -30854,7 +31503,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec40;
+        condition.extensions.pgFilterAttribute = colSpec42;
         return condition;
       },
       userPreferences($where, value) {
@@ -31307,7 +31956,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec62;
+        condition.extensions.pgFilterAttribute = colSpec64;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -31315,7 +31964,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec59;
+        condition.extensions.pgFilterAttribute = colSpec61;
         return condition;
       },
       hiddenColumnIds(queryBuilder, value) {
@@ -31323,7 +31972,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec58;
+        condition.extensions.pgFilterAttribute = colSpec60;
         return condition;
       },
       not($where, value) {
@@ -31355,7 +32004,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec57;
+        condition.extensions.pgFilterAttribute = colSpec59;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -31363,7 +32012,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec55;
+        condition.extensions.pgFilterAttribute = colSpec57;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -31371,7 +32020,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec60;
+        condition.extensions.pgFilterAttribute = colSpec62;
         return condition;
       },
       user($where, value) {
@@ -31392,7 +32041,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec56;
+        condition.extensions.pgFilterAttribute = colSpec58;
         return condition;
       },
       viewMode(queryBuilder, value) {
@@ -31400,7 +32049,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec61;
+        condition.extensions.pgFilterAttribute = colSpec63;
         return condition;
       }
     }
@@ -32746,6 +33395,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_AVERAGE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec5.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_AVERAGE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec5.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -33048,6 +33735,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_DISTINCT_COUNT_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_DISTINCT_COUNT_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_DISTINCT_COUNT_PRIORITY_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -33238,6 +33963,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_MAX_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec4.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_MAX_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec4.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_MIN_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -33273,6 +34036,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      TASKS_MIN_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_MIN_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -33314,6 +34115,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_STDDEV_POPULATION_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec7.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_STDDEV_POPULATION_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec7.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -33349,6 +34188,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      TASKS_STDDEV_SAMPLE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_STDDEV_SAMPLE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -33390,6 +34267,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_SUM_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_SUM_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -33428,6 +34343,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_VARIANCE_POPULATION_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec9.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_VARIANCE_POPULATION_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec9.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -33463,6 +34416,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      TASKS_VARIANCE_SAMPLE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_VARIANCE_SAMPLE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -34459,7 +35450,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.text
+          codec: TYPES.uuid
         });
       },
       TITLE($pgSelect) {
@@ -34591,6 +35582,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec5.pgTypeCodecModifier?.(spec_project.attributes.column_index.codec) ?? spec_project.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec5.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec5.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
           direction: "DESC"
         });
       },
@@ -34817,6 +35846,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec2.pgTypeCodecModifier?.(spec_project.attributes.name.codec) ?? spec_project.attributes.name.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
           direction: "DESC"
         });
       },
@@ -35086,6 +36153,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      PROJECTS_MAX_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec4.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_MAX_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec4.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "DESC"
+        });
+      },
       PROJECTS_MIN_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -35121,6 +36226,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec3.pgTypeCodecModifier?.(spec_project.attributes.column_index.codec) ?? spec_project.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECTS_MIN_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec3.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_MIN_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec3.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
           direction: "DESC"
         });
       },
@@ -35162,6 +36305,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec7.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec7.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "DESC"
+        });
+      },
       PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -35197,6 +36378,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec6.pgTypeCodecModifier?.(spec_project.attributes.column_index.codec) ?? spec_project.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec6.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec6.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
           direction: "DESC"
         });
       },
@@ -35238,6 +36457,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      PROJECTS_SUM_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_SUM_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "DESC"
+        });
+      },
       PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -35276,6 +36533,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec9.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec9.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "DESC"
+        });
+      },
       PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -35311,6 +36606,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec8.pgTypeCodecModifier?.(spec_project.attributes.column_index.codec) ?? spec_project.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec8.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("next_task_number")}`, spec_project.attributes.next_task_number.codec)}
+from ${resource_projectPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec8.pgTypeCodecModifier?.(spec_project.attributes.next_task_number.codec) ?? spec_project.attributes.next_task_number.codec,
           direction: "DESC"
         });
       },
@@ -35398,10 +36731,16 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           codec: TYPES.text
         });
       },
+      NEXT_TASK_NUMBER($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("next_task_number")}`,
+          codec: TYPES.int
+        });
+      },
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.text
+          codec: TYPES.uuid
         });
       },
       PREFIX($pgSelect) {
@@ -36374,6 +37713,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      NEXT_TASK_NUMBER_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "next_task_number",
+          direction: "ASC"
+        });
+      },
+      NEXT_TASK_NUMBER_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "next_task_number",
+          direction: "DESC"
+        });
+      },
       ORGANIZATION_ID_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "organization_id",
@@ -36491,6 +37842,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec5.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      TASKS_AVERAGE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec5.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_AVERAGE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec5.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -36796,6 +38185,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_DISTINCT_COUNT_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_DISTINCT_COUNT_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_DISTINCT_COUNT_PRIORITY_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -36986,6 +38413,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_MAX_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec4.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_MAX_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec4.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_MIN_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -37021,6 +38486,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      TASKS_MIN_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_MIN_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -37062,6 +38565,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_STDDEV_POPULATION_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec7.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_STDDEV_POPULATION_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec7.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -37097,6 +38638,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      TASKS_STDDEV_SAMPLE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_STDDEV_SAMPLE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -37138,6 +38717,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_SUM_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_SUM_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -37176,6 +38793,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      TASKS_VARIANCE_POPULATION_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec9.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_VARIANCE_POPULATION_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec9.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -37211,6 +38866,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      TASKS_VARIANCE_SAMPLE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      TASKS_VARIANCE_SAMPLE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation2.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation2.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -37852,6 +39545,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
         });
       },
+      NUMBER($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("number")}`,
+          codec: TYPES.int
+        });
+      },
       PRIORITY($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("priority")}`,
@@ -38320,6 +40019,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      NUMBER_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "number",
+          direction: "ASC"
+        });
+      },
+      NUMBER_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "number",
+          direction: "DESC"
+        });
+      },
       POSTS_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -38657,12 +40368,14 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           attribute: "project_id",
           direction: "ASC"
         });
+        queryBuilder.setOrderIsUnique();
       },
       PROJECT_ID_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "project_id",
           direction: "DESC"
         });
+        queryBuilder.setOrderIsUnique();
       },
       ROW_ID_ASC(queryBuilder) {
         queryBuilder.orderBy({
@@ -39500,6 +41213,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      AUTHORED_TASKS_AVERAGE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec5.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_AVERAGE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec5.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       AUTHORED_TASKS_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -39802,6 +41553,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       AUTHORED_TASKS_DISTINCT_COUNT_PRIORITY_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -39992,6 +41781,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      AUTHORED_TASKS_MAX_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec4.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_MAX_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec4.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       AUTHORED_TASKS_MIN_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -40027,6 +41854,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      AUTHORED_TASKS_MIN_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_MIN_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec3.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -40068,6 +41933,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      AUTHORED_TASKS_STDDEV_POPULATION_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec7.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_STDDEV_POPULATION_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec7.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -40103,6 +42006,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      AUTHORED_TASKS_STDDEV_SAMPLE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_STDDEV_SAMPLE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec6.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },
@@ -40144,6 +42085,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      AUTHORED_TASKS_SUM_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_SUM_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -40182,6 +42161,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec9.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec9.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "DESC"
+        });
+      },
       AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -40217,6 +42234,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.column_index.codec) ?? spec_task.attributes.column_index.codec,
+          direction: "DESC"
+        });
+      },
+      AUTHORED_TASKS_VARIANCE_SAMPLE_NUMBER_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
+          direction: "ASC"
+        });
+      },
+      AUTHORED_TASKS_VARIANCE_SAMPLE_NUMBER_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("number")}`, spec_task.attributes.number.codec)}
+from ${resource_taskPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec8.pgTypeCodecModifier?.(spec_task.attributes.number.codec) ?? spec_task.attributes.number.codec,
           direction: "DESC"
         });
       },

@@ -260,6 +260,13 @@
       "when": 1768611850863,
       "tag": "0036_premium_scarlet_witch",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1768860636509,
+      "tag": "0037_green_may_parker",
+      "breakpoints": true
     }
   ]
 }

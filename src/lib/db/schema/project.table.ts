@@ -44,6 +44,8 @@ export const projects = pgTable(
     columnIndex: integer().notNull().default(0),
     // whether the project is publicly accessible (like Trello public boards)
     isPublic: boolean().notNull().default(false),
+    // Counter for auto-incrementing task numbers within this project
+    nextTaskNumber: integer("next_task_number").notNull().default(1),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

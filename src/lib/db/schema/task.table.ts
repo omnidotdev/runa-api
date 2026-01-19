@@ -5,6 +5,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uniqueIndex,
   uuid,
   varchar,
@@ -26,6 +27,8 @@ export const tasks = pgTable(
   "task",
   {
     id: generateDefaultId(),
+    // Persistent task number within project (auto-assigned by trigger, immutable)
+    number: integer(),
     content: text().notNull(),
     description: text().notNull(),
     priority: varchar({ length: 10 }).notNull().default("medium"),
@@ -51,6 +54,7 @@ export const tasks = pgTable(
     index().on(table.projectId),
     index().on(table.columnId),
     index().on(table.columnId, table.columnIndex),
+    unique("task_project_number_unique").on(table.projectId, table.number),
   ],
 );
 
