@@ -12,10 +12,10 @@
  */
 
 import {
-  AUTHZ_API_URL as _AUTHZ_API_URL,
-  AUTHZ_ENABLED as _AUTHZ_ENABLED,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
+  AUTHZ_API_URL as _AUTHZ_API_URL,
+  AUTHZ_ENABLED as _AUTHZ_ENABLED,
 } from "lib/config/env.config";
 
 // Re-export for EXPORTABLE compatibility in plugins
