@@ -37,7 +37,7 @@ export const projects = pgTable(
       // .generatedAlwaysAs((): SQL => generateSlug(projects.name))
       .notNull(),
     // Organization ID from JWT claims - not a FK, just a reference
-    organizationId: text("organization_id").notNull(),
+    organizationId: text().notNull(),
     projectColumnId: uuid()
       .notNull()
       .references(() => projectColumns.id, { onDelete: "cascade" }),

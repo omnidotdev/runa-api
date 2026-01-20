@@ -791,7 +791,7 @@ const spec_projectColumn = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -1360,7 +1360,7 @@ const spec_project = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -7356,7 +7356,7 @@ type Query implements Node {
   project(rowId: UUID!): Project
 
   """Get a single \`Project\`."""
-  projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
 
   """Get a single \`UserOrganization\`."""
   userOrganization(rowId: UUID!): UserOrganization
@@ -7995,7 +7995,7 @@ type Project implements Node {
   name: String!
   description: String
   prefix: String
-  organizationId: UUID!
+  organizationId: String!
   createdAt: Datetime!
   updatedAt: Datetime!
   projectColumnId: UUID!
@@ -8152,7 +8152,7 @@ type ProjectColumn implements Node {
   rowId: UUID!
   emoji: String
   title: String!
-  organizationId: UUID!
+  organizationId: String!
   index: Int!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -8555,7 +8555,7 @@ input ProjectCondition {
   prefix: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: UUID
+  organizationId: String
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
@@ -8596,7 +8596,7 @@ input ProjectFilter {
   prefix: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: UUIDFilter
+  organizationId: StringFilter
 
   """Filter by the object’s \`createdAt\` field."""
   createdAt: DatetimeFilter
@@ -10381,7 +10381,7 @@ input ProjectColumnFilter {
   title: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: UUIDFilter
+  organizationId: StringFilter
 
   """Filter by the object’s \`index\` field."""
   index: IntFilter
@@ -13950,7 +13950,7 @@ input ProjectColumnCondition {
   title: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: UUID
+  organizationId: String
 
   """Checks for equality with the object’s \`index\` field."""
   index: Int
@@ -15191,7 +15191,7 @@ input ProjectColumnInput {
   rowId: UUID
   emoji: String
   title: String!
-  organizationId: UUID!
+  organizationId: String!
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -15384,7 +15384,7 @@ input ProjectInput {
   name: String!
   description: String
   prefix: String
-  organizationId: UUID!
+  organizationId: String!
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID!
@@ -15973,7 +15973,7 @@ input ProjectColumnPatch {
   rowId: UUID
   emoji: String
   title: String
-  organizationId: UUID
+  organizationId: String
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -16260,7 +16260,7 @@ input ProjectPatch {
   name: String
   description: String
   prefix: String
-  organizationId: UUID
+  organizationId: String
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID
@@ -20744,7 +20744,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       rowId($pgSelectSingle) {
@@ -20885,7 +20885,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       prefix($pgSelectSingle) {
@@ -27773,7 +27773,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -28353,7 +28353,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -38448,7 +38448,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       TITLE($pgSelect) {
@@ -39738,7 +39738,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       PREFIX($pgSelect) {

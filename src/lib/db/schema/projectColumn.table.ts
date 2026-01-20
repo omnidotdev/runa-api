@@ -25,7 +25,7 @@ export const projectColumns = pgTable(
     emoji: text(),
     title: text().notNull(),
     // Organization ID from JWT claims - not a FK, just a reference
-    organizationId: text("organization_id").notNull(),
+    organizationId: text().notNull(),
     index: integer().notNull().default(0),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),

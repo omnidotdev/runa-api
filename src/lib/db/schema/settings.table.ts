@@ -31,7 +31,7 @@ export const settings = pgTable(
     id: generateDefaultId(),
     // FK to IDP organization - 1:1 with orgs
     // Org name/slug resolved from JWT claims at runtime
-    organizationId: text("organization_id").notNull().unique(),
+    organizationId: text().notNull().unique(),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     // Cached from Aether, synced via webhook
     subscriptionId: text("subscription_id"),
