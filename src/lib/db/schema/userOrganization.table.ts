@@ -44,7 +44,7 @@ export const userOrganizations = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     /** IDP organization ID */
-    organizationId: uuid().notNull(),
+    organizationId: text().notNull(),
     /** Organization slug (cached from IDP) */
     slug: text().notNull(),
     /** Organization name (cached from IDP, for display) */

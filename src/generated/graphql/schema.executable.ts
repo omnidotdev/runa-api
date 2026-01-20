@@ -139,7 +139,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "41395",
+    oid: "300631",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -222,7 +222,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "41178",
+    oid: "300414",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +317,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "41552",
+    oid: "300788",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -412,7 +412,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "41381",
+    oid: "300617",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -519,7 +519,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "41249",
+    oid: "300485",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -626,7 +626,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "41202",
+    oid: "300438",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -733,7 +733,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "41189",
+    oid: "300425",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -791,7 +791,7 @@ const spec_projectColumn = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.text,
+      codec: TYPES.uuid,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -840,7 +840,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "41446",
+    oid: "300682",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -975,7 +975,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "41463",
+    oid: "300699",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1106,7 +1106,7 @@ const spec_settings = {
   },
   description: undefined,
   extensions: {
-    oid: "41264",
+    oid: "300500",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1261,7 +1261,7 @@ const spec_task = {
     number: {
       description: undefined,
       codec: TYPES.int,
-      notNull: true,
+      notNull: false,
       hasDefault: false,
       extensions: {
         tags: {},
@@ -1273,7 +1273,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "41230",
+    oid: "300466",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1293,7 +1293,7 @@ const organizationTypeCodec = enumCodec({
   values: ["personal", "team"],
   description: undefined,
   extensions: {
-    oid: "300362",
+    oid: "300912",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1360,7 +1360,7 @@ const spec_project = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.text,
+      codec: TYPES.uuid,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -1457,7 +1457,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "41215",
+    oid: "300451",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1478,7 +1478,7 @@ const memberRoleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "300355",
+    oid: "300904",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1520,7 +1520,7 @@ const spec_userOrganization = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -1617,7 +1617,7 @@ const spec_userOrganization = {
   },
   description: undefined,
   extensions: {
-    oid: "300369",
+    oid: "300919",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -7356,13 +7356,13 @@ type Query implements Node {
   project(rowId: UUID!): Project
 
   """Get a single \`Project\`."""
-  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
+  projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
 
   """Get a single \`UserOrganization\`."""
   userOrganization(rowId: UUID!): UserOrganization
 
   """Get a single \`UserOrganization\`."""
-  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: UUID!): UserOrganization
+  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: String!): UserOrganization
 
   """Reads a single \`TaskLabel\` using its globally unique \`ID\`."""
   taskLabelById(
@@ -7995,7 +7995,7 @@ type Project implements Node {
   name: String!
   description: String
   prefix: String
-  organizationId: String!
+  organizationId: UUID!
   createdAt: Datetime!
   updatedAt: Datetime!
   projectColumnId: UUID!
@@ -8152,7 +8152,7 @@ type ProjectColumn implements Node {
   rowId: UUID!
   emoji: String
   title: String!
-  organizationId: String!
+  organizationId: UUID!
   index: Int!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -8555,7 +8555,7 @@ input ProjectCondition {
   prefix: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: String
+  organizationId: UUID
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
@@ -8596,7 +8596,7 @@ input ProjectFilter {
   prefix: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: StringFilter
+  organizationId: UUIDFilter
 
   """Filter by the object’s \`createdAt\` field."""
   createdAt: DatetimeFilter
@@ -9882,7 +9882,7 @@ input UserOrganizationFilter {
   userId: UUIDFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: UUIDFilter
+  organizationId: StringFilter
 
   """Filter by the object’s \`slug\` field."""
   slug: StringFilter
@@ -10381,7 +10381,7 @@ input ProjectColumnFilter {
   title: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: StringFilter
+  organizationId: UUIDFilter
 
   """Filter by the object’s \`index\` field."""
   index: IntFilter
@@ -10809,7 +10809,7 @@ type Task implements Node {
   updatedAt: Datetime!
   columnIndex: Int!
   projectId: UUID!
-  number: Int!
+  number: Int
 
   """Reads a single \`User\` that is related to this \`Task\`."""
   author: User
@@ -12192,7 +12192,7 @@ type UserOrganization implements Node {
   id: ID!
   rowId: UUID!
   userId: UUID!
-  organizationId: UUID!
+  organizationId: String!
   slug: String!
   name: String
   type: OrganizationType!
@@ -12355,7 +12355,7 @@ input UserOrganizationCondition {
   userId: UUID
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: UUID
+  organizationId: String
 
   """Checks for equality with the object’s \`slug\` field."""
   slug: String
@@ -13950,7 +13950,7 @@ input ProjectColumnCondition {
   title: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: String
+  organizationId: UUID
 
   """Checks for equality with the object’s \`index\` field."""
   index: Int
@@ -15191,7 +15191,7 @@ input ProjectColumnInput {
   rowId: UUID
   emoji: String
   title: String!
-  organizationId: String!
+  organizationId: UUID!
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -15340,7 +15340,7 @@ input TaskInput {
   updatedAt: Datetime
   columnIndex: Int
   projectId: UUID!
-  number: Int!
+  number: Int
 }
 
 """The output of our create \`Project\` mutation."""
@@ -15384,7 +15384,7 @@ input ProjectInput {
   name: String!
   description: String
   prefix: String
-  organizationId: String!
+  organizationId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID!
@@ -15433,7 +15433,7 @@ input CreateUserOrganizationInput {
 input UserOrganizationInput {
   rowId: UUID
   userId: UUID!
-  organizationId: UUID!
+  organizationId: String!
   slug: String!
   name: String
   type: OrganizationType
@@ -15973,7 +15973,7 @@ input ProjectColumnPatch {
   rowId: UUID
   emoji: String
   title: String
-  organizationId: String
+  organizationId: UUID
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -16260,7 +16260,7 @@ input ProjectPatch {
   name: String
   description: String
   prefix: String
-  organizationId: String
+  organizationId: UUID
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID
@@ -16333,7 +16333,7 @@ Represents an update to a \`UserOrganization\`. Fields that are set will be upda
 input UserOrganizationPatch {
   rowId: UUID
   userId: UUID
-  organizationId: UUID
+  organizationId: String
   slug: String
   name: String
   type: OrganizationType
@@ -20744,7 +20744,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       rowId($pgSelectSingle) {
@@ -20885,7 +20885,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       prefix($pgSelectSingle) {
@@ -22334,7 +22334,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       role($pgSelectSingle) {
@@ -27773,7 +27773,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
           }
         });
       },
@@ -28353,7 +28353,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
           }
         });
       },
@@ -34042,7 +34042,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -38448,7 +38448,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.text
+          codec: TYPES.uuid
         });
       },
       TITLE($pgSelect) {
@@ -39738,7 +39738,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.text
+          codec: TYPES.uuid
         });
       },
       PREFIX($pgSelect) {
@@ -46432,7 +46432,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       ROLE($pgSelect) {

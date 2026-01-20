@@ -274,6 +274,20 @@
       "when": 1768879844609,
       "tag": "0038_vengeful_living_lightning",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1768882335888,
+      "tag": "0039_wet_darkstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1768882380981,
+      "tag": "0040_concerned_zuras",
+      "breakpoints": true
     }
   ]
 }
