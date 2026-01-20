@@ -139,7 +139,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "300037",
+    oid: "41395",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -222,7 +222,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "299821",
+    oid: "41178",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +317,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "300194",
+    oid: "41552",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -412,7 +412,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "300023",
+    oid: "41381",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -519,7 +519,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "299892",
+    oid: "41249",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -626,7 +626,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "299845",
+    oid: "41202",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -733,7 +733,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "299832",
+    oid: "41189",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -791,7 +791,7 @@ const spec_projectColumn = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -840,7 +840,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "300088",
+    oid: "41446",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -975,7 +975,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "300105",
+    oid: "41463",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1106,7 +1106,7 @@ const spec_settings = {
   },
   description: undefined,
   extensions: {
-    oid: "299907",
+    oid: "41264",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1273,7 +1273,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "299873",
+    oid: "41230",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1343,7 +1343,7 @@ const spec_project = {
     },
     organization_id: {
       description: undefined,
-      codec: TYPES.uuid,
+      codec: TYPES.text,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -1440,7 +1440,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "299858",
+    oid: "41215",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5116,7 +5116,7 @@ const planWrapper = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -5132,7 +5132,7 @@ const planWrapper = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5166,7 +5166,7 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -5181,7 +5181,7 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -5220,7 +5220,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -5241,7 +5241,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5272,10 +5272,10 @@ const planWrapper4 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5340,7 +5340,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -5357,7 +5357,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5388,10 +5388,10 @@ const planWrapper7 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5426,7 +5426,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -5439,7 +5439,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission("true", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5490,7 +5490,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5522,7 +5522,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5544,7 +5544,7 @@ const planWrapper11 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("create" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -5563,7 +5563,7 @@ const planWrapper11 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5646,7 +5646,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -5662,7 +5662,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5703,7 +5703,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -5718,7 +5718,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -5763,7 +5763,7 @@ const planWrapper15 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -5784,7 +5784,7 @@ const planWrapper15 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5821,10 +5821,10 @@ const planWrapper16 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5901,7 +5901,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -5918,7 +5918,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5955,10 +5955,10 @@ const planWrapper19 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5999,7 +5999,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -6012,7 +6012,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission("true", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6079,7 +6079,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6111,7 +6111,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6139,7 +6139,7 @@ const planWrapper23 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("update" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -6158,7 +6158,7 @@ const planWrapper23 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6196,7 +6196,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -6212,7 +6212,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6253,7 +6253,7 @@ const planWrapper25 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -6268,7 +6268,7 @@ const planWrapper25 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -6313,7 +6313,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -6334,7 +6334,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6371,10 +6371,10 @@ const planWrapper27 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6451,7 +6451,7 @@ const planWrapper29 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -6468,7 +6468,7 @@ const planWrapper29 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6505,10 +6505,10 @@ const planWrapper30 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6549,7 +6549,7 @@ const planWrapper31 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -6562,7 +6562,7 @@ const planWrapper31 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission("true", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6629,7 +6629,7 @@ const planWrapper33 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6661,7 +6661,7 @@ const planWrapper33 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission("true", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6689,7 +6689,7 @@ const planWrapper34 = (plan, _, fieldArgs) => {
     if (!observer) throw Error("Unauthorized");
     if ("delete" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission("true", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -6708,7 +6708,7 @@ const planWrapper34 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission("true", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission("", undefined, observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6854,7 +6854,7 @@ type Query implements Node {
   project(rowId: UUID!): Project
 
   """Get a single \`Project\`."""
-  projectBySlugAndOrganizationId(slug: String!, organizationId: UUID!): Project
+  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
 
   """Reads a single \`TaskLabel\` using its globally unique \`ID\`."""
   taskLabelById(
@@ -7439,7 +7439,7 @@ type Project implements Node {
   name: String!
   description: String
   prefix: String
-  organizationId: UUID!
+  organizationId: String!
   createdAt: Datetime!
   updatedAt: Datetime!
   projectColumnId: UUID!
@@ -7596,7 +7596,7 @@ type ProjectColumn implements Node {
   rowId: UUID!
   emoji: String
   title: String!
-  organizationId: UUID!
+  organizationId: String!
   index: Int!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -7999,7 +7999,7 @@ input ProjectCondition {
   prefix: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: UUID
+  organizationId: String
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
@@ -8040,7 +8040,7 @@ input ProjectFilter {
   prefix: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: UUIDFilter
+  organizationId: StringFilter
 
   """Filter by the object’s \`createdAt\` field."""
   createdAt: DatetimeFilter
@@ -9626,7 +9626,7 @@ input ProjectColumnFilter {
   title: StringFilter
 
   """Filter by the object’s \`organizationId\` field."""
-  organizationId: UUIDFilter
+  organizationId: StringFilter
 
   """Filter by the object’s \`index\` field."""
   index: IntFilter
@@ -12885,7 +12885,7 @@ input ProjectColumnCondition {
   title: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: UUID
+  organizationId: String
 
   """Checks for equality with the object’s \`index\` field."""
   index: Int
@@ -14084,7 +14084,7 @@ input ProjectColumnInput {
   rowId: UUID
   emoji: String
   title: String!
-  organizationId: UUID!
+  organizationId: String!
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -14277,7 +14277,7 @@ input ProjectInput {
   name: String!
   description: String
   prefix: String
-  organizationId: UUID!
+  organizationId: String!
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID!
@@ -14817,7 +14817,7 @@ input ProjectColumnPatch {
   rowId: UUID
   emoji: String
   title: String
-  organizationId: UUID
+  organizationId: String
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -15104,7 +15104,7 @@ input ProjectPatch {
   name: String
   description: String
   prefix: String
-  organizationId: UUID
+  organizationId: String
   createdAt: Datetime
   updatedAt: Datetime
   projectColumnId: UUID
@@ -19275,7 +19275,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       rowId($pgSelectSingle) {
@@ -19416,7 +19416,7 @@ ${String(oldPlan21)}`);
       },
       organizationId($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       prefix($pgSelectSingle) {
@@ -25554,7 +25554,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -26134,7 +26134,7 @@ export const inputObjects = {
           type: "attribute",
           attribute: "organization_id",
           callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
         });
       },
@@ -35450,7 +35450,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       TITLE($pgSelect) {
@@ -36740,7 +36740,7 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.uuid
+          codec: TYPES.text
         });
       },
       PREFIX($pgSelect) {
