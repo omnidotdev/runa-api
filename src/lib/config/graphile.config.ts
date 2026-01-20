@@ -21,6 +21,7 @@ import {
   UserPreferencePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
 /**
@@ -34,6 +35,8 @@ const graphilePreset: GraphileConfig.Preset = {
     PgAggregatesPreset,
   ],
   plugins: [
+    // Observer plugin (exposes current authenticated user)
+    ObserverPlugin,
     // Authorization plugins (pre-mutation validation)
     AssigneePlugin,
     ColumnPlugin,

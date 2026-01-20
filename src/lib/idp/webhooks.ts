@@ -7,13 +7,18 @@
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { invalidatePermissionCache } from "lib/authz/cache";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { projectColumns, settings } from "lib/db/schema";
+import {
+  projectColumns,
+  settings,
+  userOrganizations,
+  users,
+} from "lib/db/schema";
 
 interface OrganizationCreatedPayload {
   eventType: "organization.created";
@@ -53,12 +58,20 @@ interface MemberRoleChangedPayload {
   timestamp: string;
 }
 
+interface UserDeletedPayload {
+  eventType: "user.deleted";
+  userId: string;
+  deletedAt: string;
+  timestamp: string;
+}
+
 type IdpWebhookPayload =
   | OrganizationCreatedPayload
   | OrganizationDeletedPayload
   | MemberAddedPayload
   | MemberRemovedPayload
-  | MemberRoleChangedPayload;
+  | MemberRoleChangedPayload
+  | UserDeletedPayload;
 
 /**
  * Verify HMAC-SHA256 signature from IDP.
@@ -122,7 +135,9 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
 
       // biome-ignore lint/suspicious/noConsole: webhook logging
       console.log(
-        `IDP event received: ${body.eventType} for org ${body.organizationId}`,
+        `IDP event received: ${body.eventType}${
+          "organizationId" in body ? ` for org ${body.organizationId}` : ""
+        }${"userId" in body && body.eventType === "user.deleted" ? ` for user ${body.userId}` : ""}`,
       );
 
       switch (body.eventType) {
@@ -140,6 +155,9 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
           break;
         case "member.role_changed":
           await handleMemberRoleChanged(body);
+          break;
+        case "user.deleted":
+          await handleUserDeleted(body);
           break;
         default:
           console.warn(`Unknown IDP event type: ${eventType}`);
@@ -254,13 +272,51 @@ async function handleOrganizationDeleted(
 
 /**
  * Handle member added event.
- * Invalidates permission cache for the user to pick up new permissions.
+ * Persists organization membership and invalidates permission cache.
  */
 async function handleMemberAdded(payload: MemberAddedPayload): Promise<void> {
   const { organizationId, userId, role } = payload;
 
+  try {
+    // Find the local user by IDP user ID
+    const user = await dbPool.query.users.findFirst({
+      where: (table, { eq }) => eq(table.identityProviderId, userId),
+      columns: { id: true },
+    });
+
+    if (user) {
+      // Upsert organization membership
+      await dbPool
+        .insert(userOrganizations)
+        .values({
+          userId: user.id,
+          organizationId,
+          slug: organizationId, // Will be updated with proper slug if available
+          role: role as "owner" | "admin" | "member",
+          syncedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: [userOrganizations.userId, userOrganizations.organizationId],
+          set: {
+            role: role as "owner" | "admin" | "member",
+            syncedAt: new Date(),
+            updatedAt: new Date(),
+          },
+        });
+
+      // biome-ignore lint/suspicious/noConsole: webhook logging
+      console.log(
+        `Persisted member ${userId} in org ${organizationId} with role ${role}`,
+      );
+    }
+  } catch (err) {
+    console.error(
+      `Failed to persist member ${userId} in org ${organizationId}:`,
+      err,
+    );
+  }
+
   // Invalidate all cached permissions for this user in this org
-  // Pattern matches: userId:organization:orgId:*
   invalidatePermissionCache(`${userId}:organization:${organizationId}:`);
 
   // biome-ignore lint/suspicious/noConsole: webhook logging
@@ -271,12 +327,45 @@ async function handleMemberAdded(payload: MemberAddedPayload): Promise<void> {
 
 /**
  * Handle member removed event.
- * Invalidates permission cache for the user to revoke permissions.
+ * Removes organization membership and invalidates permission cache.
  */
 async function handleMemberRemoved(
   payload: MemberRemovedPayload,
 ): Promise<void> {
   const { organizationId, userId } = payload;
+
+  try {
+    // Find the local user by IDP user ID
+    const user = await dbPool.query.users.findFirst({
+      where: (table, { eq }) => eq(table.identityProviderId, userId),
+      columns: { id: true },
+    });
+
+    if (user) {
+      // Delete organization membership
+      const result = await dbPool
+        .delete(userOrganizations)
+        .where(
+          and(
+            eq(userOrganizations.userId, user.id),
+            eq(userOrganizations.organizationId, organizationId),
+          ),
+        )
+        .returning({ id: userOrganizations.id });
+
+      if (result.length > 0) {
+        // biome-ignore lint/suspicious/noConsole: webhook logging
+        console.log(
+          `Deleted membership for user ${userId} from org ${organizationId}`,
+        );
+      }
+    }
+  } catch (err) {
+    console.error(
+      `Failed to delete membership for user ${userId} from org ${organizationId}:`,
+      err,
+    );
+  }
 
   // Invalidate all cached permissions for this user in this org
   invalidatePermissionCache(`${userId}:organization:${organizationId}:`);
@@ -293,12 +382,50 @@ async function handleMemberRemoved(
 
 /**
  * Handle member role changed event.
- * Invalidates permission cache for the user to pick up new role permissions.
+ * Updates organization membership role and invalidates permission cache.
  */
 async function handleMemberRoleChanged(
   payload: MemberRoleChangedPayload,
 ): Promise<void> {
   const { organizationId, userId, oldRole, newRole } = payload;
+
+  try {
+    // Find the local user by IDP user ID
+    const user = await dbPool.query.users.findFirst({
+      where: (table, { eq }) => eq(table.identityProviderId, userId),
+      columns: { id: true },
+    });
+
+    if (user) {
+      // Update organization membership role
+      const result = await dbPool
+        .update(userOrganizations)
+        .set({
+          role: newRole as "owner" | "admin" | "member",
+          syncedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(userOrganizations.userId, user.id),
+            eq(userOrganizations.organizationId, organizationId),
+          ),
+        )
+        .returning({ id: userOrganizations.id });
+
+      if (result.length > 0) {
+        // biome-ignore lint/suspicious/noConsole: webhook logging
+        console.log(
+          `Updated role for user ${userId} in org ${organizationId}: ${oldRole} → ${newRole}`,
+        );
+      }
+    }
+  } catch (err) {
+    console.error(
+      `Failed to update role for user ${userId} in org ${organizationId}:`,
+      err,
+    );
+  }
 
   // Invalidate all cached permissions for this user
   invalidatePermissionCache(`${userId}:`);
@@ -307,6 +434,41 @@ async function handleMemberRoleChanged(
   console.log(
     `Member ${userId} role changed in org ${organizationId}: ${oldRole} → ${newRole} - cache invalidated`,
   );
+}
+
+/**
+ * Handle user deleted event.
+ * Deletes the local user record (cascades to user preferences).
+ * This is a hard delete since the user has been removed from the IDP.
+ */
+async function handleUserDeleted(payload: UserDeletedPayload): Promise<void> {
+  const { userId } = payload;
+
+  try {
+    // Invalidate all cached permissions for this user first
+    invalidatePermissionCache(`${userId}:`);
+
+    // Delete the user record (cascades to user_preferences via FK)
+    const result = await dbPool
+      .delete(users)
+      .where(eq(users.identityProviderId, userId))
+      .returning({ id: users.id });
+
+    if (result.length > 0) {
+      // biome-ignore lint/suspicious/noConsole: webhook logging
+      console.log(
+        `Deleted user ${result[0].id} (IDP user ${userId} was deleted)`,
+      );
+    } else {
+      // biome-ignore lint/suspicious/noConsole: webhook logging
+      console.log(
+        `No local user found for IDP user ${userId} (may not exist in this app)`,
+      );
+    }
+  } catch (err) {
+    console.error(`Failed to delete user for IDP user ${userId}:`, err);
+    throw err;
+  }
 }
 
 export default idpWebhook;

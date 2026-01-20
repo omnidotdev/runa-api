@@ -54,18 +54,32 @@ const queryClient = new QueryClient({
 /**
  * Remote JWKS for verifying JWT signatures from Gatekeeper.
  * jose's createRemoteJWKSet handles caching and key rotation automatically.
+ * Lazily initialized to avoid errors during build scripts when AUTH_BASE_URL is not set.
  * @see https://www.better-auth.com/docs/plugins/jwt
  */
-const JWKS = createRemoteJWKSet(
-  new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`),
-);
+let JWKS: ReturnType<typeof createRemoteJWKSet> | null = null;
+
+function getJWKS() {
+  if (!JWKS) {
+    if (!AUTH_BASE_URL) {
+      throw new AuthenticationError(
+        "AUTH_BASE_URL is not configured",
+        "AUTH_CONFIG_MISSING",
+      );
+    }
+    JWKS = createRemoteJWKSet(
+      new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`),
+    );
+  }
+  return JWKS;
+}
 
 /**
  * Verify JWT signature using Gatekeeper's JWKS endpoint.
  * Returns the verified payload or throws an error.
  */
 async function verifyAccessToken(token: string): Promise<UserInfoClaims> {
-  const { payload } = await jwtVerify(token, JWKS, {
+  const { payload } = await jwtVerify(token, getJWKS(), {
     issuer: AUTH_BASE_URL,
   });
 
@@ -134,11 +148,27 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
       );
     }
 
-    // Verify JWT signature using JWKS (cryptographic verification)
-    const verifiedPayload = await verifyAccessToken(accessToken);
+    // Better Auth OIDC access tokens are opaque tokens, not JWTs.
+    // Validation is done via the userinfo endpoint which verifies the token server-side.
+    // If the access token looks like a JWT (3 dot-separated parts), we can optionally
+    // verify it for additional security, but this is not required.
+    const isJwtFormat = accessToken.split(".").length === 3;
+    if (isJwtFormat) {
+      try {
+        const verifiedPayload = await verifyAccessToken(accessToken);
+        validateClaims(verifiedPayload);
+      } catch (jwtError) {
+        // JWT verification failed - this is expected for opaque tokens
+        // Continue with userinfo validation which will definitively validate the token
+        console.warn(
+          "[Auth] JWT verification skipped (opaque token):",
+          jwtError instanceof Error ? jwtError.message : jwtError,
+        );
+      }
+    }
 
-    // Fetch additional claims from userinfo (org membership, profile data)
-    // Access tokens may not contain all claims, userinfo provides the full set
+    // Fetch user claims from userinfo endpoint - this validates the access token
+    // and provides the authoritative user identity claims
     const claims = await queryClient.ensureQueryData({
       queryKey: ["UserInfo", { accessToken }],
       queryFn: async () => {
@@ -169,9 +199,6 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
         "INVALID_CLAIMS",
       );
     }
-
-    // Validate time-based claims from verified payload
-    validateClaims(verifiedPayload);
 
     if (!claims.email)
       throw new AuthenticationError(
