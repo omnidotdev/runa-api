@@ -293,14 +293,14 @@ async function handleMemberAdded(payload: MemberAddedPayload): Promise<void> {
           organizationId,
           slug: organizationId, // Will be updated with proper slug if available
           role: role as "owner" | "admin" | "member",
-          syncedAt: new Date(),
+          syncedAt: new Date().toISOString(),
         })
         .onConflictDoUpdate({
           target: [userOrganizations.userId, userOrganizations.organizationId],
           set: {
             role: role as "owner" | "admin" | "member",
-            syncedAt: new Date(),
-            updatedAt: new Date(),
+            syncedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
           },
         });
 
@@ -402,8 +402,8 @@ async function handleMemberRoleChanged(
         .update(userOrganizations)
         .set({
           role: newRole as "owner" | "admin" | "member",
-          syncedAt: new Date(),
-          updatedAt: new Date(),
+          syncedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         })
         .where(
           and(
