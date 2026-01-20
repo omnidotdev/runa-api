@@ -11,8 +11,8 @@ export const maintenanceMiddleware = new Elysia({ name: "maintenance" }).derive(
   async ({ request, set }) => {
     const url = new URL(request.url);
 
-    // Allow health checks through
-    if (url.pathname === "/health") return {};
+    // Allow health checks and preflight requests through
+    if (url.pathname === "/health" || request.method === "OPTIONS") return {};
 
     if (await isMaintenanceMode()) {
       set.status = 503;
