@@ -1,6 +1,7 @@
 import {
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
+  isSelfHosted,
 } from "lib/config/env.config";
 
 /** Request timeout in milliseconds */
@@ -11,6 +12,45 @@ const CIRCUIT_BREAKER_THRESHOLD = 5;
 
 /** Circuit breaker cooldown in milliseconds */
 const CIRCUIT_BREAKER_COOLDOWN_MS = 30000;
+
+/**
+ * Default entitlements for self-hosted mode (all features unlocked).
+ */
+const SELF_HOSTED_ENTITLEMENTS: EntitlementsResponse = {
+  billingAccountId: "self-hosted",
+  entityType: "organization",
+  entityId: "self-hosted",
+  entitlementVersion: 1,
+  entitlements: [
+    {
+      id: "sh-tier",
+      featureKey: "tier",
+      value: "enterprise",
+      productId: "runa",
+      source: "self-hosted",
+      validFrom: "2020-01-01T00:00:00Z",
+      validUntil: null,
+    },
+    {
+      id: "sh-max-projects",
+      featureKey: "max_projects",
+      value: "-1",
+      productId: "runa",
+      source: "self-hosted",
+      validFrom: "2020-01-01T00:00:00Z",
+      validUntil: null,
+    },
+    {
+      id: "sh-max-members",
+      featureKey: "max_members",
+      value: "-1",
+      productId: "runa",
+      source: "self-hosted",
+      validFrom: "2020-01-01T00:00:00Z",
+      validUntil: null,
+    },
+  ],
+};
 
 interface EntitlementsResponse {
   billingAccountId: string;
@@ -90,6 +130,11 @@ export async function getEntitlements(
   entityId: string,
   productId?: string,
 ): Promise<EntitlementsResult> {
+  // Self-hosted mode: return unlimited entitlements, no Aether dependency
+  if (isSelfHosted) {
+    return { status: "success", data: SELF_HOSTED_ENTITLEMENTS };
+  }
+
   if (!BILLING_BASE_URL) {
     return {
       status: "unavailable",

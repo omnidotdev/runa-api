@@ -27,8 +27,11 @@ export const {
   // Feature flags
   FLAGS_API_HOST,
   FLAGS_CLIENT_KEY,
+  // Self-hosted mode
+  SELF_HOSTED,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
+export const isSelfHosted = SELF_HOSTED === "true";
