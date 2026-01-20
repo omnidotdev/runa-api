@@ -110,7 +110,7 @@ async function startServer(): Promise<void> {
           isProdEnv &&
             useOpenTelemetry({
               variables: true,
-              result: true,
+              result: false, // Disable full result logging to reduce serialization overhead
             }),
           // parser and validation caches recommended for Grafast (https://grafast.org/grafast/servers#envelop)
           useParserCache(),

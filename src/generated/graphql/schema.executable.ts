@@ -139,7 +139,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "300631",
+    oid: "42979",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -222,7 +222,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "300414",
+    oid: "42763",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +317,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "300788",
+    oid: "43136",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -412,7 +412,7 @@ const spec_label = {
   },
   description: undefined,
   extensions: {
-    oid: "300617",
+    oid: "42965",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -519,7 +519,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "300485",
+    oid: "42834",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -626,7 +626,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "300438",
+    oid: "42787",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -733,7 +733,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "300425",
+    oid: "42774",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -840,7 +840,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "300682",
+    oid: "43030",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -975,7 +975,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "300699",
+    oid: "43047",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1106,7 +1106,7 @@ const spec_settings = {
   },
   description: undefined,
   extensions: {
-    oid: "300500",
+    oid: "42849",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1273,7 +1273,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "300466",
+    oid: "42815",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1293,7 +1293,7 @@ const organizationTypeCodec = enumCodec({
   values: ["personal", "team"],
   description: undefined,
   extensions: {
-    oid: "300912",
+    oid: "43260",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1457,7 +1457,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "300451",
+    oid: "42800",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1478,7 +1478,7 @@ const memberRoleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "300904",
+    oid: "43252",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1617,7 +1617,7 @@ const spec_userOrganization = {
   },
   description: undefined,
   extensions: {
-    oid: "300919",
+    oid: "43267",
     isTableLike: true,
     pg: {
       serviceName: "main",
