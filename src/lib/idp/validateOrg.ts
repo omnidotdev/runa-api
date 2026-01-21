@@ -1,7 +1,7 @@
 /**
  * IDP organization validation.
  *
- * Validates that an organization exists in the IDP before creating workspaces.
+ * Validates that an organization exists in the IDP before creating resources.
  *
  * SECURITY: Fails CLOSED when IDP is unavailable.
  * Cannot create resources for organizations we can't verify.
