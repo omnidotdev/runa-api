@@ -3,7 +3,7 @@
  * Wraps the entitlements client with caching.
  *
  * Entitlements are queried at the ORGANIZATION level, not workspace level.
- * This enables bundle billing where one subscription covers all Omni products.
+ * This enables bundle billing where one subscription covers multiple Omni apps.
  *
  * SECURITY: Fails CLOSED when Aether is unavailable.
  * Users cannot access features without verified entitlements.
@@ -12,8 +12,8 @@
 import { getCached, setCached } from "./cache";
 import { getEntitlements } from "./client";
 
-/** Runa product ID for entitlements */
-const PRODUCT_ID = "runa";
+/** Runa app ID for entitlements */
+const APP_ID = "runa";
 
 /** Cache key prefix */
 const CACHE_PREFIX = "organization";
@@ -68,7 +68,7 @@ async function fetchOrganizationEntitlements(
   const result = await getEntitlements(
     "organization",
     organizationId,
-    PRODUCT_ID,
+    APP_ID,
   );
 
   if (result.status === "unavailable") {
@@ -87,12 +87,12 @@ async function fetchOrganizationEntitlements(
   };
 
   for (const ent of result.data.entitlements) {
-    // Check product-specific tier first (runa:tier), then shared tier
-    if (ent.featureKey === `${PRODUCT_ID}:tier` || ent.featureKey === "tier") {
+    // Check app-specific tier first (runa:tier), then shared tier
+    if (ent.featureKey === `${APP_ID}:tier` || ent.featureKey === "tier") {
       entitlements.tier = (ent.value as Tier) ?? "free";
     } else if (ent.featureKey.startsWith("max_")) {
-      // Handle both product-specific (runa:max_projects) and shared (max_projects)
-      const key = ent.featureKey.replace(`${PRODUCT_ID}:`, "");
+      // Handle both app-specific (runa:max_projects) and shared (max_projects)
+      const key = ent.featureKey.replace(`${APP_ID}:`, "");
       entitlements.limits[key] =
         typeof ent.value === "number" ? ent.value : Number(ent.value) || -1;
     }
