@@ -27,7 +27,9 @@ async function exportAllTuples(): Promise<TupleKey[]> {
 
   // Project-organization relationships (project table)
   // organization:X has 'organization' relation on project:Y
-  const allProjects = await dbPool.select().from(projects);
+  const allProjects = await dbPool
+    .select({ id: projects.id, organizationId: projects.organizationId })
+    .from(projects);
   for (const p of allProjects) {
     tuples.push({
       user: `organization:${p.organizationId}`,
