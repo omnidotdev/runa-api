@@ -12,8 +12,20 @@ const knipConfig: KnipConfig = {
     "src/jobs/**",
     "src/lib/db/db.ts",
     "src/lib/config/env.config.ts",
+    // Instrumentation loaded via --import flag at runtime
+    "src/instrumentation.ts",
   ],
-  ignoreDependencies: ["drizzle-kit"],
+  ignoreDependencies: [
+    "drizzle-kit",
+    // OpenTelemetry deps used by instrumentation.ts (loaded via --import)
+    "@opentelemetry/auto-instrumentations-node",
+    "@opentelemetry/exporter-logs-otlp-http",
+    "@opentelemetry/exporter-trace-otlp-http",
+    "@opentelemetry/resources",
+    "@opentelemetry/sdk-logs",
+    "@opentelemetry/sdk-node",
+    "@opentelemetry/semantic-conventions",
+  ],
   tags: ["-knipignore"],
 };
 
