@@ -148,7 +148,6 @@ export async function getEntitlements(
     };
   }
 
-
   if (circuitBreaker.isOpen()) {
     return { status: "unavailable", error: "Circuit breaker open" };
   }

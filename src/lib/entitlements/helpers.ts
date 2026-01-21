@@ -65,11 +65,7 @@ async function fetchOrganizationEntitlements(
   }
 
   // Fetch from entitlements service using organization entity type
-  const result = await getEntitlements(
-    "organization",
-    organizationId,
-    APP_ID,
-  );
+  const result = await getEntitlements("organization", organizationId, APP_ID);
 
   if (result.status === "unavailable") {
     return { status: "unavailable", error: result.error };
