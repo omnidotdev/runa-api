@@ -16,10 +16,9 @@ import { replaceInFile } from "replace-in-file";
 
 import { getDefaultOrganization } from "lib/auth/organizations";
 import {
-  AUTHZ_API_URL,
-  AUTHZ_ENABLED,
   checkPermission,
   deleteTuples,
+  isAuthzEnabled,
   writeTuples,
 } from "lib/authz";
 import graphilePreset from "lib/config/graphile.config";
@@ -30,22 +29,72 @@ import {
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
 
+const SRC_DIR = `${__dirname}/..`;
 const CACHE_DIR = `${__dirname}/../../.cache`;
 const HASH_FILE = `${CACHE_DIR}/schema-hash`;
-const SCHEMA_DIR = `${__dirname}/../lib/db/schema`;
 
 /**
- * Compute hash of all schema files.
+ * Directories and files that affect the generated GraphQL schema.
+ * Changes to any of these should trigger schema regeneration.
+ *
+ * Note: We don't track lib/authz, lib/entitlements, etc. because those
+ * are just function references imported by the generated schema. Their
+ * internal implementation doesn't affect the generated output - only
+ * the plugin code that calls them matters.
+ */
+const SCHEMA_DEPENDENCIES = {
+  directories: [
+    // Database schema definitions → GraphQL types
+    "lib/db/schema",
+    // GraphQL plugins (EXPORTABLE code gets serialized into output)
+    "lib/graphql/plugins",
+  ],
+  files: [
+    // Graphile configuration (plugins list, schema settings)
+    "lib/config/graphile.config.ts",
+  ],
+};
+
+/**
+ * Get all TypeScript files from a directory recursively.
+ */
+const getFilesFromDirectory = (dir: string): string[] => {
+  const fullPath = join(SRC_DIR, dir);
+  if (!existsSync(fullPath)) return [];
+
+  return readdirSync(fullPath, { recursive: true })
+    .filter((f): f is string => typeof f === "string" && f.endsWith(".ts"))
+    .map((f) => join(dir, f))
+    .sort();
+};
+
+/**
+ * Compute hash of all files that affect schema generation.
  */
 const computeSchemaHash = (): string => {
   const hash = createHash("sha256");
 
-  const files = readdirSync(SCHEMA_DIR, { recursive: true })
-    .filter((f): f is string => typeof f === "string" && f.endsWith(".ts"))
-    .sort();
+  // Collect all files from tracked directories
+  const allFiles: string[] = [];
 
-  for (const file of files) {
-    const content = readFileSync(join(SCHEMA_DIR, file));
+  for (const dir of SCHEMA_DEPENDENCIES.directories) {
+    allFiles.push(...getFilesFromDirectory(dir));
+  }
+
+  // Add individual tracked files
+  for (const file of SCHEMA_DEPENDENCIES.files) {
+    if (existsSync(join(SRC_DIR, file))) {
+      allFiles.push(file);
+    }
+  }
+
+  // Sort for deterministic ordering
+  allFiles.sort();
+
+  // Hash each file's path and content
+  for (const file of allFiles) {
+    const fullPath = join(SRC_DIR, file);
+    const content = readFileSync(fullPath);
     hash.update(file);
     hash.update(content);
   }
@@ -54,7 +103,7 @@ const computeSchemaHash = (): string => {
 };
 
 /**
- * Check if schema has changed since last generation.
+ * Check if schema dependencies have changed since last generation.
  */
 const hasSchemaChanged = (): boolean => {
   if (!existsSync(HASH_FILE)) return true;
@@ -91,11 +140,10 @@ const generateGraphqlSchema = async () => {
       "graphile-export": { EXPORTABLE },
       "postgraphile/grafast": { context, sideEffect },
       "lib/authz": {
-        AUTHZ_ENABLED,
-        AUTHZ_API_URL,
         checkPermission,
-        writeTuples,
         deleteTuples,
+        isAuthzEnabled,
+        writeTuples,
       },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "./constants": {
@@ -111,65 +159,6 @@ const generateGraphqlSchema = async () => {
     files: schemaFilePath,
     from: /\/\* eslint-disable graphile-export\/export-instances, graphile-export\/export-methods, graphile-export\/export-plans, graphile-export\/exhaustive-deps \*\//g,
     to: "// @ts-nocheck",
-  });
-
-  // Remove invalid globalThis import and use native fetch
-  // graphile-export doesn't recognize fetch as a known global
-  await replaceInFile({
-    files: schemaFilePath,
-    from: /import \{ [^}]*\} from "globalThis";\n/g,
-    to: "",
-  });
-
-  // Replace _fetch with fetch (native global)
-  await replaceInFile({
-    files: schemaFilePath,
-    from: /_fetch/g,
-    to: "fetch",
-  });
-
-  // Fix hardcoded AUTHZ values - replace with imports from lib/authz
-  // graphile-export inlines these values at generation time, but we need them to be runtime env vars
-  await replaceInFile({
-    files: schemaFilePath,
-    from: /import \{ checkPermission, deleteTuples, writeTuples \} from "lib\/authz";/g,
-    to: 'import { AUTHZ_ENABLED, AUTHZ_API_URL, checkPermission, deleteTuples, writeTuples } from "lib/authz";',
-  });
-
-  // Fix checkPermission calls: checkPermission("...", "https://localhost:4100", ...) -> checkPermission(AUTHZ_ENABLED, AUTHZ_API_URL, ...)
-  // The first arg may be "true", "", or other values depending on env during generation
-  await replaceInFile({
-    files: schemaFilePath,
-    from: /"[^"]*", "https:\/\/localhost:4100"/g,
-    to: "AUTHZ_ENABLED, AUTHZ_API_URL",
-  });
-
-  // Fix writeTuples/deleteTuples calls: writeTuples("https://localhost:4100", ...) -> writeTuples(AUTHZ_API_URL, ...)
-  await replaceInFile({
-    files: schemaFilePath,
-    from: /writeTuples\("https:\/\/localhost:4100"/g,
-    to: "writeTuples(AUTHZ_API_URL",
-  });
-
-  await replaceInFile({
-    files: schemaFilePath,
-    from: /deleteTuples\("https:\/\/localhost:4100"/g,
-    to: "deleteTuples(AUTHZ_API_URL",
-  });
-
-  // Fix AUTHZ_API_URL guard: if (!"https://localhost:4100") -> if (!AUTHZ_API_URL)
-  await replaceInFile({
-    files: schemaFilePath,
-    from: /if \(!"https:\/\/localhost:4100"\)/g,
-    to: "if (!AUTHZ_API_URL)",
-  });
-
-  // Fix AUTHZ_ENABLED guard: if ("..." !== "true") -> if (AUTHZ_ENABLED !== "true")
-  // The first value may be "", "true", or other values depending on env during generation
-  await replaceInFile({
-    files: schemaFilePath,
-    from: /if \("[^"]*" !== "true"\)/g,
-    to: 'if (AUTHZ_ENABLED !== "true")',
   });
 
   // emit SDL

@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { AUTHZ_API_URL, AUTHZ_ENABLED, checkPermission } from "lib/authz";
+import { checkPermission } from "lib/authz";
 
 import type { InsertPost } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -17,15 +17,7 @@ import type { MutationScope } from "./types";
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      checkPermission,
-      propName,
-      scope,
-    ): PlanWrapperFn =>
+    (context, sideEffect, checkPermission, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -49,8 +41,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!task) throw new Error("Task not found");
 
               const allowed = await checkPermission(
-                AUTHZ_ENABLED,
-                AUTHZ_API_URL,
                 observer.id,
                 "project",
                 task.projectId,
@@ -67,8 +57,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!post) throw new Error("Post not found");
 
               const allowed = await checkPermission(
-                AUTHZ_ENABLED,
-                AUTHZ_API_URL,
                 observer.id,
                 "project",
                 post.task.projectId,
@@ -82,15 +70,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      checkPermission,
-      propName,
-      scope,
-    ],
+    [context, sideEffect, checkPermission, propName, scope],
   );
 
 /**

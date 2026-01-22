@@ -3,7 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
-import { BILLING_WEBHOOK_SECRET } from "lib/config/env.config";
+import { BILLING_WEBHOOK_SECRET, isSelfHosted } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { settings } from "lib/db/schema";
 import { invalidateCache } from "./cache";
@@ -12,7 +12,7 @@ interface EntitlementWebhookPayload {
   eventType: string;
   entityType: string;
   entityId: string;
-  productId: string;
+  appId: string;
   featureKey?: string;
   value?: unknown;
   version: number;
@@ -56,6 +56,11 @@ const verifySignature = (
 const entitlementsWebhook = new Elysia({ prefix: "/webhooks" }).post(
   "/entitlements",
   async ({ request, headers, set }) => {
+    if (isSelfHosted) {
+      set.status = 204;
+      return { received: true, selfHosted: true };
+    }
+
     const signature = headers["x-billing-signature"];
 
     if (!BILLING_WEBHOOK_SECRET) {

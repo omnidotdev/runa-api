@@ -12,15 +12,11 @@
  */
 
 import {
+  AUTHZ_API_URL,
+  AUTHZ_ENABLED,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
-  AUTHZ_API_URL as _AUTHZ_API_URL,
-  AUTHZ_ENABLED as _AUTHZ_ENABLED,
 } from "lib/config/env.config";
-
-// Re-export for EXPORTABLE compatibility in plugins
-export const AUTHZ_API_URL = _AUTHZ_API_URL;
-export const AUTHZ_ENABLED = _AUTHZ_ENABLED;
 
 /** @knipignore - re-exported for plugin compatibility */
 export {
@@ -32,6 +28,15 @@ export {
 
 /** Request timeout in milliseconds */
 const REQUEST_TIMEOUT_MS = 5000;
+
+/**
+ * Check if AuthZ is enabled and configured.
+ * Exported as a function (not a value) so graphile-export handles it correctly.
+ * Use this in plugins for early-exit checks before doing expensive work.
+ */
+export function isAuthzEnabled(): boolean {
+  return AUTHZ_ENABLED === "true" && !!AUTHZ_API_URL;
+}
 
 /** Circuit breaker failure threshold before opening */
 const CIRCUIT_BREAKER_THRESHOLD = 5;
@@ -129,15 +134,15 @@ const circuitBreaker = new CircuitBreaker();
  * Uses Vortex's dedicated authz endpoint if configured, otherwise falls back to direct Warden API.
  * Exported for graphile-export EXPORTABLE compatibility.
  *
- * @param authzProviderUrl - Warden API URL (fallback when Vortex not configured)
+ * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
+ *
  * @param tuples - The tuples to write
  */
 export async function writeTuples(
-  authzProviderUrl: string | undefined,
   tuples: Array<{ user: string; relation: string; object: string }>,
 ): Promise<void> {
   // Skip if authz is disabled
-  if (_AUTHZ_ENABLED !== "true") {
+  if (AUTHZ_ENABLED !== "true") {
     return;
   }
 
@@ -184,7 +189,7 @@ export async function writeTuples(
   }
 
   // Fallback: Direct Warden API
-  if (!authzProviderUrl) {
+  if (!AUTHZ_API_URL) {
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
@@ -194,7 +199,7 @@ export async function writeTuples(
   }
 
   try {
-    const response = await fetch(`${authzProviderUrl}/tuples`, {
+    const response = await fetch(`${AUTHZ_API_URL}/tuples`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tuples }),
@@ -227,15 +232,15 @@ export async function writeTuples(
  * Uses Vortex's dedicated authz endpoint if configured, otherwise falls back to direct Warden API.
  * Exported for graphile-export EXPORTABLE compatibility.
  *
- * @param authzProviderUrl - Warden API URL (fallback when Vortex not configured)
+ * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
+ *
  * @param tuples - The tuples to delete
  */
 export async function deleteTuples(
-  authzProviderUrl: string | undefined,
   tuples: Array<{ user: string; relation: string; object: string }>,
 ): Promise<void> {
   // Skip if authz is disabled
-  if (_AUTHZ_ENABLED !== "true") {
+  if (AUTHZ_ENABLED !== "true") {
     return;
   }
 
@@ -282,7 +287,7 @@ export async function deleteTuples(
   }
 
   // Fallback: Direct Warden API
-  if (!authzProviderUrl) {
+  if (!AUTHZ_API_URL) {
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
@@ -292,7 +297,7 @@ export async function deleteTuples(
   }
 
   try {
-    const response = await fetch(`${authzProviderUrl}/tuples`, {
+    const response = await fetch(`${AUTHZ_API_URL}/tuples`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tuples }),
@@ -346,16 +351,17 @@ interface PermissionCheckResult {
  * Checks cache first for each permission, then batches remaining checks.
  * Returns true (permissive) when authz is disabled.
  * Throws error (fail-closed) when PDP is unavailable.
+ *
+ * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
+ *
  * @knipignore - exported API for batch permission checks
  */
 export async function checkPermissionsBatch(
-  authzEnabled: string | undefined,
-  authzProviderUrl: string | undefined,
   checks: PermissionCheck[],
   requestCache?: Map<string, boolean>,
 ): Promise<PermissionCheckResult[]> {
   // Permissive when disabled
-  if (authzEnabled !== "true" || !authzProviderUrl) {
+  if (AUTHZ_ENABLED !== "true" || !AUTHZ_API_URL) {
     return checks.map((check) => ({ ...check, allowed: true }));
   }
 
@@ -407,7 +413,7 @@ export async function checkPermissionsBatch(
 
   try {
     const batchResults = await circuitBreaker.execute(async () => {
-      const response = await fetch(`${authzProviderUrl}/check/batch`, {
+      const response = await fetch(`${AUTHZ_API_URL}/check/batch`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -476,10 +482,10 @@ export async function checkPermissionsBatch(
  * Returns true if authorized, false otherwise.
  * Returns true (permissive) when authz is disabled.
  * Throws error (fail-closed) when PDP is unavailable.
+ *
+ * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
  */
 export async function checkPermission(
-  authzEnabled: string | undefined,
-  authzProviderUrl: string | undefined,
   userId: string,
   resourceType: string,
   resourceId: string,
@@ -487,8 +493,8 @@ export async function checkPermission(
   requestCache?: Map<string, boolean>,
 ): Promise<boolean> {
   // Permissive when disabled
-  if (authzEnabled !== "true") return true;
-  if (!authzProviderUrl) return true;
+  if (AUTHZ_ENABLED !== "true") return true;
+  if (!AUTHZ_API_URL) return true;
 
   // Import cache functions inline to avoid circular dependencies
   const { buildPermissionCacheKey, getCachedPermission, setCachedPermission } =
@@ -518,7 +524,7 @@ export async function checkPermission(
 
   try {
     const allowed = await circuitBreaker.execute(async () => {
-      const response = await fetch(`${authzProviderUrl}/check`, {
+      const response = await fetch(`${AUTHZ_API_URL}/check`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

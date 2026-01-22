@@ -26,7 +26,7 @@ const SELF_HOSTED_ENTITLEMENTS: EntitlementsResponse = {
       id: "sh-tier",
       featureKey: "tier",
       value: "enterprise",
-      productId: "runa",
+      appId: "runa",
       source: "self-hosted",
       validFrom: "2020-01-01T00:00:00Z",
       validUntil: null,
@@ -35,7 +35,7 @@ const SELF_HOSTED_ENTITLEMENTS: EntitlementsResponse = {
       id: "sh-max-projects",
       featureKey: "max_projects",
       value: "-1",
-      productId: "runa",
+      appId: "runa",
       source: "self-hosted",
       validFrom: "2020-01-01T00:00:00Z",
       validUntil: null,
@@ -44,7 +44,7 @@ const SELF_HOSTED_ENTITLEMENTS: EntitlementsResponse = {
       id: "sh-max-members",
       featureKey: "max_members",
       value: "-1",
-      productId: "runa",
+      appId: "runa",
       source: "self-hosted",
       validFrom: "2020-01-01T00:00:00Z",
       validUntil: null,
@@ -59,7 +59,7 @@ interface EntitlementsResponse {
   entitlementVersion: number;
   entitlements: Array<{
     id: string;
-    productId: string;
+    appId: string;
     featureKey: string;
     value: string | null;
     source: string;
@@ -118,7 +118,6 @@ const circuitBreaker = new EntitlementsCircuitBreaker();
 
 /**
  * Get all entitlements for an entity.
- * Optionally filter by product.
  *
  * Returns a result object to distinguish between:
  * - success: entitlements found
@@ -128,7 +127,7 @@ const circuitBreaker = new EntitlementsCircuitBreaker();
 export async function getEntitlements(
   entityType: string,
   entityId: string,
-  productId?: string,
+  appId: string,
 ): Promise<EntitlementsResult> {
   // Self-hosted mode: return unlimited entitlements, no Aether dependency
   if (isSelfHosted) {
@@ -142,17 +141,21 @@ export async function getEntitlements(
     };
   }
 
+  if (!BILLING_SERVICE_API_KEY) {
+    return {
+      status: "unavailable",
+      error: "BILLING_SERVICE_API_KEY not configured",
+    };
+  }
+
   if (circuitBreaker.isOpen()) {
     return { status: "unavailable", error: "Circuit breaker open" };
   }
 
   try {
     const url = new URL(
-      `${BILLING_BASE_URL}/entitlements/${entityType}/${entityId}`,
+      `${BILLING_BASE_URL}/entitlements/${appId}/${entityType}/${entityId}`,
     );
-    if (productId) {
-      url.searchParams.set("productId", productId);
-    }
 
     const res = await fetch(url, {
       headers: {
