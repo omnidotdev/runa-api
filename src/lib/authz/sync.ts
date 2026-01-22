@@ -12,10 +12,10 @@
  */
 
 import {
-  VORTEX_API_URL,
-  VORTEX_AUTHZ_WEBHOOK_SECRET,
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
+  VORTEX_API_URL,
+  VORTEX_AUTHZ_WEBHOOK_SECRET,
 } from "lib/config/env.config";
 
 /** @knipignore - re-exported for plugin compatibility */

@@ -3,11 +3,7 @@ import { QueryClient } from "@tanstack/query-core";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import ms from "ms";
 
-import {
-  AUTH_BASE_URL,
-  isDevEnv,
-  protectRoutes,
-} from "lib/config/env.config";
+import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/db/schema";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";

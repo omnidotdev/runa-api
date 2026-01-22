@@ -16,13 +16,7 @@ import type { MutationScope } from "./types";
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
-    (
-      context,
-      sideEffect,
-      checkPermission,
-      propName,
-      scope,
-    ): PlanWrapperFn =>
+    (context, sideEffect, checkPermission, propName, scope): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
@@ -56,13 +50,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
         return plan();
       },
-    [
-      context,
-      sideEffect,
-      checkPermission,
-      propName,
-      scope,
-    ],
+    [context, sideEffect, checkPermission, propName, scope],
   );
 
 /**
