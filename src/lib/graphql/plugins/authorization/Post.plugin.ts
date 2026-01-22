@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { AUTHZ_API_URL, AUTHZ_ENABLED, checkPermission } from "lib/authz";
+import { checkPermission } from "lib/authz";
 
 import type { InsertPost } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -20,8 +20,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     (
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
       checkPermission,
       propName,
       scope,
@@ -49,8 +47,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!task) throw new Error("Task not found");
 
               const allowed = await checkPermission(
-                AUTHZ_ENABLED,
-                AUTHZ_API_URL,
                 observer.id,
                 "project",
                 task.projectId,
@@ -67,8 +63,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!post) throw new Error("Post not found");
 
               const allowed = await checkPermission(
-                AUTHZ_ENABLED,
-                AUTHZ_API_URL,
                 observer.id,
                 "project",
                 post.task.projectId,
@@ -85,8 +79,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
       checkPermission,
       propName,
       scope,

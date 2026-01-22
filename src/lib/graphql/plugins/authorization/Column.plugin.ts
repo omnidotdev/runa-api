@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { AUTHZ_API_URL, AUTHZ_ENABLED, checkPermission } from "lib/authz";
+import { checkPermission } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
@@ -25,8 +25,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     (
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
       checkPermission,
       isWithinLimit,
       FEATURE_KEYS,
@@ -54,8 +52,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!column) throw new Error("Column not found");
 
               const allowed = await checkPermission(
-                AUTHZ_ENABLED,
-                AUTHZ_API_URL,
                 observer.id,
                 "project",
                 column.projectId,
@@ -67,8 +63,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const projectId = (input as InsertColumn).projectId;
 
               const allowed = await checkPermission(
-                AUTHZ_ENABLED,
-                AUTHZ_API_URL,
                 observer.id,
                 "project",
                 projectId,
@@ -101,8 +95,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
       checkPermission,
       isWithinLimit,
       FEATURE_KEYS,

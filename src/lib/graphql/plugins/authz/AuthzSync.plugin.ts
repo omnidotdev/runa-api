@@ -17,12 +17,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import {
-  AUTHZ_API_URL,
-  AUTHZ_ENABLED,
-  deleteTuples,
-  writeTuples,
-} from "lib/authz";
+import { deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
 
 import type { InsertProject } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -33,21 +28,14 @@ import type { PlanWrapperFn } from "postgraphile/utils";
  */
 const syncCreateProject = (): PlanWrapperFn =>
   EXPORTABLE(
-    (
-      _context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      writeTuples,
-    ): PlanWrapperFn =>
+    (_context, sideEffect, isAuthzEnabled, writeTuples): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $input = fieldArgs.getRaw(["input", "project"]);
 
         sideEffect([$result, $input], async ([result, input]) => {
           if (!result) return;
-          if (AUTHZ_ENABLED !== "true") return;
-          if (!AUTHZ_API_URL) return;
+          if (!isAuthzEnabled()) return;
 
           const { organizationId } = input as InsertProject;
           const projectId = (result as { id?: string })?.id;
@@ -58,7 +46,7 @@ const syncCreateProject = (): PlanWrapperFn =>
           }
 
           try {
-            await writeTuples(AUTHZ_API_URL, [
+            await writeTuples([
               {
                 user: `organization:${organizationId}`,
                 relation: "organization",
@@ -75,7 +63,7 @@ const syncCreateProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_API_URL, writeTuples],
+    [context, sideEffect, isAuthzEnabled, writeTuples],
   );
 
 /**
@@ -83,13 +71,7 @@ const syncCreateProject = (): PlanWrapperFn =>
  */
 const syncDeleteProject = (): PlanWrapperFn =>
   EXPORTABLE(
-    (
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      deleteTuples,
-    ): PlanWrapperFn =>
+    (context, sideEffect, isAuthzEnabled, deleteTuples): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $projectId = fieldArgs.getRaw(["input", "rowId"]);
@@ -99,8 +81,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
           [$result, $projectId, $db],
           async ([result, projectId, db]) => {
             if (!result) return;
-            if (AUTHZ_ENABLED !== "true") return;
-            if (!AUTHZ_API_URL) return;
+            if (!isAuthzEnabled()) return;
 
             // Get the organization ID before deletion
             const project = await db.query.projects.findFirst({
@@ -110,7 +91,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
             if (!project) return;
 
             try {
-              await deleteTuples(AUTHZ_API_URL, [
+              await deleteTuples([
                 {
                   user: `organization:${project.organizationId}`,
                   relation: "organization",
@@ -128,7 +109,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_API_URL, deleteTuples],
+    [context, sideEffect, isAuthzEnabled, deleteTuples],
   );
 
 /**

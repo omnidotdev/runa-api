@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export/helpers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { AUTHZ_API_URL, AUTHZ_ENABLED, checkPermission } from "lib/authz";
+import { checkPermission } from "lib/authz";
 
 import type { PlanWrapperFn } from "postgraphile/utils";
 import type { MutationScope } from "./types";
@@ -19,8 +19,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     (
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
       checkPermission,
       propName,
       scope,
@@ -46,8 +44,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             // Check permission on the organization
             const requiredPermission = scope === "delete" ? "owner" : "admin";
             const allowed = await checkPermission(
-              AUTHZ_ENABLED,
-              AUTHZ_API_URL,
               observer.id,
               "organization",
               settings.organizationId,
@@ -63,8 +59,6 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     [
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
       checkPermission,
       propName,
       scope,
