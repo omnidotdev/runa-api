@@ -188,44 +188,73 @@ const DEFAULT_PROJECT_COLUMNS = [
 
 /**
  * Handle organization created event.
- * Provisions default project columns for the organization.
+ * Provisions default project columns and settings for the organization.
  */
 async function handleOrganizationCreated(
   payload: OrganizationCreatedPayload,
 ): Promise<void> {
   const { organizationId, organizationType } = payload;
 
+  // Provision project columns
   try {
-    // Check if columns already exist (handles webhook retries)
-    const existing = await dbPool.query.projectColumns.findFirst({
+    const existingColumns = await dbPool.query.projectColumns.findFirst({
       where: (table, { eq }) => eq(table.organizationId, organizationId),
       columns: { id: true },
     });
 
-    if (existing) {
+    if (existingColumns) {
       // biome-ignore lint/suspicious/noConsole: webhook logging
       console.log(
         `Project columns already exist for org ${organizationId}, skipping`,
       );
-      return;
+    } else {
+      await dbPool.insert(projectColumns).values(
+        DEFAULT_PROJECT_COLUMNS.map((col) => ({
+          organizationId,
+          emoji: col.emoji,
+          title: col.title,
+          index: col.index,
+        })),
+      );
+
+      // biome-ignore lint/suspicious/noConsole: webhook logging
+      console.log(
+        `Provisioned default project columns for ${organizationType} org ${organizationId}`,
+      );
     }
-
-    await dbPool.insert(projectColumns).values(
-      DEFAULT_PROJECT_COLUMNS.map((col) => ({
-        organizationId,
-        emoji: col.emoji,
-        title: col.title,
-        index: col.index,
-      })),
-    );
-
-    // biome-ignore lint/suspicious/noConsole: webhook logging
-    console.log(
-      `Provisioned default project columns for ${organizationType} org ${organizationId}`,
-    );
   } catch (err) {
     console.error(
       `Failed to provision project columns for org ${organizationId}:`,
+      err,
+    );
+  }
+
+  // Provision settings
+  try {
+    const existingSettings = await dbPool.query.settings.findFirst({
+      where: (table, { eq }) => eq(table.organizationId, organizationId),
+      columns: { id: true },
+    });
+
+    if (existingSettings) {
+      // biome-ignore lint/suspicious/noConsole: webhook logging
+      console.log(
+        `Settings already exist for org ${organizationId}, skipping`,
+      );
+    } else {
+      await dbPool.insert(settings).values({
+        organizationId,
+        viewMode: "board",
+      });
+
+      // biome-ignore lint/suspicious/noConsole: webhook logging
+      console.log(
+        `Provisioned default settings for ${organizationType} org ${organizationId}`,
+      );
+    }
+  } catch (err) {
+    console.error(
+      `Failed to provision settings for org ${organizationId}:`,
       err,
     );
   }
