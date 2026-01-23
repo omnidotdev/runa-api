@@ -238,9 +238,7 @@ async function handleOrganizationCreated(
 
     if (existingSettings) {
       // biome-ignore lint/suspicious/noConsole: webhook logging
-      console.log(
-        `Settings already exist for org ${organizationId}, skipping`,
-      );
+      console.log(`Settings already exist for org ${organizationId}, skipping`);
     } else {
       await dbPool.insert(settings).values({
         organizationId,
