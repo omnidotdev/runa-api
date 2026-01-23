@@ -21,6 +21,7 @@ import {
   UserPreferencePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
@@ -37,6 +38,8 @@ const graphilePreset: GraphileConfig.Preset = {
   plugins: [
     // Observer plugin (exposes current authenticated user)
     ObserverPlugin,
+    // IDP user ID resolver (translates IDP user IDs to local user IDs)
+    UserIdResolverPlugin,
     // Authorization plugins (pre-mutation validation)
     AssigneePlugin,
     ColumnPlugin,

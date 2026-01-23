@@ -8,16 +8,12 @@ import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 
 import type { InsertAssignee } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
-import type { MutationScope } from "./types";
 
 /**
- * Validate assignee permissions via PDP.
- *
- * - Create: Member permission on project required (with tier limits)
- * - Update: Member permission on project required
- * - Delete: Member permission on project required
+ * Validate create assignee permissions via PDP.
+ * Member permission on project required, with tier limits check.
  */
-const validatePermissions = (propName: string, scope: MutationScope) =>
+const validateCreatePermissions = (): PlanWrapperFn =>
   EXPORTABLE(
     (
       context,
@@ -26,11 +22,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassOrgIds,
-      propName,
-      scope,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        const $input = fieldArgs.getRaw(["input", propName]);
+        const $input = fieldArgs.getRaw(["input", "assignee"]);
         const $observer = context().get("observer");
         const $db = context().get("db");
         const $authzCache = context().get("authzCache");
@@ -42,58 +36,36 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!observer) throw new Error("Unauthorized");
             if (!accessToken) throw new Error("Unauthorized");
 
-            if (scope !== "create") {
-              // input is { taskId, userId } for composite key tables
-              const { taskId } = input as { taskId: string; userId: string };
+            const taskId = (input as InsertAssignee).taskId;
 
-              // Get task to find project for AuthZ check
-              const task = await db.query.tasks.findFirst({
-                where: (table, { eq }) => eq(table.id, taskId),
-                columns: { projectId: true },
-              });
-              if (!task) throw new Error("Task not found");
+            // Get task with assignees and project for tier limit check
+            const task = await db.query.tasks.findFirst({
+              where: (table, { eq }) => eq(table.id, taskId),
+              with: {
+                assignees: true,
+                project: true,
+              },
+            });
+            if (!task) throw new Error("Task not found");
 
-              const allowed = await checkPermission(
-                observer.id,
-                "project",
-                task.projectId,
-                "member",
-                accessToken,
-                authzCache,
-              );
-              if (!allowed) throw new Error("Unauthorized");
-            } else {
-              const taskId = (input as InsertAssignee).taskId;
+            const allowed = await checkPermission(
+              observer.id,
+              "project",
+              task.project.id,
+              "member",
+              accessToken,
+              authzCache,
+            );
+            if (!allowed) throw new Error("Unauthorized");
 
-              // Get task with assignees and project for tier limit check
-              const task = await db.query.tasks.findFirst({
-                where: (table, { eq }) => eq(table.id, taskId),
-                with: {
-                  assignees: true,
-                  project: true,
-                },
-              });
-              if (!task) throw new Error("Task not found");
-
-              const allowed = await checkPermission(
-                observer.id,
-                "project",
-                task.project.id,
-                "member",
-                accessToken,
-                authzCache,
-              );
-              if (!allowed) throw new Error("Unauthorized");
-
-              const withinLimit = await isWithinLimit(
-                { organizationId: task.project.organizationId },
-                FEATURE_KEYS.MAX_ASSIGNEES,
-                task.assignees.length,
-                billingBypassOrgIds,
-              );
-              if (!withinLimit)
-                throw new Error("Maximum number of assignees reached");
-            }
+            const withinLimit = await isWithinLimit(
+              { organizationId: task.project.organizationId },
+              FEATURE_KEYS.MAX_ASSIGNEES,
+              task.assignees.length,
+              billingBypassOrgIds,
+            );
+            if (!withinLimit)
+              throw new Error("Maximum number of assignees reached");
           },
         );
 
@@ -106,9 +78,55 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
       isWithinLimit,
       FEATURE_KEYS,
       billingBypassOrgIds,
-      propName,
-      scope,
     ],
+  );
+
+/**
+ * Validate delete assignee permissions via PDP.
+ * Member permission on project required.
+ *
+ * Note: Assignee uses composite key (taskId, userId), so the input
+ * has these fields at the root level, not nested under "rowId".
+ */
+const validateDeletePermissions = (): PlanWrapperFn =>
+  EXPORTABLE(
+    (context, sideEffect, checkPermission): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
+        // For composite key tables, taskId and userId are at root level of input
+        const $taskId = fieldArgs.getRaw(["input", "taskId"]);
+        const $observer = context().get("observer");
+        const $db = context().get("db");
+        const $authzCache = context().get("authzCache");
+        const $accessToken = context().get("accessToken");
+
+        sideEffect(
+          [$taskId, $observer, $db, $authzCache, $accessToken],
+          async ([taskId, observer, db, authzCache, accessToken]) => {
+            if (!observer) throw new Error("Unauthorized");
+            if (!accessToken) throw new Error("Unauthorized");
+
+            // Get task to find project for AuthZ check
+            const task = await db.query.tasks.findFirst({
+              where: (table, { eq }) => eq(table.id, taskId as string),
+              columns: { projectId: true },
+            });
+            if (!task) throw new Error("Task not found");
+
+            const allowed = await checkPermission(
+              observer.id,
+              "project",
+              task.projectId,
+              "member",
+              accessToken,
+              authzCache,
+            );
+            if (!allowed) throw new Error("Unauthorized");
+          },
+        );
+
+        return plan();
+      },
+    [context, sideEffect, checkPermission],
   );
 
 /**
@@ -116,9 +134,8 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
  */
 const AssigneePlugin = wrapPlans({
   Mutation: {
-    createAssignee: validatePermissions("assignee", "create"),
-    updateAssignee: validatePermissions("rowId", "update"),
-    deleteAssignee: validatePermissions("rowId", "delete"),
+    createAssignee: validateCreatePermissions(),
+    deleteAssignee: validateDeletePermissions(),
   },
 });
 
