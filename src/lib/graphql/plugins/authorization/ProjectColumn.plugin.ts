@@ -26,11 +26,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $observer = context().get("observer");
         const $db = context().get("db");
         const $authzCache = context().get("authzCache");
+        const $accessToken = context().get("accessToken");
 
         sideEffect(
-          [$input, $observer, $db, $authzCache],
-          async ([input, observer, db, authzCache]) => {
+          [$input, $observer, $db, $authzCache, $accessToken],
+          async ([input, observer, db, authzCache, accessToken]) => {
             if (!observer) throw new Error("Unauthorized");
+            if (!accessToken) throw new Error("Unauthorized");
 
             if (scope === "create") {
               const organizationId = (input as InsertProjectColumn)
@@ -41,6 +43,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "organization",
                 organizationId,
                 "admin",
+                accessToken,
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");
@@ -57,6 +60,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "organization",
                 projectColumn.organizationId,
                 "admin",
+                accessToken,
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");

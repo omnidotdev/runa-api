@@ -19,47 +19,63 @@ import { wrapPlans } from "postgraphile/utils";
 
 import { deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
 
+import type { PgDeleteSingleStep, PgInsertSingleStep } from "@dataplan/pg";
 import type { InsertProject } from "lib/db/schema";
+import type { ObjectStep } from "postgraphile/grafast";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
  * Sync project creation to authz store.
  * Creates organization → project tuple for permission inheritance.
+ *
+ * Uses Grafast step methods to extract the project ID during planning phase:
+ * - PostGraphile mutations return ObjectStep<{ result: PgInsertSingleStep }>
+ * - getStepForKey("result") retrieves the inner insert step
+ * - .get("id") creates a step that extracts just the id field
  */
 const syncCreateProject = (): PlanWrapperFn =>
   EXPORTABLE(
-    (_context, sideEffect, isAuthzEnabled, writeTuples): PlanWrapperFn =>
+    (context, sideEffect, isAuthzEnabled, writeTuples): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $input = fieldArgs.getRaw(["input", "project"]);
+        const $accessToken = context().get("accessToken");
 
-        sideEffect([$result, $input], async ([result, input]) => {
-          if (!result) return;
-          if (!isAuthzEnabled()) return;
+        // Extract project ID using proper Grafast step methods
+        // $result is ObjectStep<{ result: PgInsertSingleStep }>
+        const $objectResult = $result as ObjectStep<{
+          result: PgInsertSingleStep;
+        }>;
+        const $insertStep = $objectResult.getStepForKey("result");
+        const $projectId = $insertStep.get("id");
 
-          const { organizationId } = input as InsertProject;
-          const projectId = (result as { id?: string })?.id;
+        sideEffect(
+          [$projectId, $input, $accessToken],
+          async ([projectId, input, accessToken]) => {
+            if (!projectId) return;
+            if (!isAuthzEnabled()) return;
 
-          if (!projectId) {
-            console.error("[AuthZ Sync] Project ID not found in result");
-            return;
-          }
+            const { organizationId } = input as InsertProject;
 
-          try {
-            await writeTuples([
-              {
-                user: `organization:${organizationId}`,
-                relation: "organization",
-                object: `project:${projectId}`,
-              },
-            ]);
-          } catch (error) {
-            console.error(
-              "[AuthZ Sync] Failed to sync project creation:",
-              error,
-            );
-          }
-        });
+            try {
+              await writeTuples(
+                [
+                  {
+                    user: `organization:${organizationId}`,
+                    relation: "organization",
+                    object: `project:${projectId}`,
+                  },
+                ],
+                accessToken ?? undefined,
+              );
+            } catch (error) {
+              console.error(
+                "[AuthZ Sync] Failed to sync project creation:",
+                error,
+              );
+            }
+          },
+        );
 
         return $result;
       },
@@ -68,36 +84,46 @@ const syncCreateProject = (): PlanWrapperFn =>
 
 /**
  * Sync project deletion to authz store.
+ *
+ * Uses Grafast step methods to extract data from the delete result:
+ * - PgDeleteSingleStep uses PostgreSQL's DELETE ... RETURNING
+ * - We can extract organizationId directly from the deleted row
  */
 const syncDeleteProject = (): PlanWrapperFn =>
   EXPORTABLE(
     (context, sideEffect, isAuthzEnabled, deleteTuples): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
-        const $projectId = fieldArgs.getRaw(["input", "rowId"]);
-        const $db = context().get("db");
+        const $accessToken = context().get("accessToken");
+
+        // Extract data from the delete step using proper Grafast methods
+        // $result is ObjectStep<{ result: PgDeleteSingleStep }>
+        // PgDeleteSingleStep uses RETURNING to provide deleted row data
+        const $objectResult = $result as ObjectStep<{
+          result: PgDeleteSingleStep;
+        }>;
+        const $deleteStep = $objectResult.getStepForKey("result");
+        const $projectId = $deleteStep.get("id");
+        // Note: Use snake_case - .get() uses PostgreSQL column names, not JS camelCase
+        const $organizationId = $deleteStep.get("organization_id");
 
         sideEffect(
-          [$result, $projectId, $db],
-          async ([result, projectId, db]) => {
-            if (!result) return;
+          [$projectId, $organizationId, $accessToken],
+          async ([projectId, organizationId, accessToken]) => {
+            if (!projectId || !organizationId) return;
             if (!isAuthzEnabled()) return;
 
-            // Get the organization ID before deletion
-            const project = await db.query.projects.findFirst({
-              where: (table, { eq }) => eq(table.id, projectId as string),
-            });
-
-            if (!project) return;
-
             try {
-              await deleteTuples([
-                {
-                  user: `organization:${project.organizationId}`,
-                  relation: "organization",
-                  object: `project:${projectId}`,
-                },
-              ]);
+              await deleteTuples(
+                [
+                  {
+                    user: `organization:${organizationId}`,
+                    relation: "organization",
+                    object: `project:${projectId}`,
+                  },
+                ],
+                accessToken ?? undefined,
+              );
             } catch (error) {
               console.error(
                 "[AuthZ Sync] Failed to sync project deletion:",

@@ -22,47 +22,57 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
+        const $authzCache = context().get("authzCache");
+        const $accessToken = context().get("accessToken");
 
-        sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-          if (!observer) throw new Error("Unauthorized");
+        sideEffect(
+          [$input, $observer, $db, $authzCache, $accessToken],
+          async ([input, observer, db, authzCache, accessToken]) => {
+            if (!observer) throw new Error("Unauthorized");
+            if (!accessToken) throw new Error("Unauthorized");
 
-          if (scope === "create") {
-            const taskId = (input as InsertTaskLabel).taskId;
+            if (scope === "create") {
+              const taskId = (input as InsertTaskLabel).taskId;
 
-            // Get task to find project for AuthZ check
-            const task = await db.query.tasks.findFirst({
-              where: (table, { eq }) => eq(table.id, taskId),
-              columns: { projectId: true },
-            });
-            if (!task) throw new Error("Task not found");
+              // Get task to find project for AuthZ check
+              const task = await db.query.tasks.findFirst({
+                where: (table, { eq }) => eq(table.id, taskId),
+                columns: { projectId: true },
+              });
+              if (!task) throw new Error("Task not found");
 
-            const allowed = await checkPermission(
-              observer.id,
-              "project",
-              task.projectId,
-              "member",
-            );
-            if (!allowed) throw new Error("Unauthorized");
-          } else {
-            // input is { taskId, labelId } for composite key tables
-            const { taskId } = input as { taskId: string; labelId: string };
+              const allowed = await checkPermission(
+                observer.id,
+                "project",
+                task.projectId,
+                "member",
+                accessToken,
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            } else {
+              // input is { taskId, labelId } for composite key tables
+              const { taskId } = input as { taskId: string; labelId: string };
 
-            // Get task to find project for AuthZ check
-            const task = await db.query.tasks.findFirst({
-              where: (table, { eq }) => eq(table.id, taskId),
-              columns: { projectId: true },
-            });
-            if (!task) throw new Error("Task not found");
+              // Get task to find project for AuthZ check
+              const task = await db.query.tasks.findFirst({
+                where: (table, { eq }) => eq(table.id, taskId),
+                columns: { projectId: true },
+              });
+              if (!task) throw new Error("Task not found");
 
-            const allowed = await checkPermission(
-              observer.id,
-              "project",
-              task.projectId,
-              "member",
-            );
-            if (!allowed) throw new Error("Unauthorized");
-          }
-        });
+              const allowed = await checkPermission(
+                observer.id,
+                "project",
+                task.projectId,
+                "member",
+                accessToken,
+                authzCache,
+              );
+              if (!allowed) throw new Error("Unauthorized");
+            }
+          },
+        );
 
         return plan();
       },

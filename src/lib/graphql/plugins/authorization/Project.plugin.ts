@@ -38,11 +38,20 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $db = context().get("db");
         const $withPgClient = context().get("withPgClient");
         const $authzCache = context().get("authzCache");
+        const $accessToken = context().get("accessToken");
 
         sideEffect(
-          [$input, $observer, $db, $withPgClient, $authzCache],
-          async ([input, observer, db, withPgClient, authzCache]) => {
+          [$input, $observer, $db, $withPgClient, $authzCache, $accessToken],
+          async ([
+            input,
+            observer,
+            db,
+            withPgClient,
+            authzCache,
+            accessToken,
+          ]) => {
             if (!observer) throw new Error("Unauthorized");
+            if (!accessToken) throw new Error("Unauthorized");
 
             if (scope === "create") {
               const organizationId = (input as InsertProject).organizationId;
@@ -53,6 +62,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "organization",
                 organizationId,
                 "admin",
+                accessToken,
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");
@@ -91,6 +101,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "project",
                 projectId,
                 "admin",
+                accessToken,
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");

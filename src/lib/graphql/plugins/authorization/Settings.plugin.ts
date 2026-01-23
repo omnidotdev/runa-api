@@ -22,11 +22,13 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $observer = context().get("observer");
         const $db = context().get("db");
         const $authzCache = context().get("authzCache");
+        const $accessToken = context().get("accessToken");
 
         sideEffect(
-          [$input, $observer, $db, $authzCache],
-          async ([input, observer, db, authzCache]) => {
+          [$input, $observer, $db, $authzCache, $accessToken],
+          async ([input, observer, db, authzCache, accessToken]) => {
             if (!observer) throw new Error("Unauthorized");
+            if (!accessToken) throw new Error("Unauthorized");
 
             // Get settings to find the organization
             const settings = await db.query.settings.findFirst({
@@ -42,6 +44,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               "organization",
               settings.organizationId,
               requiredPermission,
+              accessToken,
               authzCache,
             );
             if (!allowed) throw new Error("Unauthorized");

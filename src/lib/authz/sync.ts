@@ -137,9 +137,11 @@ const circuitBreaker = new CircuitBreaker();
  * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
  *
  * @param tuples - The tuples to write
+ * @param accessToken - JWT access token for authenticating with Warden (required for direct API fallback)
  */
 export async function writeTuples(
   tuples: Array<{ user: string; relation: string; object: string }>,
+  accessToken?: string,
 ): Promise<void> {
   // Skip if authz is disabled
   if (AUTHZ_ENABLED !== "true") {
@@ -198,10 +200,22 @@ export async function writeTuples(
     return;
   }
 
+  if (!accessToken) {
+    logAuthzEvent({
+      type: "tuple_skipped",
+      tupleCount: tuples.length,
+      error: "No access token for Warden API authentication",
+    });
+    return;
+  }
+
   try {
     const response = await fetch(`${AUTHZ_API_URL}/tuples`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: JSON.stringify({ tuples }),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
@@ -235,9 +249,11 @@ export async function writeTuples(
  * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
  *
  * @param tuples - The tuples to delete
+ * @param accessToken - JWT access token for authenticating with Warden (required for direct API fallback)
  */
 export async function deleteTuples(
   tuples: Array<{ user: string; relation: string; object: string }>,
+  accessToken?: string,
 ): Promise<void> {
   // Skip if authz is disabled
   if (AUTHZ_ENABLED !== "true") {
@@ -296,10 +312,22 @@ export async function deleteTuples(
     return;
   }
 
+  if (!accessToken) {
+    logAuthzEvent({
+      type: "tuple_skipped",
+      tupleCount: tuples.length,
+      error: "No access token for Warden API authentication",
+    });
+    return;
+  }
+
   try {
     const response = await fetch(`${AUTHZ_API_URL}/tuples`, {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: JSON.stringify({ tuples }),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
@@ -484,12 +512,15 @@ export async function checkPermissionsBatch(
  * Throws error (fail-closed) when PDP is unavailable.
  *
  * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
+ *
+ * @param accessToken - JWT access token to authenticate with the AuthZ service (Warden)
  */
 export async function checkPermission(
   userId: string,
   resourceType: string,
   resourceId: string,
   permission: string,
+  accessToken: string,
   requestCache?: Map<string, boolean>,
 ): Promise<boolean> {
   // Permissive when disabled
@@ -526,7 +557,10 @@ export async function checkPermission(
     const allowed = await circuitBreaker.execute(async () => {
       const response = await fetch(`${AUTHZ_API_URL}/check`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({
           user: `user:${userId}`,
           relation: permission,

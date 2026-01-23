@@ -33,13 +33,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
-
         const $authzCache = context().get("authzCache");
+        const $accessToken = context().get("accessToken");
 
         sideEffect(
-          [$input, $observer, $db, $authzCache],
-          async ([input, observer, db, authzCache]) => {
+          [$input, $observer, $db, $authzCache, $accessToken],
+          async ([input, observer, db, authzCache, accessToken]) => {
             if (!observer) throw new Error("Unauthorized");
+            if (!accessToken) throw new Error("Unauthorized");
 
             if (scope !== "create") {
               // Get label to find project for AuthZ check
@@ -54,6 +55,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "project",
                 label.projectId,
                 "admin",
+                accessToken,
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");
@@ -65,6 +67,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "project",
                 projectId,
                 "admin",
+                accessToken,
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");

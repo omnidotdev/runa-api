@@ -33,13 +33,14 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $input = fieldArgs.getRaw(["input", propName]);
         const $observer = context().get("observer");
         const $db = context().get("db");
-
         const $authzCache = context().get("authzCache");
+        const $accessToken = context().get("accessToken");
 
         sideEffect(
-          [$input, $observer, $db, $authzCache],
-          async ([input, observer, db, authzCache]) => {
+          [$input, $observer, $db, $authzCache, $accessToken],
+          async ([input, observer, db, authzCache, accessToken]) => {
             if (!observer) throw new Error("Unauthorized");
+            if (!accessToken) throw new Error("Unauthorized");
 
             if (scope !== "create") {
               // input is { taskId, userId } for composite key tables
@@ -57,6 +58,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "project",
                 task.projectId,
                 "member",
+                accessToken,
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");
@@ -78,6 +80,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 "project",
                 task.project.id,
                 "member",
+                accessToken,
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");

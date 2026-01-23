@@ -5594,9 +5594,12 @@ function oldPlan(_, args) {
 const planWrapper = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "taskLabel"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" === "create") {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -5610,7 +5613,7 @@ const planWrapper = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -5626,7 +5629,7 @@ const planWrapper = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5642,9 +5645,11 @@ const planWrapper2 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "assignee"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" !== "create") {
       const {
           taskId
@@ -5660,7 +5665,7 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -5675,7 +5680,7 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.project.id, "member", accessToken, authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -5694,9 +5699,11 @@ const planWrapper3 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "emoji"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" === "create") {
       const postId = input.postId,
         post = await db.query.posts.findFirst({
@@ -5714,7 +5721,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -5735,7 +5742,7 @@ const planWrapper3 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission(observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", emoji.post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5751,9 +5758,11 @@ const planWrapper4 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "label"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" !== "create") {
       const label = await db.query.labels.findFirst({
         where(table, {
@@ -5766,10 +5775,10 @@ const planWrapper4 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5818,9 +5827,11 @@ const planWrapper6 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "post"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" === "create") {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -5834,7 +5845,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -5851,7 +5862,7 @@ const planWrapper6 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5867,9 +5878,11 @@ const planWrapper7 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "column"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" !== "create") {
       const column = await db.query.columns.findFirst({
         where(table, {
@@ -5882,10 +5895,10 @@ const planWrapper7 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission(observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -5915,12 +5928,14 @@ const planWrapper8 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "projectColumn"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -5933,7 +5948,7 @@ const planWrapper8 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission(observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -5979,12 +5994,14 @@ const planWrapper10 = (plan, _, fieldArgs) => {
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6016,7 +6033,7 @@ const planWrapper10 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6033,12 +6050,14 @@ const planWrapper11 = (plan, _, fieldArgs) => {
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("create" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -6057,7 +6076,7 @@ const planWrapper11 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6082,24 +6101,21 @@ ${String(oldPlan12)}`);
 }
 const planWrapper12 = (plan, _, fieldArgs) => {
   const $result = plan(),
-    $input = fieldArgs.getRaw(["input", "project"]);
-  sideEffect([$result, $input], async ([result, input]) => {
-    if (!result) return;
+    $input = fieldArgs.getRaw(["input", "project"]),
+    $accessToken = context().get("accessToken"),
+    $projectId = $result.getStepForKey("result").get("id");
+  sideEffect([$projectId, $input, $accessToken], async ([projectId, input, accessToken]) => {
+    if (!projectId) return;
     if (!isAuthzEnabled()) return;
     const {
-        organizationId
-      } = input,
-      projectId = result?.id;
-    if (!projectId) {
-      console.error("[AuthZ Sync] Project ID not found in result");
-      return;
-    }
+      organizationId
+    } = input;
     try {
       await writeTuples([{
         user: `organization:${organizationId}`,
         relation: "organization",
         object: `project:${projectId}`
-      }]);
+      }], accessToken ?? void 0);
     } catch (error) {
       console.error("[AuthZ Sync] Failed to sync project creation:", error);
     }
@@ -6123,9 +6139,12 @@ const oldPlan13 = (_$root, args) => {
 const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" === "create") {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -6139,7 +6158,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -6155,7 +6174,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6178,9 +6197,11 @@ const planWrapper14 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" !== "create") {
       const {
           taskId
@@ -6196,7 +6217,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -6211,7 +6232,7 @@ const planWrapper14 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.project.id, "member", accessToken, authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -6236,9 +6257,11 @@ const planWrapper15 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" === "create") {
       const postId = input.postId,
         post = await db.query.posts.findFirst({
@@ -6256,7 +6279,7 @@ const planWrapper15 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -6277,7 +6300,7 @@ const planWrapper15 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission(observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", emoji.post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6299,9 +6322,11 @@ const planWrapper16 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" !== "create") {
       const label = await db.query.labels.findFirst({
         where(table, {
@@ -6314,10 +6339,10 @@ const planWrapper16 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6378,9 +6403,11 @@ const planWrapper18 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" === "create") {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -6394,7 +6421,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -6411,7 +6438,7 @@ const planWrapper18 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6433,9 +6460,11 @@ const planWrapper19 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" !== "create") {
       const column = await db.query.columns.findFirst({
         where(table, {
@@ -6448,10 +6477,10 @@ const planWrapper19 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission(observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6487,12 +6516,14 @@ const planWrapper20 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -6505,7 +6536,7 @@ const planWrapper20 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission(observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6567,12 +6598,14 @@ const planWrapper22 = (plan, _, fieldArgs) => {
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6604,7 +6637,7 @@ const planWrapper22 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6627,12 +6660,14 @@ const planWrapper23 = (plan, _, fieldArgs) => {
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("update" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -6651,7 +6686,7 @@ const planWrapper23 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6677,9 +6712,12 @@ const oldPlan24 = (_$root, args) => {
 const planWrapper24 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" === "create") {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -6693,7 +6731,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const {
           taskId
@@ -6709,7 +6747,7 @@ const planWrapper24 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member"))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6732,9 +6770,11 @@ const planWrapper25 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" !== "create") {
       const {
           taskId
@@ -6750,7 +6790,7 @@ const planWrapper25 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -6765,7 +6805,7 @@ const planWrapper25 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.project.id, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.project.id, "member", accessToken, authzCache))) throw Error("Unauthorized");
       if (!(await isWithinLimit({
         organizationId: task.project.organizationId
       }, FEATURE_KEYS.MAX_ASSIGNEES, task.assignees.length, billingBypassOrgIds))) throw Error("Maximum number of assignees reached");
@@ -6790,9 +6830,11 @@ const planWrapper26 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" === "create") {
       const postId = input.postId,
         post = await db.query.posts.findFirst({
@@ -6810,7 +6852,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
           }
         });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const emoji = await db.query.emojis.findFirst({
         where(table, {
@@ -6831,7 +6873,7 @@ const planWrapper26 = (plan, _, fieldArgs) => {
         }
       });
       if (!emoji) throw Error("Emoji not found");
-      if (!(await checkPermission(observer.id, "project", emoji.post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", emoji.post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6853,9 +6895,11 @@ const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" !== "create") {
       const label = await db.query.labels.findFirst({
         where(table, {
@@ -6868,10 +6912,10 @@ const planWrapper27 = (plan, _, fieldArgs) => {
         }
       });
       if (!label) throw Error("Label not found");
-      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -6932,9 +6976,11 @@ const planWrapper29 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" === "create") {
       const taskId = input.taskId,
         task = await db.query.tasks.findFirst({
@@ -6948,7 +6994,7 @@ const planWrapper29 = (plan, _, fieldArgs) => {
           }
         });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const post = await db.query.posts.findFirst({
         where(table, {
@@ -6965,7 +7011,7 @@ const planWrapper29 = (plan, _, fieldArgs) => {
         }
       });
       if (!post) throw Error("Post not found");
-      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6987,9 +7033,11 @@ const planWrapper30 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" !== "create") {
       const column = await db.query.columns.findFirst({
         where(table, {
@@ -7002,10 +7050,10 @@ const planWrapper30 = (plan, _, fieldArgs) => {
         }
       });
       if (!column) throw Error("Column not found");
-      if (!(await checkPermission(observer.id, "project", column.projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -7041,12 +7089,14 @@ const planWrapper31 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $authzCache], async ([input, observer, db, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     } else {
       const projectColumn = await db.query.projectColumns.findFirst({
         where(table, {
@@ -7059,7 +7109,7 @@ const planWrapper31 = (plan, _, fieldArgs) => {
         }
       });
       if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission(observer.id, "organization", projectColumn.organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -7121,12 +7171,14 @@ const planWrapper33 = (plan, _, fieldArgs) => {
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" === "create") {
       const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
       const project = await db.query.projects.findFirst({
         where(table, {
           eq
@@ -7158,7 +7210,7 @@ const planWrapper33 = (plan, _, fieldArgs) => {
         }
       });
       if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.id, "project", task.projectId, "editor", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", task.projectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -7181,12 +7233,14 @@ const planWrapper34 = (plan, _, fieldArgs) => {
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
-    $authzCache = context().get("authzCache");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache], async ([input, observer, db, withPgClient, authzCache]) => {
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
     if ("delete" === "create") {
       const organizationId = input.organizationId;
-      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
       const settings = await db.query.settings.findFirst({
           where(table, {
             eq
@@ -7205,7 +7259,7 @@ const planWrapper34 = (plan, _, fieldArgs) => {
       }, FEATURE_KEYS.MAX_PROJECTS, totalProjects, billingBypassOrgIds))) throw Error("Maximum number of projects reached");
     } else {
       const projectId = input;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", authzCache))) throw Error("Unauthorized");
+      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -7230,25 +7284,19 @@ ${String(oldPlan35)}`);
 }
 const planWrapper35 = (plan, _, fieldArgs) => {
   const $result = plan(),
-    $projectId = fieldArgs.getRaw(["input", "rowId"]),
-    $db = context().get("db");
-  sideEffect([$result, $projectId, $db], async ([result, projectId, db]) => {
-    if (!result) return;
+    $accessToken = context().get("accessToken"),
+    $deleteStep = $result.getStepForKey("result"),
+    $projectId = $deleteStep.get("id"),
+    $organizationId = $deleteStep.get("organization_id");
+  sideEffect([$projectId, $organizationId, $accessToken], async ([projectId, organizationId, accessToken]) => {
+    if (!projectId || !organizationId) return;
     if (!isAuthzEnabled()) return;
-    const project = await db.query.projects.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, projectId);
-      }
-    });
-    if (!project) return;
     try {
       await deleteTuples([{
-        user: `organization:${project.organizationId}`,
+        user: `organization:${organizationId}`,
         relation: "organization",
         object: `project:${projectId}`
-      }]);
+      }], accessToken ?? void 0);
     } catch (error) {
       console.error("[AuthZ Sync] Failed to sync project deletion:", error);
     }

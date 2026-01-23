@@ -25,6 +25,7 @@ const knipConfig: KnipConfig = {
     "@opentelemetry/sdk-logs",
     "@opentelemetry/sdk-node",
     "@opentelemetry/semantic-conventions",
+    "@dataplan/pg",
   ],
   tags: ["-knipignore"],
 };

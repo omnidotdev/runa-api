@@ -22,6 +22,8 @@ declare global {
       db: typeof dbPool;
       /** Request-scoped permission cache to avoid duplicate PDP calls within a single GraphQL request. */
       authzCache: Map<string, boolean>;
+      /** JWT access token for authenticating with downstream services (e.g., Warden AuthZ). */
+      accessToken: string | null;
     }
   }
 }
@@ -42,6 +44,8 @@ export interface GraphQLContext {
   pgSubscriber: PgSubscriber | null;
   /** Request-scoped permission cache to avoid duplicate PDP calls within a single GraphQL request. */
   authzCache: Map<string, boolean>;
+  /** JWT access token for authenticating with downstream services (e.g., Warden AuthZ). */
+  accessToken: string | null;
 }
 
 /**
@@ -55,11 +59,17 @@ const createGraphqlContext = async ({
     GraphQLContext,
     "observer" | "organizations" | "pgSettings" | "pgSubscriber"
   >
-> => ({
-  request,
-  db: dbPool,
-  withPgClient,
-  authzCache: new Map<string, boolean>(),
-});
+> => {
+  const accessToken =
+    request.headers.get("authorization")?.split("Bearer ")[1] ?? null;
+
+  return {
+    request,
+    db: dbPool,
+    withPgClient,
+    authzCache: new Map<string, boolean>(),
+    accessToken,
+  };
+};
 
 export default createGraphqlContext;
