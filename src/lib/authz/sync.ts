@@ -16,6 +16,7 @@ import {
   AUTHZ_ENABLED,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
+  WARDEN_SERVICE_KEY,
 } from "lib/config/env.config";
 
 /** @knipignore - re-exported for plugin compatibility */
@@ -200,11 +201,12 @@ export async function writeTuples(
     return;
   }
 
-  if (!accessToken) {
+  // Use service key for service-to-service auth, or access token as fallback
+  if (!WARDEN_SERVICE_KEY && !accessToken) {
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
-      error: "No access token for Warden API authentication",
+      error: "No service key or access token for Warden API authentication",
     });
     return;
   }
@@ -214,7 +216,9 @@ export async function writeTuples(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+        ...(WARDEN_SERVICE_KEY
+          ? { "X-Service-Key": WARDEN_SERVICE_KEY }
+          : { Authorization: `Bearer ${accessToken}` }),
       },
       body: JSON.stringify({ tuples }),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
@@ -312,11 +316,12 @@ export async function deleteTuples(
     return;
   }
 
-  if (!accessToken) {
+  // Use service key for service-to-service auth, or access token as fallback
+  if (!WARDEN_SERVICE_KEY && !accessToken) {
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
-      error: "No access token for Warden API authentication",
+      error: "No service key or access token for Warden API authentication",
     });
     return;
   }
@@ -326,7 +331,9 @@ export async function deleteTuples(
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+        ...(WARDEN_SERVICE_KEY
+          ? { "X-Service-Key": WARDEN_SERVICE_KEY }
+          : { Authorization: `Bearer ${accessToken}` }),
       },
       body: JSON.stringify({ tuples }),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
