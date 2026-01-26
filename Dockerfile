@@ -17,7 +17,7 @@ ENV NODE_ENV=production
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/package.json ./
-COPY --from=builder /app/src/lib/config ./src/lib/config
+COPY --from=builder /app/src ./src
 
 EXPOSE 4000
 CMD ["bun", "run", "start"]
