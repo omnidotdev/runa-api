@@ -61,11 +61,14 @@ const CIRCUIT_BREAKER_COOLDOWN_MS = 30000;
 type AuthzEventType =
   | "permission_check"
   | "tuple_write"
+  | "tuple_write_failed"
   | "tuple_delete"
+  | "tuple_delete_failed"
   | "tuple_skipped"
   | "circuit_open"
   | "circuit_half_open"
-  | "circuit_closed";
+  | "circuit_closed"
+  | "drift_detected";
 
 interface AuthzEvent {
   type: AuthzEventType;
@@ -77,6 +80,8 @@ interface AuthzEvent {
   durationMs?: number;
   error?: string;
   tupleCount?: number;
+  driftType?: "missing" | "orphaned";
+  severity?: "info" | "warn" | "error";
 }
 
 /**
@@ -187,20 +192,23 @@ export async function writeTuples(
         logAuthzEvent({
           type: "tuple_write",
           tupleCount: tuples.length,
+          severity: "info",
         });
         return { success: true };
       }
       // Fall through to direct API on Vortex failure
       logAuthzEvent({
-        type: "tuple_write",
+        type: "tuple_write_failed",
         tupleCount: tuples.length,
         error: `Vortex returned ${response.status}, falling back to direct API`,
+        severity: "warn",
       });
     } catch (error) {
       logAuthzEvent({
-        type: "tuple_write",
+        type: "tuple_write_failed",
         tupleCount: tuples.length,
         error: `Vortex failed: ${error instanceof Error ? error.message : String(error)}, falling back to direct API`,
+        severity: "warn",
       });
     }
   }
@@ -209,9 +217,10 @@ export async function writeTuples(
   if (!AUTHZ_API_URL) {
     const errorMsg = "Neither Vortex nor Warden API configured";
     logAuthzEvent({
-      type: "tuple_skipped",
+      type: "tuple_write_failed",
       tupleCount: tuples.length,
       error: errorMsg,
+      severity: "error",
     });
     return { success: false, error: errorMsg };
   }
@@ -221,9 +230,10 @@ export async function writeTuples(
     const errorMsg =
       "No service key or access token for Warden API authentication";
     logAuthzEvent({
-      type: "tuple_skipped",
+      type: "tuple_write_failed",
       tupleCount: tuples.length,
       error: errorMsg,
+      severity: "error",
     });
     return { success: false, error: errorMsg };
   }
@@ -245,23 +255,26 @@ export async function writeTuples(
       logAuthzEvent({
         type: "tuple_write",
         tupleCount: tuples.length,
+        severity: "info",
       });
       return { success: true };
     }
 
     const errorMsg = `Warden API returned ${response.status}`;
     logAuthzEvent({
-      type: "tuple_write",
+      type: "tuple_write_failed",
       tupleCount: tuples.length,
       error: errorMsg,
+      severity: "error",
     });
     return { success: false, error: errorMsg };
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     logAuthzEvent({
-      type: "tuple_write",
+      type: "tuple_write_failed",
       tupleCount: tuples.length,
       error: errorMsg,
+      severity: "error",
     });
     return { success: false, error: errorMsg };
   }
@@ -311,20 +324,23 @@ export async function deleteTuples(
         logAuthzEvent({
           type: "tuple_delete",
           tupleCount: tuples.length,
+          severity: "info",
         });
         return { success: true };
       }
       // Fall through to direct API on Vortex failure
       logAuthzEvent({
-        type: "tuple_delete",
+        type: "tuple_delete_failed",
         tupleCount: tuples.length,
         error: `Vortex returned ${response.status}, falling back to direct API`,
+        severity: "warn",
       });
     } catch (error) {
       logAuthzEvent({
-        type: "tuple_delete",
+        type: "tuple_delete_failed",
         tupleCount: tuples.length,
         error: `Vortex failed: ${error instanceof Error ? error.message : String(error)}, falling back to direct API`,
+        severity: "warn",
       });
     }
   }
@@ -333,9 +349,10 @@ export async function deleteTuples(
   if (!AUTHZ_API_URL) {
     const errorMsg = "Neither Vortex nor Warden API configured";
     logAuthzEvent({
-      type: "tuple_skipped",
+      type: "tuple_delete_failed",
       tupleCount: tuples.length,
       error: errorMsg,
+      severity: "error",
     });
     return { success: false, error: errorMsg };
   }
@@ -345,9 +362,10 @@ export async function deleteTuples(
     const errorMsg =
       "No service key or access token for Warden API authentication";
     logAuthzEvent({
-      type: "tuple_skipped",
+      type: "tuple_delete_failed",
       tupleCount: tuples.length,
       error: errorMsg,
+      severity: "error",
     });
     return { success: false, error: errorMsg };
   }
@@ -369,23 +387,26 @@ export async function deleteTuples(
       logAuthzEvent({
         type: "tuple_delete",
         tupleCount: tuples.length,
+        severity: "info",
       });
       return { success: true };
     }
 
     const errorMsg = `Warden API returned ${response.status}`;
     logAuthzEvent({
-      type: "tuple_delete",
+      type: "tuple_delete_failed",
       tupleCount: tuples.length,
       error: errorMsg,
+      severity: "error",
     });
     return { success: false, error: errorMsg };
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     logAuthzEvent({
-      type: "tuple_delete",
+      type: "tuple_delete_failed",
       tupleCount: tuples.length,
       error: errorMsg,
+      severity: "error",
     });
     return { success: false, error: errorMsg };
   }
