@@ -450,7 +450,10 @@ export async function checkPermissionsBatch(
     const batchResults = await circuitBreaker.execute(async () => {
       const response = await fetch(`${AUTHZ_API_URL}/check/batch`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(WARDEN_SERVICE_KEY && { "X-Service-Key": WARDEN_SERVICE_KEY }),
+        },
         body: JSON.stringify({
           checks: uncachedChecks.map(({ check }) => ({
             user: `user:${check.userId}`,
@@ -566,7 +569,9 @@ export async function checkPermission(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          ...(WARDEN_SERVICE_KEY
+            ? { "X-Service-Key": WARDEN_SERVICE_KEY }
+            : { Authorization: `Bearer ${accessToken}` }),
         },
         body: JSON.stringify({
           user: `user:${userId}`,
