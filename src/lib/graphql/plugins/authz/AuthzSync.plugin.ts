@@ -18,7 +18,12 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
+import {
+  deleteTuples,
+  isAuthzEnabled,
+  isTransactionalSyncMode,
+  writeTuples,
+} from "lib/authz";
 
 import type { PgDeleteSingleStep, PgInsertSingleStep } from "@dataplan/pg";
 import type { InsertProject } from "lib/db/schema";
@@ -37,7 +42,13 @@ import type { PlanWrapperFn } from "postgraphile/utils";
  */
 const syncCreateProject = (): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect, isAuthzEnabled, writeTuples): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      isAuthzEnabled,
+      isTransactionalSyncMode,
+      writeTuples,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
         const $input = fieldArgs.getRaw(["input", "project"]);
@@ -59,38 +70,35 @@ const syncCreateProject = (): PlanWrapperFn =>
 
             const { organizationId } = input as InsertProject;
 
-            try {
-              // Use org ID as workspace ID (Runa has no workspace concept)
-              // Tuples are idempotent, so org→workspace is safe to write repeatedly
-              await writeTuples(
-                [
-                  // Ensure org → workspace link exists
-                  {
-                    user: `organization:${organizationId}`,
-                    relation: "organization",
-                    object: `workspace:${organizationId}`,
-                  },
-                  // Create workspace → project link
-                  {
-                    user: `workspace:${organizationId}`,
-                    relation: "workspace",
-                    object: `project:${projectId}`,
-                  },
-                ],
-                accessToken ?? undefined,
-              );
-            } catch (error) {
-              console.error(
-                "[AuthZ Sync] Failed to sync project creation:",
-                error,
-              );
+            // Use org ID as workspace ID (Runa has no workspace concept)
+            // Tuples are idempotent, so org→workspace is safe to write repeatedly
+            const result = await writeTuples(
+              [
+                // Ensure org → workspace link exists
+                {
+                  user: `organization:${organizationId}`,
+                  relation: "organization",
+                  object: `workspace:${organizationId}`,
+                },
+                // Create workspace → project link
+                {
+                  user: `workspace:${organizationId}`,
+                  relation: "workspace",
+                  object: `project:${projectId}`,
+                },
+              ],
+              accessToken ?? undefined,
+            );
+
+            if (!result.success && isTransactionalSyncMode()) {
+              throw new Error(`AuthZ sync failed: ${result.error}`);
             }
           },
         );
 
         return $result;
       },
-    [context, sideEffect, isAuthzEnabled, writeTuples],
+    [context, sideEffect, isAuthzEnabled, isTransactionalSyncMode, writeTuples],
   );
 
 /**
@@ -103,7 +111,13 @@ const syncCreateProject = (): PlanWrapperFn =>
  */
 const syncDeleteProject = (): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect, isAuthzEnabled, deleteTuples): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      isAuthzEnabled,
+      isTransactionalSyncMode,
+      deleteTuples,
+    ): PlanWrapperFn =>
       (plan, _, _fieldArgs) => {
         const $result = plan();
         const $accessToken = context().get("accessToken");
@@ -125,30 +139,33 @@ const syncDeleteProject = (): PlanWrapperFn =>
             if (!projectId || !organizationId) return;
             if (!isAuthzEnabled()) return;
 
-            try {
-              // Delete workspace → project link (org→workspace stays for other projects)
-              await deleteTuples(
-                [
-                  {
-                    user: `workspace:${organizationId}`,
-                    relation: "workspace",
-                    object: `project:${projectId}`,
-                  },
-                ],
-                accessToken ?? undefined,
-              );
-            } catch (error) {
-              console.error(
-                "[AuthZ Sync] Failed to sync project deletion:",
-                error,
-              );
+            // Delete workspace → project link (org→workspace stays for other projects)
+            const result = await deleteTuples(
+              [
+                {
+                  user: `workspace:${organizationId}`,
+                  relation: "workspace",
+                  object: `project:${projectId}`,
+                },
+              ],
+              accessToken ?? undefined,
+            );
+
+            if (!result.success && isTransactionalSyncMode()) {
+              throw new Error(`AuthZ sync failed: ${result.error}`);
             }
           },
         );
 
         return $result;
       },
-    [context, sideEffect, isAuthzEnabled, deleteTuples],
+    [
+      context,
+      sideEffect,
+      isAuthzEnabled,
+      isTransactionalSyncMode,
+      deleteTuples,
+    ],
   );
 
 /**

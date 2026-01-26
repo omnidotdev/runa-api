@@ -14,10 +14,15 @@
 import {
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
+  AUTHZ_SYNC_MODE,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
   WARDEN_SERVICE_KEY,
 } from "lib/config/env.config";
+
+export type TupleSyncResult =
+  | { success: true }
+  | { success: false; error: string };
 
 /** @knipignore - re-exported for plugin compatibility */
 export {
@@ -37,6 +42,14 @@ const REQUEST_TIMEOUT_MS = 5000;
  */
 export function isAuthzEnabled(): boolean {
   return AUTHZ_ENABLED === "true" && !!AUTHZ_API_URL;
+}
+
+/**
+ * Check if transactional sync mode is enabled.
+ * When true, mutations should fail if AuthZ tuple sync fails.
+ */
+export function isTransactionalSyncMode(): boolean {
+  return AUTHZ_SYNC_MODE === "transactional";
 }
 
 /** Circuit breaker failure threshold before opening */
@@ -137,16 +150,17 @@ const circuitBreaker = new CircuitBreaker();
  *
  * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
  *
- * @param tuples - The tuples to write
- * @param accessToken - JWT access token for authenticating with Warden (required for direct API fallback)
+ * @param tuples - The tuples to write.
+ * @param accessToken - JWT access token for authenticating with Warden (required for direct API fallback).
+ * @returns Result indicating success or failure with error message.
  */
 export async function writeTuples(
   tuples: Array<{ user: string; relation: string; object: string }>,
   accessToken?: string,
-): Promise<void> {
+): Promise<TupleSyncResult> {
   // Skip if authz is disabled
   if (AUTHZ_ENABLED !== "true") {
-    return;
+    return { success: true };
   }
 
   // Try Vortex first if configured (uses dedicated /webhooks/authz endpoint)
@@ -174,7 +188,7 @@ export async function writeTuples(
           type: "tuple_write",
           tupleCount: tuples.length,
         });
-        return;
+        return { success: true };
       }
       // Fall through to direct API on Vortex failure
       logAuthzEvent({
@@ -193,22 +207,25 @@ export async function writeTuples(
 
   // Fallback: Direct Warden API
   if (!AUTHZ_API_URL) {
+    const errorMsg = "Neither Vortex nor Warden API configured";
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
-      error: "Neither Vortex nor Warden API configured",
+      error: errorMsg,
     });
-    return;
+    return { success: false, error: errorMsg };
   }
 
   // Use service key for service-to-service auth, or access token as fallback
   if (!WARDEN_SERVICE_KEY && !accessToken) {
+    const errorMsg =
+      "No service key or access token for Warden API authentication";
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
-      error: "No service key or access token for Warden API authentication",
+      error: errorMsg,
     });
-    return;
+    return { success: false, error: errorMsg };
   }
 
   try {
@@ -229,19 +246,24 @@ export async function writeTuples(
         type: "tuple_write",
         tupleCount: tuples.length,
       });
-    } else {
-      logAuthzEvent({
-        type: "tuple_write",
-        tupleCount: tuples.length,
-        error: `Warden API returned ${response.status}`,
-      });
+      return { success: true };
     }
-  } catch (error) {
+
+    const errorMsg = `Warden API returned ${response.status}`;
     logAuthzEvent({
       type: "tuple_write",
       tupleCount: tuples.length,
-      error: error instanceof Error ? error.message : String(error),
+      error: errorMsg,
     });
+    return { success: false, error: errorMsg };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    logAuthzEvent({
+      type: "tuple_write",
+      tupleCount: tuples.length,
+      error: errorMsg,
+    });
+    return { success: false, error: errorMsg };
   }
 }
 
@@ -252,16 +274,17 @@ export async function writeTuples(
  *
  * Reads AUTHZ_ENABLED and AUTHZ_API_URL from environment at runtime.
  *
- * @param tuples - The tuples to delete
- * @param accessToken - JWT access token for authenticating with Warden (required for direct API fallback)
+ * @param tuples - The tuples to delete.
+ * @param accessToken - JWT access token for authenticating with Warden (required for direct API fallback).
+ * @returns Result indicating success or failure with error message.
  */
 export async function deleteTuples(
   tuples: Array<{ user: string; relation: string; object: string }>,
   accessToken?: string,
-): Promise<void> {
+): Promise<TupleSyncResult> {
   // Skip if authz is disabled
   if (AUTHZ_ENABLED !== "true") {
-    return;
+    return { success: true };
   }
 
   // Try Vortex first if configured (uses dedicated /webhooks/authz endpoint)
@@ -289,7 +312,7 @@ export async function deleteTuples(
           type: "tuple_delete",
           tupleCount: tuples.length,
         });
-        return;
+        return { success: true };
       }
       // Fall through to direct API on Vortex failure
       logAuthzEvent({
@@ -308,22 +331,25 @@ export async function deleteTuples(
 
   // Fallback: Direct Warden API
   if (!AUTHZ_API_URL) {
+    const errorMsg = "Neither Vortex nor Warden API configured";
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
-      error: "Neither Vortex nor Warden API configured",
+      error: errorMsg,
     });
-    return;
+    return { success: false, error: errorMsg };
   }
 
   // Use service key for service-to-service auth, or access token as fallback
   if (!WARDEN_SERVICE_KEY && !accessToken) {
+    const errorMsg =
+      "No service key or access token for Warden API authentication";
     logAuthzEvent({
       type: "tuple_skipped",
       tupleCount: tuples.length,
-      error: "No service key or access token for Warden API authentication",
+      error: errorMsg,
     });
-    return;
+    return { success: false, error: errorMsg };
   }
 
   try {
@@ -344,19 +370,24 @@ export async function deleteTuples(
         type: "tuple_delete",
         tupleCount: tuples.length,
       });
-    } else {
-      logAuthzEvent({
-        type: "tuple_delete",
-        tupleCount: tuples.length,
-        error: `Warden API returned ${response.status}`,
-      });
+      return { success: true };
     }
-  } catch (error) {
+
+    const errorMsg = `Warden API returned ${response.status}`;
     logAuthzEvent({
       type: "tuple_delete",
       tupleCount: tuples.length,
-      error: error instanceof Error ? error.message : String(error),
+      error: errorMsg,
     });
+    return { success: false, error: errorMsg };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    logAuthzEvent({
+      type: "tuple_delete",
+      tupleCount: tuples.length,
+      error: errorMsg,
+    });
+    return { success: false, error: errorMsg };
   }
 }
 

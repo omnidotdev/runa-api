@@ -19,6 +19,7 @@ export const {
   // AuthZ - feature flag and PDP URL for permission checks
   AUTHZ_ENABLED,
   AUTHZ_API_URL,
+  AUTHZ_SYNC_MODE,
   // IDP webhook
   IDP_WEBHOOK_SECRET,
   // Vortex workflow engine (for durable authz tuple sync)
