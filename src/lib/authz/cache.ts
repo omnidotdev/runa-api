@@ -66,7 +66,6 @@ export function setCachedPermission(
  * - `user123:organization:` - All organization permissions for user
  * - `user123:` - All permissions for user
  * - `:organization:org456:` - All permissions for organization
- * @knipignore
  */
 export function invalidatePermissionCache(pattern: string): void {
   for (const key of cache.keys()) {

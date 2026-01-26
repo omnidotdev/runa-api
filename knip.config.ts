@@ -14,6 +14,8 @@ const knipConfig: KnipConfig = {
     "src/lib/config/env.config.ts",
     // Instrumentation loaded via --import flag at runtime
     "src/instrumentation.ts",
+    // Drizzle schema exports (relations, Select/Insert types) for ORM use
+    "src/lib/db/schema/**",
   ],
   ignoreDependencies: [
     "drizzle-kit",
