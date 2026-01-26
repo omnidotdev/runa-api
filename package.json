@@ -25,6 +25,7 @@
     "db:up": "bun --env-file .env.local drizzle-kit up --config src/lib/config/drizzle.config.ts",
     "authz:backfill": "bun run --env-file .env.local src/scripts/authz/backfillProjectTuples.ts",
     "authz:detect-drift": "bun run --env-file .env.local src/scripts/authz/detectDrift.ts",
+    "authz:reconcile": "bun run --env-file .env.local src/scripts/authz/reconcile.ts",
     "graphql:generate": "GRAPHILE_ENV=development bun run --env-file .env.local src/scripts/generateGraphqlSchema.ts",
     "prepare": "husky"
   },
