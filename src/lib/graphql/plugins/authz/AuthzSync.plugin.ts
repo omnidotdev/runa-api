@@ -8,8 +8,9 @@
  * member tuples directly to the AuthZ store. This plugin only handles
  * Runa-specific resources (projects).
  *
- * Authorization model:
- * - organization → project (direct, no intermediate workspace)
+ * Authorization model (deployed OpenFGA schema):
+ * - organization → workspace (org ID used as workspace ID since Runa has no workspaces)
+ * - workspace → project
  * - Settings table is just app preferences, no auth tuples needed
  */
 
@@ -26,7 +27,8 @@ import type { PlanWrapperFn } from "postgraphile/utils";
 
 /**
  * Sync project creation to authz store.
- * Creates organization → project tuple for permission inheritance.
+ * Creates workspace → project tuple for permission inheritance.
+ * Also ensures org → workspace tuple exists (idempotent).
  *
  * Uses Grafast step methods to extract the project ID during planning phase:
  * - PostGraphile mutations return ObjectStep<{ result: PgInsertSingleStep }>
@@ -58,11 +60,20 @@ const syncCreateProject = (): PlanWrapperFn =>
             const { organizationId } = input as InsertProject;
 
             try {
+              // Use org ID as workspace ID (Runa has no workspace concept)
+              // Tuples are idempotent, so org→workspace is safe to write repeatedly
               await writeTuples(
                 [
+                  // Ensure org → workspace link exists
                   {
                     user: `organization:${organizationId}`,
                     relation: "organization",
+                    object: `workspace:${organizationId}`,
+                  },
+                  // Create workspace → project link
+                  {
+                    user: `workspace:${organizationId}`,
+                    relation: "workspace",
                     object: `project:${projectId}`,
                   },
                 ],
@@ -84,6 +95,7 @@ const syncCreateProject = (): PlanWrapperFn =>
 
 /**
  * Sync project deletion to authz store.
+ * Removes workspace → project tuple.
  *
  * Uses Grafast step methods to extract data from the delete result:
  * - PgDeleteSingleStep uses PostgreSQL's DELETE ... RETURNING
@@ -92,7 +104,7 @@ const syncCreateProject = (): PlanWrapperFn =>
 const syncDeleteProject = (): PlanWrapperFn =>
   EXPORTABLE(
     (context, sideEffect, isAuthzEnabled, deleteTuples): PlanWrapperFn =>
-      (plan, _, fieldArgs) => {
+      (plan, _, _fieldArgs) => {
         const $result = plan();
         const $accessToken = context().get("accessToken");
 
@@ -114,11 +126,12 @@ const syncDeleteProject = (): PlanWrapperFn =>
             if (!isAuthzEnabled()) return;
 
             try {
+              // Delete workspace → project link (org→workspace stays for other projects)
               await deleteTuples(
                 [
                   {
-                    user: `organization:${organizationId}`,
-                    relation: "organization",
+                    user: `workspace:${organizationId}`,
+                    relation: "workspace",
                     object: `project:${projectId}`,
                   },
                 ],

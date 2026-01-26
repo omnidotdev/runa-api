@@ -1,15 +1,20 @@
 /**
- * Backfill organization-project tuples into Warden.
+ * Backfill workspace-project tuples into Warden.
  *
- * Creates tuples: organization:{orgId} → organization → project:{projectId}
+ * Creates tuples:
+ * - organization:{orgId} → organization → workspace:{orgId}
+ * - workspace:{orgId} → workspace → project:{projectId}
+ *
+ * Note: Runa has no workspace concept, so we use orgId as workspaceId.
+ * This matches the deployed OpenFGA model which uses workspace for projects.
  *
  * This is needed because projects created before authz sync was implemented
- * (Jan 22, 2026) don't have their organization relationships in OpenFGA.
+ * (Jan 22, 2026) don't have their relationships in OpenFGA.
  */
 
 import { drizzle } from "drizzle-orm/node-postgres";
 
-import { writeTuples, isAuthzEnabled } from "lib/authz";
+import { isAuthzEnabled, writeTuples } from "lib/authz";
 import * as schema from "lib/db/schema";
 
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -40,38 +45,72 @@ const backfillProjectTuples = async () => {
     .from(schema.projects);
 
   if (projects.length === 0) {
+    // biome-ignore lint/suspicious/noConsole: script logging
     console.log("No projects found to backfill");
     return;
   }
 
-  // Build tuples for organization → project relationships
-  const tuples = projects.map((project) => ({
-    user: `organization:${project.organizationId}`,
+  // Collect unique org IDs
+  const orgIds = [...new Set(projects.map((p) => p.organizationId))];
+
+  // Build org → workspace tuples (one per org)
+  const orgWorkspaceTuples = orgIds.map((orgId) => ({
+    user: `organization:${orgId}`,
     relation: "organization",
+    object: `workspace:${orgId}`,
+  }));
+
+  // Build workspace → project tuples
+  const workspaceProjectTuples = projects.map((project) => ({
+    user: `workspace:${project.organizationId}`,
+    relation: "workspace",
     object: `project:${project.id}`,
   }));
 
-  console.log(`Found ${projects.length} projects to backfill`);
+  // biome-ignore lint/suspicious/noConsole: script logging
+  console.log(
+    `Found ${projects.length} projects across ${orgIds.length} organizations`,
+  );
 
-  // Write tuples in batches
-  for (let i = 0; i < tuples.length; i += BATCH_SIZE) {
-    const batch = tuples.slice(i, i + BATCH_SIZE);
+  // Write org → workspace tuples first
+  // biome-ignore lint/suspicious/noConsole: script logging
+  console.log(`Writing ${orgWorkspaceTuples.length} org→workspace tuples...`);
+  for (let i = 0; i < orgWorkspaceTuples.length; i += BATCH_SIZE) {
+    const batch = orgWorkspaceTuples.slice(i, i + BATCH_SIZE);
     try {
       await writeTuples(batch);
+      // biome-ignore lint/suspicious/noConsole: script logging
       console.log(
-        `Wrote batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(tuples.length / BATCH_SIZE)} (${batch.length} tuples)`,
+        `  Batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(orgWorkspaceTuples.length / BATCH_SIZE)} (${batch.length} tuples)`,
       );
     } catch (error) {
-      console.error(
-        `Failed to write batch ${Math.floor(i / BATCH_SIZE) + 1}:`,
-        error,
-      );
-      // Continue with next batch - writeTuples is idempotent
+      // biome-ignore lint/suspicious/noConsole: script logging
+      console.error(`  Failed batch ${Math.floor(i / BATCH_SIZE) + 1}:`, error);
     }
   }
 
+  // Write workspace → project tuples
+  // biome-ignore lint/suspicious/noConsole: script logging
   console.log(
-    `Backfilled ${tuples.length} organization-project tuples from ${projects.length} projects`,
+    `Writing ${workspaceProjectTuples.length} workspace→project tuples...`,
+  );
+  for (let i = 0; i < workspaceProjectTuples.length; i += BATCH_SIZE) {
+    const batch = workspaceProjectTuples.slice(i, i + BATCH_SIZE);
+    try {
+      await writeTuples(batch);
+      // biome-ignore lint/suspicious/noConsole: script logging
+      console.log(
+        `  Batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(workspaceProjectTuples.length / BATCH_SIZE)} (${batch.length} tuples)`,
+      );
+    } catch (error) {
+      // biome-ignore lint/suspicious/noConsole: script logging
+      console.error(`  Failed batch ${Math.floor(i / BATCH_SIZE) + 1}:`, error);
+    }
+  }
+
+  // biome-ignore lint/suspicious/noConsole: script logging
+  console.log(
+    `Backfilled ${orgWorkspaceTuples.length + workspaceProjectTuples.length} tuples from ${projects.length} projects`,
   );
 };
 
