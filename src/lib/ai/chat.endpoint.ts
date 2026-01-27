@@ -13,7 +13,7 @@ import {
   loadSession,
   saveSessionMessages,
 } from "./session/manager";
-import { createQueryTools } from "./tools/server";
+import { createQueryTools, createWriteTools } from "./tools/server";
 
 import type { ModelMessage, StreamChunk } from "@tanstack/ai";
 
@@ -116,6 +116,22 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         organizationId,
       });
 
+      const {
+        createTask,
+        updateTask,
+        moveTask,
+        assignTask,
+        addLabel,
+        removeLabel,
+        addComment,
+      } = createWriteTools({
+        projectId: body.projectId,
+        organizationId,
+        userId: auth.user.id,
+        accessToken: auth.accessToken,
+        sessionId: session.id,
+      });
+
       // Create adapter
       const adapter = createAdapter(agentConfig.provider, agentConfig.model);
 
@@ -125,7 +141,18 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         adapter,
         // biome-ignore lint/suspicious/noExplicitAny: dynamic adapter requires cast
         messages: allMessages as any,
-        tools: [queryTasks, queryProject, getTask],
+        tools: [
+          queryTasks,
+          queryProject,
+          getTask,
+          createTask,
+          updateTask,
+          moveTask,
+          assignTask,
+          addLabel,
+          removeLabel,
+          addComment,
+        ],
         systemPrompts: [systemPrompt],
         agentLoopStrategy: maxIterations(agentConfig.maxIterations),
       });

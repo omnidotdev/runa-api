@@ -7,7 +7,8 @@ import { z } from "zod";
  * These define the schema (input/output) for each tool.
  * Server implementations are in ./server/.
  *
- * Phase 1: Read-only tools only.
+ * Phase 1: Read-only tools.
+ * Phase 2: Write tools (create, update, move, assign, label, comment).
  */
 
 // ─────────────────────────────────────────────
@@ -170,5 +171,226 @@ export const getTaskDef = toolDefinition({
         updatedAt: z.string(),
       })
       .nullable(),
+  }),
+});
+
+// ─────────────────────────────────────────────
+// Write Tools
+// ─────────────────────────────────────────────
+
+/**
+ * Create a new task in the project.
+ */
+export const createTaskDef = toolDefinition({
+  name: "createTask",
+  description:
+    "Create a new task in the current project. Requires a title and the column (status) to place it in. Optionally set priority, description, and due date.",
+  inputSchema: z.object({
+    title: z.string().describe("Task title"),
+    columnId: z.string().describe("Column ID to place the task in"),
+    description: z
+      .string()
+      .optional()
+      .describe("Task description (defaults to empty)"),
+    priority: z
+      .enum(["none", "low", "medium", "high", "urgent"])
+      .optional()
+      .describe("Priority level (defaults to medium)"),
+    dueDate: z
+      .string()
+      .datetime()
+      .optional()
+      .describe("Due date in ISO 8601 format (e.g., 2025-03-15T00:00:00Z)"),
+  }),
+  outputSchema: z.object({
+    task: z.object({
+      id: z.string(),
+      number: z.number().nullable(),
+      title: z.string(),
+      columnId: z.string(),
+      columnTitle: z.string(),
+      priority: z.string(),
+    }),
+  }),
+});
+
+/**
+ * Update an existing task's fields.
+ */
+export const updateTaskDef = toolDefinition({
+  name: "updateTask",
+  description:
+    "Update a task's title, description, priority, or due date. Provide the task ID or task number and the fields to change. Set dueDate to null to clear it.",
+  inputSchema: z.object({
+    taskId: z
+      .string()
+      .optional()
+      .describe("Task UUID (use if you have the ID)"),
+    taskNumber: z
+      .number()
+      .optional()
+      .describe("Task number (use when user refers to T-42 or #42)"),
+    title: z.string().optional().describe("New task title"),
+    description: z.string().optional().describe("New task description"),
+    priority: z
+      .enum(["none", "low", "medium", "high", "urgent"])
+      .optional()
+      .describe("New priority level"),
+    dueDate: z
+      .string()
+      .datetime()
+      .nullable()
+      .optional()
+      .describe(
+        "New due date in ISO 8601 format, or null to clear the due date",
+      ),
+  }),
+  outputSchema: z.object({
+    task: z.object({
+      id: z.string(),
+      number: z.number().nullable(),
+      title: z.string(),
+      priority: z.string(),
+      dueDate: z.string().nullable(),
+    }),
+  }),
+});
+
+/**
+ * Move a task to a different column (status).
+ */
+export const moveTaskDef = toolDefinition({
+  name: "moveTask",
+  description:
+    "Move a task to a different column (status) on the board. Provide the task and the target column.",
+  inputSchema: z.object({
+    taskId: z
+      .string()
+      .optional()
+      .describe("Task UUID (use if you have the ID)"),
+    taskNumber: z
+      .number()
+      .optional()
+      .describe("Task number (use when user refers to T-42 or #42)"),
+    columnId: z.string().describe("Target column ID to move the task to"),
+  }),
+  outputSchema: z.object({
+    task: z.object({
+      id: z.string(),
+      number: z.number().nullable(),
+      title: z.string(),
+    }),
+    fromColumn: z.string(),
+    toColumn: z.string(),
+  }),
+});
+
+/**
+ * Add or remove an assignee on a task.
+ */
+export const assignTaskDef = toolDefinition({
+  name: "assignTask",
+  description:
+    "Add or remove an assignee on a task. Use action 'add' to assign someone, 'remove' to unassign.",
+  inputSchema: z.object({
+    taskId: z
+      .string()
+      .optional()
+      .describe("Task UUID (use if you have the ID)"),
+    taskNumber: z
+      .number()
+      .optional()
+      .describe("Task number (use when user refers to T-42 or #42)"),
+    userId: z.string().describe("User ID to assign or unassign"),
+    action: z
+      .enum(["add", "remove"])
+      .describe("Whether to add or remove the assignee"),
+  }),
+  outputSchema: z.object({
+    taskId: z.string(),
+    taskNumber: z.number().nullable(),
+    taskTitle: z.string(),
+    userId: z.string(),
+    userName: z.string(),
+    action: z.enum(["add", "remove"]),
+  }),
+});
+
+/**
+ * Add a label to a task.
+ */
+export const addLabelDef = toolDefinition({
+  name: "addLabel",
+  description:
+    "Add a label to a task. The label must already exist in the project or organization.",
+  inputSchema: z.object({
+    taskId: z
+      .string()
+      .optional()
+      .describe("Task UUID (use if you have the ID)"),
+    taskNumber: z
+      .number()
+      .optional()
+      .describe("Task number (use when user refers to T-42 or #42)"),
+    labelId: z.string().describe("Label ID to add"),
+  }),
+  outputSchema: z.object({
+    taskId: z.string(),
+    taskNumber: z.number().nullable(),
+    taskTitle: z.string(),
+    labelId: z.string(),
+    labelName: z.string(),
+  }),
+});
+
+/**
+ * Remove a label from a task.
+ */
+export const removeLabelDef = toolDefinition({
+  name: "removeLabel",
+  description: "Remove a label from a task.",
+  inputSchema: z.object({
+    taskId: z
+      .string()
+      .optional()
+      .describe("Task UUID (use if you have the ID)"),
+    taskNumber: z
+      .number()
+      .optional()
+      .describe("Task number (use when user refers to T-42 or #42)"),
+    labelId: z.string().describe("Label ID to remove"),
+  }),
+  outputSchema: z.object({
+    taskId: z.string(),
+    taskNumber: z.number().nullable(),
+    taskTitle: z.string(),
+    labelId: z.string(),
+    labelName: z.string(),
+  }),
+});
+
+/**
+ * Add a comment to a task.
+ */
+export const addCommentDef = toolDefinition({
+  name: "addComment",
+  description:
+    "Add a comment to a task. The comment will be attributed to the current user.",
+  inputSchema: z.object({
+    taskId: z
+      .string()
+      .optional()
+      .describe("Task UUID (use if you have the ID)"),
+    taskNumber: z
+      .number()
+      .optional()
+      .describe("Task number (use when user refers to T-42 or #42)"),
+    content: z.string().describe("Comment text"),
+  }),
+  outputSchema: z.object({
+    commentId: z.string(),
+    taskId: z.string(),
+    taskNumber: z.number().nullable(),
+    taskTitle: z.string(),
   }),
 });
