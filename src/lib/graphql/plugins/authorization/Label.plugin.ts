@@ -13,9 +13,10 @@ import type { MutationScope } from "./types";
 /**
  * Validate label permissions via PDP.
  *
- * - Create: Admin permission on project required (with tier limits)
- * - Update: Admin permission on project required
- * - Delete: Admin permission on project required
+ * Labels can be scoped to either a project or an organization.
+ * - Project-scoped: Admin permission on project required
+ * - Org-scoped: Admin permission on organization required
+ * - Create: Also validates tier limits
  */
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
@@ -43,50 +44,84 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             if (!accessToken) throw new Error("Unauthorized");
 
             if (scope !== "create") {
-              // Get label to find project for AuthZ check
+              // Get label to find scope for AuthZ check
               const label = await db.query.labels.findFirst({
                 where: (table, { eq }) => eq(table.id, input),
-                columns: { projectId: true },
+                columns: { projectId: true, organizationId: true },
               });
               if (!label) throw new Error("Label not found");
 
-              const allowed = await checkPermission(
-                observer.id,
-                "project",
-                label.projectId,
-                "admin",
-                accessToken,
-                authzCache,
-              );
-              if (!allowed) throw new Error("Unauthorized");
+              if (label.projectId) {
+                // Project-scoped label
+                const allowed = await checkPermission(
+                  observer.id,
+                  "project",
+                  label.projectId,
+                  "admin",
+                  accessToken,
+                  authzCache,
+                );
+                if (!allowed) throw new Error("Unauthorized");
+              } else if (label.organizationId) {
+                // Org-scoped label
+                const allowed = await checkPermission(
+                  observer.id,
+                  "organization",
+                  label.organizationId,
+                  "admin",
+                  accessToken,
+                  authzCache,
+                );
+                if (!allowed) throw new Error("Unauthorized");
+              } else {
+                throw new Error("Label has no scope");
+              }
             } else {
-              const projectId = (input as InsertLabel).projectId;
+              const { projectId, organizationId } = input as InsertLabel;
 
-              const allowed = await checkPermission(
-                observer.id,
-                "project",
-                projectId,
-                "admin",
-                accessToken,
-                authzCache,
-              );
-              if (!allowed) throw new Error("Unauthorized");
+              if (projectId) {
+                // Project-scoped label
+                const allowed = await checkPermission(
+                  observer.id,
+                  "project",
+                  projectId,
+                  "admin",
+                  accessToken,
+                  authzCache,
+                );
+                if (!allowed) throw new Error("Unauthorized");
 
-              // Get project with labels for tier limit check
-              const project = await db.query.projects.findFirst({
-                where: (table, { eq }) => eq(table.id, projectId),
-                with: { labels: true },
-              });
-              if (!project) throw new Error("Project not found");
+                // Get project with labels for tier limit check
+                const project = await db.query.projects.findFirst({
+                  where: (table, { eq }) => eq(table.id, projectId),
+                  with: { labels: true },
+                });
+                if (!project) throw new Error("Project not found");
 
-              const withinLimit = await isWithinLimit(
-                { organizationId: project.organizationId },
-                FEATURE_KEYS.MAX_LABELS,
-                project.labels.length,
-                billingBypassOrgIds,
-              );
-              if (!withinLimit)
-                throw new Error("Maximum number of labels reached");
+                const withinLimit = await isWithinLimit(
+                  { organizationId: project.organizationId },
+                  FEATURE_KEYS.MAX_LABELS,
+                  project.labels.length,
+                  billingBypassOrgIds,
+                );
+                if (!withinLimit)
+                  throw new Error("Maximum number of labels reached");
+              } else if (organizationId) {
+                // Org-scoped label
+                const allowed = await checkPermission(
+                  observer.id,
+                  "organization",
+                  organizationId,
+                  "admin",
+                  accessToken,
+                  authzCache,
+                );
+                if (!allowed) throw new Error("Unauthorized");
+
+                // TODO: Add tier limit check for org-scoped labels
+              } else {
+                throw new Error("Label must have either projectId or organizationId");
+              }
             }
           },
         );

@@ -3,7 +3,7 @@ import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 import { PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, enumCodec, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertExecutableStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isExecutableStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
-import { checkPermission, deleteTuples, isAuthzEnabled, writeTuples } from "lib/authz";
+import { checkPermission, deleteTuples, writeTuples } from "lib/authz";
 import { isWithinLimit } from "lib/entitlements";
 import { sql } from "pg-sql2";
 const nodeIdHandler_Query = {
@@ -82,6 +82,65 @@ const executor = new PgExecutor({
     });
   }
 });
+const projectProjectLabelIdentifier = sql.identifier("public", "project_project_label");
+const spec_projectProjectLabel = {
+  name: "projectProjectLabel",
+  identifier: projectProjectLabelIdentifier,
+  attributes: {
+    __proto__: null,
+    project_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_label_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  description: undefined,
+  extensions: {
+    oid: "360148",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project_project_label"
+    },
+    tags: {
+      __proto__: null
+    }
+  },
+  executor: executor
+};
+const projectProjectLabelCodec = recordCodec(spec_projectProjectLabel);
 const taskLabelIdentifier = sql.identifier("public", "task_label");
 const spec_taskLabel = {
   name: "taskLabel",
@@ -139,7 +198,7 @@ const spec_taskLabel = {
   },
   description: undefined,
   extensions: {
-    oid: "45397",
+    oid: "300631",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -222,7 +281,7 @@ const spec_assignee = {
   },
   description: undefined,
   extensions: {
-    oid: "45181",
+    oid: "300414",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +376,7 @@ const spec_emoji = {
   },
   description: undefined,
   extensions: {
-    oid: "45554",
+    oid: "300788",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -331,101 +390,6 @@ const spec_emoji = {
   executor: executor
 };
 const emojiCodec = recordCodec(spec_emoji);
-const labelIdentifier = sql.identifier("public", "label");
-const spec_label = {
-  name: "label",
-  identifier: labelIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    color: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  description: undefined,
-  extensions: {
-    oid: "45383",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "label"
-    },
-    tags: {
-      __proto__: null
-    }
-  },
-  executor: executor
-};
-const labelCodec = recordCodec(spec_label);
 const userIdentifier = sql.identifier("public", "user");
 const spec_user = {
   name: "user",
@@ -519,7 +483,7 @@ const spec_user = {
   },
   description: undefined,
   extensions: {
-    oid: "45252",
+    oid: "300485",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -626,7 +590,7 @@ const spec_post = {
   },
   description: undefined,
   extensions: {
-    oid: "45205",
+    oid: "300438",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -640,6 +604,232 @@ const spec_post = {
   executor: executor
 };
 const postCodec = recordCodec(spec_post);
+const projectLabelIdentifier = sql.identifier("public", "project_label");
+const spec_projectLabel = {
+  name: "projectLabel",
+  identifier: projectLabelIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    color: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    icon: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  description: undefined,
+  extensions: {
+    oid: "360132",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project_label"
+    },
+    tags: {
+      __proto__: null
+    }
+  },
+  executor: executor
+};
+const projectLabelCodec = recordCodec(spec_projectLabel);
+const labelIdentifier = sql.identifier("public", "label");
+const spec_label = {
+  name: "label",
+  identifier: labelIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    color: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    icon: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  description: undefined,
+  extensions: {
+    oid: "300617",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "label"
+    },
+    tags: {
+      __proto__: null
+    }
+  },
+  executor: executor
+};
+const labelCodec = recordCodec(spec_label);
 const columnIdentifier = sql.identifier("public", "column");
 const spec_column = {
   name: "column",
@@ -733,7 +923,7 @@ const spec_column = {
   },
   description: undefined,
   extensions: {
-    oid: "45192",
+    oid: "300425",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -840,7 +1030,7 @@ const spec_projectColumn = {
   },
   description: undefined,
   extensions: {
-    oid: "45448",
+    oid: "300682",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -975,7 +1165,7 @@ const spec_userPreference = {
   },
   description: undefined,
   extensions: {
-    oid: "45465",
+    oid: "300699",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1106,7 +1296,7 @@ const spec_settings = {
   },
   description: undefined,
   extensions: {
-    oid: "45267",
+    oid: "300500",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1273,7 +1463,7 @@ const spec_task = {
   },
   description: undefined,
   extensions: {
-    oid: "45233",
+    oid: "300466",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1293,7 +1483,7 @@ const organizationTypeCodec = enumCodec({
   values: ["personal", "team"],
   description: undefined,
   extensions: {
-    oid: "45678",
+    oid: "300912",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1457,7 +1647,7 @@ const spec_project = {
   },
   description: undefined,
   extensions: {
-    oid: "45218",
+    oid: "300451",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1478,7 +1668,7 @@ const memberRoleCodec = enumCodec({
   values: ["owner", "admin", "member"],
   description: undefined,
   extensions: {
-    oid: "45670",
+    oid: "300904",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -1617,7 +1807,7 @@ const spec_userOrganization = {
   },
   description: undefined,
   extensions: {
-    oid: "45685",
+    oid: "300919",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1631,6 +1821,42 @@ const spec_userOrganization = {
   executor: executor
 };
 const userOrganizationCodec = recordCodec(spec_userOrganization);
+const project_project_labelUniques = [{
+  isPrimary: true,
+  attributes: ["project_id", "project_label_id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
+}];
+const registryConfig_pgResources_project_project_label_project_project_label = {
+  executor: executor,
+  name: "project_project_label",
+  identifier: "main.public.project_project_label",
+  from: projectProjectLabelIdentifier,
+  codec: projectProjectLabelCodec,
+  uniques: project_project_labelUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project_project_label"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
 const task_labelUniques = [{
   isPrimary: true,
   attributes: ["task_id", "label_id"],
@@ -1759,42 +1985,6 @@ const registryConfig_pgResources_emoji_emoji = {
     canDelete: true
   }
 };
-const labelUniques = [{
-  isPrimary: true,
-  attributes: ["id"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null
-    }
-  }
-}];
-const registryConfig_pgResources_label_label = {
-  executor: executor,
-  name: "label",
-  identifier: "main.public.label",
-  from: labelIdentifier,
-  codec: labelCodec,
-  uniques: labelUniques,
-  isVirtual: false,
-  description: undefined,
-  extensions: {
-    description: undefined,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "label"
-    },
-    isInsertable: true,
-    isUpdatable: true,
-    isDeletable: true,
-    tags: {},
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  }
-};
 const userUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -1876,6 +2066,78 @@ const registryConfig_pgResources_post_post = {
       serviceName: "main",
       schemaName: "public",
       name: "post"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
+const project_labelUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
+}];
+const registryConfig_pgResources_project_label_project_label = {
+  executor: executor,
+  name: "project_label",
+  identifier: "main.public.project_label",
+  from: projectLabelIdentifier,
+  codec: projectLabelCodec,
+  uniques: project_labelUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project_label"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
+const labelUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
+}];
+const registryConfig_pgResources_label_label = {
+  executor: executor,
+  name: "label",
+  identifier: "main.public.label",
+  from: labelIdentifier,
+  codec: labelCodec,
+  uniques: labelUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "label"
     },
     isInsertable: true,
     isUpdatable: true,
@@ -2170,15 +2432,17 @@ const registryConfig = {
   },
   pgCodecs: {
     __proto__: null,
-    taskLabel: taskLabelCodec,
+    projectProjectLabel: projectProjectLabelCodec,
     uuid: TYPES.uuid,
     timestamptz: TYPES.timestamptz,
+    taskLabel: taskLabelCodec,
     assignee: assigneeCodec,
     emoji: emojiCodec,
     text: TYPES.text,
-    label: labelCodec,
     user: userCodec,
     post: postCodec,
+    projectLabel: projectLabelCodec,
+    label: labelCodec,
     column: columnCodec,
     int4: TYPES.int,
     projectColumn: projectColumnCodec,
@@ -2196,12 +2460,14 @@ const registryConfig = {
   },
   pgResources: {
     __proto__: null,
+    project_project_label: registryConfig_pgResources_project_project_label_project_project_label,
     task_label: registryConfig_pgResources_task_label_task_label,
     assignee: registryConfig_pgResources_assignee_assignee,
     emoji: registryConfig_pgResources_emoji_emoji,
-    label: registryConfig_pgResources_label_label,
     user: registryConfig_pgResources_user_user,
     post: registryConfig_pgResources_post_post,
+    project_label: registryConfig_pgResources_project_label_project_label,
+    label: registryConfig_pgResources_label_label,
     column: registryConfig_pgResources_column_column,
     project_column: registryConfig_pgResources_project_column_project_column,
     user_preference: registryConfig_pgResources_user_preference_user_preference,
@@ -2493,6 +2759,21 @@ const registryConfig = {
             behavior: []
           }
         }
+      },
+      projectProjectLabelsByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: registryConfig_pgResources_project_project_label_project_project_label,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isUnique: false,
+        isReferencee: true,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
       }
     },
     projectColumn: {
@@ -2505,6 +2786,57 @@ const registryConfig = {
         remoteAttributes: ["project_column_id"],
         isUnique: false,
         isReferencee: true,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      }
+    },
+    projectLabel: {
+      __proto__: null,
+      projectProjectLabelsByTheirProjectLabelId: {
+        localCodec: projectLabelCodec,
+        remoteResourceOptions: registryConfig_pgResources_project_project_label_project_project_label,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_label_id"],
+        isUnique: false,
+        isReferencee: true,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      }
+    },
+    projectProjectLabel: {
+      __proto__: null,
+      projectByMyProjectId: {
+        localCodec: projectProjectLabelCodec,
+        remoteResourceOptions: registryConfig_pgResources_project_project,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["project_id"],
+        remoteAttributes: ["id"],
+        isUnique: true,
+        isReferencee: false,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      },
+      projectLabelByMyProjectLabelId: {
+        localCodec: projectProjectLabelCodec,
+        remoteResourceOptions: registryConfig_pgResources_project_label_project_label,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["project_label_id"],
+        remoteAttributes: ["id"],
+        isUnique: true,
+        isReferencee: false,
         description: undefined,
         extensions: {
           tags: {
@@ -2786,12 +3118,14 @@ const registryConfig = {
   }
 };
 const registry = makeRegistry(registryConfig);
+const resource_project_project_labelPgResource = registry.pgResources["project_project_label"];
 const resource_task_labelPgResource = registry.pgResources["task_label"];
 const resource_assigneePgResource = registry.pgResources["assignee"];
 const resource_emojiPgResource = registry.pgResources["emoji"];
-const resource_labelPgResource = registry.pgResources["label"];
 const resource_userPgResource = registry.pgResources["user"];
 const resource_postPgResource = registry.pgResources["post"];
+const resource_project_labelPgResource = registry.pgResources["project_label"];
+const resource_labelPgResource = registry.pgResources["label"];
 const resource_columnPgResource = registry.pgResources["column"];
 const resource_project_columnPgResource = registry.pgResources["project_column"];
 const resource_user_preferencePgResource = registry.pgResources["user_preference"];
@@ -2799,6 +3133,50 @@ const resource_settingsPgResource = registry.pgResources["settings"];
 const resource_taskPgResource = registry.pgResources["task"];
 const resource_projectPgResource = registry.pgResources["project"];
 const resource_user_organizationPgResource = registry.pgResources["user_organization"];
+const nodeIdHandler_ProjectProjectLabel = {
+  typeName: "ProjectProjectLabel",
+  codec: nodeIdCodecs_base64JSON_base64JSON,
+  deprecationReason: undefined,
+  plan($record) {
+    return list([constant("ProjectProjectLabel", false), $record.get("project_id"), $record.get("project_label_id")]);
+  },
+  getSpec($list) {
+    return {
+      project_id: inhibitOnNull(access($list, [1])),
+      project_label_id: inhibitOnNull(access($list, [2]))
+    };
+  },
+  getIdentifiers(value) {
+    return value.slice(1);
+  },
+  get(spec) {
+    return resource_project_project_labelPgResource.get(spec);
+  },
+  match(obj) {
+    return obj[0] === "ProjectProjectLabel";
+  }
+};
+const specForHandlerCache = new Map();
+function specForHandler(handler) {
+  const existing = specForHandlerCache.get(handler);
+  if (existing) return existing;
+  function spec(nodeId) {
+    if (nodeId == null) return null;
+    try {
+      const specifier = handler.codec.decode(nodeId);
+      if (handler.match(specifier)) return specifier;
+    } catch {}
+    return null;
+  }
+  spec.displayName = `specifier_${handler.typeName}_${handler.codec.name}`;
+  spec.isSyncAndSafe = !0;
+  specForHandlerCache.set(handler, spec);
+  return spec;
+}
+const nodeFetcher_ProjectProjectLabel = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ProjectProjectLabel));
+  return nodeIdHandler_ProjectProjectLabel.get(nodeIdHandler_ProjectProjectLabel.getSpec($decoded));
+};
 const nodeIdHandler_TaskLabel = {
   typeName: "TaskLabel",
   codec: nodeIdCodecs_base64JSON_base64JSON,
@@ -2822,23 +3200,6 @@ const nodeIdHandler_TaskLabel = {
     return obj[0] === "TaskLabel";
   }
 };
-const specForHandlerCache = new Map();
-function specForHandler(handler) {
-  const existing = specForHandlerCache.get(handler);
-  if (existing) return existing;
-  function spec(nodeId) {
-    if (nodeId == null) return null;
-    try {
-      const specifier = handler.codec.decode(nodeId);
-      if (handler.match(specifier)) return specifier;
-    } catch {}
-    return null;
-  }
-  spec.displayName = `specifier_${handler.typeName}_${handler.codec.name}`;
-  spec.isSyncAndSafe = !0;
-  specForHandlerCache.set(handler, spec);
-  return spec;
-}
 const nodeFetcher_TaskLabel = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TaskLabel));
   return nodeIdHandler_TaskLabel.get(nodeIdHandler_TaskLabel.getSpec($decoded));
@@ -2896,32 +3257,6 @@ const nodeFetcher_Emoji = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Emoji));
   return nodeIdHandler_Emoji.get(nodeIdHandler_Emoji.getSpec($decoded));
 };
-const nodeIdHandler_Label = {
-  typeName: "Label",
-  codec: nodeIdCodecs_base64JSON_base64JSON,
-  deprecationReason: undefined,
-  plan($record) {
-    return list([constant("Label", false), $record.get("id")]);
-  },
-  getSpec($list) {
-    return {
-      id: inhibitOnNull(access($list, [1]))
-    };
-  },
-  getIdentifiers(value) {
-    return value.slice(1);
-  },
-  get(spec) {
-    return resource_labelPgResource.get(spec);
-  },
-  match(obj) {
-    return obj[0] === "Label";
-  }
-};
-const nodeFetcher_Label = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Label));
-  return nodeIdHandler_Label.get(nodeIdHandler_Label.getSpec($decoded));
-};
 const nodeIdHandler_User = {
   typeName: "User",
   codec: nodeIdCodecs_base64JSON_base64JSON,
@@ -2973,6 +3308,58 @@ const nodeIdHandler_Post = {
 const nodeFetcher_Post = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Post));
   return nodeIdHandler_Post.get(nodeIdHandler_Post.getSpec($decoded));
+};
+const nodeIdHandler_ProjectLabel = {
+  typeName: "ProjectLabel",
+  codec: nodeIdCodecs_base64JSON_base64JSON,
+  deprecationReason: undefined,
+  plan($record) {
+    return list([constant("ProjectLabel", false), $record.get("id")]);
+  },
+  getSpec($list) {
+    return {
+      id: inhibitOnNull(access($list, [1]))
+    };
+  },
+  getIdentifiers(value) {
+    return value.slice(1);
+  },
+  get(spec) {
+    return resource_project_labelPgResource.get(spec);
+  },
+  match(obj) {
+    return obj[0] === "ProjectLabel";
+  }
+};
+const nodeFetcher_ProjectLabel = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ProjectLabel));
+  return nodeIdHandler_ProjectLabel.get(nodeIdHandler_ProjectLabel.getSpec($decoded));
+};
+const nodeIdHandler_Label = {
+  typeName: "Label",
+  codec: nodeIdCodecs_base64JSON_base64JSON,
+  deprecationReason: undefined,
+  plan($record) {
+    return list([constant("Label", false), $record.get("id")]);
+  },
+  getSpec($list) {
+    return {
+      id: inhibitOnNull(access($list, [1]))
+    };
+  },
+  getIdentifiers(value) {
+    return value.slice(1);
+  },
+  get(spec) {
+    return resource_labelPgResource.get(spec);
+  },
+  match(obj) {
+    return obj[0] === "Label";
+  }
+};
+const nodeFetcher_Label = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Label));
+  return nodeIdHandler_Label.get(nodeIdHandler_Label.getSpec($decoded));
 };
 const nodeIdHandler_Column = {
   typeName: "Column",
@@ -3305,15 +3692,39 @@ function assertAllowed13(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+function assertAllowed14(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed15(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 const nodeIdHandlerByTypeName = {
   __proto__: null,
   Query: nodeIdHandler_Query,
+  ProjectProjectLabel: nodeIdHandler_ProjectProjectLabel,
   TaskLabel: nodeIdHandler_TaskLabel,
   Assignee: nodeIdHandler_Assignee,
   Emoji: nodeIdHandler_Emoji,
-  Label: nodeIdHandler_Label,
   User: nodeIdHandler_User,
   Post: nodeIdHandler_Post,
+  ProjectLabel: nodeIdHandler_ProjectLabel,
+  Label: nodeIdHandler_Label,
   Column: nodeIdHandler_Column,
   ProjectColumn: nodeIdHandler_ProjectColumn,
   UserPreference: nodeIdHandler_UserPreference,
@@ -3339,28 +3750,6 @@ const coerce = string => {
   if (!/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(string)) throw new GraphQLError("Invalid UUID, expected 32 hexadecimal characters, optionally with hyphens");
   return string;
 };
-function assertAllowed14(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed15(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed16(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -3395,6 +3784,28 @@ function assertAllowed18(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed19(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed20(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed21(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -3651,29 +4062,29 @@ const colSpec12 = {
   attributeName: "next_task_number",
   attribute: spec_project.attributes.next_task_number
 };
-function assertAllowed20(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed21(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed22(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed23(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed24(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4206,7 +4617,7 @@ const resolve68 = (i, v) => sql`${i} < ${v}`;
 const resolve69 = (i, v) => sql`${i} <= ${v}`;
 const resolve70 = (i, v) => sql`${i} > ${v}`;
 const resolve71 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed23(value, mode) {
+function assertAllowed25(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4316,28 +4727,6 @@ const colSpec19 = {
   attributeName: "emoji",
   attribute: spec_column.attributes.emoji
 };
-function assertAllowed24(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed25(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed26(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -4350,6 +4739,28 @@ function assertAllowed26(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed27(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed28(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed29(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4420,28 +4831,6 @@ const colSpec31 = {
   attributeName: "number",
   attribute: spec_task.attributes.number
 };
-function assertAllowed28(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed29(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed30(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -4454,6 +4843,28 @@ function assertAllowed30(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed31(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed32(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed33(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4489,7 +4900,7 @@ const colSpec36 = {
   attributeName: "deleted_at",
   attribute: spec_assignee.attributes.deleted_at
 };
-function assertAllowed32(value, mode) {
+function assertAllowed34(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4500,7 +4911,7 @@ function assertAllowed32(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed33(value, mode) {
+function assertAllowed35(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4546,29 +4957,29 @@ const colSpec43 = {
   attributeName: "email",
   attribute: spec_user.attributes.email
 };
-function assertAllowed34(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed35(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed36(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed37(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed38(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4629,7 +5040,7 @@ const resolve79 = (i, v) => sql`${i} < ${v}`;
 const resolve80 = (i, v) => sql`${i} <= ${v}`;
 const resolve81 = (i, v) => sql`${i} > ${v}`;
 const resolve82 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed37(value, mode) {
+function assertAllowed39(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4675,28 +5086,6 @@ const colSpec50 = {
   attributeName: "updated_at",
   attribute: spec_post.attributes.updated_at
 };
-function assertAllowed38(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed39(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed40(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -4709,6 +5098,28 @@ function assertAllowed40(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed41(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed42(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed43(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4749,29 +5160,29 @@ const colSpec56 = {
   attributeName: "updated_at",
   attribute: spec_emoji.attributes.updated_at
 };
-function assertAllowed42(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed43(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed44(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed45(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed46(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4832,7 +5243,7 @@ const resolve90 = (i, v) => sql`${i} < ${v}`;
 const resolve91 = (i, v) => sql`${i} <= ${v}`;
 const resolve92 = (i, v) => sql`${i} > ${v}`;
 const resolve93 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed45(value, mode) {
+function assertAllowed47(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4883,7 +5294,7 @@ const colSpec64 = {
   attributeName: "color",
   attribute: spec_userPreference.attributes.color
 };
-function assertAllowed46(value, mode) {
+function assertAllowed48(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4894,7 +5305,7 @@ function assertAllowed46(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed47(value, mode) {
+function assertAllowed49(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4957,7 +5368,7 @@ const resolve108 = (i, v) => sql`${v} > ANY (${i})`;
 const resolve109 = (i, v) => sql`${v} >= ANY (${i})`;
 const resolve110 = (i, v) => sql`${v} < ANY (${i})`;
 const resolve111 = (i, v) => sql`${v} <= ANY (${i})`;
-function assertAllowed48(value, mode) {
+function assertAllowed50(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4968,7 +5379,7 @@ function assertAllowed48(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed49(value, mode) {
+function assertAllowed51(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5029,7 +5440,7 @@ const colSpec74 = {
   attributeName: "updated_at",
   attribute: spec_userOrganization.attributes.updated_at
 };
-function assertAllowed50(value, mode) {
+function assertAllowed52(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5040,7 +5451,7 @@ function assertAllowed50(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed51(value, mode) {
+function assertAllowed53(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5151,7 +5562,7 @@ const resolve130 = (i, v) => sql`${i} < ${v}`;
 const resolve131 = (i, v) => sql`${i} <= ${v}`;
 const resolve132 = (i, v) => sql`${i} > ${v}`;
 const resolve133 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed52(value, mode) {
+function assertAllowed54(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5162,7 +5573,7 @@ function assertAllowed52(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed53(value, mode) {
+function assertAllowed55(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5193,7 +5604,7 @@ const colSpec78 = {
   attributeName: "updated_at",
   attribute: spec_taskLabel.attributes.updated_at
 };
-function assertAllowed54(value, mode) {
+function assertAllowed56(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5204,7 +5615,7 @@ function assertAllowed54(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed55(value, mode) {
+function assertAllowed57(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5245,28 +5656,16 @@ const colSpec84 = {
   attributeName: "updated_at",
   attribute: spec_label.attributes.updated_at
 };
-function assertAllowed56(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed57(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
+const colSpec85 = {
+  fieldName: "icon",
+  attributeName: "icon",
+  attribute: spec_label.attributes.icon
+};
+const colSpec86 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_label.attributes.organization_id
+};
 function assertAllowed58(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5322,41 +5721,6 @@ function assertAllowed62(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec85 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_projectColumn.attributes.id
-};
-const colSpec86 = {
-  fieldName: "emoji",
-  attributeName: "emoji",
-  attribute: spec_projectColumn.attributes.emoji
-};
-const colSpec87 = {
-  fieldName: "title",
-  attributeName: "title",
-  attribute: spec_projectColumn.attributes.title
-};
-const colSpec88 = {
-  fieldName: "organizationId",
-  attributeName: "organization_id",
-  attribute: spec_projectColumn.attributes.organization_id
-};
-const colSpec89 = {
-  fieldName: "index",
-  attributeName: "index",
-  attribute: spec_projectColumn.attributes.index
-};
-const colSpec90 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_projectColumn.attributes.created_at
-};
-const colSpec91 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_projectColumn.attributes.updated_at
-};
 function assertAllowed63(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5390,10 +5754,21 @@ function assertAllowed65(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const relation = registry.pgRelations["project"]["columnsByTheirProjectId"];
-const relation2 = registry.pgRelations["project"]["tasksByTheirProjectId"];
-const relation3 = registry.pgRelations["project"]["labelsByTheirProjectId"];
-const relation4 = registry.pgRelations["project"]["userPreferencesByTheirProjectId"];
+const colSpec87 = {
+  fieldName: "projectId",
+  attributeName: "project_id",
+  attribute: spec_projectProjectLabel.attributes.project_id
+};
+const colSpec88 = {
+  fieldName: "projectLabelId",
+  attributeName: "project_label_id",
+  attribute: spec_projectProjectLabel.attributes.project_label_id
+};
+const colSpec89 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_projectProjectLabel.attributes.created_at
+};
 function assertAllowed66(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5416,6 +5791,41 @@ function assertAllowed67(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec90 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_projectLabel.attributes.id
+};
+const colSpec91 = {
+  fieldName: "name",
+  attributeName: "name",
+  attribute: spec_projectLabel.attributes.name
+};
+const colSpec92 = {
+  fieldName: "color",
+  attributeName: "color",
+  attribute: spec_projectLabel.attributes.color
+};
+const colSpec93 = {
+  fieldName: "icon",
+  attributeName: "icon",
+  attribute: spec_projectLabel.attributes.icon
+};
+const colSpec94 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_projectLabel.attributes.organization_id
+};
+const colSpec95 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_projectLabel.attributes.created_at
+};
+const colSpec96 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_projectLabel.attributes.updated_at
+};
 function assertAllowed68(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5449,6 +5859,41 @@ function assertAllowed70(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec97 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_projectColumn.attributes.id
+};
+const colSpec98 = {
+  fieldName: "emoji",
+  attributeName: "emoji",
+  attribute: spec_projectColumn.attributes.emoji
+};
+const colSpec99 = {
+  fieldName: "title",
+  attributeName: "title",
+  attribute: spec_projectColumn.attributes.title
+};
+const colSpec100 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_projectColumn.attributes.organization_id
+};
+const colSpec101 = {
+  fieldName: "index",
+  attributeName: "index",
+  attribute: spec_projectColumn.attributes.index
+};
+const colSpec102 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_projectColumn.attributes.created_at
+};
+const colSpec103 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_projectColumn.attributes.updated_at
+};
 function assertAllowed71(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5482,6 +5927,11 @@ function assertAllowed73(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const relation = registry.pgRelations["project"]["columnsByTheirProjectId"];
+const relation2 = registry.pgRelations["project"]["tasksByTheirProjectId"];
+const relation3 = registry.pgRelations["project"]["labelsByTheirProjectId"];
+const relation4 = registry.pgRelations["project"]["userPreferencesByTheirProjectId"];
+const relation5 = registry.pgRelations["project"]["projectProjectLabelsByTheirProjectId"];
 function assertAllowed74(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5515,65 +5965,176 @@ function assertAllowed76(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const relation5 = registry.pgRelations["post"]["emojisByTheirPostId"];
-const relation6 = registry.pgRelations["task"]["assigneesByTheirTaskId"];
-const relation7 = registry.pgRelations["task"]["postsByTheirTaskId"];
-const relation8 = registry.pgRelations["task"]["taskLabelsByTheirTaskId"];
-const relation9 = registry.pgRelations["column"]["tasksByTheirColumnId"];
-const relation10 = registry.pgRelations["label"]["taskLabelsByTheirLabelId"];
-const relation11 = registry.pgRelations["user"]["assigneesByTheirUserId"];
-const relation12 = registry.pgRelations["user"]["postsByTheirAuthorId"];
-const relation13 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
-const relation14 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
-const relation15 = registry.pgRelations["user"]["emojisByTheirUserId"];
-const relation16 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
-const relation17 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
-const colSpec92 = {
+function assertAllowed77(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed78(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed79(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed80(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed81(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed82(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed83(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed84(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+const relation6 = registry.pgRelations["post"]["emojisByTheirPostId"];
+const relation7 = registry.pgRelations["task"]["assigneesByTheirTaskId"];
+const relation8 = registry.pgRelations["task"]["postsByTheirTaskId"];
+const relation9 = registry.pgRelations["task"]["taskLabelsByTheirTaskId"];
+function assertAllowed85(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+const relation10 = registry.pgRelations["column"]["tasksByTheirColumnId"];
+const relation11 = registry.pgRelations["label"]["taskLabelsByTheirLabelId"];
+function assertAllowed86(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+const relation12 = registry.pgRelations["user"]["assigneesByTheirUserId"];
+const relation13 = registry.pgRelations["user"]["postsByTheirAuthorId"];
+const relation14 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
+const relation15 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
+const relation16 = registry.pgRelations["user"]["emojisByTheirUserId"];
+const relation17 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
+const relation18 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
+const relation19 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
+const colSpec104 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_settings.attributes.id
 };
-const colSpec93 = {
+const colSpec105 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_settings.attributes.created_at
 };
-const colSpec94 = {
+const colSpec106 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_settings.attributes.updated_at
 };
-const colSpec95 = {
+const colSpec107 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_settings.attributes.view_mode
 };
-const colSpec96 = {
+const colSpec108 = {
   fieldName: "billingAccountId",
   attributeName: "billing_account_id",
   attribute: spec_settings.attributes.billing_account_id
 };
-const colSpec97 = {
+const colSpec109 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_settings.attributes.organization_id
 };
-const colSpec98 = {
+const colSpec110 = {
   fieldName: "subscriptionId",
   attributeName: "subscription_id",
   attribute: spec_settings.attributes.subscription_id
 };
-const colSpec99 = {
+const colSpec111 = {
   fieldName: "deletedAt",
   attributeName: "deleted_at",
   attribute: spec_settings.attributes.deleted_at
 };
-const colSpec100 = {
+const colSpec112 = {
   fieldName: "deletionReason",
   attributeName: "deletion_reason",
   attribute: spec_settings.attributes.deletion_reason
 };
-function assertAllowed77(value, mode) {
+function assertAllowed87(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5769,63 +6330,13 @@ const planWrapper4 = (plan, _, fieldArgs) => {
   return plan();
 };
 function oldPlan5(_, args) {
-  const $insert = pgInsertSingle(resource_labelPgResource, Object.create(null));
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper5 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "label"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    if ("create" !== "create") {
-      const label = await db.query.labels.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          projectId: !0
-        }
-      });
-      if (!label) throw Error("Label not found");
-      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    } else {
-      const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-      const project = await db.query.projects.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, projectId);
-        },
-        with: {
-          labels: !0
-        }
-      });
-      if (!project) throw Error("Project not found");
-      if (!(await isWithinLimit({
-        organizationId: project.organizationId
-      }, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassOrgIds))) throw Error("Maximum number of labels reached");
-    }
-  });
-  return plan();
-};
-function oldPlan6(_, args) {
   const $insert = pgInsertSingle(resource_userPgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper6 = (plan, _, fieldArgs) => {
+const planWrapper5 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "user"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -5837,14 +6348,14 @@ const planWrapper6 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan7(_, args) {
+function oldPlan6(_, args) {
   const $insert = pgInsertSingle(resource_postPgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper7 = (plan, _, fieldArgs) => {
+const planWrapper6 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "post"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5884,6 +6395,68 @@ const planWrapper7 = (plan, _, fieldArgs) => {
       });
       if (!post) throw Error("Post not found");
       if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+function oldPlan7(_, args) {
+  const $insert = pgInsertSingle(resource_labelPgResource, Object.create(null));
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper7 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "label"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    if ("create" !== "create") {
+      const label = await db.query.labels.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          projectId: !0,
+          organizationId: !0
+        }
+      });
+      if (!label) throw Error("Label not found");
+      if (label.projectId) {
+        if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else if (label.organizationId) {
+        if (!(await checkPermission(observer.id, "organization", label.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else throw Error("Label has no scope");
+    } else {
+      const {
+        projectId,
+        organizationId
+      } = input;
+      if (projectId) {
+        if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+        const project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          },
+          with: {
+            labels: !0
+          }
+        });
+        if (!project) throw Error("Project not found");
+        if (!(await isWithinLimit({
+          organizationId: project.organizationId
+        }, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassOrgIds))) throw Error("Maximum number of labels reached");
+      } else if (organizationId) {
+        if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else throw Error("Label must have either projectId or organizationId");
     }
   });
   return plan();
@@ -6127,21 +6700,26 @@ const planWrapper13 = (plan, _, fieldArgs) => {
     $projectId = $result.getStepForKey("result").get("id");
   sideEffect([$projectId, $input, $accessToken], async ([projectId, input, accessToken]) => {
     if (!projectId) return;
-    if (!isAuthzEnabled()) return;
+    if ("true" !== "true" || !"https://localhost:4100") return;
     const {
-      organizationId
-    } = input;
-    try {
-      await writeTuples([{
+        organizationId
+      } = input,
+      result = await writeTuples([{
         user: `organization:${organizationId}`,
         relation: "organization",
+        object: `workspace:${organizationId}`
+      }, {
+        user: `workspace:${organizationId}`,
+        relation: "workspace",
         object: `project:${projectId}`
       }], accessToken ?? void 0);
-    } catch (error) {
-      console.error("[AuthZ Sync] Failed to sync project creation:", error);
-    }
+    if (!result.success && undefined === "transactional") throw Error(`AuthZ sync failed: ${result.error}`);
   });
   return $result;
+};
+const specFromArgs_ProjectProjectLabel = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ProjectProjectLabel, $nodeId);
 };
 const specFromArgs_TaskLabel = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -6269,67 +6847,11 @@ const planWrapper15 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_Label = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Label, $nodeId);
-};
-const oldPlan16 = (_$root, args) => {
-  const $update = pgUpdateSingle(resource_labelPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper16 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    if ("update" !== "create") {
-      const label = await db.query.labels.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          projectId: !0
-        }
-      });
-      if (!label) throw Error("Label not found");
-      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    } else {
-      const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-      const project = await db.query.projects.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, projectId);
-        },
-        with: {
-          labels: !0
-        }
-      });
-      if (!project) throw Error("Project not found");
-      if (!(await isWithinLimit({
-        organizationId: project.organizationId
-      }, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassOrgIds))) throw Error("Maximum number of labels reached");
-    }
-  });
-  return plan();
-};
 const specFromArgs_User = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan17 = (_$root, args) => {
+const oldPlan16 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6338,7 +6860,7 @@ const oldPlan17 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper17 = (plan, _, fieldArgs) => {
+const planWrapper16 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -6354,7 +6876,7 @@ const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan18 = (_$root, args) => {
+const oldPlan17 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6363,7 +6885,7 @@ const oldPlan18 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper18 = (plan, _, fieldArgs) => {
+const planWrapper17 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6403,6 +6925,78 @@ const planWrapper18 = (plan, _, fieldArgs) => {
       });
       if (!post) throw Error("Post not found");
       if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_ProjectLabel = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ProjectLabel, $nodeId);
+};
+const specFromArgs_Label = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Label, $nodeId);
+};
+const oldPlan18 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_labelPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper18 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    if ("update" !== "create") {
+      const label = await db.query.labels.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          projectId: !0,
+          organizationId: !0
+        }
+      });
+      if (!label) throw Error("Label not found");
+      if (label.projectId) {
+        if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else if (label.organizationId) {
+        if (!(await checkPermission(observer.id, "organization", label.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else throw Error("Label has no scope");
+    } else {
+      const {
+        projectId,
+        organizationId
+      } = input;
+      if (projectId) {
+        if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+        const project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          },
+          with: {
+            labels: !0
+          }
+        });
+        if (!project) throw Error("Project not found");
+        if (!(await isWithinLimit({
+          organizationId: project.organizationId
+        }, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassOrgIds))) throw Error("Maximum number of labels reached");
+      } else if (organizationId) {
+        if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else throw Error("Label must have either projectId or organizationId");
     }
   });
   return plan();
@@ -6659,6 +7253,10 @@ const specFromArgs_UserOrganization = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_UserOrganization, $nodeId);
 };
+const specFromArgs_ProjectProjectLabel2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ProjectProjectLabel, $nodeId);
+};
 const specFromArgs_TaskLabel2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TaskLabel, $nodeId);
@@ -6868,67 +7466,11 @@ const planWrapper27 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_Label2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Label, $nodeId);
-};
-const oldPlan28 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_labelPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper28 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    if ("delete" !== "create") {
-      const label = await db.query.labels.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          projectId: !0
-        }
-      });
-      if (!label) throw Error("Label not found");
-      if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    } else {
-      const projectId = input.projectId;
-      if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-      const project = await db.query.projects.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, projectId);
-        },
-        with: {
-          labels: !0
-        }
-      });
-      if (!project) throw Error("Project not found");
-      if (!(await isWithinLimit({
-        organizationId: project.organizationId
-      }, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassOrgIds))) throw Error("Maximum number of labels reached");
-    }
-  });
-  return plan();
-};
 const specFromArgs_User2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan29 = (_$root, args) => {
+const oldPlan28 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6937,7 +7479,7 @@ const oldPlan29 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper29 = (plan, _, fieldArgs) => {
+const planWrapper28 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -6953,7 +7495,7 @@ const specFromArgs_Post2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan30 = (_$root, args) => {
+const oldPlan29 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6962,7 +7504,7 @@ const oldPlan30 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper30 = (plan, _, fieldArgs) => {
+const planWrapper29 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7002,6 +7544,78 @@ const planWrapper30 = (plan, _, fieldArgs) => {
       });
       if (!post) throw Error("Post not found");
       if (!(await checkPermission(observer.id, "project", post.task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_ProjectLabel2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ProjectLabel, $nodeId);
+};
+const specFromArgs_Label2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Label, $nodeId);
+};
+const oldPlan30 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_labelPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper30 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    if ("delete" !== "create") {
+      const label = await db.query.labels.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          projectId: !0,
+          organizationId: !0
+        }
+      });
+      if (!label) throw Error("Label not found");
+      if (label.projectId) {
+        if (!(await checkPermission(observer.id, "project", label.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else if (label.organizationId) {
+        if (!(await checkPermission(observer.id, "organization", label.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else throw Error("Label has no scope");
+    } else {
+      const {
+        projectId,
+        organizationId
+      } = input;
+      if (projectId) {
+        if (!(await checkPermission(observer.id, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+        const project = await db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, projectId);
+          },
+          with: {
+            labels: !0
+          }
+        });
+        if (!project) throw Error("Project not found");
+        if (!(await isWithinLimit({
+          organizationId: project.organizationId
+        }, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassOrgIds))) throw Error("Maximum number of labels reached");
+      } else if (organizationId) {
+        if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      } else throw Error("Label must have either projectId or organizationId");
     }
   });
   return plan();
@@ -7272,7 +7886,7 @@ ${String(oldPlan36)}`);
   if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper36 = (plan, _, fieldArgs) => {
+const planWrapper36 = (plan, _, _fieldArgs) => {
   const $result = plan(),
     $accessToken = context().get("accessToken"),
     $deleteStep = $result.getStepForKey("result"),
@@ -7280,16 +7894,13 @@ const planWrapper36 = (plan, _, fieldArgs) => {
     $organizationId = $deleteStep.get("organization_id");
   sideEffect([$projectId, $organizationId, $accessToken], async ([projectId, organizationId, accessToken]) => {
     if (!projectId || !organizationId) return;
-    if (!isAuthzEnabled()) return;
-    try {
-      await deleteTuples([{
-        user: `organization:${organizationId}`,
-        relation: "organization",
-        object: `project:${projectId}`
-      }], accessToken ?? void 0);
-    } catch (error) {
-      console.error("[AuthZ Sync] Failed to sync project deletion:", error);
-    }
+    if ("true" !== "true" || !"https://localhost:4100") return;
+    const result = await deleteTuples([{
+      user: `workspace:${organizationId}`,
+      relation: "workspace",
+      object: `project:${projectId}`
+    }], accessToken ?? void 0);
+    if (!result.success && undefined === "transactional") throw Error(`AuthZ sync failed: ${result.error}`);
   });
   return $result;
 };
@@ -7334,6 +7945,9 @@ type Query implements Node {
     id: ID!
   ): Node
 
+  """Get a single \`ProjectProjectLabel\`."""
+  projectProjectLabel(projectId: UUID!, projectLabelId: UUID!): ProjectProjectLabel
+
   """Get a single \`TaskLabel\`."""
   taskLabel(taskId: UUID!, labelId: UUID!): TaskLabel
 
@@ -7349,9 +7963,6 @@ type Query implements Node {
   """Get a single \`Emoji\`."""
   emoji(rowId: UUID!): Emoji
 
-  """Get a single \`Label\`."""
-  label(rowId: UUID!): Label
-
   """Get a single \`User\`."""
   user(rowId: UUID!): User
 
@@ -7363,6 +7974,12 @@ type Query implements Node {
 
   """Get a single \`Post\`."""
   post(rowId: UUID!): Post
+
+  """Get a single \`ProjectLabel\`."""
+  projectLabel(rowId: UUID!): ProjectLabel
+
+  """Get a single \`Label\`."""
+  label(rowId: UUID!): Label
 
   """Get a single \`Column\`."""
   column(rowId: UUID!): Column
@@ -7400,6 +8017,14 @@ type Query implements Node {
   """Get a single \`UserOrganization\`."""
   userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: String!): UserOrganization
 
+  """Reads a single \`ProjectProjectLabel\` using its globally unique \`ID\`."""
+  projectProjectLabelById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`ProjectProjectLabel\`.
+    """
+    id: ID!
+  ): ProjectProjectLabel
+
   """Reads a single \`TaskLabel\` using its globally unique \`ID\`."""
   taskLabelById(
     """The globally unique \`ID\` to be used in selecting a single \`TaskLabel\`."""
@@ -7418,12 +8043,6 @@ type Query implements Node {
     id: ID!
   ): Emoji
 
-  """Reads a single \`Label\` using its globally unique \`ID\`."""
-  labelById(
-    """The globally unique \`ID\` to be used in selecting a single \`Label\`."""
-    id: ID!
-  ): Label
-
   """Reads a single \`User\` using its globally unique \`ID\`."""
   userById(
     """The globally unique \`ID\` to be used in selecting a single \`User\`."""
@@ -7435,6 +8054,20 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`Post\`."""
     id: ID!
   ): Post
+
+  """Reads a single \`ProjectLabel\` using its globally unique \`ID\`."""
+  projectLabelById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`ProjectLabel\`.
+    """
+    id: ID!
+  ): ProjectLabel
+
+  """Reads a single \`Label\` using its globally unique \`ID\`."""
+  labelById(
+    """The globally unique \`ID\` to be used in selecting a single \`Label\`."""
+    id: ID!
+  ): Label
 
   """Reads a single \`Column\` using its globally unique \`ID\`."""
   columnById(
@@ -7483,6 +8116,40 @@ type Query implements Node {
     """
     id: ID!
   ): UserOrganization
+
+  """Reads and enables pagination through a set of \`ProjectProjectLabel\`."""
+  projectProjectLabels(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectProjectLabelFilter
+
+    """The method to use when ordering \`ProjectProjectLabel\`."""
+    orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelConnection
 
   """Reads and enables pagination through a set of \`TaskLabel\`."""
   taskLabels(
@@ -7586,40 +8253,6 @@ type Query implements Node {
     orderBy: [EmojiOrderBy!] = [PRIMARY_KEY_ASC]
   ): EmojiConnection
 
-  """Reads and enables pagination through a set of \`Label\`."""
-  labels(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LabelCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: LabelFilter
-
-    """The method to use when ordering \`Label\`."""
-    orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LabelConnection
-
   """Reads and enables pagination through a set of \`User\`."""
   users(
     """Only read the first \`n\` values of the set."""
@@ -7687,6 +8320,74 @@ type Query implements Node {
     """The method to use when ordering \`Post\`."""
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection
+
+  """Reads and enables pagination through a set of \`ProjectLabel\`."""
+  projectLabels(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectLabelFilter
+
+    """The method to use when ordering \`ProjectLabel\`."""
+    orderBy: [ProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectLabelConnection
+
+  """Reads and enables pagination through a set of \`Label\`."""
+  labels(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LabelFilter
+
+    """The method to use when ordering \`Label\`."""
+    orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LabelConnection
 
   """Reads and enables pagination through a set of \`Column\`."""
   columns(
@@ -7941,21 +8642,24 @@ interface Node {
   id: ID!
 }
 
-type TaskLabel implements Node {
+type ProjectProjectLabel implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   id: ID!
-  taskId: UUID!
-  labelId: UUID!
+  projectId: UUID!
+  projectLabelId: UUID!
   createdAt: Datetime!
-  updatedAt: Datetime!
 
-  """Reads a single \`Label\` that is related to this \`TaskLabel\`."""
-  label: Label
+  """
+  Reads a single \`Project\` that is related to this \`ProjectProjectLabel\`.
+  """
+  project: Project
 
-  """Reads a single \`Task\` that is related to this \`TaskLabel\`."""
-  task: Task
+  """
+  Reads a single \`ProjectLabel\` that is related to this \`ProjectProjectLabel\`.
+  """
+  projectLabel: ProjectLabel
 }
 
 """
@@ -7971,56 +8675,6 @@ that do not conform to both ISO 8601 and RFC 3339 may be coerced, which may lead
 to unexpected results.
 """
 scalar Datetime
-
-type Label implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  name: String!
-  color: String!
-  projectId: UUID!
-  createdAt: Datetime!
-  updatedAt: Datetime!
-
-  """Reads a single \`Project\` that is related to this \`Label\`."""
-  project: Project
-
-  """Reads and enables pagination through a set of \`TaskLabel\`."""
-  taskLabels(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaskLabelCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaskLabelFilter
-
-    """The method to use when ordering \`TaskLabel\`."""
-    orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaskLabelConnection!
-}
 
 type Project implements Node {
   """
@@ -8178,6 +8832,40 @@ type Project implements Node {
     """The method to use when ordering \`UserPreference\`."""
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection!
+
+  """Reads and enables pagination through a set of \`ProjectProjectLabel\`."""
+  projectProjectLabels(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectProjectLabelFilter
+
+    """The method to use when ordering \`ProjectProjectLabel\`."""
+    orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelConnection!
 }
 
 type ProjectColumn implements Node {
@@ -8678,6 +9366,12 @@ input ProjectFilter {
 
   """Some related \`userPreferences\` exist."""
   userPreferencesExist: Boolean
+
+  """Filter by the object’s \`projectProjectLabels\` relation."""
+  projectProjectLabels: ProjectToManyProjectProjectLabelFilter
+
+  """Some related \`projectProjectLabels\` exist."""
+  projectProjectLabelsExist: Boolean
 
   """Filter by the object’s \`projectColumn\` relation."""
   projectColumn: ProjectColumnFilter
@@ -10175,6 +10869,12 @@ input LabelFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s \`icon\` field."""
+  icon: StringFilter
+
+  """Filter by the object’s \`organizationId\` field."""
+  organizationId: StringFilter
+
   """Filter by the object’s \`taskLabels\` relation."""
   taskLabels: LabelToManyTaskLabelFilter
 
@@ -10183,6 +10883,9 @@ input LabelFilter {
 
   """Filter by the object’s \`project\` relation."""
   project: ProjectFilter
+
+  """A related \`project\` exists."""
+  projectExists: Boolean
 
   """Checks for all expressions in this list."""
   and: [LabelFilter!]
@@ -10378,6 +11081,8 @@ input LabelDistinctCountAggregateFilter {
   projectId: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+  icon: BigIntFilter
+  organizationId: BigIntFilter
 }
 
 """
@@ -10401,6 +11106,145 @@ input ProjectToManyUserPreferenceFilter {
 
   """Aggregates across related \`UserPreference\` match the filter criteria."""
   aggregates: UserPreferenceAggregatesFilter
+}
+
+"""
+A filter to be used against many \`ProjectProjectLabel\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyProjectProjectLabelFilter {
+  """
+  Every related \`ProjectProjectLabel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectProjectLabelFilter
+
+  """
+  Some related \`ProjectProjectLabel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectProjectLabelFilter
+
+  """
+  No related \`ProjectProjectLabel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectProjectLabelFilter
+
+  """
+  Aggregates across related \`ProjectProjectLabel\` match the filter criteria.
+  """
+  aggregates: ProjectProjectLabelAggregatesFilter
+}
+
+"""
+A filter to be used against \`ProjectProjectLabel\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectProjectLabelFilter {
+  """Filter by the object’s \`projectId\` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s \`projectLabelId\` field."""
+  projectLabelId: UUIDFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
+
+  """Filter by the object’s \`projectLabel\` relation."""
+  projectLabel: ProjectLabelFilter
+
+  """Checks for all expressions in this list."""
+  and: [ProjectProjectLabelFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectProjectLabelFilter!]
+
+  """Negates the expression."""
+  not: ProjectProjectLabelFilter
+}
+
+"""
+A filter to be used against \`ProjectLabel\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectLabelFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`name\` field."""
+  name: StringFilter
+
+  """Filter by the object’s \`color\` field."""
+  color: StringFilter
+
+  """Filter by the object’s \`icon\` field."""
+  icon: StringFilter
+
+  """Filter by the object’s \`organizationId\` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s \`projectProjectLabels\` relation."""
+  projectProjectLabels: ProjectLabelToManyProjectProjectLabelFilter
+
+  """Some related \`projectProjectLabels\` exist."""
+  projectProjectLabelsExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [ProjectLabelFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectLabelFilter!]
+
+  """Negates the expression."""
+  not: ProjectLabelFilter
+}
+
+"""
+A filter to be used against many \`ProjectProjectLabel\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectLabelToManyProjectProjectLabelFilter {
+  """
+  Every related \`ProjectProjectLabel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectProjectLabelFilter
+
+  """
+  Some related \`ProjectProjectLabel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectProjectLabelFilter
+
+  """
+  No related \`ProjectProjectLabel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectProjectLabelFilter
+
+  """
+  Aggregates across related \`ProjectProjectLabel\` match the filter criteria.
+  """
+  aggregates: ProjectProjectLabelAggregatesFilter
+}
+
+"""
+A filter to be used against aggregates of \`ProjectProjectLabel\` object types.
+"""
+input ProjectProjectLabelAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`ProjectProjectLabel\` object to be included within the aggregate.
+  """
+  filter: ProjectProjectLabelFilter
+
+  """Distinct count aggregate over matching \`ProjectProjectLabel\` objects."""
+  distinctCount: ProjectProjectLabelDistinctCountAggregateFilter
+}
+
+input ProjectProjectLabelDistinctCountAggregateFilter {
+  projectId: BigIntFilter
+  projectLabelId: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -10692,6 +11536,10 @@ enum ProjectOrderBy {
   LABELS_DISTINCT_COUNT_CREATED_AT_DESC
   LABELS_DISTINCT_COUNT_UPDATED_AT_ASC
   LABELS_DISTINCT_COUNT_UPDATED_AT_DESC
+  LABELS_DISTINCT_COUNT_ICON_ASC
+  LABELS_DISTINCT_COUNT_ICON_DESC
+  LABELS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  LABELS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
   USER_PREFERENCES_COUNT_ASC
   USER_PREFERENCES_COUNT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_ASC
@@ -10710,6 +11558,14 @@ enum ProjectOrderBy {
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC
   USER_PREFERENCES_DISTINCT_COUNT_COLOR_ASC
   USER_PREFERENCES_DISTINCT_COUNT_COLOR_DESC
+  PROJECT_PROJECT_LABELS_COUNT_ASC
+  PROJECT_PROJECT_LABELS_COUNT_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of \`Column\` values."""
@@ -12471,6 +13327,108 @@ type TaskLabelConnection {
   ): [TaskLabelAggregates!]
 }
 
+type TaskLabel implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  taskId: UUID!
+  labelId: UUID!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single \`Label\` that is related to this \`TaskLabel\`."""
+  label: Label
+
+  """Reads a single \`Task\` that is related to this \`TaskLabel\`."""
+  task: Task
+}
+
+type Label implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  name: String!
+  color: String!
+  projectId: UUID
+  createdAt: Datetime!
+  updatedAt: Datetime!
+  icon: String
+  organizationId: String
+
+  """Reads a single \`Project\` that is related to this \`Label\`."""
+  project: Project
+
+  """Reads and enables pagination through a set of \`TaskLabel\`."""
+  taskLabels(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskLabelFilter
+
+    """The method to use when ordering \`TaskLabel\`."""
+    orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskLabelConnection!
+}
+
+"""
+A condition to be used against \`TaskLabel\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input TaskLabelCondition {
+  """Checks for equality with the object’s \`taskId\` field."""
+  taskId: UUID
+
+  """Checks for equality with the object’s \`labelId\` field."""
+  labelId: UUID
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering \`TaskLabel\`."""
+enum TaskLabelOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TASK_ID_ASC
+  TASK_ID_DESC
+  LABEL_ID_ASC
+  LABEL_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 """A \`TaskLabel\` edge in the connection."""
 type TaskLabelEdge {
   """A cursor for use in pagination."""
@@ -12573,39 +13531,6 @@ input TaskLabelHavingVarianceSampleInput {
 input TaskLabelHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against \`TaskLabel\` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input TaskLabelCondition {
-  """Checks for equality with the object’s \`taskId\` field."""
-  taskId: UUID
-
-  """Checks for equality with the object’s \`labelId\` field."""
-  labelId: UUID
-
-  """Checks for equality with the object’s \`createdAt\` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s \`updatedAt\` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering \`TaskLabel\`."""
-enum TaskLabelOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TASK_ID_ASC
-  TASK_ID_DESC
-  LABEL_ID_ASC
-  LABEL_ID_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 """A \`Task\` edge in the connection."""
@@ -13258,6 +14183,12 @@ type LabelDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
 }
 
 """Grouping methods for \`Label\` for usage during aggregation."""
@@ -13271,6 +14202,8 @@ enum LabelGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  ICON
+  ORGANIZATION_ID
 }
 
 """Conditions for \`Label\` aggregates."""
@@ -13354,6 +14287,12 @@ input LabelCondition {
 
   """Checks for equality with the object’s \`updatedAt\` field."""
   updatedAt: Datetime
+
+  """Checks for equality with the object’s \`icon\` field."""
+  icon: String
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: String
 }
 
 """Methods to use when ordering \`Label\`."""
@@ -13373,6 +14312,10 @@ enum LabelOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  ICON_ASC
+  ICON_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
   TASK_LABELS_COUNT_ASC
   TASK_LABELS_COUNT_DESC
   TASK_LABELS_DISTINCT_COUNT_TASK_ID_ASC
@@ -13383,6 +14326,210 @@ enum LabelOrderBy {
   TASK_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_ASC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of \`ProjectProjectLabel\` values."""
+type ProjectProjectLabelConnection {
+  """A list of \`ProjectProjectLabel\` objects."""
+  nodes: [ProjectProjectLabel!]!
+
+  """
+  A list of edges which contains the \`ProjectProjectLabel\` and cursor to aid in pagination.
+  """
+  edges: [ProjectProjectLabelEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`ProjectProjectLabel\` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectProjectLabelAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping \`ProjectProjectLabel\` for these aggregates.
+    """
+    groupBy: [ProjectProjectLabelGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectProjectLabelHavingInput
+  ): [ProjectProjectLabelAggregates!]
+}
+
+"""A \`ProjectProjectLabel\` edge in the connection."""
+type ProjectProjectLabelEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`ProjectProjectLabel\` at the end of the edge."""
+  node: ProjectProjectLabel!
+}
+
+type ProjectProjectLabelAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectProjectLabelDistinctCountAggregates
+}
+
+type ProjectProjectLabelDistinctCountAggregates {
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of projectLabelId across the matching connection"""
+  projectLabelId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""
+Grouping methods for \`ProjectProjectLabel\` for usage during aggregation.
+"""
+enum ProjectProjectLabelGroupBy {
+  PROJECT_ID
+  PROJECT_LABEL_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`ProjectProjectLabel\` aggregates."""
+input ProjectProjectLabelHavingInput {
+  AND: [ProjectProjectLabelHavingInput!]
+  OR: [ProjectProjectLabelHavingInput!]
+  sum: ProjectProjectLabelHavingSumInput
+  distinctCount: ProjectProjectLabelHavingDistinctCountInput
+  min: ProjectProjectLabelHavingMinInput
+  max: ProjectProjectLabelHavingMaxInput
+  average: ProjectProjectLabelHavingAverageInput
+  stddevSample: ProjectProjectLabelHavingStddevSampleInput
+  stddevPopulation: ProjectProjectLabelHavingStddevPopulationInput
+  varianceSample: ProjectProjectLabelHavingVarianceSampleInput
+  variancePopulation: ProjectProjectLabelHavingVariancePopulationInput
+}
+
+input ProjectProjectLabelHavingSumInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingMinInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`ProjectProjectLabel\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input ProjectProjectLabelCondition {
+  """Checks for equality with the object’s \`projectId\` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s \`projectLabelId\` field."""
+  projectLabelId: UUID
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering \`ProjectProjectLabel\`."""
+enum ProjectProjectLabelOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  PROJECT_LABEL_ID_ASC
+  PROJECT_LABEL_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+}
+
+type ProjectLabel implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  name: String!
+  color: String!
+  icon: String
+  organizationId: String!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads and enables pagination through a set of \`ProjectProjectLabel\`."""
+  projectProjectLabels(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectProjectLabelFilter
+
+    """The method to use when ordering \`ProjectProjectLabel\`."""
+    orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelConnection!
 }
 
 type Setting implements Node {
@@ -13732,6 +14879,210 @@ enum UserOrderBy {
   USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of \`ProjectLabel\` values."""
+type ProjectLabelConnection {
+  """A list of \`ProjectLabel\` objects."""
+  nodes: [ProjectLabel!]!
+
+  """
+  A list of edges which contains the \`ProjectLabel\` and cursor to aid in pagination.
+  """
+  edges: [ProjectLabelEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`ProjectLabel\` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectLabelAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`ProjectLabel\` for these aggregates."""
+    groupBy: [ProjectLabelGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectLabelHavingInput
+  ): [ProjectLabelAggregates!]
+}
+
+"""A \`ProjectLabel\` edge in the connection."""
+type ProjectLabelEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`ProjectLabel\` at the end of the edge."""
+  node: ProjectLabel!
+}
+
+type ProjectLabelAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectLabelDistinctCountAggregates
+}
+
+type ProjectLabelDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of color across the matching connection"""
+  color: BigInt
+
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for \`ProjectLabel\` for usage during aggregation."""
+enum ProjectLabelGroupBy {
+  NAME
+  COLOR
+  ICON
+  ORGANIZATION_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`ProjectLabel\` aggregates."""
+input ProjectLabelHavingInput {
+  AND: [ProjectLabelHavingInput!]
+  OR: [ProjectLabelHavingInput!]
+  sum: ProjectLabelHavingSumInput
+  distinctCount: ProjectLabelHavingDistinctCountInput
+  min: ProjectLabelHavingMinInput
+  max: ProjectLabelHavingMaxInput
+  average: ProjectLabelHavingAverageInput
+  stddevSample: ProjectLabelHavingStddevSampleInput
+  stddevPopulation: ProjectLabelHavingStddevPopulationInput
+  varianceSample: ProjectLabelHavingVarianceSampleInput
+  variancePopulation: ProjectLabelHavingVariancePopulationInput
+}
+
+input ProjectLabelHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`ProjectLabel\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ProjectLabelCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`name\` field."""
+  name: String
+
+  """Checks for equality with the object’s \`color\` field."""
+  color: String
+
+  """Checks for equality with the object’s \`icon\` field."""
+  icon: String
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering \`ProjectLabel\`."""
+enum ProjectLabelOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  COLOR_ASC
+  COLOR_DESC
+  ICON_ASC
+  ICON_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  PROJECT_PROJECT_LABELS_COUNT_ASC
+  PROJECT_PROJECT_LABELS_COUNT_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of \`ProjectColumn\` values."""
@@ -14345,6 +15696,14 @@ enum SettingOrderBy {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single \`ProjectProjectLabel\`."""
+  createProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectProjectLabelInput!
+  ): CreateProjectProjectLabelPayload
+
   """Creates a single \`TaskLabel\`."""
   createTaskLabel(
     """
@@ -14369,14 +15728,6 @@ type Mutation {
     input: CreateEmojiInput!
   ): CreateEmojiPayload
 
-  """Creates a single \`Label\`."""
-  createLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateLabelInput!
-  ): CreateLabelPayload
-
   """Creates a single \`User\`."""
   createUser(
     """
@@ -14392,6 +15743,22 @@ type Mutation {
     """
     input: CreatePostInput!
   ): CreatePostPayload
+
+  """Creates a single \`ProjectLabel\`."""
+  createProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectLabelInput!
+  ): CreateProjectLabelPayload
+
+  """Creates a single \`Label\`."""
+  createLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLabelInput!
+  ): CreateLabelPayload
 
   """Creates a single \`Column\`."""
   createColumn(
@@ -14449,6 +15816,24 @@ type Mutation {
     input: CreateUserOrganizationInput!
   ): CreateUserOrganizationPayload
 
+  """
+  Updates a single \`ProjectProjectLabel\` using its globally unique id and a patch.
+  """
+  updateProjectProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectProjectLabelByIdInput!
+  ): UpdateProjectProjectLabelPayload
+
+  """Updates a single \`ProjectProjectLabel\` using a unique key and a patch."""
+  updateProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectProjectLabelInput!
+  ): UpdateProjectProjectLabelPayload
+
   """Updates a single \`TaskLabel\` using its globally unique id and a patch."""
   updateTaskLabelById(
     """
@@ -14497,22 +15882,6 @@ type Mutation {
     input: UpdateEmojiInput!
   ): UpdateEmojiPayload
 
-  """Updates a single \`Label\` using its globally unique id and a patch."""
-  updateLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLabelByIdInput!
-  ): UpdateLabelPayload
-
-  """Updates a single \`Label\` using a unique key and a patch."""
-  updateLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLabelInput!
-  ): UpdateLabelPayload
-
   """Updates a single \`User\` using its globally unique id and a patch."""
   updateUserById(
     """
@@ -14544,6 +15913,40 @@ type Mutation {
     """
     input: UpdatePostInput!
   ): UpdatePostPayload
+
+  """
+  Updates a single \`ProjectLabel\` using its globally unique id and a patch.
+  """
+  updateProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLabelByIdInput!
+  ): UpdateProjectLabelPayload
+
+  """Updates a single \`ProjectLabel\` using a unique key and a patch."""
+  updateProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLabelInput!
+  ): UpdateProjectLabelPayload
+
+  """Updates a single \`Label\` using its globally unique id and a patch."""
+  updateLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLabelByIdInput!
+  ): UpdateLabelPayload
+
+  """Updates a single \`Label\` using a unique key and a patch."""
+  updateLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLabelInput!
+  ): UpdateLabelPayload
 
   """Updates a single \`Column\` using its globally unique id and a patch."""
   updateColumnById(
@@ -14663,6 +16066,22 @@ type Mutation {
     input: UpdateUserOrganizationInput!
   ): UpdateUserOrganizationPayload
 
+  """Deletes a single \`ProjectProjectLabel\` using its globally unique id."""
+  deleteProjectProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectProjectLabelByIdInput!
+  ): DeleteProjectProjectLabelPayload
+
+  """Deletes a single \`ProjectProjectLabel\` using a unique key."""
+  deleteProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectProjectLabelInput!
+  ): DeleteProjectProjectLabelPayload
+
   """Deletes a single \`TaskLabel\` using its globally unique id."""
   deleteTaskLabelById(
     """
@@ -14711,22 +16130,6 @@ type Mutation {
     input: DeleteEmojiInput!
   ): DeleteEmojiPayload
 
-  """Deletes a single \`Label\` using its globally unique id."""
-  deleteLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLabelByIdInput!
-  ): DeleteLabelPayload
-
-  """Deletes a single \`Label\` using a unique key."""
-  deleteLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLabelInput!
-  ): DeleteLabelPayload
-
   """Deletes a single \`User\` using its globally unique id."""
   deleteUserById(
     """
@@ -14758,6 +16161,38 @@ type Mutation {
     """
     input: DeletePostInput!
   ): DeletePostPayload
+
+  """Deletes a single \`ProjectLabel\` using its globally unique id."""
+  deleteProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLabelByIdInput!
+  ): DeleteProjectLabelPayload
+
+  """Deletes a single \`ProjectLabel\` using a unique key."""
+  deleteProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLabelInput!
+  ): DeleteProjectLabelPayload
+
+  """Deletes a single \`Label\` using its globally unique id."""
+  deleteLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLabelByIdInput!
+  ): DeleteLabelPayload
+
+  """Deletes a single \`Label\` using a unique key."""
+  deleteLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLabelInput!
+  ): DeleteLabelPayload
 
   """Deletes a single \`Column\` using its globally unique id."""
   deleteColumnById(
@@ -14870,6 +16305,48 @@ type Mutation {
     """
     input: DeleteUserOrganizationInput!
   ): DeleteUserOrganizationPayload
+}
+
+"""The output of our create \`ProjectProjectLabel\` mutation."""
+type CreateProjectProjectLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectProjectLabel\` that was created by this mutation."""
+  projectProjectLabel: ProjectProjectLabel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectProjectLabel\`. May be used by Relay 1."""
+  projectProjectLabelEdge(
+    """The method to use when ordering \`ProjectProjectLabel\`."""
+    orderBy: [ProjectProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelEdge
+}
+
+"""All input for the create \`ProjectProjectLabel\` mutation."""
+input CreateProjectProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`ProjectProjectLabel\` to be created by this mutation."""
+  projectProjectLabel: ProjectProjectLabelInput!
+}
+
+"""An input for mutations affecting \`ProjectProjectLabel\`"""
+input ProjectProjectLabelInput {
+  projectId: UUID!
+  projectLabelId: UUID!
+  createdAt: Datetime
 }
 
 """The output of our create \`TaskLabel\` mutation."""
@@ -15004,51 +16481,6 @@ input EmojiInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`Label\` mutation."""
-type CreateLabelPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Label\` that was created by this mutation."""
-  label: Label
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Label\`. May be used by Relay 1."""
-  labelEdge(
-    """The method to use when ordering \`Label\`."""
-    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LabelEdge
-}
-
-"""All input for the create \`Label\` mutation."""
-input CreateLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Label\` to be created by this mutation."""
-  label: LabelInput!
-}
-
-"""An input for mutations affecting \`Label\`"""
-input LabelInput {
-  rowId: UUID
-  name: String!
-  color: String!
-  projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create \`User\` mutation."""
 type CreateUserPayload {
   """
@@ -15139,6 +16571,99 @@ input PostInput {
   taskId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`ProjectLabel\` mutation."""
+type CreateProjectLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectLabel\` that was created by this mutation."""
+  projectLabel: ProjectLabel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectLabel\`. May be used by Relay 1."""
+  projectLabelEdge(
+    """The method to use when ordering \`ProjectLabel\`."""
+    orderBy: [ProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLabelEdge
+}
+
+"""All input for the create \`ProjectLabel\` mutation."""
+input CreateProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`ProjectLabel\` to be created by this mutation."""
+  projectLabel: ProjectLabelInput!
+}
+
+"""An input for mutations affecting \`ProjectLabel\`"""
+input ProjectLabelInput {
+  rowId: UUID
+  name: String!
+  color: String!
+  icon: String
+  organizationId: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`Label\` mutation."""
+type CreateLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Label\` that was created by this mutation."""
+  label: Label
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Label\`. May be used by Relay 1."""
+  labelEdge(
+    """The method to use when ordering \`Label\`."""
+    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LabelEdge
+}
+
+"""All input for the create \`Label\` mutation."""
+input CreateLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Label\` to be created by this mutation."""
+  label: LabelInput!
+}
+
+"""An input for mutations affecting \`Label\`"""
+input LabelInput {
+  rowId: UUID
+  name: String!
+  color: String!
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  icon: String
+  organizationId: String
 }
 
 """The output of our create \`Column\` mutation."""
@@ -15479,6 +17004,73 @@ input UserOrganizationInput {
   updatedAt: Datetime
 }
 
+"""The output of our update \`ProjectProjectLabel\` mutation."""
+type UpdateProjectProjectLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectProjectLabel\` that was updated by this mutation."""
+  projectProjectLabel: ProjectProjectLabel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectProjectLabel\`. May be used by Relay 1."""
+  projectProjectLabelEdge(
+    """The method to use when ordering \`ProjectProjectLabel\`."""
+    orderBy: [ProjectProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelEdge
+}
+
+"""All input for the \`updateProjectProjectLabelById\` mutation."""
+input UpdateProjectProjectLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ProjectProjectLabel\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`ProjectProjectLabel\` being updated.
+  """
+  patch: ProjectProjectLabelPatch!
+}
+
+"""
+Represents an update to a \`ProjectProjectLabel\`. Fields that are set will be updated.
+"""
+input ProjectProjectLabelPatch {
+  projectId: UUID
+  projectLabelId: UUID
+  createdAt: Datetime
+}
+
+"""All input for the \`updateProjectProjectLabel\` mutation."""
+input UpdateProjectProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  projectId: UUID!
+  projectLabelId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`ProjectProjectLabel\` being updated.
+  """
+  patch: ProjectProjectLabelPatch!
+}
+
 """The output of our update \`TaskLabel\` mutation."""
 type UpdateTaskLabelPayload {
   """
@@ -15685,75 +17277,6 @@ input UpdateEmojiInput {
   patch: EmojiPatch!
 }
 
-"""The output of our update \`Label\` mutation."""
-type UpdateLabelPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Label\` that was updated by this mutation."""
-  label: Label
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Label\`. May be used by Relay 1."""
-  labelEdge(
-    """The method to use when ordering \`Label\`."""
-    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LabelEdge
-}
-
-"""All input for the \`updateLabelById\` mutation."""
-input UpdateLabelByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Label\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Label\` being updated.
-  """
-  patch: LabelPatch!
-}
-
-"""
-Represents an update to a \`Label\`. Fields that are set will be updated.
-"""
-input LabelPatch {
-  rowId: UUID
-  name: String
-  color: String
-  projectId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the \`updateLabel\` mutation."""
-input UpdateLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Label\` being updated.
-  """
-  patch: LabelPatch!
-}
-
 """The output of our update \`User\` mutation."""
 type UpdateUserPayload {
   """
@@ -15888,6 +17411,147 @@ input UpdatePostInput {
   An object where the defined keys will be set on the \`Post\` being updated.
   """
   patch: PostPatch!
+}
+
+"""The output of our update \`ProjectLabel\` mutation."""
+type UpdateProjectLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectLabel\` that was updated by this mutation."""
+  projectLabel: ProjectLabel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectLabel\`. May be used by Relay 1."""
+  projectLabelEdge(
+    """The method to use when ordering \`ProjectLabel\`."""
+    orderBy: [ProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLabelEdge
+}
+
+"""All input for the \`updateProjectLabelById\` mutation."""
+input UpdateProjectLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ProjectLabel\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`ProjectLabel\` being updated.
+  """
+  patch: ProjectLabelPatch!
+}
+
+"""
+Represents an update to a \`ProjectLabel\`. Fields that are set will be updated.
+"""
+input ProjectLabelPatch {
+  rowId: UUID
+  name: String
+  color: String
+  icon: String
+  organizationId: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateProjectLabel\` mutation."""
+input UpdateProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`ProjectLabel\` being updated.
+  """
+  patch: ProjectLabelPatch!
+}
+
+"""The output of our update \`Label\` mutation."""
+type UpdateLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Label\` that was updated by this mutation."""
+  label: Label
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Label\`. May be used by Relay 1."""
+  labelEdge(
+    """The method to use when ordering \`Label\`."""
+    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LabelEdge
+}
+
+"""All input for the \`updateLabelById\` mutation."""
+input UpdateLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Label\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Label\` being updated.
+  """
+  patch: LabelPatch!
+}
+
+"""
+Represents an update to a \`Label\`. Fields that are set will be updated.
+"""
+input LabelPatch {
+  rowId: UUID
+  name: String
+  color: String
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  icon: String
+  organizationId: String
+}
+
+"""All input for the \`updateLabel\` mutation."""
+input UpdateLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Label\` being updated.
+  """
+  patch: LabelPatch!
 }
 
 """The output of our update \`Column\` mutation."""
@@ -16394,6 +18058,55 @@ input UpdateUserOrganizationInput {
   patch: UserOrganizationPatch!
 }
 
+"""The output of our delete \`ProjectProjectLabel\` mutation."""
+type DeleteProjectProjectLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectProjectLabel\` that was deleted by this mutation."""
+  projectProjectLabel: ProjectProjectLabel
+  deletedProjectProjectLabelId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectProjectLabel\`. May be used by Relay 1."""
+  projectProjectLabelEdge(
+    """The method to use when ordering \`ProjectProjectLabel\`."""
+    orderBy: [ProjectProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelEdge
+}
+
+"""All input for the \`deleteProjectProjectLabelById\` mutation."""
+input DeleteProjectProjectLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ProjectProjectLabel\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteProjectProjectLabel\` mutation."""
+input DeleteProjectProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  projectId: UUID!
+  projectLabelId: UUID!
+}
+
 """The output of our delete \`TaskLabel\` mutation."""
 type DeleteTaskLabelPayload {
   """
@@ -16540,54 +18253,6 @@ input DeleteEmojiInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Label\` mutation."""
-type DeleteLabelPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Label\` that was deleted by this mutation."""
-  label: Label
-  deletedLabelId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Label\`. May be used by Relay 1."""
-  labelEdge(
-    """The method to use when ordering \`Label\`."""
-    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LabelEdge
-}
-
-"""All input for the \`deleteLabelById\` mutation."""
-input DeleteLabelByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Label\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteLabel\` mutation."""
-input DeleteLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`User\` mutation."""
 type DeleteUserPayload {
   """
@@ -16676,6 +18341,102 @@ input DeletePostByIdInput {
 
 """All input for the \`deletePost\` mutation."""
 input DeletePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`ProjectLabel\` mutation."""
+type DeleteProjectLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectLabel\` that was deleted by this mutation."""
+  projectLabel: ProjectLabel
+  deletedProjectLabelId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectLabel\`. May be used by Relay 1."""
+  projectLabelEdge(
+    """The method to use when ordering \`ProjectLabel\`."""
+    orderBy: [ProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLabelEdge
+}
+
+"""All input for the \`deleteProjectLabelById\` mutation."""
+input DeleteProjectLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ProjectLabel\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteProjectLabel\` mutation."""
+input DeleteProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Label\` mutation."""
+type DeleteLabelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Label\` that was deleted by this mutation."""
+  label: Label
+  deletedLabelId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Label\`. May be used by Relay 1."""
+  labelEdge(
+    """The method to use when ordering \`Label\`."""
+    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LabelEdge
+}
+
+"""All input for the \`deleteLabelById\` mutation."""
+input DeleteLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Label\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteLabel\` mutation."""
+input DeleteLabelInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -17082,7 +18843,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed2(value, "object");
+              assertAllowed3(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17132,7 +18893,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed7(value, "object");
+              assertAllowed9(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17182,7 +18943,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed3(value, "object");
+              assertAllowed4(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17236,7 +18997,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed4(value, "object");
+              assertAllowed8(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17371,7 +19132,109 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed8(value, "object");
+              assertAllowed10(value, "object");
+              if (value == null) return;
+              const condition = new PgCondition(queryBuilder);
+              return condition;
+            });
+          },
+          orderBy(parent, $connection, value) {
+            const $select = $connection.getSubplan();
+            value.apply($select);
+          }
+        }
+      },
+      projectLabel(_$root, {
+        $rowId
+      }) {
+        return resource_project_labelPgResource.get({
+          id: $rowId
+        });
+      },
+      projectLabelById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_ProjectLabel($nodeId);
+      },
+      projectLabels: {
+        plan() {
+          return connection(resource_project_labelPgResource.find());
+        },
+        args: {
+          first(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          },
+          last(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          },
+          offset(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          },
+          before(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          },
+          after(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          },
+          condition(_condition, $connection, arg) {
+            const $select = $connection.getSubplan();
+            arg.apply($select, qbWhereBuilder);
+          },
+          filter(_, $connection, fieldArg) {
+            const $pgSelect = $connection.getSubplan();
+            fieldArg.apply($pgSelect, (queryBuilder, value) => {
+              assertAllowed7(value, "object");
+              if (value == null) return;
+              const condition = new PgCondition(queryBuilder);
+              return condition;
+            });
+          },
+          orderBy(parent, $connection, value) {
+            const $select = $connection.getSubplan();
+            value.apply($select);
+          }
+        }
+      },
+      projectProjectLabel(_$root, {
+        $projectId,
+        $projectLabelId
+      }) {
+        return resource_project_project_labelPgResource.get({
+          project_id: $projectId,
+          project_label_id: $projectLabelId
+        });
+      },
+      projectProjectLabelById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_ProjectProjectLabel($nodeId);
+      },
+      projectProjectLabels: {
+        plan() {
+          return connection(resource_project_project_labelPgResource.find());
+        },
+        args: {
+          first(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          },
+          last(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          },
+          offset(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          },
+          before(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          },
+          after(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          },
+          condition(_condition, $connection, arg) {
+            const $select = $connection.getSubplan();
+            arg.apply($select, qbWhereBuilder);
+          },
+          filter(_, $connection, fieldArg) {
+            const $pgSelect = $connection.getSubplan();
+            fieldArg.apply($pgSelect, (queryBuilder, value) => {
+              assertAllowed(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17410,7 +19273,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed12(value, "object");
+              assertAllowed14(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17470,7 +19333,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed10(value, "object");
+              assertAllowed12(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17551,7 +19414,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed(value, "object");
+              assertAllowed2(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17590,7 +19453,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed11(value, "object");
+              assertAllowed13(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17674,7 +19537,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed13(value, "object");
+              assertAllowed15(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17733,7 +19596,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed9(value, "object");
+              assertAllowed11(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -17868,17 +19731,17 @@ ${String(oldPlan4)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan5.apply(this, args);
+                $prev = oldPlan7.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createLabel"}, but that function did not return a step!
-${String(oldPlan5)}`);
+${String(oldPlan7)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -17893,17 +19756,17 @@ ${String(oldPlan5)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan7.apply(this, args);
+                $prev = oldPlan6.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createPost"}, but that function did not return a step!
-${String(oldPlan7)}`);
+${String(oldPlan6)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -17957,6 +19820,34 @@ ${String(oldPlan9)}`);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      createProjectLabel: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_project_labelPgResource, Object.create(null));
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      createProjectProjectLabel: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_project_project_labelPgResource, Object.create(null));
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
         },
         args: {
           input(_, $object) {
@@ -18032,17 +19923,17 @@ ${String(oldPlan)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan6.apply(this, args);
+                $prev = oldPlan5.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createUser"}, but that function did not return a step!
-${String(oldPlan6)}`);
+${String(oldPlan5)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18213,17 +20104,17 @@ ${String(oldPlan27)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan28.apply(this, args);
+                $prev = oldPlan30.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteLabel"}, but that function did not return a step!
-${String(oldPlan28)}`);
+${String(oldPlan30)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18252,17 +20143,17 @@ ${String(oldPlan28)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan30.apply(this, args);
+                $prev = oldPlan29.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePost"}, but that function did not return a step!
-${String(oldPlan30)}`);
+${String(oldPlan29)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18354,6 +20245,67 @@ ${String(oldPlan32)}`);
       deleteProjectColumnById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_project_columnPgResource, specFromArgs_ProjectColumn2(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deleteProjectLabel: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_project_labelPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deleteProjectLabelById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_project_labelPgResource, specFromArgs_ProjectLabel2(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deleteProjectProjectLabel: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_project_project_labelPgResource, {
+            project_id: args.getRaw(['input', "projectId"]),
+            project_label_id: args.getRaw(['input', "projectLabelId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deleteProjectProjectLabelById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_project_project_labelPgResource, specFromArgs_ProjectProjectLabel2(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -18477,17 +20429,17 @@ ${String(oldPlan24)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan29.apply(this, args);
+                $prev = oldPlan28.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUser"}, but that function did not return a step!
-${String(oldPlan29)}`);
+${String(oldPlan28)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18694,17 +20646,17 @@ ${String(oldPlan15)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan16.apply(this, args);
+                $prev = oldPlan18.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateLabel"}, but that function did not return a step!
-${String(oldPlan16)}`);
+${String(oldPlan18)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18733,17 +20685,17 @@ ${String(oldPlan16)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan18.apply(this, args);
+                $prev = oldPlan17.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePost"}, but that function did not return a step!
-${String(oldPlan18)}`);
+${String(oldPlan17)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18835,6 +20787,67 @@ ${String(oldPlan20)}`);
       updateProjectColumnById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_project_columnPgResource, specFromArgs_ProjectColumn(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      updateProjectLabel: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_project_labelPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      updateProjectLabelById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_project_labelPgResource, specFromArgs_ProjectLabel(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      updateProjectProjectLabel: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_project_project_labelPgResource, {
+            project_id: args.getRaw(['input', "projectId"]),
+            project_label_id: args.getRaw(['input', "projectLabelId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      updateProjectProjectLabelById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_project_project_labelPgResource, specFromArgs_ProjectProjectLabel(args));
           args.apply($update);
           return object({
             result: $update
@@ -18958,17 +20971,17 @@ ${String(oldPlan14)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan17.apply(this, args);
+                $prev = oldPlan16.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUser"}, but that function did not return a step!
-${String(oldPlan17)}`);
+${String(oldPlan16)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19223,7 +21236,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed66(value, "object");
+              assertAllowed74(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -19522,6 +21535,23 @@ ${String(oldPlan21)}`);
       }
     }
   },
+  CreateProjectLabelPayload: {
+    assertStep: assertExecutableStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      projectLabel($object) {
+        return $object.get("result");
+      },
+      projectLabelEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_project_labelPgResource, project_labelUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
   CreateProjectPayload: {
     assertStep: assertExecutableStep,
     plans: {
@@ -19533,6 +21563,23 @@ ${String(oldPlan21)}`);
       },
       projectEdge($mutation, fieldArgs) {
         return pgMutationPayloadEdge(resource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
+  CreateProjectProjectLabelPayload: {
+    assertStep: assertExecutableStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      projectProjectLabel($object) {
+        return $object.get("result");
+      },
+      projectProjectLabelEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_project_project_labelPgResource, project_project_labelUniques[0].attributes, $mutation, fieldArgs);
       },
       query() {
         return rootValue();
@@ -19773,6 +21820,28 @@ ${String(oldPlan21)}`);
       }
     }
   },
+  DeleteProjectLabelPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      deletedProjectLabelId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_ProjectLabel.plan($record);
+        return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
+      },
+      projectLabel($object) {
+        return $object.get("result");
+      },
+      projectLabelEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_project_labelPgResource, project_labelUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
   DeleteProjectPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19789,6 +21858,28 @@ ${String(oldPlan21)}`);
       },
       projectEdge($mutation, fieldArgs) {
         return pgMutationPayloadEdge(resource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
+  DeleteProjectProjectLabelPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      deletedProjectProjectLabelId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_ProjectProjectLabel.plan($record);
+        return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
+      },
+      projectProjectLabel($object) {
+        return $object.get("result");
+      },
+      projectProjectLabelEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_project_project_labelPgResource, project_project_labelUniques[0].attributes, $mutation, fieldArgs);
       },
       query() {
         return rootValue();
@@ -20050,6 +22141,9 @@ ${String(oldPlan21)}`);
         const specifier = nodeIdHandler_Label.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Label.codec.name].encode);
       },
+      organizationId($record) {
+        return $record.get("organization_id");
+      },
       project($record) {
         return resource_projectPgResource.get({
           id: $record.get("project_id")
@@ -20091,7 +22185,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed14(value, "object");
+              assertAllowed85(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -20165,8 +22259,18 @@ ${String(oldPlan21)}`);
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
+      icon($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("icon")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
       name($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("name")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      organizationId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
@@ -20231,7 +22335,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed76(value, "object");
+              assertAllowed84(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -20383,7 +22487,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed15(value, "object");
+              assertAllowed16(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -20435,7 +22539,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed17(value, "object");
+              assertAllowed18(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -20460,6 +22564,48 @@ ${String(oldPlan21)}`);
       },
       projectColumnId($record) {
         return $record.get("project_column_id");
+      },
+      projectProjectLabels: {
+        plan($record) {
+          const $records = resource_project_project_labelPgResource.find({
+            project_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          },
+          last(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          },
+          offset(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          },
+          before(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          },
+          after(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          },
+          condition(_condition, $connection, arg) {
+            const $select = $connection.getSubplan();
+            arg.apply($select, qbWhereBuilder);
+          },
+          filter(_, $connection, fieldArg) {
+            const $pgSelect = $connection.getSubplan();
+            fieldArg.apply($pgSelect, (queryBuilder, value) => {
+              assertAllowed20(value, "object");
+              if (value == null) return;
+              const condition = new PgCondition(queryBuilder);
+              return condition;
+            });
+          },
+          orderBy(parent, $connection, value) {
+            const $select = $connection.getSubplan();
+            value.apply($select);
+          }
+        }
       },
       rowId($record) {
         return $record.get("id");
@@ -20494,7 +22640,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed16(value, "object");
+              assertAllowed17(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -20539,7 +22685,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed18(value, "object");
+              assertAllowed19(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -20655,7 +22801,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed19(value, "object");
+              assertAllowed21(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -20943,6 +23089,153 @@ ${String(oldPlan21)}`);
       }
     }
   },
+  ProjectLabel: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt($record) {
+        return $record.get("created_at");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_ProjectLabel.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_ProjectLabel.codec.name].encode);
+      },
+      organizationId($record) {
+        return $record.get("organization_id");
+      },
+      projectProjectLabels: {
+        plan($record) {
+          const $records = resource_project_project_labelPgResource.find({
+            project_label_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          },
+          last(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          },
+          offset(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          },
+          before(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          },
+          after(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          },
+          condition(_condition, $connection, arg) {
+            const $select = $connection.getSubplan();
+            arg.apply($select, qbWhereBuilder);
+          },
+          filter(_, $connection, fieldArg) {
+            const $pgSelect = $connection.getSubplan();
+            fieldArg.apply($pgSelect, (queryBuilder, value) => {
+              assertAllowed86(value, "object");
+              if (value == null) return;
+              const condition = new PgCondition(queryBuilder);
+              return condition;
+            });
+          },
+          orderBy(parent, $connection, value) {
+            const $select = $connection.getSubplan();
+            value.apply($select);
+          }
+        }
+      },
+      rowId($record) {
+        return $record.get("id");
+      },
+      updatedAt($record) {
+        return $record.get("updated_at");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of project_labelUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_project_labelPgResource.get(spec);
+    }
+  },
+  ProjectLabelAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      distinctCount($pgSelectSingle) {
+        return $pgSelectSingle;
+      },
+      keys($pgSelectSingle) {
+        const $groupDetails = $pgSelectSingle.getClassStep().getGroupDetails();
+        return lambda([$groupDetails, $pgSelectSingle], ([groupDetails, item]) => {
+          if (groupDetails.indicies.length === 0 || item == null) return null;else return groupDetails.indicies.map(({
+            index
+          }) => item[index]);
+        });
+      }
+    }
+  },
+  ProjectLabelConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate").single();
+      },
+      groupedAggregates: {
+        plan($connection) {
+          return $connection.cloneSubplanWithoutPagination("aggregate");
+        },
+        args: {
+          groupBy(_$parent, $pgSelect, input) {
+            return input.apply($pgSelect);
+          },
+          having(_$parent, $pgSelect, input) {
+            return input.apply($pgSelect, queryBuilder => queryBuilder.havingBuilder());
+          }
+        }
+      },
+      totalCount($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
+      }
+    }
+  },
+  ProjectLabelDistinctCountAggregates: {
+    plans: {
+      color($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("color")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      createdAt($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      icon($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("icon")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      name($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("name")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      organizationId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      rowId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      updatedAt($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      }
+    }
+  },
   ProjectMaxAggregates: {
     plans: {
       columnIndex($pgSelectSingle) {
@@ -20968,6 +23261,98 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("next_task_number")}`,
           sqlAggregate = spec3.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.int);
+      }
+    }
+  },
+  ProjectProjectLabel: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt($record) {
+        return $record.get("created_at");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_ProjectProjectLabel.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_ProjectProjectLabel.codec.name].encode);
+      },
+      project($record) {
+        return resource_projectPgResource.get({
+          id: $record.get("project_id")
+        });
+      },
+      projectId($record) {
+        return $record.get("project_id");
+      },
+      projectLabel($record) {
+        return resource_project_labelPgResource.get({
+          id: $record.get("project_label_id")
+        });
+      },
+      projectLabelId($record) {
+        return $record.get("project_label_id");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of project_project_labelUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_project_project_labelPgResource.get(spec);
+    }
+  },
+  ProjectProjectLabelAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      distinctCount($pgSelectSingle) {
+        return $pgSelectSingle;
+      },
+      keys($pgSelectSingle) {
+        const $groupDetails = $pgSelectSingle.getClassStep().getGroupDetails();
+        return lambda([$groupDetails, $pgSelectSingle], ([groupDetails, item]) => {
+          if (groupDetails.indicies.length === 0 || item == null) return null;else return groupDetails.indicies.map(({
+            index
+          }) => item[index]);
+        });
+      }
+    }
+  },
+  ProjectProjectLabelConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate").single();
+      },
+      groupedAggregates: {
+        plan($connection) {
+          return $connection.cloneSubplanWithoutPagination("aggregate");
+        },
+        args: {
+          groupBy(_$parent, $pgSelect, input) {
+            return input.apply($pgSelect);
+          },
+          having(_$parent, $pgSelect, input) {
+            return input.apply($pgSelect, queryBuilder => queryBuilder.havingBuilder());
+          }
+        }
+      },
+      totalCount($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
+      }
+    }
+  },
+  ProjectProjectLabelDistinctCountAggregates: {
+    plans: {
+      createdAt($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      projectId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("project_id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      projectLabelId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("project_label_id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       }
     }
   },
@@ -21204,7 +23589,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed67(value, "object");
+              assertAllowed75(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -21275,7 +23660,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed68(value, "object");
+              assertAllowed76(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -21328,7 +23713,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed69(value, "object");
+              assertAllowed77(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -21792,6 +24177,23 @@ ${String(oldPlan21)}`);
       }
     }
   },
+  UpdateProjectLabelPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      projectLabel($object) {
+        return $object.get("result");
+      },
+      projectLabelEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_project_labelPgResource, project_labelUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
   UpdateProjectPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -21803,6 +24205,23 @@ ${String(oldPlan21)}`);
       },
       projectEdge($mutation, fieldArgs) {
         return pgMutationPayloadEdge(resource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
+  UpdateProjectProjectLabelPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      projectProjectLabel($object) {
+        return $object.get("result");
+      },
+      projectProjectLabelEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_project_project_labelPgResource, project_project_labelUniques[0].attributes, $mutation, fieldArgs);
       },
       query() {
         return rootValue();
@@ -21944,7 +24363,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed70(value, "object");
+              assertAllowed78(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -21986,7 +24405,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed71(value, "object");
+              assertAllowed79(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22028,7 +24447,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed72(value, "object");
+              assertAllowed80(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22076,7 +24495,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed74(value, "object");
+              assertAllowed82(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22131,7 +24550,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed75(value, "object");
+              assertAllowed83(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22173,7 +24592,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed73(value, "object");
+              assertAllowed81(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22660,7 +25079,7 @@ export const inputObjects = {
   AssigneeFilter: {
     plans: {
       and($where, value) {
-        assertAllowed33(value, "list");
+        assertAllowed35(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -22681,18 +25100,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed35(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed33(value, "list");
+        assertAllowed35(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       task($where, value) {
-        assertAllowed32(value, "object");
+        assertAllowed34(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -22721,7 +25140,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed32(value, "object");
+        assertAllowed34(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -24019,7 +26438,7 @@ export const inputObjects = {
   ColumnFilter: {
     plans: {
       and($where, value) {
-        assertAllowed26(value, "list");
+        assertAllowed28(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -24048,18 +26467,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed26(value, "object");
+        assertAllowed28(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed26(value, "list");
+        assertAllowed28(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       project($where, value) {
-        assertAllowed25(value, "object");
+        assertAllowed27(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -24088,7 +26507,7 @@ export const inputObjects = {
         return condition;
       },
       tasks($where, value) {
-        assertAllowed24(value, "object");
+        assertAllowed26(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -24099,7 +26518,7 @@ export const inputObjects = {
         return $rel;
       },
       tasksExist($where, value) {
-        assertAllowed24(value, "scalar");
+        assertAllowed26(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -24519,7 +26938,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed27(value, "object");
+        assertAllowed29(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -24539,7 +26958,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed27(value, "object");
+        assertAllowed29(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -24559,7 +26978,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed27(value, "object");
+        assertAllowed29(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -24672,6 +27091,26 @@ export const inputObjects = {
         qb.setMeta("clientMutationId", val);
       },
       project(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
+  CreateProjectLabelInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      projectLabel(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
+  CreateProjectProjectLabelInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      projectProjectLabel(qb, arg) {
         if (arg != null) return qb.setBuilder();
       }
     }
@@ -25102,6 +27541,34 @@ export const inputObjects = {
       }
     }
   },
+  DeleteProjectLabelByIdInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      }
+    }
+  },
+  DeleteProjectLabelInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      }
+    }
+  },
+  DeleteProjectProjectLabelByIdInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      }
+    }
+  },
+  DeleteProjectProjectLabelInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      }
+    }
+  },
   DeleteSettingByIdInput: {
     plans: {
       clientMutationId(qb, val) {
@@ -25317,7 +27784,7 @@ export const inputObjects = {
   EmojiFilter: {
     plans: {
       and($where, value) {
-        assertAllowed43(value, "list");
+        assertAllowed45(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -25338,18 +27805,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed43(value, "object");
+        assertAllowed45(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed43(value, "list");
+        assertAllowed45(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       post($where, value) {
-        assertAllowed42(value, "object");
+        assertAllowed44(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -25386,7 +27853,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed42(value, "object");
+        assertAllowed44(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -26009,10 +28476,28 @@ export const inputObjects = {
           }
         });
       },
+      icon($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "icon",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
       name($condition, val) {
         $condition.where({
           type: "attribute",
           attribute: "name",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
+      organizationId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "organization_id",
           callback(expression) {
             return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
           }
@@ -26067,12 +28552,30 @@ export const inputObjects = {
         };
         return $col;
       },
+      icon($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("icon")}`, spec_label.attributes.icon.codec)
+        };
+        return $col;
+      },
       name($parent, input) {
         if (input == null) return;
         const $col = new PgCondition($parent);
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("name")}`, spec_label.attributes.name.codec)
+        };
+        return $col;
+      },
+      organizationId($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("organization_id")}`, spec_label.attributes.organization_id.codec)
         };
         return $col;
       },
@@ -26108,7 +28611,7 @@ export const inputObjects = {
   LabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed58(value, "list");
+        assertAllowed60(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -26128,6 +28631,14 @@ export const inputObjects = {
         condition.extensions.pgFilterAttribute = colSpec83;
         return condition;
       },
+      icon(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec85;
+        return condition;
+      },
       name(queryBuilder, value) {
         if (value === void 0) return;
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -26137,18 +28648,26 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed58(value, "object");
+        assertAllowed60(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed58(value, "list");
+        assertAllowed60(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
+      organizationId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec86;
+        return condition;
+      },
       project($where, value) {
-        assertAllowed57(value, "object");
+        assertAllowed59(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -26159,6 +28678,19 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
         return $subQuery;
+      },
+      projectExists($where, value) {
+        assertAllowed59(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: projectIdentifier,
+          alias: resource_projectPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.label.projectByMyProjectId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.label.projectByMyProjectId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       projectId(queryBuilder, value) {
         if (value === void 0) return;
@@ -26177,7 +28709,7 @@ export const inputObjects = {
         return condition;
       },
       taskLabels($where, value) {
-        assertAllowed56(value, "object");
+        assertAllowed58(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskLabelIdentifier,
@@ -26188,7 +28720,7 @@ export const inputObjects = {
         return $rel;
       },
       taskLabelsExist($where, value) {
-        assertAllowed56(value, "scalar");
+        assertAllowed58(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskLabelIdentifier,
@@ -26388,11 +28920,23 @@ export const inputObjects = {
       }) {
         obj.set("created_at", bakedInputRuntime(schema, field.type, val));
       },
+      icon(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("icon", bakedInputRuntime(schema, field.type, val));
+      },
       name(obj, val, {
         field,
         schema
       }) {
         obj.set("name", bakedInputRuntime(schema, field.type, val));
+      },
+      organizationId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
       },
       projectId(obj, val, {
         field,
@@ -26429,11 +28973,23 @@ export const inputObjects = {
       }) {
         obj.set("created_at", bakedInputRuntime(schema, field.type, val));
       },
+      icon(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("icon", bakedInputRuntime(schema, field.type, val));
+      },
       name(obj, val, {
         field,
         schema
       }) {
         obj.set("name", bakedInputRuntime(schema, field.type, val));
+      },
+      organizationId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
       },
       projectId(obj, val, {
         field,
@@ -26478,7 +29034,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed59(value, "object");
+        assertAllowed61(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -26498,7 +29054,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed59(value, "object");
+        assertAllowed61(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -26518,7 +29074,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed59(value, "object");
+        assertAllowed61(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -27224,12 +29780,12 @@ export const inputObjects = {
   PostFilter: {
     plans: {
       and($where, value) {
-        assertAllowed40(value, "list");
+        assertAllowed42(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       author($where, value) {
-        assertAllowed39(value, "object");
+        assertAllowed41(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -27242,7 +29798,7 @@ export const inputObjects = {
         return $subQuery;
       },
       authorExists($where, value) {
-        assertAllowed39(value, "scalar");
+        assertAllowed41(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -27279,7 +29835,7 @@ export const inputObjects = {
         return condition;
       },
       emojis($where, value) {
-        assertAllowed38(value, "object");
+        assertAllowed40(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: emojiIdentifier,
@@ -27290,7 +29846,7 @@ export const inputObjects = {
         return $rel;
       },
       emojisExist($where, value) {
-        assertAllowed38(value, "scalar");
+        assertAllowed40(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: emojiIdentifier,
@@ -27303,12 +29859,12 @@ export const inputObjects = {
         });
       },
       not($where, value) {
-        assertAllowed40(value, "object");
+        assertAllowed42(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed40(value, "list");
+        assertAllowed42(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -27322,7 +29878,7 @@ export const inputObjects = {
         return condition;
       },
       task($where, value) {
-        assertAllowed39(value, "object");
+        assertAllowed41(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -27640,7 +30196,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed41(value, "object");
+        assertAllowed43(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -27660,7 +30216,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed41(value, "object");
+        assertAllowed43(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -27680,7 +30236,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed41(value, "object");
+        assertAllowed43(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -27837,7 +30393,7 @@ export const inputObjects = {
   ProjectColumnFilter: {
     plans: {
       and($where, value) {
-        assertAllowed64(value, "list");
+        assertAllowed72(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -27846,7 +30402,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec90;
+        condition.extensions.pgFilterAttribute = colSpec102;
         return condition;
       },
       emoji(queryBuilder, value) {
@@ -27854,7 +30410,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec86;
+        condition.extensions.pgFilterAttribute = colSpec98;
         return condition;
       },
       index(queryBuilder, value) {
@@ -27862,16 +30418,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec89;
+        condition.extensions.pgFilterAttribute = colSpec101;
         return condition;
       },
       not($where, value) {
-        assertAllowed64(value, "object");
+        assertAllowed72(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed64(value, "list");
+        assertAllowed72(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -27881,11 +30437,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec88;
+        condition.extensions.pgFilterAttribute = colSpec100;
         return condition;
       },
       projects($where, value) {
-        assertAllowed63(value, "object");
+        assertAllowed71(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectIdentifier,
@@ -27896,7 +30452,7 @@ export const inputObjects = {
         return $rel;
       },
       projectsExist($where, value) {
-        assertAllowed63(value, "scalar");
+        assertAllowed71(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -27913,7 +30469,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec85;
+        condition.extensions.pgFilterAttribute = colSpec97;
         return condition;
       },
       title(queryBuilder, value) {
@@ -27921,7 +30477,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec87;
+        condition.extensions.pgFilterAttribute = colSpec99;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -27929,7 +30485,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec91;
+        condition.extensions.pgFilterAttribute = colSpec103;
         return condition;
       }
     }
@@ -28259,7 +30815,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed73(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -28279,7 +30835,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed73(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -28299,7 +30855,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed73(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -28547,7 +31103,7 @@ export const inputObjects = {
   ProjectFilter: {
     plans: {
       and($where, value) {
-        assertAllowed22(value, "list");
+        assertAllowed24(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -28560,7 +31116,7 @@ export const inputObjects = {
         return condition;
       },
       columns($where, value) {
-        assertAllowed20(value, "object");
+        assertAllowed22(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: columnIdentifier,
@@ -28571,7 +31127,7 @@ export const inputObjects = {
         return $rel;
       },
       columnsExist($where, value) {
-        assertAllowed20(value, "scalar");
+        assertAllowed22(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: columnIdentifier,
@@ -28608,7 +31164,7 @@ export const inputObjects = {
         return condition;
       },
       labels($where, value) {
-        assertAllowed20(value, "object");
+        assertAllowed22(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: labelIdentifier,
@@ -28619,7 +31175,7 @@ export const inputObjects = {
         return $rel;
       },
       labelsExist($where, value) {
-        assertAllowed20(value, "scalar");
+        assertAllowed22(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: labelIdentifier,
@@ -28648,12 +31204,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed22(value, "object");
+        assertAllowed24(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed22(value, "list");
+        assertAllowed24(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -28675,7 +31231,7 @@ export const inputObjects = {
         return condition;
       },
       projectColumn($where, value) {
-        assertAllowed21(value, "object");
+        assertAllowed23(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectColumnIdentifier,
@@ -28695,6 +31251,30 @@ export const inputObjects = {
         condition.extensions.pgFilterAttribute = colSpec8;
         return condition;
       },
+      projectProjectLabels($where, value) {
+        assertAllowed22(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: projectProjectLabelIdentifier,
+          alias: resource_project_project_labelPgResource.name,
+          localAttributes: registryConfig.pgRelations.project.projectProjectLabelsByTheirProjectId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.project.projectProjectLabelsByTheirProjectId.remoteAttributes
+        };
+        return $rel;
+      },
+      projectProjectLabelsExist($where, value) {
+        assertAllowed22(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: projectProjectLabelIdentifier,
+          alias: resource_project_project_labelPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.project.projectProjectLabelsByTheirProjectId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.project.projectProjectLabelsByTheirProjectId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       rowId(queryBuilder, value) {
         if (value === void 0) return;
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -28712,7 +31292,7 @@ export const inputObjects = {
         return condition;
       },
       tasks($where, value) {
-        assertAllowed20(value, "object");
+        assertAllowed22(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -28723,7 +31303,7 @@ export const inputObjects = {
         return $rel;
       },
       tasksExist($where, value) {
-        assertAllowed20(value, "scalar");
+        assertAllowed22(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -28744,7 +31324,7 @@ export const inputObjects = {
         return condition;
       },
       userPreferences($where, value) {
-        assertAllowed20(value, "object");
+        assertAllowed22(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userPreferenceIdentifier,
@@ -28755,7 +31335,7 @@ export const inputObjects = {
         return $rel;
       },
       userPreferencesExist($where, value) {
-        assertAllowed20(value, "scalar");
+        assertAllowed22(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userPreferenceIdentifier,
@@ -29099,6 +31679,514 @@ export const inputObjects = {
       }
     }
   },
+  ProjectLabelCondition: {
+    plans: {
+      color($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "color",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
+      createdAt($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "created_at",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+          }
+        });
+      },
+      icon($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "icon",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
+      name($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "name",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
+      organizationId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "organization_id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
+      rowId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+          }
+        });
+      },
+      updatedAt($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "updated_at",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+          }
+        });
+      }
+    }
+  },
+  ProjectLabelFilter: {
+    plans: {
+      and($where, value) {
+        assertAllowed69(value, "list");
+        if (value == null) return;
+        return $where.andPlan();
+      },
+      color(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec92;
+        return condition;
+      },
+      createdAt(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec95;
+        return condition;
+      },
+      icon(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec93;
+        return condition;
+      },
+      name(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec91;
+        return condition;
+      },
+      not($where, value) {
+        assertAllowed69(value, "object");
+        if (value == null) return;
+        return $where.notPlan().andPlan();
+      },
+      or($where, value) {
+        assertAllowed69(value, "list");
+        if (value == null) return;
+        const $or = $where.orPlan();
+        return () => $or.andPlan();
+      },
+      organizationId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec94;
+        return condition;
+      },
+      projectProjectLabels($where, value) {
+        assertAllowed68(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: projectProjectLabelIdentifier,
+          alias: resource_project_project_labelPgResource.name,
+          localAttributes: registryConfig.pgRelations.projectLabel.projectProjectLabelsByTheirProjectLabelId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.projectLabel.projectProjectLabelsByTheirProjectLabelId.remoteAttributes
+        };
+        return $rel;
+      },
+      projectProjectLabelsExist($where, value) {
+        assertAllowed68(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: projectProjectLabelIdentifier,
+          alias: resource_project_project_labelPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.projectLabel.projectProjectLabelsByTheirProjectLabelId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.projectLabel.projectProjectLabelsByTheirProjectLabelId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      rowId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec90;
+        return condition;
+      },
+      updatedAt(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec96;
+        return condition;
+      }
+    }
+  },
+  ProjectLabelHavingAverageInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelHavingDistinctCountInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelHavingInput: {
+    plans: {
+      AND($where) {
+        return $where;
+      },
+      average($having) {
+        return $having;
+      },
+      distinctCount($having) {
+        return $having;
+      },
+      max($having) {
+        return $having;
+      },
+      min($having) {
+        return $having;
+      },
+      OR($where) {
+        return new PgOrFilter($where);
+      },
+      stddevPopulation($having) {
+        return $having;
+      },
+      stddevSample($having) {
+        return $having;
+      },
+      sum($having) {
+        return $having;
+      },
+      variancePopulation($having) {
+        return $having;
+      },
+      varianceSample($having) {
+        return $having;
+      }
+    }
+  },
+  ProjectLabelHavingMaxInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelHavingMinInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelHavingStddevPopulationInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelHavingStddevSampleInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelHavingSumInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelHavingVariancePopulationInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelHavingVarianceSampleInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      updatedAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
+          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_projectLabel.attributes.updated_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectLabelInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      color(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("color", bakedInputRuntime(schema, field.type, val));
+      },
+      createdAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+      },
+      icon(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("icon", bakedInputRuntime(schema, field.type, val));
+      },
+      name(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("name", bakedInputRuntime(schema, field.type, val));
+      },
+      organizationId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
+      },
+      rowId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("id", bakedInputRuntime(schema, field.type, val));
+      },
+      updatedAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
+      }
+    }
+  },
+  ProjectLabelPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      color(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("color", bakedInputRuntime(schema, field.type, val));
+      },
+      createdAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+      },
+      icon(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("icon", bakedInputRuntime(schema, field.type, val));
+      },
+      name(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("name", bakedInputRuntime(schema, field.type, val));
+      },
+      organizationId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
+      },
+      rowId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("id", bakedInputRuntime(schema, field.type, val));
+      },
+      updatedAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
+      }
+    }
+  },
+  ProjectLabelToManyProjectProjectLabelFilter: {
+    plans: {
+      aggregates($where, input) {
+        if (input == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateCondition($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      every($where, value) {
+        assertAllowed70(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery.notPlan().andPlan();
+      },
+      none($where, value) {
+        assertAllowed70(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      some($where, value) {
+        assertAllowed70(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      }
+    }
+  },
   ProjectMaxAggregateFilter: {
     plans: {
       columnIndex($parent, input) {
@@ -29220,6 +32308,314 @@ export const inputObjects = {
       }
     }
   },
+  ProjectProjectLabelAggregatesFilter: {
+    plans: {
+      distinctCount($subquery, input) {
+        if (input == null) return;
+        return $subquery.forAggregate(spec2);
+      },
+      filter($subquery, input) {
+        if (input == null) return;
+        return new PgCondition($subquery, !1, "AND");
+      }
+    }
+  },
+  ProjectProjectLabelCondition: {
+    plans: {
+      createdAt($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "created_at",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+          }
+        });
+      },
+      projectId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "project_id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+          }
+        });
+      },
+      projectLabelId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "project_label_id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+          }
+        });
+      }
+    }
+  },
+  ProjectProjectLabelDistinctCountAggregateFilter: {
+    plans: {
+      createdAt($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_projectProjectLabel.attributes.created_at.codec)
+        };
+        return $col;
+      },
+      projectId($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("project_id")}`, spec_projectProjectLabel.attributes.project_id.codec)
+        };
+        return $col;
+      },
+      projectLabelId($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("project_label_id")}`, spec_projectProjectLabel.attributes.project_label_id.codec)
+        };
+        return $col;
+      }
+    }
+  },
+  ProjectProjectLabelFilter: {
+    plans: {
+      and($where, value) {
+        assertAllowed67(value, "list");
+        if (value == null) return;
+        return $where.andPlan();
+      },
+      createdAt(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec89;
+        return condition;
+      },
+      not($where, value) {
+        assertAllowed67(value, "object");
+        if (value == null) return;
+        return $where.notPlan().andPlan();
+      },
+      or($where, value) {
+        assertAllowed67(value, "list");
+        if (value == null) return;
+        const $or = $where.orPlan();
+        return () => $or.andPlan();
+      },
+      project($where, value) {
+        assertAllowed66(value, "object");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: projectIdentifier,
+          alias: resource_projectPgResource.name
+        });
+        registryConfig.pgRelations.projectProjectLabel.projectByMyProjectId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.projectProjectLabel.projectByMyProjectId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      projectId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec87;
+        return condition;
+      },
+      projectLabel($where, value) {
+        assertAllowed66(value, "object");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: projectLabelIdentifier,
+          alias: resource_project_labelPgResource.name
+        });
+        registryConfig.pgRelations.projectProjectLabel.projectLabelByMyProjectLabelId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.projectProjectLabel.projectLabelByMyProjectLabelId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      projectLabelId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec88;
+        return condition;
+      }
+    }
+  },
+  ProjectProjectLabelHavingAverageInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelHavingDistinctCountInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelHavingInput: {
+    plans: {
+      AND($where) {
+        return $where;
+      },
+      average($having) {
+        return $having;
+      },
+      distinctCount($having) {
+        return $having;
+      },
+      max($having) {
+        return $having;
+      },
+      min($having) {
+        return $having;
+      },
+      OR($where) {
+        return new PgOrFilter($where);
+      },
+      stddevPopulation($having) {
+        return $having;
+      },
+      stddevSample($having) {
+        return $having;
+      },
+      sum($having) {
+        return $having;
+      },
+      variancePopulation($having) {
+        return $having;
+      },
+      varianceSample($having) {
+        return $having;
+      }
+    }
+  },
+  ProjectProjectLabelHavingMaxInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelHavingMinInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelHavingStddevPopulationInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelHavingStddevSampleInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelHavingSumInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelHavingVariancePopulationInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelHavingVarianceSampleInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_projectProjectLabel.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  ProjectProjectLabelInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+      },
+      projectId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("project_id", bakedInputRuntime(schema, field.type, val));
+      },
+      projectLabelId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("project_label_id", bakedInputRuntime(schema, field.type, val));
+      }
+    }
+  },
+  ProjectProjectLabelPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+      },
+      projectId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("project_id", bakedInputRuntime(schema, field.type, val));
+      },
+      projectLabelId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("project_label_id", bakedInputRuntime(schema, field.type, val));
+      }
+    }
+  },
   ProjectStddevPopulationAggregateFilter: {
     plans: {
       columnIndex($parent, input) {
@@ -29309,7 +32705,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed23(value, "object");
+        assertAllowed25(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29329,7 +32725,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed23(value, "object");
+        assertAllowed25(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29349,7 +32745,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed23(value, "object");
+        assertAllowed25(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29393,7 +32789,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed63(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29413,7 +32809,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed63(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29433,7 +32829,91 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed63(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      }
+    }
+  },
+  ProjectToManyProjectProjectLabelFilter: {
+    plans: {
+      aggregates($where, input) {
+        if (input == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateCondition($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      every($where, value) {
+        assertAllowed65(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery.notPlan().andPlan();
+      },
+      none($where, value) {
+        assertAllowed65(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      some($where, value) {
+        assertAllowed65(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29477,7 +32957,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed60(value, "object");
+        assertAllowed62(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29497,7 +32977,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed60(value, "object");
+        assertAllowed62(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29517,7 +32997,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed60(value, "object");
+        assertAllowed62(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29561,7 +33041,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed64(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29581,7 +33061,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed64(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29601,7 +33081,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed64(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29754,7 +33234,7 @@ export const inputObjects = {
   SettingFilter: {
     plans: {
       and($where, value) {
-        assertAllowed77(value, "list");
+        assertAllowed87(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -29763,7 +33243,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec96;
+        condition.extensions.pgFilterAttribute = colSpec108;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -29771,7 +33251,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec93;
+        condition.extensions.pgFilterAttribute = colSpec105;
         return condition;
       },
       deletedAt(queryBuilder, value) {
@@ -29779,7 +33259,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec99;
+        condition.extensions.pgFilterAttribute = colSpec111;
         return condition;
       },
       deletionReason(queryBuilder, value) {
@@ -29787,16 +33267,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec100;
+        condition.extensions.pgFilterAttribute = colSpec112;
         return condition;
       },
       not($where, value) {
-        assertAllowed77(value, "object");
+        assertAllowed87(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed77(value, "list");
+        assertAllowed87(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -29806,7 +33286,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec97;
+        condition.extensions.pgFilterAttribute = colSpec109;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -29814,7 +33294,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec92;
+        condition.extensions.pgFilterAttribute = colSpec104;
         return condition;
       },
       subscriptionId(queryBuilder, value) {
@@ -29822,7 +33302,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec98;
+        condition.extensions.pgFilterAttribute = colSpec110;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -29830,7 +33310,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec94;
+        condition.extensions.pgFilterAttribute = colSpec106;
         return condition;
       },
       viewMode(queryBuilder, value) {
@@ -29838,7 +33318,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec95;
+        condition.extensions.pgFilterAttribute = colSpec107;
         return condition;
       }
     }
@@ -31790,12 +35270,12 @@ export const inputObjects = {
   TaskFilter: {
     plans: {
       and($where, value) {
-        assertAllowed30(value, "list");
+        assertAllowed32(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       assignees($where, value) {
-        assertAllowed28(value, "object");
+        assertAllowed30(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: assigneeIdentifier,
@@ -31806,7 +35286,7 @@ export const inputObjects = {
         return $rel;
       },
       assigneesExist($where, value) {
-        assertAllowed28(value, "scalar");
+        assertAllowed30(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: assigneeIdentifier,
@@ -31819,7 +35299,7 @@ export const inputObjects = {
         });
       },
       author($where, value) {
-        assertAllowed29(value, "object");
+        assertAllowed31(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -31832,7 +35312,7 @@ export const inputObjects = {
         return $subQuery;
       },
       authorExists($where, value) {
-        assertAllowed29(value, "scalar");
+        assertAllowed31(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -31853,7 +35333,7 @@ export const inputObjects = {
         return condition;
       },
       column($where, value) {
-        assertAllowed29(value, "object");
+        assertAllowed31(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: columnIdentifier,
@@ -31914,7 +35394,7 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed30(value, "object");
+        assertAllowed32(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
@@ -31927,13 +35407,13 @@ export const inputObjects = {
         return condition;
       },
       or($where, value) {
-        assertAllowed30(value, "list");
+        assertAllowed32(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       posts($where, value) {
-        assertAllowed28(value, "object");
+        assertAllowed30(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
@@ -31944,7 +35424,7 @@ export const inputObjects = {
         return $rel;
       },
       postsExist($where, value) {
-        assertAllowed28(value, "scalar");
+        assertAllowed30(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -31965,7 +35445,7 @@ export const inputObjects = {
         return condition;
       },
       project($where, value) {
-        assertAllowed29(value, "object");
+        assertAllowed31(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -31994,7 +35474,7 @@ export const inputObjects = {
         return condition;
       },
       taskLabels($where, value) {
-        assertAllowed28(value, "object");
+        assertAllowed30(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskLabelIdentifier,
@@ -32005,7 +35485,7 @@ export const inputObjects = {
         return $rel;
       },
       taskLabelsExist($where, value) {
-        assertAllowed28(value, "scalar");
+        assertAllowed30(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskLabelIdentifier,
@@ -32497,7 +35977,7 @@ export const inputObjects = {
   TaskLabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed55(value, "list");
+        assertAllowed57(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -32510,7 +35990,7 @@ export const inputObjects = {
         return condition;
       },
       label($where, value) {
-        assertAllowed54(value, "object");
+        assertAllowed56(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: labelIdentifier,
@@ -32531,18 +36011,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed55(value, "object");
+        assertAllowed57(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed55(value, "list");
+        assertAllowed57(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       task($where, value) {
-        assertAllowed54(value, "object");
+        assertAllowed56(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -33003,7 +36483,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed31(value, "object");
+        assertAllowed33(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33023,7 +36503,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed31(value, "object");
+        assertAllowed33(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33043,7 +36523,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed31(value, "object");
+        assertAllowed33(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33087,7 +36567,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed52(value, "object");
+        assertAllowed54(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33107,7 +36587,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed52(value, "object");
+        assertAllowed54(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33127,7 +36607,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed52(value, "object");
+        assertAllowed54(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33171,7 +36651,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed53(value, "object");
+        assertAllowed55(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33191,7 +36671,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed53(value, "object");
+        assertAllowed55(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33211,7 +36691,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed53(value, "object");
+        assertAllowed55(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33416,6 +36896,46 @@ export const inputObjects = {
       }
     }
   },
+  UpdateProjectLabelByIdInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      patch(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
+  UpdateProjectLabelInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      patch(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
+  UpdateProjectProjectLabelByIdInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      patch(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
+  UpdateProjectProjectLabelInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      patch(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
   UpdateSettingByIdInput: {
     plans: {
       clientMutationId(qb, val) {
@@ -33606,12 +37126,12 @@ export const inputObjects = {
   UserFilter: {
     plans: {
       and($where, value) {
-        assertAllowed35(value, "list");
+        assertAllowed37(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       assignees($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed36(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: assigneeIdentifier,
@@ -33622,7 +37142,7 @@ export const inputObjects = {
         return $rel;
       },
       assigneesExist($where, value) {
-        assertAllowed34(value, "scalar");
+        assertAllowed36(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: assigneeIdentifier,
@@ -33635,7 +37155,7 @@ export const inputObjects = {
         });
       },
       authoredPosts($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed36(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
@@ -33646,7 +37166,7 @@ export const inputObjects = {
         return $rel;
       },
       authoredPostsExist($where, value) {
-        assertAllowed34(value, "scalar");
+        assertAllowed36(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -33659,7 +37179,7 @@ export const inputObjects = {
         });
       },
       authoredTasks($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed36(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -33670,7 +37190,7 @@ export const inputObjects = {
         return $rel;
       },
       authoredTasksExist($where, value) {
-        assertAllowed34(value, "scalar");
+        assertAllowed36(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -33707,7 +37227,7 @@ export const inputObjects = {
         return condition;
       },
       emojis($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed36(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: emojiIdentifier,
@@ -33718,7 +37238,7 @@ export const inputObjects = {
         return $rel;
       },
       emojisExist($where, value) {
-        assertAllowed34(value, "scalar");
+        assertAllowed36(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: emojiIdentifier,
@@ -33747,12 +37267,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed35(value, "object");
+        assertAllowed37(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed35(value, "list");
+        assertAllowed37(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -33774,7 +37294,7 @@ export const inputObjects = {
         return condition;
       },
       userOrganizations($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed36(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userOrganizationIdentifier,
@@ -33785,7 +37305,7 @@ export const inputObjects = {
         return $rel;
       },
       userOrganizationsExist($where, value) {
-        assertAllowed34(value, "scalar");
+        assertAllowed36(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userOrganizationIdentifier,
@@ -33798,7 +37318,7 @@ export const inputObjects = {
         });
       },
       userPreferences($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed36(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userPreferenceIdentifier,
@@ -33809,7 +37329,7 @@ export const inputObjects = {
         return $rel;
       },
       userPreferencesExist($where, value) {
-        assertAllowed34(value, "scalar");
+        assertAllowed36(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userPreferenceIdentifier,
@@ -34236,7 +37756,7 @@ export const inputObjects = {
   UserOrganizationFilter: {
     plans: {
       and($where, value) {
-        assertAllowed51(value, "list");
+        assertAllowed53(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -34257,12 +37777,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed51(value, "object");
+        assertAllowed53(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed51(value, "list");
+        assertAllowed53(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -34324,7 +37844,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed50(value, "object");
+        assertAllowed52(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -34889,7 +38409,7 @@ export const inputObjects = {
   UserPreferenceFilter: {
     plans: {
       and($where, value) {
-        assertAllowed47(value, "list");
+        assertAllowed49(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -34918,18 +38438,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed49(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed47(value, "list");
+        assertAllowed49(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       project($where, value) {
-        assertAllowed46(value, "object");
+        assertAllowed48(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -34966,7 +38486,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed46(value, "object");
+        assertAllowed48(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -35288,7 +38808,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed38(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35308,7 +38828,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed38(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35328,7 +38848,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed38(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35372,7 +38892,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed48(value, "object");
+        assertAllowed50(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35392,7 +38912,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed48(value, "object");
+        assertAllowed50(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35412,7 +38932,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed48(value, "object");
+        assertAllowed50(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35456,7 +38976,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed37(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35476,7 +38996,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed37(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35496,7 +39016,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed37(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35540,7 +39060,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed44(value, "object");
+        assertAllowed46(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35560,7 +39080,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed44(value, "object");
+        assertAllowed46(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35580,7 +39100,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed44(value, "object");
+        assertAllowed46(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35624,7 +39144,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed49(value, "object");
+        assertAllowed51(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35644,7 +39164,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed49(value, "object");
+        assertAllowed51(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35664,7 +39184,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed49(value, "object");
+        assertAllowed51(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35708,7 +39228,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed45(value, "object");
+        assertAllowed47(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35728,7 +39248,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed45(value, "object");
+        assertAllowed47(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -35748,7 +39268,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed45(value, "object");
+        assertAllowed47(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36387,8 +39907,8 @@ export const enums = {
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36406,8 +39926,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36425,8 +39945,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36444,8 +39964,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36463,8 +39983,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36481,8 +40001,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36499,8 +40019,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36518,8 +40038,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36537,8 +40057,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36556,8 +40076,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36575,8 +40095,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36594,8 +40114,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36613,8 +40133,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36632,8 +40152,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36651,8 +40171,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36670,8 +40190,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36689,8 +40209,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36708,8 +40228,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36727,8 +40247,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36746,8 +40266,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36765,8 +40285,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36784,8 +40304,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36803,8 +40323,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36822,8 +40342,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36841,8 +40361,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36860,8 +40380,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36879,8 +40399,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36898,8 +40418,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36917,8 +40437,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36936,8 +40456,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36955,8 +40475,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36974,8 +40494,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -36993,8 +40513,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37012,8 +40532,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37031,8 +40551,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37050,8 +40570,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37069,8 +40589,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37088,8 +40608,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37107,8 +40627,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37126,8 +40646,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37145,8 +40665,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37164,8 +40684,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37183,8 +40703,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37202,8 +40722,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37221,8 +40741,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37240,8 +40760,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37259,8 +40779,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37278,8 +40798,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37297,8 +40817,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37316,8 +40836,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37335,8 +40855,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37354,8 +40874,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37373,8 +40893,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37392,8 +40912,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37411,8 +40931,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37430,8 +40950,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37449,8 +40969,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37468,8 +40988,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation9.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation9.remoteAttributes[i];
+        relation10.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation10.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -37689,9 +41209,21 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
         });
       },
+      ICON($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("icon")}`,
+          codec: TYPES.text
+        });
+      },
       NAME($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("name")}`,
+          codec: TYPES.text
+        });
+      },
+      ORGANIZATION_ID($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
           codec: TYPES.text
         });
       },
@@ -37747,6 +41279,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      ICON_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "icon",
+          direction: "ASC"
+        });
+      },
+      ICON_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "icon",
+          direction: "DESC"
+        });
+      },
       NAME_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "name",
@@ -37756,6 +41300,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       NAME_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "name",
+          direction: "DESC"
+        });
+      },
+      ORGANIZATION_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "organization_id",
+          direction: "ASC"
+        });
+      },
+      ORGANIZATION_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "organization_id",
           direction: "DESC"
         });
       },
@@ -37807,8 +41363,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37825,8 +41381,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37843,8 +41399,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37862,8 +41418,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37881,8 +41437,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37900,8 +41456,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37919,8 +41475,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37938,8 +41494,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37957,8 +41513,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -37976,8 +41532,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation10.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation10.remoteAttributes[i];
+        relation11.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation11.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -38111,8 +41667,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38129,8 +41685,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38147,8 +41703,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38166,8 +41722,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38185,8 +41741,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38204,8 +41760,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38223,8 +41779,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38242,8 +41798,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38261,8 +41817,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38280,8 +41836,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38299,8 +41855,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38318,8 +41874,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38337,8 +41893,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38356,8 +41912,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation5.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation5.remoteAttributes[i];
+        relation6.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation6.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -38577,8 +42133,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38596,8 +42152,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38615,8 +42171,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38634,8 +42190,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38653,8 +42209,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38671,8 +42227,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38689,8 +42245,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38708,8 +42264,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38727,8 +42283,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38746,8 +42302,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38765,8 +42321,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38784,8 +42340,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38803,8 +42359,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38822,8 +42378,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38841,8 +42397,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38860,8 +42416,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38879,8 +42435,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38898,8 +42454,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38917,8 +42473,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38936,8 +42492,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38955,8 +42511,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38974,8 +42530,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -38993,8 +42549,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39012,8 +42568,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39031,8 +42587,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39050,8 +42606,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39069,8 +42625,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39088,8 +42644,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39107,8 +42663,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39126,8 +42682,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39145,8 +42701,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39164,8 +42720,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39183,8 +42739,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39202,8 +42758,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39221,8 +42777,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39240,8 +42796,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39259,8 +42815,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39278,8 +42834,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39297,8 +42853,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39316,8 +42872,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39335,8 +42891,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39354,8 +42910,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39373,8 +42929,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39392,8 +42948,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39411,8 +42967,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39430,8 +42986,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39449,8 +43005,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39468,8 +43024,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39487,8 +43043,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39506,8 +43062,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39525,8 +43081,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39544,8 +43100,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39563,8 +43119,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39582,8 +43138,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39601,8 +43157,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39620,8 +43176,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39639,8 +43195,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39658,8 +43214,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation17.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation17.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -39803,6 +43359,328 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $pgSelect.groupBy({
           fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
           codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+        });
+      }
+    }
+  },
+  ProjectLabelGroupBy: {
+    values: {
+      COLOR($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("color")}`,
+          codec: TYPES.text
+        });
+      },
+      CREATED_AT($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+          codec: TYPES.timestamptz
+        });
+      },
+      CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+          codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+          codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      ICON($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("icon")}`,
+          codec: TYPES.text
+        });
+      },
+      NAME($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("name")}`,
+          codec: TYPES.text
+        });
+      },
+      ORGANIZATION_ID($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
+          codec: TYPES.text
+        });
+      },
+      UPDATED_AT($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
+          codec: TYPES.timestamptz
+        });
+      },
+      UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+          codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
+          codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+        });
+      }
+    }
+  },
+  ProjectLabelOrderBy: {
+    values: {
+      COLOR_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "color",
+          direction: "ASC"
+        });
+      },
+      COLOR_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "color",
+          direction: "DESC"
+        });
+      },
+      CREATED_AT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "created_at",
+          direction: "ASC"
+        });
+      },
+      CREATED_AT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "created_at",
+          direction: "DESC"
+        });
+      },
+      ICON_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "icon",
+          direction: "ASC"
+        });
+      },
+      ICON_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "icon",
+          direction: "DESC"
+        });
+      },
+      NAME_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "name",
+          direction: "ASC"
+        });
+      },
+      NAME_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "name",
+          direction: "DESC"
+        });
+      },
+      ORGANIZATION_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "organization_id",
+          direction: "ASC"
+        });
+      },
+      ORGANIZATION_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "organization_id",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        project_labelUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        project_labelUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_PROJECT_LABELS_COUNT_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_COUNT_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_projectProjectLabel.attributes.created_at.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.created_at.codec) ?? spec_projectProjectLabel.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_projectProjectLabel.attributes.created_at.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.created_at.codec) ?? spec_projectProjectLabel.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_projectProjectLabel.attributes.project_id.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.project_id.codec) ?? spec_projectProjectLabel.attributes.project_id.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_projectProjectLabel.attributes.project_id.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.project_id.codec) ?? spec_projectProjectLabel.attributes.project_id.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_label_id")}`, spec_projectProjectLabel.attributes.project_label_id.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.project_label_id.codec) ?? spec_projectProjectLabel.attributes.project_label_id.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_label_id")}`, spec_projectProjectLabel.attributes.project_label_id.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.project_label_id.codec) ?? spec_projectProjectLabel.attributes.project_label_id.codec,
+          direction: "DESC"
+        });
+      },
+      ROW_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "id",
+          direction: "ASC"
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "id",
+          direction: "DESC"
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      UPDATED_AT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "updated_at",
+          direction: "ASC"
+        });
+      },
+      UPDATED_AT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "updated_at",
+          direction: "DESC"
         });
       }
     }
@@ -40575,6 +44453,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      LABELS_DISTINCT_COUNT_ICON_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_labelPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("icon")}`, spec_label.attributes.icon.codec)}
+from ${resource_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_label.attributes.icon.codec) ?? spec_label.attributes.icon.codec,
+          direction: "ASC"
+        });
+      },
+      LABELS_DISTINCT_COUNT_ICON_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_labelPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("icon")}`, spec_label.attributes.icon.codec)}
+from ${resource_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_label.attributes.icon.codec) ?? spec_label.attributes.icon.codec,
+          direction: "DESC"
+        });
+      },
       LABELS_DISTINCT_COUNT_NAME_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -40610,6 +44526,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec2.pgTypeCodecModifier?.(spec_label.attributes.name.codec) ?? spec_label.attributes.name.codec,
+          direction: "DESC"
+        });
+      },
+      LABELS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_labelPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_label.attributes.organization_id.codec)}
+from ${resource_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_label.attributes.organization_id.codec) ?? spec_label.attributes.organization_id.codec,
+          direction: "ASC"
+        });
+      },
+      LABELS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_labelPgResource.name));
+        relation3.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation3.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_label.attributes.organization_id.codec)}
+from ${resource_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_label.attributes.organization_id.codec) ?? spec_label.attributes.organization_id.codec,
           direction: "DESC"
         });
       },
@@ -40802,6 +44756,156 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       PROJECT_COLUMN_ID_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "project_column_id",
+          direction: "DESC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_COUNT_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_COUNT_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_projectProjectLabel.attributes.created_at.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.created_at.codec) ?? spec_projectProjectLabel.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_projectProjectLabel.attributes.created_at.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.created_at.codec) ?? spec_projectProjectLabel.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_projectProjectLabel.attributes.project_id.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.project_id.codec) ?? spec_projectProjectLabel.attributes.project_id.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_id")}`, spec_projectProjectLabel.attributes.project_id.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.project_id.codec) ?? spec_projectProjectLabel.attributes.project_id.codec,
+          direction: "DESC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_label_id")}`, spec_projectProjectLabel.attributes.project_label_id.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.project_label_id.codec) ?? spec_projectProjectLabel.attributes.project_label_id.codec,
+          direction: "ASC"
+        });
+      },
+      PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
+        relation5.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation5.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("project_label_id")}`, spec_projectProjectLabel.attributes.project_label_id.codec)}
+from ${resource_project_project_labelPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_projectProjectLabel.attributes.project_label_id.codec) ?? spec_projectProjectLabel.attributes.project_label_id.codec,
           direction: "DESC"
         });
       },
@@ -42287,6 +46391,100 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
+  ProjectProjectLabelGroupBy: {
+    values: {
+      CREATED_AT($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+          codec: TYPES.timestamptz
+        });
+      },
+      CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+          codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+          codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      PROJECT_ID($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("project_id")}`,
+          codec: TYPES.uuid
+        });
+      },
+      PROJECT_LABEL_ID($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("project_label_id")}`,
+          codec: TYPES.uuid
+        });
+      }
+    }
+  },
+  ProjectProjectLabelOrderBy: {
+    values: {
+      CREATED_AT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "created_at",
+          direction: "ASC"
+        });
+      },
+      CREATED_AT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "created_at",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        project_project_labelUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        project_project_labelUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "project_id",
+          direction: "ASC"
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "project_id",
+          direction: "DESC"
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_LABEL_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "project_label_id",
+          direction: "ASC"
+        });
+      },
+      PROJECT_LABEL_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "project_label_id",
+          direction: "DESC"
+        });
+      }
+    }
+  },
   SettingGroupBy: {
     values: {
       BILLING_ACCOUNT_ID($pgSelect) {
@@ -42739,8 +46937,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42757,8 +46955,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42775,8 +46973,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42794,8 +46992,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42813,8 +47011,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42832,8 +47030,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42851,8 +47049,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42870,8 +47068,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42889,8 +47087,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42908,8 +47106,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42927,8 +47125,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -42946,8 +47144,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation6.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation6.remoteAttributes[i];
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43061,8 +47259,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43079,8 +47277,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43097,8 +47295,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43116,8 +47314,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43135,8 +47333,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43154,8 +47352,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43173,8 +47371,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43192,8 +47390,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43211,8 +47409,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43230,8 +47428,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43249,8 +47447,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43268,8 +47466,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43287,8 +47485,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43306,8 +47504,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43325,8 +47523,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43344,8 +47542,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
+        relation8.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation8.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43421,8 +47619,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43439,8 +47637,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43457,8 +47655,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43476,8 +47674,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43495,8 +47693,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43514,8 +47712,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43533,8 +47731,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43552,8 +47750,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43571,8 +47769,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43590,8 +47788,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_task_labelPgResource.name));
-        relation8.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation8.remoteAttributes[i];
+        relation9.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation9.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_task_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43677,8 +47875,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43695,8 +47893,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43713,8 +47911,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43732,8 +47930,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43751,8 +47949,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43770,8 +47968,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43789,8 +47987,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43808,8 +48006,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43827,8 +48025,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43846,8 +48044,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43865,8 +48063,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43884,8 +48082,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_assigneePgResource.name));
-        relation11.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation11.remoteAttributes[i];
+        relation12.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation12.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_assigneePgResource.from === "function") throw Error("Function source unsupported");
@@ -43903,8 +48101,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43921,8 +48119,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43939,8 +48137,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43958,8 +48156,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43977,8 +48175,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -43996,8 +48194,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44015,8 +48213,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44034,8 +48232,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44053,8 +48251,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44072,8 +48270,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44091,8 +48289,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44110,8 +48308,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44129,8 +48327,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44148,8 +48346,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44167,8 +48365,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44186,8 +48384,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_postPgResource.name));
-        relation12.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation12.remoteAttributes[i];
+        relation13.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation13.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_postPgResource.from === "function") throw Error("Function source unsupported");
@@ -44205,8 +48403,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44224,8 +48422,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44243,8 +48441,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44262,8 +48460,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44281,8 +48479,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44299,8 +48497,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44317,8 +48515,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44336,8 +48534,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44355,8 +48553,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44374,8 +48572,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44393,8 +48591,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44412,8 +48610,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44431,8 +48629,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44450,8 +48648,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44469,8 +48667,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44488,8 +48686,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44507,8 +48705,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44526,8 +48724,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44545,8 +48743,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44564,8 +48762,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44583,8 +48781,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44602,8 +48800,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44621,8 +48819,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44640,8 +48838,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44659,8 +48857,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44678,8 +48876,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44697,8 +48895,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44716,8 +48914,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44735,8 +48933,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44754,8 +48952,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44773,8 +48971,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44792,8 +48990,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44811,8 +49009,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44830,8 +49028,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44849,8 +49047,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44868,8 +49066,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44887,8 +49085,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44906,8 +49104,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44925,8 +49123,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44944,8 +49142,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44963,8 +49161,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -44982,8 +49180,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45001,8 +49199,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45020,8 +49218,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45039,8 +49237,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45058,8 +49256,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45077,8 +49275,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45096,8 +49294,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45115,8 +49313,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45134,8 +49332,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45153,8 +49351,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45172,8 +49370,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45191,8 +49389,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45210,8 +49408,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45229,8 +49427,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45248,8 +49446,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45267,8 +49465,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45286,8 +49484,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_taskPgResource.name));
-        relation13.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation13.remoteAttributes[i];
+        relation14.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation14.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_taskPgResource.from === "function") throw Error("Function source unsupported");
@@ -45343,8 +49541,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45361,8 +49559,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45379,8 +49577,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45398,8 +49596,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45417,8 +49615,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45436,8 +49634,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45455,8 +49653,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45474,8 +49672,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45493,8 +49691,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45512,8 +49710,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45531,8 +49729,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45550,8 +49748,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45569,8 +49767,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45588,8 +49786,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_emojiPgResource.name));
-        relation15.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation15.remoteAttributes[i];
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_emojiPgResource.from === "function") throw Error("Function source unsupported");
@@ -45677,8 +49875,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45695,8 +49893,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45713,8 +49911,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45732,8 +49930,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45751,8 +49949,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45770,8 +49968,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45789,8 +49987,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45808,8 +50006,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45827,8 +50025,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45846,8 +50044,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45865,8 +50063,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45884,8 +50082,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45903,8 +50101,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45922,8 +50120,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45941,8 +50139,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45960,8 +50158,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45979,8 +50177,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -45998,8 +50196,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -46017,8 +50215,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -46036,8 +50234,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -46055,8 +50253,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -46074,8 +50272,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_organizationPgResource.name));
-        relation16.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation16.remoteAttributes[i];
+        relation17.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation17.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_organizationPgResource.from === "function") throw Error("Function source unsupported");
@@ -46093,8 +50291,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46111,8 +50309,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46129,8 +50327,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46148,8 +50346,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46167,8 +50365,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46186,8 +50384,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46205,8 +50403,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46224,8 +50422,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46243,8 +50441,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46262,8 +50460,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46281,8 +50479,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46300,8 +50498,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46319,8 +50517,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46338,8 +50536,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46357,8 +50555,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46376,8 +50574,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46395,8 +50593,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
@@ -46414,8 +50612,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
-        relation14.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation14.remoteAttributes[i];
+        relation15.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation15.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");

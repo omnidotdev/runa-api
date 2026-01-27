@@ -17,6 +17,8 @@ export * from "./label.table";
 export * from "./post.table";
 export * from "./project.table";
 export * from "./projectColumn.table";
+export * from "./projectLabel.table";
+export * from "./projectProjectLabel.table";
 export * from "./settings.table";
 export * from "./task.table";
 export * from "./taskLabel.table";

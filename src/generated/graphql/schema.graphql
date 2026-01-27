@@ -17,6 +17,9 @@ type Query implements Node {
     id: ID!
   ): Node
 
+  """Get a single `ProjectProjectLabel`."""
+  projectProjectLabel(projectId: UUID!, projectLabelId: UUID!): ProjectProjectLabel
+
   """Get a single `TaskLabel`."""
   taskLabel(taskId: UUID!, labelId: UUID!): TaskLabel
 
@@ -32,9 +35,6 @@ type Query implements Node {
   """Get a single `Emoji`."""
   emoji(rowId: UUID!): Emoji
 
-  """Get a single `Label`."""
-  label(rowId: UUID!): Label
-
   """Get a single `User`."""
   user(rowId: UUID!): User
 
@@ -46,6 +46,12 @@ type Query implements Node {
 
   """Get a single `Post`."""
   post(rowId: UUID!): Post
+
+  """Get a single `ProjectLabel`."""
+  projectLabel(rowId: UUID!): ProjectLabel
+
+  """Get a single `Label`."""
+  label(rowId: UUID!): Label
 
   """Get a single `Column`."""
   column(rowId: UUID!): Column
@@ -83,6 +89,14 @@ type Query implements Node {
   """Get a single `UserOrganization`."""
   userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: String!): UserOrganization
 
+  """Reads a single `ProjectProjectLabel` using its globally unique `ID`."""
+  projectProjectLabelById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectProjectLabel`.
+    """
+    id: ID!
+  ): ProjectProjectLabel
+
   """Reads a single `TaskLabel` using its globally unique `ID`."""
   taskLabelById(
     """The globally unique `ID` to be used in selecting a single `TaskLabel`."""
@@ -101,12 +115,6 @@ type Query implements Node {
     id: ID!
   ): Emoji
 
-  """Reads a single `Label` using its globally unique `ID`."""
-  labelById(
-    """The globally unique `ID` to be used in selecting a single `Label`."""
-    id: ID!
-  ): Label
-
   """Reads a single `User` using its globally unique `ID`."""
   userById(
     """The globally unique `ID` to be used in selecting a single `User`."""
@@ -118,6 +126,20 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Post`."""
     id: ID!
   ): Post
+
+  """Reads a single `ProjectLabel` using its globally unique `ID`."""
+  projectLabelById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectLabel`.
+    """
+    id: ID!
+  ): ProjectLabel
+
+  """Reads a single `Label` using its globally unique `ID`."""
+  labelById(
+    """The globally unique `ID` to be used in selecting a single `Label`."""
+    id: ID!
+  ): Label
 
   """Reads a single `Column` using its globally unique `ID`."""
   columnById(
@@ -166,6 +188,40 @@ type Query implements Node {
     """
     id: ID!
   ): UserOrganization
+
+  """Reads and enables pagination through a set of `ProjectProjectLabel`."""
+  projectProjectLabels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectProjectLabelFilter
+
+    """The method to use when ordering `ProjectProjectLabel`."""
+    orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelConnection
 
   """Reads and enables pagination through a set of `TaskLabel`."""
   taskLabels(
@@ -269,40 +325,6 @@ type Query implements Node {
     orderBy: [EmojiOrderBy!] = [PRIMARY_KEY_ASC]
   ): EmojiConnection
 
-  """Reads and enables pagination through a set of `Label`."""
-  labels(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LabelCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: LabelFilter
-
-    """The method to use when ordering `Label`."""
-    orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LabelConnection
-
   """Reads and enables pagination through a set of `User`."""
   users(
     """Only read the first `n` values of the set."""
@@ -370,6 +392,74 @@ type Query implements Node {
     """The method to use when ordering `Post`."""
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection
+
+  """Reads and enables pagination through a set of `ProjectLabel`."""
+  projectLabels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectLabelFilter
+
+    """The method to use when ordering `ProjectLabel`."""
+    orderBy: [ProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectLabelConnection
+
+  """Reads and enables pagination through a set of `Label`."""
+  labels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LabelFilter
+
+    """The method to use when ordering `Label`."""
+    orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LabelConnection
 
   """Reads and enables pagination through a set of `Column`."""
   columns(
@@ -624,21 +714,24 @@ interface Node {
   id: ID!
 }
 
-type TaskLabel implements Node {
+type ProjectProjectLabel implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   id: ID!
-  taskId: UUID!
-  labelId: UUID!
+  projectId: UUID!
+  projectLabelId: UUID!
   createdAt: Datetime!
-  updatedAt: Datetime!
 
-  """Reads a single `Label` that is related to this `TaskLabel`."""
-  label: Label
+  """
+  Reads a single `Project` that is related to this `ProjectProjectLabel`.
+  """
+  project: Project
 
-  """Reads a single `Task` that is related to this `TaskLabel`."""
-  task: Task
+  """
+  Reads a single `ProjectLabel` that is related to this `ProjectProjectLabel`.
+  """
+  projectLabel: ProjectLabel
 }
 
 """
@@ -654,56 +747,6 @@ that do not conform to both ISO 8601 and RFC 3339 may be coerced, which may lead
 to unexpected results.
 """
 scalar Datetime
-
-type Label implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  name: String!
-  color: String!
-  projectId: UUID!
-  createdAt: Datetime!
-  updatedAt: Datetime!
-
-  """Reads a single `Project` that is related to this `Label`."""
-  project: Project
-
-  """Reads and enables pagination through a set of `TaskLabel`."""
-  taskLabels(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaskLabelCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaskLabelFilter
-
-    """The method to use when ordering `TaskLabel`."""
-    orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaskLabelConnection!
-}
 
 type Project implements Node {
   """
@@ -861,6 +904,40 @@ type Project implements Node {
     """The method to use when ordering `UserPreference`."""
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection!
+
+  """Reads and enables pagination through a set of `ProjectProjectLabel`."""
+  projectProjectLabels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectProjectLabelFilter
+
+    """The method to use when ordering `ProjectProjectLabel`."""
+    orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelConnection!
 }
 
 type ProjectColumn implements Node {
@@ -1361,6 +1438,12 @@ input ProjectFilter {
 
   """Some related `userPreferences` exist."""
   userPreferencesExist: Boolean
+
+  """Filter by the object’s `projectProjectLabels` relation."""
+  projectProjectLabels: ProjectToManyProjectProjectLabelFilter
+
+  """Some related `projectProjectLabels` exist."""
+  projectProjectLabelsExist: Boolean
 
   """Filter by the object’s `projectColumn` relation."""
   projectColumn: ProjectColumnFilter
@@ -2858,6 +2941,12 @@ input LabelFilter {
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s `icon` field."""
+  icon: StringFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
   """Filter by the object’s `taskLabels` relation."""
   taskLabels: LabelToManyTaskLabelFilter
 
@@ -2866,6 +2955,9 @@ input LabelFilter {
 
   """Filter by the object’s `project` relation."""
   project: ProjectFilter
+
+  """A related `project` exists."""
+  projectExists: Boolean
 
   """Checks for all expressions in this list."""
   and: [LabelFilter!]
@@ -3061,6 +3153,8 @@ input LabelDistinctCountAggregateFilter {
   projectId: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+  icon: BigIntFilter
+  organizationId: BigIntFilter
 }
 
 """
@@ -3084,6 +3178,145 @@ input ProjectToManyUserPreferenceFilter {
 
   """Aggregates across related `UserPreference` match the filter criteria."""
   aggregates: UserPreferenceAggregatesFilter
+}
+
+"""
+A filter to be used against many `ProjectProjectLabel` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyProjectProjectLabelFilter {
+  """
+  Every related `ProjectProjectLabel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectProjectLabelFilter
+
+  """
+  Some related `ProjectProjectLabel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectProjectLabelFilter
+
+  """
+  No related `ProjectProjectLabel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectProjectLabelFilter
+
+  """
+  Aggregates across related `ProjectProjectLabel` match the filter criteria.
+  """
+  aggregates: ProjectProjectLabelAggregatesFilter
+}
+
+"""
+A filter to be used against `ProjectProjectLabel` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectProjectLabelFilter {
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `projectLabelId` field."""
+  projectLabelId: UUIDFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Filter by the object’s `projectLabel` relation."""
+  projectLabel: ProjectLabelFilter
+
+  """Checks for all expressions in this list."""
+  and: [ProjectProjectLabelFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectProjectLabelFilter!]
+
+  """Negates the expression."""
+  not: ProjectProjectLabelFilter
+}
+
+"""
+A filter to be used against `ProjectLabel` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectLabelFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `color` field."""
+  color: StringFilter
+
+  """Filter by the object’s `icon` field."""
+  icon: StringFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `projectProjectLabels` relation."""
+  projectProjectLabels: ProjectLabelToManyProjectProjectLabelFilter
+
+  """Some related `projectProjectLabels` exist."""
+  projectProjectLabelsExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [ProjectLabelFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectLabelFilter!]
+
+  """Negates the expression."""
+  not: ProjectLabelFilter
+}
+
+"""
+A filter to be used against many `ProjectProjectLabel` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectLabelToManyProjectProjectLabelFilter {
+  """
+  Every related `ProjectProjectLabel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectProjectLabelFilter
+
+  """
+  Some related `ProjectProjectLabel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectProjectLabelFilter
+
+  """
+  No related `ProjectProjectLabel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectProjectLabelFilter
+
+  """
+  Aggregates across related `ProjectProjectLabel` match the filter criteria.
+  """
+  aggregates: ProjectProjectLabelAggregatesFilter
+}
+
+"""
+A filter to be used against aggregates of `ProjectProjectLabel` object types.
+"""
+input ProjectProjectLabelAggregatesFilter {
+  """
+  A filter that must pass for the relevant `ProjectProjectLabel` object to be included within the aggregate.
+  """
+  filter: ProjectProjectLabelFilter
+
+  """Distinct count aggregate over matching `ProjectProjectLabel` objects."""
+  distinctCount: ProjectProjectLabelDistinctCountAggregateFilter
+}
+
+input ProjectProjectLabelDistinctCountAggregateFilter {
+  projectId: BigIntFilter
+  projectLabelId: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -3375,6 +3608,10 @@ enum ProjectOrderBy {
   LABELS_DISTINCT_COUNT_CREATED_AT_DESC
   LABELS_DISTINCT_COUNT_UPDATED_AT_ASC
   LABELS_DISTINCT_COUNT_UPDATED_AT_DESC
+  LABELS_DISTINCT_COUNT_ICON_ASC
+  LABELS_DISTINCT_COUNT_ICON_DESC
+  LABELS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  LABELS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
   USER_PREFERENCES_COUNT_ASC
   USER_PREFERENCES_COUNT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_ASC
@@ -3393,6 +3630,14 @@ enum ProjectOrderBy {
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC
   USER_PREFERENCES_DISTINCT_COUNT_COLOR_ASC
   USER_PREFERENCES_DISTINCT_COUNT_COLOR_DESC
+  PROJECT_PROJECT_LABELS_COUNT_ASC
+  PROJECT_PROJECT_LABELS_COUNT_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `Column` values."""
@@ -5154,6 +5399,108 @@ type TaskLabelConnection {
   ): [TaskLabelAggregates!]
 }
 
+type TaskLabel implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  taskId: UUID!
+  labelId: UUID!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Label` that is related to this `TaskLabel`."""
+  label: Label
+
+  """Reads a single `Task` that is related to this `TaskLabel`."""
+  task: Task
+}
+
+type Label implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  name: String!
+  color: String!
+  projectId: UUID
+  createdAt: Datetime!
+  updatedAt: Datetime!
+  icon: String
+  organizationId: String
+
+  """Reads a single `Project` that is related to this `Label`."""
+  project: Project
+
+  """Reads and enables pagination through a set of `TaskLabel`."""
+  taskLabels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskLabelFilter
+
+    """The method to use when ordering `TaskLabel`."""
+    orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskLabelConnection!
+}
+
+"""
+A condition to be used against `TaskLabel` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input TaskLabelCondition {
+  """Checks for equality with the object’s `taskId` field."""
+  taskId: UUID
+
+  """Checks for equality with the object’s `labelId` field."""
+  labelId: UUID
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `TaskLabel`."""
+enum TaskLabelOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TASK_ID_ASC
+  TASK_ID_DESC
+  LABEL_ID_ASC
+  LABEL_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 """A `TaskLabel` edge in the connection."""
 type TaskLabelEdge {
   """A cursor for use in pagination."""
@@ -5256,39 +5603,6 @@ input TaskLabelHavingVarianceSampleInput {
 input TaskLabelHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `TaskLabel` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input TaskLabelCondition {
-  """Checks for equality with the object’s `taskId` field."""
-  taskId: UUID
-
-  """Checks for equality with the object’s `labelId` field."""
-  labelId: UUID
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `TaskLabel`."""
-enum TaskLabelOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TASK_ID_ASC
-  TASK_ID_DESC
-  LABEL_ID_ASC
-  LABEL_ID_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 """A `Task` edge in the connection."""
@@ -5941,6 +6255,12 @@ type LabelDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
 }
 
 """Grouping methods for `Label` for usage during aggregation."""
@@ -5954,6 +6274,8 @@ enum LabelGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  ICON
+  ORGANIZATION_ID
 }
 
 """Conditions for `Label` aggregates."""
@@ -6037,6 +6359,12 @@ input LabelCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
+
+  """Checks for equality with the object’s `icon` field."""
+  icon: String
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
 }
 
 """Methods to use when ordering `Label`."""
@@ -6056,6 +6384,10 @@ enum LabelOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  ICON_ASC
+  ICON_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
   TASK_LABELS_COUNT_ASC
   TASK_LABELS_COUNT_DESC
   TASK_LABELS_DISTINCT_COUNT_TASK_ID_ASC
@@ -6066,6 +6398,210 @@ enum LabelOrderBy {
   TASK_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_ASC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of `ProjectProjectLabel` values."""
+type ProjectProjectLabelConnection {
+  """A list of `ProjectProjectLabel` objects."""
+  nodes: [ProjectProjectLabel!]!
+
+  """
+  A list of edges which contains the `ProjectProjectLabel` and cursor to aid in pagination.
+  """
+  edges: [ProjectProjectLabelEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ProjectProjectLabel` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectProjectLabelAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping `ProjectProjectLabel` for these aggregates.
+    """
+    groupBy: [ProjectProjectLabelGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectProjectLabelHavingInput
+  ): [ProjectProjectLabelAggregates!]
+}
+
+"""A `ProjectProjectLabel` edge in the connection."""
+type ProjectProjectLabelEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectProjectLabel` at the end of the edge."""
+  node: ProjectProjectLabel!
+}
+
+type ProjectProjectLabelAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectProjectLabelDistinctCountAggregates
+}
+
+type ProjectProjectLabelDistinctCountAggregates {
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of projectLabelId across the matching connection"""
+  projectLabelId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""
+Grouping methods for `ProjectProjectLabel` for usage during aggregation.
+"""
+enum ProjectProjectLabelGroupBy {
+  PROJECT_ID
+  PROJECT_LABEL_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ProjectProjectLabel` aggregates."""
+input ProjectProjectLabelHavingInput {
+  AND: [ProjectProjectLabelHavingInput!]
+  OR: [ProjectProjectLabelHavingInput!]
+  sum: ProjectProjectLabelHavingSumInput
+  distinctCount: ProjectProjectLabelHavingDistinctCountInput
+  min: ProjectProjectLabelHavingMinInput
+  max: ProjectProjectLabelHavingMaxInput
+  average: ProjectProjectLabelHavingAverageInput
+  stddevSample: ProjectProjectLabelHavingStddevSampleInput
+  stddevPopulation: ProjectProjectLabelHavingStddevPopulationInput
+  varianceSample: ProjectProjectLabelHavingVarianceSampleInput
+  variancePopulation: ProjectProjectLabelHavingVariancePopulationInput
+}
+
+input ProjectProjectLabelHavingSumInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingMinInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input ProjectProjectLabelHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `ProjectProjectLabel` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input ProjectProjectLabelCondition {
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `projectLabelId` field."""
+  projectLabelId: UUID
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering `ProjectProjectLabel`."""
+enum ProjectProjectLabelOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  PROJECT_LABEL_ID_ASC
+  PROJECT_LABEL_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+}
+
+type ProjectLabel implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  name: String!
+  color: String!
+  icon: String
+  organizationId: String!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads and enables pagination through a set of `ProjectProjectLabel`."""
+  projectProjectLabels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectProjectLabelFilter
+
+    """The method to use when ordering `ProjectProjectLabel`."""
+    orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelConnection!
 }
 
 type Setting implements Node {
@@ -6415,6 +6951,210 @@ enum UserOrderBy {
   USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of `ProjectLabel` values."""
+type ProjectLabelConnection {
+  """A list of `ProjectLabel` objects."""
+  nodes: [ProjectLabel!]!
+
+  """
+  A list of edges which contains the `ProjectLabel` and cursor to aid in pagination.
+  """
+  edges: [ProjectLabelEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ProjectLabel` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectLabelAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `ProjectLabel` for these aggregates."""
+    groupBy: [ProjectLabelGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectLabelHavingInput
+  ): [ProjectLabelAggregates!]
+}
+
+"""A `ProjectLabel` edge in the connection."""
+type ProjectLabelEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectLabel` at the end of the edge."""
+  node: ProjectLabel!
+}
+
+type ProjectLabelAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectLabelDistinctCountAggregates
+}
+
+type ProjectLabelDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of name across the matching connection"""
+  name: BigInt
+
+  """Distinct count of color across the matching connection"""
+  color: BigInt
+
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `ProjectLabel` for usage during aggregation."""
+enum ProjectLabelGroupBy {
+  NAME
+  COLOR
+  ICON
+  ORGANIZATION_ID
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ProjectLabel` aggregates."""
+input ProjectLabelHavingInput {
+  AND: [ProjectLabelHavingInput!]
+  OR: [ProjectLabelHavingInput!]
+  sum: ProjectLabelHavingSumInput
+  distinctCount: ProjectLabelHavingDistinctCountInput
+  min: ProjectLabelHavingMinInput
+  max: ProjectLabelHavingMaxInput
+  average: ProjectLabelHavingAverageInput
+  stddevSample: ProjectLabelHavingStddevSampleInput
+  stddevPopulation: ProjectLabelHavingStddevPopulationInput
+  varianceSample: ProjectLabelHavingVarianceSampleInput
+  variancePopulation: ProjectLabelHavingVariancePopulationInput
+}
+
+input ProjectLabelHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLabelHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `ProjectLabel` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ProjectLabelCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `color` field."""
+  color: String
+
+  """Checks for equality with the object’s `icon` field."""
+  icon: String
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `ProjectLabel`."""
+enum ProjectLabelOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  COLOR_ASC
+  COLOR_DESC
+  ICON_ASC
+  ICON_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  PROJECT_PROJECT_LABELS_COUNT_ASC
+  PROJECT_PROJECT_LABELS_COUNT_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `ProjectColumn` values."""
@@ -7028,6 +7768,14 @@ enum SettingOrderBy {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single `ProjectProjectLabel`."""
+  createProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectProjectLabelInput!
+  ): CreateProjectProjectLabelPayload
+
   """Creates a single `TaskLabel`."""
   createTaskLabel(
     """
@@ -7052,14 +7800,6 @@ type Mutation {
     input: CreateEmojiInput!
   ): CreateEmojiPayload
 
-  """Creates a single `Label`."""
-  createLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateLabelInput!
-  ): CreateLabelPayload
-
   """Creates a single `User`."""
   createUser(
     """
@@ -7075,6 +7815,22 @@ type Mutation {
     """
     input: CreatePostInput!
   ): CreatePostPayload
+
+  """Creates a single `ProjectLabel`."""
+  createProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectLabelInput!
+  ): CreateProjectLabelPayload
+
+  """Creates a single `Label`."""
+  createLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLabelInput!
+  ): CreateLabelPayload
 
   """Creates a single `Column`."""
   createColumn(
@@ -7132,6 +7888,24 @@ type Mutation {
     input: CreateUserOrganizationInput!
   ): CreateUserOrganizationPayload
 
+  """
+  Updates a single `ProjectProjectLabel` using its globally unique id and a patch.
+  """
+  updateProjectProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectProjectLabelByIdInput!
+  ): UpdateProjectProjectLabelPayload
+
+  """Updates a single `ProjectProjectLabel` using a unique key and a patch."""
+  updateProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectProjectLabelInput!
+  ): UpdateProjectProjectLabelPayload
+
   """Updates a single `TaskLabel` using its globally unique id and a patch."""
   updateTaskLabelById(
     """
@@ -7180,22 +7954,6 @@ type Mutation {
     input: UpdateEmojiInput!
   ): UpdateEmojiPayload
 
-  """Updates a single `Label` using its globally unique id and a patch."""
-  updateLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLabelByIdInput!
-  ): UpdateLabelPayload
-
-  """Updates a single `Label` using a unique key and a patch."""
-  updateLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLabelInput!
-  ): UpdateLabelPayload
-
   """Updates a single `User` using its globally unique id and a patch."""
   updateUserById(
     """
@@ -7227,6 +7985,40 @@ type Mutation {
     """
     input: UpdatePostInput!
   ): UpdatePostPayload
+
+  """
+  Updates a single `ProjectLabel` using its globally unique id and a patch.
+  """
+  updateProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLabelByIdInput!
+  ): UpdateProjectLabelPayload
+
+  """Updates a single `ProjectLabel` using a unique key and a patch."""
+  updateProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLabelInput!
+  ): UpdateProjectLabelPayload
+
+  """Updates a single `Label` using its globally unique id and a patch."""
+  updateLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLabelByIdInput!
+  ): UpdateLabelPayload
+
+  """Updates a single `Label` using a unique key and a patch."""
+  updateLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLabelInput!
+  ): UpdateLabelPayload
 
   """Updates a single `Column` using its globally unique id and a patch."""
   updateColumnById(
@@ -7346,6 +8138,22 @@ type Mutation {
     input: UpdateUserOrganizationInput!
   ): UpdateUserOrganizationPayload
 
+  """Deletes a single `ProjectProjectLabel` using its globally unique id."""
+  deleteProjectProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectProjectLabelByIdInput!
+  ): DeleteProjectProjectLabelPayload
+
+  """Deletes a single `ProjectProjectLabel` using a unique key."""
+  deleteProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectProjectLabelInput!
+  ): DeleteProjectProjectLabelPayload
+
   """Deletes a single `TaskLabel` using its globally unique id."""
   deleteTaskLabelById(
     """
@@ -7394,22 +8202,6 @@ type Mutation {
     input: DeleteEmojiInput!
   ): DeleteEmojiPayload
 
-  """Deletes a single `Label` using its globally unique id."""
-  deleteLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLabelByIdInput!
-  ): DeleteLabelPayload
-
-  """Deletes a single `Label` using a unique key."""
-  deleteLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLabelInput!
-  ): DeleteLabelPayload
-
   """Deletes a single `User` using its globally unique id."""
   deleteUserById(
     """
@@ -7441,6 +8233,38 @@ type Mutation {
     """
     input: DeletePostInput!
   ): DeletePostPayload
+
+  """Deletes a single `ProjectLabel` using its globally unique id."""
+  deleteProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLabelByIdInput!
+  ): DeleteProjectLabelPayload
+
+  """Deletes a single `ProjectLabel` using a unique key."""
+  deleteProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLabelInput!
+  ): DeleteProjectLabelPayload
+
+  """Deletes a single `Label` using its globally unique id."""
+  deleteLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLabelByIdInput!
+  ): DeleteLabelPayload
+
+  """Deletes a single `Label` using a unique key."""
+  deleteLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLabelInput!
+  ): DeleteLabelPayload
 
   """Deletes a single `Column` using its globally unique id."""
   deleteColumnById(
@@ -7553,6 +8377,48 @@ type Mutation {
     """
     input: DeleteUserOrganizationInput!
   ): DeleteUserOrganizationPayload
+}
+
+"""The output of our create `ProjectProjectLabel` mutation."""
+type CreateProjectProjectLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectProjectLabel` that was created by this mutation."""
+  projectProjectLabel: ProjectProjectLabel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectProjectLabel`. May be used by Relay 1."""
+  projectProjectLabelEdge(
+    """The method to use when ordering `ProjectProjectLabel`."""
+    orderBy: [ProjectProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelEdge
+}
+
+"""All input for the create `ProjectProjectLabel` mutation."""
+input CreateProjectProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectProjectLabel` to be created by this mutation."""
+  projectProjectLabel: ProjectProjectLabelInput!
+}
+
+"""An input for mutations affecting `ProjectProjectLabel`"""
+input ProjectProjectLabelInput {
+  projectId: UUID!
+  projectLabelId: UUID!
+  createdAt: Datetime
 }
 
 """The output of our create `TaskLabel` mutation."""
@@ -7687,51 +8553,6 @@ input EmojiInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `Label` mutation."""
-type CreateLabelPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Label` that was created by this mutation."""
-  label: Label
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Label`. May be used by Relay 1."""
-  labelEdge(
-    """The method to use when ordering `Label`."""
-    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LabelEdge
-}
-
-"""All input for the create `Label` mutation."""
-input CreateLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Label` to be created by this mutation."""
-  label: LabelInput!
-}
-
-"""An input for mutations affecting `Label`"""
-input LabelInput {
-  rowId: UUID
-  name: String!
-  color: String!
-  projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `User` mutation."""
 type CreateUserPayload {
   """
@@ -7822,6 +8643,99 @@ input PostInput {
   taskId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `ProjectLabel` mutation."""
+type CreateProjectLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLabel` that was created by this mutation."""
+  projectLabel: ProjectLabel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLabel`. May be used by Relay 1."""
+  projectLabelEdge(
+    """The method to use when ordering `ProjectLabel`."""
+    orderBy: [ProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLabelEdge
+}
+
+"""All input for the create `ProjectLabel` mutation."""
+input CreateProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectLabel` to be created by this mutation."""
+  projectLabel: ProjectLabelInput!
+}
+
+"""An input for mutations affecting `ProjectLabel`"""
+input ProjectLabelInput {
+  rowId: UUID
+  name: String!
+  color: String!
+  icon: String
+  organizationId: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `Label` mutation."""
+type CreateLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Label` that was created by this mutation."""
+  label: Label
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Label`. May be used by Relay 1."""
+  labelEdge(
+    """The method to use when ordering `Label`."""
+    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LabelEdge
+}
+
+"""All input for the create `Label` mutation."""
+input CreateLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Label` to be created by this mutation."""
+  label: LabelInput!
+}
+
+"""An input for mutations affecting `Label`"""
+input LabelInput {
+  rowId: UUID
+  name: String!
+  color: String!
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  icon: String
+  organizationId: String
 }
 
 """The output of our create `Column` mutation."""
@@ -8162,6 +9076,73 @@ input UserOrganizationInput {
   updatedAt: Datetime
 }
 
+"""The output of our update `ProjectProjectLabel` mutation."""
+type UpdateProjectProjectLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectProjectLabel` that was updated by this mutation."""
+  projectProjectLabel: ProjectProjectLabel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectProjectLabel`. May be used by Relay 1."""
+  projectProjectLabelEdge(
+    """The method to use when ordering `ProjectProjectLabel`."""
+    orderBy: [ProjectProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelEdge
+}
+
+"""All input for the `updateProjectProjectLabelById` mutation."""
+input UpdateProjectProjectLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectProjectLabel` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ProjectProjectLabel` being updated.
+  """
+  patch: ProjectProjectLabelPatch!
+}
+
+"""
+Represents an update to a `ProjectProjectLabel`. Fields that are set will be updated.
+"""
+input ProjectProjectLabelPatch {
+  projectId: UUID
+  projectLabelId: UUID
+  createdAt: Datetime
+}
+
+"""All input for the `updateProjectProjectLabel` mutation."""
+input UpdateProjectProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  projectId: UUID!
+  projectLabelId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ProjectProjectLabel` being updated.
+  """
+  patch: ProjectProjectLabelPatch!
+}
+
 """The output of our update `TaskLabel` mutation."""
 type UpdateTaskLabelPayload {
   """
@@ -8368,75 +9349,6 @@ input UpdateEmojiInput {
   patch: EmojiPatch!
 }
 
-"""The output of our update `Label` mutation."""
-type UpdateLabelPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Label` that was updated by this mutation."""
-  label: Label
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Label`. May be used by Relay 1."""
-  labelEdge(
-    """The method to use when ordering `Label`."""
-    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LabelEdge
-}
-
-"""All input for the `updateLabelById` mutation."""
-input UpdateLabelByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Label` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Label` being updated.
-  """
-  patch: LabelPatch!
-}
-
-"""
-Represents an update to a `Label`. Fields that are set will be updated.
-"""
-input LabelPatch {
-  rowId: UUID
-  name: String
-  color: String
-  projectId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateLabel` mutation."""
-input UpdateLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Label` being updated.
-  """
-  patch: LabelPatch!
-}
-
 """The output of our update `User` mutation."""
 type UpdateUserPayload {
   """
@@ -8571,6 +9483,147 @@ input UpdatePostInput {
   An object where the defined keys will be set on the `Post` being updated.
   """
   patch: PostPatch!
+}
+
+"""The output of our update `ProjectLabel` mutation."""
+type UpdateProjectLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLabel` that was updated by this mutation."""
+  projectLabel: ProjectLabel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLabel`. May be used by Relay 1."""
+  projectLabelEdge(
+    """The method to use when ordering `ProjectLabel`."""
+    orderBy: [ProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLabelEdge
+}
+
+"""All input for the `updateProjectLabelById` mutation."""
+input UpdateProjectLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectLabel` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ProjectLabel` being updated.
+  """
+  patch: ProjectLabelPatch!
+}
+
+"""
+Represents an update to a `ProjectLabel`. Fields that are set will be updated.
+"""
+input ProjectLabelPatch {
+  rowId: UUID
+  name: String
+  color: String
+  icon: String
+  organizationId: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateProjectLabel` mutation."""
+input UpdateProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ProjectLabel` being updated.
+  """
+  patch: ProjectLabelPatch!
+}
+
+"""The output of our update `Label` mutation."""
+type UpdateLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Label` that was updated by this mutation."""
+  label: Label
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Label`. May be used by Relay 1."""
+  labelEdge(
+    """The method to use when ordering `Label`."""
+    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LabelEdge
+}
+
+"""All input for the `updateLabelById` mutation."""
+input UpdateLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Label` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Label` being updated.
+  """
+  patch: LabelPatch!
+}
+
+"""
+Represents an update to a `Label`. Fields that are set will be updated.
+"""
+input LabelPatch {
+  rowId: UUID
+  name: String
+  color: String
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  icon: String
+  organizationId: String
+}
+
+"""All input for the `updateLabel` mutation."""
+input UpdateLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Label` being updated.
+  """
+  patch: LabelPatch!
 }
 
 """The output of our update `Column` mutation."""
@@ -9077,6 +10130,55 @@ input UpdateUserOrganizationInput {
   patch: UserOrganizationPatch!
 }
 
+"""The output of our delete `ProjectProjectLabel` mutation."""
+type DeleteProjectProjectLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectProjectLabel` that was deleted by this mutation."""
+  projectProjectLabel: ProjectProjectLabel
+  deletedProjectProjectLabelId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectProjectLabel`. May be used by Relay 1."""
+  projectProjectLabelEdge(
+    """The method to use when ordering `ProjectProjectLabel`."""
+    orderBy: [ProjectProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelEdge
+}
+
+"""All input for the `deleteProjectProjectLabelById` mutation."""
+input DeleteProjectProjectLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectProjectLabel` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteProjectProjectLabel` mutation."""
+input DeleteProjectProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  projectId: UUID!
+  projectLabelId: UUID!
+}
+
 """The output of our delete `TaskLabel` mutation."""
 type DeleteTaskLabelPayload {
   """
@@ -9223,54 +10325,6 @@ input DeleteEmojiInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Label` mutation."""
-type DeleteLabelPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Label` that was deleted by this mutation."""
-  label: Label
-  deletedLabelId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Label`. May be used by Relay 1."""
-  labelEdge(
-    """The method to use when ordering `Label`."""
-    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LabelEdge
-}
-
-"""All input for the `deleteLabelById` mutation."""
-input DeleteLabelByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Label` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteLabel` mutation."""
-input DeleteLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `User` mutation."""
 type DeleteUserPayload {
   """
@@ -9359,6 +10413,102 @@ input DeletePostByIdInput {
 
 """All input for the `deletePost` mutation."""
 input DeletePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ProjectLabel` mutation."""
+type DeleteProjectLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLabel` that was deleted by this mutation."""
+  projectLabel: ProjectLabel
+  deletedProjectLabelId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLabel`. May be used by Relay 1."""
+  projectLabelEdge(
+    """The method to use when ordering `ProjectLabel`."""
+    orderBy: [ProjectLabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLabelEdge
+}
+
+"""All input for the `deleteProjectLabelById` mutation."""
+input DeleteProjectLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectLabel` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteProjectLabel` mutation."""
+input DeleteProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Label` mutation."""
+type DeleteLabelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Label` that was deleted by this mutation."""
+  label: Label
+  deletedLabelId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Label`. May be used by Relay 1."""
+  labelEdge(
+    """The method to use when ordering `Label`."""
+    orderBy: [LabelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LabelEdge
+}
+
+"""All input for the `deleteLabelById` mutation."""
+input DeleteLabelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Label` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteLabel` mutation."""
+input DeleteLabelInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
