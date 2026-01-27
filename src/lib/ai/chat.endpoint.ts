@@ -13,7 +13,11 @@ import {
   loadSession,
   saveSessionMessages,
 } from "./session/manager";
-import { createQueryTools, createWriteTools } from "./tools/server";
+import {
+  createDestructiveTools,
+  createQueryTools,
+  createWriteTools,
+} from "./tools/server";
 
 import type { ModelMessage, StreamChunk } from "@tanstack/ai";
 
@@ -116,6 +120,14 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         organizationId,
       });
 
+      const writeContext = {
+        projectId: body.projectId,
+        organizationId,
+        userId: auth.user.id,
+        accessToken: auth.accessToken,
+        sessionId: session.id,
+      };
+
       const {
         createTask,
         updateTask,
@@ -124,13 +136,16 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         addLabel,
         removeLabel,
         addComment,
-      } = createWriteTools({
-        projectId: body.projectId,
-        organizationId,
-        userId: auth.user.id,
-        accessToken: auth.accessToken,
-        sessionId: session.id,
+      } = createWriteTools(writeContext, {
+        requireApprovalForCreate: agentConfig.requireApprovalForCreate,
       });
+
+      const {
+        deleteTask,
+        batchMoveTasks,
+        batchUpdateTasks,
+        batchDeleteTasks,
+      } = createDestructiveTools(writeContext, agentConfig);
 
       // Create adapter
       const adapter = createAdapter(agentConfig.provider, agentConfig.model);
@@ -152,6 +167,10 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
           addLabel,
           removeLabel,
           addComment,
+          deleteTask,
+          batchMoveTasks,
+          batchUpdateTasks,
+          batchDeleteTasks,
         ],
         systemPrompts: [systemPrompt],
         agentLoopStrategy: maxIterations(agentConfig.maxIterations),

@@ -12,7 +12,7 @@
  * so the agent can report them to the user.
  */
 
-import { and, count, eq, max, or } from "drizzle-orm";
+import { and, count, eq, or } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
@@ -35,72 +35,39 @@ import {
   moveTaskDef,
   removeLabelDef,
   updateTaskDef,
+  withApproval,
 } from "../definitions";
 import { logActivity } from "./activity";
+import { getNextColumnIndex, resolveTask } from "./helpers";
 import { requireProjectPermission } from "./permissions";
 
 import type { WriteToolContext } from "./context";
 
 // ─────────────────────────────────────────────
-// Shared Helpers
-// ─────────────────────────────────────────────
-
-/**
- * Resolve a task by ID or project-scoped number.
- * Throws if neither is provided or the task is not found.
- */
-async function resolveTask(
-  input: { taskId?: string; taskNumber?: number },
-  projectId: string,
-) {
-  if (!input.taskId && input.taskNumber === undefined) {
-    throw new Error("Either taskId or taskNumber must be provided.");
-  }
-
-  const condition = input.taskId
-    ? and(eq(tasks.id, input.taskId), eq(tasks.projectId, projectId))
-    : and(
-        eq(tasks.number, input.taskNumber!),
-        eq(tasks.projectId, projectId),
-      );
-
-  const task = await dbPool.query.tasks.findFirst({
-    where: condition,
-  });
-
-  if (!task) {
-    const ref = input.taskId ?? `T-${input.taskNumber}`;
-    throw new Error(`Task ${ref} not found in this project.`);
-  }
-
-  return task;
-}
-
-/**
- * Get the next column index for appending a task at the end of a column.
- */
-async function getNextColumnIndex(columnId: string): Promise<number> {
-  const result = await dbPool
-    .select({ maxIndex: max(tasks.columnIndex) })
-    .from(tasks)
-    .where(eq(tasks.columnId, columnId));
-
-  const current = result[0]?.maxIndex;
-  return current !== null && current !== undefined ? current + 1 : 0;
-}
-
-// ─────────────────────────────────────────────
 // Factory
 // ─────────────────────────────────────────────
+
+interface WriteToolConfig {
+  requireApprovalForCreate?: boolean;
+}
 
 /**
  * Create write tools scoped to a project with full auth context.
  *
  * Each tool checks permissions, executes the operation, and logs activity.
+ * When `config.requireApprovalForCreate` is true, the createTask tool
+ * will pause for user approval before executing.
  */
-export function createWriteTools(context: WriteToolContext) {
+export function createWriteTools(
+  context: WriteToolContext,
+  config?: WriteToolConfig,
+) {
   // ── createTask ──────────────────────────────
-  const createTask = createTaskDef.server(async (input) => {
+  const createTaskToolDef = config?.requireApprovalForCreate
+    ? withApproval(createTaskDef, true)
+    : createTaskDef;
+
+  const createTask = createTaskToolDef.server(async (input) => {
     try {
       await requireProjectPermission(context, "editor");
     } catch (err) {

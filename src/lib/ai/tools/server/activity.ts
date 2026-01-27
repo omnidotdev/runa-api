@@ -19,6 +19,8 @@ interface LogActivityParams {
   status: "completed" | "failed" | "denied";
   errorMessage?: string;
   affectedTaskIds?: string[];
+  requiresApproval?: boolean;
+  approvalStatus?: string;
 }
 
 /**
@@ -38,6 +40,8 @@ export function logActivity(params: LogActivityParams): void {
       toolName: params.toolName,
       toolInput: params.toolInput,
       toolOutput: params.toolOutput ?? null,
+      requiresApproval: params.requiresApproval ?? false,
+      approvalStatus: params.approvalStatus ?? null,
       status: params.status,
       errorMessage: params.errorMessage ?? null,
       affectedTaskIds: params.affectedTaskIds ?? [],

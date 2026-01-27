@@ -9,7 +9,37 @@ import { z } from "zod";
  *
  * Phase 1: Read-only tools.
  * Phase 2: Write tools (create, update, move, assign, label, comment).
+ * Phase 3: Destructive/batch tools (delete, batch move/update/delete).
  */
+
+// ─────────────────────────────────────────────
+// Dynamic Approval Helper
+// ─────────────────────────────────────────────
+
+/**
+ * Re-create a tool definition with dynamic `needsApproval`.
+ *
+ * TanStack AI bakes `needsApproval` into the definition at construction time.
+ * Since approval is configurable per-organization, we reconstruct the definition
+ * at request time when the org config is available.
+ *
+ * @param def - The base tool definition (without needsApproval)
+ * @param needsApproval - Whether to enable approval gating
+ * @returns A new tool definition with needsApproval set, or the original if false
+ */
+export function withApproval<
+  TDef extends ReturnType<typeof toolDefinition>,
+>(def: TDef, needsApproval: boolean): TDef {
+  if (!needsApproval) return def;
+
+  return toolDefinition({
+    name: def.name,
+    description: def.description,
+    inputSchema: def.inputSchema,
+    outputSchema: def.outputSchema,
+    needsApproval: true,
+  }) as unknown as TDef;
+}
 
 // ─────────────────────────────────────────────
 // Read-Only Tools
@@ -392,5 +422,151 @@ export const addCommentDef = toolDefinition({
     taskId: z.string(),
     taskNumber: z.number().nullable(),
     taskTitle: z.string(),
+  }),
+});
+
+// ─────────────────────────────────────────────
+// Destructive & Batch Tools
+// ─────────────────────────────────────────────
+
+/** Shared schema for identifying a task by ID or number. */
+const taskRefSchema = z.object({
+  taskId: z
+    .string()
+    .optional()
+    .describe("Task UUID (use if you have the ID)"),
+  taskNumber: z
+    .number()
+    .optional()
+    .describe("Task number (use when user refers to T-42 or #42)"),
+});
+
+/**
+ * Delete a single task from the project.
+ * needsApproval is injected dynamically via withApproval().
+ */
+export const deleteTaskDef = toolDefinition({
+  name: "deleteTask",
+  description:
+    "Permanently delete a task from the project. This cannot be undone. Provide the task ID or task number.",
+  inputSchema: taskRefSchema,
+  outputSchema: z.object({
+    deletedTaskId: z.string(),
+    deletedTaskNumber: z.number().nullable(),
+    deletedTaskTitle: z.string(),
+  }),
+});
+
+/**
+ * Batch move multiple tasks to a target column.
+ * needsApproval is injected dynamically via withApproval().
+ */
+export const batchMoveTasksDef = toolDefinition({
+  name: "batchMoveTasks",
+  description:
+    "Move multiple tasks to a target column (status) in one operation. List the tasks to move and the destination column. Use this for bulk status changes like 'move all urgent tasks to Done'.",
+  inputSchema: z.object({
+    tasks: z
+      .array(taskRefSchema)
+      .min(1)
+      .max(50)
+      .describe("Tasks to move (1-50)"),
+    columnId: z.string().describe("Target column ID to move all tasks to"),
+  }),
+  outputSchema: z.object({
+    movedCount: z.number(),
+    targetColumn: z.string(),
+    movedTasks: z.array(
+      z.object({
+        id: z.string(),
+        number: z.number().nullable(),
+        title: z.string(),
+        fromColumn: z.string(),
+      }),
+    ),
+    errors: z.array(
+      z.object({
+        ref: z.string(),
+        message: z.string(),
+      }),
+    ),
+  }),
+});
+
+/**
+ * Batch update fields on multiple tasks.
+ * needsApproval is injected dynamically via withApproval().
+ */
+export const batchUpdateTasksDef = toolDefinition({
+  name: "batchUpdateTasks",
+  description:
+    "Update fields on multiple tasks at once. Provide the tasks and the fields to change (priority, dueDate). Use this for bulk updates like 'set all backlog tasks to low priority'.",
+  inputSchema: z.object({
+    tasks: z
+      .array(taskRefSchema)
+      .min(1)
+      .max(50)
+      .describe("Tasks to update (1-50)"),
+    priority: z
+      .enum(["none", "low", "medium", "high", "urgent"])
+      .optional()
+      .describe("New priority level for all tasks"),
+    dueDate: z
+      .string()
+      .datetime()
+      .nullable()
+      .optional()
+      .describe(
+        "New due date in ISO 8601 format for all tasks, or null to clear",
+      ),
+  }),
+  outputSchema: z.object({
+    updatedCount: z.number(),
+    updatedTasks: z.array(
+      z.object({
+        id: z.string(),
+        number: z.number().nullable(),
+        title: z.string(),
+      }),
+    ),
+    errors: z.array(
+      z.object({
+        ref: z.string(),
+        message: z.string(),
+      }),
+    ),
+  }),
+});
+
+/**
+ * Batch delete multiple tasks.
+ * needsApproval is injected dynamically via withApproval().
+ */
+export const batchDeleteTasksDef = toolDefinition({
+  name: "batchDeleteTasks",
+  description:
+    "Permanently delete multiple tasks from the project in one operation. This cannot be undone. Use this for bulk cleanup like 'delete all completed tasks'.",
+  inputSchema: z.object({
+    tasks: z
+      .array(taskRefSchema)
+      .min(1)
+      .max(50)
+      .describe("Tasks to delete (1-50)"),
+  }),
+  outputSchema: z.object({
+    deletedCount: z.number(),
+    deletedTasks: z.array(
+      z.object({
+        id: z.string(),
+        number: z.number().nullable(),
+        title: z.string(),
+      }),
+    ),
+    errors: z.array(
+      z.object({
+        ref: z.string(),
+        message: z.string(),
+      }),
+    ),
   }),
 });

@@ -9,5 +9,10 @@ export {
   addLabelDef,
   removeLabelDef,
   addCommentDef,
+  deleteTaskDef,
+  batchMoveTasksDef,
+  batchUpdateTasksDef,
+  batchDeleteTasksDef,
+  withApproval,
 } from "./definitions";
-export { createQueryTools, createWriteTools } from "./server";
+export { createDestructiveTools, createQueryTools, createWriteTools } from "./server";

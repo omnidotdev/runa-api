@@ -11,7 +11,7 @@ export {
   saveSessionMessages,
   listSessions,
 } from "./session/manager";
-export { createQueryTools, createWriteTools } from "./tools/server";
+export { createDestructiveTools, createQueryTools, createWriteTools } from "./tools/server";
 export {
   queryTasksDef,
   queryProjectDef,
@@ -23,4 +23,9 @@ export {
   addLabelDef,
   removeLabelDef,
   addCommentDef,
+  deleteTaskDef,
+  batchMoveTasksDef,
+  batchUpdateTasksDef,
+  batchDeleteTasksDef,
+  withApproval,
 } from "./tools/definitions";

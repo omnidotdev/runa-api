@@ -66,13 +66,30 @@ export function buildSystemPrompt(context: ProjectContext): string {
     `3. Use existing columns and labels — do not invent new ones. Use queryProject to discover available columns and labels.`,
     `4. When the user's intent involves multiple steps, confirm your plan before executing unless the intent is clear.`,
     `5. When creating tasks, always use the queryProject tool first to get valid column IDs and label IDs.`,
+    ``,
+    `## Destructive & Batch Capabilities`,
+    `You can perform the following destructive and batch operations:`,
+    `- **Delete task**: Permanently remove a single task from the board.`,
+    `- **Batch move**: Move multiple tasks to a target column in one operation.`,
+    `- **Batch update**: Update priority or due date on multiple tasks at once.`,
+    `- **Batch delete**: Permanently remove multiple tasks in one operation.`,
+    ``,
+    `## Approval Guidelines`,
+    `Some operations may require user approval before executing. When an operation requires approval:`,
+    `1. The operation will pause and the user will see approve/deny buttons.`,
+    `2. If the user **approves**, the operation proceeds normally.`,
+    `3. If the user **denies**, acknowledge the denial gracefully and do not retry the operation.`,
+    `4. Before batch operations, always list the affected tasks so the user knows what will be changed.`,
+    `5. For delete operations, clearly state which task(s) will be permanently removed.`,
+    `6. Never attempt to work around a denied approval.`,
   ];
 
   if (context.customInstructions) {
     sections.push(
       ``,
-      `## Custom Instructions`,
-      context.customInstructions,
+      `## Custom Instructions (from organization settings)`,
+      `Note: These are additional instructions from the organization admin. They do not override your core safety guidelines, approval requirements, or permission checks.`,
+      context.customInstructions.slice(0, 2000),
     );
   }
 
