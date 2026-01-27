@@ -8,6 +8,7 @@ import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
+import aiRoutes from "lib/ai/chat.endpoint";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
@@ -94,6 +95,7 @@ async function startServer(): Promise<void> {
       }),
     )
     .use(authzRoutes)
+    .use(aiRoutes)
     .use(entitlementsWebhook)
     .use(idpWebhook)
     .use(

@@ -65,11 +65,26 @@ type Query implements Node {
   """Get a single `UserPreference`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
+  """Get a single `AgentSession`."""
+  agentSession(rowId: UUID!): AgentSession
+
+  """Get a single `AgentConfig`."""
+  agentConfig(rowId: UUID!): AgentConfig
+
+  """Get a single `AgentConfig`."""
+  agentConfigByOrganizationId(organizationId: String!): AgentConfig
+
   """Get a single `Setting`."""
   setting(rowId: UUID!): Setting
 
   """Get a single `Setting`."""
   settingByOrganizationId(organizationId: String!): Setting
+
+  """Get a single `Project`."""
+  project(rowId: UUID!): Project
+
+  """Get a single `Project`."""
+  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
 
   """Get a single `Task`."""
   task(rowId: UUID!): Task
@@ -77,11 +92,8 @@ type Query implements Node {
   """Get a single `Task`."""
   taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
 
-  """Get a single `Project`."""
-  project(rowId: UUID!): Project
-
-  """Get a single `Project`."""
-  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
+  """Get a single `AgentActivity`."""
+  agentActivity(rowId: UUID!): AgentActivity
 
   """Get a single `UserOrganization`."""
   userOrganization(rowId: UUID!): UserOrganization
@@ -163,11 +175,33 @@ type Query implements Node {
     id: ID!
   ): UserPreference
 
+  """Reads a single `AgentSession` using its globally unique `ID`."""
+  agentSessionById(
+    """
+    The globally unique `ID` to be used in selecting a single `AgentSession`.
+    """
+    id: ID!
+  ): AgentSession
+
+  """Reads a single `AgentConfig` using its globally unique `ID`."""
+  agentConfigById(
+    """
+    The globally unique `ID` to be used in selecting a single `AgentConfig`.
+    """
+    id: ID!
+  ): AgentConfig
+
   """Reads a single `Setting` using its globally unique `ID`."""
   settingById(
     """The globally unique `ID` to be used in selecting a single `Setting`."""
     id: ID!
   ): Setting
+
+  """Reads a single `Project` using its globally unique `ID`."""
+  projectById(
+    """The globally unique `ID` to be used in selecting a single `Project`."""
+    id: ID!
+  ): Project
 
   """Reads a single `Task` using its globally unique `ID`."""
   taskById(
@@ -175,11 +209,13 @@ type Query implements Node {
     id: ID!
   ): Task
 
-  """Reads a single `Project` using its globally unique `ID`."""
-  projectById(
-    """The globally unique `ID` to be used in selecting a single `Project`."""
+  """Reads a single `AgentActivity` using its globally unique `ID`."""
+  agentActivityById(
+    """
+    The globally unique `ID` to be used in selecting a single `AgentActivity`.
+    """
     id: ID!
-  ): Project
+  ): AgentActivity
 
   """Reads a single `UserOrganization` using its globally unique `ID`."""
   userOrganizationById(
@@ -563,6 +599,74 @@ type Query implements Node {
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
 
+  """Reads and enables pagination through a set of `AgentSession`."""
+  agentSessions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgentSessionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgentSessionFilter
+
+    """The method to use when ordering `AgentSession`."""
+    orderBy: [AgentSessionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentSessionConnection
+
+  """Reads and enables pagination through a set of `AgentConfig`."""
+  agentConfigs(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgentConfigCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgentConfigFilter
+
+    """The method to use when ordering `AgentConfig`."""
+    orderBy: [AgentConfigOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentConfigConnection
+
   """Reads and enables pagination through a set of `Setting`."""
   settings(
     """Only read the first `n` values of the set."""
@@ -596,6 +700,40 @@ type Query implements Node {
     """The method to use when ordering `Setting`."""
     orderBy: [SettingOrderBy!] = [PRIMARY_KEY_ASC]
   ): SettingConnection
+
+  """Reads and enables pagination through a set of `Project`."""
+  projects(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectFilter
+
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectConnection
 
   """Reads and enables pagination through a set of `Task`."""
   tasks(
@@ -631,8 +769,8 @@ type Query implements Node {
     orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaskConnection
 
-  """Reads and enables pagination through a set of `Project`."""
-  projects(
+  """Reads and enables pagination through a set of `AgentActivity`."""
+  agentActivities(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -654,16 +792,16 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: ProjectCondition
+    condition: AgentActivityCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: ProjectFilter
+    filter: AgentActivityFilter
 
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectConnection
+    """The method to use when ordering `AgentActivity`."""
+    orderBy: [AgentActivityOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentActivityConnection
 
   """Reads and enables pagination through a set of `UserOrganization`."""
   userOrganizations(
@@ -938,6 +1076,74 @@ type Project implements Node {
     """The method to use when ordering `ProjectProjectLabel`."""
     orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectProjectLabelConnection!
+
+  """Reads and enables pagination through a set of `AgentActivity`."""
+  agentActivities(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgentActivityCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgentActivityFilter
+
+    """The method to use when ordering `AgentActivity`."""
+    orderBy: [AgentActivityOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentActivityConnection!
+
+  """Reads and enables pagination through a set of `AgentSession`."""
+  agentSessions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgentSessionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgentSessionFilter
+
+    """The method to use when ordering `AgentSession`."""
+    orderBy: [AgentSessionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentSessionConnection!
 }
 
 type ProjectColumn implements Node {
@@ -1444,6 +1650,18 @@ input ProjectFilter {
 
   """Some related `projectProjectLabels` exist."""
   projectProjectLabelsExist: Boolean
+
+  """Filter by the object’s `agentActivities` relation."""
+  agentActivities: ProjectToManyAgentActivityFilter
+
+  """Some related `agentActivities` exist."""
+  agentActivitiesExist: Boolean
+
+  """Filter by the object’s `agentSessions` relation."""
+  agentSessions: ProjectToManyAgentSessionFilter
+
+  """Some related `agentSessions` exist."""
+  agentSessionsExist: Boolean
 
   """Filter by the object’s `projectColumn` relation."""
   projectColumn: ProjectColumnFilter
@@ -2046,6 +2264,18 @@ input UserFilter {
 
   """Some related `userOrganizations` exist."""
   userOrganizationsExist: Boolean
+
+  """Filter by the object’s `agentActivities` relation."""
+  agentActivities: UserToManyAgentActivityFilter
+
+  """Some related `agentActivities` exist."""
+  agentActivitiesExist: Boolean
+
+  """Filter by the object’s `agentSessions` relation."""
+  agentSessions: UserToManyAgentSessionFilter
+
+  """Some related `agentSessions` exist."""
+  agentSessionsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -2842,6 +3072,306 @@ input UserOrganizationDistinctCountAggregateFilter {
 }
 
 """
+A filter to be used against many `AgentActivity` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyAgentActivityFilter {
+  """
+  Every related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AgentActivityFilter
+
+  """
+  Some related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AgentActivityFilter
+
+  """
+  No related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AgentActivityFilter
+
+  """Aggregates across related `AgentActivity` match the filter criteria."""
+  aggregates: AgentActivityAggregatesFilter
+}
+
+"""
+A filter to be used against `AgentActivity` object types. All fields are combined with a logical ‘and.’
+"""
+input AgentActivityFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `sessionId` field."""
+  sessionId: UUIDFilter
+
+  """Filter by the object’s `userId` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s `toolName` field."""
+  toolName: StringFilter
+
+  """Filter by the object’s `requiresApproval` field."""
+  requiresApproval: BooleanFilter
+
+  """Filter by the object’s `approvalStatus` field."""
+  approvalStatus: StringFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `errorMessage` field."""
+  errorMessage: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Filter by the object’s `session` relation."""
+  session: AgentSessionFilter
+
+  """Filter by the object’s `user` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [AgentActivityFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AgentActivityFilter!]
+
+  """Negates the expression."""
+  not: AgentActivityFilter
+}
+
+"""
+A filter to be used against `AgentSession` object types. All fields are combined with a logical ‘and.’
+"""
+input AgentSessionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `userId` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `totalTokensUsed` field."""
+  totalTokensUsed: IntFilter
+
+  """Filter by the object’s `toolCallCount` field."""
+  toolCallCount: IntFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `agentActivitiesBySessionId` relation."""
+  agentActivitiesBySessionId: AgentSessionToManyAgentActivityFilter
+
+  """Some related `agentActivitiesBySessionId` exist."""
+  agentActivitiesBySessionIdExist: Boolean
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Filter by the object’s `user` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [AgentSessionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AgentSessionFilter!]
+
+  """Negates the expression."""
+  not: AgentSessionFilter
+}
+
+"""
+A filter to be used against many `AgentActivity` object types. All fields are combined with a logical ‘and.’
+"""
+input AgentSessionToManyAgentActivityFilter {
+  """
+  Every related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AgentActivityFilter
+
+  """
+  Some related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AgentActivityFilter
+
+  """
+  No related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AgentActivityFilter
+
+  """Aggregates across related `AgentActivity` match the filter criteria."""
+  aggregates: AgentActivityAggregatesFilter
+}
+
+"""
+A filter to be used against aggregates of `AgentActivity` object types.
+"""
+input AgentActivityAggregatesFilter {
+  """
+  A filter that must pass for the relevant `AgentActivity` object to be included within the aggregate.
+  """
+  filter: AgentActivityFilter
+
+  """Distinct count aggregate over matching `AgentActivity` objects."""
+  distinctCount: AgentActivityDistinctCountAggregateFilter
+}
+
+input AgentActivityDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  projectId: BigIntFilter
+  sessionId: BigIntFilter
+  userId: BigIntFilter
+  toolName: BigIntFilter
+  toolInput: BigIntFilter
+  toolOutput: BigIntFilter
+  requiresApproval: BigIntFilter
+  approvalStatus: BigIntFilter
+  status: BigIntFilter
+  errorMessage: BigIntFilter
+  affectedTaskIds: BigIntFilter
+  createdAt: BigIntFilter
+}
+
+"""
+A filter to be used against many `AgentSession` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyAgentSessionFilter {
+  """
+  Every related `AgentSession` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AgentSessionFilter
+
+  """
+  Some related `AgentSession` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AgentSessionFilter
+
+  """
+  No related `AgentSession` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AgentSessionFilter
+
+  """Aggregates across related `AgentSession` match the filter criteria."""
+  aggregates: AgentSessionAggregatesFilter
+}
+
+"""A filter to be used against aggregates of `AgentSession` object types."""
+input AgentSessionAggregatesFilter {
+  """
+  A filter that must pass for the relevant `AgentSession` object to be included within the aggregate.
+  """
+  filter: AgentSessionFilter
+
+  """Sum aggregate over matching `AgentSession` objects."""
+  sum: AgentSessionSumAggregateFilter
+
+  """Distinct count aggregate over matching `AgentSession` objects."""
+  distinctCount: AgentSessionDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `AgentSession` objects."""
+  min: AgentSessionMinAggregateFilter
+
+  """Maximum aggregate over matching `AgentSession` objects."""
+  max: AgentSessionMaxAggregateFilter
+
+  """Mean average aggregate over matching `AgentSession` objects."""
+  average: AgentSessionAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching `AgentSession` objects.
+  """
+  stddevSample: AgentSessionStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching `AgentSession` objects.
+  """
+  stddevPopulation: AgentSessionStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `AgentSession` objects."""
+  varianceSample: AgentSessionVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching `AgentSession` objects."""
+  variancePopulation: AgentSessionVariancePopulationAggregateFilter
+}
+
+input AgentSessionSumAggregateFilter {
+  totalTokensUsed: BigIntFilter
+  toolCallCount: BigIntFilter
+}
+
+input AgentSessionDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  projectId: BigIntFilter
+  userId: BigIntFilter
+  title: BigIntFilter
+  messages: BigIntFilter
+  totalTokensUsed: BigIntFilter
+  toolCallCount: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+input AgentSessionMinAggregateFilter {
+  totalTokensUsed: IntFilter
+  toolCallCount: IntFilter
+}
+
+input AgentSessionMaxAggregateFilter {
+  totalTokensUsed: IntFilter
+  toolCallCount: IntFilter
+}
+
+input AgentSessionAverageAggregateFilter {
+  totalTokensUsed: BigFloatFilter
+  toolCallCount: BigFloatFilter
+}
+
+input AgentSessionStddevSampleAggregateFilter {
+  totalTokensUsed: BigFloatFilter
+  toolCallCount: BigFloatFilter
+}
+
+input AgentSessionStddevPopulationAggregateFilter {
+  totalTokensUsed: BigFloatFilter
+  toolCallCount: BigFloatFilter
+}
+
+input AgentSessionVarianceSampleAggregateFilter {
+  totalTokensUsed: BigFloatFilter
+  toolCallCount: BigFloatFilter
+}
+
+input AgentSessionVariancePopulationAggregateFilter {
+  totalTokensUsed: BigFloatFilter
+  toolCallCount: BigFloatFilter
+}
+
+"""
 A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
 """
 input TaskToManyPostFilter {
@@ -3320,6 +3850,52 @@ input ProjectProjectLabelDistinctCountAggregateFilter {
 }
 
 """
+A filter to be used against many `AgentActivity` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyAgentActivityFilter {
+  """
+  Every related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AgentActivityFilter
+
+  """
+  Some related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AgentActivityFilter
+
+  """
+  No related `AgentActivity` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AgentActivityFilter
+
+  """Aggregates across related `AgentActivity` match the filter criteria."""
+  aggregates: AgentActivityAggregatesFilter
+}
+
+"""
+A filter to be used against many `AgentSession` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyAgentSessionFilter {
+  """
+  Every related `AgentSession` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AgentSessionFilter
+
+  """
+  Some related `AgentSession` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AgentSessionFilter
+
+  """
+  No related `AgentSession` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AgentSessionFilter
+
+  """Aggregates across related `AgentSession` match the filter criteria."""
+  aggregates: AgentSessionAggregatesFilter
+}
+
+"""
 A filter to be used against `ProjectColumn` object types. All fields are combined with a logical ‘and.’
 """
 input ProjectColumnFilter {
@@ -3638,6 +4214,90 @@ enum ProjectOrderBy {
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
+  AGENT_ACTIVITIES_COUNT_ASC
+  AGENT_ACTIVITIES_COUNT_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ROW_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ROW_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_PROJECT_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_PROJECT_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_SESSION_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_SESSION_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_USER_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_USER_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_NAME_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_NAME_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_INPUT_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_INPUT_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_OUTPUT_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_OUTPUT_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_REQUIRES_APPROVAL_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_REQUIRES_APPROVAL_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_APPROVAL_STATUS_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_APPROVAL_STATUS_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_STATUS_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_STATUS_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ERROR_MESSAGE_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ERROR_MESSAGE_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_DESC
+  AGENT_SESSIONS_COUNT_ASC
+  AGENT_SESSIONS_COUNT_DESC
+  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_PROJECT_ID_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_PROJECT_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TITLE_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
 }
 
 """A connection to a list of `Column` values."""
@@ -4103,6 +4763,74 @@ type User implements Node {
     """The method to use when ordering `UserOrganization`."""
     orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserOrganizationConnection!
+
+  """Reads and enables pagination through a set of `AgentActivity`."""
+  agentActivities(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgentActivityCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgentActivityFilter
+
+    """The method to use when ordering `AgentActivity`."""
+    orderBy: [AgentActivityOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentActivityConnection!
+
+  """Reads and enables pagination through a set of `AgentSession`."""
+  agentSessions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgentSessionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgentSessionFilter
+
+    """The method to use when ordering `AgentSession`."""
+    orderBy: [AgentSessionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentSessionConnection!
 }
 
 """A connection to a list of `Assignee` values."""
@@ -5366,6 +6094,709 @@ enum UserOrganizationOrderBy {
   UPDATED_AT_DESC
 }
 
+"""A connection to a list of `AgentActivity` values."""
+type AgentActivityConnection {
+  """A list of `AgentActivity` objects."""
+  nodes: [AgentActivity!]!
+
+  """
+  A list of edges which contains the `AgentActivity` and cursor to aid in pagination.
+  """
+  edges: [AgentActivityEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AgentActivity` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: AgentActivityAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `AgentActivity` for these aggregates."""
+    groupBy: [AgentActivityGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: AgentActivityHavingInput
+  ): [AgentActivityAggregates!]
+}
+
+type AgentActivity implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  projectId: UUID!
+  sessionId: UUID!
+  userId: UUID!
+  toolName: String!
+  toolInput: JSON!
+  toolOutput: JSON
+  requiresApproval: Boolean!
+  approvalStatus: String
+  status: String!
+  errorMessage: String
+  affectedTaskIds: JSON!
+  createdAt: Datetime!
+
+  """Reads a single `Project` that is related to this `AgentActivity`."""
+  project: Project
+
+  """Reads a single `AgentSession` that is related to this `AgentActivity`."""
+  session: AgentSession
+
+  """Reads a single `User` that is related to this `AgentActivity`."""
+  user: User
+}
+
+"""
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type AgentSession implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  projectId: UUID!
+  userId: UUID!
+  title: String
+  messages: JSON!
+  totalTokensUsed: Int!
+  toolCallCount: Int!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Project` that is related to this `AgentSession`."""
+  project: Project
+
+  """Reads a single `User` that is related to this `AgentSession`."""
+  user: User
+
+  """Reads and enables pagination through a set of `AgentActivity`."""
+  agentActivitiesBySessionId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgentActivityCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgentActivityFilter
+
+    """The method to use when ordering `AgentActivity`."""
+    orderBy: [AgentActivityOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentActivityConnection!
+}
+
+"""
+A condition to be used against `AgentActivity` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AgentActivityCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `sessionId` field."""
+  sessionId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s `toolName` field."""
+  toolName: String
+
+  """Checks for equality with the object’s `requiresApproval` field."""
+  requiresApproval: Boolean
+
+  """Checks for equality with the object’s `approvalStatus` field."""
+  approvalStatus: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+
+  """Checks for equality with the object’s `errorMessage` field."""
+  errorMessage: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering `AgentActivity`."""
+enum AgentActivityOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  SESSION_ID_ASC
+  SESSION_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  TOOL_NAME_ASC
+  TOOL_NAME_DESC
+  REQUIRES_APPROVAL_ASC
+  REQUIRES_APPROVAL_DESC
+  APPROVAL_STATUS_ASC
+  APPROVAL_STATUS_DESC
+  STATUS_ASC
+  STATUS_DESC
+  ERROR_MESSAGE_ASC
+  ERROR_MESSAGE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+}
+
+"""A `AgentActivity` edge in the connection."""
+type AgentActivityEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AgentActivity` at the end of the edge."""
+  node: AgentActivity!
+}
+
+type AgentActivityAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: AgentActivityDistinctCountAggregates
+}
+
+type AgentActivityDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of sessionId across the matching connection"""
+  sessionId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of toolName across the matching connection"""
+  toolName: BigInt
+
+  """Distinct count of toolInput across the matching connection"""
+  toolInput: BigInt
+
+  """Distinct count of toolOutput across the matching connection"""
+  toolOutput: BigInt
+
+  """Distinct count of requiresApproval across the matching connection"""
+  requiresApproval: BigInt
+
+  """Distinct count of approvalStatus across the matching connection"""
+  approvalStatus: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of errorMessage across the matching connection"""
+  errorMessage: BigInt
+
+  """Distinct count of affectedTaskIds across the matching connection"""
+  affectedTaskIds: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""Grouping methods for `AgentActivity` for usage during aggregation."""
+enum AgentActivityGroupBy {
+  ORGANIZATION_ID
+  PROJECT_ID
+  SESSION_ID
+  USER_ID
+  TOOL_NAME
+  TOOL_INPUT
+  TOOL_OUTPUT
+  REQUIRES_APPROVAL
+  APPROVAL_STATUS
+  STATUS
+  ERROR_MESSAGE
+  AFFECTED_TASK_IDS
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `AgentActivity` aggregates."""
+input AgentActivityHavingInput {
+  AND: [AgentActivityHavingInput!]
+  OR: [AgentActivityHavingInput!]
+  sum: AgentActivityHavingSumInput
+  distinctCount: AgentActivityHavingDistinctCountInput
+  min: AgentActivityHavingMinInput
+  max: AgentActivityHavingMaxInput
+  average: AgentActivityHavingAverageInput
+  stddevSample: AgentActivityHavingStddevSampleInput
+  stddevPopulation: AgentActivityHavingStddevPopulationInput
+  varianceSample: AgentActivityHavingVarianceSampleInput
+  variancePopulation: AgentActivityHavingVariancePopulationInput
+}
+
+input AgentActivityHavingSumInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input AgentActivityHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input AgentActivityHavingMinInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input AgentActivityHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input AgentActivityHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input AgentActivityHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input AgentActivityHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input AgentActivityHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+}
+
+input AgentActivityHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+}
+
+"""A connection to a list of `AgentSession` values."""
+type AgentSessionConnection {
+  """A list of `AgentSession` objects."""
+  nodes: [AgentSession!]!
+
+  """
+  A list of edges which contains the `AgentSession` and cursor to aid in pagination.
+  """
+  edges: [AgentSessionEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AgentSession` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: AgentSessionAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `AgentSession` for these aggregates."""
+    groupBy: [AgentSessionGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: AgentSessionHavingInput
+  ): [AgentSessionAggregates!]
+}
+
+"""A `AgentSession` edge in the connection."""
+type AgentSessionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AgentSession` at the end of the edge."""
+  node: AgentSession!
+}
+
+type AgentSessionAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: AgentSessionSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: AgentSessionDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: AgentSessionMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: AgentSessionMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: AgentSessionAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: AgentSessionStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: AgentSessionStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: AgentSessionVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: AgentSessionVariancePopulationAggregates
+}
+
+type AgentSessionSumAggregates {
+  """Sum of totalTokensUsed across the matching connection"""
+  totalTokensUsed: BigInt!
+
+  """Sum of toolCallCount across the matching connection"""
+  toolCallCount: BigInt!
+}
+
+type AgentSessionDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of messages across the matching connection"""
+  messages: BigInt
+
+  """Distinct count of totalTokensUsed across the matching connection"""
+  totalTokensUsed: BigInt
+
+  """Distinct count of toolCallCount across the matching connection"""
+  toolCallCount: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type AgentSessionMinAggregates {
+  """Minimum of totalTokensUsed across the matching connection"""
+  totalTokensUsed: Int
+
+  """Minimum of toolCallCount across the matching connection"""
+  toolCallCount: Int
+}
+
+type AgentSessionMaxAggregates {
+  """Maximum of totalTokensUsed across the matching connection"""
+  totalTokensUsed: Int
+
+  """Maximum of toolCallCount across the matching connection"""
+  toolCallCount: Int
+}
+
+type AgentSessionAverageAggregates {
+  """Mean average of totalTokensUsed across the matching connection"""
+  totalTokensUsed: BigFloat
+
+  """Mean average of toolCallCount across the matching connection"""
+  toolCallCount: BigFloat
+}
+
+type AgentSessionStddevSampleAggregates {
+  """
+  Sample standard deviation of totalTokensUsed across the matching connection
+  """
+  totalTokensUsed: BigFloat
+
+  """
+  Sample standard deviation of toolCallCount across the matching connection
+  """
+  toolCallCount: BigFloat
+}
+
+type AgentSessionStddevPopulationAggregates {
+  """
+  Population standard deviation of totalTokensUsed across the matching connection
+  """
+  totalTokensUsed: BigFloat
+
+  """
+  Population standard deviation of toolCallCount across the matching connection
+  """
+  toolCallCount: BigFloat
+}
+
+type AgentSessionVarianceSampleAggregates {
+  """Sample variance of totalTokensUsed across the matching connection"""
+  totalTokensUsed: BigFloat
+
+  """Sample variance of toolCallCount across the matching connection"""
+  toolCallCount: BigFloat
+}
+
+type AgentSessionVariancePopulationAggregates {
+  """Population variance of totalTokensUsed across the matching connection"""
+  totalTokensUsed: BigFloat
+
+  """Population variance of toolCallCount across the matching connection"""
+  toolCallCount: BigFloat
+}
+
+"""Grouping methods for `AgentSession` for usage during aggregation."""
+enum AgentSessionGroupBy {
+  ORGANIZATION_ID
+  PROJECT_ID
+  USER_ID
+  TITLE
+  MESSAGES
+  TOTAL_TOKENS_USED
+  TOOL_CALL_COUNT
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `AgentSession` aggregates."""
+input AgentSessionHavingInput {
+  AND: [AgentSessionHavingInput!]
+  OR: [AgentSessionHavingInput!]
+  sum: AgentSessionHavingSumInput
+  distinctCount: AgentSessionHavingDistinctCountInput
+  min: AgentSessionHavingMinInput
+  max: AgentSessionHavingMaxInput
+  average: AgentSessionHavingAverageInput
+  stddevSample: AgentSessionHavingStddevSampleInput
+  stddevPopulation: AgentSessionHavingStddevPopulationInput
+  varianceSample: AgentSessionHavingVarianceSampleInput
+  variancePopulation: AgentSessionHavingVariancePopulationInput
+}
+
+input AgentSessionHavingSumInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentSessionHavingDistinctCountInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentSessionHavingMinInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentSessionHavingMaxInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentSessionHavingAverageInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentSessionHavingStddevSampleInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentSessionHavingStddevPopulationInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentSessionHavingVarianceSampleInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentSessionHavingVariancePopulationInput {
+  totalTokensUsed: HavingIntFilter
+  toolCallCount: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `AgentSession` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AgentSessionCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `totalTokensUsed` field."""
+  totalTokensUsed: Int
+
+  """Checks for equality with the object’s `toolCallCount` field."""
+  toolCallCount: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `AgentSession`."""
+enum AgentSessionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  TOTAL_TOKENS_USED_ASC
+  TOTAL_TOKENS_USED_DESC
+  TOOL_CALL_COUNT_ASC
+  TOOL_CALL_COUNT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_COUNT_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_COUNT_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_USER_ID_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_USER_ID_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_NAME_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_NAME_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_INPUT_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_INPUT_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_OUTPUT_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_OUTPUT_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_REQUIRES_APPROVAL_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_REQUIRES_APPROVAL_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_APPROVAL_STATUS_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_APPROVAL_STATUS_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_STATUS_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_STATUS_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ERROR_MESSAGE_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ERROR_MESSAGE_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_AFFECTED_TASK_IDS_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_AFFECTED_TASK_IDS_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC
+}
+
 """A connection to a list of `TaskLabel` values."""
 type TaskLabelConnection {
   """A list of `TaskLabel` objects."""
@@ -6604,6 +8035,24 @@ type ProjectLabel implements Node {
   ): ProjectProjectLabelConnection!
 }
 
+type AgentConfig implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  provider: String!
+  model: String!
+  enabled: Boolean!
+  maxIterationsPerRequest: Int!
+  requireApprovalForDestructive: Boolean!
+  requireApprovalForCreate: Boolean!
+  customInstructions: String
+  createdAt: Datetime!
+  updatedAt: Datetime!
+}
+
 type Setting implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -6951,6 +8400,90 @@ enum UserOrderBy {
   USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+  AGENT_ACTIVITIES_COUNT_ASC
+  AGENT_ACTIVITIES_COUNT_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ROW_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ROW_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_PROJECT_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_PROJECT_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_SESSION_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_SESSION_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_USER_ID_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_USER_ID_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_NAME_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_NAME_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_INPUT_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_INPUT_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_OUTPUT_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_OUTPUT_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_REQUIRES_APPROVAL_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_REQUIRES_APPROVAL_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_APPROVAL_STATUS_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_APPROVAL_STATUS_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_STATUS_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_STATUS_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ERROR_MESSAGE_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_ERROR_MESSAGE_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_DESC
+  AGENT_SESSIONS_COUNT_ASC
+  AGENT_SESSIONS_COUNT_DESC
+  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_PROJECT_ID_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_PROJECT_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TITLE_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_ASC
+  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_DESC
+  AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
+  AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
 }
 
 """A connection to a list of `ProjectLabel` values."""
@@ -7500,6 +9033,391 @@ enum ProjectColumnOrderBy {
   PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC
 }
 
+"""A connection to a list of `AgentConfig` values."""
+type AgentConfigConnection {
+  """A list of `AgentConfig` objects."""
+  nodes: [AgentConfig!]!
+
+  """
+  A list of edges which contains the `AgentConfig` and cursor to aid in pagination.
+  """
+  edges: [AgentConfigEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AgentConfig` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: AgentConfigAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `AgentConfig` for these aggregates."""
+    groupBy: [AgentConfigGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: AgentConfigHavingInput
+  ): [AgentConfigAggregates!]
+}
+
+"""A `AgentConfig` edge in the connection."""
+type AgentConfigEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AgentConfig` at the end of the edge."""
+  node: AgentConfig!
+}
+
+type AgentConfigAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: AgentConfigSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: AgentConfigDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: AgentConfigMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: AgentConfigMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: AgentConfigAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: AgentConfigStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: AgentConfigStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: AgentConfigVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: AgentConfigVariancePopulationAggregates
+}
+
+type AgentConfigSumAggregates {
+  """Sum of maxIterationsPerRequest across the matching connection"""
+  maxIterationsPerRequest: BigInt!
+}
+
+type AgentConfigDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of provider across the matching connection"""
+  provider: BigInt
+
+  """Distinct count of model across the matching connection"""
+  model: BigInt
+
+  """Distinct count of enabled across the matching connection"""
+  enabled: BigInt
+
+  """
+  Distinct count of maxIterationsPerRequest across the matching connection
+  """
+  maxIterationsPerRequest: BigInt
+
+  """
+  Distinct count of requireApprovalForDestructive across the matching connection
+  """
+  requireApprovalForDestructive: BigInt
+
+  """
+  Distinct count of requireApprovalForCreate across the matching connection
+  """
+  requireApprovalForCreate: BigInt
+
+  """Distinct count of customInstructions across the matching connection"""
+  customInstructions: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type AgentConfigMinAggregates {
+  """Minimum of maxIterationsPerRequest across the matching connection"""
+  maxIterationsPerRequest: Int
+}
+
+type AgentConfigMaxAggregates {
+  """Maximum of maxIterationsPerRequest across the matching connection"""
+  maxIterationsPerRequest: Int
+}
+
+type AgentConfigAverageAggregates {
+  """Mean average of maxIterationsPerRequest across the matching connection"""
+  maxIterationsPerRequest: BigFloat
+}
+
+type AgentConfigStddevSampleAggregates {
+  """
+  Sample standard deviation of maxIterationsPerRequest across the matching connection
+  """
+  maxIterationsPerRequest: BigFloat
+}
+
+type AgentConfigStddevPopulationAggregates {
+  """
+  Population standard deviation of maxIterationsPerRequest across the matching connection
+  """
+  maxIterationsPerRequest: BigFloat
+}
+
+type AgentConfigVarianceSampleAggregates {
+  """
+  Sample variance of maxIterationsPerRequest across the matching connection
+  """
+  maxIterationsPerRequest: BigFloat
+}
+
+type AgentConfigVariancePopulationAggregates {
+  """
+  Population variance of maxIterationsPerRequest across the matching connection
+  """
+  maxIterationsPerRequest: BigFloat
+}
+
+"""Grouping methods for `AgentConfig` for usage during aggregation."""
+enum AgentConfigGroupBy {
+  PROVIDER
+  MODEL
+  ENABLED
+  MAX_ITERATIONS_PER_REQUEST
+  REQUIRE_APPROVAL_FOR_DESTRUCTIVE
+  REQUIRE_APPROVAL_FOR_CREATE
+  CUSTOM_INSTRUCTIONS
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `AgentConfig` aggregates."""
+input AgentConfigHavingInput {
+  AND: [AgentConfigHavingInput!]
+  OR: [AgentConfigHavingInput!]
+  sum: AgentConfigHavingSumInput
+  distinctCount: AgentConfigHavingDistinctCountInput
+  min: AgentConfigHavingMinInput
+  max: AgentConfigHavingMaxInput
+  average: AgentConfigHavingAverageInput
+  stddevSample: AgentConfigHavingStddevSampleInput
+  stddevPopulation: AgentConfigHavingStddevPopulationInput
+  varianceSample: AgentConfigHavingVarianceSampleInput
+  variancePopulation: AgentConfigHavingVariancePopulationInput
+}
+
+input AgentConfigHavingSumInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentConfigHavingDistinctCountInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentConfigHavingMinInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentConfigHavingMaxInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentConfigHavingAverageInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentConfigHavingStddevSampleInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentConfigHavingStddevPopulationInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentConfigHavingVarianceSampleInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input AgentConfigHavingVariancePopulationInput {
+  maxIterationsPerRequest: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `AgentConfig` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input AgentConfigCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `provider` field."""
+  provider: String
+
+  """Checks for equality with the object’s `model` field."""
+  model: String
+
+  """Checks for equality with the object’s `enabled` field."""
+  enabled: Boolean
+
+  """Checks for equality with the object’s `maxIterationsPerRequest` field."""
+  maxIterationsPerRequest: Int
+
+  """
+  Checks for equality with the object’s `requireApprovalForDestructive` field.
+  """
+  requireApprovalForDestructive: Boolean
+
+  """
+  Checks for equality with the object’s `requireApprovalForCreate` field.
+  """
+  requireApprovalForCreate: Boolean
+
+  """Checks for equality with the object’s `customInstructions` field."""
+  customInstructions: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""
+A filter to be used against `AgentConfig` object types. All fields are combined with a logical ‘and.’
+"""
+input AgentConfigFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `provider` field."""
+  provider: StringFilter
+
+  """Filter by the object’s `model` field."""
+  model: StringFilter
+
+  """Filter by the object’s `enabled` field."""
+  enabled: BooleanFilter
+
+  """Filter by the object’s `maxIterationsPerRequest` field."""
+  maxIterationsPerRequest: IntFilter
+
+  """Filter by the object’s `requireApprovalForDestructive` field."""
+  requireApprovalForDestructive: BooleanFilter
+
+  """Filter by the object’s `requireApprovalForCreate` field."""
+  requireApprovalForCreate: BooleanFilter
+
+  """Filter by the object’s `customInstructions` field."""
+  customInstructions: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Checks for all expressions in this list."""
+  and: [AgentConfigFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AgentConfigFilter!]
+
+  """Negates the expression."""
+  not: AgentConfigFilter
+}
+
+"""Methods to use when ordering `AgentConfig`."""
+enum AgentConfigOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  PROVIDER_ASC
+  PROVIDER_DESC
+  MODEL_ASC
+  MODEL_DESC
+  ENABLED_ASC
+  ENABLED_DESC
+  MAX_ITERATIONS_PER_REQUEST_ASC
+  MAX_ITERATIONS_PER_REQUEST_DESC
+  REQUIRE_APPROVAL_FOR_DESTRUCTIVE_ASC
+  REQUIRE_APPROVAL_FOR_DESTRUCTIVE_DESC
+  REQUIRE_APPROVAL_FOR_CREATE_ASC
+  REQUIRE_APPROVAL_FOR_CREATE_DESC
+  CUSTOM_INSTRUCTIONS_ASC
+  CUSTOM_INSTRUCTIONS_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 """A connection to a list of `Setting` values."""
 type SettingConnection {
   """A list of `Setting` objects."""
@@ -7856,6 +9774,22 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
+  """Creates a single `AgentSession`."""
+  createAgentSession(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAgentSessionInput!
+  ): CreateAgentSessionPayload
+
+  """Creates a single `AgentConfig`."""
+  createAgentConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAgentConfigInput!
+  ): CreateAgentConfigPayload
+
   """Creates a single `Setting`."""
   createSetting(
     """
@@ -7863,6 +9797,14 @@ type Mutation {
     """
     input: CreateSettingInput!
   ): CreateSettingPayload
+
+  """Creates a single `Project`."""
+  createProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectInput!
+  ): CreateProjectPayload
 
   """Creates a single `Task`."""
   createTask(
@@ -7872,13 +9814,13 @@ type Mutation {
     input: CreateTaskInput!
   ): CreateTaskPayload
 
-  """Creates a single `Project`."""
-  createProject(
+  """Creates a single `AgentActivity`."""
+  createAgentActivity(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateProjectInput!
-  ): CreateProjectPayload
+    input: CreateAgentActivityInput!
+  ): CreateAgentActivityPayload
 
   """Creates a single `UserOrganization`."""
   createUserOrganization(
@@ -8072,6 +10014,42 @@ type Mutation {
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
 
+  """
+  Updates a single `AgentSession` using its globally unique id and a patch.
+  """
+  updateAgentSessionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAgentSessionByIdInput!
+  ): UpdateAgentSessionPayload
+
+  """Updates a single `AgentSession` using a unique key and a patch."""
+  updateAgentSession(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAgentSessionInput!
+  ): UpdateAgentSessionPayload
+
+  """
+  Updates a single `AgentConfig` using its globally unique id and a patch.
+  """
+  updateAgentConfigById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAgentConfigByIdInput!
+  ): UpdateAgentConfigPayload
+
+  """Updates a single `AgentConfig` using a unique key and a patch."""
+  updateAgentConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAgentConfigInput!
+  ): UpdateAgentConfigPayload
+
   """Updates a single `Setting` using its globally unique id and a patch."""
   updateSettingById(
     """
@@ -8087,6 +10065,22 @@ type Mutation {
     """
     input: UpdateSettingInput!
   ): UpdateSettingPayload
+
+  """Updates a single `Project` using its globally unique id and a patch."""
+  updateProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectByIdInput!
+  ): UpdateProjectPayload
+
+  """Updates a single `Project` using a unique key and a patch."""
+  updateProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectInput!
+  ): UpdateProjectPayload
 
   """Updates a single `Task` using its globally unique id and a patch."""
   updateTaskById(
@@ -8104,21 +10098,23 @@ type Mutation {
     input: UpdateTaskInput!
   ): UpdateTaskPayload
 
-  """Updates a single `Project` using its globally unique id and a patch."""
-  updateProjectById(
+  """
+  Updates a single `AgentActivity` using its globally unique id and a patch.
+  """
+  updateAgentActivityById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateProjectByIdInput!
-  ): UpdateProjectPayload
+    input: UpdateAgentActivityByIdInput!
+  ): UpdateAgentActivityPayload
 
-  """Updates a single `Project` using a unique key and a patch."""
-  updateProject(
+  """Updates a single `AgentActivity` using a unique key and a patch."""
+  updateAgentActivity(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateProjectInput!
-  ): UpdateProjectPayload
+    input: UpdateAgentActivityInput!
+  ): UpdateAgentActivityPayload
 
   """
   Updates a single `UserOrganization` using its globally unique id and a patch.
@@ -8314,6 +10310,38 @@ type Mutation {
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
 
+  """Deletes a single `AgentSession` using its globally unique id."""
+  deleteAgentSessionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAgentSessionByIdInput!
+  ): DeleteAgentSessionPayload
+
+  """Deletes a single `AgentSession` using a unique key."""
+  deleteAgentSession(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAgentSessionInput!
+  ): DeleteAgentSessionPayload
+
+  """Deletes a single `AgentConfig` using its globally unique id."""
+  deleteAgentConfigById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAgentConfigByIdInput!
+  ): DeleteAgentConfigPayload
+
+  """Deletes a single `AgentConfig` using a unique key."""
+  deleteAgentConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAgentConfigInput!
+  ): DeleteAgentConfigPayload
+
   """Deletes a single `Setting` using its globally unique id."""
   deleteSettingById(
     """
@@ -8329,6 +10357,22 @@ type Mutation {
     """
     input: DeleteSettingInput!
   ): DeleteSettingPayload
+
+  """Deletes a single `Project` using its globally unique id."""
+  deleteProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectByIdInput!
+  ): DeleteProjectPayload
+
+  """Deletes a single `Project` using a unique key."""
+  deleteProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectInput!
+  ): DeleteProjectPayload
 
   """Deletes a single `Task` using its globally unique id."""
   deleteTaskById(
@@ -8346,21 +10390,21 @@ type Mutation {
     input: DeleteTaskInput!
   ): DeleteTaskPayload
 
-  """Deletes a single `Project` using its globally unique id."""
-  deleteProjectById(
+  """Deletes a single `AgentActivity` using its globally unique id."""
+  deleteAgentActivityById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteProjectByIdInput!
-  ): DeleteProjectPayload
+    input: DeleteAgentActivityByIdInput!
+  ): DeleteAgentActivityPayload
 
-  """Deletes a single `Project` using a unique key."""
-  deleteProject(
+  """Deletes a single `AgentActivity` using a unique key."""
+  deleteAgentActivity(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteProjectInput!
-  ): DeleteProjectPayload
+    input: DeleteAgentActivityInput!
+  ): DeleteAgentActivityPayload
 
   """Deletes a single `UserOrganization` using its globally unique id."""
   deleteUserOrganizationById(
@@ -8877,6 +10921,105 @@ input UserPreferenceInput {
   color: String
 }
 
+"""The output of our create `AgentSession` mutation."""
+type CreateAgentSessionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentSession` that was created by this mutation."""
+  agentSession: AgentSession
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentSession`. May be used by Relay 1."""
+  agentSessionEdge(
+    """The method to use when ordering `AgentSession`."""
+    orderBy: [AgentSessionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentSessionEdge
+}
+
+"""All input for the create `AgentSession` mutation."""
+input CreateAgentSessionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `AgentSession` to be created by this mutation."""
+  agentSession: AgentSessionInput!
+}
+
+"""An input for mutations affecting `AgentSession`"""
+input AgentSessionInput {
+  rowId: UUID
+  organizationId: String!
+  projectId: UUID!
+  userId: UUID!
+  title: String
+  messages: JSON
+  totalTokensUsed: Int
+  toolCallCount: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `AgentConfig` mutation."""
+type CreateAgentConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentConfig` that was created by this mutation."""
+  agentConfig: AgentConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentConfig`. May be used by Relay 1."""
+  agentConfigEdge(
+    """The method to use when ordering `AgentConfig`."""
+    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentConfigEdge
+}
+
+"""All input for the create `AgentConfig` mutation."""
+input CreateAgentConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `AgentConfig` to be created by this mutation."""
+  agentConfig: AgentConfigInput!
+}
+
+"""An input for mutations affecting `AgentConfig`"""
+input AgentConfigInput {
+  rowId: UUID
+  organizationId: String!
+  provider: String
+  model: String
+  enabled: Boolean
+  maxIterationsPerRequest: Int
+  requireApprovalForDestructive: Boolean
+  requireApprovalForCreate: Boolean
+  customInstructions: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `Setting` mutation."""
 type CreateSettingPayload {
   """
@@ -8923,6 +11066,57 @@ input SettingInput {
   subscriptionId: String
   deletedAt: Datetime
   deletionReason: String
+}
+
+"""The output of our create `Project` mutation."""
+type CreateProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was created by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the create `Project` mutation."""
+input CreateProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Project` to be created by this mutation."""
+  project: ProjectInput!
+}
+
+"""An input for mutations affecting `Project`"""
+input ProjectInput {
+  rowId: UUID
+  name: String!
+  description: String
+  prefix: String
+  organizationId: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+  projectColumnId: UUID!
+  slug: String!
+  columnIndex: Int
+  isPublic: Boolean
+  nextTaskNumber: Int
 }
 
 """The output of our create `Task` mutation."""
@@ -8976,55 +11170,57 @@ input TaskInput {
   number: Int
 }
 
-"""The output of our create `Project` mutation."""
-type CreateProjectPayload {
+"""The output of our create `AgentActivity` mutation."""
+type CreateAgentActivityPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `Project` that was created by this mutation."""
-  project: Project
+  """The `AgentActivity` that was created by this mutation."""
+  agentActivity: AgentActivity
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `Project`. May be used by Relay 1."""
-  projectEdge(
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectEdge
+  """An edge for our `AgentActivity`. May be used by Relay 1."""
+  agentActivityEdge(
+    """The method to use when ordering `AgentActivity`."""
+    orderBy: [AgentActivityOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentActivityEdge
 }
 
-"""All input for the create `Project` mutation."""
-input CreateProjectInput {
+"""All input for the create `AgentActivity` mutation."""
+input CreateAgentActivityInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The `Project` to be created by this mutation."""
-  project: ProjectInput!
+  """The `AgentActivity` to be created by this mutation."""
+  agentActivity: AgentActivityInput!
 }
 
-"""An input for mutations affecting `Project`"""
-input ProjectInput {
+"""An input for mutations affecting `AgentActivity`"""
+input AgentActivityInput {
   rowId: UUID
-  name: String!
-  description: String
-  prefix: String
   organizationId: String!
+  projectId: UUID!
+  sessionId: UUID!
+  userId: UUID!
+  toolName: String!
+  toolInput: JSON!
+  toolOutput: JSON
+  requiresApproval: Boolean
+  approvalStatus: String
+  status: String
+  errorMessage: String
+  affectedTaskIds: JSON
   createdAt: Datetime
-  updatedAt: Datetime
-  projectColumnId: UUID!
-  slug: String!
-  columnIndex: Int
-  isPublic: Boolean
-  nextTaskNumber: Int
 }
 
 """The output of our create `UserOrganization` mutation."""
@@ -9837,6 +12033,153 @@ input UpdateUserPreferenceInput {
   patch: UserPreferencePatch!
 }
 
+"""The output of our update `AgentSession` mutation."""
+type UpdateAgentSessionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentSession` that was updated by this mutation."""
+  agentSession: AgentSession
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentSession`. May be used by Relay 1."""
+  agentSessionEdge(
+    """The method to use when ordering `AgentSession`."""
+    orderBy: [AgentSessionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentSessionEdge
+}
+
+"""All input for the `updateAgentSessionById` mutation."""
+input UpdateAgentSessionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AgentSession` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `AgentSession` being updated.
+  """
+  patch: AgentSessionPatch!
+}
+
+"""
+Represents an update to a `AgentSession`. Fields that are set will be updated.
+"""
+input AgentSessionPatch {
+  rowId: UUID
+  organizationId: String
+  projectId: UUID
+  userId: UUID
+  title: String
+  messages: JSON
+  totalTokensUsed: Int
+  toolCallCount: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateAgentSession` mutation."""
+input UpdateAgentSessionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `AgentSession` being updated.
+  """
+  patch: AgentSessionPatch!
+}
+
+"""The output of our update `AgentConfig` mutation."""
+type UpdateAgentConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentConfig` that was updated by this mutation."""
+  agentConfig: AgentConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentConfig`. May be used by Relay 1."""
+  agentConfigEdge(
+    """The method to use when ordering `AgentConfig`."""
+    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentConfigEdge
+}
+
+"""All input for the `updateAgentConfigById` mutation."""
+input UpdateAgentConfigByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AgentConfig` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `AgentConfig` being updated.
+  """
+  patch: AgentConfigPatch!
+}
+
+"""
+Represents an update to a `AgentConfig`. Fields that are set will be updated.
+"""
+input AgentConfigPatch {
+  rowId: UUID
+  organizationId: String
+  provider: String
+  model: String
+  enabled: Boolean
+  maxIterationsPerRequest: Int
+  requireApprovalForDestructive: Boolean
+  requireApprovalForCreate: Boolean
+  customInstructions: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateAgentConfig` mutation."""
+input UpdateAgentConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `AgentConfig` being updated.
+  """
+  patch: AgentConfigPatch!
+}
+
 """The output of our update `Setting` mutation."""
 type UpdateSettingPayload {
   """
@@ -9907,79 +12250,6 @@ input UpdateSettingInput {
   An object where the defined keys will be set on the `Setting` being updated.
   """
   patch: SettingPatch!
-}
-
-"""The output of our update `Task` mutation."""
-type UpdateTaskPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Task` that was updated by this mutation."""
-  task: Task
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Task`. May be used by Relay 1."""
-  taskEdge(
-    """The method to use when ordering `Task`."""
-    orderBy: [TaskOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaskEdge
-}
-
-"""All input for the `updateTaskById` mutation."""
-input UpdateTaskByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Task` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Task` being updated.
-  """
-  patch: TaskPatch!
-}
-
-"""Represents an update to a `Task`. Fields that are set will be updated."""
-input TaskPatch {
-  rowId: UUID
-  content: String
-  description: String
-  priority: String
-  authorId: UUID
-  columnId: UUID
-  dueDate: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-  columnIndex: Int
-  projectId: UUID
-  number: Int
-}
-
-"""All input for the `updateTask` mutation."""
-input UpdateTaskInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Task` being updated.
-  """
-  patch: TaskPatch!
 }
 
 """The output of our update `Project` mutation."""
@@ -10055,6 +12325,156 @@ input UpdateProjectInput {
   An object where the defined keys will be set on the `Project` being updated.
   """
   patch: ProjectPatch!
+}
+
+"""The output of our update `Task` mutation."""
+type UpdateTaskPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Task` that was updated by this mutation."""
+  task: Task
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Task`. May be used by Relay 1."""
+  taskEdge(
+    """The method to use when ordering `Task`."""
+    orderBy: [TaskOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskEdge
+}
+
+"""All input for the `updateTaskById` mutation."""
+input UpdateTaskByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Task` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Task` being updated.
+  """
+  patch: TaskPatch!
+}
+
+"""Represents an update to a `Task`. Fields that are set will be updated."""
+input TaskPatch {
+  rowId: UUID
+  content: String
+  description: String
+  priority: String
+  authorId: UUID
+  columnId: UUID
+  dueDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+  columnIndex: Int
+  projectId: UUID
+  number: Int
+}
+
+"""All input for the `updateTask` mutation."""
+input UpdateTaskInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Task` being updated.
+  """
+  patch: TaskPatch!
+}
+
+"""The output of our update `AgentActivity` mutation."""
+type UpdateAgentActivityPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentActivity` that was updated by this mutation."""
+  agentActivity: AgentActivity
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentActivity`. May be used by Relay 1."""
+  agentActivityEdge(
+    """The method to use when ordering `AgentActivity`."""
+    orderBy: [AgentActivityOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentActivityEdge
+}
+
+"""All input for the `updateAgentActivityById` mutation."""
+input UpdateAgentActivityByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AgentActivity` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `AgentActivity` being updated.
+  """
+  patch: AgentActivityPatch!
+}
+
+"""
+Represents an update to a `AgentActivity`. Fields that are set will be updated.
+"""
+input AgentActivityPatch {
+  rowId: UUID
+  organizationId: String
+  projectId: UUID
+  sessionId: UUID
+  userId: UUID
+  toolName: String
+  toolInput: JSON
+  toolOutput: JSON
+  requiresApproval: Boolean
+  approvalStatus: String
+  status: String
+  errorMessage: String
+  affectedTaskIds: JSON
+  createdAt: Datetime
+}
+
+"""All input for the `updateAgentActivity` mutation."""
+input UpdateAgentActivityInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `AgentActivity` being updated.
+  """
+  patch: AgentActivityPatch!
 }
 
 """The output of our update `UserOrganization` mutation."""
@@ -10661,6 +13081,102 @@ input DeleteUserPreferenceInput {
   rowId: UUID!
 }
 
+"""The output of our delete `AgentSession` mutation."""
+type DeleteAgentSessionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentSession` that was deleted by this mutation."""
+  agentSession: AgentSession
+  deletedAgentSessionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentSession`. May be used by Relay 1."""
+  agentSessionEdge(
+    """The method to use when ordering `AgentSession`."""
+    orderBy: [AgentSessionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentSessionEdge
+}
+
+"""All input for the `deleteAgentSessionById` mutation."""
+input DeleteAgentSessionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AgentSession` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteAgentSession` mutation."""
+input DeleteAgentSessionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `AgentConfig` mutation."""
+type DeleteAgentConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentConfig` that was deleted by this mutation."""
+  agentConfig: AgentConfig
+  deletedAgentConfigId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentConfig`. May be used by Relay 1."""
+  agentConfigEdge(
+    """The method to use when ordering `AgentConfig`."""
+    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentConfigEdge
+}
+
+"""All input for the `deleteAgentConfigById` mutation."""
+input DeleteAgentConfigByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AgentConfig` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteAgentConfig` mutation."""
+input DeleteAgentConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Setting` mutation."""
 type DeleteSettingPayload {
   """
@@ -10701,6 +13217,54 @@ input DeleteSettingByIdInput {
 
 """All input for the `deleteSetting` mutation."""
 input DeleteSettingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Project` mutation."""
+type DeleteProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was deleted by this mutation."""
+  project: Project
+  deletedProjectId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the `deleteProjectById` mutation."""
+input DeleteProjectByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Project` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteProject` mutation."""
+input DeleteProjectInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10757,32 +13321,32 @@ input DeleteTaskInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Project` mutation."""
-type DeleteProjectPayload {
+"""The output of our delete `AgentActivity` mutation."""
+type DeleteAgentActivityPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `Project` that was deleted by this mutation."""
-  project: Project
-  deletedProjectId: ID
+  """The `AgentActivity` that was deleted by this mutation."""
+  agentActivity: AgentActivity
+  deletedAgentActivityId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `Project`. May be used by Relay 1."""
-  projectEdge(
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectEdge
+  """An edge for our `AgentActivity`. May be used by Relay 1."""
+  agentActivityEdge(
+    """The method to use when ordering `AgentActivity`."""
+    orderBy: [AgentActivityOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentActivityEdge
 }
 
-"""All input for the `deleteProjectById` mutation."""
-input DeleteProjectByIdInput {
+"""All input for the `deleteAgentActivityById` mutation."""
+input DeleteAgentActivityByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10790,13 +13354,13 @@ input DeleteProjectByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `Project` to be deleted.
+  The globally unique `ID` which will identify a single `AgentActivity` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the `deleteProject` mutation."""
-input DeleteProjectInput {
+"""All input for the `deleteAgentActivity` mutation."""
+input DeleteAgentActivityInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

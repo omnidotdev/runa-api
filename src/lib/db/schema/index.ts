@@ -10,6 +10,9 @@
 // - Track: role changes, organization access, task deletions
 // - Fields: entityType, entityId, action, userId, changes (jsonb), createdAt
 
+export * from "./agentActivity.table";
+export * from "./agentConfig.table";
+export * from "./agentSession.table";
 export * from "./assignee.table";
 export * from "./column.table";
 export * from "./emoji.table";

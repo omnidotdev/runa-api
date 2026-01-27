@@ -32,6 +32,12 @@ export const {
   FLAGS_CLIENT_KEY,
   // Self-hosted mode
   SELF_HOSTED,
+  // AI Agent
+  ANTHROPIC_API_KEY,
+  OPENAI_API_KEY,
+  AGENT_DEFAULT_PROVIDER,
+  AGENT_DEFAULT_MODEL,
+  AGENT_MAX_ITERATIONS,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
