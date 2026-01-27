@@ -2,8 +2,8 @@ import { relations } from "drizzle-orm";
 import { index, pgTable, primaryKey, unique, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate } from "lib/db/util";
-import { projectLabels } from "./projectLabel.table";
 import { projects } from "./project.table";
+import { projectLabels } from "./projectLabel.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm/table";
 

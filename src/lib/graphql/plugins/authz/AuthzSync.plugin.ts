@@ -101,7 +101,14 @@ const syncCreateProject = (): PlanWrapperFn =>
 
         return $result;
       },
-    [context, sideEffect, AUTHZ_ENABLED, AUTHZ_API_URL, AUTHZ_SYNC_MODE, writeTuples],
+    [
+      context,
+      sideEffect,
+      AUTHZ_ENABLED,
+      AUTHZ_API_URL,
+      AUTHZ_SYNC_MODE,
+      writeTuples,
+    ],
   );
 
 /**

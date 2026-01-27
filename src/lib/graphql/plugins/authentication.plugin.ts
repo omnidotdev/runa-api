@@ -3,8 +3,14 @@ import { QueryClient } from "@tanstack/query-core";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import ms from "ms";
 
-import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
+import {
+  AUTH_BASE_URL,
+  isDevEnv,
+  isSelfHosted,
+  protectRoutes,
+} from "lib/config/env.config";
 import { users } from "lib/db/schema";
+import { provisionPersonalOrganization } from "lib/provisioning/selfHosted";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { JWTPayload } from "jose";
@@ -40,6 +46,62 @@ class AuthenticationError extends Error {
     this.name = "AuthenticationError";
     this.code = code;
   }
+}
+
+/**
+ * Get symmetric key for self-hosted JWT verification.
+ * Uses AUTH_SECRET to derive a 256-bit key via HKDF.
+ */
+async function getSelfHostedKey(): Promise<Uint8Array> {
+  const { AUTH_SECRET } = process.env;
+  if (!AUTH_SECRET) {
+    throw new AuthenticationError(
+      "AUTH_SECRET not configured",
+      "AUTH_SECRET_MISSING",
+    );
+  }
+
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(AUTH_SECRET),
+    "HKDF",
+    false,
+    ["deriveBits"],
+  );
+
+  return new Uint8Array(
+    await crypto.subtle.deriveBits(
+      {
+        name: "HKDF",
+        hash: "SHA-256",
+        salt: encoder.encode("runa-self-hosted-auth"),
+        info: encoder.encode("jwt-signing-key"),
+      },
+      keyMaterial,
+      256,
+    ),
+  );
+}
+
+/**
+ * Verify self-hosted JWT signed with AUTH_SECRET.
+ */
+async function verifySelfHostedToken(token: string): Promise<UserInfoClaims> {
+  const key = await getSelfHostedKey();
+
+  const { payload } = await jwtVerify(token, key, {
+    issuer: "self-hosted",
+  });
+
+  if (!payload.sub) {
+    throw new AuthenticationError(
+      "Missing required 'sub' claim",
+      "MISSING_SUB_CLAIM",
+    );
+  }
+
+  return payload as UserInfoClaims;
 }
 
 const queryClient = new QueryClient({
@@ -164,56 +226,65 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
       );
     }
 
-    // Better Auth OIDC access tokens are opaque tokens, not JWTs.
-    // Validation is done via the userinfo endpoint which verifies the token server-side.
-    // If the access token looks like a JWT (3 dot-separated parts), we can optionally
-    // verify it for additional security, but this is not required.
-    const isJwtFormat = accessToken.split(".").length === 3;
-    if (isJwtFormat) {
-      try {
-        const verifiedPayload = await verifyAccessToken(accessToken);
-        validateClaims(verifiedPayload);
-      } catch (jwtError) {
-        // JWT verification failed - this is expected for opaque tokens
-        // Continue with userinfo validation which will definitively validate the token
-        console.warn(
-          "[Auth] JWT verification skipped (opaque token):",
-          jwtError instanceof Error ? jwtError.message : jwtError,
-        );
-      }
-    }
+    let claims: UserInfoClaims;
 
-    // Fetch user claims from userinfo endpoint - this validates the access token
-    // and provides the authoritative user identity claims
-    const claims = await queryClient.ensureQueryData({
-      queryKey: ["UserInfo", { accessToken }],
-      queryFn: async () => {
-        const response = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new AuthenticationError(
-            "Invalid access token or request failed",
-            "USERINFO_FAILED",
+    // Self-hosted mode: verify JWT signed with shared AUTH_SECRET
+    if (isSelfHosted) {
+      claims = await verifySelfHostedToken(accessToken);
+      validateClaims(claims);
+    } else {
+      // SaaS mode: validate via external IDP
+      // Better Auth OIDC access tokens are opaque tokens, not JWTs.
+      // Validation is done via the userinfo endpoint which verifies the token server-side.
+      // If the access token looks like a JWT (3 dot-separated parts), we can optionally
+      // verify it for additional security, but this is not required.
+      const isJwtFormat = accessToken.split(".").length === 3;
+      if (isJwtFormat) {
+        try {
+          const verifiedPayload = await verifyAccessToken(accessToken);
+          validateClaims(verifiedPayload);
+        } catch (jwtError) {
+          // JWT verification failed - this is expected for opaque tokens
+          // Continue with userinfo validation which will definitively validate the token
+          console.warn(
+            "[Auth] JWT verification skipped (opaque token):",
+            jwtError instanceof Error ? jwtError.message : jwtError,
           );
         }
+      }
 
-        const userInfoClaims: UserInfoClaims = await response.json();
+      // Fetch user claims from userinfo endpoint - this validates the access token
+      // and provides the authoritative user identity claims
+      claims = await queryClient.ensureQueryData({
+        queryKey: ["UserInfo", { accessToken }],
+        queryFn: async () => {
+          const response = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
 
-        return userInfoClaims;
-      },
-    });
+          if (!response.ok) {
+            throw new AuthenticationError(
+              "Invalid access token or request failed",
+              "USERINFO_FAILED",
+            );
+          }
 
-    if (!claims) {
-      if (!protectRoutes) return null;
+          const userInfoClaims: UserInfoClaims = await response.json();
 
-      throw new AuthenticationError(
-        "Invalid access token or request failed",
-        "INVALID_CLAIMS",
-      );
+          return userInfoClaims;
+        },
+      });
+
+      if (!claims) {
+        if (!protectRoutes) return null;
+
+        throw new AuthenticationError(
+          "Invalid access token or request failed",
+          "INVALID_CLAIMS",
+        );
+      }
     }
 
     if (!claims.email)
@@ -242,6 +313,18 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
         },
       })
       .returning();
+
+    // Self-hosted only: auto-provision personal workspace if user has none.
+    // SaaS mode: orgs come from HIDRA Gatekeeper via JWT claims and webhooks.
+    if (isSelfHosted) {
+      await provisionPersonalOrganization({
+        db: ctx.db,
+        userId: user.id,
+        identityProviderId: user.identityProviderId,
+        userName: user.name,
+        userEmail: user.email,
+      });
+    }
 
     return user;
   } catch (err) {

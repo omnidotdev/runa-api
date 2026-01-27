@@ -120,7 +120,9 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
                 // TODO: Add tier limit check for org-scoped labels
               } else {
-                throw new Error("Label must have either projectId or organizationId");
+                throw new Error(
+                  "Label must have either projectId or organizationId",
+                );
               }
             }
           },
