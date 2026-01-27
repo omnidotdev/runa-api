@@ -20,7 +20,7 @@ export const columns = pgTable(
   "column",
   {
     id: generateDefaultId(),
-    emoji: text(),
+    icon: text(),
     title: text().notNull(),
     projectId: uuid()
       .notNull()

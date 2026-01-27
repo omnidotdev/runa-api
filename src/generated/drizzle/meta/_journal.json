@@ -316,6 +316,13 @@
       "when": 1769500831428,
       "tag": "0044_needy_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1769508386124,
+      "tag": "0045_exotic_vivisector",
+      "breakpoints": true
     }
   ]
 }

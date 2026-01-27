@@ -22,7 +22,7 @@ export const projectColumns = pgTable(
   "project_column",
   {
     id: generateDefaultId(),
-    emoji: text(),
+    icon: text(),
     title: text().notNull(),
     // Organization ID from JWT claims - not a FK, just a reference
     organizationId: text().notNull(),

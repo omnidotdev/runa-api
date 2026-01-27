@@ -946,7 +946,7 @@ type ProjectColumn implements Node {
   """
   id: ID!
   rowId: UUID!
-  emoji: String
+  icon: String
   title: String!
   organizationId: String!
   index: Int!
@@ -1803,8 +1803,8 @@ input ColumnFilter {
   """Filter by the object’s `index` field."""
   index: IntFilter
 
-  """Filter by the object’s `emoji` field."""
-  emoji: StringFilter
+  """Filter by the object’s `icon` field."""
+  icon: StringFilter
 
   """Filter by the object’s `tasks` relation."""
   tasks: ColumnToManyTaskFilter
@@ -3058,7 +3058,7 @@ input ColumnDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   index: BigIntFilter
-  emoji: BigIntFilter
+  icon: BigIntFilter
 }
 
 input ColumnMinAggregateFilter {
@@ -3326,8 +3326,8 @@ input ProjectColumnFilter {
   """Filter by the object’s `rowId` field."""
   rowId: UUIDFilter
 
-  """Filter by the object’s `emoji` field."""
-  emoji: StringFilter
+  """Filter by the object’s `icon` field."""
+  icon: StringFilter
 
   """Filter by the object’s `title` field."""
   title: StringFilter
@@ -3520,8 +3520,8 @@ enum ProjectOrderBy {
   COLUMNS_DISTINCT_COUNT_UPDATED_AT_DESC
   COLUMNS_DISTINCT_COUNT_INDEX_ASC
   COLUMNS_DISTINCT_COUNT_INDEX_DESC
-  COLUMNS_DISTINCT_COUNT_EMOJI_ASC
-  COLUMNS_DISTINCT_COUNT_EMOJI_DESC
+  COLUMNS_DISTINCT_COUNT_ICON_ASC
+  COLUMNS_DISTINCT_COUNT_ICON_DESC
   COLUMNS_MIN_INDEX_ASC
   COLUMNS_MIN_INDEX_DESC
   COLUMNS_MAX_INDEX_ASC
@@ -3684,7 +3684,7 @@ type Column implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   index: Int!
-  emoji: String
+  icon: String
 
   """Reads a single `Project` that is related to this `Column`."""
   project: Project
@@ -5959,8 +5959,8 @@ type ColumnDistinctCountAggregates {
   """Distinct count of index across the matching connection"""
   index: BigInt
 
-  """Distinct count of emoji across the matching connection"""
-  emoji: BigInt
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
 }
 
 type ColumnMinAggregates {
@@ -6009,7 +6009,7 @@ enum ColumnGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   INDEX
-  EMOJI
+  ICON
 }
 
 """Conditions for `Column` aggregates."""
@@ -6103,8 +6103,8 @@ input ColumnCondition {
   """Checks for equality with the object’s `index` field."""
   index: Int
 
-  """Checks for equality with the object’s `emoji` field."""
-  emoji: String
+  """Checks for equality with the object’s `icon` field."""
+  icon: String
 }
 
 """Methods to use when ordering `Column`."""
@@ -6124,8 +6124,8 @@ enum ColumnOrderBy {
   UPDATED_AT_DESC
   INDEX_ASC
   INDEX_DESC
-  EMOJI_ASC
-  EMOJI_DESC
+  ICON_ASC
+  ICON_DESC
   TASKS_COUNT_ASC
   TASKS_COUNT_DESC
   TASKS_SUM_COLUMN_INDEX_ASC
@@ -7257,8 +7257,8 @@ type ProjectColumnDistinctCountAggregates {
   """Distinct count of rowId across the matching connection"""
   rowId: BigInt
 
-  """Distinct count of emoji across the matching connection"""
-  emoji: BigInt
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
 
   """Distinct count of title across the matching connection"""
   title: BigInt
@@ -7313,7 +7313,7 @@ type ProjectColumnVariancePopulationAggregates {
 
 """Grouping methods for `ProjectColumn` for usage during aggregation."""
 enum ProjectColumnGroupBy {
-  EMOJI
+  ICON
   TITLE
   ORGANIZATION_ID
   INDEX
@@ -7402,8 +7402,8 @@ input ProjectColumnCondition {
   """Checks for equality with the object’s `rowId` field."""
   rowId: UUID
 
-  """Checks for equality with the object’s `emoji` field."""
-  emoji: String
+  """Checks for equality with the object’s `icon` field."""
+  icon: String
 
   """Checks for equality with the object’s `title` field."""
   title: String
@@ -7428,8 +7428,8 @@ enum ProjectColumnOrderBy {
   PRIMARY_KEY_DESC
   ROW_ID_ASC
   ROW_ID_DESC
-  EMOJI_ASC
-  EMOJI_DESC
+  ICON_ASC
+  ICON_DESC
   TITLE_ASC
   TITLE_DESC
   ORGANIZATION_ID_ASC
@@ -8781,7 +8781,7 @@ input ColumnInput {
   createdAt: Datetime
   updatedAt: Datetime
   index: Int
-  emoji: String
+  icon: String
 }
 
 """The output of our create `ProjectColumn` mutation."""
@@ -8822,7 +8822,7 @@ input CreateProjectColumnInput {
 """An input for mutations affecting `ProjectColumn`"""
 input ProjectColumnInput {
   rowId: UUID
-  emoji: String
+  icon: String
   title: String!
   organizationId: String!
   index: Int
@@ -9678,7 +9678,7 @@ input ColumnPatch {
   createdAt: Datetime
   updatedAt: Datetime
   index: Int
-  emoji: String
+  icon: String
 }
 
 """All input for the `updateColumn` mutation."""
@@ -9743,7 +9743,7 @@ Represents an update to a `ProjectColumn`. Fields that are set will be updated.
 """
 input ProjectColumnPatch {
   rowId: UUID
-  emoji: String
+  icon: String
   title: String
   organizationId: String
   index: Int

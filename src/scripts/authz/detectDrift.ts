@@ -175,10 +175,7 @@ if (report.orphanedTuples.length > 0) {
   );
 }
 
-if (
-  report.missingTuples.length === 0 &&
-  report.orphanedTuples.length === 0
-) {
+if (report.missingTuples.length === 0 && report.orphanedTuples.length === 0) {
   // biome-ignore lint/suspicious/noConsole: script output
   console.log("\n✓ No drift detected");
   process.exit(0);
