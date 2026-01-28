@@ -53,6 +53,11 @@ export const agentActivities = pgTable(
     // Affected entities (for quick filtering)
     affectedTaskIds: jsonb().notNull().default([]),
 
+    // Undo/rollback support: snapshot of entity state before the write.
+    // Used to restore the previous state when rolling back an activity.
+    // NULL for query tools, "denied"/"failed" activities, or irreversible actions.
+    snapshotBefore: jsonb(),
+
     createdAt: generateDefaultDate(),
   },
   (table) => [
@@ -62,6 +67,10 @@ export const agentActivities = pgTable(
     index("agent_activity_session_id_idx").on(table.sessionId),
     index("agent_activity_user_id_idx").on(table.userId),
     index("agent_activity_tool_name_idx").on(table.toolName),
+    index("agent_activity_project_created_idx").on(
+      table.projectId,
+      table.createdAt,
+    ),
   ],
 );
 

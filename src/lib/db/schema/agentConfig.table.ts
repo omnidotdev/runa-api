@@ -1,4 +1,3 @@
-import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -6,6 +5,7 @@ import {
   pgTable,
   text,
   uniqueIndex,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
@@ -28,6 +28,13 @@ export const agentConfigs = pgTable(
     provider: text().notNull().default("anthropic"),
     model: text().notNull().default("claude-sonnet-4-5"),
 
+    // BYOK: Encrypted API key provided by the organization.
+    // Stored as AES-256-GCM ciphertext (base64). Decrypted in-memory only.
+    encryptedApiKey: text(),
+    // Provider associated with the encrypted key (e.g. "anthropic", "openai").
+    // Must match `provider` when set. Null when using server-level env keys.
+    keyProvider: text(),
+
     // Agent behavior
     enabled: boolean().notNull().default(false),
     maxIterationsPerRequest: integer().notNull().default(10),
@@ -39,6 +46,9 @@ export const agentConfigs = pgTable(
     // Custom system prompt additions (appended to base prompt)
     customInstructions: text(),
 
+    // Default persona for new sessions (FK to agent_persona.id)
+    defaultPersonaId: uuid(),
+
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
@@ -47,8 +57,6 @@ export const agentConfigs = pgTable(
     index("agent_config_organization_id_idx").on(table.organizationId),
   ],
 );
-
-export const agentConfigRelations = relations(agentConfigs, () => ({}));
 
 export type InsertAgentConfig = InferInsertModel<typeof agentConfigs>;
 export type SelectAgentConfig = InferSelectModel<typeof agentConfigs>;

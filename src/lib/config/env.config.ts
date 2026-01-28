@@ -38,6 +38,8 @@ export const {
   AGENT_DEFAULT_PROVIDER,
   AGENT_DEFAULT_MODEL,
   AGENT_MAX_ITERATIONS,
+  // BYOK encryption key for org-provided API keys (AES-256-GCM)
+  ENCRYPTION_SECRET,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

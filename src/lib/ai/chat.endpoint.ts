@@ -4,9 +4,14 @@ import { Elysia, t } from "elysia";
 import { isAgentEnabled } from "lib/flags";
 
 import { authenticateRequest, validateProjectAccess } from "./auth";
-import { createAdapter, resolveAgentConfig } from "./config";
+import { createAdapter, resolveAgentConfig, resolvePersona } from "./config";
 import { buildProjectContext } from "./prompts/projectContext";
 import { buildSystemPrompt } from "./prompts/system";
+import {
+  checkRateLimit,
+  ORG_CHAT_LIMIT,
+  USER_CHAT_LIMIT,
+} from "./rateLimit";
 import {
   createSession,
   listSessions,
@@ -14,6 +19,7 @@ import {
   saveSessionMessages,
 } from "./session/manager";
 import {
+  createDelegationTool,
   createDestructiveTools,
   createQueryTools,
   createWriteTools,
@@ -25,7 +31,6 @@ import type { ModelMessage, StreamChunk } from "@tanstack/ai";
 const modelMessageSchema = t.Object(
   {
     role: t.Union([
-      t.Literal("system"),
       t.Literal("user"),
       t.Literal("assistant"),
       t.Literal("tool"),
@@ -81,13 +86,37 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
 
       const { organizationId } = projectAccess;
 
+      // Rate-limit: per-user and per-org
+      const userLimit = checkRateLimit(
+        `user:${auth.user.id}`,
+        USER_CHAT_LIMIT,
+      );
+      if (!userLimit.allowed) {
+        set.status = 429;
+        set.headers["Retry-After"] = String(userLimit.retryAfterSeconds);
+        return { error: "Too many requests. Please try again later." };
+      }
+
+      const orgLimit = checkRateLimit(`org:${organizationId}`, ORG_CHAT_LIMIT);
+      if (!orgLimit.allowed) {
+        set.status = 429;
+        set.headers["Retry-After"] = String(orgLimit.retryAfterSeconds);
+        return { error: "Organization rate limit exceeded. Please try again later." };
+      }
+
+      const requestStartTime = Date.now();
+
       // Resolve agent configuration
       const agentConfig = await resolveAgentConfig(organizationId);
 
       // Load or create session
       let session;
       if (body.sessionId) {
-        session = await loadSession(body.sessionId, auth.user.id);
+        session = await loadSession(
+          body.sessionId,
+          auth.user.id,
+          body.projectId,
+        );
         if (!session) {
           set.status = 404;
           return { error: "Session not found" };
@@ -100,6 +129,11 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         });
       }
 
+      // Resolve persona: client-specified > org default > none
+      const persona = body.personaId
+        ? await resolvePersona(body.personaId, organizationId)
+        : agentConfig.defaultPersona;
+
       // Build project context for system prompt
       const projectContext = await buildProjectContext({
         projectId: body.projectId,
@@ -109,10 +143,14 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         customInstructions: agentConfig.customInstructions,
       });
 
-      const systemPrompt = buildSystemPrompt(projectContext);
+      const systemPrompt = buildSystemPrompt(projectContext, persona);
 
-      // Use messages from client (client manages conversation state via useChat)
-      const allMessages = body.messages as ModelMessage[];
+      // Use messages from client — filter out any system role as defense-in-depth.
+      // Cast to `string` comparison because TypeBox schema already excludes "system",
+      // but runtime payloads could still contain it if validation is bypassed.
+      const allMessages = (body.messages as ModelMessage[]).filter(
+        (m) => (m.role as string) !== "system",
+      );
 
       // Create tools
       const { queryTasks, queryProject, getTask } = createQueryTools({
@@ -147,8 +185,32 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         batchDeleteTasks,
       } = createDestructiveTools(writeContext, agentConfig);
 
-      // Create adapter
-      const adapter = createAdapter(agentConfig.provider, agentConfig.model);
+      // Agent-to-Agent delegation (Phase 9B)
+      const delegateToAgent = createDelegationTool({
+        ...writeContext,
+        delegationDepth: 0,
+        agentConfig,
+        userName: auth.user.name,
+      });
+
+      // Structured request log
+      const requestMeta = {
+        userId: auth.user.id,
+        projectId: body.projectId,
+        sessionId: session.id,
+        messageCount: allMessages.length,
+        isNewSession: !body.sessionId,
+      };
+
+      // Create adapter (uses org-provided key when available, falls back to env).
+      // Extract and clear the decrypted key immediately after adapter creation
+      // to prevent the plaintext from lingering in the long-lived SSE closure.
+      const { orgApiKey, ...safeConfig } = agentConfig;
+      const adapter = createAdapter(
+        safeConfig.provider,
+        safeConfig.model,
+        orgApiKey,
+      );
 
       // Create streaming response
       // Messages validated by TypeBox schema; adapter chosen dynamically so cast is required
@@ -171,6 +233,8 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
           batchMoveTasks,
           batchUpdateTasks,
           batchDeleteTasks,
+          // Agent-to-Agent delegation (null when at max depth — filtered out)
+          ...(delegateToAgent ? [delegateToAgent] : []),
         ],
         systemPrompts: [systemPrompt],
         agentLoopStrategy: maxIterations(agentConfig.maxIterations),
@@ -244,12 +308,25 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             ...assistantMessage,
           ];
 
+          const durationMs = Date.now() - requestStartTime;
+
           // Save to database (fire-and-forget, don't block the stream)
           saveSessionMessages(session.id, finalMessages, {
             toolCalls: baseToolCallCount + newToolCallCount,
-            // biome-ignore lint/suspicious/noConsole: fire-and-forget persistence error logging
           }).catch((err) => {
-            console.error("[AI] Failed to save session messages:", err);
+            // biome-ignore lint/suspicious/noConsole: fire-and-forget persistence error logging
+            console.error("[AI] Failed to save session messages:", {
+              ...requestMeta,
+              error: err instanceof Error ? err.message : String(err),
+              durationMs,
+            });
+          });
+
+          // biome-ignore lint/suspicious/noConsole: structured request metrics
+          console.info("[AI] Chat completed:", {
+            ...requestMeta,
+            toolCallCount: newToolCallCount,
+            durationMs,
           });
         }
       };
@@ -271,6 +348,7 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       body: t.Object({
         projectId: t.String(),
         sessionId: t.Optional(t.String()),
+        personaId: t.Optional(t.String()),
         messages: t.Array(modelMessageSchema),
       }),
     },

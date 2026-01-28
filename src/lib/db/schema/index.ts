@@ -12,7 +12,11 @@
 
 export * from "./agentActivity.table";
 export * from "./agentConfig.table";
+export * from "./agentMarketplaceListing.table";
+export * from "./agentPersona.table";
 export * from "./agentSession.table";
+export * from "./agentSchedule.table";
+export * from "./agentWebhook.table";
 export * from "./assignee.table";
 export * from "./column.table";
 export * from "./emoji.table";

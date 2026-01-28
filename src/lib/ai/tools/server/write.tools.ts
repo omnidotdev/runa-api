@@ -12,13 +12,12 @@
  * so the agent can report them to the user.
  */
 
-import { and, count, eq, or } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   assignees,
   columns,
-  labels,
   posts,
   taskLabels,
   tasks,
@@ -38,7 +37,7 @@ import {
   withApproval,
 } from "../definitions";
 import { logActivity } from "./activity";
-import { getNextColumnIndex, resolveTask } from "./helpers";
+import { getNextColumnIndex, resolveLabel, resolveTask } from "./helpers";
 import { requireProjectPermission } from "./permissions";
 
 import type { WriteToolContext } from "./context";
@@ -156,6 +155,12 @@ export function createWriteTools(
         toolOutput: result,
         status: "completed",
         affectedTaskIds: [created.id],
+        // No prior state — rollback means deleting the created task
+        snapshotBefore: {
+          operation: "create",
+          entityType: "task",
+          entityId: created.id,
+        },
       });
 
       return result;
@@ -188,6 +193,19 @@ export function createWriteTools(
 
     try {
       const task = await resolveTask(input, context.projectId);
+
+      // Snapshot the task state before the update for rollback support
+      const snapshot = {
+        operation: "update" as const,
+        entityType: "task" as const,
+        entityId: task.id,
+        previousState: {
+          content: task.content,
+          description: task.description,
+          priority: task.priority,
+          dueDate: task.dueDate,
+        },
+      };
 
       // Build immutable patch from provided fields only
       const patch: Record<string, unknown> = {};
@@ -229,6 +247,7 @@ export function createWriteTools(
         toolOutput: result,
         status: "completed",
         affectedTaskIds: [task.id],
+        snapshotBefore: snapshot,
       });
 
       return result;
@@ -261,6 +280,17 @@ export function createWriteTools(
 
     try {
       const task = await resolveTask(input, context.projectId);
+
+      // Snapshot column position before the move
+      const snapshot = {
+        operation: "move" as const,
+        entityType: "task" as const,
+        entityId: task.id,
+        previousState: {
+          columnId: task.columnId,
+          columnIndex: task.columnIndex,
+        },
+      };
 
       // Validate target column belongs to this project
       const targetColumn = await dbPool.query.columns.findFirst({
@@ -310,6 +340,7 @@ export function createWriteTools(
         toolOutput: result,
         status: "completed",
         affectedTaskIds: [task.id],
+        snapshotBefore: snapshot,
       });
 
       return result;
@@ -426,6 +457,13 @@ export function createWriteTools(
         toolOutput: result,
         status: "completed",
         affectedTaskIds: [task.id],
+        // Rollback reverses the action: add → remove, remove → add
+        snapshotBefore: {
+          operation: input.action === "add" ? "assign" : "unassign",
+          entityType: "assignee",
+          entityId: task.id,
+          previousState: { taskId: task.id, userId: input.userId },
+        },
       });
 
       return result;
@@ -458,24 +496,11 @@ export function createWriteTools(
 
     try {
       const task = await resolveTask(input, context.projectId);
-
-      // Validate label exists and belongs to this project or organization
-      const label = await dbPool.query.labels.findFirst({
-        where: and(
-          eq(labels.id, input.labelId),
-          or(
-            eq(labels.projectId, context.projectId),
-            eq(labels.organizationId, context.organizationId),
-          ),
-        ),
-        columns: { id: true, name: true },
-      });
-
-      if (!label) {
-        throw new Error(
-          `Label ${input.labelId} not found in this project or organization.`,
-        );
-      }
+      const label = await resolveLabel(
+        input.labelId,
+        context.projectId,
+        context.organizationId,
+      );
 
       // Idempotent insert
       await dbPool
@@ -501,6 +526,13 @@ export function createWriteTools(
         toolOutput: result,
         status: "completed",
         affectedTaskIds: [task.id],
+        // Rollback means removing this label from the task
+        snapshotBefore: {
+          operation: "addLabel",
+          entityType: "taskLabel",
+          entityId: task.id,
+          previousState: { taskId: task.id, labelId: label.id },
+        },
       });
 
       return result;
@@ -533,24 +565,11 @@ export function createWriteTools(
 
     try {
       const task = await resolveTask(input, context.projectId);
-
-      // Validate label exists and belongs to this project or organization
-      const label = await dbPool.query.labels.findFirst({
-        where: and(
-          eq(labels.id, input.labelId),
-          or(
-            eq(labels.projectId, context.projectId),
-            eq(labels.organizationId, context.organizationId),
-          ),
-        ),
-        columns: { id: true, name: true },
-      });
-
-      if (!label) {
-        throw new Error(
-          `Label ${input.labelId} not found in this project or organization.`,
-        );
-      }
+      const label = await resolveLabel(
+        input.labelId,
+        context.projectId,
+        context.organizationId,
+      );
 
       await dbPool
         .delete(taskLabels)
@@ -576,6 +595,13 @@ export function createWriteTools(
         toolOutput: result,
         status: "completed",
         affectedTaskIds: [task.id],
+        // Rollback means re-adding this label to the task
+        snapshotBefore: {
+          operation: "removeLabel",
+          entityType: "taskLabel",
+          entityId: task.id,
+          previousState: { taskId: task.id, labelId: label.id },
+        },
       });
 
       return result;
@@ -632,6 +658,12 @@ export function createWriteTools(
         toolOutput: result,
         status: "completed",
         affectedTaskIds: [task.id],
+        // Rollback means deleting the created comment
+        snapshotBefore: {
+          operation: "addComment",
+          entityType: "comment",
+          entityId: comment.id,
+        },
       });
 
       return result;

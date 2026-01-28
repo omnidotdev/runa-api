@@ -9,7 +9,16 @@ import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
 import aiRoutes from "lib/ai/chat.endpoint";
-import aiConfigRoutes from "lib/ai/config.endpoint";
+import aiConfigRoutes, { aiConfigKeyRoutes } from "lib/ai/config.endpoint";
+import aiMarketplaceRoutes from "lib/ai/marketplace.endpoint";
+import aiPersonaRoutes from "lib/ai/persona.endpoint";
+import aiScheduleRoutes, {
+  aiScheduleCronPlugin,
+} from "lib/ai/schedule.endpoint";
+import aiRollbackRoutes from "lib/ai/rollback.endpoint";
+import aiWebhookRoutes, {
+  aiWebhookReceiverRoutes,
+} from "lib/ai/webhook.endpoint";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
@@ -92,12 +101,20 @@ async function startServer(): Promise<void> {
     .use(
       cors({
         origin: CORS_ALLOWED_ORIGINS!.split(","),
-        methods: ["GET", "POST", "OPTIONS"],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       }),
     )
     .use(authzRoutes)
     .use(aiRoutes)
     .use(aiConfigRoutes)
+    .use(aiConfigKeyRoutes)
+    .use(aiPersonaRoutes)
+    .use(aiMarketplaceRoutes)
+    .use(aiWebhookRoutes)
+    .use(aiWebhookReceiverRoutes)
+    .use(aiRollbackRoutes)
+    .use(aiScheduleRoutes)
+    .use(aiScheduleCronPlugin)
     .use(entitlementsWebhook)
     .use(idpWebhook)
     .use(

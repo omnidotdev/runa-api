@@ -9,11 +9,14 @@
 
 import { Elysia, t } from "elysia";
 
+import { eq } from "drizzle-orm";
+
 import { dbPool } from "lib/db/db";
 import { agentConfigs } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
 
 import { authenticateRequest } from "./auth";
+import { decrypt, encrypt, maskApiKey } from "./encryption";
 
 const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
   .get(
@@ -50,6 +53,20 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
           eq(table.organizationId, query.organizationId),
       });
 
+      // Derive masked BYOK key for display (never expose the actual key)
+      let byokKey: { maskedKey: string; provider: string } | null = null;
+      if (config?.encryptedApiKey && config.keyProvider) {
+        try {
+          const plainKey = decrypt(config.encryptedApiKey);
+          byokKey = {
+            maskedKey: maskApiKey(plainKey),
+            provider: config.keyProvider,
+          };
+        } catch {
+          // Decryption failed — key is stale. Show as unavailable.
+        }
+      }
+
       // Return config or defaults
       return {
         config: {
@@ -60,6 +77,7 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
           maxIterationsPerRequest:
             config?.maxIterationsPerRequest ?? 10,
           customInstructions: config?.customInstructions ?? null,
+          byokKey,
         },
       };
     },
@@ -122,6 +140,21 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
             : body.customInstructions.slice(0, 2000)
           : undefined;
 
+      // Validate defaultPersonaId if provided
+      if (body.defaultPersonaId !== undefined && body.defaultPersonaId !== null) {
+        const persona = await dbPool.query.agentPersonas.findFirst({
+          where: (table, { eq: eqFn, and: andFn }) =>
+            andFn(
+              eqFn(table.id, body.defaultPersonaId!),
+              eqFn(table.organizationId, body.organizationId),
+            ),
+        });
+        if (!persona) {
+          set.status = 400;
+          return { error: "Persona not found in this organization" };
+        }
+      }
+
       const values = {
         organizationId: body.organizationId,
         ...(body.requireApprovalForDestructive !== undefined && {
@@ -135,6 +168,9 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
         }),
         ...(sanitizedInstructions !== undefined && {
           customInstructions: sanitizedInstructions,
+        }),
+        ...(body.defaultPersonaId !== undefined && {
+          defaultPersonaId: body.defaultPersonaId,
         }),
       };
 
@@ -154,6 +190,7 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
           requireApprovalForCreate: agentConfigs.requireApprovalForCreate,
           maxIterationsPerRequest: agentConfigs.maxIterationsPerRequest,
           customInstructions: agentConfigs.customInstructions,
+          defaultPersonaId: agentConfigs.defaultPersonaId,
         });
 
       return { config: upserted };
@@ -165,8 +202,157 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
         requireApprovalForCreate: t.Optional(t.Boolean()),
         maxIterationsPerRequest: t.Optional(t.Number()),
         customInstructions: t.Optional(t.Union([t.String(), t.Null()])),
+        defaultPersonaId: t.Optional(t.Union([t.String(), t.Null()])),
+      }),
+    },
+  );
+
+/**
+ * BYOK key management routes.
+ *
+ * PUT    /api/ai/config/key — Store an encrypted org API key
+ * DELETE /api/ai/config/key — Remove an org API key (revert to server env vars)
+ */
+const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
+  .put(
+    "/",
+    async ({ request, body, set }) => {
+      const enabled = await isAgentEnabled();
+      if (!enabled) {
+        set.status = 403;
+        return { error: "Agent feature is not enabled" };
+      }
+
+      let auth;
+      try {
+        auth = await authenticateRequest(request);
+      } catch (err) {
+        set.status = 401;
+        return {
+          error:
+            err instanceof Error ? err.message : "Authentication failed",
+        };
+      }
+
+      const orgClaim = auth.organizations.find(
+        (org) => org.id === body.organizationId,
+      );
+      if (!orgClaim) {
+        set.status = 403;
+        return { error: "Access denied to this organization" };
+      }
+      const isAdmin =
+        orgClaim.roles.includes("admin") || orgClaim.roles.includes("owner");
+      if (!isAdmin) {
+        set.status = 403;
+        return {
+          error: "Only organization admins can manage API keys",
+        };
+      }
+
+      // Validate provider
+      const allowedProviders = ["anthropic", "openai"];
+      if (!allowedProviders.includes(body.provider)) {
+        set.status = 400;
+        return {
+          error: `Unsupported provider: ${body.provider}. Allowed: ${allowedProviders.join(", ")}`,
+        };
+      }
+
+      // Basic key format validation
+      if (body.apiKey.length < 10 || body.apiKey.length > 500) {
+        set.status = 400;
+        return { error: "API key must be between 10 and 500 characters" };
+      }
+
+      const encryptedKey = encrypt(body.apiKey);
+
+      // Upsert encrypted key into agent config
+      await dbPool
+        .insert(agentConfigs)
+        .values({
+          organizationId: body.organizationId,
+          encryptedApiKey: encryptedKey,
+          keyProvider: body.provider,
+        })
+        .onConflictDoUpdate({
+          target: agentConfigs.organizationId,
+          set: {
+            encryptedApiKey: encryptedKey,
+            keyProvider: body.provider,
+            updatedAt: new Date().toISOString(),
+          },
+        });
+
+      return {
+        key: {
+          maskedKey: maskApiKey(body.apiKey),
+          provider: body.provider,
+        },
+      };
+    },
+    {
+      body: t.Object({
+        organizationId: t.String(),
+        provider: t.String(),
+        apiKey: t.String(),
+      }),
+    },
+  )
+  .delete(
+    "/",
+    async ({ request, body, set }) => {
+      const enabled = await isAgentEnabled();
+      if (!enabled) {
+        set.status = 403;
+        return { error: "Agent feature is not enabled" };
+      }
+
+      let auth;
+      try {
+        auth = await authenticateRequest(request);
+      } catch (err) {
+        set.status = 401;
+        return {
+          error:
+            err instanceof Error ? err.message : "Authentication failed",
+        };
+      }
+
+      const orgClaim = auth.organizations.find(
+        (org) => org.id === body.organizationId,
+      );
+      if (!orgClaim) {
+        set.status = 403;
+        return { error: "Access denied to this organization" };
+      }
+      const isAdmin =
+        orgClaim.roles.includes("admin") || orgClaim.roles.includes("owner");
+      if (!isAdmin) {
+        set.status = 403;
+        return {
+          error: "Only organization admins can manage API keys",
+        };
+      }
+
+      // Clear the encrypted key and provider
+      await dbPool
+        .update(agentConfigs)
+        .set({
+          encryptedApiKey: null,
+          keyProvider: null,
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(agentConfigs.organizationId, body.organizationId));
+
+      return { success: true };
+    },
+    {
+      body: t.Object({
+        organizationId: t.String(),
       }),
     },
   );
 
 export default aiConfigRoutes;
+export { aiConfigKeyRoutes };

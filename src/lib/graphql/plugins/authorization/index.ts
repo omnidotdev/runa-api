@@ -3,6 +3,7 @@ export { default as ColumnPlugin } from "./Column.plugin";
 export { default as EmojiPlugin } from "./Emoji.plugin";
 export { default as LabelPlugin } from "./Label.plugin";
 export { default as PostPlugin } from "./Post.plugin";
+export { default as PostMentionPlugin } from "./PostMention.plugin";
 export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsOnly.plugin";
 export { default as ProjectPlugin } from "./Project.plugin";
 export { default as ProjectColumnPlugin } from "./ProjectColumn.plugin";

@@ -59,6 +59,7 @@ export const queryTasksDef = toolDefinition({
       .describe("Search keyword to match against task titles"),
     columnId: z
       .string()
+      .uuid()
       .optional()
       .describe("Filter by column/status ID"),
     priority: z
@@ -67,10 +68,12 @@ export const queryTasksDef = toolDefinition({
       .describe("Filter by priority level"),
     assigneeId: z
       .string()
+      .uuid()
       .optional()
       .describe("Filter by assignee user ID"),
     labelId: z
       .string()
+      .uuid()
       .optional()
       .describe("Filter by label ID"),
     limit: z
@@ -162,6 +165,7 @@ export const getTaskDef = toolDefinition({
   inputSchema: z.object({
     taskId: z
       .string()
+      .uuid()
       .optional()
       .describe("Task UUID (use this if you have the ID)"),
     taskNumber: z
@@ -217,7 +221,7 @@ export const createTaskDef = toolDefinition({
     "Create a new task in the current project. Requires a title and the column (status) to place it in. Optionally set priority, description, and due date.",
   inputSchema: z.object({
     title: z.string().describe("Task title"),
-    columnId: z.string().describe("Column ID to place the task in"),
+    columnId: z.string().uuid().describe("Column ID to place the task in"),
     description: z
       .string()
       .optional()
@@ -254,6 +258,7 @@ export const updateTaskDef = toolDefinition({
   inputSchema: z.object({
     taskId: z
       .string()
+      .uuid()
       .optional()
       .describe("Task UUID (use if you have the ID)"),
     taskNumber: z
@@ -296,13 +301,14 @@ export const moveTaskDef = toolDefinition({
   inputSchema: z.object({
     taskId: z
       .string()
+      .uuid()
       .optional()
       .describe("Task UUID (use if you have the ID)"),
     taskNumber: z
       .number()
       .optional()
       .describe("Task number (use when user refers to T-42 or #42)"),
-    columnId: z.string().describe("Target column ID to move the task to"),
+    columnId: z.string().uuid().describe("Target column ID to move the task to"),
   }),
   outputSchema: z.object({
     task: z.object({
@@ -325,13 +331,14 @@ export const assignTaskDef = toolDefinition({
   inputSchema: z.object({
     taskId: z
       .string()
+      .uuid()
       .optional()
       .describe("Task UUID (use if you have the ID)"),
     taskNumber: z
       .number()
       .optional()
       .describe("Task number (use when user refers to T-42 or #42)"),
-    userId: z.string().describe("User ID to assign or unassign"),
+    userId: z.string().uuid().describe("User ID to assign or unassign"),
     action: z
       .enum(["add", "remove"])
       .describe("Whether to add or remove the assignee"),
@@ -356,13 +363,14 @@ export const addLabelDef = toolDefinition({
   inputSchema: z.object({
     taskId: z
       .string()
+      .uuid()
       .optional()
       .describe("Task UUID (use if you have the ID)"),
     taskNumber: z
       .number()
       .optional()
       .describe("Task number (use when user refers to T-42 or #42)"),
-    labelId: z.string().describe("Label ID to add"),
+    labelId: z.string().uuid().describe("Label ID to add"),
   }),
   outputSchema: z.object({
     taskId: z.string(),
@@ -382,13 +390,14 @@ export const removeLabelDef = toolDefinition({
   inputSchema: z.object({
     taskId: z
       .string()
+      .uuid()
       .optional()
       .describe("Task UUID (use if you have the ID)"),
     taskNumber: z
       .number()
       .optional()
       .describe("Task number (use when user refers to T-42 or #42)"),
-    labelId: z.string().describe("Label ID to remove"),
+    labelId: z.string().uuid().describe("Label ID to remove"),
   }),
   outputSchema: z.object({
     taskId: z.string(),
@@ -409,6 +418,7 @@ export const addCommentDef = toolDefinition({
   inputSchema: z.object({
     taskId: z
       .string()
+      .uuid()
       .optional()
       .describe("Task UUID (use if you have the ID)"),
     taskNumber: z
@@ -426,6 +436,37 @@ export const addCommentDef = toolDefinition({
 });
 
 // ─────────────────────────────────────────────
+// Delegation Tools
+// ─────────────────────────────────────────────
+
+/**
+ * Delegate a subtask to another agent persona.
+ * The delegate runs in its own context and returns a text response.
+ */
+export const delegateToAgentDef = toolDefinition({
+  name: "delegateToAgent",
+  description:
+    "Delegate a subtask to another agent persona. The delegate persona runs independently and returns its response. Use this when a specialized persona would handle part of the task better (e.g., delegating triage to a triage-focused persona). The delegate has the same project access and query/write tools as you, but cannot perform destructive or batch operations (delete, batch move/update/delete).",
+  inputSchema: z.object({
+    personaId: z
+      .string()
+      .uuid()
+      .describe("ID of the agent persona to delegate to"),
+    instruction: z
+      .string()
+      .min(1)
+      .max(2000)
+      .describe(
+        "The instruction or question for the delegate agent. Be specific about what you need.",
+      ),
+  }),
+  outputSchema: z.object({
+    personaName: z.string(),
+    response: z.string().max(4000),
+  }),
+});
+
+// ─────────────────────────────────────────────
 // Destructive & Batch Tools
 // ─────────────────────────────────────────────
 
@@ -433,6 +474,7 @@ export const addCommentDef = toolDefinition({
 const taskRefSchema = z.object({
   taskId: z
     .string()
+    .uuid()
     .optional()
     .describe("Task UUID (use if you have the ID)"),
   taskNumber: z
@@ -471,7 +513,7 @@ export const batchMoveTasksDef = toolDefinition({
       .min(1)
       .max(50)
       .describe("Tasks to move (1-50)"),
-    columnId: z.string().describe("Target column ID to move all tasks to"),
+    columnId: z.string().uuid().describe("Target column ID to move all tasks to"),
   }),
   outputSchema: z.object({
     movedCount: z.number(),

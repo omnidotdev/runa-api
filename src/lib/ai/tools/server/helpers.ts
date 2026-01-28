@@ -4,10 +4,10 @@
  * Extracted from write.tools.ts for reuse across write and destructive tools.
  */
 
-import { and, eq, max } from "drizzle-orm";
+import { and, eq, max, or } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
-import { tasks } from "lib/db/schema";
+import { labels, tasks } from "lib/db/schema";
 
 /**
  * Resolve a task by ID or project-scoped number.
@@ -38,6 +38,35 @@ export async function resolveTask(
   }
 
   return task;
+}
+
+/**
+ * Resolve a label by ID, ensuring it belongs to the given project or organization.
+ * Throws if the label is not found.
+ */
+export async function resolveLabel(
+  labelId: string,
+  projectId: string,
+  organizationId: string,
+): Promise<{ id: string; name: string }> {
+  const label = await dbPool.query.labels.findFirst({
+    where: and(
+      eq(labels.id, labelId),
+      or(
+        eq(labels.projectId, projectId),
+        eq(labels.organizationId, organizationId),
+      ),
+    ),
+    columns: { id: true, name: true },
+  });
+
+  if (!label) {
+    throw new Error(
+      `Label ${labelId} not found in this project or organization.`,
+    );
+  }
+
+  return label;
 }
 
 /**

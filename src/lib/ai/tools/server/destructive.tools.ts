@@ -71,6 +71,22 @@ export function createDestructiveTools(
       try {
         const task = await resolveTask(input, context.projectId);
 
+        // Snapshot full task state before deletion for rollback support
+        const snapshot = {
+          operation: "delete" as const,
+          entityType: "task" as const,
+          entityId: task.id,
+          previousState: {
+            content: task.content,
+            description: task.description,
+            priority: task.priority,
+            columnId: task.columnId,
+            columnIndex: task.columnIndex,
+            dueDate: task.dueDate,
+            authorId: task.authorId,
+          },
+        };
+
         await dbPool.delete(tasks).where(eq(tasks.id, task.id));
 
         const result = {
@@ -87,6 +103,7 @@ export function createDestructiveTools(
           status: "completed",
           requiresApproval: needsApproval,
           affectedTaskIds: [task.id],
+          snapshotBefore: snapshot,
         });
 
         return result;
@@ -123,45 +140,56 @@ export function createDestructiveTools(
       }
 
       try {
-        // Validate target column belongs to this project
-        const targetColumn = await dbPool.query.columns.findFirst({
-          where: and(
-            eq(columns.id, input.columnId),
-            eq(columns.projectId, context.projectId),
-          ),
-          columns: { id: true, title: true },
-        });
-
-        if (!targetColumn) {
-          throw new Error(
-            `Column ${input.columnId} not found in this project.`,
-          );
-        }
-
-        const movedTasks: Array<{
-          id: string;
-          number: number | null;
-          title: string;
-          fromColumn: string;
+        const taskSnapshots: Array<{
+          taskId: string;
+          columnId: string;
+          columnIndex: number;
         }> = [];
-        const errors: Array<{ ref: string; message: string }> = [];
-        const affectedIds: string[] = [];
 
-        // Pre-fetch the base index once to avoid duplicate indices within the batch
-        let nextIndex = await getNextColumnIndex(input.columnId);
+        const result = await dbPool.transaction(async (tx) => {
+          // Validate target column belongs to this project
+          const targetColumn = await tx.query.columns.findFirst({
+            where: and(
+              eq(columns.id, input.columnId),
+              eq(columns.projectId, context.projectId),
+            ),
+            columns: { id: true, title: true },
+          });
 
-        for (const taskRef of input.tasks) {
-          const ref = taskRef.taskId ?? `T-${taskRef.taskNumber}`;
-          try {
+          if (!targetColumn) {
+            throw new Error(
+              `Column ${input.columnId} not found in this project.`,
+            );
+          }
+
+          const movedTasks: Array<{
+            id: string;
+            number: number | null;
+            title: string;
+            fromColumn: string;
+          }> = [];
+          const affectedIds: string[] = [];
+
+          // Pre-fetch the base index once to avoid duplicate indices within the batch
+          let nextIndex = await getNextColumnIndex(input.columnId);
+
+          for (const taskRef of input.tasks) {
             const task = await resolveTask(taskRef, context.projectId);
 
+            // Snapshot position before the move
+            taskSnapshots.push({
+              taskId: task.id,
+              columnId: task.columnId,
+              columnIndex: task.columnIndex,
+            });
+
             // Get source column title
-            const sourceColumn = await dbPool.query.columns.findFirst({
+            const sourceColumn = await tx.query.columns.findFirst({
               where: eq(columns.id, task.columnId),
               columns: { title: true },
             });
 
-            await dbPool
+            await tx
               .update(tasks)
               .set({
                 columnId: input.columnId,
@@ -178,32 +206,38 @@ export function createDestructiveTools(
               fromColumn: sourceColumn?.title ?? "Unknown",
             });
             affectedIds.push(task.id);
-          } catch (err) {
-            errors.push({
-              ref,
-              message: err instanceof Error ? err.message : "Unknown error",
-            });
           }
-        }
 
-        const result = {
-          movedCount: movedTasks.length,
-          targetColumn: targetColumn.title,
-          movedTasks,
-          errors,
-        };
+          return {
+            movedCount: movedTasks.length,
+            targetColumn: targetColumn.title,
+            movedTasks,
+            errors: [] as Array<{ ref: string; message: string }>,
+            affectedIds,
+          };
+        });
 
         logActivity({
           context,
           toolName: "batchMoveTasks",
           toolInput: input,
           toolOutput: result,
-          status: errors.length > 0 && movedTasks.length === 0 ? "failed" : "completed",
+          status: "completed",
           requiresApproval: needsApproval,
-          affectedTaskIds: affectedIds,
+          affectedTaskIds: result.affectedIds,
+          snapshotBefore: {
+            operation: "batchMove",
+            entityType: "task",
+            tasks: taskSnapshots,
+          },
         });
 
-        return result;
+        return {
+          movedCount: result.movedCount,
+          targetColumn: result.targetColumn,
+          movedTasks: result.movedTasks,
+          errors: result.errors,
+        };
       } catch (err) {
         logActivity({
           context,
@@ -249,20 +283,31 @@ export function createDestructiveTools(
         );
       }
 
-      const updatedTasks: Array<{
-        id: string;
-        number: number | null;
-        title: string;
+      const taskSnapshots: Array<{
+        taskId: string;
+        priority: string;
+        dueDate: string | null;
       }> = [];
-      const errors: Array<{ ref: string; message: string }> = [];
-      const affectedIds: string[] = [];
 
-      for (const taskRef of input.tasks) {
-        const ref = taskRef.taskId ?? `T-${taskRef.taskNumber}`;
-        try {
+      const result = await dbPool.transaction(async (tx) => {
+        const updatedTasks: Array<{
+          id: string;
+          number: number | null;
+          title: string;
+        }> = [];
+        const affectedIds: string[] = [];
+
+        for (const taskRef of input.tasks) {
           const task = await resolveTask(taskRef, context.projectId);
 
-          await dbPool
+          // Snapshot fields before the update
+          taskSnapshots.push({
+            taskId: task.id,
+            priority: task.priority,
+            dueDate: task.dueDate,
+          });
+
+          await tx
             .update(tasks)
             .set(patch)
             .where(eq(tasks.id, task.id));
@@ -273,31 +318,36 @@ export function createDestructiveTools(
             title: task.content,
           });
           affectedIds.push(task.id);
-        } catch (err) {
-          errors.push({
-            ref,
-            message: err instanceof Error ? err.message : "Unknown error",
-          });
         }
-      }
 
-      const result = {
-        updatedCount: updatedTasks.length,
-        updatedTasks,
-        errors,
-      };
+        return {
+          updatedCount: updatedTasks.length,
+          updatedTasks,
+          errors: [] as Array<{ ref: string; message: string }>,
+          affectedIds,
+        };
+      });
 
       logActivity({
         context,
         toolName: "batchUpdateTasks",
         toolInput: input,
         toolOutput: result,
-        status: errors.length > 0 && updatedTasks.length === 0 ? "failed" : "completed",
+        status: "completed",
         requiresApproval: needsApproval,
-        affectedTaskIds: affectedIds,
+        affectedTaskIds: result.affectedIds,
+        snapshotBefore: {
+          operation: "batchUpdate",
+          entityType: "task",
+          tasks: taskSnapshots,
+        },
       });
 
-      return result;
+      return {
+        updatedCount: result.updatedCount,
+        updatedTasks: result.updatedTasks,
+        errors: result.errors,
+      };
     } catch (err) {
       logActivity({
         context,
@@ -331,20 +381,41 @@ export function createDestructiveTools(
     }
 
     try {
-      const deletedTasks: Array<{
-        id: string;
-        number: number | null;
-        title: string;
+      const taskSnapshots: Array<{
+        taskId: string;
+        content: string;
+        description: string;
+        priority: string;
+        columnId: string;
+        columnIndex: number;
+        dueDate: string | null;
+        authorId: string | null;
       }> = [];
-      const errors: Array<{ ref: string; message: string }> = [];
-      const affectedIds: string[] = [];
 
-      for (const taskRef of input.tasks) {
-        const ref = taskRef.taskId ?? `T-${taskRef.taskNumber}`;
-        try {
+      const result = await dbPool.transaction(async (tx) => {
+        const deletedTasks: Array<{
+          id: string;
+          number: number | null;
+          title: string;
+        }> = [];
+        const affectedIds: string[] = [];
+
+        for (const taskRef of input.tasks) {
           const task = await resolveTask(taskRef, context.projectId);
 
-          await dbPool.delete(tasks).where(eq(tasks.id, task.id));
+          // Snapshot full task state before deletion
+          taskSnapshots.push({
+            taskId: task.id,
+            content: task.content,
+            description: task.description,
+            priority: task.priority,
+            columnId: task.columnId,
+            columnIndex: task.columnIndex,
+            dueDate: task.dueDate,
+            authorId: task.authorId,
+          });
+
+          await tx.delete(tasks).where(eq(tasks.id, task.id));
 
           deletedTasks.push({
             id: task.id,
@@ -352,31 +423,36 @@ export function createDestructiveTools(
             title: task.content,
           });
           affectedIds.push(task.id);
-        } catch (err) {
-          errors.push({
-            ref,
-            message: err instanceof Error ? err.message : "Unknown error",
-          });
         }
-      }
 
-      const result = {
-        deletedCount: deletedTasks.length,
-        deletedTasks,
-        errors,
-      };
+        return {
+          deletedCount: deletedTasks.length,
+          deletedTasks,
+          errors: [] as Array<{ ref: string; message: string }>,
+          affectedIds,
+        };
+      });
 
       logActivity({
         context,
         toolName: "batchDeleteTasks",
         toolInput: input,
         toolOutput: result,
-        status: errors.length > 0 && deletedTasks.length === 0 ? "failed" : "completed",
+        status: "completed",
         requiresApproval: needsApproval,
-        affectedTaskIds: affectedIds,
+        affectedTaskIds: result.affectedIds,
+        snapshotBefore: {
+          operation: "batchDelete",
+          entityType: "task",
+          tasks: taskSnapshots,
+        },
       });
 
-      return result;
+      return {
+        deletedCount: result.deletedCount,
+        deletedTasks: result.deletedTasks,
+        errors: result.errors,
+      };
     } catch (err) {
       logActivity({
         context,

@@ -3,7 +3,7 @@ import { and, desc, eq } from "drizzle-orm";
 import { dbPool } from "lib/db/db";
 import { agentSessions } from "lib/db/schema";
 
-import type { SelectAgentSession } from "lib/db/schema";
+import type { InsertAgentSession, SelectAgentSession } from "lib/db/schema";
 
 /**
  * Create a new agent chat session.
@@ -30,16 +30,19 @@ export async function createSession(params: {
 
 /**
  * Load an existing session by ID.
- * Returns null if not found or user doesn't own the session.
+ * Returns null if not found, user doesn't own the session, or
+ * the session belongs to a different project.
  */
 export async function loadSession(
   sessionId: string,
   userId: string,
+  projectId: string,
 ): Promise<SelectAgentSession | null> {
   const session = await dbPool.query.agentSessions.findFirst({
     where: and(
       eq(agentSessions.id, sessionId),
       eq(agentSessions.userId, userId),
+      eq(agentSessions.projectId, projectId),
     ),
   });
 
@@ -54,8 +57,8 @@ export async function saveSessionMessages(
   messages: unknown[],
   stats?: { tokensUsed?: number; toolCalls?: number },
 ): Promise<void> {
-  const updateValues: Record<string, unknown> = {
-    messages,
+  const updateValues: Partial<InsertAgentSession> = {
+    messages: messages as InsertAgentSession["messages"],
     updatedAt: new Date().toISOString(),
   };
 
