@@ -99,8 +99,6 @@ export const WEBHOOK_EVENT_TYPES = [
   "custom",
 ] as const;
 
-export type WebhookEventType = (typeof WEBHOOK_EVENT_TYPES)[number];
-
 /** Max instruction length after template interpolation. */
 const MAX_INSTRUCTION_LENGTH = 4_000;
 

@@ -26,12 +26,3 @@ export const isAgentEnabled = async (): Promise<boolean> => {
   if (AGENT_ENABLED === "true") return true;
   return isEnabled(FLAGS.AGENT_ENABLED, false);
 };
-
-/**
- * Check if the agent chat panel is enabled.
- */
-export const isAgentChatPanelEnabled = async (): Promise<boolean> => {
-  // Use same override as isAgentEnabled for consistency
-  if (AGENT_ENABLED === "true") return true;
-  return isEnabled(FLAGS.AGENT_CHAT_PANEL, false);
-};
