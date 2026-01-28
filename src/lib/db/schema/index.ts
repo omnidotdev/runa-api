@@ -12,7 +12,6 @@
 
 export * from "./agentActivity.table";
 export * from "./agentConfig.table";
-export * from "./agentMarketplaceListing.table";
 export * from "./agentPersona.table";
 export * from "./agentSchedule.table";
 export * from "./agentSession.table";

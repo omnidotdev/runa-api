@@ -1311,149 +1311,6 @@ const spec_userPreference = {
   executor: executor
 };
 const userPreferenceCodec = recordCodec(spec_userPreference);
-const agentMarketplaceListingIdentifier = sql.identifier("public", "agent_marketplace_listing");
-const spec_agentMarketplaceListing = {
-  name: "agentMarketplaceListing",
-  identifier: agentMarketplaceListingIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    persona_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    title: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: false,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    category: {
-      description: undefined,
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    install_count: {
-      description: undefined,
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    published_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  description: undefined,
-  extensions: {
-    oid: "46957",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "agent_marketplace_listing"
-    },
-    tags: {
-      __proto__: null
-    }
-  },
-  executor: executor
-};
-const agentMarketplaceListingCodec = recordCodec(spec_agentMarketplaceListing);
 const agentWebhookIdentifier = sql.identifier("public", "agent_webhook");
 const spec_agentWebhook = {
   name: "agentWebhook",
@@ -3425,42 +3282,6 @@ const registryConfig_pgResources_user_preference_user_preference = {
     canDelete: true
   }
 };
-const agent_marketplace_listingUniques = [{
-  isPrimary: true,
-  attributes: ["id"],
-  description: undefined,
-  extensions: {
-    tags: {
-      __proto__: null
-    }
-  }
-}];
-const registryConfig_pgResources_agent_marketplace_listing_agent_marketplace_listing = {
-  executor: executor,
-  name: "agent_marketplace_listing",
-  identifier: "main.public.agent_marketplace_listing",
-  from: agentMarketplaceListingIdentifier,
-  codec: agentMarketplaceListingCodec,
-  uniques: agent_marketplace_listingUniques,
-  isVirtual: false,
-  description: undefined,
-  extensions: {
-    description: undefined,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "agent_marketplace_listing"
-    },
-    isInsertable: true,
-    isUpdatable: true,
-    isDeletable: true,
-    tags: {},
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  }
-};
 const agent_webhookUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -3809,7 +3630,6 @@ const registryConfig = {
     userPreference: userPreferenceCodec,
     pgCatalogTextArray: pgCatalogTextArrayCodec,
     varchar: TYPES.varchar,
-    agentMarketplaceListing: agentMarketplaceListingCodec,
     agentWebhook: agentWebhookCodec,
     agentSchedule: agentScheduleCodec,
     agentSession: agentSessionCodec,
@@ -3838,7 +3658,6 @@ const registryConfig = {
     agent_persona: registryConfig_pgResources_agent_persona_agent_persona,
     project_column: registryConfig_pgResources_project_column_project_column,
     user_preference: registryConfig_pgResources_user_preference_user_preference,
-    agent_marketplace_listing: registryConfig_pgResources_agent_marketplace_listing_agent_marketplace_listing,
     agent_webhook: registryConfig_pgResources_agent_webhook_agent_webhook,
     agent_schedule: registryConfig_pgResources_agent_schedule_agent_schedule,
     agent_session: registryConfig_pgResources_agent_session_agent_session,
@@ -3949,41 +3768,8 @@ const registryConfig = {
         }
       }
     },
-    agentMarketplaceListing: {
-      __proto__: null,
-      agentPersonaByMyPersonaId: {
-        localCodec: agentMarketplaceListingCodec,
-        remoteResourceOptions: registryConfig_pgResources_agent_persona_agent_persona,
-        localCodecPolymorphicTypes: undefined,
-        localAttributes: ["persona_id"],
-        remoteAttributes: ["id"],
-        isUnique: true,
-        isReferencee: false,
-        description: undefined,
-        extensions: {
-          tags: {
-            behavior: []
-          }
-        }
-      }
-    },
     agentPersona: {
       __proto__: null,
-      agentMarketplaceListingsByTheirPersonaId: {
-        localCodec: agentPersonaCodec,
-        remoteResourceOptions: registryConfig_pgResources_agent_marketplace_listing_agent_marketplace_listing,
-        localCodecPolymorphicTypes: undefined,
-        localAttributes: ["id"],
-        remoteAttributes: ["persona_id"],
-        isUnique: false,
-        isReferencee: true,
-        description: undefined,
-        extensions: {
-          tags: {
-            behavior: []
-          }
-        }
-      },
       agentSchedulesByTheirPersonaId: {
         localCodec: agentPersonaCodec,
         remoteResourceOptions: registryConfig_pgResources_agent_schedule_agent_schedule,
@@ -4816,7 +4602,6 @@ const resource_columnPgResource = registry.pgResources["column"];
 const resource_agent_personaPgResource = registry.pgResources["agent_persona"];
 const resource_project_columnPgResource = registry.pgResources["project_column"];
 const resource_user_preferencePgResource = registry.pgResources["user_preference"];
-const resource_agent_marketplace_listingPgResource = registry.pgResources["agent_marketplace_listing"];
 const resource_agent_webhookPgResource = registry.pgResources["agent_webhook"];
 const resource_agent_schedulePgResource = registry.pgResources["agent_schedule"];
 const resource_agent_sessionPgResource = registry.pgResources["agent_session"];
@@ -5157,32 +4942,6 @@ const nodeIdHandler_UserPreference = {
 const nodeFetcher_UserPreference = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_UserPreference));
   return nodeIdHandler_UserPreference.get(nodeIdHandler_UserPreference.getSpec($decoded));
-};
-const nodeIdHandler_AgentMarketplaceListing = {
-  typeName: "AgentMarketplaceListing",
-  codec: nodeIdCodecs_base64JSON_base64JSON,
-  deprecationReason: undefined,
-  plan($record) {
-    return list([constant("AgentMarketplaceListing", false), $record.get("id")]);
-  },
-  getSpec($list) {
-    return {
-      id: inhibitOnNull(access($list, [1]))
-    };
-  },
-  getIdentifiers(value) {
-    return value.slice(1);
-  },
-  get(spec) {
-    return resource_agent_marketplace_listingPgResource.get(spec);
-  },
-  match(obj) {
-    return obj[0] === "AgentMarketplaceListing";
-  }
-};
-const nodeFetcher_AgentMarketplaceListing = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AgentMarketplaceListing));
-  return nodeIdHandler_AgentMarketplaceListing.get(nodeIdHandler_AgentMarketplaceListing.getSpec($decoded));
 };
 const nodeIdHandler_AgentWebhook = {
   typeName: "AgentWebhook",
@@ -5655,17 +5414,6 @@ function assertAllowed21(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed22(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 const nodeIdHandlerByTypeName = {
   __proto__: null,
   Query: nodeIdHandler_Query,
@@ -5681,7 +5429,6 @@ const nodeIdHandlerByTypeName = {
   AgentPersona: nodeIdHandler_AgentPersona,
   ProjectColumn: nodeIdHandler_ProjectColumn,
   UserPreference: nodeIdHandler_UserPreference,
-  AgentMarketplaceListing: nodeIdHandler_AgentMarketplaceListing,
   AgentWebhook: nodeIdHandler_AgentWebhook,
   AgentSchedule: nodeIdHandler_AgentSchedule,
   AgentSession: nodeIdHandler_AgentSession,
@@ -5709,6 +5456,17 @@ const coerce = string => {
   if (!/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(string)) throw new GraphQLError("Invalid UUID, expected 32 hexadecimal characters, optionally with hyphens");
   return string;
 };
+function assertAllowed22(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed23(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5798,17 +5556,6 @@ function assertAllowed30(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed31(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed32(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6065,6 +5812,17 @@ const colSpec12 = {
   attributeName: "next_task_number",
   attribute: spec_project.attributes.next_task_number
 };
+function assertAllowed32(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed33(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -6077,17 +5835,6 @@ function assertAllowed33(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed34(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed35(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6620,7 +6367,7 @@ const resolve68 = (i, v) => sql`${i} < ${v}`;
 const resolve69 = (i, v) => sql`${i} <= ${v}`;
 const resolve70 = (i, v) => sql`${i} > ${v}`;
 const resolve71 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed36(value, mode) {
+function assertAllowed35(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6730,6 +6477,17 @@ const colSpec19 = {
   attributeName: "icon",
   attribute: spec_column.attributes.icon
 };
+function assertAllowed36(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed37(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -6753,17 +6511,6 @@ function assertAllowed38(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed39(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed40(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6834,6 +6581,17 @@ const colSpec31 = {
   attributeName: "number",
   attribute: spec_task.attributes.number
 };
+function assertAllowed40(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed41(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -6857,17 +6615,6 @@ function assertAllowed42(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed43(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed44(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6903,7 +6650,7 @@ const colSpec36 = {
   attributeName: "deleted_at",
   attribute: spec_assignee.attributes.deleted_at
 };
-function assertAllowed45(value, mode) {
+function assertAllowed44(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6914,7 +6661,7 @@ function assertAllowed45(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed46(value, mode) {
+function assertAllowed45(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6960,6 +6707,17 @@ const colSpec43 = {
   attributeName: "email",
   attribute: spec_user.attributes.email
 };
+function assertAllowed46(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed47(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -6972,17 +6730,6 @@ function assertAllowed47(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed48(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed49(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7043,7 +6790,7 @@ const resolve79 = (i, v) => sql`${i} < ${v}`;
 const resolve80 = (i, v) => sql`${i} <= ${v}`;
 const resolve81 = (i, v) => sql`${i} > ${v}`;
 const resolve82 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed50(value, mode) {
+function assertAllowed49(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7089,6 +6836,17 @@ const colSpec50 = {
   attributeName: "updated_at",
   attribute: spec_post.attributes.updated_at
 };
+function assertAllowed50(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed51(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -7112,17 +6870,6 @@ function assertAllowed52(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed53(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed54(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7163,6 +6910,17 @@ const colSpec56 = {
   attributeName: "updated_at",
   attribute: spec_emoji.attributes.updated_at
 };
+function assertAllowed54(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed55(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -7175,17 +6933,6 @@ function assertAllowed55(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed56(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed57(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7246,7 +6993,7 @@ const resolve90 = (i, v) => sql`${i} < ${v}`;
 const resolve91 = (i, v) => sql`${i} <= ${v}`;
 const resolve92 = (i, v) => sql`${i} > ${v}`;
 const resolve93 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed58(value, mode) {
+function assertAllowed57(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7297,7 +7044,7 @@ const colSpec64 = {
   attributeName: "color",
   attribute: spec_userPreference.attributes.color
 };
-function assertAllowed59(value, mode) {
+function assertAllowed58(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7308,7 +7055,7 @@ function assertAllowed59(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed60(value, mode) {
+function assertAllowed59(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7371,7 +7118,7 @@ const resolve108 = (i, v) => sql`${v} > ANY (${i})`;
 const resolve109 = (i, v) => sql`${v} >= ANY (${i})`;
 const resolve110 = (i, v) => sql`${v} < ANY (${i})`;
 const resolve111 = (i, v) => sql`${v} <= ANY (${i})`;
-function assertAllowed61(value, mode) {
+function assertAllowed60(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7382,7 +7129,7 @@ function assertAllowed61(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed62(value, mode) {
+function assertAllowed61(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7443,7 +7190,7 @@ const colSpec74 = {
   attributeName: "updated_at",
   attribute: spec_userOrganization.attributes.updated_at
 };
-function assertAllowed63(value, mode) {
+function assertAllowed62(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7454,7 +7201,7 @@ function assertAllowed63(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed64(value, mode) {
+function assertAllowed63(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7565,7 +7312,7 @@ const resolve130 = (i, v) => sql`${i} < ${v}`;
 const resolve131 = (i, v) => sql`${i} <= ${v}`;
 const resolve132 = (i, v) => sql`${i} > ${v}`;
 const resolve133 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed65(value, mode) {
+function assertAllowed64(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7631,7 +7378,7 @@ const colSpec85 = {
   attributeName: "created_at",
   attribute: spec_agentActivity.attributes.created_at
 };
-function assertAllowed66(value, mode) {
+function assertAllowed65(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7642,7 +7389,7 @@ function assertAllowed66(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed67(value, mode) {
+function assertAllowed66(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7703,6 +7450,17 @@ const colSpec95 = {
   attributeName: "type",
   attribute: spec_agentSession.attributes.type
 };
+function assertAllowed67(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed68(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -7769,17 +7527,6 @@ function assertAllowed73(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed74(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 const colSpec96 = {
   fieldName: "taskId",
   attributeName: "task_id",
@@ -7800,7 +7547,7 @@ const colSpec99 = {
   attributeName: "updated_at",
   attribute: spec_taskLabel.attributes.updated_at
 };
-function assertAllowed75(value, mode) {
+function assertAllowed74(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7811,7 +7558,7 @@ function assertAllowed75(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed76(value, mode) {
+function assertAllowed75(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7862,6 +7609,17 @@ const colSpec107 = {
   attributeName: "organization_id",
   attribute: spec_label.attributes.organization_id
 };
+function assertAllowed76(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed77(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -7939,17 +7697,6 @@ function assertAllowed83(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed84(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 const colSpec108 = {
   fieldName: "projectId",
   attributeName: "project_id",
@@ -7965,7 +7712,7 @@ const colSpec110 = {
   attributeName: "created_at",
   attribute: spec_projectProjectLabel.attributes.created_at
 };
-function assertAllowed85(value, mode) {
+function assertAllowed84(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -7976,7 +7723,7 @@ function assertAllowed85(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed86(value, mode) {
+function assertAllowed85(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -8022,6 +7769,17 @@ const colSpec117 = {
   attributeName: "updated_at",
   attribute: spec_projectLabel.attributes.updated_at
 };
+function assertAllowed86(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed87(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8067,17 +7825,6 @@ function assertAllowed90(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed91(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed92(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -8148,7 +7895,7 @@ const colSpec129 = {
   attributeName: "updated_at",
   attribute: spec_agentSchedule.attributes.updated_at
 };
-function assertAllowed93(value, mode) {
+function assertAllowed92(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -8159,7 +7906,7 @@ function assertAllowed93(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed94(value, mode) {
+function assertAllowed93(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -8215,6 +7962,17 @@ const colSpec138 = {
   attributeName: "updated_at",
   attribute: spec_agentPersona.attributes.updated_at
 };
+function assertAllowed94(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 function assertAllowed95(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8251,52 +8009,57 @@ function assertAllowed97(value, mode) {
 const colSpec139 = {
   fieldName: "rowId",
   attributeName: "id",
-  attribute: spec_agentMarketplaceListing.attributes.id
+  attribute: spec_agentWebhook.attributes.id
 };
 const colSpec140 = {
-  fieldName: "personaId",
-  attributeName: "persona_id",
-  attribute: spec_agentMarketplaceListing.attributes.persona_id
-};
-const colSpec141 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
-  attribute: spec_agentMarketplaceListing.attributes.organization_id
+  attribute: spec_agentWebhook.attributes.organization_id
+};
+const colSpec141 = {
+  fieldName: "projectId",
+  attributeName: "project_id",
+  attribute: spec_agentWebhook.attributes.project_id
 };
 const colSpec142 = {
-  fieldName: "title",
-  attributeName: "title",
-  attribute: spec_agentMarketplaceListing.attributes.title
+  fieldName: "name",
+  attributeName: "name",
+  attribute: spec_agentWebhook.attributes.name
 };
 const colSpec143 = {
-  fieldName: "description",
-  attributeName: "description",
-  attribute: spec_agentMarketplaceListing.attributes.description
+  fieldName: "eventType",
+  attributeName: "event_type",
+  attribute: spec_agentWebhook.attributes.event_type
 };
 const colSpec144 = {
-  fieldName: "category",
-  attributeName: "category",
-  attribute: spec_agentMarketplaceListing.attributes.category
+  fieldName: "instructionTemplate",
+  attributeName: "instruction_template",
+  attribute: spec_agentWebhook.attributes.instruction_template
 };
 const colSpec145 = {
-  fieldName: "installCount",
-  attributeName: "install_count",
-  attribute: spec_agentMarketplaceListing.attributes.install_count
+  fieldName: "signingSecret",
+  attributeName: "signing_secret",
+  attribute: spec_agentWebhook.attributes.signing_secret
 };
 const colSpec146 = {
-  fieldName: "publishedAt",
-  attributeName: "published_at",
-  attribute: spec_agentMarketplaceListing.attributes.published_at
+  fieldName: "enabled",
+  attributeName: "enabled",
+  attribute: spec_agentWebhook.attributes.enabled
 };
 const colSpec147 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_agentMarketplaceListing.attributes.created_at
+  fieldName: "lastTriggeredAt",
+  attributeName: "last_triggered_at",
+  attribute: spec_agentWebhook.attributes.last_triggered_at
 };
 const colSpec148 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_agentWebhook.attributes.created_at
+};
+const colSpec149 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
-  attribute: spec_agentMarketplaceListing.attributes.updated_at
+  attribute: spec_agentWebhook.attributes.updated_at
 };
 function assertAllowed98(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -8320,6 +8083,41 @@ function assertAllowed99(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec150 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_projectColumn.attributes.id
+};
+const colSpec151 = {
+  fieldName: "icon",
+  attributeName: "icon",
+  attribute: spec_projectColumn.attributes.icon
+};
+const colSpec152 = {
+  fieldName: "title",
+  attributeName: "title",
+  attribute: spec_projectColumn.attributes.title
+};
+const colSpec153 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_projectColumn.attributes.organization_id
+};
+const colSpec154 = {
+  fieldName: "index",
+  attributeName: "index",
+  attribute: spec_projectColumn.attributes.index
+};
+const colSpec155 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_projectColumn.attributes.created_at
+};
+const colSpec156 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_projectColumn.attributes.updated_at
+};
 function assertAllowed100(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8342,61 +8140,6 @@ function assertAllowed101(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec149 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_agentWebhook.attributes.id
-};
-const colSpec150 = {
-  fieldName: "organizationId",
-  attributeName: "organization_id",
-  attribute: spec_agentWebhook.attributes.organization_id
-};
-const colSpec151 = {
-  fieldName: "projectId",
-  attributeName: "project_id",
-  attribute: spec_agentWebhook.attributes.project_id
-};
-const colSpec152 = {
-  fieldName: "name",
-  attributeName: "name",
-  attribute: spec_agentWebhook.attributes.name
-};
-const colSpec153 = {
-  fieldName: "eventType",
-  attributeName: "event_type",
-  attribute: spec_agentWebhook.attributes.event_type
-};
-const colSpec154 = {
-  fieldName: "instructionTemplate",
-  attributeName: "instruction_template",
-  attribute: spec_agentWebhook.attributes.instruction_template
-};
-const colSpec155 = {
-  fieldName: "signingSecret",
-  attributeName: "signing_secret",
-  attribute: spec_agentWebhook.attributes.signing_secret
-};
-const colSpec156 = {
-  fieldName: "enabled",
-  attributeName: "enabled",
-  attribute: spec_agentWebhook.attributes.enabled
-};
-const colSpec157 = {
-  fieldName: "lastTriggeredAt",
-  attributeName: "last_triggered_at",
-  attribute: spec_agentWebhook.attributes.last_triggered_at
-};
-const colSpec158 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_agentWebhook.attributes.created_at
-};
-const colSpec159 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_agentWebhook.attributes.updated_at
-};
 function assertAllowed102(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8408,6 +8151,15 @@ function assertAllowed102(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const relation = registry.pgRelations["project"]["columnsByTheirProjectId"];
+const relation2 = registry.pgRelations["project"]["tasksByTheirProjectId"];
+const relation3 = registry.pgRelations["project"]["labelsByTheirProjectId"];
+const relation4 = registry.pgRelations["project"]["userPreferencesByTheirProjectId"];
+const relation5 = registry.pgRelations["project"]["projectProjectLabelsByTheirProjectId"];
+const relation6 = registry.pgRelations["project"]["agentActivitiesByTheirProjectId"];
+const relation7 = registry.pgRelations["project"]["agentSessionsByTheirProjectId"];
+const relation8 = registry.pgRelations["project"]["agentSchedulesByTheirProjectId"];
+const relation9 = registry.pgRelations["project"]["agentWebhooksByTheirProjectId"];
 function assertAllowed103(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8419,41 +8171,6 @@ function assertAllowed103(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec160 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_projectColumn.attributes.id
-};
-const colSpec161 = {
-  fieldName: "icon",
-  attributeName: "icon",
-  attribute: spec_projectColumn.attributes.icon
-};
-const colSpec162 = {
-  fieldName: "title",
-  attributeName: "title",
-  attribute: spec_projectColumn.attributes.title
-};
-const colSpec163 = {
-  fieldName: "organizationId",
-  attributeName: "organization_id",
-  attribute: spec_projectColumn.attributes.organization_id
-};
-const colSpec164 = {
-  fieldName: "index",
-  attributeName: "index",
-  attribute: spec_projectColumn.attributes.index
-};
-const colSpec165 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_projectColumn.attributes.created_at
-};
-const colSpec166 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_projectColumn.attributes.updated_at
-};
 function assertAllowed104(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8487,15 +8204,6 @@ function assertAllowed106(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const relation = registry.pgRelations["project"]["columnsByTheirProjectId"];
-const relation2 = registry.pgRelations["project"]["tasksByTheirProjectId"];
-const relation3 = registry.pgRelations["project"]["labelsByTheirProjectId"];
-const relation4 = registry.pgRelations["project"]["userPreferencesByTheirProjectId"];
-const relation5 = registry.pgRelations["project"]["projectProjectLabelsByTheirProjectId"];
-const relation6 = registry.pgRelations["project"]["agentActivitiesByTheirProjectId"];
-const relation7 = registry.pgRelations["project"]["agentSessionsByTheirProjectId"];
-const relation8 = registry.pgRelations["project"]["agentSchedulesByTheirProjectId"];
-const relation9 = registry.pgRelations["project"]["agentWebhooksByTheirProjectId"];
 function assertAllowed107(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8595,6 +8303,10 @@ function assertAllowed115(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const relation10 = registry.pgRelations["post"]["emojisByTheirPostId"];
+const relation11 = registry.pgRelations["task"]["assigneesByTheirTaskId"];
+const relation12 = registry.pgRelations["task"]["postsByTheirTaskId"];
+const relation13 = registry.pgRelations["task"]["taskLabelsByTheirTaskId"];
 function assertAllowed116(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8606,6 +8318,7 @@ function assertAllowed116(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const relation14 = registry.pgRelations["agentSession"]["agentActivitiesByTheirSessionId"];
 function assertAllowed117(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8617,6 +8330,8 @@ function assertAllowed117(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const relation15 = registry.pgRelations["column"]["tasksByTheirColumnId"];
+const relation16 = registry.pgRelations["label"]["taskLabelsByTheirLabelId"];
 function assertAllowed118(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8639,10 +8354,62 @@ function assertAllowed119(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const relation10 = registry.pgRelations["post"]["emojisByTheirPostId"];
-const relation11 = registry.pgRelations["task"]["assigneesByTheirTaskId"];
-const relation12 = registry.pgRelations["task"]["postsByTheirTaskId"];
-const relation13 = registry.pgRelations["task"]["taskLabelsByTheirTaskId"];
+const relation17 = registry.pgRelations["user"]["assigneesByTheirUserId"];
+const relation18 = registry.pgRelations["user"]["postsByTheirAuthorId"];
+const relation19 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
+const relation20 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
+const relation21 = registry.pgRelations["user"]["emojisByTheirUserId"];
+const relation22 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
+const relation23 = registry.pgRelations["user"]["agentActivitiesByTheirUserId"];
+const relation24 = registry.pgRelations["user"]["agentSessionsByTheirUserId"];
+const relation25 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
+const relation26 = registry.pgRelations["agentPersona"]["agentSchedulesByTheirPersonaId"];
+const relation27 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
+const colSpec157 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_settings.attributes.id
+};
+const colSpec158 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_settings.attributes.created_at
+};
+const colSpec159 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_settings.attributes.updated_at
+};
+const colSpec160 = {
+  fieldName: "viewMode",
+  attributeName: "view_mode",
+  attribute: spec_settings.attributes.view_mode
+};
+const colSpec161 = {
+  fieldName: "billingAccountId",
+  attributeName: "billing_account_id",
+  attribute: spec_settings.attributes.billing_account_id
+};
+const colSpec162 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_settings.attributes.organization_id
+};
+const colSpec163 = {
+  fieldName: "subscriptionId",
+  attributeName: "subscription_id",
+  attribute: spec_settings.attributes.subscription_id
+};
+const colSpec164 = {
+  fieldName: "deletedAt",
+  attributeName: "deleted_at",
+  attribute: spec_settings.attributes.deleted_at
+};
+const colSpec165 = {
+  fieldName: "deletionReason",
+  attributeName: "deletion_reason",
+  attribute: spec_settings.attributes.deletion_reason
+};
 function assertAllowed120(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -8654,182 +8421,67 @@ function assertAllowed120(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const relation14 = registry.pgRelations["agentSession"]["agentActivitiesByTheirSessionId"];
-function assertAllowed121(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-const relation15 = registry.pgRelations["column"]["tasksByTheirColumnId"];
-const relation16 = registry.pgRelations["label"]["taskLabelsByTheirLabelId"];
-function assertAllowed122(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed123(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-function assertAllowed124(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-const relation17 = registry.pgRelations["user"]["assigneesByTheirUserId"];
-const relation18 = registry.pgRelations["user"]["postsByTheirAuthorId"];
-const relation19 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
-const relation20 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
-const relation21 = registry.pgRelations["user"]["emojisByTheirUserId"];
-const relation22 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
-const relation23 = registry.pgRelations["user"]["agentActivitiesByTheirUserId"];
-const relation24 = registry.pgRelations["user"]["agentSessionsByTheirUserId"];
-const relation25 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
-const relation26 = registry.pgRelations["agentPersona"]["agentMarketplaceListingsByTheirPersonaId"];
-const relation27 = registry.pgRelations["agentPersona"]["agentSchedulesByTheirPersonaId"];
-const relation28 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
-const colSpec167 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_settings.attributes.id
-};
-const colSpec168 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_settings.attributes.created_at
-};
-const colSpec169 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_settings.attributes.updated_at
-};
-const colSpec170 = {
-  fieldName: "viewMode",
-  attributeName: "view_mode",
-  attribute: spec_settings.attributes.view_mode
-};
-const colSpec171 = {
-  fieldName: "billingAccountId",
-  attributeName: "billing_account_id",
-  attribute: spec_settings.attributes.billing_account_id
-};
-const colSpec172 = {
-  fieldName: "organizationId",
-  attributeName: "organization_id",
-  attribute: spec_settings.attributes.organization_id
-};
-const colSpec173 = {
-  fieldName: "subscriptionId",
-  attributeName: "subscription_id",
-  attribute: spec_settings.attributes.subscription_id
-};
-const colSpec174 = {
-  fieldName: "deletedAt",
-  attributeName: "deleted_at",
-  attribute: spec_settings.attributes.deleted_at
-};
-const colSpec175 = {
-  fieldName: "deletionReason",
-  attributeName: "deletion_reason",
-  attribute: spec_settings.attributes.deletion_reason
-};
-function assertAllowed125(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
-const colSpec176 = {
+const colSpec166 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_agentConfig.attributes.id
 };
-const colSpec177 = {
+const colSpec167 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_agentConfig.attributes.organization_id
 };
-const colSpec178 = {
+const colSpec168 = {
   fieldName: "model",
   attributeName: "model",
   attribute: spec_agentConfig.attributes.model
 };
-const colSpec179 = {
+const colSpec169 = {
   fieldName: "enabled",
   attributeName: "enabled",
   attribute: spec_agentConfig.attributes.enabled
 };
-const colSpec180 = {
+const colSpec170 = {
   fieldName: "maxIterationsPerRequest",
   attributeName: "max_iterations_per_request",
   attribute: spec_agentConfig.attributes.max_iterations_per_request
 };
-const colSpec181 = {
+const colSpec171 = {
   fieldName: "requireApprovalForDestructive",
   attributeName: "require_approval_for_destructive",
   attribute: spec_agentConfig.attributes.require_approval_for_destructive
 };
-const colSpec182 = {
+const colSpec172 = {
   fieldName: "requireApprovalForCreate",
   attributeName: "require_approval_for_create",
   attribute: spec_agentConfig.attributes.require_approval_for_create
 };
-const colSpec183 = {
+const colSpec173 = {
   fieldName: "customInstructions",
   attributeName: "custom_instructions",
   attribute: spec_agentConfig.attributes.custom_instructions
 };
-const colSpec184 = {
+const colSpec174 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_agentConfig.attributes.created_at
 };
-const colSpec185 = {
+const colSpec175 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_agentConfig.attributes.updated_at
 };
-const colSpec186 = {
+const colSpec176 = {
   fieldName: "encryptedApiKey",
   attributeName: "encrypted_api_key",
   attribute: spec_agentConfig.attributes.encrypted_api_key
 };
-const colSpec187 = {
+const colSpec177 = {
   fieldName: "defaultPersonaId",
   attributeName: "default_persona_id",
   attribute: spec_agentConfig.attributes.default_persona_id
 };
-function assertAllowed126(value, mode) {
+function assertAllowed121(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -9804,10 +9456,6 @@ const planWrapper21 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_AgentMarketplaceListing = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_AgentMarketplaceListing, $nodeId);
-};
 const specFromArgs_AgentWebhook = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AgentWebhook, $nodeId);
@@ -10432,10 +10080,6 @@ const planWrapper33 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_AgentMarketplaceListing2 = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_AgentMarketplaceListing, $nodeId);
-};
 const specFromArgs_AgentWebhook2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AgentWebhook, $nodeId);
@@ -10699,9 +10343,6 @@ type Query implements Node {
   """Get a single \`UserPreference\`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
-  """Get a single \`AgentMarketplaceListing\`."""
-  agentMarketplaceListing(rowId: UUID!): AgentMarketplaceListing
-
   """Get a single \`AgentWebhook\`."""
   agentWebhook(rowId: UUID!): AgentWebhook
 
@@ -10825,16 +10466,6 @@ type Query implements Node {
     """
     id: ID!
   ): UserPreference
-
-  """
-  Reads a single \`AgentMarketplaceListing\` using its globally unique \`ID\`.
-  """
-  agentMarketplaceListingById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`AgentMarketplaceListing\`.
-    """
-    id: ID!
-  ): AgentMarketplaceListing
 
   """Reads a single \`AgentWebhook\` using its globally unique \`ID\`."""
   agentWebhookById(
@@ -11309,42 +10940,6 @@ type Query implements Node {
     """The method to use when ordering \`UserPreference\`."""
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
-
-  """
-  Reads and enables pagination through a set of \`AgentMarketplaceListing\`.
-  """
-  agentMarketplaceListings(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentMarketplaceListingCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentMarketplaceListingFilter
-
-    """The method to use when ordering \`AgentMarketplaceListing\`."""
-    orderBy: [AgentMarketplaceListingOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingConnection
 
   """Reads and enables pagination through a set of \`AgentWebhook\`."""
   agentWebhooks(
@@ -14911,12 +14506,6 @@ input AgentPersonaFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
-  """Filter by the object’s \`agentMarketplaceListingsByPersonaId\` relation."""
-  agentMarketplaceListingsByPersonaId: AgentPersonaToManyAgentMarketplaceListingFilter
-
-  """Some related \`agentMarketplaceListingsByPersonaId\` exist."""
-  agentMarketplaceListingsByPersonaIdExist: Boolean
-
   """Filter by the object’s \`agentSchedulesByPersonaId\` relation."""
   agentSchedulesByPersonaId: AgentPersonaToManyAgentScheduleFilter
 
@@ -14931,172 +14520,6 @@ input AgentPersonaFilter {
 
   """Negates the expression."""
   not: AgentPersonaFilter
-}
-
-"""
-A filter to be used against many \`AgentMarketplaceListing\` object types. All fields are combined with a logical ‘and.’
-"""
-input AgentPersonaToManyAgentMarketplaceListingFilter {
-  """
-  Every related \`AgentMarketplaceListing\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: AgentMarketplaceListingFilter
-
-  """
-  Some related \`AgentMarketplaceListing\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: AgentMarketplaceListingFilter
-
-  """
-  No related \`AgentMarketplaceListing\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: AgentMarketplaceListingFilter
-
-  """
-  Aggregates across related \`AgentMarketplaceListing\` match the filter criteria.
-  """
-  aggregates: AgentMarketplaceListingAggregatesFilter
-}
-
-"""
-A filter to be used against \`AgentMarketplaceListing\` object types. All fields are combined with a logical ‘and.’
-"""
-input AgentMarketplaceListingFilter {
-  """Filter by the object’s \`rowId\` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s \`personaId\` field."""
-  personaId: UUIDFilter
-
-  """Filter by the object’s \`organizationId\` field."""
-  organizationId: StringFilter
-
-  """Filter by the object’s \`title\` field."""
-  title: StringFilter
-
-  """Filter by the object’s \`description\` field."""
-  description: StringFilter
-
-  """Filter by the object’s \`category\` field."""
-  category: StringFilter
-
-  """Filter by the object’s \`installCount\` field."""
-  installCount: IntFilter
-
-  """Filter by the object’s \`publishedAt\` field."""
-  publishedAt: DatetimeFilter
-
-  """Filter by the object’s \`createdAt\` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s \`updatedAt\` field."""
-  updatedAt: DatetimeFilter
-
-  """Filter by the object’s \`persona\` relation."""
-  persona: AgentPersonaFilter
-
-  """Checks for all expressions in this list."""
-  and: [AgentMarketplaceListingFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [AgentMarketplaceListingFilter!]
-
-  """Negates the expression."""
-  not: AgentMarketplaceListingFilter
-}
-
-"""
-A filter to be used against aggregates of \`AgentMarketplaceListing\` object types.
-"""
-input AgentMarketplaceListingAggregatesFilter {
-  """
-  A filter that must pass for the relevant \`AgentMarketplaceListing\` object to be included within the aggregate.
-  """
-  filter: AgentMarketplaceListingFilter
-
-  """Sum aggregate over matching \`AgentMarketplaceListing\` objects."""
-  sum: AgentMarketplaceListingSumAggregateFilter
-
-  """
-  Distinct count aggregate over matching \`AgentMarketplaceListing\` objects.
-  """
-  distinctCount: AgentMarketplaceListingDistinctCountAggregateFilter
-
-  """Minimum aggregate over matching \`AgentMarketplaceListing\` objects."""
-  min: AgentMarketplaceListingMinAggregateFilter
-
-  """Maximum aggregate over matching \`AgentMarketplaceListing\` objects."""
-  max: AgentMarketplaceListingMaxAggregateFilter
-
-  """
-  Mean average aggregate over matching \`AgentMarketplaceListing\` objects.
-  """
-  average: AgentMarketplaceListingAverageAggregateFilter
-
-  """
-  Sample standard deviation aggregate over matching \`AgentMarketplaceListing\` objects.
-  """
-  stddevSample: AgentMarketplaceListingStddevSampleAggregateFilter
-
-  """
-  Population standard deviation aggregate over matching \`AgentMarketplaceListing\` objects.
-  """
-  stddevPopulation: AgentMarketplaceListingStddevPopulationAggregateFilter
-
-  """
-  Sample variance aggregate over matching \`AgentMarketplaceListing\` objects.
-  """
-  varianceSample: AgentMarketplaceListingVarianceSampleAggregateFilter
-
-  """
-  Population variance aggregate over matching \`AgentMarketplaceListing\` objects.
-  """
-  variancePopulation: AgentMarketplaceListingVariancePopulationAggregateFilter
-}
-
-input AgentMarketplaceListingSumAggregateFilter {
-  installCount: BigIntFilter
-}
-
-input AgentMarketplaceListingDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  personaId: BigIntFilter
-  organizationId: BigIntFilter
-  title: BigIntFilter
-  description: BigIntFilter
-  category: BigIntFilter
-  installCount: BigIntFilter
-  publishedAt: BigIntFilter
-  createdAt: BigIntFilter
-  updatedAt: BigIntFilter
-}
-
-input AgentMarketplaceListingMinAggregateFilter {
-  installCount: IntFilter
-}
-
-input AgentMarketplaceListingMaxAggregateFilter {
-  installCount: IntFilter
-}
-
-input AgentMarketplaceListingAverageAggregateFilter {
-  installCount: BigFloatFilter
-}
-
-input AgentMarketplaceListingStddevSampleAggregateFilter {
-  installCount: BigFloatFilter
-}
-
-input AgentMarketplaceListingStddevPopulationAggregateFilter {
-  installCount: BigFloatFilter
-}
-
-input AgentMarketplaceListingVarianceSampleAggregateFilter {
-  installCount: BigFloatFilter
-}
-
-input AgentMarketplaceListingVariancePopulationAggregateFilter {
-  installCount: BigFloatFilter
 }
 
 """
@@ -19484,42 +18907,6 @@ type AgentPersona implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
 
-  """
-  Reads and enables pagination through a set of \`AgentMarketplaceListing\`.
-  """
-  agentMarketplaceListingsByPersonaId(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentMarketplaceListingCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentMarketplaceListingFilter
-
-    """The method to use when ordering \`AgentMarketplaceListing\`."""
-    orderBy: [AgentMarketplaceListingOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingConnection!
-
   """Reads and enables pagination through a set of \`AgentSchedule\`."""
   agentSchedulesByPersonaId(
     """Only read the first \`n\` values of the set."""
@@ -19553,361 +18940,6 @@ type AgentPersona implements Node {
     """The method to use when ordering \`AgentSchedule\`."""
     orderBy: [AgentScheduleOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentScheduleConnection!
-}
-
-"""A connection to a list of \`AgentMarketplaceListing\` values."""
-type AgentMarketplaceListingConnection {
-  """A list of \`AgentMarketplaceListing\` objects."""
-  nodes: [AgentMarketplaceListing!]!
-
-  """
-  A list of edges which contains the \`AgentMarketplaceListing\` and cursor to aid in pagination.
-  """
-  edges: [AgentMarketplaceListingEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* \`AgentMarketplaceListing\` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: AgentMarketplaceListingAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping \`AgentMarketplaceListing\` for these aggregates.
-    """
-    groupBy: [AgentMarketplaceListingGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: AgentMarketplaceListingHavingInput
-  ): [AgentMarketplaceListingAggregates!]
-}
-
-type AgentMarketplaceListing implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  personaId: UUID!
-  organizationId: String!
-  title: String!
-  description: String
-  category: String!
-  installCount: Int!
-  publishedAt: Datetime!
-  createdAt: Datetime!
-  updatedAt: Datetime!
-
-  """
-  Reads a single \`AgentPersona\` that is related to this \`AgentMarketplaceListing\`.
-  """
-  persona: AgentPersona
-}
-
-"""A \`AgentMarketplaceListing\` edge in the connection."""
-type AgentMarketplaceListingEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The \`AgentMarketplaceListing\` at the end of the edge."""
-  node: AgentMarketplaceListing!
-}
-
-type AgentMarketplaceListingAggregates {
-  keys: [String]
-
-  """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: AgentMarketplaceListingSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: AgentMarketplaceListingDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: AgentMarketplaceListingMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: AgentMarketplaceListingMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: AgentMarketplaceListingAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: AgentMarketplaceListingStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: AgentMarketplaceListingStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: AgentMarketplaceListingVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: AgentMarketplaceListingVariancePopulationAggregates
-}
-
-type AgentMarketplaceListingSumAggregates {
-  """Sum of installCount across the matching connection"""
-  installCount: BigInt!
-}
-
-type AgentMarketplaceListingDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of personaId across the matching connection"""
-  personaId: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of title across the matching connection"""
-  title: BigInt
-
-  """Distinct count of description across the matching connection"""
-  description: BigInt
-
-  """Distinct count of category across the matching connection"""
-  category: BigInt
-
-  """Distinct count of installCount across the matching connection"""
-  installCount: BigInt
-
-  """Distinct count of publishedAt across the matching connection"""
-  publishedAt: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-type AgentMarketplaceListingMinAggregates {
-  """Minimum of installCount across the matching connection"""
-  installCount: Int
-}
-
-type AgentMarketplaceListingMaxAggregates {
-  """Maximum of installCount across the matching connection"""
-  installCount: Int
-}
-
-type AgentMarketplaceListingAverageAggregates {
-  """Mean average of installCount across the matching connection"""
-  installCount: BigFloat
-}
-
-type AgentMarketplaceListingStddevSampleAggregates {
-  """
-  Sample standard deviation of installCount across the matching connection
-  """
-  installCount: BigFloat
-}
-
-type AgentMarketplaceListingStddevPopulationAggregates {
-  """
-  Population standard deviation of installCount across the matching connection
-  """
-  installCount: BigFloat
-}
-
-type AgentMarketplaceListingVarianceSampleAggregates {
-  """Sample variance of installCount across the matching connection"""
-  installCount: BigFloat
-}
-
-type AgentMarketplaceListingVariancePopulationAggregates {
-  """Population variance of installCount across the matching connection"""
-  installCount: BigFloat
-}
-
-"""
-Grouping methods for \`AgentMarketplaceListing\` for usage during aggregation.
-"""
-enum AgentMarketplaceListingGroupBy {
-  PERSONA_ID
-  ORGANIZATION_ID
-  TITLE
-  DESCRIPTION
-  CATEGORY
-  INSTALL_COUNT
-  PUBLISHED_AT
-  PUBLISHED_AT_TRUNCATED_TO_HOUR
-  PUBLISHED_AT_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for \`AgentMarketplaceListing\` aggregates."""
-input AgentMarketplaceListingHavingInput {
-  AND: [AgentMarketplaceListingHavingInput!]
-  OR: [AgentMarketplaceListingHavingInput!]
-  sum: AgentMarketplaceListingHavingSumInput
-  distinctCount: AgentMarketplaceListingHavingDistinctCountInput
-  min: AgentMarketplaceListingHavingMinInput
-  max: AgentMarketplaceListingHavingMaxInput
-  average: AgentMarketplaceListingHavingAverageInput
-  stddevSample: AgentMarketplaceListingHavingStddevSampleInput
-  stddevPopulation: AgentMarketplaceListingHavingStddevPopulationInput
-  varianceSample: AgentMarketplaceListingHavingVarianceSampleInput
-  variancePopulation: AgentMarketplaceListingHavingVariancePopulationInput
-}
-
-input AgentMarketplaceListingHavingSumInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingDistinctCountInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingMinInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingMaxInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingAverageInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingStddevSampleInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingStddevPopulationInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingVarianceSampleInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingVariancePopulationInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against \`AgentMarketplaceListing\` object types. All
-fields are tested for equality and combined with a logical ‘and.’
-"""
-input AgentMarketplaceListingCondition {
-  """Checks for equality with the object’s \`rowId\` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s \`personaId\` field."""
-  personaId: UUID
-
-  """Checks for equality with the object’s \`organizationId\` field."""
-  organizationId: String
-
-  """Checks for equality with the object’s \`title\` field."""
-  title: String
-
-  """Checks for equality with the object’s \`description\` field."""
-  description: String
-
-  """Checks for equality with the object’s \`category\` field."""
-  category: String
-
-  """Checks for equality with the object’s \`installCount\` field."""
-  installCount: Int
-
-  """Checks for equality with the object’s \`publishedAt\` field."""
-  publishedAt: Datetime
-
-  """Checks for equality with the object’s \`createdAt\` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s \`updatedAt\` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering \`AgentMarketplaceListing\`."""
-enum AgentMarketplaceListingOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  PERSONA_ID_ASC
-  PERSONA_ID_DESC
-  ORGANIZATION_ID_ASC
-  ORGANIZATION_ID_DESC
-  TITLE_ASC
-  TITLE_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  CATEGORY_ASC
-  CATEGORY_DESC
-  INSTALL_COUNT_ASC
-  INSTALL_COUNT_DESC
-  PUBLISHED_AT_ASC
-  PUBLISHED_AT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 """
@@ -21324,44 +20356,6 @@ enum AgentPersonaOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_SUM_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_SUM_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PERSONA_ID_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PERSONA_ID_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_TITLE_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_TITLE_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_DESCRIPTION_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_DESCRIPTION_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CATEGORY_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CATEGORY_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PUBLISHED_AT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PUBLISHED_AT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CREATED_AT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CREATED_AT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_UPDATED_AT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_UPDATED_AT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MIN_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MIN_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MAX_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MAX_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_AVERAGE_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_AVERAGE_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_SAMPLE_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_SAMPLE_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_POPULATION_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_POPULATION_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_SAMPLE_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_SAMPLE_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_POPULATION_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_POPULATION_INSTALL_COUNT_DESC
   AGENT_SCHEDULES_BY_PERSONA_ID_COUNT_ASC
   AGENT_SCHEDULES_BY_PERSONA_ID_COUNT_DESC
   AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_ASC
@@ -22494,14 +21488,6 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
-  """Creates a single \`AgentMarketplaceListing\`."""
-  createAgentMarketplaceListing(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAgentMarketplaceListingInput!
-  ): CreateAgentMarketplaceListingPayload
-
   """Creates a single \`AgentWebhook\`."""
   createAgentWebhook(
     """
@@ -22775,26 +21761,6 @@ type Mutation {
     """
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
-
-  """
-  Updates a single \`AgentMarketplaceListing\` using its globally unique id and a patch.
-  """
-  updateAgentMarketplaceListingById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentMarketplaceListingByIdInput!
-  ): UpdateAgentMarketplaceListingPayload
-
-  """
-  Updates a single \`AgentMarketplaceListing\` using a unique key and a patch.
-  """
-  updateAgentMarketplaceListing(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentMarketplaceListingInput!
-  ): UpdateAgentMarketplaceListingPayload
 
   """
   Updates a single \`AgentWebhook\` using its globally unique id and a patch.
@@ -23143,24 +22109,6 @@ type Mutation {
     """
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
-
-  """
-  Deletes a single \`AgentMarketplaceListing\` using its globally unique id.
-  """
-  deleteAgentMarketplaceListingById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentMarketplaceListingByIdInput!
-  ): DeleteAgentMarketplaceListingPayload
-
-  """Deletes a single \`AgentMarketplaceListing\` using a unique key."""
-  deleteAgentMarketplaceListing(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentMarketplaceListingInput!
-  ): DeleteAgentMarketplaceListingPayload
 
   """Deletes a single \`AgentWebhook\` using its globally unique id."""
   deleteAgentWebhookById(
@@ -23851,55 +22799,6 @@ input UserPreferenceInput {
   updatedAt: Datetime
   viewMode: String
   color: String
-}
-
-"""The output of our create \`AgentMarketplaceListing\` mutation."""
-type CreateAgentMarketplaceListingPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`AgentMarketplaceListing\` that was created by this mutation."""
-  agentMarketplaceListing: AgentMarketplaceListing
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`AgentMarketplaceListing\`. May be used by Relay 1."""
-  agentMarketplaceListingEdge(
-    """The method to use when ordering \`AgentMarketplaceListing\`."""
-    orderBy: [AgentMarketplaceListingOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingEdge
-}
-
-"""All input for the create \`AgentMarketplaceListing\` mutation."""
-input CreateAgentMarketplaceListingInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`AgentMarketplaceListing\` to be created by this mutation."""
-  agentMarketplaceListing: AgentMarketplaceListingInput!
-}
-
-"""An input for mutations affecting \`AgentMarketplaceListing\`"""
-input AgentMarketplaceListingInput {
-  rowId: UUID
-  personaId: UUID!
-  organizationId: String!
-  title: String!
-  description: String
-  category: String!
-  installCount: Int
-  publishedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
 }
 
 """The output of our create \`AgentWebhook\` mutation."""
@@ -25190,79 +24089,6 @@ input UpdateUserPreferenceInput {
   patch: UserPreferencePatch!
 }
 
-"""The output of our update \`AgentMarketplaceListing\` mutation."""
-type UpdateAgentMarketplaceListingPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`AgentMarketplaceListing\` that was updated by this mutation."""
-  agentMarketplaceListing: AgentMarketplaceListing
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`AgentMarketplaceListing\`. May be used by Relay 1."""
-  agentMarketplaceListingEdge(
-    """The method to use when ordering \`AgentMarketplaceListing\`."""
-    orderBy: [AgentMarketplaceListingOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingEdge
-}
-
-"""All input for the \`updateAgentMarketplaceListingById\` mutation."""
-input UpdateAgentMarketplaceListingByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`AgentMarketplaceListing\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`AgentMarketplaceListing\` being updated.
-  """
-  patch: AgentMarketplaceListingPatch!
-}
-
-"""
-Represents an update to a \`AgentMarketplaceListing\`. Fields that are set will be updated.
-"""
-input AgentMarketplaceListingPatch {
-  rowId: UUID
-  personaId: UUID
-  organizationId: String
-  title: String
-  description: String
-  category: String
-  installCount: Int
-  publishedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the \`updateAgentMarketplaceListing\` mutation."""
-input UpdateAgentMarketplaceListingInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`AgentMarketplaceListing\` being updated.
-  """
-  patch: AgentMarketplaceListingPatch!
-}
-
 """The output of our update \`AgentWebhook\` mutation."""
 type UpdateAgentWebhookPayload {
   """
@@ -26511,54 +25337,6 @@ input DeleteUserPreferenceInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`AgentMarketplaceListing\` mutation."""
-type DeleteAgentMarketplaceListingPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`AgentMarketplaceListing\` that was deleted by this mutation."""
-  agentMarketplaceListing: AgentMarketplaceListing
-  deletedAgentMarketplaceListingId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`AgentMarketplaceListing\`. May be used by Relay 1."""
-  agentMarketplaceListingEdge(
-    """The method to use when ordering \`AgentMarketplaceListing\`."""
-    orderBy: [AgentMarketplaceListingOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingEdge
-}
-
-"""All input for the \`deleteAgentMarketplaceListingById\` mutation."""
-input DeleteAgentMarketplaceListingByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`AgentMarketplaceListing\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteAgentMarketplaceListing\` mutation."""
-input DeleteAgentMarketplaceListingInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`AgentWebhook\` mutation."""
 type DeleteAgentWebhookPayload {
   """
@@ -27031,7 +25809,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed21(value, "object");
+              assertAllowed20(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -27099,57 +25877,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed20(value, "object");
-              if (value == null) return;
-              const condition = new PgCondition(queryBuilder);
-              return condition;
-            });
-          },
-          orderBy(parent, $connection, value) {
-            const $select = $connection.getSubplan();
-            value.apply($select);
-          }
-        }
-      },
-      agentMarketplaceListing(_$root, {
-        $rowId
-      }) {
-        return resource_agent_marketplace_listingPgResource.get({
-          id: $rowId
-        });
-      },
-      agentMarketplaceListingById(_$parent, args) {
-        const $nodeId = args.getRaw("id");
-        return nodeFetcher_AgentMarketplaceListing($nodeId);
-      },
-      agentMarketplaceListings: {
-        plan() {
-          return connection(resource_agent_marketplace_listingPgResource.find());
-        },
-        args: {
-          first(_, $connection, arg) {
-            $connection.setFirst(arg.getRaw());
-          },
-          last(_, $connection, val) {
-            $connection.setLast(val.getRaw());
-          },
-          offset(_, $connection, val) {
-            $connection.setOffset(val.getRaw());
-          },
-          before(_, $connection, val) {
-            $connection.setBefore(val.getRaw());
-          },
-          after(_, $connection, val) {
-            $connection.setAfter(val.getRaw());
-          },
-          condition(_condition, $connection, arg) {
-            const $select = $connection.getSubplan();
-            arg.apply($select, qbWhereBuilder);
-          },
-          filter(_, $connection, fieldArg) {
-            const $pgSelect = $connection.getSubplan();
-            fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed13(value, "object");
+              assertAllowed19(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -27249,7 +25977,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed15(value, "object");
+              assertAllowed14(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -27299,7 +26027,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed16(value, "object");
+              assertAllowed15(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -27349,7 +26077,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed14(value, "object");
+              assertAllowed13(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -27840,7 +26568,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed18(value, "object");
+              assertAllowed17(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -27900,7 +26628,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed17(value, "object");
+              assertAllowed16(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -28020,7 +26748,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed19(value, "object");
+              assertAllowed18(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -28104,7 +26832,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed22(value, "object");
+              assertAllowed21(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -28236,20 +26964,6 @@ export const objects = {
       createAgentConfig: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_agent_configPgResource, Object.create(null));
-          args.apply($insert);
-          return object({
-            result: $insert
-          });
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      createAgentMarketplaceListing: {
-        plan(_, args) {
-          const $insert = pgInsertSingle(resource_agent_marketplace_listingPgResource, Object.create(null));
           args.apply($insert);
           return object({
             result: $insert
@@ -28697,36 +27411,6 @@ ${String(oldPlan11)}`);
       deleteAgentConfigById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_agent_configPgResource, specFromArgs_AgentConfig2(args));
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      deleteAgentMarketplaceListing: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(resource_agent_marketplace_listingPgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      deleteAgentMarketplaceListingById: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(resource_agent_marketplace_listingPgResource, specFromArgs_AgentMarketplaceListing2(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -29457,36 +28141,6 @@ ${String(oldPlan33)}`);
       updateAgentConfigById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_agent_configPgResource, specFromArgs_AgentConfig(args));
-          args.apply($update);
-          return object({
-            result: $update
-          });
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      updateAgentMarketplaceListing: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(resource_agent_marketplace_listingPgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($update);
-          return object({
-            result: $update
-          });
-        },
-        args: {
-          input(_, $object) {
-            return $object;
-          }
-        }
-      },
-      updateAgentMarketplaceListingById: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(resource_agent_marketplace_listingPgResource, specFromArgs_AgentMarketplaceListing(args));
           args.apply($update);
           return object({
             result: $update
@@ -30588,281 +29242,9 @@ ${String(oldPlan21)}`);
       }
     }
   },
-  AgentMarketplaceListing: {
-    assertStep: assertPgClassSingleStep,
-    plans: {
-      createdAt($record) {
-        return $record.get("created_at");
-      },
-      id($parent) {
-        const specifier = nodeIdHandler_AgentMarketplaceListing.plan($parent);
-        return lambda(specifier, nodeIdCodecs[nodeIdHandler_AgentMarketplaceListing.codec.name].encode);
-      },
-      installCount($record) {
-        return $record.get("install_count");
-      },
-      organizationId($record) {
-        return $record.get("organization_id");
-      },
-      persona($record) {
-        return resource_agent_personaPgResource.get({
-          id: $record.get("persona_id")
-        });
-      },
-      personaId($record) {
-        return $record.get("persona_id");
-      },
-      publishedAt($record) {
-        return $record.get("published_at");
-      },
-      rowId($record) {
-        return $record.get("id");
-      },
-      updatedAt($record) {
-        return $record.get("updated_at");
-      }
-    },
-    planType($specifier) {
-      const spec = Object.create(null);
-      for (const pkCol of agent_marketplace_listingUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
-      return resource_agent_marketplace_listingPgResource.get(spec);
-    }
-  },
-  AgentMarketplaceListingAggregates: {
-    assertStep: assertPgClassSingleStep,
-    plans: {
-      average($pgSelectSingle) {
-        return $pgSelectSingle;
-      },
-      distinctCount($pgSelectSingle) {
-        return $pgSelectSingle;
-      },
-      keys($pgSelectSingle) {
-        const $groupDetails = $pgSelectSingle.getClassStep().getGroupDetails();
-        return lambda([$groupDetails, $pgSelectSingle], ([groupDetails, item]) => {
-          if (groupDetails.indicies.length === 0 || item == null) return null;else return groupDetails.indicies.map(({
-            index
-          }) => item[index]);
-        });
-      },
-      max($pgSelectSingle) {
-        return $pgSelectSingle;
-      },
-      min($pgSelectSingle) {
-        return $pgSelectSingle;
-      },
-      stddevPopulation($pgSelectSingle) {
-        return $pgSelectSingle;
-      },
-      stddevSample($pgSelectSingle) {
-        return $pgSelectSingle;
-      },
-      sum($pgSelectSingle) {
-        return $pgSelectSingle;
-      },
-      variancePopulation($pgSelectSingle) {
-        return $pgSelectSingle;
-      },
-      varianceSample($pgSelectSingle) {
-        return $pgSelectSingle;
-      }
-    }
-  },
-  AgentMarketplaceListingAverageAggregates: {
-    plans: {
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec5.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      }
-    }
-  },
-  AgentMarketplaceListingConnection: {
-    assertStep: ConnectionStep,
-    plans: {
-      aggregates($connection) {
-        return $connection.cloneSubplanWithoutPagination("aggregate").single();
-      },
-      groupedAggregates: {
-        plan($connection) {
-          return $connection.cloneSubplanWithoutPagination("aggregate");
-        },
-        args: {
-          groupBy(_$parent, $pgSelect, input) {
-            return input.apply($pgSelect);
-          },
-          having(_$parent, $pgSelect, input) {
-            return input.apply($pgSelect, queryBuilder => queryBuilder.havingBuilder());
-          }
-        }
-      },
-      totalCount($connection) {
-        return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
-      }
-    }
-  },
-  AgentMarketplaceListingDistinctCountAggregates: {
-    plans: {
-      category($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("category")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      createdAt($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      description($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("description")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      organizationId($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      personaId($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("persona_id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      publishedAt($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("published_at")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      rowId($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      title($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("title")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      updatedAt($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("updated_at")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      }
-    }
-  },
-  AgentMarketplaceListingMaxAggregates: {
-    plans: {
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec4.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.int);
-      }
-    }
-  },
-  AgentMarketplaceListingMinAggregates: {
-    plans: {
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec3.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.int);
-      }
-    }
-  },
-  AgentMarketplaceListingStddevPopulationAggregates: {
-    plans: {
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec7.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      }
-    }
-  },
-  AgentMarketplaceListingStddevSampleAggregates: {
-    plans: {
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec6.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      }
-    }
-  },
-  AgentMarketplaceListingSumAggregates: {
-    plans: {
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      }
-    }
-  },
-  AgentMarketplaceListingVariancePopulationAggregates: {
-    plans: {
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec9.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      }
-    }
-  },
-  AgentMarketplaceListingVarianceSampleAggregates: {
-    plans: {
-      installCount($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("install_count")}`,
-          sqlAggregate = spec8.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      }
-    }
-  },
   AgentPersona: {
     assertStep: assertPgClassSingleStep,
     plans: {
-      agentMarketplaceListingsByPersonaId: {
-        plan($record) {
-          const $records = resource_agent_marketplace_listingPgResource.find({
-            persona_id: $record.get("id")
-          });
-          return connection($records);
-        },
-        args: {
-          first(_, $connection, arg) {
-            $connection.setFirst(arg.getRaw());
-          },
-          last(_, $connection, val) {
-            $connection.setLast(val.getRaw());
-          },
-          offset(_, $connection, val) {
-            $connection.setOffset(val.getRaw());
-          },
-          before(_, $connection, val) {
-            $connection.setBefore(val.getRaw());
-          },
-          after(_, $connection, val) {
-            $connection.setAfter(val.getRaw());
-          },
-          condition(_condition, $connection, arg) {
-            const $select = $connection.getSubplan();
-            arg.apply($select, qbWhereBuilder);
-          },
-          filter(_, $connection, fieldArg) {
-            const $pgSelect = $connection.getSubplan();
-            fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed122(value, "object");
-              if (value == null) return;
-              const condition = new PgCondition(queryBuilder);
-              return condition;
-            });
-          },
-          orderBy(parent, $connection, value) {
-            const $select = $connection.getSubplan();
-            value.apply($select);
-          }
-        }
-      },
       agentSchedulesByPersonaId: {
         plan($record) {
           const $records = resource_agent_schedulePgResource.find({
@@ -30893,7 +29275,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed123(value, "object");
+              assertAllowed118(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -31208,7 +29590,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed120(value, "object");
+              assertAllowed116(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -31804,7 +30186,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed107(value, "object");
+              assertAllowed103(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -32026,23 +30408,6 @@ ${String(oldPlan21)}`);
       },
       agentConfigEdge($mutation, fieldArgs) {
         return pgMutationPayloadEdge(resource_agent_configPgResource, agent_configUniques[0].attributes, $mutation, fieldArgs);
-      },
-      clientMutationId($mutation) {
-        return $mutation.getStepForKey("result").getMeta("clientMutationId");
-      },
-      query() {
-        return rootValue();
-      }
-    }
-  },
-  CreateAgentMarketplaceListingPayload: {
-    assertStep: assertExecutableStep,
-    plans: {
-      agentMarketplaceListing($object) {
-        return $object.get("result");
-      },
-      agentMarketplaceListingEdge($mutation, fieldArgs) {
-        return pgMutationPayloadEdge(resource_agent_marketplace_listingPgResource, agent_marketplace_listingUniques[0].attributes, $mutation, fieldArgs);
       },
       clientMutationId($mutation) {
         return $mutation.getStepForKey("result").getMeta("clientMutationId");
@@ -32412,28 +30777,6 @@ ${String(oldPlan21)}`);
       deletedAgentConfigId($object) {
         const $record = $object.getStepForKey("result"),
           specifier = nodeIdHandler_AgentConfig.plan($record);
-        return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
-      },
-      query() {
-        return rootValue();
-      }
-    }
-  },
-  DeleteAgentMarketplaceListingPayload: {
-    assertStep: ObjectStep,
-    plans: {
-      agentMarketplaceListing($object) {
-        return $object.get("result");
-      },
-      agentMarketplaceListingEdge($mutation, fieldArgs) {
-        return pgMutationPayloadEdge(resource_agent_marketplace_listingPgResource, agent_marketplace_listingUniques[0].attributes, $mutation, fieldArgs);
-      },
-      clientMutationId($mutation) {
-        return $mutation.getStepForKey("result").getMeta("clientMutationId");
-      },
-      deletedAgentMarketplaceListingId($object) {
-        const $record = $object.getStepForKey("result"),
-          specifier = nodeIdHandler_AgentMarketplaceListing.plan($record);
         return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
       },
       query() {
@@ -33026,7 +31369,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed121(value, "object");
+              assertAllowed117(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33176,7 +31519,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed119(value, "object");
+              assertAllowed115(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33325,7 +31668,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed28(value, "object");
+              assertAllowed27(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33367,7 +31710,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed30(value, "object");
+              assertAllowed29(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33409,7 +31752,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed29(value, "object");
+              assertAllowed28(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33451,7 +31794,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed31(value, "object");
+              assertAllowed30(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33496,7 +31839,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed23(value, "object");
+              assertAllowed22(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33548,7 +31891,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed25(value, "object");
+              assertAllowed24(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33604,7 +31947,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed27(value, "object");
+              assertAllowed26(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33649,7 +31992,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed24(value, "object");
+              assertAllowed23(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33694,7 +32037,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed26(value, "object");
+              assertAllowed25(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -33810,7 +32153,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed32(value, "object");
+              assertAllowed31(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -34141,7 +32484,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed124(value, "object");
+              assertAllowed119(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -34598,7 +32941,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed108(value, "object");
+              assertAllowed104(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -34669,7 +33012,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed109(value, "object");
+              assertAllowed105(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -34722,7 +33065,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed110(value, "object");
+              assertAllowed106(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -35118,23 +33461,6 @@ ${String(oldPlan21)}`);
       }
     }
   },
-  UpdateAgentMarketplaceListingPayload: {
-    assertStep: ObjectStep,
-    plans: {
-      agentMarketplaceListing($object) {
-        return $object.get("result");
-      },
-      agentMarketplaceListingEdge($mutation, fieldArgs) {
-        return pgMutationPayloadEdge(resource_agent_marketplace_listingPgResource, agent_marketplace_listingUniques[0].attributes, $mutation, fieldArgs);
-      },
-      clientMutationId($mutation) {
-        return $mutation.getStepForKey("result").getMeta("clientMutationId");
-      },
-      query() {
-        return rootValue();
-      }
-    }
-  },
   UpdateAgentPersonaPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -35491,7 +33817,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed117(value, "object");
+              assertAllowed113(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -35533,7 +33859,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed118(value, "object");
+              assertAllowed114(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -35575,7 +33901,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed111(value, "object");
+              assertAllowed107(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -35617,7 +33943,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed112(value, "object");
+              assertAllowed108(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -35659,7 +33985,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed113(value, "object");
+              assertAllowed109(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -35707,7 +34033,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed115(value, "object");
+              assertAllowed111(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -35762,7 +34088,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed116(value, "object");
+              assertAllowed112(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -35804,7 +34130,7 @@ ${String(oldPlan21)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed114(value, "object");
+              assertAllowed110(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -36435,7 +34761,7 @@ export const inputObjects = {
   AgentActivityFilter: {
     plans: {
       and($where, value) {
-        assertAllowed67(value, "list");
+        assertAllowed66(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -36464,12 +34790,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed67(value, "object");
+        assertAllowed66(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed67(value, "list");
+        assertAllowed66(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -36483,7 +34809,7 @@ export const inputObjects = {
         return condition;
       },
       project($where, value) {
-        assertAllowed66(value, "object");
+        assertAllowed65(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -36520,7 +34846,7 @@ export const inputObjects = {
         return condition;
       },
       session($where, value) {
-        assertAllowed66(value, "object");
+        assertAllowed65(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentSessionIdentifier,
@@ -36557,7 +34883,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed66(value, "object");
+        assertAllowed65(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -37002,7 +35328,7 @@ export const inputObjects = {
   AgentConfigFilter: {
     plans: {
       and($where, value) {
-        assertAllowed126(value, "list");
+        assertAllowed121(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -37011,7 +35337,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec184;
+        condition.extensions.pgFilterAttribute = colSpec174;
         return condition;
       },
       customInstructions(queryBuilder, value) {
@@ -37019,7 +35345,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec183;
+        condition.extensions.pgFilterAttribute = colSpec173;
         return condition;
       },
       defaultPersonaId(queryBuilder, value) {
@@ -37027,7 +35353,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec187;
+        condition.extensions.pgFilterAttribute = colSpec177;
         return condition;
       },
       enabled(queryBuilder, value) {
@@ -37035,7 +35361,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec179;
+        condition.extensions.pgFilterAttribute = colSpec169;
         return condition;
       },
       encryptedApiKey(queryBuilder, value) {
@@ -37043,7 +35369,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec186;
+        condition.extensions.pgFilterAttribute = colSpec176;
         return condition;
       },
       maxIterationsPerRequest(queryBuilder, value) {
@@ -37051,7 +35377,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec180;
+        condition.extensions.pgFilterAttribute = colSpec170;
         return condition;
       },
       model(queryBuilder, value) {
@@ -37059,16 +35385,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec178;
+        condition.extensions.pgFilterAttribute = colSpec168;
         return condition;
       },
       not($where, value) {
-        assertAllowed126(value, "object");
+        assertAllowed121(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed126(value, "list");
+        assertAllowed121(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -37078,7 +35404,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec177;
+        condition.extensions.pgFilterAttribute = colSpec167;
         return condition;
       },
       requireApprovalForCreate(queryBuilder, value) {
@@ -37086,7 +35412,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec182;
+        condition.extensions.pgFilterAttribute = colSpec172;
         return condition;
       },
       requireApprovalForDestructive(queryBuilder, value) {
@@ -37094,7 +35420,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec181;
+        condition.extensions.pgFilterAttribute = colSpec171;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -37102,7 +35428,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec176;
+        condition.extensions.pgFilterAttribute = colSpec166;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -37110,7 +35436,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec185;
+        condition.extensions.pgFilterAttribute = colSpec175;
         return condition;
       }
     }
@@ -37477,838 +35803,6 @@ export const inputObjects = {
       }
     }
   },
-  AgentMarketplaceListingAggregatesFilter: {
-    plans: {
-      average($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec5);
-      },
-      distinctCount($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec2);
-      },
-      filter($subquery, input) {
-        if (input == null) return;
-        return new PgCondition($subquery, !1, "AND");
-      },
-      max($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec4);
-      },
-      min($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec3);
-      },
-      stddevPopulation($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec7);
-      },
-      stddevSample($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec6);
-      },
-      sum($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec);
-      },
-      variancePopulation($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec9);
-      },
-      varianceSample($subquery, input) {
-        if (input == null) return;
-        return $subquery.forAggregate(spec8);
-      }
-    }
-  },
-  AgentMarketplaceListingAverageAggregateFilter: {
-    plans: {
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec5.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      }
-    }
-  },
-  AgentMarketplaceListingCondition: {
-    plans: {
-      category($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "category",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
-          }
-        });
-      },
-      createdAt($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "created_at",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
-          }
-        });
-      },
-      description($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "description",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
-          }
-        });
-      },
-      installCount($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "install_count",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.int)}`;
-          }
-        });
-      },
-      organizationId($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "organization_id",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
-          }
-        });
-      },
-      personaId($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "persona_id",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
-          }
-        });
-      },
-      publishedAt($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "published_at",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
-          }
-        });
-      },
-      rowId($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "id",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
-          }
-        });
-      },
-      title($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "title",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
-          }
-        });
-      },
-      updatedAt($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "updated_at",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
-          }
-        });
-      }
-    }
-  },
-  AgentMarketplaceListingDistinctCountAggregateFilter: {
-    plans: {
-      category($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("category")}`, spec_agentMarketplaceListing.attributes.category.codec)
-        };
-        return $col;
-      },
-      createdAt($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_agentMarketplaceListing.attributes.created_at.codec)
-        };
-        return $col;
-      },
-      description($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("description")}`, spec_agentMarketplaceListing.attributes.description.codec)
-        };
-        return $col;
-      },
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      },
-      organizationId($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("organization_id")}`, spec_agentMarketplaceListing.attributes.organization_id.codec)
-        };
-        return $col;
-      },
-      personaId($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("persona_id")}`, spec_agentMarketplaceListing.attributes.persona_id.codec)
-        };
-        return $col;
-      },
-      publishedAt($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("published_at")}`, spec_agentMarketplaceListing.attributes.published_at.codec)
-        };
-        return $col;
-      },
-      rowId($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_agentMarketplaceListing.attributes.id.codec)
-        };
-        return $col;
-      },
-      title($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("title")}`, spec_agentMarketplaceListing.attributes.title.codec)
-        };
-        return $col;
-      },
-      updatedAt($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("updated_at")}`, spec_agentMarketplaceListing.attributes.updated_at.codec)
-        };
-        return $col;
-      }
-    }
-  },
-  AgentMarketplaceListingFilter: {
-    plans: {
-      and($where, value) {
-        assertAllowed99(value, "list");
-        if (value == null) return;
-        return $where.andPlan();
-      },
-      category(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec144;
-        return condition;
-      },
-      createdAt(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec147;
-        return condition;
-      },
-      description(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec143;
-        return condition;
-      },
-      installCount(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec145;
-        return condition;
-      },
-      not($where, value) {
-        assertAllowed99(value, "object");
-        if (value == null) return;
-        return $where.notPlan().andPlan();
-      },
-      or($where, value) {
-        assertAllowed99(value, "list");
-        if (value == null) return;
-        const $or = $where.orPlan();
-        return () => $or.andPlan();
-      },
-      organizationId(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec141;
-        return condition;
-      },
-      persona($where, value) {
-        assertAllowed98(value, "object");
-        if (value == null) return;
-        const $subQuery = $where.existsPlan({
-          tableExpression: agentPersonaIdentifier,
-          alias: resource_agent_personaPgResource.name
-        });
-        registryConfig.pgRelations.agentMarketplaceListing.agentPersonaByMyPersonaId.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = registryConfig.pgRelations.agentMarketplaceListing.agentPersonaByMyPersonaId.remoteAttributes[i];
-          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-        });
-        return $subQuery;
-      },
-      personaId(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec140;
-        return condition;
-      },
-      publishedAt(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec146;
-        return condition;
-      },
-      rowId(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec139;
-        return condition;
-      },
-      title(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec142;
-        return condition;
-      },
-      updatedAt(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec148;
-        return condition;
-      }
-    }
-  },
-  AgentMarketplaceListingHavingAverageInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingHavingDistinctCountInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingHavingInput: {
-    plans: {
-      AND($where) {
-        return $where;
-      },
-      average($having) {
-        return $having;
-      },
-      distinctCount($having) {
-        return $having;
-      },
-      max($having) {
-        return $having;
-      },
-      min($having) {
-        return $having;
-      },
-      OR($where) {
-        return new PgOrFilter($where);
-      },
-      stddevPopulation($having) {
-        return $having;
-      },
-      stddevSample($having) {
-        return $having;
-      },
-      sum($having) {
-        return $having;
-      },
-      variancePopulation($having) {
-        return $having;
-      },
-      varianceSample($having) {
-        return $having;
-      }
-    }
-  },
-  AgentMarketplaceListingHavingMaxInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingHavingMinInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingHavingStddevPopulationInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingHavingStddevSampleInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingHavingSumInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingHavingVariancePopulationInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingHavingVarianceSampleInput: {
-    plans: {
-      createdAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
-          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.created_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      installCount($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("install_count")}`,
-          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.install_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      publishedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("published_at")}`,
-          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.published_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      updatedAt($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
-          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_agentMarketplaceListing.attributes.updated_at.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      }
-    }
-  },
-  AgentMarketplaceListingInput: {
-    baked: createObjectAndApplyChildren,
-    plans: {
-      category(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("category", bakedInputRuntime(schema, field.type, val));
-      },
-      createdAt(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
-      },
-      description(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("description", bakedInputRuntime(schema, field.type, val));
-      },
-      installCount(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("install_count", bakedInputRuntime(schema, field.type, val));
-      },
-      organizationId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
-      },
-      personaId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("persona_id", bakedInputRuntime(schema, field.type, val));
-      },
-      publishedAt(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("published_at", bakedInputRuntime(schema, field.type, val));
-      },
-      rowId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("id", bakedInputRuntime(schema, field.type, val));
-      },
-      title(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("title", bakedInputRuntime(schema, field.type, val));
-      },
-      updatedAt(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
-      }
-    }
-  },
-  AgentMarketplaceListingMaxAggregateFilter: {
-    plans: {
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.int,
-          expression: spec4.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      }
-    }
-  },
-  AgentMarketplaceListingMinAggregateFilter: {
-    plans: {
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.int,
-          expression: spec3.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      }
-    }
-  },
-  AgentMarketplaceListingPatch: {
-    baked: createObjectAndApplyChildren,
-    plans: {
-      category(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("category", bakedInputRuntime(schema, field.type, val));
-      },
-      createdAt(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
-      },
-      description(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("description", bakedInputRuntime(schema, field.type, val));
-      },
-      installCount(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("install_count", bakedInputRuntime(schema, field.type, val));
-      },
-      organizationId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
-      },
-      personaId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("persona_id", bakedInputRuntime(schema, field.type, val));
-      },
-      publishedAt(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("published_at", bakedInputRuntime(schema, field.type, val));
-      },
-      rowId(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("id", bakedInputRuntime(schema, field.type, val));
-      },
-      title(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("title", bakedInputRuntime(schema, field.type, val));
-      },
-      updatedAt(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("updated_at", bakedInputRuntime(schema, field.type, val));
-      }
-    }
-  },
-  AgentMarketplaceListingStddevPopulationAggregateFilter: {
-    plans: {
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec7.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      }
-    }
-  },
-  AgentMarketplaceListingStddevSampleAggregateFilter: {
-    plans: {
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec6.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      }
-    }
-  },
-  AgentMarketplaceListingSumAggregateFilter: {
-    plans: {
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      }
-    }
-  },
-  AgentMarketplaceListingVariancePopulationAggregateFilter: {
-    plans: {
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec9.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      }
-    }
-  },
-  AgentMarketplaceListingVarianceSampleAggregateFilter: {
-    plans: {
-      installCount($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec8.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)
-        };
-        return $col;
-      }
-    }
-  },
   AgentPersonaCondition: {
     plans: {
       createdAt($condition, val) {
@@ -38396,32 +35890,8 @@ export const inputObjects = {
   },
   AgentPersonaFilter: {
     plans: {
-      agentMarketplaceListingsByPersonaId($where, value) {
-        assertAllowed95(value, "object");
-        const $rel = $where.andPlan();
-        $rel.extensions.pgFilterRelation = {
-          tableExpression: agentMarketplaceListingIdentifier,
-          alias: resource_agent_marketplace_listingPgResource.name,
-          localAttributes: registryConfig.pgRelations.agentPersona.agentMarketplaceListingsByTheirPersonaId.localAttributes,
-          remoteAttributes: registryConfig.pgRelations.agentPersona.agentMarketplaceListingsByTheirPersonaId.remoteAttributes
-        };
-        return $rel;
-      },
-      agentMarketplaceListingsByPersonaIdExist($where, value) {
-        assertAllowed95(value, "scalar");
-        if (value == null) return;
-        const $subQuery = $where.existsPlan({
-          tableExpression: agentMarketplaceListingIdentifier,
-          alias: resource_agent_marketplace_listingPgResource.name,
-          equals: value
-        });
-        registryConfig.pgRelations.agentPersona.agentMarketplaceListingsByTheirPersonaId.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = registryConfig.pgRelations.agentPersona.agentMarketplaceListingsByTheirPersonaId.remoteAttributes[i];
-          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-        });
-      },
       agentSchedulesByPersonaId($where, value) {
-        assertAllowed95(value, "object");
+        assertAllowed94(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: agentScheduleIdentifier,
@@ -38432,7 +35902,7 @@ export const inputObjects = {
         return $rel;
       },
       agentSchedulesByPersonaIdExist($where, value) {
-        assertAllowed95(value, "scalar");
+        assertAllowed94(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentScheduleIdentifier,
@@ -38445,7 +35915,7 @@ export const inputObjects = {
         });
       },
       and($where, value) {
-        assertAllowed96(value, "list");
+        assertAllowed95(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -38490,12 +35960,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed96(value, "object");
+        assertAllowed95(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed96(value, "list");
+        assertAllowed95(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -38815,90 +36285,6 @@ export const inputObjects = {
       }
     }
   },
-  AgentPersonaToManyAgentMarketplaceListingFilter: {
-    plans: {
-      aggregates($where, input) {
-        if (input == null) return;
-        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
-        const {
-            localAttributes,
-            remoteAttributes,
-            tableExpression,
-            alias
-          } = $where.extensions.pgFilterRelation,
-          $subQuery = new PgAggregateCondition($where, {
-            sql,
-            tableExpression,
-            alias
-          }, pgWhereConditionSpecListToSQL);
-        localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = remoteAttributes[i];
-          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-        });
-        return $subQuery;
-      },
-      every($where, value) {
-        assertAllowed97(value, "object");
-        if (value == null) return;
-        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
-        const {
-            localAttributes,
-            remoteAttributes,
-            tableExpression,
-            alias
-          } = $where.extensions.pgFilterRelation,
-          $subQuery = $where.notPlan().existsPlan({
-            tableExpression,
-            alias
-          });
-        localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = remoteAttributes[i];
-          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-        });
-        return $subQuery.notPlan().andPlan();
-      },
-      none($where, value) {
-        assertAllowed97(value, "object");
-        if (value == null) return;
-        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
-        const {
-            localAttributes,
-            remoteAttributes,
-            tableExpression,
-            alias
-          } = $where.extensions.pgFilterRelation,
-          $subQuery = $where.notPlan().existsPlan({
-            tableExpression,
-            alias
-          });
-        localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = remoteAttributes[i];
-          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-        });
-        return $subQuery;
-      },
-      some($where, value) {
-        assertAllowed97(value, "object");
-        if (value == null) return;
-        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
-        const {
-            localAttributes,
-            remoteAttributes,
-            tableExpression,
-            alias
-          } = $where.extensions.pgFilterRelation,
-          $subQuery = $where.existsPlan({
-            tableExpression,
-            alias
-          });
-        localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = remoteAttributes[i];
-          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-        });
-        return $subQuery;
-      }
-    }
-  },
   AgentPersonaToManyAgentScheduleFilter: {
     plans: {
       aggregates($where, input) {
@@ -38922,7 +36308,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed100(value, "object");
+        assertAllowed96(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38942,7 +36328,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed100(value, "object");
+        assertAllowed96(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38962,7 +36348,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed100(value, "object");
+        assertAllowed96(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -39222,7 +36608,7 @@ export const inputObjects = {
   AgentScheduleFilter: {
     plans: {
       and($where, value) {
-        assertAllowed94(value, "list");
+        assertAllowed93(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -39283,12 +36669,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed94(value, "object");
+        assertAllowed93(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed94(value, "list");
+        assertAllowed93(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -39302,7 +36688,7 @@ export const inputObjects = {
         return condition;
       },
       persona($where, value) {
-        assertAllowed93(value, "object");
+        assertAllowed92(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentPersonaIdentifier,
@@ -39315,7 +36701,7 @@ export const inputObjects = {
         return $subQuery;
       },
       personaExists($where, value) {
-        assertAllowed93(value, "scalar");
+        assertAllowed92(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentPersonaIdentifier,
@@ -39336,7 +36722,7 @@ export const inputObjects = {
         return condition;
       },
       project($where, value) {
-        assertAllowed93(value, "object");
+        assertAllowed92(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -40047,7 +37433,7 @@ export const inputObjects = {
   AgentSessionFilter: {
     plans: {
       agentActivitiesBySessionId($where, value) {
-        assertAllowed68(value, "object");
+        assertAllowed67(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: agentActivityIdentifier,
@@ -40058,7 +37444,7 @@ export const inputObjects = {
         return $rel;
       },
       agentActivitiesBySessionIdExist($where, value) {
-        assertAllowed68(value, "scalar");
+        assertAllowed67(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentActivityIdentifier,
@@ -40071,7 +37457,7 @@ export const inputObjects = {
         });
       },
       and($where, value) {
-        assertAllowed70(value, "list");
+        assertAllowed69(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -40084,12 +37470,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed70(value, "object");
+        assertAllowed69(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed70(value, "list");
+        assertAllowed69(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -40103,7 +37489,7 @@ export const inputObjects = {
         return condition;
       },
       project($where, value) {
-        assertAllowed69(value, "object");
+        assertAllowed68(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -40116,7 +37502,7 @@ export const inputObjects = {
         return $subQuery;
       },
       projectExists($where, value) {
-        assertAllowed69(value, "scalar");
+        assertAllowed68(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -40185,7 +37571,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed69(value, "object");
+        assertAllowed68(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -40735,7 +38121,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed71(value, "object");
+        assertAllowed70(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -40755,7 +38141,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed71(value, "object");
+        assertAllowed70(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -40775,7 +38161,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed71(value, "object");
+        assertAllowed70(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -41061,7 +38447,7 @@ export const inputObjects = {
   AgentWebhookFilter: {
     plans: {
       and($where, value) {
-        assertAllowed103(value, "list");
+        assertAllowed99(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -41070,7 +38456,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec158;
+        condition.extensions.pgFilterAttribute = colSpec148;
         return condition;
       },
       enabled(queryBuilder, value) {
@@ -41078,7 +38464,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec156;
+        condition.extensions.pgFilterAttribute = colSpec146;
         return condition;
       },
       eventType(queryBuilder, value) {
@@ -41086,7 +38472,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec153;
+        condition.extensions.pgFilterAttribute = colSpec143;
         return condition;
       },
       instructionTemplate(queryBuilder, value) {
@@ -41094,7 +38480,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec154;
+        condition.extensions.pgFilterAttribute = colSpec144;
         return condition;
       },
       lastTriggeredAt(queryBuilder, value) {
@@ -41102,7 +38488,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec157;
+        condition.extensions.pgFilterAttribute = colSpec147;
         return condition;
       },
       name(queryBuilder, value) {
@@ -41110,16 +38496,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec152;
+        condition.extensions.pgFilterAttribute = colSpec142;
         return condition;
       },
       not($where, value) {
-        assertAllowed103(value, "object");
+        assertAllowed99(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed103(value, "list");
+        assertAllowed99(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -41129,11 +38515,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec150;
+        condition.extensions.pgFilterAttribute = colSpec140;
         return condition;
       },
       project($where, value) {
-        assertAllowed102(value, "object");
+        assertAllowed98(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -41150,7 +38536,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec151;
+        condition.extensions.pgFilterAttribute = colSpec141;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -41158,7 +38544,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec149;
+        condition.extensions.pgFilterAttribute = colSpec139;
         return condition;
       },
       signingSecret(queryBuilder, value) {
@@ -41166,7 +38552,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec155;
+        condition.extensions.pgFilterAttribute = colSpec145;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -41174,7 +38560,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec159;
+        condition.extensions.pgFilterAttribute = colSpec149;
         return condition;
       }
     }
@@ -41642,7 +39028,7 @@ export const inputObjects = {
   AssigneeFilter: {
     plans: {
       and($where, value) {
-        assertAllowed46(value, "list");
+        assertAllowed45(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -41663,18 +39049,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed46(value, "object");
+        assertAllowed45(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed46(value, "list");
+        assertAllowed45(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       task($where, value) {
-        assertAllowed45(value, "object");
+        assertAllowed44(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -41703,7 +39089,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed45(value, "object");
+        assertAllowed44(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -43001,7 +40387,7 @@ export const inputObjects = {
   ColumnFilter: {
     plans: {
       and($where, value) {
-        assertAllowed39(value, "list");
+        assertAllowed38(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -43030,18 +40416,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed39(value, "object");
+        assertAllowed38(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed39(value, "list");
+        assertAllowed38(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       project($where, value) {
-        assertAllowed38(value, "object");
+        assertAllowed37(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -43070,7 +40456,7 @@ export const inputObjects = {
         return condition;
       },
       tasks($where, value) {
-        assertAllowed37(value, "object");
+        assertAllowed36(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -43081,7 +40467,7 @@ export const inputObjects = {
         return $rel;
       },
       tasksExist($where, value) {
-        assertAllowed37(value, "scalar");
+        assertAllowed36(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -43501,7 +40887,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed40(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -43521,7 +40907,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed40(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -43541,7 +40927,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed40(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -43601,16 +40987,6 @@ export const inputObjects = {
   CreateAgentConfigInput: {
     plans: {
       agentConfig(qb, arg) {
-        if (arg != null) return qb.setBuilder();
-      },
-      clientMutationId(qb, val) {
-        qb.setMeta("clientMutationId", val);
-      }
-    }
-  },
-  CreateAgentMarketplaceListingInput: {
-    plans: {
-      agentMarketplaceListing(qb, arg) {
         if (arg != null) return qb.setBuilder();
       },
       clientMutationId(qb, val) {
@@ -44104,20 +41480,6 @@ export const inputObjects = {
       }
     }
   },
-  DeleteAgentMarketplaceListingByIdInput: {
-    plans: {
-      clientMutationId(qb, val) {
-        qb.setMeta("clientMutationId", val);
-      }
-    }
-  },
-  DeleteAgentMarketplaceListingInput: {
-    plans: {
-      clientMutationId(qb, val) {
-        qb.setMeta("clientMutationId", val);
-      }
-    }
-  },
   DeleteAgentPersonaByIdInput: {
     plans: {
       clientMutationId(qb, val) {
@@ -44515,7 +41877,7 @@ export const inputObjects = {
   EmojiFilter: {
     plans: {
       and($where, value) {
-        assertAllowed56(value, "list");
+        assertAllowed55(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -44536,18 +41898,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed56(value, "object");
+        assertAllowed55(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed56(value, "list");
+        assertAllowed55(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       post($where, value) {
-        assertAllowed55(value, "object");
+        assertAllowed54(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -44584,7 +41946,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed55(value, "object");
+        assertAllowed54(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -45342,7 +42704,7 @@ export const inputObjects = {
   LabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed79(value, "list");
+        assertAllowed78(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -45379,12 +42741,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed79(value, "object");
+        assertAllowed78(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed79(value, "list");
+        assertAllowed78(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -45398,7 +42760,7 @@ export const inputObjects = {
         return condition;
       },
       project($where, value) {
-        assertAllowed78(value, "object");
+        assertAllowed77(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -45411,7 +42773,7 @@ export const inputObjects = {
         return $subQuery;
       },
       projectExists($where, value) {
-        assertAllowed78(value, "scalar");
+        assertAllowed77(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -45440,7 +42802,7 @@ export const inputObjects = {
         return condition;
       },
       taskLabels($where, value) {
-        assertAllowed77(value, "object");
+        assertAllowed76(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskLabelIdentifier,
@@ -45451,7 +42813,7 @@ export const inputObjects = {
         return $rel;
       },
       taskLabelsExist($where, value) {
-        assertAllowed77(value, "scalar");
+        assertAllowed76(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskLabelIdentifier,
@@ -45765,7 +43127,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed80(value, "object");
+        assertAllowed79(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -45785,7 +43147,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed80(value, "object");
+        assertAllowed79(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -45805,7 +43167,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed80(value, "object");
+        assertAllowed79(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -46511,12 +43873,12 @@ export const inputObjects = {
   PostFilter: {
     plans: {
       and($where, value) {
-        assertAllowed53(value, "list");
+        assertAllowed52(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       author($where, value) {
-        assertAllowed52(value, "object");
+        assertAllowed51(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -46529,7 +43891,7 @@ export const inputObjects = {
         return $subQuery;
       },
       authorExists($where, value) {
-        assertAllowed52(value, "scalar");
+        assertAllowed51(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -46566,7 +43928,7 @@ export const inputObjects = {
         return condition;
       },
       emojis($where, value) {
-        assertAllowed51(value, "object");
+        assertAllowed50(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: emojiIdentifier,
@@ -46577,7 +43939,7 @@ export const inputObjects = {
         return $rel;
       },
       emojisExist($where, value) {
-        assertAllowed51(value, "scalar");
+        assertAllowed50(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: emojiIdentifier,
@@ -46590,12 +43952,12 @@ export const inputObjects = {
         });
       },
       not($where, value) {
-        assertAllowed53(value, "object");
+        assertAllowed52(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed53(value, "list");
+        assertAllowed52(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -46609,7 +43971,7 @@ export const inputObjects = {
         return condition;
       },
       task($where, value) {
-        assertAllowed52(value, "object");
+        assertAllowed51(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -46927,7 +44289,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed54(value, "object");
+        assertAllowed53(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -46947,7 +44309,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed54(value, "object");
+        assertAllowed53(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -46967,7 +44329,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed54(value, "object");
+        assertAllowed53(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -47124,7 +44486,7 @@ export const inputObjects = {
   ProjectColumnFilter: {
     plans: {
       and($where, value) {
-        assertAllowed105(value, "list");
+        assertAllowed101(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -47133,7 +44495,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec165;
+        condition.extensions.pgFilterAttribute = colSpec155;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -47141,7 +44503,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec161;
+        condition.extensions.pgFilterAttribute = colSpec151;
         return condition;
       },
       index(queryBuilder, value) {
@@ -47149,16 +44511,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec164;
+        condition.extensions.pgFilterAttribute = colSpec154;
         return condition;
       },
       not($where, value) {
-        assertAllowed105(value, "object");
+        assertAllowed101(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed105(value, "list");
+        assertAllowed101(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -47168,11 +44530,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec163;
+        condition.extensions.pgFilterAttribute = colSpec153;
         return condition;
       },
       projects($where, value) {
-        assertAllowed104(value, "object");
+        assertAllowed100(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectIdentifier,
@@ -47183,7 +44545,7 @@ export const inputObjects = {
         return $rel;
       },
       projectsExist($where, value) {
-        assertAllowed104(value, "scalar");
+        assertAllowed100(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -47200,7 +44562,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec160;
+        condition.extensions.pgFilterAttribute = colSpec150;
         return condition;
       },
       title(queryBuilder, value) {
@@ -47208,7 +44570,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec162;
+        condition.extensions.pgFilterAttribute = colSpec152;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -47216,7 +44578,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec166;
+        condition.extensions.pgFilterAttribute = colSpec156;
         return condition;
       }
     }
@@ -47546,7 +44908,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed106(value, "object");
+        assertAllowed102(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -47566,7 +44928,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed106(value, "object");
+        assertAllowed102(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -47586,7 +44948,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed106(value, "object");
+        assertAllowed102(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -47834,7 +45196,7 @@ export const inputObjects = {
   ProjectFilter: {
     plans: {
       agentActivities($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: agentActivityIdentifier,
@@ -47845,7 +45207,7 @@ export const inputObjects = {
         return $rel;
       },
       agentActivitiesExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentActivityIdentifier,
@@ -47858,7 +45220,7 @@ export const inputObjects = {
         });
       },
       agentSchedules($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: agentScheduleIdentifier,
@@ -47869,7 +45231,7 @@ export const inputObjects = {
         return $rel;
       },
       agentSchedulesExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentScheduleIdentifier,
@@ -47882,7 +45244,7 @@ export const inputObjects = {
         });
       },
       agentSessions($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: agentSessionIdentifier,
@@ -47893,7 +45255,7 @@ export const inputObjects = {
         return $rel;
       },
       agentSessionsExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentSessionIdentifier,
@@ -47906,7 +45268,7 @@ export const inputObjects = {
         });
       },
       agentWebhooks($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: agentWebhookIdentifier,
@@ -47917,7 +45279,7 @@ export const inputObjects = {
         return $rel;
       },
       agentWebhooksExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentWebhookIdentifier,
@@ -47930,7 +45292,7 @@ export const inputObjects = {
         });
       },
       and($where, value) {
-        assertAllowed35(value, "list");
+        assertAllowed34(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -47943,7 +45305,7 @@ export const inputObjects = {
         return condition;
       },
       columns($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: columnIdentifier,
@@ -47954,7 +45316,7 @@ export const inputObjects = {
         return $rel;
       },
       columnsExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: columnIdentifier,
@@ -47991,7 +45353,7 @@ export const inputObjects = {
         return condition;
       },
       labels($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: labelIdentifier,
@@ -48002,7 +45364,7 @@ export const inputObjects = {
         return $rel;
       },
       labelsExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: labelIdentifier,
@@ -48031,12 +45393,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed35(value, "object");
+        assertAllowed34(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed35(value, "list");
+        assertAllowed34(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -48058,7 +45420,7 @@ export const inputObjects = {
         return condition;
       },
       projectColumn($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed33(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectColumnIdentifier,
@@ -48079,7 +45441,7 @@ export const inputObjects = {
         return condition;
       },
       projectProjectLabels($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectProjectLabelIdentifier,
@@ -48090,7 +45452,7 @@ export const inputObjects = {
         return $rel;
       },
       projectProjectLabelsExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectProjectLabelIdentifier,
@@ -48119,7 +45481,7 @@ export const inputObjects = {
         return condition;
       },
       tasks($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -48130,7 +45492,7 @@ export const inputObjects = {
         return $rel;
       },
       tasksExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -48151,7 +45513,7 @@ export const inputObjects = {
         return condition;
       },
       userPreferences($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed32(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userPreferenceIdentifier,
@@ -48162,7 +45524,7 @@ export const inputObjects = {
         return $rel;
       },
       userPreferencesExist($where, value) {
-        assertAllowed33(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userPreferenceIdentifier,
@@ -48576,7 +45938,7 @@ export const inputObjects = {
   ProjectLabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed88(value, "list");
+        assertAllowed87(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -48613,12 +45975,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed88(value, "object");
+        assertAllowed87(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed88(value, "list");
+        assertAllowed87(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -48632,7 +45994,7 @@ export const inputObjects = {
         return condition;
       },
       projectProjectLabels($where, value) {
-        assertAllowed87(value, "object");
+        assertAllowed86(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectProjectLabelIdentifier,
@@ -48643,7 +46005,7 @@ export const inputObjects = {
         return $rel;
       },
       projectProjectLabelsExist($where, value) {
-        assertAllowed87(value, "scalar");
+        assertAllowed86(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectProjectLabelIdentifier,
@@ -48953,7 +46315,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed89(value, "object");
+        assertAllowed88(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -48973,7 +46335,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed89(value, "object");
+        assertAllowed88(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -48993,7 +46355,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed89(value, "object");
+        assertAllowed88(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49212,7 +46574,7 @@ export const inputObjects = {
   ProjectProjectLabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed86(value, "list");
+        assertAllowed85(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -49225,18 +46587,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed86(value, "object");
+        assertAllowed85(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed86(value, "list");
+        assertAllowed85(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       project($where, value) {
-        assertAllowed85(value, "object");
+        assertAllowed84(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -49257,7 +46619,7 @@ export const inputObjects = {
         return condition;
       },
       projectLabel($where, value) {
-        assertAllowed85(value, "object");
+        assertAllowed84(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectLabelIdentifier,
@@ -49532,7 +46894,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed90(value, "object");
+        assertAllowed89(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49552,7 +46914,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed90(value, "object");
+        assertAllowed89(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49572,7 +46934,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed90(value, "object");
+        assertAllowed89(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49616,7 +46978,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed92(value, "object");
+        assertAllowed91(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49636,7 +46998,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed92(value, "object");
+        assertAllowed91(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49656,7 +47018,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed92(value, "object");
+        assertAllowed91(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49700,7 +47062,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed91(value, "object");
+        assertAllowed90(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49720,7 +47082,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed91(value, "object");
+        assertAllowed90(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49740,7 +47102,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed91(value, "object");
+        assertAllowed90(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49784,7 +47146,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed101(value, "object");
+        assertAllowed97(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49804,7 +47166,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed101(value, "object");
+        assertAllowed97(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49824,7 +47186,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed101(value, "object");
+        assertAllowed97(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49868,7 +47230,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed35(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49888,7 +47250,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed35(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49908,7 +47270,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed35(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49952,7 +47314,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed82(value, "object");
+        assertAllowed81(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49972,7 +47334,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed82(value, "object");
+        assertAllowed81(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -49992,7 +47354,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed82(value, "object");
+        assertAllowed81(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50036,7 +47398,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed84(value, "object");
+        assertAllowed83(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50056,7 +47418,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed84(value, "object");
+        assertAllowed83(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50076,7 +47438,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed84(value, "object");
+        assertAllowed83(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50120,7 +47482,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed81(value, "object");
+        assertAllowed80(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50140,7 +47502,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed81(value, "object");
+        assertAllowed80(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50160,7 +47522,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed81(value, "object");
+        assertAllowed80(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50204,7 +47566,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed83(value, "object");
+        assertAllowed82(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50224,7 +47586,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed83(value, "object");
+        assertAllowed82(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50244,7 +47606,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed83(value, "object");
+        assertAllowed82(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -50397,7 +47759,7 @@ export const inputObjects = {
   SettingFilter: {
     plans: {
       and($where, value) {
-        assertAllowed125(value, "list");
+        assertAllowed120(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -50406,7 +47768,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec171;
+        condition.extensions.pgFilterAttribute = colSpec161;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -50414,7 +47776,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec168;
+        condition.extensions.pgFilterAttribute = colSpec158;
         return condition;
       },
       deletedAt(queryBuilder, value) {
@@ -50422,7 +47784,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec174;
+        condition.extensions.pgFilterAttribute = colSpec164;
         return condition;
       },
       deletionReason(queryBuilder, value) {
@@ -50430,16 +47792,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec175;
+        condition.extensions.pgFilterAttribute = colSpec165;
         return condition;
       },
       not($where, value) {
-        assertAllowed125(value, "object");
+        assertAllowed120(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed125(value, "list");
+        assertAllowed120(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -50449,7 +47811,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec172;
+        condition.extensions.pgFilterAttribute = colSpec162;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -50457,7 +47819,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec167;
+        condition.extensions.pgFilterAttribute = colSpec157;
         return condition;
       },
       subscriptionId(queryBuilder, value) {
@@ -50465,7 +47827,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec173;
+        condition.extensions.pgFilterAttribute = colSpec163;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -50473,7 +47835,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec169;
+        condition.extensions.pgFilterAttribute = colSpec159;
         return condition;
       },
       viewMode(queryBuilder, value) {
@@ -50481,7 +47843,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec170;
+        condition.extensions.pgFilterAttribute = colSpec160;
         return condition;
       }
     }
@@ -52433,12 +49795,12 @@ export const inputObjects = {
   TaskFilter: {
     plans: {
       and($where, value) {
-        assertAllowed43(value, "list");
+        assertAllowed42(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       assignees($where, value) {
-        assertAllowed41(value, "object");
+        assertAllowed40(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: assigneeIdentifier,
@@ -52449,7 +49811,7 @@ export const inputObjects = {
         return $rel;
       },
       assigneesExist($where, value) {
-        assertAllowed41(value, "scalar");
+        assertAllowed40(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: assigneeIdentifier,
@@ -52462,7 +49824,7 @@ export const inputObjects = {
         });
       },
       author($where, value) {
-        assertAllowed42(value, "object");
+        assertAllowed41(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -52475,7 +49837,7 @@ export const inputObjects = {
         return $subQuery;
       },
       authorExists($where, value) {
-        assertAllowed42(value, "scalar");
+        assertAllowed41(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -52496,7 +49858,7 @@ export const inputObjects = {
         return condition;
       },
       column($where, value) {
-        assertAllowed42(value, "object");
+        assertAllowed41(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: columnIdentifier,
@@ -52557,7 +49919,7 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed43(value, "object");
+        assertAllowed42(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
@@ -52570,13 +49932,13 @@ export const inputObjects = {
         return condition;
       },
       or($where, value) {
-        assertAllowed43(value, "list");
+        assertAllowed42(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       posts($where, value) {
-        assertAllowed41(value, "object");
+        assertAllowed40(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
@@ -52587,7 +49949,7 @@ export const inputObjects = {
         return $rel;
       },
       postsExist($where, value) {
-        assertAllowed41(value, "scalar");
+        assertAllowed40(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -52608,7 +49970,7 @@ export const inputObjects = {
         return condition;
       },
       project($where, value) {
-        assertAllowed42(value, "object");
+        assertAllowed41(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -52637,7 +49999,7 @@ export const inputObjects = {
         return condition;
       },
       taskLabels($where, value) {
-        assertAllowed41(value, "object");
+        assertAllowed40(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskLabelIdentifier,
@@ -52648,7 +50010,7 @@ export const inputObjects = {
         return $rel;
       },
       taskLabelsExist($where, value) {
-        assertAllowed41(value, "scalar");
+        assertAllowed40(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskLabelIdentifier,
@@ -53140,7 +50502,7 @@ export const inputObjects = {
   TaskLabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed76(value, "list");
+        assertAllowed75(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -53153,7 +50515,7 @@ export const inputObjects = {
         return condition;
       },
       label($where, value) {
-        assertAllowed75(value, "object");
+        assertAllowed74(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: labelIdentifier,
@@ -53174,18 +50536,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed76(value, "object");
+        assertAllowed75(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed76(value, "list");
+        assertAllowed75(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       task($where, value) {
-        assertAllowed75(value, "object");
+        assertAllowed74(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -53646,7 +51008,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed44(value, "object");
+        assertAllowed43(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53666,7 +51028,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed44(value, "object");
+        assertAllowed43(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53686,7 +51048,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed44(value, "object");
+        assertAllowed43(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53730,7 +51092,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed73(value, "object");
+        assertAllowed72(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53750,7 +51112,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed73(value, "object");
+        assertAllowed72(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53770,7 +51132,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed73(value, "object");
+        assertAllowed72(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53814,7 +51176,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed74(value, "object");
+        assertAllowed73(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53834,7 +51196,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed74(value, "object");
+        assertAllowed73(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53854,7 +51216,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed74(value, "object");
+        assertAllowed73(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -53950,26 +51312,6 @@ export const inputObjects = {
     }
   },
   UpdateAgentConfigInput: {
-    plans: {
-      clientMutationId(qb, val) {
-        qb.setMeta("clientMutationId", val);
-      },
-      patch(qb, arg) {
-        if (arg != null) return qb.setBuilder();
-      }
-    }
-  },
-  UpdateAgentMarketplaceListingByIdInput: {
-    plans: {
-      clientMutationId(qb, val) {
-        qb.setMeta("clientMutationId", val);
-      },
-      patch(qb, arg) {
-        if (arg != null) return qb.setBuilder();
-      }
-    }
-  },
-  UpdateAgentMarketplaceListingInput: {
     plans: {
       clientMutationId(qb, val) {
         qb.setMeta("clientMutationId", val);
@@ -54429,7 +51771,7 @@ export const inputObjects = {
   UserFilter: {
     plans: {
       agentActivities($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed46(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: agentActivityIdentifier,
@@ -54440,7 +51782,7 @@ export const inputObjects = {
         return $rel;
       },
       agentActivitiesExist($where, value) {
-        assertAllowed47(value, "scalar");
+        assertAllowed46(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentActivityIdentifier,
@@ -54453,7 +51795,7 @@ export const inputObjects = {
         });
       },
       agentSessions($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed46(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: agentSessionIdentifier,
@@ -54464,7 +51806,7 @@ export const inputObjects = {
         return $rel;
       },
       agentSessionsExist($where, value) {
-        assertAllowed47(value, "scalar");
+        assertAllowed46(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: agentSessionIdentifier,
@@ -54477,12 +51819,12 @@ export const inputObjects = {
         });
       },
       and($where, value) {
-        assertAllowed48(value, "list");
+        assertAllowed47(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       assignees($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed46(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: assigneeIdentifier,
@@ -54493,7 +51835,7 @@ export const inputObjects = {
         return $rel;
       },
       assigneesExist($where, value) {
-        assertAllowed47(value, "scalar");
+        assertAllowed46(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: assigneeIdentifier,
@@ -54506,7 +51848,7 @@ export const inputObjects = {
         });
       },
       authoredPosts($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed46(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
@@ -54517,7 +51859,7 @@ export const inputObjects = {
         return $rel;
       },
       authoredPostsExist($where, value) {
-        assertAllowed47(value, "scalar");
+        assertAllowed46(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -54530,7 +51872,7 @@ export const inputObjects = {
         });
       },
       authoredTasks($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed46(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -54541,7 +51883,7 @@ export const inputObjects = {
         return $rel;
       },
       authoredTasksExist($where, value) {
-        assertAllowed47(value, "scalar");
+        assertAllowed46(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -54578,7 +51920,7 @@ export const inputObjects = {
         return condition;
       },
       emojis($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed46(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: emojiIdentifier,
@@ -54589,7 +51931,7 @@ export const inputObjects = {
         return $rel;
       },
       emojisExist($where, value) {
-        assertAllowed47(value, "scalar");
+        assertAllowed46(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: emojiIdentifier,
@@ -54618,12 +51960,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed48(value, "object");
+        assertAllowed47(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed48(value, "list");
+        assertAllowed47(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -54645,7 +51987,7 @@ export const inputObjects = {
         return condition;
       },
       userOrganizations($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed46(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userOrganizationIdentifier,
@@ -54656,7 +51998,7 @@ export const inputObjects = {
         return $rel;
       },
       userOrganizationsExist($where, value) {
-        assertAllowed47(value, "scalar");
+        assertAllowed46(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userOrganizationIdentifier,
@@ -54669,7 +52011,7 @@ export const inputObjects = {
         });
       },
       userPreferences($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed46(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userPreferenceIdentifier,
@@ -54680,7 +52022,7 @@ export const inputObjects = {
         return $rel;
       },
       userPreferencesExist($where, value) {
-        assertAllowed47(value, "scalar");
+        assertAllowed46(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userPreferenceIdentifier,
@@ -55107,7 +52449,7 @@ export const inputObjects = {
   UserOrganizationFilter: {
     plans: {
       and($where, value) {
-        assertAllowed64(value, "list");
+        assertAllowed63(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -55128,12 +52470,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed64(value, "object");
+        assertAllowed63(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed64(value, "list");
+        assertAllowed63(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -55195,7 +52537,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed63(value, "object");
+        assertAllowed62(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -55760,7 +53102,7 @@ export const inputObjects = {
   UserPreferenceFilter: {
     plans: {
       and($where, value) {
-        assertAllowed60(value, "list");
+        assertAllowed59(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -55789,18 +53131,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed60(value, "object");
+        assertAllowed59(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed60(value, "list");
+        assertAllowed59(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       project($where, value) {
-        assertAllowed59(value, "object");
+        assertAllowed58(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -55837,7 +53179,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed59(value, "object");
+        assertAllowed58(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -56159,7 +53501,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed64(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56179,7 +53521,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed64(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56199,7 +53541,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed64(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56243,7 +53585,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed72(value, "object");
+        assertAllowed71(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56263,7 +53605,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed72(value, "object");
+        assertAllowed71(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56283,7 +53625,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed72(value, "object");
+        assertAllowed71(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56327,7 +53669,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed49(value, "object");
+        assertAllowed48(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56347,7 +53689,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed49(value, "object");
+        assertAllowed48(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56367,7 +53709,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed49(value, "object");
+        assertAllowed48(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56411,7 +53753,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed60(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56431,7 +53773,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed60(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56451,7 +53793,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed60(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56495,7 +53837,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed50(value, "object");
+        assertAllowed49(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56515,7 +53857,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed50(value, "object");
+        assertAllowed49(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56535,7 +53877,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed50(value, "object");
+        assertAllowed49(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56579,7 +53921,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed57(value, "object");
+        assertAllowed56(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56599,7 +53941,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed57(value, "object");
+        assertAllowed56(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56619,7 +53961,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed57(value, "object");
+        assertAllowed56(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56663,7 +54005,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed61(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56683,7 +54025,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed61(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56703,7 +54045,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed61(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56747,7 +54089,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed58(value, "object");
+        assertAllowed57(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56767,7 +54109,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed58(value, "object");
+        assertAllowed57(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -56787,7 +54129,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed58(value, "object");
+        assertAllowed57(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -57676,244 +55018,6 @@ export const enums = {
       }
     }
   },
-  AgentMarketplaceListingGroupBy: {
-    values: {
-      CATEGORY($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("category")}`,
-          codec: TYPES.text
-        });
-      },
-      CREATED_AT($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
-          codec: TYPES.timestamptz
-        });
-      },
-      CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
-          codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
-        });
-      },
-      CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
-          codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
-        });
-      },
-      DESCRIPTION($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("description")}`,
-          codec: TYPES.text
-        });
-      },
-      INSTALL_COUNT($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("install_count")}`,
-          codec: TYPES.int
-        });
-      },
-      ORGANIZATION_ID($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
-          codec: TYPES.text
-        });
-      },
-      PERSONA_ID($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("persona_id")}`,
-          codec: TYPES.uuid
-        });
-      },
-      PUBLISHED_AT($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("published_at")}`,
-          codec: TYPES.timestamptz
-        });
-      },
-      PUBLISHED_AT_TRUNCATED_TO_DAY($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("published_at")}`),
-          codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
-        });
-      },
-      PUBLISHED_AT_TRUNCATED_TO_HOUR($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("published_at")}`),
-          codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
-        });
-      },
-      TITLE($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("title")}`,
-          codec: TYPES.text
-        });
-      },
-      UPDATED_AT($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("updated_at")}`,
-          codec: TYPES.timestamptz
-        });
-      },
-      UPDATED_AT_TRUNCATED_TO_DAY($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
-          codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
-        });
-      },
-      UPDATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("updated_at")}`),
-          codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
-        });
-      }
-    }
-  },
-  AgentMarketplaceListingOrderBy: {
-    values: {
-      CATEGORY_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "category",
-          direction: "ASC"
-        });
-      },
-      CATEGORY_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "category",
-          direction: "DESC"
-        });
-      },
-      CREATED_AT_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "created_at",
-          direction: "ASC"
-        });
-      },
-      CREATED_AT_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "created_at",
-          direction: "DESC"
-        });
-      },
-      DESCRIPTION_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "description",
-          direction: "ASC"
-        });
-      },
-      DESCRIPTION_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "description",
-          direction: "DESC"
-        });
-      },
-      INSTALL_COUNT_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "install_count",
-          direction: "ASC"
-        });
-      },
-      INSTALL_COUNT_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "install_count",
-          direction: "DESC"
-        });
-      },
-      ORGANIZATION_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "organization_id",
-          direction: "ASC"
-        });
-      },
-      ORGANIZATION_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "organization_id",
-          direction: "DESC"
-        });
-      },
-      PERSONA_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "persona_id",
-          direction: "ASC"
-        });
-      },
-      PERSONA_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "persona_id",
-          direction: "DESC"
-        });
-      },
-      PRIMARY_KEY_ASC(queryBuilder) {
-        agent_marketplace_listingUniques[0].attributes.forEach(attributeName => {
-          queryBuilder.orderBy({
-            attribute: attributeName,
-            direction: "ASC"
-          });
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      PRIMARY_KEY_DESC(queryBuilder) {
-        agent_marketplace_listingUniques[0].attributes.forEach(attributeName => {
-          queryBuilder.orderBy({
-            attribute: attributeName,
-            direction: "DESC"
-          });
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      PUBLISHED_AT_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "published_at",
-          direction: "ASC"
-        });
-      },
-      PUBLISHED_AT_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "published_at",
-          direction: "DESC"
-        });
-      },
-      ROW_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "id",
-          direction: "ASC"
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      ROW_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "id",
-          direction: "DESC"
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      TITLE_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "title",
-          direction: "ASC"
-        });
-      },
-      TITLE_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "title",
-          direction: "DESC"
-        });
-      },
-      UPDATED_AT_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "updated_at",
-          direction: "ASC"
-        });
-      },
-      UPDATED_AT_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "updated_at",
-          direction: "DESC"
-        });
-      }
-    }
-  },
   AgentPersonaGroupBy: {
     values: {
       CREATED_AT($pgSelect) {
@@ -57992,732 +55096,12 @@ export const enums = {
   },
   AgentPersonaOrderBy: {
     values: {
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_AVERAGE_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec5.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_AVERAGE_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec5.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`select count(*)
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
-        $select.orderBy({
-          fragment,
-          codec: TYPES.bigint,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`select count(*)
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
-        $select.orderBy({
-          fragment,
-          codec: TYPES.bigint,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CATEGORY_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("category")}`, spec_agentMarketplaceListing.attributes.category.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.category.codec) ?? spec_agentMarketplaceListing.attributes.category.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CATEGORY_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("category")}`, spec_agentMarketplaceListing.attributes.category.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.category.codec) ?? spec_agentMarketplaceListing.attributes.category.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_agentMarketplaceListing.attributes.created_at.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.created_at.codec) ?? spec_agentMarketplaceListing.attributes.created_at.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_agentMarketplaceListing.attributes.created_at.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.created_at.codec) ?? spec_agentMarketplaceListing.attributes.created_at.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_agentMarketplaceListing.attributes.description.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.description.codec) ?? spec_agentMarketplaceListing.attributes.description.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("description")}`, spec_agentMarketplaceListing.attributes.description.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.description.codec) ?? spec_agentMarketplaceListing.attributes.description.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_agentMarketplaceListing.attributes.organization_id.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.organization_id.codec) ?? spec_agentMarketplaceListing.attributes.organization_id.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_agentMarketplaceListing.attributes.organization_id.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.organization_id.codec) ?? spec_agentMarketplaceListing.attributes.organization_id.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PERSONA_ID_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("persona_id")}`, spec_agentMarketplaceListing.attributes.persona_id.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.persona_id.codec) ?? spec_agentMarketplaceListing.attributes.persona_id.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PERSONA_ID_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("persona_id")}`, spec_agentMarketplaceListing.attributes.persona_id.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.persona_id.codec) ?? spec_agentMarketplaceListing.attributes.persona_id.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PUBLISHED_AT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("published_at")}`, spec_agentMarketplaceListing.attributes.published_at.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.published_at.codec) ?? spec_agentMarketplaceListing.attributes.published_at.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PUBLISHED_AT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("published_at")}`, spec_agentMarketplaceListing.attributes.published_at.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.published_at.codec) ?? spec_agentMarketplaceListing.attributes.published_at.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_agentMarketplaceListing.attributes.id.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.id.codec) ?? spec_agentMarketplaceListing.attributes.id.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_agentMarketplaceListing.attributes.id.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.id.codec) ?? spec_agentMarketplaceListing.attributes.id.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_TITLE_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_agentMarketplaceListing.attributes.title.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.title.codec) ?? spec_agentMarketplaceListing.attributes.title.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_TITLE_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("title")}`, spec_agentMarketplaceListing.attributes.title.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.title.codec) ?? spec_agentMarketplaceListing.attributes.title.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_agentMarketplaceListing.attributes.updated_at.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.updated_at.codec) ?? spec_agentMarketplaceListing.attributes.updated_at.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("updated_at")}`, spec_agentMarketplaceListing.attributes.updated_at.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.updated_at.codec) ?? spec_agentMarketplaceListing.attributes.updated_at.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MAX_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec4.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MAX_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec4.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MIN_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec3.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MIN_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec3.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_POPULATION_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec7.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_POPULATION_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec7.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_SAMPLE_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec6.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_SAMPLE_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec6.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_SUM_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_SUM_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_POPULATION_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec9.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_POPULATION_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec9.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_SAMPLE_INSTALL_COUNT_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec8.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_SAMPLE_INSTALL_COUNT_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_marketplace_listingPgResource.name));
-        relation26.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation26.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_marketplace_listingPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("install_count")}`, spec_agentMarketplaceListing.attributes.install_count.codec)}
-from ${resource_agent_marketplace_listingPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec8.pgTypeCodecModifier?.(spec_agentMarketplaceListing.attributes.install_count.codec) ?? spec_agentMarketplaceListing.attributes.install_count.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SCHEDULES_BY_PERSONA_ID_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58734,8 +55118,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58752,8 +55136,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58771,8 +55155,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58790,8 +55174,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58809,8 +55193,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58828,8 +55212,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58847,8 +55231,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58866,8 +55250,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58885,8 +55269,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58904,8 +55288,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58923,8 +55307,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58942,8 +55326,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58961,8 +55345,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58980,8 +55364,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -58999,8 +55383,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59018,8 +55402,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59037,8 +55421,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59056,8 +55440,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59075,8 +55459,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59094,8 +55478,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59113,8 +55497,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59132,8 +55516,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59151,8 +55535,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59170,8 +55554,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -59189,8 +55573,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_agent_schedulePgResource.name));
-        relation27.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation27.remoteAttributes[i];
+        relation26.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation26.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_agent_schedulePgResource.from === "function") throw Error("Function source unsupported");
@@ -63244,8 +59628,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63263,8 +59647,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63282,8 +59666,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63301,8 +59685,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63320,8 +59704,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63338,8 +59722,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63356,8 +59740,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63375,8 +59759,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63394,8 +59778,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63413,8 +59797,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63432,8 +59816,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63451,8 +59835,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63470,8 +59854,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63489,8 +59873,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63508,8 +59892,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63527,8 +59911,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63546,8 +59930,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63565,8 +59949,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63584,8 +59968,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63603,8 +59987,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63622,8 +60006,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63641,8 +60025,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63660,8 +60044,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63679,8 +60063,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63698,8 +60082,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63717,8 +60101,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63736,8 +60120,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63755,8 +60139,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63774,8 +60158,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63793,8 +60177,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63812,8 +60196,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63831,8 +60215,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63850,8 +60234,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63869,8 +60253,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63888,8 +60272,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63907,8 +60291,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63926,8 +60310,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63945,8 +60329,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63964,8 +60348,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -63983,8 +60367,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64002,8 +60386,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64021,8 +60405,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64040,8 +60424,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64059,8 +60443,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64078,8 +60462,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64097,8 +60481,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64116,8 +60500,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64135,8 +60519,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64154,8 +60538,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64173,8 +60557,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64192,8 +60576,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64211,8 +60595,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64230,8 +60614,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64249,8 +60633,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64268,8 +60652,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64287,8 +60671,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64306,8 +60690,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -64325,8 +60709,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation28.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation28.remoteAttributes[i];
+        relation27.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation27.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");

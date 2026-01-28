@@ -10,7 +10,6 @@ import { useGrafast } from "grafast/envelop";
 
 import aiRoutes from "lib/ai/chat.endpoint";
 import aiConfigRoutes, { aiConfigKeyRoutes } from "lib/ai/config.endpoint";
-import aiMarketplaceRoutes from "lib/ai/marketplace.endpoint";
 import aiPersonaRoutes from "lib/ai/persona.endpoint";
 import projectCreationRoutes from "lib/ai/projectCreation.endpoint";
 import aiRollbackRoutes from "lib/ai/rollback.endpoint";
@@ -175,7 +174,6 @@ async function startServer(): Promise<void> {
     .use(aiConfigRoutes)
     .use(aiConfigKeyRoutes)
     .use(aiPersonaRoutes)
-    .use(aiMarketplaceRoutes)
     .use(aiWebhookRoutes)
     .use(aiWebhookReceiverRoutes)
     .use(aiRollbackRoutes)

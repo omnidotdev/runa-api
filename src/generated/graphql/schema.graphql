@@ -68,9 +68,6 @@ type Query implements Node {
   """Get a single `UserPreference`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
-  """Get a single `AgentMarketplaceListing`."""
-  agentMarketplaceListing(rowId: UUID!): AgentMarketplaceListing
-
   """Get a single `AgentWebhook`."""
   agentWebhook(rowId: UUID!): AgentWebhook
 
@@ -194,16 +191,6 @@ type Query implements Node {
     """
     id: ID!
   ): UserPreference
-
-  """
-  Reads a single `AgentMarketplaceListing` using its globally unique `ID`.
-  """
-  agentMarketplaceListingById(
-    """
-    The globally unique `ID` to be used in selecting a single `AgentMarketplaceListing`.
-    """
-    id: ID!
-  ): AgentMarketplaceListing
 
   """Reads a single `AgentWebhook` using its globally unique `ID`."""
   agentWebhookById(
@@ -678,42 +665,6 @@ type Query implements Node {
     """The method to use when ordering `UserPreference`."""
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
-
-  """
-  Reads and enables pagination through a set of `AgentMarketplaceListing`.
-  """
-  agentMarketplaceListings(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentMarketplaceListingCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentMarketplaceListingFilter
-
-    """The method to use when ordering `AgentMarketplaceListing`."""
-    orderBy: [AgentMarketplaceListingOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingConnection
 
   """Reads and enables pagination through a set of `AgentWebhook`."""
   agentWebhooks(
@@ -4280,12 +4231,6 @@ input AgentPersonaFilter {
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
 
-  """Filter by the object’s `agentMarketplaceListingsByPersonaId` relation."""
-  agentMarketplaceListingsByPersonaId: AgentPersonaToManyAgentMarketplaceListingFilter
-
-  """Some related `agentMarketplaceListingsByPersonaId` exist."""
-  agentMarketplaceListingsByPersonaIdExist: Boolean
-
   """Filter by the object’s `agentSchedulesByPersonaId` relation."""
   agentSchedulesByPersonaId: AgentPersonaToManyAgentScheduleFilter
 
@@ -4300,172 +4245,6 @@ input AgentPersonaFilter {
 
   """Negates the expression."""
   not: AgentPersonaFilter
-}
-
-"""
-A filter to be used against many `AgentMarketplaceListing` object types. All fields are combined with a logical ‘and.’
-"""
-input AgentPersonaToManyAgentMarketplaceListingFilter {
-  """
-  Every related `AgentMarketplaceListing` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: AgentMarketplaceListingFilter
-
-  """
-  Some related `AgentMarketplaceListing` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: AgentMarketplaceListingFilter
-
-  """
-  No related `AgentMarketplaceListing` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: AgentMarketplaceListingFilter
-
-  """
-  Aggregates across related `AgentMarketplaceListing` match the filter criteria.
-  """
-  aggregates: AgentMarketplaceListingAggregatesFilter
-}
-
-"""
-A filter to be used against `AgentMarketplaceListing` object types. All fields are combined with a logical ‘and.’
-"""
-input AgentMarketplaceListingFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `personaId` field."""
-  personaId: UUIDFilter
-
-  """Filter by the object’s `organizationId` field."""
-  organizationId: StringFilter
-
-  """Filter by the object’s `title` field."""
-  title: StringFilter
-
-  """Filter by the object’s `description` field."""
-  description: StringFilter
-
-  """Filter by the object’s `category` field."""
-  category: StringFilter
-
-  """Filter by the object’s `installCount` field."""
-  installCount: IntFilter
-
-  """Filter by the object’s `publishedAt` field."""
-  publishedAt: DatetimeFilter
-
-  """Filter by the object’s `createdAt` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s `updatedAt` field."""
-  updatedAt: DatetimeFilter
-
-  """Filter by the object’s `persona` relation."""
-  persona: AgentPersonaFilter
-
-  """Checks for all expressions in this list."""
-  and: [AgentMarketplaceListingFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [AgentMarketplaceListingFilter!]
-
-  """Negates the expression."""
-  not: AgentMarketplaceListingFilter
-}
-
-"""
-A filter to be used against aggregates of `AgentMarketplaceListing` object types.
-"""
-input AgentMarketplaceListingAggregatesFilter {
-  """
-  A filter that must pass for the relevant `AgentMarketplaceListing` object to be included within the aggregate.
-  """
-  filter: AgentMarketplaceListingFilter
-
-  """Sum aggregate over matching `AgentMarketplaceListing` objects."""
-  sum: AgentMarketplaceListingSumAggregateFilter
-
-  """
-  Distinct count aggregate over matching `AgentMarketplaceListing` objects.
-  """
-  distinctCount: AgentMarketplaceListingDistinctCountAggregateFilter
-
-  """Minimum aggregate over matching `AgentMarketplaceListing` objects."""
-  min: AgentMarketplaceListingMinAggregateFilter
-
-  """Maximum aggregate over matching `AgentMarketplaceListing` objects."""
-  max: AgentMarketplaceListingMaxAggregateFilter
-
-  """
-  Mean average aggregate over matching `AgentMarketplaceListing` objects.
-  """
-  average: AgentMarketplaceListingAverageAggregateFilter
-
-  """
-  Sample standard deviation aggregate over matching `AgentMarketplaceListing` objects.
-  """
-  stddevSample: AgentMarketplaceListingStddevSampleAggregateFilter
-
-  """
-  Population standard deviation aggregate over matching `AgentMarketplaceListing` objects.
-  """
-  stddevPopulation: AgentMarketplaceListingStddevPopulationAggregateFilter
-
-  """
-  Sample variance aggregate over matching `AgentMarketplaceListing` objects.
-  """
-  varianceSample: AgentMarketplaceListingVarianceSampleAggregateFilter
-
-  """
-  Population variance aggregate over matching `AgentMarketplaceListing` objects.
-  """
-  variancePopulation: AgentMarketplaceListingVariancePopulationAggregateFilter
-}
-
-input AgentMarketplaceListingSumAggregateFilter {
-  installCount: BigIntFilter
-}
-
-input AgentMarketplaceListingDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  personaId: BigIntFilter
-  organizationId: BigIntFilter
-  title: BigIntFilter
-  description: BigIntFilter
-  category: BigIntFilter
-  installCount: BigIntFilter
-  publishedAt: BigIntFilter
-  createdAt: BigIntFilter
-  updatedAt: BigIntFilter
-}
-
-input AgentMarketplaceListingMinAggregateFilter {
-  installCount: IntFilter
-}
-
-input AgentMarketplaceListingMaxAggregateFilter {
-  installCount: IntFilter
-}
-
-input AgentMarketplaceListingAverageAggregateFilter {
-  installCount: BigFloatFilter
-}
-
-input AgentMarketplaceListingStddevSampleAggregateFilter {
-  installCount: BigFloatFilter
-}
-
-input AgentMarketplaceListingStddevPopulationAggregateFilter {
-  installCount: BigFloatFilter
-}
-
-input AgentMarketplaceListingVarianceSampleAggregateFilter {
-  installCount: BigFloatFilter
-}
-
-input AgentMarketplaceListingVariancePopulationAggregateFilter {
-  installCount: BigFloatFilter
 }
 
 """
@@ -8853,42 +8632,6 @@ type AgentPersona implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
 
-  """
-  Reads and enables pagination through a set of `AgentMarketplaceListing`.
-  """
-  agentMarketplaceListingsByPersonaId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentMarketplaceListingCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentMarketplaceListingFilter
-
-    """The method to use when ordering `AgentMarketplaceListing`."""
-    orderBy: [AgentMarketplaceListingOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingConnection!
-
   """Reads and enables pagination through a set of `AgentSchedule`."""
   agentSchedulesByPersonaId(
     """Only read the first `n` values of the set."""
@@ -8922,361 +8665,6 @@ type AgentPersona implements Node {
     """The method to use when ordering `AgentSchedule`."""
     orderBy: [AgentScheduleOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentScheduleConnection!
-}
-
-"""A connection to a list of `AgentMarketplaceListing` values."""
-type AgentMarketplaceListingConnection {
-  """A list of `AgentMarketplaceListing` objects."""
-  nodes: [AgentMarketplaceListing!]!
-
-  """
-  A list of edges which contains the `AgentMarketplaceListing` and cursor to aid in pagination.
-  """
-  edges: [AgentMarketplaceListingEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `AgentMarketplaceListing` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: AgentMarketplaceListingAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping `AgentMarketplaceListing` for these aggregates.
-    """
-    groupBy: [AgentMarketplaceListingGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: AgentMarketplaceListingHavingInput
-  ): [AgentMarketplaceListingAggregates!]
-}
-
-type AgentMarketplaceListing implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  personaId: UUID!
-  organizationId: String!
-  title: String!
-  description: String
-  category: String!
-  installCount: Int!
-  publishedAt: Datetime!
-  createdAt: Datetime!
-  updatedAt: Datetime!
-
-  """
-  Reads a single `AgentPersona` that is related to this `AgentMarketplaceListing`.
-  """
-  persona: AgentPersona
-}
-
-"""A `AgentMarketplaceListing` edge in the connection."""
-type AgentMarketplaceListingEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `AgentMarketplaceListing` at the end of the edge."""
-  node: AgentMarketplaceListing!
-}
-
-type AgentMarketplaceListingAggregates {
-  keys: [String]
-
-  """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: AgentMarketplaceListingSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: AgentMarketplaceListingDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: AgentMarketplaceListingMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: AgentMarketplaceListingMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: AgentMarketplaceListingAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: AgentMarketplaceListingStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: AgentMarketplaceListingStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: AgentMarketplaceListingVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: AgentMarketplaceListingVariancePopulationAggregates
-}
-
-type AgentMarketplaceListingSumAggregates {
-  """Sum of installCount across the matching connection"""
-  installCount: BigInt!
-}
-
-type AgentMarketplaceListingDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of personaId across the matching connection"""
-  personaId: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of title across the matching connection"""
-  title: BigInt
-
-  """Distinct count of description across the matching connection"""
-  description: BigInt
-
-  """Distinct count of category across the matching connection"""
-  category: BigInt
-
-  """Distinct count of installCount across the matching connection"""
-  installCount: BigInt
-
-  """Distinct count of publishedAt across the matching connection"""
-  publishedAt: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-type AgentMarketplaceListingMinAggregates {
-  """Minimum of installCount across the matching connection"""
-  installCount: Int
-}
-
-type AgentMarketplaceListingMaxAggregates {
-  """Maximum of installCount across the matching connection"""
-  installCount: Int
-}
-
-type AgentMarketplaceListingAverageAggregates {
-  """Mean average of installCount across the matching connection"""
-  installCount: BigFloat
-}
-
-type AgentMarketplaceListingStddevSampleAggregates {
-  """
-  Sample standard deviation of installCount across the matching connection
-  """
-  installCount: BigFloat
-}
-
-type AgentMarketplaceListingStddevPopulationAggregates {
-  """
-  Population standard deviation of installCount across the matching connection
-  """
-  installCount: BigFloat
-}
-
-type AgentMarketplaceListingVarianceSampleAggregates {
-  """Sample variance of installCount across the matching connection"""
-  installCount: BigFloat
-}
-
-type AgentMarketplaceListingVariancePopulationAggregates {
-  """Population variance of installCount across the matching connection"""
-  installCount: BigFloat
-}
-
-"""
-Grouping methods for `AgentMarketplaceListing` for usage during aggregation.
-"""
-enum AgentMarketplaceListingGroupBy {
-  PERSONA_ID
-  ORGANIZATION_ID
-  TITLE
-  DESCRIPTION
-  CATEGORY
-  INSTALL_COUNT
-  PUBLISHED_AT
-  PUBLISHED_AT_TRUNCATED_TO_HOUR
-  PUBLISHED_AT_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `AgentMarketplaceListing` aggregates."""
-input AgentMarketplaceListingHavingInput {
-  AND: [AgentMarketplaceListingHavingInput!]
-  OR: [AgentMarketplaceListingHavingInput!]
-  sum: AgentMarketplaceListingHavingSumInput
-  distinctCount: AgentMarketplaceListingHavingDistinctCountInput
-  min: AgentMarketplaceListingHavingMinInput
-  max: AgentMarketplaceListingHavingMaxInput
-  average: AgentMarketplaceListingHavingAverageInput
-  stddevSample: AgentMarketplaceListingHavingStddevSampleInput
-  stddevPopulation: AgentMarketplaceListingHavingStddevPopulationInput
-  varianceSample: AgentMarketplaceListingHavingVarianceSampleInput
-  variancePopulation: AgentMarketplaceListingHavingVariancePopulationInput
-}
-
-input AgentMarketplaceListingHavingSumInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingDistinctCountInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingMinInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingMaxInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingAverageInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingStddevSampleInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingStddevPopulationInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingVarianceSampleInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentMarketplaceListingHavingVariancePopulationInput {
-  installCount: HavingIntFilter
-  publishedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `AgentMarketplaceListing` object types. All
-fields are tested for equality and combined with a logical ‘and.’
-"""
-input AgentMarketplaceListingCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `personaId` field."""
-  personaId: UUID
-
-  """Checks for equality with the object’s `organizationId` field."""
-  organizationId: String
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
-  """Checks for equality with the object’s `category` field."""
-  category: String
-
-  """Checks for equality with the object’s `installCount` field."""
-  installCount: Int
-
-  """Checks for equality with the object’s `publishedAt` field."""
-  publishedAt: Datetime
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `AgentMarketplaceListing`."""
-enum AgentMarketplaceListingOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  PERSONA_ID_ASC
-  PERSONA_ID_DESC
-  ORGANIZATION_ID_ASC
-  ORGANIZATION_ID_DESC
-  TITLE_ASC
-  TITLE_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  CATEGORY_ASC
-  CATEGORY_DESC
-  INSTALL_COUNT_ASC
-  INSTALL_COUNT_DESC
-  PUBLISHED_AT_ASC
-  PUBLISHED_AT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 """
@@ -10693,44 +10081,6 @@ enum AgentPersonaOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_SUM_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_SUM_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PERSONA_ID_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PERSONA_ID_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_TITLE_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_TITLE_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_DESCRIPTION_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_DESCRIPTION_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CATEGORY_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CATEGORY_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PUBLISHED_AT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_PUBLISHED_AT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CREATED_AT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_CREATED_AT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_UPDATED_AT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_DISTINCT_COUNT_UPDATED_AT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MIN_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MIN_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MAX_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_MAX_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_AVERAGE_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_AVERAGE_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_SAMPLE_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_SAMPLE_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_POPULATION_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_STDDEV_POPULATION_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_SAMPLE_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_SAMPLE_INSTALL_COUNT_DESC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_POPULATION_INSTALL_COUNT_ASC
-  AGENT_MARKETPLACE_LISTINGS_BY_PERSONA_ID_VARIANCE_POPULATION_INSTALL_COUNT_DESC
   AGENT_SCHEDULES_BY_PERSONA_ID_COUNT_ASC
   AGENT_SCHEDULES_BY_PERSONA_ID_COUNT_DESC
   AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_ASC
@@ -11863,14 +11213,6 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
-  """Creates a single `AgentMarketplaceListing`."""
-  createAgentMarketplaceListing(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAgentMarketplaceListingInput!
-  ): CreateAgentMarketplaceListingPayload
-
   """Creates a single `AgentWebhook`."""
   createAgentWebhook(
     """
@@ -12144,26 +11486,6 @@ type Mutation {
     """
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
-
-  """
-  Updates a single `AgentMarketplaceListing` using its globally unique id and a patch.
-  """
-  updateAgentMarketplaceListingById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentMarketplaceListingByIdInput!
-  ): UpdateAgentMarketplaceListingPayload
-
-  """
-  Updates a single `AgentMarketplaceListing` using a unique key and a patch.
-  """
-  updateAgentMarketplaceListing(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentMarketplaceListingInput!
-  ): UpdateAgentMarketplaceListingPayload
 
   """
   Updates a single `AgentWebhook` using its globally unique id and a patch.
@@ -12512,24 +11834,6 @@ type Mutation {
     """
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
-
-  """
-  Deletes a single `AgentMarketplaceListing` using its globally unique id.
-  """
-  deleteAgentMarketplaceListingById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentMarketplaceListingByIdInput!
-  ): DeleteAgentMarketplaceListingPayload
-
-  """Deletes a single `AgentMarketplaceListing` using a unique key."""
-  deleteAgentMarketplaceListing(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentMarketplaceListingInput!
-  ): DeleteAgentMarketplaceListingPayload
 
   """Deletes a single `AgentWebhook` using its globally unique id."""
   deleteAgentWebhookById(
@@ -13220,55 +12524,6 @@ input UserPreferenceInput {
   updatedAt: Datetime
   viewMode: String
   color: String
-}
-
-"""The output of our create `AgentMarketplaceListing` mutation."""
-type CreateAgentMarketplaceListingPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentMarketplaceListing` that was created by this mutation."""
-  agentMarketplaceListing: AgentMarketplaceListing
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentMarketplaceListing`. May be used by Relay 1."""
-  agentMarketplaceListingEdge(
-    """The method to use when ordering `AgentMarketplaceListing`."""
-    orderBy: [AgentMarketplaceListingOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingEdge
-}
-
-"""All input for the create `AgentMarketplaceListing` mutation."""
-input CreateAgentMarketplaceListingInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `AgentMarketplaceListing` to be created by this mutation."""
-  agentMarketplaceListing: AgentMarketplaceListingInput!
-}
-
-"""An input for mutations affecting `AgentMarketplaceListing`"""
-input AgentMarketplaceListingInput {
-  rowId: UUID
-  personaId: UUID!
-  organizationId: String!
-  title: String!
-  description: String
-  category: String!
-  installCount: Int
-  publishedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
 }
 
 """The output of our create `AgentWebhook` mutation."""
@@ -14559,79 +13814,6 @@ input UpdateUserPreferenceInput {
   patch: UserPreferencePatch!
 }
 
-"""The output of our update `AgentMarketplaceListing` mutation."""
-type UpdateAgentMarketplaceListingPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentMarketplaceListing` that was updated by this mutation."""
-  agentMarketplaceListing: AgentMarketplaceListing
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentMarketplaceListing`. May be used by Relay 1."""
-  agentMarketplaceListingEdge(
-    """The method to use when ordering `AgentMarketplaceListing`."""
-    orderBy: [AgentMarketplaceListingOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingEdge
-}
-
-"""All input for the `updateAgentMarketplaceListingById` mutation."""
-input UpdateAgentMarketplaceListingByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AgentMarketplaceListing` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `AgentMarketplaceListing` being updated.
-  """
-  patch: AgentMarketplaceListingPatch!
-}
-
-"""
-Represents an update to a `AgentMarketplaceListing`. Fields that are set will be updated.
-"""
-input AgentMarketplaceListingPatch {
-  rowId: UUID
-  personaId: UUID
-  organizationId: String
-  title: String
-  description: String
-  category: String
-  installCount: Int
-  publishedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateAgentMarketplaceListing` mutation."""
-input UpdateAgentMarketplaceListingInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `AgentMarketplaceListing` being updated.
-  """
-  patch: AgentMarketplaceListingPatch!
-}
-
 """The output of our update `AgentWebhook` mutation."""
 type UpdateAgentWebhookPayload {
   """
@@ -15872,54 +15054,6 @@ input DeleteUserPreferenceByIdInput {
 
 """All input for the `deleteUserPreference` mutation."""
 input DeleteUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `AgentMarketplaceListing` mutation."""
-type DeleteAgentMarketplaceListingPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentMarketplaceListing` that was deleted by this mutation."""
-  agentMarketplaceListing: AgentMarketplaceListing
-  deletedAgentMarketplaceListingId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentMarketplaceListing`. May be used by Relay 1."""
-  agentMarketplaceListingEdge(
-    """The method to use when ordering `AgentMarketplaceListing`."""
-    orderBy: [AgentMarketplaceListingOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentMarketplaceListingEdge
-}
-
-"""All input for the `deleteAgentMarketplaceListingById` mutation."""
-input DeleteAgentMarketplaceListingByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AgentMarketplaceListing` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteAgentMarketplaceListing` mutation."""
-input DeleteAgentMarketplaceListingInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
