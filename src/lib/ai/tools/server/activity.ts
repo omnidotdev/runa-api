@@ -8,7 +8,6 @@
 
 import { dbPool } from "lib/db/db";
 import { agentActivities } from "lib/db/schema";
-
 import { requireProjectPermission } from "./permissions";
 
 import type { WriteToolContext } from "./context";
@@ -52,7 +51,6 @@ export function logActivity(params: LogActivityParams): void {
       affectedTaskIds: params.affectedTaskIds ?? [],
       snapshotBefore: params.snapshotBefore ?? null,
     })
-    // biome-ignore lint/suspicious/noConsole: fire-and-forget audit logging
     .catch((err) => console.error("[AI] Failed to log activity:", err));
 }
 
@@ -74,7 +72,10 @@ interface WithPermissionAndLoggingOptions {
  *
  * Returns the result of `fn` and a list of affected task IDs for logging.
  */
-export async function withPermissionAndLogging<TInput, TResult extends { affectedIds?: string[] }>(
+export async function withPermissionAndLogging<
+  TInput,
+  TResult extends { affectedIds?: string[] },
+>(
   options: WithPermissionAndLoggingOptions,
   input: TInput,
   fn: (input: TInput) => Promise<TResult>,

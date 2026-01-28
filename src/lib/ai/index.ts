@@ -1,31 +1,36 @@
-export { createAdapter, resolveAgentConfig } from "./config";
-export type { ResolvedAgentConfig } from "./config";
 export { authenticateRequest, validateProjectAccess } from "./auth";
-export type { AuthenticatedUser } from "./auth";
-export { buildSystemPrompt } from "./prompts/system";
+export { createAdapter, resolveAgentConfig } from "./config";
 export { buildProjectContext } from "./prompts/projectContext";
-export type { ProjectContext } from "./prompts/projectContext";
+export { buildSystemPrompt } from "./prompts/system";
 export {
   createSession,
+  listSessions,
   loadSession,
   saveSessionMessages,
-  listSessions,
 } from "./session/manager";
-export { createDestructiveTools, createQueryTools, createWriteTools } from "./tools/server";
 export {
-  queryTasksDef,
-  queryProjectDef,
-  getTaskDef,
-  createTaskDef,
-  updateTaskDef,
-  moveTaskDef,
-  assignTaskDef,
-  addLabelDef,
-  removeLabelDef,
   addCommentDef,
-  deleteTaskDef,
+  addLabelDef,
+  assignTaskDef,
+  batchDeleteTasksDef,
   batchMoveTasksDef,
   batchUpdateTasksDef,
-  batchDeleteTasksDef,
+  createTaskDef,
+  deleteTaskDef,
+  getTaskDef,
+  moveTaskDef,
+  queryProjectDef,
+  queryTasksDef,
+  removeLabelDef,
+  updateTaskDef,
   withApproval,
 } from "./tools/definitions";
+export {
+  createDestructiveTools,
+  createQueryTools,
+  createWriteTools,
+} from "./tools/server";
+
+export type { AuthenticatedUser } from "./auth";
+export type { ResolvedAgentConfig } from "./config";
+export type { ProjectContext } from "./prompts/projectContext";

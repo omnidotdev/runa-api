@@ -44,9 +44,7 @@ function ensureCleanupTimer(windowMs: number): void {
     const now = Date.now();
     for (const [key, entry] of store) {
       // Remove timestamps outside the largest possible window
-      entry.timestamps = entry.timestamps.filter(
-        (ts) => now - ts < windowMs,
-      );
+      entry.timestamps = entry.timestamps.filter((ts) => now - ts < windowMs);
       if (entry.timestamps.length === 0) {
         store.delete(key);
       }

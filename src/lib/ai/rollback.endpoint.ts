@@ -23,8 +23,9 @@ import {
   tasks,
 } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { authenticateRequest, validateProjectAccess } from "./auth";
+
+import type { AuthenticatedUser } from "./auth";
 
 // ─────────────────────────────────────────────
 // Constants
@@ -119,10 +120,7 @@ async function applyRollback(
           patch.dueDate = previousState.dueDate;
 
         if (Object.keys(patch).length > 0) {
-          await tx
-            .update(tasks)
-            .set(patch)
-            .where(eq(tasks.id, entityId));
+          await tx.update(tasks).set(patch).where(eq(tasks.id, entityId));
         }
         return `Restored task ${entityId} to previous state`;
       }
@@ -304,9 +302,7 @@ async function applyBatchRollback(
     }
 
     default:
-      throw new Error(
-        `Unsupported batch rollback operation: ${operation}`,
-      );
+      throw new Error(`Unsupported batch rollback operation: ${operation}`);
   }
 }
 
@@ -325,14 +321,13 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -434,8 +429,7 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
           description,
         };
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Rollback failed";
+        const message = err instanceof Error ? err.message : "Rollback failed";
         // Client-actionable errors (double-rollback) get 409 Conflict
         if (message.includes("already been rolled back")) {
           set.status = 409;
@@ -461,14 +455,13 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -492,9 +485,7 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
       // Validate access to ALL unique projects referenced by session activities,
       // not just the first. A session could span multiple projects if the agent
       // operated cross-project.
-      const uniqueProjectIds = [
-        ...new Set(activities.map((a) => a.projectId)),
-      ];
+      const uniqueProjectIds = [...new Set(activities.map((a) => a.projectId))];
 
       try {
         for (const pid of uniqueProjectIds) {
@@ -528,15 +519,12 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
       }
 
       // Filter to activities that have snapshots
-      const rollbackable = activities.filter(
-        (a) => a.snapshotBefore !== null,
-      );
+      const rollbackable = activities.filter((a) => a.snapshotBefore !== null);
 
       if (rollbackable.length === 0) {
         set.status = 400;
         return {
-          error:
-            "No activities in this session have snapshots for rollback.",
+          error: "No activities in this session have snapshots for rollback.",
         };
       }
 
@@ -566,11 +554,7 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
             if (claimed.length === 0) continue;
 
             const snapshot = activity.snapshotBefore as Snapshot;
-            const desc = await applyRollback(
-              snapshot,
-              tx,
-              activity.projectId,
-            );
+            const desc = await applyRollback(snapshot, tx, activity.projectId);
 
             descriptions.push({
               activityId: activity.id,
@@ -612,9 +596,7 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
         };
       } catch (err) {
         const message =
-          err instanceof Error
-            ? err.message
-            : "Session rollback failed";
+          err instanceof Error ? err.message : "Session rollback failed";
         if (message.includes("already rolled back")) {
           set.status = 409;
         } else {
@@ -648,14 +630,13 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
         return { error: "toolInput payload exceeds maximum allowed size" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -729,11 +710,7 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
             );
           }
 
-          const desc = await applyRollback(
-            snapshot,
-            tx,
-            activity.projectId,
-          );
+          const desc = await applyRollback(snapshot, tx, activity.projectId);
 
           await tx.insert(agentActivities).values({
             organizationId: activity.organizationId,
@@ -759,8 +736,7 @@ const aiRollbackRoutes = new Elysia({ prefix: "/api/ai/rollback" })
           description,
         };
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Rollback failed";
+        const message = err instanceof Error ? err.message : "Rollback failed";
         if (message.includes("already been rolled back")) {
           set.status = 409;
         } else {

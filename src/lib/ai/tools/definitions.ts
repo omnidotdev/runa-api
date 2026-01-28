@@ -27,9 +27,10 @@ import { z } from "zod";
  * @param needsApproval - Whether to enable approval gating
  * @returns A new tool definition with needsApproval set, or the original if false
  */
-export function withApproval<
-  TDef extends ReturnType<typeof toolDefinition>,
->(def: TDef, needsApproval: boolean): TDef {
+export function withApproval<TDef extends ReturnType<typeof toolDefinition>>(
+  def: TDef,
+  needsApproval: boolean,
+): TDef {
   if (!needsApproval) return def;
 
   return toolDefinition({
@@ -71,11 +72,7 @@ export const queryTasksDef = toolDefinition({
       .uuid()
       .optional()
       .describe("Filter by assignee user ID"),
-    labelId: z
-      .string()
-      .uuid()
-      .optional()
-      .describe("Filter by label ID"),
+    labelId: z.string().uuid().optional().describe("Filter by label ID"),
     limit: z
       .number()
       .optional()
@@ -308,7 +305,10 @@ export const moveTaskDef = toolDefinition({
       .number()
       .optional()
       .describe("Task number (use when user refers to T-42 or #42)"),
-    columnId: z.string().uuid().describe("Target column ID to move the task to"),
+    columnId: z
+      .string()
+      .uuid()
+      .describe("Target column ID to move the task to"),
   }),
   outputSchema: z.object({
     task: z.object({
@@ -355,11 +355,12 @@ export const assignTaskDef = toolDefinition({
 
 /**
  * Add a label to a task.
+ * Supports referencing labels by ID or by name. Can optionally create new labels.
  */
 export const addLabelDef = toolDefinition({
   name: "addLabel",
   description:
-    "Add a label to a task. The label must already exist in the project or organization.",
+    "Add a label to a task. You can reference the label by ID or by name. If the label doesn't exist and createIfMissing is false (default), an error is returned so you can ask the user if they want to create it. If createIfMissing is true, a new project label will be created.",
   inputSchema: z.object({
     taskId: z
       .string()
@@ -370,7 +371,33 @@ export const addLabelDef = toolDefinition({
       .number()
       .optional()
       .describe("Task number (use when user refers to T-42 or #42)"),
-    labelId: z.string().uuid().describe("Label ID to add"),
+    labelId: z
+      .string()
+      .uuid()
+      .optional()
+      .describe(
+        "Label ID to add (use if you have the exact ID from queryProject)",
+      ),
+    labelName: z
+      .string()
+      .optional()
+      .describe(
+        "Label name to add. The tool will search for an existing label with this name in the project or organization.",
+      ),
+    createIfMissing: z
+      .boolean()
+      .optional()
+      .default(false)
+      .describe(
+        "If true and the label doesn't exist, create a new project label. If false (default), return an error when label is not found so you can confirm with the user first.",
+      ),
+    labelColor: z
+      .string()
+      .optional()
+      .default("blue")
+      .describe(
+        "Color for new label (only used when createIfMissing is true). Options: gray, red, orange, yellow, green, blue, purple, pink.",
+      ),
   }),
   outputSchema: z.object({
     taskId: z.string(),
@@ -378,6 +405,7 @@ export const addLabelDef = toolDefinition({
     taskTitle: z.string(),
     labelId: z.string(),
     labelName: z.string(),
+    labelCreated: z.boolean().describe("Whether a new label was created"),
   }),
 });
 
@@ -513,7 +541,10 @@ export const batchMoveTasksDef = toolDefinition({
       .min(1)
       .max(50)
       .describe("Tasks to move (1-50)"),
-    columnId: z.string().uuid().describe("Target column ID to move all tasks to"),
+    columnId: z
+      .string()
+      .uuid()
+      .describe("Target column ID to move all tasks to"),
   }),
   outputSchema: z.object({
     movedCount: z.number(),

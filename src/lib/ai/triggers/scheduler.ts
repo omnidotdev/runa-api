@@ -25,7 +25,6 @@ import {
   userOrganizations,
 } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { createAdapter, resolveAgentConfig } from "../config";
 import { buildProjectContext } from "../prompts/projectContext";
 import { buildSystemPrompt } from "../prompts/system";
@@ -113,13 +112,9 @@ async function executeSchedule(schedule: SelectAgentSchedule): Promise<void> {
 
   // 1. Resolve agent config
   const agentConfig = await resolveAgentConfig(organizationId);
-  const { orgApiKey, ...safeConfig } = agentConfig;
+  const { orgApiKey, model } = agentConfig;
 
-  const adapter = createAdapter(
-    safeConfig.provider,
-    safeConfig.model,
-    orgApiKey,
-  );
+  const adapter = createAdapter(model, orgApiKey);
 
   // 2. Find a user in this organization for FK constraints
   const orgMembership = await dbPool.query.userOrganizations.findFirst({
@@ -273,7 +268,6 @@ export async function pollSchedules(): Promise<void> {
 
     if (claimedSchedules.length === 0) return;
 
-    // biome-ignore lint/suspicious/noConsole: scheduler metrics
     console.info(
       `[AI Scheduler] Claimed ${claimedSchedules.length} due schedule(s)`,
     );
@@ -281,7 +275,6 @@ export async function pollSchedules(): Promise<void> {
     // Execute each claimed schedule (fire-and-forget with concurrency guard)
     for (const schedule of claimedSchedules) {
       if (runningSchedules.has(schedule.id)) {
-        // biome-ignore lint/suspicious/noConsole: scheduler metrics
         console.info(
           `[AI Scheduler] Skipping ${schedule.id} — already running`,
         );
@@ -300,7 +293,6 @@ export async function pollSchedules(): Promise<void> {
       // Execute the schedule asynchronously, then recompute nextRunAt
       executeSchedule(schedule)
         .then(() => {
-          // biome-ignore lint/suspicious/noConsole: scheduler metrics
           console.info("[AI Scheduler] Completed:", {
             scheduleId: schedule.id,
             name: schedule.name,
@@ -308,7 +300,6 @@ export async function pollSchedules(): Promise<void> {
           });
         })
         .catch((err) => {
-          // biome-ignore lint/suspicious/noConsole: error logging
           console.error("[AI Scheduler] Execution failed:", {
             scheduleId: schedule.id,
             error: err instanceof Error ? err.message : String(err),
@@ -324,7 +315,6 @@ export async function pollSchedules(): Promise<void> {
             .set({ nextRunAt: nextRun, updatedAt: sql`now()` })
             .where(eq(agentSchedules.id, schedule.id))
             .catch((err) => {
-              // biome-ignore lint/suspicious/noConsole: error logging
               console.error("[AI Scheduler] Failed to set nextRunAt:", {
                 scheduleId: schedule.id,
                 error: err instanceof Error ? err.message : String(err),
@@ -333,7 +323,6 @@ export async function pollSchedules(): Promise<void> {
         });
     }
   } catch (err) {
-    // biome-ignore lint/suspicious/noConsole: error logging
     console.error(
       "[AI Scheduler] Poll error:",
       err instanceof Error ? err.message : String(err),
@@ -352,9 +341,7 @@ export async function pollSchedules(): Promise<void> {
  * Respects the same concurrency guard as `pollSchedules` to prevent
  * overlapping runs from manual + scheduled execution.
  */
-export async function executeScheduleById(
-  scheduleId: string,
-): Promise<void> {
+export async function executeScheduleById(scheduleId: string): Promise<void> {
   if (runningSchedules.has(scheduleId)) {
     throw new Error(`Schedule ${scheduleId} is already running`);
   }
@@ -377,7 +364,6 @@ export async function executeScheduleById(
 
     await executeSchedule(schedule);
 
-    // biome-ignore lint/suspicious/noConsole: manual trigger logging
     console.info("[AI Scheduler] Manual run completed:", {
       scheduleId,
       name: schedule.name,

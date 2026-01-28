@@ -14,6 +14,12 @@ import { makeSchema } from "postgraphile";
 import { context, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
 
+import {
+  MAX_INSTRUCTION_LENGTH,
+  detectMention,
+  handleMention,
+  stripHtml,
+} from "lib/ai/triggers/mention";
 import { getDefaultOrganization } from "lib/auth/organizations";
 import {
   checkPermission,
@@ -152,6 +158,12 @@ const generateGraphqlSchema = async () => {
       },
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
+      "lib/ai/triggers/mention": {
+        detectMention,
+        handleMention,
+        stripHtml,
+        MAX_INSTRUCTION_LENGTH,
+      },
     },
   });
 

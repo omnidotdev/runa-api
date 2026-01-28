@@ -13,8 +13,9 @@ import { Elysia, t } from "elysia";
 import { dbPool } from "lib/db/db";
 import { agentConfigs, agentPersonas } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { authenticateRequest } from "./auth";
+
+import type { AuthenticatedUser } from "./auth";
 
 /** Max system prompt length for personas. */
 const MAX_SYSTEM_PROMPT_LENGTH = 4000;
@@ -55,14 +56,13 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -97,14 +97,13 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -136,7 +135,8 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         .values({
           organizationId: body.organizationId,
           name,
-          description: body.description?.trim().slice(0, MAX_DESCRIPTION_LENGTH) ?? null,
+          description:
+            body.description?.trim().slice(0, MAX_DESCRIPTION_LENGTH) ?? null,
           systemPrompt,
           icon: body.icon?.slice(0, 10) ?? null,
           enabled: body.enabled ?? true,
@@ -166,14 +166,13 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -272,14 +271,13 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 

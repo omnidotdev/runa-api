@@ -111,10 +111,7 @@ export function createQueryTools(context: {
 
     // Build lookup maps
     const columnMap = new Map(columnRows.map((c) => [c.id, c.title]));
-    const assigneeMap = new Map<
-      string,
-      Array<{ id: string; name: string }>
-    >();
+    const assigneeMap = new Map<string, Array<{ id: string; name: string }>>();
     for (const a of taskAssignees) {
       const existing = assigneeMap.get(a.taskId) ?? [];
       existing.push({ id: a.userId, name: a.userName });
@@ -216,9 +213,7 @@ export function createQueryTools(context: {
         .where(eq(tasks.projectId, context.projectId))
         .groupBy(tasks.columnId);
 
-      const countMap = new Map(
-        taskCounts.map((tc) => [tc.columnId, tc.count]),
-      );
+      const countMap = new Map(taskCounts.map((tc) => [tc.columnId, tc.count]));
 
       columnsWithCounts = projectColumns.map((c) => ({
         ...c,

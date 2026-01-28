@@ -32,12 +32,12 @@ export const {
   FLAGS_CLIENT_KEY,
   // Self-hosted mode
   SELF_HOSTED,
-  // AI Agent
-  ANTHROPIC_API_KEY,
-  OPENAI_API_KEY,
-  AGENT_DEFAULT_PROVIDER,
+  // AI Agent (OpenRouter)
+  OPENROUTER_API_KEY,
   AGENT_DEFAULT_MODEL,
   AGENT_MAX_ITERATIONS,
+  // Env var override for enabling agent without Unleash (local dev)
+  AGENT_ENABLED,
   // BYOK encryption key for org-provided API keys (AES-256-GCM)
   ENCRYPTION_SECRET,
 } = process.env;

@@ -15,7 +15,8 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 /**
  * Agent configuration table.
  *
- * Stores LLM provider configuration and agent behavior settings per organization.
+ * Stores LLM configuration and agent behavior settings per organization.
+ * Uses OpenRouter as the unified LLM provider (access to 300+ models).
  * 1:1 relationship with organizations (via organizationId from IDP).
  */
 export const agentConfigs = pgTable(
@@ -24,16 +25,13 @@ export const agentConfigs = pgTable(
     id: generateDefaultId(),
     organizationId: text().notNull().unique(),
 
-    // LLM Provider
-    provider: text().notNull().default("anthropic"),
-    model: text().notNull().default("claude-sonnet-4-5"),
+    // LLM Model (OpenRouter format: provider/model-name)
+    // e.g., "anthropic/claude-sonnet-4.5", "openai/gpt-4o"
+    model: text().notNull().default("anthropic/claude-sonnet-4.5"),
 
-    // BYOK: Encrypted API key provided by the organization.
+    // BYOK: Encrypted OpenRouter API key provided by the organization.
     // Stored as AES-256-GCM ciphertext (base64). Decrypted in-memory only.
     encryptedApiKey: text(),
-    // Provider associated with the encrypted key (e.g. "anthropic", "openai").
-    // Must match `provider` when set. Null when using server-level env keys.
-    keyProvider: text(),
 
     // Agent behavior
     enabled: boolean().notNull().default(false),

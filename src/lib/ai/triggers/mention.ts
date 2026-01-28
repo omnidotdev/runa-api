@@ -15,7 +15,6 @@ import { eq } from "drizzle-orm";
 import { dbPool } from "lib/db/db";
 import { posts, projects, tasks, users } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { createAdapter, resolveAgentConfig } from "../config";
 import { buildProjectContext } from "../prompts/projectContext";
 import { buildSystemPrompt } from "../prompts/system";
@@ -30,7 +29,7 @@ import type { StreamChunk } from "@tanstack/ai";
 // ─────────────────────────────────────────────
 
 /** Maximum instruction length to prevent excessively long prompts. */
-const MAX_INSTRUCTION_LENGTH = 2_000;
+export const MAX_INSTRUCTION_LENGTH = 2_000;
 
 /**
  * Strip HTML tags from content to get plain text for mention detection.
@@ -40,7 +39,7 @@ const MAX_INSTRUCTION_LENGTH = 2_000;
  * attributes may produce imperfect output, but that only causes false
  * negatives for mention detection — not a security issue.
  */
-function stripHtml(html: string): string {
+export function stripHtml(html: string): string {
   return html
     .replace(/<[^>]*>/g, " ")
     .replace(/&amp;/g, "&")
@@ -171,7 +170,6 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
       USER_RATE_LIMIT,
     );
     if (!userRateResult.allowed) {
-      // biome-ignore lint/suspicious/noConsole: rate limit logging
       console.info("[AI Mention] Rate limited for user:", ctx.userId);
       return;
     }
@@ -181,7 +179,6 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
       TASK_RATE_LIMIT,
     );
     if (!taskRateResult.allowed) {
-      // biome-ignore lint/suspicious/noConsole: rate limit logging
       console.info("[AI Mention] Rate limited for task:", ctx.taskId);
       return;
     }
@@ -204,13 +201,9 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
 
     // 4. Resolve agent config
     const agentConfig = await resolveAgentConfig(organizationId);
-    const { orgApiKey, ...safeConfig } = agentConfig;
+    const { orgApiKey, model } = agentConfig;
 
-    const adapter = createAdapter(
-      safeConfig.provider,
-      safeConfig.model,
-      orgApiKey,
-    );
+    const adapter = createAdapter(model, orgApiKey);
 
     // 5. Create session for audit trail
     const session = await createSession({
@@ -256,10 +249,17 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
       organizationId,
     });
 
-    const { createTask, updateTask, moveTask, assignTask, addLabel, removeLabel, addComment } =
-      createWriteTools(writeContext, {
-        requireApprovalForCreate: agentConfig.requireApprovalForCreate,
-      });
+    const {
+      createTask,
+      updateTask,
+      moveTask,
+      assignTask,
+      addLabel,
+      removeLabel,
+      addComment,
+    } = createWriteTools(writeContext, {
+      requireApprovalForCreate: agentConfig.requireApprovalForCreate,
+    });
 
     // 8. Build the user message from the mention
     const { instruction } = detectMention(ctx.commentText);
@@ -318,7 +318,6 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
     // 11. Persist session for audit trail
     await saveSessionMessages(session.id, allMessages);
 
-    // biome-ignore lint/suspicious/noConsole: structured mention metrics
     console.info("[AI Mention] Completed:", {
       taskId: ctx.taskId,
       taskNumber: task.number,
@@ -326,7 +325,6 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
       hasResponse: !!assistantContent,
     });
   } catch (err) {
-    // biome-ignore lint/suspicious/noConsole: error logging for fire-and-forget
     console.error("[AI Mention] Unhandled error:", {
       taskId: ctx.taskId,
       userId: ctx.userId,

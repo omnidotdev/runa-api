@@ -1,14 +1,11 @@
 import { QueryClient } from "@tanstack/query-core";
+import { eq } from "drizzle-orm";
 import { jwtVerify } from "jose";
 import ms from "ms";
 
-import {
-  AUTH_BASE_URL,
-  isSelfHosted,
-} from "lib/config/env.config";
+import { AUTH_BASE_URL, isSelfHosted } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { projects, users } from "lib/db/schema";
-import { eq } from "drizzle-orm";
 
 import type { JWTPayload } from "jose";
 import type { SelectUser } from "lib/db/schema";
@@ -90,9 +87,7 @@ async function getSelfHostedKey(): Promise<Uint8Array> {
 export async function authenticateRequest(
   request: Request,
 ): Promise<AuthenticatedUser> {
-  const accessToken = request.headers
-    .get("authorization")
-    ?.split("Bearer ")[1];
+  const accessToken = request.headers.get("authorization")?.split("Bearer ")[1];
 
   if (!accessToken) {
     throw new Error("Missing or invalid authorization header");

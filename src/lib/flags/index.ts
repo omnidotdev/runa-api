@@ -1,3 +1,4 @@
+import { AGENT_ENABLED } from "lib/config/env.config";
 import { isEnabled } from "./client";
 
 /** @knipignore */
@@ -16,8 +17,13 @@ export const isMaintenanceMode = async (): Promise<boolean> => {
 
 /**
  * Check if the AI agent feature is enabled.
+ *
+ * Supports env var override (AGENT_ENABLED=true) for local development
+ * without Unleash. In production, use the feature flag.
  */
 export const isAgentEnabled = async (): Promise<boolean> => {
+  // Allow env var override for local development
+  if (AGENT_ENABLED === "true") return true;
   return isEnabled(FLAGS.AGENT_ENABLED, false);
 };
 
@@ -25,5 +31,7 @@ export const isAgentEnabled = async (): Promise<boolean> => {
  * Check if the agent chat panel is enabled.
  */
 export const isAgentChatPanelEnabled = async (): Promise<boolean> => {
+  // Use same override as isAgentEnabled for consistency
+  if (AGENT_ENABLED === "true") return true;
   return isEnabled(FLAGS.AGENT_CHAT_PANEL, false);
 };

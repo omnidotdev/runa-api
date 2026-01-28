@@ -46,10 +46,7 @@ const mentionDetector = (): PlanWrapperFn =>
             // to prevent recursive mention loops. The agent posts replies via
             // direct DB insert, but this guard is defense-in-depth in case
             // the reply path ever changes to go through GraphQL.
-            if (
-              postInput.authorId === null ||
-              postInput.authorId === undefined
-            )
+            if (postInput.authorId === null || postInput.authorId === undefined)
               return;
 
             // Check for @agent / @runa mention
@@ -65,7 +62,6 @@ const mentionDetector = (): PlanWrapperFn =>
               accessToken,
               commentText: postInput.description,
             }).catch((err) => {
-              // biome-ignore lint/suspicious/noConsole: fire-and-forget error logging
               console.error(
                 "[AI Mention] Failed to handle mention:",
                 err instanceof Error ? err.message : String(err),

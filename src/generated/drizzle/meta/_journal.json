@@ -330,6 +330,13 @@
       "when": 1769548562644,
       "tag": "0046_bouncy_tempest",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1769607784936,
+      "tag": "0047_military_richard_fisk",
+      "breakpoints": true
     }
   ]
 }

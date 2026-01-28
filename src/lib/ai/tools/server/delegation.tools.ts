@@ -19,7 +19,6 @@ import { createAdapter, resolvePersona } from "../../config";
 import { buildProjectContext } from "../../prompts/projectContext";
 import { buildSystemPrompt } from "../../prompts/system";
 import { delegateToAgentDef } from "../definitions";
-
 import { createQueryTools } from "./query.tools";
 import { createWriteTools } from "./write.tools";
 
@@ -76,7 +75,6 @@ export function createDelegationTool(context: DelegationContext) {
       };
     }
 
-    // biome-ignore lint/suspicious/noConsole: structured delegation logging
     console.info("[AI] Delegation started:", {
       parentDepth: context.delegationDepth,
       targetPersonaId: input.personaId,
@@ -151,12 +149,8 @@ export function createDelegationTool(context: DelegationContext) {
 
       // Extract and clear the decrypted key to match chat.endpoint.ts pattern —
       // prevent plaintext from lingering in the long-lived closure.
-      const { orgApiKey, ...safeConfig } = context.agentConfig;
-      const adapter = createAdapter(
-        safeConfig.provider,
-        safeConfig.model,
-        orgApiKey,
-      );
+      const { orgApiKey, model } = context.agentConfig;
+      const adapter = createAdapter(model, orgApiKey);
 
       // Wrap instruction in structured framing to reduce prompt injection surface
       const framedInstruction = [
@@ -184,7 +178,6 @@ export function createDelegationTool(context: DelegationContext) {
 
       const durationMs = Date.now() - startTime;
 
-      // biome-ignore lint/suspicious/noConsole: structured delegation logging
       console.info("[AI] Delegation completed:", {
         parentDepth: context.delegationDepth,
         targetPersonaName: persona.name,
@@ -205,7 +198,6 @@ export function createDelegationTool(context: DelegationContext) {
       const isTimeout =
         error instanceof Error && error.message === "DELEGATION_TIMEOUT";
 
-      // biome-ignore lint/suspicious/noConsole: structured error logging
       console.error("[AI] Delegation failed:", {
         parentDepth: context.delegationDepth,
         targetPersonaId: input.personaId,

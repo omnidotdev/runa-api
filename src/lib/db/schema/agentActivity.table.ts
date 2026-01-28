@@ -74,23 +74,20 @@ export const agentActivities = pgTable(
   ],
 );
 
-export const agentActivityRelations = relations(
-  agentActivities,
-  ({ one }) => ({
-    session: one(agentSessions, {
-      fields: [agentActivities.sessionId],
-      references: [agentSessions.id],
-    }),
-    user: one(users, {
-      fields: [agentActivities.userId],
-      references: [users.id],
-    }),
-    project: one(projects, {
-      fields: [agentActivities.projectId],
-      references: [projects.id],
-    }),
+export const agentActivityRelations = relations(agentActivities, ({ one }) => ({
+  session: one(agentSessions, {
+    fields: [agentActivities.sessionId],
+    references: [agentSessions.id],
   }),
-);
+  user: one(users, {
+    fields: [agentActivities.userId],
+    references: [users.id],
+  }),
+  project: one(projects, {
+    fields: [agentActivities.projectId],
+    references: [projects.id],
+  }),
+}));
 
 export type InsertAgentActivity = InferInsertModel<typeof agentActivities>;
 export type SelectAgentActivity = InferSelectModel<typeof agentActivities>;

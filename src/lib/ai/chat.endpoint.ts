@@ -2,16 +2,11 @@ import { chat, maxIterations, toServerSentEventsResponse } from "@tanstack/ai";
 import { Elysia, t } from "elysia";
 
 import { isAgentEnabled } from "lib/flags";
-
 import { authenticateRequest, validateProjectAccess } from "./auth";
 import { createAdapter, resolveAgentConfig, resolvePersona } from "./config";
 import { buildProjectContext } from "./prompts/projectContext";
 import { buildSystemPrompt } from "./prompts/system";
-import {
-  checkRateLimit,
-  ORG_CHAT_LIMIT,
-  USER_CHAT_LIMIT,
-} from "./rateLimit";
+import { ORG_CHAT_LIMIT, USER_CHAT_LIMIT, checkRateLimit } from "./rateLimit";
 import {
   createSession,
   listSessions,
@@ -26,6 +21,8 @@ import {
 } from "./tools/server";
 
 import type { ModelMessage, StreamChunk } from "@tanstack/ai";
+import type { SelectAgentSession } from "lib/db/schema";
+import type { AuthenticatedUser } from "./auth";
 
 /** Elysia/TypeBox schema for ModelMessage validation. */
 const modelMessageSchema = t.Object(
@@ -35,11 +32,77 @@ const modelMessageSchema = t.Object(
       t.Literal("assistant"),
       t.Literal("tool"),
     ]),
-    content: t.Union([t.String(), t.Array(t.Any())]),
+    // TanStack AI sends `null` for tool-only messages (e.g., after approval)
+    content: t.Union([t.String(), t.Array(t.Any()), t.Null()]),
     toolCallId: t.Optional(t.String()),
   },
   { additionalProperties: true },
 );
+
+/** Schema for approval responses sent separately from messages. */
+const approvalResponseSchema = t.Object({
+  id: t.String(),
+  approved: t.Boolean(),
+});
+
+/**
+ * TanStack AI's collectClientState looks for approval info in UIMessage format
+ * (with .parts array), but the client sends ModelMessage format. This interface
+ * represents a synthetic message we inject to carry approval state.
+ */
+interface ApprovalCarrierMessage {
+  role: "assistant";
+  parts: Array<{
+    type: "tool-call";
+    id: string;
+    state: "approval-responded";
+    approval: {
+      id: string;
+      approved: boolean;
+    };
+  }>;
+}
+
+/**
+ * Convert approval responses from the client into a synthetic message
+ * that TanStack AI's collectClientState can parse.
+ *
+ * TanStack AI generates approval IDs in the format "approval_${toolCallId}".
+ * We extract the tool call ID for the carrier message but keep the full
+ * approval ID for the approval lookup.
+ *
+ * NOTE: This is a workaround for TanStack AI not serializing approval state
+ * in ModelMessages. Consider reporting upstream: https://github.com/TanStack/ai
+ */
+function createApprovalCarrierMessage(
+  approvals: Array<{ id: string; approved: boolean }>,
+): ApprovalCarrierMessage {
+  const APPROVAL_PREFIX = "approval_";
+
+  return {
+    role: "assistant",
+    parts: approvals.map((approval) => {
+      // TanStack AI uses "approval_${toolCallId}" format
+      const toolCallId = approval.id.startsWith(APPROVAL_PREFIX)
+        ? approval.id.slice(APPROVAL_PREFIX.length)
+        : approval.id;
+
+      if (!approval.id.startsWith(APPROVAL_PREFIX)) {
+        console.warn("[AI] Approval ID has unexpected format:", approval.id);
+      }
+
+      return {
+        type: "tool-call" as const,
+        id: toolCallId,
+        state: "approval-responded" as const,
+        approval: {
+          id: approval.id,
+          approved: approval.approved,
+        },
+      };
+    }),
+  };
+}
 
 /**
  * AI Agent routes.
@@ -59,19 +122,18 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       }
 
       // Authenticate
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
       // Validate project access
-      let projectAccess;
+      let projectAccess: { organizationId: string };
       try {
         projectAccess = await validateProjectAccess(
           body.projectId,
@@ -87,10 +149,7 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       const { organizationId } = projectAccess;
 
       // Rate-limit: per-user and per-org
-      const userLimit = checkRateLimit(
-        `user:${auth.user.id}`,
-        USER_CHAT_LIMIT,
-      );
+      const userLimit = checkRateLimit(`user:${auth.user.id}`, USER_CHAT_LIMIT);
       if (!userLimit.allowed) {
         set.status = 429;
         set.headers["Retry-After"] = String(userLimit.retryAfterSeconds);
@@ -101,7 +160,9 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       if (!orgLimit.allowed) {
         set.status = 429;
         set.headers["Retry-After"] = String(orgLimit.retryAfterSeconds);
-        return { error: "Organization rate limit exceeded. Please try again later." };
+        return {
+          error: "Organization rate limit exceeded. Please try again later.",
+        };
       }
 
       const requestStartTime = Date.now();
@@ -110,7 +171,7 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       const agentConfig = await resolveAgentConfig(organizationId);
 
       // Load or create session
-      let session;
+      let session: SelectAgentSession;
       if (body.sessionId) {
         session = await loadSession(
           body.sessionId,
@@ -148,9 +209,34 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       // Use messages from client — filter out any system role as defense-in-depth.
       // Cast to `string` comparison because TypeBox schema already excludes "system",
       // but runtime payloads could still contain it if validation is bypassed.
-      const allMessages = (body.messages as ModelMessage[]).filter(
+      const filteredMessages = (body.messages as ModelMessage[]).filter(
         (m) => (m.role as string) !== "system",
       );
+
+      // Inject approval state into messages.
+      // TanStack AI's collectClientState expects UIMessage format with .parts,
+      // but ModelMessages don't include approval info. We create a synthetic
+      // "carrier" message that collectClientState can parse.
+      //
+      // The carrier message is cast through `unknown` because it's a hybrid:
+      // - Has `role: "assistant"` like ModelMessage
+      // - Has `parts` array like UIMessage (for collectClientState to find approvals)
+      // This intentional structure mismatch is the workaround for TanStack AI
+      // not serializing approval state in ModelMessages.
+      //
+      // TODO: Add validation that approval IDs correspond to pending approvals
+      // from this session to prevent unauthorized approval injection.
+      const approvals = body.approvals ?? [];
+
+      const allMessages =
+        approvals.length > 0
+          ? [
+              ...filteredMessages,
+              createApprovalCarrierMessage(
+                approvals,
+              ) as unknown as ModelMessage,
+            ]
+          : filteredMessages;
 
       // Create tools
       const { queryTasks, queryProject, getTask } = createQueryTools({
@@ -178,12 +264,8 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         requireApprovalForCreate: agentConfig.requireApprovalForCreate,
       });
 
-      const {
-        deleteTask,
-        batchMoveTasks,
-        batchUpdateTasks,
-        batchDeleteTasks,
-      } = createDestructiveTools(writeContext, agentConfig);
+      const { deleteTask, batchMoveTasks, batchUpdateTasks, batchDeleteTasks } =
+        createDestructiveTools(writeContext, agentConfig);
 
       // Agent-to-Agent delegation (Phase 9B)
       const delegateToAgent = createDelegationTool({
@@ -205,12 +287,8 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       // Create adapter (uses org-provided key when available, falls back to env).
       // Extract and clear the decrypted key immediately after adapter creation
       // to prevent the plaintext from lingering in the long-lived SSE closure.
-      const { orgApiKey, ...safeConfig } = agentConfig;
-      const adapter = createAdapter(
-        safeConfig.provider,
-        safeConfig.model,
-        orgApiKey,
-      );
+      const { orgApiKey, model } = agentConfig;
+      const adapter = createAdapter(model, orgApiKey);
 
       // Create streaming response
       // Messages validated by TypeBox schema; adapter chosen dynamically so cast is required
@@ -314,7 +392,6 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
           saveSessionMessages(session.id, finalMessages, {
             toolCalls: baseToolCallCount + newToolCallCount,
           }).catch((err) => {
-            // biome-ignore lint/suspicious/noConsole: fire-and-forget persistence error logging
             console.error("[AI] Failed to save session messages:", {
               ...requestMeta,
               error: err instanceof Error ? err.message : String(err),
@@ -322,7 +399,6 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             });
           });
 
-          // biome-ignore lint/suspicious/noConsole: structured request metrics
           console.info("[AI] Chat completed:", {
             ...requestMeta,
             toolCallCount: newToolCallCount,
@@ -350,6 +426,8 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         sessionId: t.Optional(t.String()),
         personaId: t.Optional(t.String()),
         messages: t.Array(modelMessageSchema),
+        // Approval responses sent separately since ModelMessage format doesn't preserve them
+        approvals: t.Optional(t.Array(approvalResponseSchema)),
       }),
     },
   )
@@ -364,14 +442,13 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       }
 
       // Authenticate
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 

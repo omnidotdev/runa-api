@@ -19,7 +19,6 @@ import { and, eq } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import { columns, tasks } from "lib/db/schema";
-
 import {
   batchDeleteTasksDef,
   batchMoveTasksDef,
@@ -31,8 +30,8 @@ import { logActivity } from "./activity";
 import { getNextColumnIndex, resolveTask } from "./helpers";
 import { requireProjectPermission } from "./permissions";
 
-import type { WriteToolContext } from "./context";
 import type { ResolvedAgentConfig } from "../../config";
+import type { WriteToolContext } from "./context";
 
 // ─────────────────────────────────────────────
 // Factory
@@ -307,10 +306,7 @@ export function createDestructiveTools(
             dueDate: task.dueDate,
           });
 
-          await tx
-            .update(tasks)
-            .set(patch)
-            .where(eq(tasks.id, task.id));
+          await tx.update(tasks).set(patch).where(eq(tasks.id, task.id));
 
           updatedTasks.push({
             id: task.id,

@@ -84,7 +84,6 @@ const backfillProjectTuples = async () => {
         `  Batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(orgWorkspaceTuples.length / BATCH_SIZE)} (${batch.length} tuples)`,
       );
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: script logging
       console.error(`  Failed batch ${Math.floor(i / BATCH_SIZE) + 1}:`, error);
     }
   }
@@ -103,7 +102,6 @@ const backfillProjectTuples = async () => {
         `  Batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(workspaceProjectTuples.length / BATCH_SIZE)} (${batch.length} tuples)`,
       );
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: script logging
       console.error(`  Failed batch ${Math.floor(i / BATCH_SIZE) + 1}:`, error);
     }
   }

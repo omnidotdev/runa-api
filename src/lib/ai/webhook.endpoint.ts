@@ -17,7 +17,6 @@ import { Elysia, t } from "elysia";
 import { dbPool } from "lib/db/db";
 import { agentWebhooks } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { authenticateRequest, validateProjectAccess } from "./auth";
 import { encrypt } from "./encryption";
 import {
@@ -26,6 +25,8 @@ import {
   handleWebhook,
   verifyWebhookSignature,
 } from "./triggers/webhook";
+
+import type { AuthenticatedUser } from "./auth";
 
 /** Max instruction template length. */
 const MAX_TEMPLATE_LENGTH = 4_000;
@@ -53,14 +54,13 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -104,14 +104,13 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -134,8 +133,7 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         (org) => org.id === organizationId,
       );
       const isAdmin =
-        orgClaim?.roles.includes("admin") ||
-        orgClaim?.roles.includes("owner");
+        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
       if (!isAdmin) {
         set.status = 403;
         return {
@@ -232,14 +230,13 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -262,8 +259,7 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         (org) => org.id === organizationId,
       );
       const isAdmin =
-        orgClaim?.roles.includes("admin") ||
-        orgClaim?.roles.includes("owner");
+        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
       if (!isAdmin) {
         set.status = 403;
         return {
@@ -365,14 +361,13 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -395,8 +390,7 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         (org) => org.id === organizationId,
       );
       const isAdmin =
-        orgClaim?.roles.includes("admin") ||
-        orgClaim?.roles.includes("owner");
+        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
       if (!isAdmin) {
         set.status = 403;
         return {
@@ -524,7 +518,6 @@ const aiWebhookReceiverRoutes = new Elysia({
         eventType,
         eventPayload,
       }).catch((err) => {
-        // biome-ignore lint/suspicious/noConsole: fire-and-forget error logging
         console.error(
           "[AI Webhook] Failed to handle webhook:",
           err instanceof Error ? err.message : String(err),
@@ -534,7 +527,6 @@ const aiWebhookReceiverRoutes = new Elysia({
       set.status = 200;
       return { received: true };
     } catch (err) {
-      // biome-ignore lint/suspicious/noConsole: endpoint error logging
       console.error("[AI Webhook] Receiver error:", err);
       set.status = 500;
       return { error: "Internal server error" };

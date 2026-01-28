@@ -18,6 +18,7 @@ import { dbPool } from "lib/db/db";
 import {
   assignees,
   columns,
+  labels,
   posts,
   taskLabels,
   tasks,
@@ -25,7 +26,6 @@ import {
   users,
 } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements/helpers";
-
 import {
   addCommentDef,
   addLabelDef,
@@ -110,9 +110,7 @@ export function createWriteTools(
       });
 
       if (!column) {
-        throw new Error(
-          `Column ${input.columnId} not found in this project.`,
-        );
+        throw new Error(`Column ${input.columnId} not found in this project.`);
       }
 
       const nextIndex = await getNextColumnIndex(input.columnId);
@@ -210,7 +208,8 @@ export function createWriteTools(
       // Build immutable patch from provided fields only
       const patch: Record<string, unknown> = {};
       if (input.title !== undefined) patch.content = input.title;
-      if (input.description !== undefined) patch.description = input.description;
+      if (input.description !== undefined)
+        patch.description = input.description;
       if (input.priority !== undefined) patch.priority = input.priority;
       if (input.dueDate !== undefined) patch.dueDate = input.dueDate;
 
@@ -302,9 +301,7 @@ export function createWriteTools(
       });
 
       if (!targetColumn) {
-        throw new Error(
-          `Column ${input.columnId} not found in this project.`,
-        );
+        throw new Error(`Column ${input.columnId} not found in this project.`);
       }
 
       // Get source column title
@@ -375,16 +372,12 @@ export function createWriteTools(
       const task = await resolveTask(input, context.projectId);
 
       // Validate user is a member of this organization
-      const membership =
-        await dbPool.query.userOrganizations.findFirst({
-          where: and(
-            eq(userOrganizations.userId, input.userId),
-            eq(
-              userOrganizations.organizationId,
-              context.organizationId,
-            ),
-          ),
-        });
+      const membership = await dbPool.query.userOrganizations.findFirst({
+        where: and(
+          eq(userOrganizations.userId, input.userId),
+          eq(userOrganizations.organizationId, context.organizationId),
+        ),
+      });
 
       if (!membership) {
         throw new Error(
@@ -495,19 +488,78 @@ export function createWriteTools(
     }
 
     try {
-      const task = await resolveTask(input, context.projectId);
-      const label = await resolveLabel(
-        input.labelId,
-        context.projectId,
-        context.organizationId,
-      );
+      // Validate input: either labelId OR labelName must be provided
+      if (!input.labelId && !input.labelName) {
+        throw new Error(
+          "Either labelId or labelName must be provided to add a label.",
+        );
+      }
 
-      // Idempotent insert
+      const task = await resolveTask(input, context.projectId);
+      let label: { id: string; name: string };
+      let labelCreated = false;
+
+      if (input.labelId) {
+        // Use existing label by ID
+        label = await resolveLabel(
+          input.labelId,
+          context.projectId,
+          context.organizationId,
+        );
+      } else {
+        // Find label by name
+        const labelName = input.labelName!.trim();
+
+        // Check project-scoped labels first
+        let existingLabel = await dbPool.query.labels.findFirst({
+          where: and(
+            eq(labels.projectId, context.projectId),
+            eq(labels.name, labelName),
+          ),
+          columns: { id: true, name: true },
+        });
+
+        // Fall back to org-scoped labels
+        if (!existingLabel) {
+          existingLabel = await dbPool.query.labels.findFirst({
+            where: and(
+              eq(labels.organizationId, context.organizationId),
+              eq(labels.name, labelName),
+            ),
+            columns: { id: true, name: true },
+          });
+        }
+
+        if (existingLabel) {
+          label = existingLabel;
+        } else if (input.createIfMissing) {
+          // Create new project-scoped label
+          const labelColor = input.labelColor ?? "blue";
+          const [newLabel] = await dbPool
+            .insert(labels)
+            .values({
+              name: labelName,
+              color: labelColor,
+              projectId: context.projectId,
+            })
+            .returning({ id: labels.id, name: labels.name });
+
+          label = newLabel;
+          labelCreated = true;
+        } else {
+          // Label not found and createIfMissing is false - return error so agent can ask user
+          throw new Error(
+            `Label "${labelName}" not found in this project. Would you like me to create it?`,
+          );
+        }
+      }
+
+      // Idempotent insert of task-label association
       await dbPool
         .insert(taskLabels)
         .values({
           taskId: task.id,
-          labelId: input.labelId,
+          labelId: label.id,
         })
         .onConflictDoNothing();
 
@@ -517,6 +569,7 @@ export function createWriteTools(
         taskTitle: task.content,
         labelId: label.id,
         labelName: label.name,
+        labelCreated,
       };
 
       logActivity({
@@ -527,6 +580,7 @@ export function createWriteTools(
         status: "completed",
         affectedTaskIds: [task.id],
         // Rollback means removing this label from the task
+        // Note: we don't delete created labels on rollback, only the task-label association
         snapshotBefore: {
           operation: "addLabel",
           entityType: "taskLabel",

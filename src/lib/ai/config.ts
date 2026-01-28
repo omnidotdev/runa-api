@@ -1,24 +1,17 @@
-import { createAnthropicChat } from "@tanstack/ai-anthropic";
-import { createOpenaiChat } from "@tanstack/ai-openai";
+import { createOpenRouterText } from "@tanstack/ai-openrouter";
 
 import {
   AGENT_DEFAULT_MODEL,
-  AGENT_DEFAULT_PROVIDER,
   AGENT_MAX_ITERATIONS,
-  ANTHROPIC_API_KEY,
-  OPENAI_API_KEY,
+  OPENROUTER_API_KEY,
 } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-
 import { decrypt } from "./encryption";
 
 import type { SelectAgentConfig, SelectAgentPersona } from "lib/db/schema";
 
-/** Default provider when none configured. */
-const DEFAULT_PROVIDER = "anthropic";
-
-/** Default model when none configured. */
-const DEFAULT_MODEL = "claude-sonnet-4-5";
+/** Default model when none configured (OpenRouter format: provider/model). */
+const DEFAULT_MODEL = "anthropic/claude-sonnet-4.5";
 
 /** Default max agent loop iterations. */
 const DEFAULT_MAX_ITERATIONS = 10;
@@ -26,42 +19,51 @@ const DEFAULT_MAX_ITERATIONS = 10;
 /** Maximum allowed iterations (safety cap). */
 const MAX_ITERATIONS_CAP = 20;
 
-/** Allowed model identifiers per provider. */
-const ALLOWED_MODELS: Record<string, readonly string[]> = {
-  anthropic: [
-    "claude-sonnet-4-5",
-    "claude-haiku-3-5",
-    "claude-sonnet-4-20250514",
-    "claude-opus-4-20250514",
-  ] as const,
-  openai: [
-    "gpt-4o",
-    "gpt-4o-mini",
-    "gpt-4-turbo",
-    "o3-mini",
-  ] as const,
-};
+/**
+ * Allowed model identifiers for OpenRouter.
+ * Uses the format: provider/model-name
+ *
+ * @see https://openrouter.ai/models for full list
+ */
+const ALLOWED_MODELS = [
+  // Anthropic
+  "anthropic/claude-sonnet-4.5",
+  "anthropic/claude-haiku-4.5",
+  "anthropic/claude-opus-4",
+  // OpenAI
+  "openai/gpt-4o",
+  "openai/gpt-4o-mini",
+  "openai/gpt-4-turbo",
+  "openai/o3-mini",
+  // Google
+  "google/gemini-2.0-flash-001",
+  "google/gemini-2.5-pro-preview-05-06",
+  // DeepSeek
+  "deepseek/deepseek-chat",
+  "deepseek/deepseek-r1",
+  // Meta
+  "meta-llama/llama-3.3-70b-instruct",
+] as const;
+
+type AllowedModel = (typeof ALLOWED_MODELS)[number];
 
 /**
- * Check whether a model name is allowed for the given provider.
+ * Check whether a model name is in the allowed list.
  */
-function isAllowedModel(provider: string, model: string): boolean {
-  const allowed = ALLOWED_MODELS[provider];
-  if (!allowed) return false;
-  return allowed.includes(model);
+function isAllowedModel(model: string): model is AllowedModel {
+  return ALLOWED_MODELS.includes(model as AllowedModel);
 }
 
 /**
  * Resolved agent configuration combining env defaults with org-level overrides.
  */
 export interface ResolvedAgentConfig {
-  provider: string;
   model: string;
   maxIterations: number;
   requireApprovalForDestructive: boolean;
   requireApprovalForCreate: boolean;
   customInstructions: string | null;
-  /** Decrypted org-provided API key, or null to use server env vars. */
+  /** Decrypted org-provided OpenRouter API key, or null to use server env var. */
   orgApiKey: string | null;
   /** Default persona for new chat sessions, if one is configured. */
   defaultPersona: { name: string; systemPrompt: string } | null;
@@ -124,7 +126,6 @@ export async function resolveAgentConfig(
   }
 
   return {
-    provider: orgConfig?.provider ?? AGENT_DEFAULT_PROVIDER ?? DEFAULT_PROVIDER,
     model: orgConfig?.model ?? AGENT_DEFAULT_MODEL ?? DEFAULT_MODEL,
     maxIterations: Math.min(
       orgConfig?.maxIterationsPerRequest ?? envMaxIterations,
@@ -166,44 +167,32 @@ export async function resolvePersona(
 }
 
 /**
- * Create a TanStack AI adapter for the given provider and model.
+ * Create a TanStack AI OpenRouter adapter for the given model.
  *
- * Validates the model name against the allowed list for the provider
- * to prevent arbitrary model strings from being passed to the LLM API.
+ * Validates the model name against the allowed list to prevent arbitrary
+ * model strings from being passed to the LLM API.
  *
  * When an org-provided API key is available, it takes precedence over
- * server-level environment variables (BYOK support).
+ * the server-level environment variable (BYOK support).
  */
-export function createAdapter(
-  provider: string,
-  model: string,
-  orgApiKey?: string | null,
-) {
-  if (!isAllowedModel(provider, model)) {
-    const allowed = ALLOWED_MODELS[provider];
+export function createAdapter(model: string, orgApiKey?: string | null) {
+  if (!isAllowedModel(model)) {
     throw new Error(
-      allowed
-        ? `Model "${model}" is not allowed for provider "${provider}". Allowed models: ${allowed.join(", ")}`
-        : `Unsupported AI provider: ${provider}`,
+      `Model "${model}" is not allowed. Allowed models: ${ALLOWED_MODELS.join(", ")}`,
     );
   }
 
-  switch (provider) {
-    case "anthropic": {
-      const apiKey = orgApiKey ?? ANTHROPIC_API_KEY;
-      if (!apiKey) {
-        throw new Error("ANTHROPIC_API_KEY is not configured");
-      }
-      return createAnthropicChat(model as "claude-sonnet-4-5", apiKey);
-    }
-    case "openai": {
-      const apiKey = orgApiKey ?? OPENAI_API_KEY;
-      if (!apiKey) {
-        throw new Error("OPENAI_API_KEY is not configured");
-      }
-      return createOpenaiChat(model as "gpt-4o", apiKey);
-    }
-    default:
-      throw new Error(`Unsupported AI provider: ${provider}`);
+  const apiKey = orgApiKey ?? OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY is not configured");
   }
+
+  return createOpenRouterText(model, apiKey);
+}
+
+/**
+ * Get the list of allowed models for display in UI.
+ */
+export function getAllowedModels(): readonly string[] {
+  return ALLOWED_MODELS;
 }

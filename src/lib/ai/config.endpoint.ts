@@ -7,16 +7,17 @@
  * Uses the same authentication as the chat endpoint.
  */
 
-import { Elysia, t } from "elysia";
-
 import { eq } from "drizzle-orm";
+import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { agentConfigs } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { authenticateRequest } from "./auth";
+import { getAllowedModels } from "./config";
 import { decrypt, encrypt, maskApiKey } from "./encryption";
+
+import type { AuthenticatedUser } from "./auth";
 
 const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
   .get(
@@ -28,14 +29,13 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -54,13 +54,12 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
       });
 
       // Derive masked BYOK key for display (never expose the actual key)
-      let byokKey: { maskedKey: string; provider: string } | null = null;
-      if (config?.encryptedApiKey && config.keyProvider) {
+      let byokKey: { maskedKey: string } | null = null;
+      if (config?.encryptedApiKey) {
         try {
           const plainKey = decrypt(config.encryptedApiKey);
           byokKey = {
             maskedKey: maskApiKey(plainKey),
-            provider: config.keyProvider,
           };
         } catch {
           // Decryption failed — key is stale. Show as unavailable.
@@ -70,15 +69,15 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
       // Return config or defaults
       return {
         config: {
+          model: config?.model ?? "anthropic/claude-sonnet-4.5",
           requireApprovalForDestructive:
             config?.requireApprovalForDestructive ?? true,
-          requireApprovalForCreate:
-            config?.requireApprovalForCreate ?? false,
-          maxIterationsPerRequest:
-            config?.maxIterationsPerRequest ?? 10,
+          requireApprovalForCreate: config?.requireApprovalForCreate ?? false,
+          maxIterationsPerRequest: config?.maxIterationsPerRequest ?? 10,
           customInstructions: config?.customInstructions ?? null,
           byokKey,
         },
+        allowedModels: getAllowedModels(),
       };
     },
     {
@@ -96,14 +95,13 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -120,9 +118,19 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
       if (!isAdmin) {
         set.status = 403;
         return {
-          error:
-            "Only organization admins can update agent configuration",
+          error: "Only organization admins can update agent configuration",
         };
+      }
+
+      // Validate model if provided
+      if (body.model !== undefined) {
+        const allowedModels = getAllowedModels();
+        if (!allowedModels.includes(body.model)) {
+          set.status = 400;
+          return {
+            error: `Invalid model: ${body.model}. Allowed models: ${allowedModels.join(", ")}`,
+          };
+        }
       }
 
       // Upsert the config using organizationId as the unique key
@@ -141,7 +149,10 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
           : undefined;
 
       // Validate defaultPersonaId if provided
-      if (body.defaultPersonaId !== undefined && body.defaultPersonaId !== null) {
+      if (
+        body.defaultPersonaId !== undefined &&
+        body.defaultPersonaId !== null
+      ) {
         const persona = await dbPool.query.agentPersonas.findFirst({
           where: (table, { eq: eqFn, and: andFn }) =>
             andFn(
@@ -157,6 +168,9 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
 
       const values = {
         organizationId: body.organizationId,
+        ...(body.model !== undefined && {
+          model: body.model,
+        }),
         ...(body.requireApprovalForDestructive !== undefined && {
           requireApprovalForDestructive: body.requireApprovalForDestructive,
         }),
@@ -185,6 +199,7 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
           },
         })
         .returning({
+          model: agentConfigs.model,
           requireApprovalForDestructive:
             agentConfigs.requireApprovalForDestructive,
           requireApprovalForCreate: agentConfigs.requireApprovalForCreate,
@@ -198,6 +213,7 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
     {
       body: t.Object({
         organizationId: t.String(),
+        model: t.Optional(t.String()),
         requireApprovalForDestructive: t.Optional(t.Boolean()),
         requireApprovalForCreate: t.Optional(t.Boolean()),
         maxIterationsPerRequest: t.Optional(t.Number()),
@@ -210,8 +226,8 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
 /**
  * BYOK key management routes.
  *
- * PUT    /api/ai/config/key — Store an encrypted org API key
- * DELETE /api/ai/config/key — Remove an org API key (revert to server env vars)
+ * PUT    /api/ai/config/key — Store an encrypted OpenRouter API key
+ * DELETE /api/ai/config/key — Remove an org API key (revert to server env var)
  */
 const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
   .put(
@@ -223,14 +239,13 @@ const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -247,15 +262,6 @@ const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
         set.status = 403;
         return {
           error: "Only organization admins can manage API keys",
-        };
-      }
-
-      // Validate provider
-      const allowedProviders = ["anthropic", "openai"];
-      if (!allowedProviders.includes(body.provider)) {
-        set.status = 400;
-        return {
-          error: `Unsupported provider: ${body.provider}. Allowed: ${allowedProviders.join(", ")}`,
         };
       }
 
@@ -273,13 +279,11 @@ const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
         .values({
           organizationId: body.organizationId,
           encryptedApiKey: encryptedKey,
-          keyProvider: body.provider,
         })
         .onConflictDoUpdate({
           target: agentConfigs.organizationId,
           set: {
             encryptedApiKey: encryptedKey,
-            keyProvider: body.provider,
             updatedAt: new Date().toISOString(),
           },
         });
@@ -287,14 +291,12 @@ const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
       return {
         key: {
           maskedKey: maskApiKey(body.apiKey),
-          provider: body.provider,
         },
       };
     },
     {
       body: t.Object({
         organizationId: t.String(),
-        provider: t.String(),
         apiKey: t.String(),
       }),
     },
@@ -308,14 +310,13 @@ const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -335,12 +336,11 @@ const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
         };
       }
 
-      // Clear the encrypted key and provider
+      // Clear the encrypted key
       await dbPool
         .update(agentConfigs)
         .set({
           encryptedApiKey: null,
-          keyProvider: null,
           updatedAt: new Date().toISOString(),
         })
         .where(eq(agentConfigs.organizationId, body.organizationId));

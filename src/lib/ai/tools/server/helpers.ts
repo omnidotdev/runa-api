@@ -23,10 +23,7 @@ export async function resolveTask(
 
   const condition = input.taskId
     ? and(eq(tasks.id, input.taskId), eq(tasks.projectId, projectId))
-    : and(
-        eq(tasks.number, input.taskNumber!),
-        eq(tasks.projectId, projectId),
-      );
+    : and(eq(tasks.number, input.taskNumber!), eq(tasks.projectId, projectId));
 
   const task = await dbPool.query.tasks.findFirst({
     where: condition,

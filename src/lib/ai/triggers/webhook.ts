@@ -21,7 +21,6 @@ import { and, eq } from "drizzle-orm";
 import { dbPool } from "lib/db/db";
 import { agentWebhooks, userOrganizations } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { createAdapter, resolveAgentConfig } from "../config";
 import { decrypt } from "../encryption";
 import { buildProjectContext } from "../prompts/projectContext";
@@ -58,9 +57,7 @@ export function verifyWebhookSignature(
 ): boolean {
   try {
     const secret = decrypt(encryptedSecret);
-    const expected = createHmac("sha256", secret)
-      .update(payload)
-      .digest("hex");
+    const expected = createHmac("sha256", secret).update(payload).digest("hex");
 
     const sigBuffer = Buffer.from(signature, "hex");
     const expectedBuffer = Buffer.from(expected, "hex");
@@ -171,7 +168,6 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
       WEBHOOK_RATE_LIMIT,
     );
     if (!webhookRateResult.allowed) {
-      // biome-ignore lint/suspicious/noConsole: rate limit logging
       console.info("[AI Webhook] Rate limited for webhook:", ctx.webhookId);
       return;
     }
@@ -181,7 +177,6 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
       PROJECT_WEBHOOK_RATE_LIMIT,
     );
     if (!projectRateResult.allowed) {
-      // biome-ignore lint/suspicious/noConsole: rate limit logging
       console.info("[AI Webhook] Rate limited for project:", ctx.projectId);
       return;
     }
@@ -200,13 +195,9 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
 
     // 4. Resolve agent config
     const agentConfig = await resolveAgentConfig(organizationId);
-    const { orgApiKey, ...safeConfig } = agentConfig;
+    const { orgApiKey, model } = agentConfig;
 
-    const adapter = createAdapter(
-      safeConfig.provider,
-      safeConfig.model,
-      orgApiKey,
-    );
+    const adapter = createAdapter(model, orgApiKey);
 
     // 5. Create session for audit trail.
     // Webhooks are not user-initiated, so we use a placeholder userId.
@@ -256,10 +247,17 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
       organizationId,
     });
 
-    const { createTask, updateTask, moveTask, assignTask, addLabel, removeLabel, addComment } =
-      createWriteTools(writeContext, {
-        requireApprovalForCreate: agentConfig.requireApprovalForCreate,
-      });
+    const {
+      createTask,
+      updateTask,
+      moveTask,
+      assignTask,
+      addLabel,
+      removeLabel,
+      addComment,
+    } = createWriteTools(writeContext, {
+      requireApprovalForCreate: agentConfig.requireApprovalForCreate,
+    });
 
     // 9. Build user message from template + event
     const instruction = interpolateTemplate(
@@ -314,7 +312,6 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
       .set({ lastTriggeredAt: new Date() })
       .where(eq(agentWebhooks.id, ctx.webhookId));
 
-    // biome-ignore lint/suspicious/noConsole: structured webhook metrics
     console.info("[AI Webhook] Completed:", {
       webhookId: ctx.webhookId,
       projectId: ctx.projectId,
@@ -323,7 +320,6 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
       hasResponse: !!assistantContent,
     });
   } catch (err) {
-    // biome-ignore lint/suspicious/noConsole: error logging for fire-and-forget
     console.error("[AI Webhook] Unhandled error:", {
       webhookId: ctx.webhookId,
       projectId: ctx.projectId,

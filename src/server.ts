@@ -12,10 +12,10 @@ import aiRoutes from "lib/ai/chat.endpoint";
 import aiConfigRoutes, { aiConfigKeyRoutes } from "lib/ai/config.endpoint";
 import aiMarketplaceRoutes from "lib/ai/marketplace.endpoint";
 import aiPersonaRoutes from "lib/ai/persona.endpoint";
+import aiRollbackRoutes from "lib/ai/rollback.endpoint";
 import aiScheduleRoutes, {
   aiScheduleCronPlugin,
 } from "lib/ai/schedule.endpoint";
-import aiRollbackRoutes from "lib/ai/rollback.endpoint";
 import aiWebhookRoutes, {
   aiWebhookReceiverRoutes,
 } from "lib/ai/webhook.endpoint";

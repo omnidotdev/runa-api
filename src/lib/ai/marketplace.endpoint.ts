@@ -14,8 +14,9 @@ import { Elysia, t } from "elysia";
 import { dbPool } from "lib/db/db";
 import { agentMarketplaceListings, agentPersonas } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { authenticateRequest } from "./auth";
+
+import type { AuthenticatedUser } from "./auth";
 
 /** Valid marketplace listing categories. */
 const VALID_CATEGORIES = [
@@ -92,8 +93,7 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -107,9 +107,7 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
 
       const conditions = [];
       if (query.category) {
-        conditions.push(
-          eq(agentMarketplaceListings.category, query.category),
-        );
+        conditions.push(eq(agentMarketplaceListings.category, query.category));
       }
       if (query.search) {
         const trimmed = query.search.slice(0, MAX_SEARCH_LENGTH).trim();
@@ -153,7 +151,10 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
         .limit(limit)
         .offset(offset);
 
-      return { listings, pagination: { limit, offset, count: listings.length } };
+      return {
+        listings,
+        pagination: { limit, offset, count: listings.length },
+      };
     },
     {
       query: t.Object({
@@ -179,8 +180,7 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -226,14 +226,13 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -272,7 +271,9 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
       });
       if (existing) {
         set.status = 409;
-        return { error: "This persona is already published to the marketplace" };
+        return {
+          error: "This persona is already published to the marketplace",
+        };
       }
 
       const title = body.title.trim().slice(0, MAX_TITLE_LENGTH);
@@ -316,14 +317,13 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -338,10 +338,9 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
       }
 
       // Find the listing
-      const listing =
-        await dbPool.query.agentMarketplaceListings.findFirst({
-          where: (table, { eq: eqFn }) => eqFn(table.id, params.id),
-        });
+      const listing = await dbPool.query.agentMarketplaceListings.findFirst({
+        where: (table, { eq: eqFn }) => eqFn(table.id, params.id),
+      });
       if (!listing) {
         set.status = 404;
         return { error: "Listing not found" };
@@ -433,14 +432,13 @@ const aiMarketplaceRoutes = new Elysia({ prefix: "/api/ai/marketplace" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 

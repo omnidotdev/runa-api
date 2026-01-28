@@ -83,7 +83,12 @@ export async function listSessions(
   userId: string,
   limit = 20,
 ): Promise<
-  Array<Pick<SelectAgentSession, "id" | "title" | "toolCallCount" | "createdAt" | "updatedAt">>
+  Array<
+    Pick<
+      SelectAgentSession,
+      "id" | "title" | "toolCallCount" | "createdAt" | "updatedAt"
+    >
+  >
 > {
   return dbPool
     .select({

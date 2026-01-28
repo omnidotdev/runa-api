@@ -19,7 +19,6 @@ import { Elysia, t } from "elysia";
 import { dbPool } from "lib/db/db";
 import { agentSchedules } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-
 import { authenticateRequest, validateProjectAccess } from "./auth";
 import {
   computeNextRun,
@@ -27,6 +26,8 @@ import {
   isValidCron,
   pollSchedules,
 } from "./triggers/scheduler";
+
+import type { AuthenticatedUser } from "./auth";
 
 /** Max instruction length. */
 const MAX_INSTRUCTION_LENGTH = 4_000;
@@ -67,14 +68,13 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -120,14 +120,13 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -150,8 +149,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         (org) => org.id === organizationId,
       );
       const isAdmin =
-        orgClaim?.roles.includes("admin") ||
-        orgClaim?.roles.includes("owner");
+        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
       if (!isAdmin) {
         set.status = 403;
         return {
@@ -251,14 +249,13 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -281,8 +278,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         (org) => org.id === organizationId,
       );
       const isAdmin =
-        orgClaim?.roles.includes("admin") ||
-        orgClaim?.roles.includes("owner");
+        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
       if (!isAdmin) {
         set.status = 403;
         return {
@@ -400,14 +396,13 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -430,8 +425,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         (org) => org.id === organizationId,
       );
       const isAdmin =
-        orgClaim?.roles.includes("admin") ||
-        orgClaim?.roles.includes("owner");
+        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
       if (!isAdmin) {
         set.status = 403;
         return {
@@ -472,14 +466,13 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         return { error: "Agent feature is not enabled" };
       }
 
-      let auth;
+      let auth: AuthenticatedUser;
       try {
         auth = await authenticateRequest(request);
       } catch (err) {
         set.status = 401;
         return {
-          error:
-            err instanceof Error ? err.message : "Authentication failed",
+          error: err instanceof Error ? err.message : "Authentication failed",
         };
       }
 
@@ -502,8 +495,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         (org) => org.id === organizationId,
       );
       const isAdmin =
-        orgClaim?.roles.includes("admin") ||
-        orgClaim?.roles.includes("owner");
+        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
       if (!isAdmin) {
         set.status = 403;
         return {
@@ -526,7 +518,6 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
       // Import dynamically to avoid circular dependency at module scope
       const { executeScheduleById } = await import("./triggers/scheduler");
       executeScheduleById(schedule.id).catch((err) => {
-        // biome-ignore lint/suspicious/noConsole: fire-and-forget error logging
         console.error(
           "[AI Schedule] Manual run failed:",
           err instanceof Error ? err.message : String(err),

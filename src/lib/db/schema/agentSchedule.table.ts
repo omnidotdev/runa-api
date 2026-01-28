@@ -62,19 +62,16 @@ export const agentSchedules = pgTable(
   ],
 );
 
-export const agentScheduleRelations = relations(
-  agentSchedules,
-  ({ one }) => ({
-    project: one(projects, {
-      fields: [agentSchedules.projectId],
-      references: [projects.id],
-    }),
-    persona: one(agentPersonas, {
-      fields: [agentSchedules.personaId],
-      references: [agentPersonas.id],
-    }),
+export const agentScheduleRelations = relations(agentSchedules, ({ one }) => ({
+  project: one(projects, {
+    fields: [agentSchedules.projectId],
+    references: [projects.id],
   }),
-);
+  persona: one(agentPersonas, {
+    fields: [agentSchedules.personaId],
+    references: [agentPersonas.id],
+  }),
+}));
 
 export type InsertAgentSchedule = InferInsertModel<typeof agentSchedules>;
 export type SelectAgentSchedule = InferSelectModel<typeof agentSchedules>;
