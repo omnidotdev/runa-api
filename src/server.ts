@@ -12,6 +12,7 @@ import aiRoutes from "lib/ai/chat.endpoint";
 import aiConfigRoutes, { aiConfigKeyRoutes } from "lib/ai/config.endpoint";
 import aiMarketplaceRoutes from "lib/ai/marketplace.endpoint";
 import aiPersonaRoutes from "lib/ai/persona.endpoint";
+import projectCreationRoutes from "lib/ai/projectCreation.endpoint";
 import aiRollbackRoutes from "lib/ai/rollback.endpoint";
 import aiScheduleRoutes, {
   aiScheduleCronPlugin,
@@ -106,6 +107,7 @@ async function startServer(): Promise<void> {
     )
     .use(authzRoutes)
     .use(aiRoutes)
+    .use(projectCreationRoutes)
     .use(aiConfigRoutes)
     .use(aiConfigKeyRoutes)
     .use(aiPersonaRoutes)

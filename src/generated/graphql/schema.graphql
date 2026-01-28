@@ -3445,6 +3445,9 @@ input AgentSessionFilter {
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s `type` field."""
+  type: StringFilter
+
   """Filter by the object’s `agentActivitiesBySessionId` relation."""
   agentActivitiesBySessionId: AgentSessionToManyAgentActivityFilter
 
@@ -3453,6 +3456,9 @@ input AgentSessionFilter {
 
   """Filter by the object’s `project` relation."""
   project: ProjectFilter
+
+  """A related `project` exists."""
+  projectExists: Boolean
 
   """Filter by the object’s `user` relation."""
   user: UserFilter
@@ -3599,6 +3605,7 @@ input AgentSessionDistinctCountAggregateFilter {
   toolCallCount: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+  type: BigIntFilter
 }
 
 input AgentSessionMinAggregateFilter {
@@ -4987,6 +4994,8 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
   AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC
   AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
@@ -6937,7 +6946,7 @@ type AgentSession implements Node {
   id: ID!
   rowId: UUID!
   organizationId: String!
-  projectId: UUID!
+  projectId: UUID
   userId: UUID!
   title: String
   messages: JSON!
@@ -6945,6 +6954,7 @@ type AgentSession implements Node {
   toolCallCount: Int!
   createdAt: Datetime!
   updatedAt: Datetime!
+  type: String!
 
   """Reads a single `Project` that is related to this `AgentSession`."""
   project: Project
@@ -7320,6 +7330,9 @@ type AgentSessionDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of type across the matching connection"""
+  type: BigInt
 }
 
 type AgentSessionMinAggregates {
@@ -7401,6 +7414,7 @@ enum AgentSessionGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  TYPE
 }
 
 """Conditions for `AgentSession` aggregates."""
@@ -7512,6 +7526,9 @@ input AgentSessionCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
+
+  """Checks for equality with the object’s `type` field."""
+  type: String
 }
 
 """Methods to use when ordering `AgentSession`."""
@@ -7537,6 +7554,8 @@ enum AgentSessionOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  TYPE_ASC
+  TYPE_DESC
   AGENT_ACTIVITIES_BY_SESSION_ID_COUNT_ASC
   AGENT_ACTIVITIES_BY_SESSION_ID_COUNT_DESC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_ASC
@@ -10226,6 +10245,8 @@ enum UserOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
   AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC
   AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
@@ -13390,7 +13411,7 @@ input CreateAgentSessionInput {
 input AgentSessionInput {
   rowId: UUID
   organizationId: String!
-  projectId: UUID!
+  projectId: UUID
   userId: UUID!
   title: String
   messages: JSON
@@ -13398,6 +13419,7 @@ input AgentSessionInput {
   toolCallCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+  type: String
 }
 
 """The output of our create `Setting` mutation."""
@@ -14815,6 +14837,7 @@ input AgentSessionPatch {
   toolCallCount: Int
   createdAt: Datetime
   updatedAt: Datetime
+  type: String
 }
 
 """All input for the `updateAgentSession` mutation."""

@@ -19,6 +19,7 @@ import {
   agentActivities,
   assignees,
   posts,
+  projects,
   taskLabels,
   tasks,
 } from "lib/db/schema";
@@ -104,6 +105,17 @@ async function applyRollback(
       }
       throw new Error(
         `Unsupported entity type for create rollback: ${entityType}`,
+      );
+    }
+
+    case "createProject": {
+      if (entityType === "project") {
+        // Delete the project - FK cascades will handle columns, labels, tasks
+        await tx.delete(projects).where(eq(projects.id, entityId));
+        return `Deleted project ${entityId} and all associated data`;
+      }
+      throw new Error(
+        `Unsupported entity type for createProject rollback: ${entityType}`,
       );
     }
 

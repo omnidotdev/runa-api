@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import { agentSessions } from "lib/db/schema";
@@ -6,7 +6,7 @@ import { agentSessions } from "lib/db/schema";
 import type { InsertAgentSession, SelectAgentSession } from "lib/db/schema";
 
 /**
- * Create a new agent chat session.
+ * Create a new agent chat session for an existing project.
  */
 export async function createSession(params: {
   organizationId: string;
@@ -20,7 +20,32 @@ export async function createSession(params: {
       organizationId: params.organizationId,
       projectId: params.projectId,
       userId: params.userId,
+      type: "project_chat",
       title: params.title ?? null,
+      messages: [],
+    })
+    .returning();
+
+  return session;
+}
+
+/**
+ * Create a new project creation session.
+ * These sessions don't have a projectId until the project is created.
+ */
+export async function createCreationSession(params: {
+  organizationId: string;
+  userId: string;
+  title?: string;
+}): Promise<SelectAgentSession> {
+  const [session] = await dbPool
+    .insert(agentSessions)
+    .values({
+      organizationId: params.organizationId,
+      projectId: null,
+      userId: params.userId,
+      type: "project_creation",
+      title: params.title ?? "New Project",
       messages: [],
     })
     .returning();
@@ -32,21 +57,75 @@ export async function createSession(params: {
  * Load an existing session by ID.
  * Returns null if not found, user doesn't own the session, or
  * the session belongs to a different project.
+ *
+ * @param sessionId - Session ID to load
+ * @param userId - User ID (must own the session)
+ * @param projectId - Project ID (null for creation sessions)
  */
 export async function loadSession(
   sessionId: string,
   userId: string,
-  projectId: string,
+  projectId: string | null,
+): Promise<SelectAgentSession | null> {
+  const projectCondition =
+    projectId === null
+      ? isNull(agentSessions.projectId)
+      : eq(agentSessions.projectId, projectId);
+
+  const session = await dbPool.query.agentSessions.findFirst({
+    where: and(
+      eq(agentSessions.id, sessionId),
+      eq(agentSessions.userId, userId),
+      projectCondition,
+    ),
+  });
+
+  return session ?? null;
+}
+
+/**
+ * Load a creation session by ID (org-scoped, no project).
+ * Used for project creation flow where session is not tied to a project.
+ *
+ * Only returns sessions that haven't been linked to a project yet
+ * (projectId IS NULL). Sessions that have completed project creation
+ * should be loaded via loadSession instead.
+ */
+export async function loadCreationSession(
+  sessionId: string,
+  userId: string,
+  organizationId: string,
 ): Promise<SelectAgentSession | null> {
   const session = await dbPool.query.agentSessions.findFirst({
     where: and(
       eq(agentSessions.id, sessionId),
       eq(agentSessions.userId, userId),
-      eq(agentSessions.projectId, projectId),
+      eq(agentSessions.organizationId, organizationId),
+      eq(agentSessions.type, "project_creation"),
+      // Only load sessions that haven't been linked to a project yet
+      isNull(agentSessions.projectId),
     ),
   });
 
   return session ?? null;
+}
+
+/**
+ * Update a session's projectId after project creation.
+ * Used to link a creation session to the newly created project.
+ */
+export async function linkSessionToProject(
+  sessionId: string,
+  projectId: string,
+): Promise<void> {
+  await dbPool
+    .update(agentSessions)
+    .set({
+      projectId,
+      type: "project_chat",
+      updatedAt: new Date().toISOString(),
+    })
+    .where(eq(agentSessions.id, sessionId));
 }
 
 /**

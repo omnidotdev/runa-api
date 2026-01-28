@@ -643,3 +643,138 @@ export const batchDeleteTasksDef = toolDefinition({
     ),
   }),
 });
+
+// ─────────────────────────────────────────────
+// Project Creation Tools
+// ─────────────────────────────────────────────
+
+/** Shared schema for column definition in proposals. */
+const proposedColumnSchema = z.object({
+  title: z.string().min(1).max(50).describe("Column title/status name"),
+  icon: z
+    .string()
+    .optional()
+    .describe("Emoji icon for the column (e.g., '📋', '🚀', '✅')"),
+});
+
+/** Shared schema for label definition in proposals. */
+const proposedLabelSchema = z.object({
+  name: z.string().min(1).max(50).describe("Label name"),
+  color: z
+    .enum([
+      "gray",
+      "red",
+      "orange",
+      "yellow",
+      "green",
+      "blue",
+      "purple",
+      "pink",
+    ])
+    .describe("Label color"),
+});
+
+/** Shared schema for initial task definition in proposals. */
+const proposedTaskSchema = z.object({
+  title: z.string().min(1).max(200).describe("Task title"),
+  columnIndex: z
+    .number()
+    .int()
+    .min(0)
+    .describe("Index of the column to place this task in (0-based)"),
+  priority: z
+    .enum(["none", "low", "medium", "high", "urgent"])
+    .optional()
+    .describe("Task priority level"),
+  description: z.string().optional().describe("Task description (markdown)"),
+  labelNames: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "Names of labels to assign to this task (must match labels defined in the proposal)",
+    ),
+});
+
+/**
+ * Propose a project structure for user review.
+ *
+ * Use this tool after gathering context through discovery questions.
+ * The proposal is stored and can be executed with createProjectFromProposal.
+ */
+export const proposeProjectDef = toolDefinition({
+  name: "proposeProject",
+  description:
+    "Present a project proposal to the user for review. Use this after gathering enough context through discovery questions. The user will see the proposed structure and can approve, request changes, or reject. Do not call this until you have enough information about the project.",
+  inputSchema: z.object({
+    name: z
+      .string()
+      .min(3)
+      .max(100)
+      .describe("Project name (e.g., 'Marketing Campaign Q1')"),
+    prefix: z
+      .string()
+      .min(1)
+      .max(10)
+      .transform((s) => s.toUpperCase().replace(/[^A-Z0-9]/g, ""))
+      .describe(
+        "Task prefix for numbering (e.g., 'MKT' for MKT-1, MKT-2). Letters/numbers only, auto-uppercased.",
+      ),
+    description: z
+      .string()
+      .max(500)
+      .optional()
+      .describe("Brief project description"),
+    columns: z
+      .array(proposedColumnSchema)
+      .min(2)
+      .max(10)
+      .describe(
+        "Board columns representing workflow stages. Order matters (left to right on board).",
+      ),
+    labels: z
+      .array(proposedLabelSchema)
+      .max(10)
+      .optional()
+      .describe("Optional labels for categorizing tasks"),
+    initialTasks: z
+      .array(proposedTaskSchema)
+      .max(20)
+      .optional()
+      .describe("Optional initial tasks to pre-populate the board"),
+  }),
+  outputSchema: z.object({
+    proposalId: z.string().describe("Unique ID to reference this proposal"),
+    status: z.enum(["pending_review"]),
+    summary: z.string().describe("Human-readable summary of the proposal"),
+  }),
+});
+
+/**
+ * Create a project from an approved proposal.
+ *
+ * This tool requires explicit user approval before execution.
+ * It creates the project, columns, labels, and initial tasks atomically.
+ */
+export const createProjectFromProposalDef = toolDefinition({
+  name: "createProjectFromProposal",
+  description:
+    "Create the project from a proposal after the user has approved it. Only call this when the user explicitly confirms they want to create the project. This operation requires approval and will create the project with all columns, labels, and initial tasks atomically.",
+  inputSchema: z.object({
+    proposalId: z
+      .string()
+      .describe("The proposal ID from proposeProject to execute"),
+  }),
+  outputSchema: z.object({
+    project: z.object({
+      id: z.string(),
+      name: z.string(),
+      slug: z.string(),
+      prefix: z.string(),
+    }),
+    columnsCreated: z.number(),
+    labelsCreated: z.number(),
+    tasksCreated: z.number(),
+    boardUrl: z.string().describe("Relative URL to the new project board"),
+  }),
+  needsApproval: true,
+});

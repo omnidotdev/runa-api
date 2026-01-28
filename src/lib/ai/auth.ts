@@ -162,3 +162,43 @@ export async function validateProjectAccess(
 
   return { organizationId: project.organizationId };
 }
+
+/** Roles that can create projects within an organization. */
+const PROJECT_CREATION_ROLES = new Set(["editor", "admin", "owner"]);
+
+/**
+ * Validate that a user has organization-level access for project creation.
+ *
+ * Project creation requires "editor", "admin", or "owner" role.
+ * This is a higher permission level than simply viewing projects.
+ */
+export async function validateOrganizationAccess(
+  organizationId: string,
+  organizations: OrganizationClaim[],
+): Promise<{
+  organizationId: string;
+  organizationSlug: string;
+  roles: string[];
+}> {
+  const orgClaim = organizations.find((org) => org.id === organizationId);
+
+  if (!orgClaim) {
+    throw new Error("Access denied: user is not a member of this organization");
+  }
+
+  const canCreateProjects = orgClaim.roles.some((role) =>
+    PROJECT_CREATION_ROLES.has(role),
+  );
+
+  if (!canCreateProjects) {
+    throw new Error(
+      "Access denied: insufficient permissions to create projects. Requires editor, admin, or owner role.",
+    );
+  }
+
+  return {
+    organizationId,
+    organizationSlug: orgClaim.slug,
+    roles: orgClaim.roles,
+  };
+}
