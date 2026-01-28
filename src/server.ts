@@ -11,9 +11,9 @@ import { useGrafast } from "grafast/envelop";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
-  AUTH_SECRET,
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
+  AUTH_SECRET,
   CORS_ALLOWED_ORIGINS,
   DATABASE_URL,
   PORT,
