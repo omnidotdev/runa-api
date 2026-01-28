@@ -173,15 +173,16 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       // Load or create session
       let session: SelectAgentSession;
       if (body.sessionId) {
-        session = await loadSession(
+        const loadedSession = await loadSession(
           body.sessionId,
           auth.user.id,
           body.projectId,
         );
-        if (!session) {
+        if (!loadedSession) {
           set.status = 404;
           return { error: "Session not found" };
         }
+        session = loadedSession;
       } else {
         session = await createSession({
           organizationId,
