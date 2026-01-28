@@ -24,6 +24,59 @@ import type { ModelMessage, StreamChunk } from "@tanstack/ai";
 import type { SelectAgentSession } from "lib/db/schema";
 import type { AuthenticatedUser } from "./auth";
 
+/**
+ * Restructures messages to ensure valid conversation format.
+ *
+ * After approval continuation flow, tool results can end up in the wrong position
+ * (after intervening assistant messages). This function:
+ * 1. Collects all tool results
+ * 2. Matches them to their corresponding tool calls
+ * 3. Places tool results immediately after the assistant message with the tool call
+ * 4. Removes orphaned tool results that would break the conversation structure
+ *
+ * Valid structure: assistant(tool_calls) → tool(results) → assistant(text) → user
+ * Invalid structure: assistant(tool_calls) → tool(partial) → assistant(text) → tool(orphaned)
+ */
+function restructureMessages(messages: ModelMessage[]): ModelMessage[] {
+  // First pass: collect all tool results by their toolCallId
+  const toolResultsByCallId = new Map<string, ModelMessage>();
+  for (const msg of messages) {
+    if (msg.role === "tool" && msg.toolCallId) {
+      toolResultsByCallId.set(msg.toolCallId, msg);
+    }
+  }
+
+  // Second pass: build restructured message list
+  const result: ModelMessage[] = [];
+  const usedToolCallIds = new Set<string>();
+
+  for (const msg of messages) {
+    // Skip tool messages - we'll insert them after their corresponding assistant message
+    if (msg.role === "tool") {
+      continue;
+    }
+
+    result.push(msg);
+
+    // After an assistant message with tool calls, insert all matching tool results
+    if (msg.role === "assistant") {
+      const toolCalls = (msg as { toolCalls?: Array<{ id: string }> })
+        .toolCalls;
+      if (toolCalls && toolCalls.length > 0) {
+        for (const tc of toolCalls) {
+          const toolResult = toolResultsByCallId.get(tc.id);
+          if (toolResult && !usedToolCallIds.has(tc.id)) {
+            result.push(toolResult);
+            usedToolCallIds.add(tc.id);
+          }
+        }
+      }
+    }
+  }
+
+  return result;
+}
+
 /** Elysia/TypeBox schema for ModelMessage validation. */
 const modelMessageSchema = t.Object(
   {
@@ -207,11 +260,16 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
 
       const systemPrompt = buildSystemPrompt(projectContext, persona);
 
-      // Use messages from client — filter out any system role as defense-in-depth.
+      // Use messages from client — filter out:
+      // 1. System role messages (defense-in-depth, TypeBox already excludes these)
+      // 2. Continuation marker messages (synthetic messages from approval flow)
       // Cast to `string` comparison because TypeBox schema already excludes "system",
       // but runtime payloads could still contain it if validation is bypassed.
+      const CONTINUATION_MARKER = "[CONTINUE_AFTER_APPROVAL]";
       const filteredMessages = (body.messages as ModelMessage[]).filter(
-        (m) => (m.role as string) !== "system",
+        (m) =>
+          (m.role as string) !== "system" &&
+          !(m.role === "user" && m.content === CONTINUATION_MARKER),
       );
 
       // Inject approval state into messages.
@@ -229,15 +287,19 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
       // from this session to prevent unauthorized approval injection.
       const approvals = body.approvals ?? [];
 
+      // Restructure messages to ensure valid conversation format
+      // (tool results immediately after their corresponding tool calls)
+      const restructuredMessages = restructureMessages(filteredMessages);
+
       const allMessages =
         approvals.length > 0
           ? [
-              ...filteredMessages,
+              ...restructuredMessages,
               createApprovalCarrierMessage(
                 approvals,
               ) as unknown as ModelMessage,
             ]
-          : filteredMessages;
+          : restructuredMessages;
 
       // Create tools
       const { queryTasks, queryProject, getTask } = createQueryTools({
@@ -336,75 +398,83 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
           output: string;
         }> = [];
 
-        for await (const chunk of aiStream) {
-          yield chunk;
+        try {
+          for await (const chunk of aiStream) {
+            yield chunk;
 
-          if (chunk.type === "content" && chunk.content) {
-            assistantContent = chunk.content;
+            if (chunk.type === "content" && chunk.content) {
+              assistantContent = chunk.content;
+            }
+            if (chunk.type === "tool_call") {
+              toolCalls.push({
+                name: chunk.toolCall.function.name,
+                arguments: chunk.toolCall.function.arguments,
+                id: chunk.toolCall.id,
+              });
+              newToolCallCount++;
+            }
+            if (chunk.type === "tool_result") {
+              toolResults.push({
+                id: chunk.toolCallId,
+                output: chunk.content,
+              });
+            }
           }
-          if (chunk.type === "tool_call") {
-            toolCalls.push({
-              name: chunk.toolCall.function.name,
-              arguments: chunk.toolCall.function.arguments,
-              id: chunk.toolCall.id,
-            });
-            newToolCallCount++;
-          }
-          if (chunk.type === "tool_result") {
-            toolResults.push({
-              id: chunk.toolCallId,
-              output: chunk.content,
-            });
-          }
-        }
 
-        // Persist the complete conversation after stream ends
-        if (assistantContent || toolCalls.length > 0) {
-          // Build final message list immutably
-          const toolMessages = toolCalls.flatMap((tc) => {
-            const result = toolResults.find((r) => r.id === tc.id);
-            return [
-              { role: "assistant" as const, content: "", toolCallId: tc.id },
-              ...(result
-                ? [
-                    {
-                      role: "tool" as const,
-                      content: result.output,
-                      toolCallId: tc.id,
-                    },
-                  ]
-                : []),
+          // Persist the complete conversation after stream ends
+          if (assistantContent || toolCalls.length > 0) {
+            // Build final message list immutably
+            const toolMessages = toolCalls.flatMap((tc) => {
+              const result = toolResults.find((r) => r.id === tc.id);
+              return [
+                { role: "assistant" as const, content: "", toolCallId: tc.id },
+                ...(result
+                  ? [
+                      {
+                        role: "tool" as const,
+                        content: result.output,
+                        toolCallId: tc.id,
+                      },
+                    ]
+                  : []),
+              ];
+            });
+
+            const assistantMessage = assistantContent
+              ? [{ role: "assistant" as const, content: assistantContent }]
+              : [];
+
+            const finalMessages = [
+              ...allMessages,
+              ...toolMessages,
+              ...assistantMessage,
             ];
-          });
 
-          const assistantMessage = assistantContent
-            ? [{ role: "assistant" as const, content: assistantContent }]
-            : [];
+            const durationMs = Date.now() - requestStartTime;
 
-          const finalMessages = [
-            ...allMessages,
-            ...toolMessages,
-            ...assistantMessage,
-          ];
+            // Save to database (fire-and-forget, don't block the stream)
+            saveSessionMessages(session.id, finalMessages, {
+              toolCalls: baseToolCallCount + newToolCallCount,
+            }).catch((err) => {
+              console.error("[AI] Failed to save session messages:", {
+                ...requestMeta,
+                error: err instanceof Error ? err.message : String(err),
+                durationMs,
+              });
+            });
 
-          const durationMs = Date.now() - requestStartTime;
-
-          // Save to database (fire-and-forget, don't block the stream)
-          saveSessionMessages(session.id, finalMessages, {
-            toolCalls: baseToolCallCount + newToolCallCount,
-          }).catch((err) => {
-            console.error("[AI] Failed to save session messages:", {
+            console.info("[AI] Chat completed:", {
               ...requestMeta,
-              error: err instanceof Error ? err.message : String(err),
+              toolCallCount: newToolCallCount,
               durationMs,
             });
+          }
+        } catch (err) {
+          console.error("[AI] Stream error:", {
+            sessionId: session.id,
+            error: err instanceof Error ? err.message : String(err),
           });
-
-          console.info("[AI] Chat completed:", {
-            ...requestMeta,
-            toolCallCount: newToolCallCount,
-            durationMs,
-          });
+          throw err;
         }
       };
 
