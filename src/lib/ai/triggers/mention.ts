@@ -304,7 +304,7 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
     // Uses direct DB insert (NOT the GraphQL mutation) to avoid
     // re-triggering the PostMention plugin on the agent's own reply.
     if (assistantContent) {
-      const replyHtml = textToHtml(`Agent\n\n${assistantContent}`);
+      const replyHtml = textToHtml(assistantContent);
 
       await dbPool.insert(posts).values({
         description: replyHtml,

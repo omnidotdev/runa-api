@@ -38,6 +38,7 @@ import {
 } from "../definitions";
 import { logActivity } from "./activity";
 import { getNextColumnIndex, resolveLabel, resolveTask } from "./helpers";
+import { markdownToHtml } from "./markdown";
 import { requireProjectPermission } from "./permissions";
 
 import type { WriteToolContext } from "./context";
@@ -115,11 +116,16 @@ export function createWriteTools(
 
       const nextIndex = await getNextColumnIndex(input.columnId);
 
+      // Convert markdown description to HTML for storage
+      const descriptionHtml = input.description
+        ? markdownToHtml(input.description)
+        : "";
+
       const [created] = await dbPool
         .insert(tasks)
         .values({
           content: input.title,
-          description: input.description ?? "",
+          description: descriptionHtml,
           priority: input.priority ?? "medium",
           columnId: input.columnId,
           columnIndex: nextIndex,
@@ -208,8 +214,10 @@ export function createWriteTools(
       // Build immutable patch from provided fields only
       const patch: Record<string, unknown> = {};
       if (input.title !== undefined) patch.content = input.title;
-      if (input.description !== undefined)
-        patch.description = input.description;
+      if (input.description !== undefined) {
+        // Convert markdown description to HTML for storage
+        patch.description = markdownToHtml(input.description);
+      }
       if (input.priority !== undefined) patch.priority = input.priority;
       if (input.dueDate !== undefined) patch.dueDate = input.dueDate;
 
