@@ -11,13 +11,17 @@ import { useGrafast } from "grafast/envelop";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
+  AUTH_SECRET,
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
   CORS_ALLOWED_ORIGINS,
+  DATABASE_URL,
   PORT,
   isDevEnv,
   isProdEnv,
+  isSelfHosted,
 } from "lib/config/env.config";
+import { pgPool } from "lib/db/db";
 import entitlementsWebhook from "lib/entitlements/webhooks";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import {
@@ -30,6 +34,64 @@ import { maintenanceMiddleware } from "lib/middleware/maintenance";
 
 /** Health check timeout in milliseconds */
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
+
+/**
+ * Verify required environment variables are set.
+ * Fails startup if critical configuration is missing.
+ */
+function verifyEnvConfig(): void {
+  if (!DATABASE_URL) {
+    throw new Error("DATABASE_URL is required");
+  }
+
+  if (isSelfHosted && !AUTH_SECRET) {
+    throw new Error("AUTH_SECRET is required for self-hosted mode");
+  }
+
+  // biome-ignore lint/suspicious/noConsole: startup logging
+  console.log("[Config] Environment variables verified");
+}
+
+/**
+ * Verify database connectivity before starting.
+ * Fails startup if the database is unreachable.
+ */
+async function verifyDatabaseHealth(): Promise<void> {
+  try {
+    const client = await pgPool.connect();
+
+    try {
+      await client.query("SELECT 1");
+    } finally {
+      client.release();
+    }
+
+    // biome-ignore lint/suspicious/noConsole: startup logging
+    console.log("[Database] Connection verified");
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unknown database error";
+    throw new Error(`Database unavailable: ${message}`);
+  }
+}
+
+/**
+ * Check database health for readiness probe.
+ */
+async function checkDatabaseHealth(): Promise<boolean> {
+  try {
+    const client = await pgPool.connect();
+
+    try {
+      await client.query("SELECT 1");
+      return true;
+    } finally {
+      client.release();
+    }
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Verify PDP (authorization service) is healthy before starting.
@@ -67,7 +129,9 @@ async function verifyPdpHealth(): Promise<void> {
  * Start the Elysia server with preflight checks.
  */
 async function startServer(): Promise<void> {
-  // Preflight: verify external dependencies
+  // Preflight: verify configuration and dependencies
+  verifyEnvConfig();
+  await verifyDatabaseHealth();
   await verifyPdpHealth();
 
   /**
@@ -119,6 +183,18 @@ async function startServer(): Promise<void> {
         ],
       }),
     )
+    // Health check endpoints for container orchestration
+    .get("/health", () => ({ status: "ok" }))
+    .get("/ready", async ({ set }) => {
+      const dbHealthy = await checkDatabaseHealth();
+
+      if (!dbHealthy) {
+        set.status = 503;
+        return { status: "unavailable", database: false };
+      }
+
+      return { status: "ok", database: true };
+    })
     .listen(PORT);
 
   // biome-ignore lint/suspicious/noConsole: root logging

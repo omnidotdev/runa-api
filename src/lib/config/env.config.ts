@@ -7,6 +7,8 @@ export const {
   // https://stackoverflow.com/a/68578294
   HOST = "0.0.0.0",
   DATABASE_URL,
+  // Self-hosted auth
+  AUTH_SECRET,
   AUTH_BASE_URL,
   GRAPHQL_MAX_COMPLEXITY_COST,
   CORS_ALLOWED_ORIGINS,
