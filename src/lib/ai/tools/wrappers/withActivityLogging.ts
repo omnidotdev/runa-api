@@ -1,5 +1,5 @@
 /**
- * Activity logging utility for AI agent write tools.
+ * Activity logging wrapper for AI agent write tools.
  *
  * Inserts audit records into the agent_activity table.
  * Fire-and-forget: errors are logged to console, never thrown.
@@ -9,9 +9,9 @@
 import { dbPool } from "lib/db/db";
 import { agentActivities } from "lib/db/schema";
 
-import type { WriteToolContext } from "./context";
+import type { WriteToolContext } from "../core/context";
 
-interface LogActivityParams {
+export interface LogActivityParams {
   context: WriteToolContext;
   toolName: string;
   toolInput: unknown;

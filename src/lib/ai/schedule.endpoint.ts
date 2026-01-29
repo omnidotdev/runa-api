@@ -18,13 +18,13 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { agentSchedules } from "lib/db/schema";
-import { isAgentEnabled } from "lib/flags";
-import { authenticateRequest, validateProjectAccess } from "./auth";
+import { checkProjectAccess, checkProjectAdmin } from "./auth";
 import {
   MAX_SCHEDULES_PER_PROJECT,
   MAX_SCHEDULE_INSTRUCTION_LENGTH,
   MAX_SCHEDULE_NAME_LENGTH,
 } from "./constants";
+import { agentFeatureGuard, authGuard } from "./guards";
 import {
   computeNextRun,
   isMinimumInterval,
@@ -32,7 +32,7 @@ import {
   pollSchedules,
 } from "./triggers/scheduler";
 
-import type { AuthenticatedUser } from "./auth";
+import type { InsertAgentSchedule } from "lib/db/schema";
 
 // ─────────────────────────────────────────────
 // Cron Plugin (background polling)
@@ -55,32 +55,18 @@ const aiScheduleCronPlugin = new Elysia().use(
 // ─────────────────────────────────────────────
 
 const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
+  .use(agentFeatureGuard)
+  .use(authGuard)
   .get(
     "/",
-    async ({ request, query, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      try {
-        await validateProjectAccess(query.projectId, auth.organizations);
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
+    async ({ query, auth, set }) => {
+      const accessCheck = await checkProjectAccess(
+        query.projectId,
+        auth.organizations,
+      );
+      if (!accessCheck.ok) {
+        set.status = accessCheck.status;
+        return accessCheck.response;
       }
 
       const schedules = await dbPool.query.agentSchedules.findMany({
@@ -109,49 +95,18 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
   )
   .post(
     "/",
-    async ({ request, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      let organizationId: string;
-      try {
-        const access = await validateProjectAccess(
-          body.projectId,
-          auth.organizations,
-        );
-        organizationId = access.organizationId;
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
-      }
-
-      // Verify admin role
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === organizationId,
+    async ({ body, auth, set }) => {
+      const adminCheck = await checkProjectAdmin(
+        body.projectId,
+        auth.organizations,
+        "manage schedules",
       );
-      const isAdmin =
-        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can manage schedules",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
+
+      const { organizationId } = adminCheck.value;
 
       // Validate cron expression
       if (!isValidCron(body.cronExpression)) {
@@ -238,48 +193,15 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
   )
   .put(
     "/:id",
-    async ({ request, params, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      let organizationId: string;
-      try {
-        const access = await validateProjectAccess(
-          body.projectId,
-          auth.organizations,
-        );
-        organizationId = access.organizationId;
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
-      }
-
-      // Verify admin role
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === organizationId,
+    async ({ params, body, auth, set }) => {
+      const adminCheck = await checkProjectAdmin(
+        body.projectId,
+        auth.organizations,
+        "manage schedules",
       );
-      const isAdmin =
-        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can manage schedules",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       // Verify schedule exists and belongs to the project
@@ -294,9 +216,10 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         return { error: "Schedule not found" };
       }
 
-      const updates: Record<string, unknown> = {
-        updatedAt: sql`now()`,
-      };
+      // Note: Using sql`now()` for updatedAt since Drizzle handles it properly
+      // Other fields use Partial<InsertAgentSchedule> for type safety
+      const updates: Partial<InsertAgentSchedule> = {};
+      let newCronExpression: string | undefined;
 
       if (body.name !== undefined) {
         const name = body.name.trim().slice(0, MAX_SCHEDULE_NAME_LENGTH);
@@ -320,6 +243,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
           };
         }
         updates.cronExpression = body.cronExpression;
+        newCronExpression = body.cronExpression;
         // Recompute next run when cron changes
         updates.nextRunAt = computeNextRun(body.cronExpression);
       }
@@ -343,15 +267,17 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         updates.enabled = body.enabled;
         // Recompute next run when re-enabled
         if (body.enabled) {
-          const cronExpr =
-            (updates.cronExpression as string) ?? existing.cronExpression;
+          const cronExpr = newCronExpression ?? existing.cronExpression;
           updates.nextRunAt = computeNextRun(cronExpr);
         }
       }
 
       const [updated] = await dbPool
         .update(agentSchedules)
-        .set(updates)
+        .set({
+          ...updates,
+          updatedAt: sql`now()`,
+        })
         .where(
           and(
             eq(agentSchedules.id, params.id),
@@ -385,48 +311,15 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
   )
   .delete(
     "/:id",
-    async ({ request, params, query, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      let organizationId: string;
-      try {
-        const access = await validateProjectAccess(
-          query.projectId,
-          auth.organizations,
-        );
-        organizationId = access.organizationId;
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
-      }
-
-      // Verify admin role
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === organizationId,
+    async ({ params, query, auth, set }) => {
+      const adminCheck = await checkProjectAdmin(
+        query.projectId,
+        auth.organizations,
+        "manage schedules",
       );
-      const isAdmin =
-        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can manage schedules",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       const deleted = await dbPool
@@ -455,48 +348,15 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
   )
   .post(
     "/:id/run",
-    async ({ request, params, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      let organizationId: string;
-      try {
-        const access = await validateProjectAccess(
-          body.projectId,
-          auth.organizations,
-        );
-        organizationId = access.organizationId;
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
-      }
-
-      // Verify admin role
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === organizationId,
+    async ({ params, body, auth, set }) => {
+      const adminCheck = await checkProjectAdmin(
+        body.projectId,
+        auth.organizations,
+        "trigger schedules",
       );
-      const isAdmin =
-        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can trigger schedules",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       const schedule = await dbPool.query.agentSchedules.findFirst({

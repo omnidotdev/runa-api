@@ -1,7 +1,7 @@
 /**
  * Shared helpers for AI agent tool implementations.
  *
- * Extracted from write.tools.ts for reuse across write and destructive tools.
+ * Provides task/label resolution and batch operations.
  */
 
 import { and, eq, inArray, max, or } from "drizzle-orm";
@@ -9,11 +9,7 @@ import { and, eq, inArray, max, or } from "drizzle-orm";
 import { dbPool } from "lib/db/db";
 import { columns, labels, tasks } from "lib/db/schema";
 
-/** Task reference input type. */
-export interface TaskRef {
-  taskId?: string;
-  taskNumber?: number;
-}
+import type { TaskRef } from "../types";
 
 /**
  * Resolve a task by ID or project-scoped number.
@@ -101,7 +97,6 @@ export async function resolveTasks(
 ): Promise<Array<typeof tasks.$inferSelect>> {
   if (refs.length === 0) return [];
 
-  // Separate refs by type for efficient batching
   const idRefs = refs.filter((r) => r.taskId);
   const numberRefs = refs.filter(
     (r) => r.taskNumber !== undefined && !r.taskId,
@@ -110,7 +105,6 @@ export async function resolveTasks(
   const taskIds = idRefs.map((r) => r.taskId!);
   const taskNumbers = numberRefs.map((r) => r.taskNumber!);
 
-  // Build a single query with OR conditions for both ID and number lookups
   const conditions = [];
   if (taskIds.length > 0) {
     conditions.push(
@@ -131,13 +125,11 @@ export async function resolveTasks(
     where: conditions.length === 1 ? conditions[0] : or(...conditions),
   });
 
-  // Build lookup maps for O(1) access
   const byId = new Map(foundTasks.map((t) => [t.id, t]));
   const byNumber = new Map(
     foundTasks.filter((t) => t.number !== null).map((t) => [t.number!, t]),
   );
 
-  // Return in original order, throwing if any ref is missing
   const result: Array<typeof tasks.$inferSelect> = [];
   for (const ref of refs) {
     const task = ref.taskId

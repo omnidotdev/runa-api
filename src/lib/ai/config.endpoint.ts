@@ -12,40 +12,24 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { agentConfigs } from "lib/db/schema";
-import { isAgentEnabled } from "lib/flags";
-import { authenticateRequest } from "./auth";
+import { checkOrgAdmin, checkOrgMember } from "./auth";
 import { getAllowedModels } from "./config";
 import { decrypt, encrypt, maskApiKey } from "./encryption";
-
-import type { AuthenticatedUser } from "./auth";
+import { agentFeatureGuard, authGuard } from "./guards";
 
 const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
+  .use(agentFeatureGuard)
+  .use(authGuard)
   .get(
     "/",
-    async ({ request, query, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      // Verify user belongs to the requested organization
-      const hasAccess = auth.organizations.some(
-        (org) => org.id === query.organizationId,
+    async ({ query, auth, set }) => {
+      const memberCheck = checkOrgMember(
+        auth.organizations,
+        query.organizationId,
       );
-      if (!hasAccess) {
-        set.status = 403;
-        return { error: "Access denied to this organization" };
+      if (!memberCheck.ok) {
+        set.status = memberCheck.status;
+        return memberCheck.response;
       }
 
       const config = await dbPool.query.agentConfigs.findFirst({
@@ -88,38 +72,15 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
   )
   .put(
     "/",
-    async ({ request, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      // Verify user is an admin/owner of the organization
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === body.organizationId,
+    async ({ body, auth, set }) => {
+      const adminCheck = checkOrgAdmin(
+        auth.organizations,
+        body.organizationId,
+        "update agent configuration",
       );
-      if (!orgClaim) {
-        set.status = 403;
-        return { error: "Access denied to this organization" };
-      }
-      const isAdmin =
-        orgClaim.roles.includes("admin") || orgClaim.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can update agent configuration",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       // Validate model if provided
@@ -230,39 +191,19 @@ const aiConfigRoutes = new Elysia({ prefix: "/api/ai/config" })
  * DELETE /api/ai/config/key — Remove an org API key (revert to server env var)
  */
 const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
+  .use(agentFeatureGuard)
+  .use(authGuard)
   .put(
     "/",
-    async ({ request, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === body.organizationId,
+    async ({ body, auth, set }) => {
+      const adminCheck = checkOrgAdmin(
+        auth.organizations,
+        body.organizationId,
+        "manage API keys",
       );
-      if (!orgClaim) {
-        set.status = 403;
-        return { error: "Access denied to this organization" };
-      }
-      const isAdmin =
-        orgClaim.roles.includes("admin") || orgClaim.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can manage API keys",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       // Basic key format validation
@@ -303,37 +244,15 @@ const aiConfigKeyRoutes = new Elysia({ prefix: "/api/ai/config/key" })
   )
   .delete(
     "/",
-    async ({ request, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === body.organizationId,
+    async ({ body, auth, set }) => {
+      const adminCheck = checkOrgAdmin(
+        auth.organizations,
+        body.organizationId,
+        "manage API keys",
       );
-      if (!orgClaim) {
-        set.status = 403;
-        return { error: "Access denied to this organization" };
-      }
-      const isAdmin =
-        orgClaim.roles.includes("admin") || orgClaim.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can manage API keys",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       // Clear the encrypted key

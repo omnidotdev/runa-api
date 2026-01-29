@@ -7,7 +7,7 @@
  */
 
 /** Context for read-only tools (query tools). */
-interface ToolContext {
+export interface ToolContext {
   projectId: string;
   organizationId: string;
 }

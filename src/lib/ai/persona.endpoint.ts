@@ -12,43 +12,29 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { agentConfigs, agentPersonas } from "lib/db/schema";
-import { isAgentEnabled } from "lib/flags";
-import { authenticateRequest, requireOrgAdmin, requireOrgMember } from "./auth";
+import { checkOrgAdmin, checkOrgMember } from "./auth";
 import {
   MAX_PERSONA_DESCRIPTION_LENGTH,
   MAX_PERSONA_NAME_LENGTH,
   MAX_PERSONA_SYSTEM_PROMPT_LENGTH,
 } from "./constants";
+import { agentFeatureGuard, authGuard } from "./guards";
 
-import type { AuthenticatedUser } from "./auth";
+import type { InsertAgentPersona } from "lib/db/schema";
 
 const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
+  .use(agentFeatureGuard)
+  .use(authGuard)
   .get(
     "/",
-    async ({ request, query, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      try {
-        requireOrgMember(auth.organizations, query.organizationId);
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
+    async ({ query, auth, set }) => {
+      const memberCheck = checkOrgMember(
+        auth.organizations,
+        query.organizationId,
+      );
+      if (!memberCheck.ok) {
+        set.status = memberCheck.status;
+        return memberCheck.response;
       }
 
       const personas = await dbPool.query.agentPersonas.findMany({
@@ -67,34 +53,15 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
   )
   .post(
     "/",
-    async ({ request, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      try {
-        requireOrgAdmin(
-          auth.organizations,
-          body.organizationId,
-          "manage personas",
-        );
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
+    async ({ body, auth, set }) => {
+      const adminCheck = checkOrgAdmin(
+        auth.organizations,
+        body.organizationId,
+        "manage personas",
+      );
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       const name = body.name.trim().slice(0, MAX_PERSONA_NAME_LENGTH);
@@ -141,34 +108,15 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
   )
   .put(
     "/:id",
-    async ({ request, params, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      try {
-        requireOrgAdmin(
-          auth.organizations,
-          body.organizationId,
-          "manage personas",
-        );
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
+    async ({ params, body, auth, set }) => {
+      const adminCheck = checkOrgAdmin(
+        auth.organizations,
+        body.organizationId,
+        "manage personas",
+      );
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       // Verify persona belongs to the organization
@@ -184,7 +132,7 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         return { error: "Persona not found" };
       }
 
-      const updates: Record<string, unknown> = {
+      const updates: Partial<InsertAgentPersona> = {
         updatedAt: new Date().toISOString(),
       };
 
@@ -250,34 +198,15 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
   )
   .delete(
     "/:id",
-    async ({ request, params, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      try {
-        requireOrgAdmin(
-          auth.organizations,
-          body.organizationId,
-          "manage personas",
-        );
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
+    async ({ params, body, auth, set }) => {
+      const adminCheck = checkOrgAdmin(
+        auth.organizations,
+        body.organizationId,
+        "manage personas",
+      );
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       const deleted = await dbPool

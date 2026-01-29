@@ -16,14 +16,14 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { agentWebhooks } from "lib/db/schema";
-import { isAgentEnabled } from "lib/flags";
-import { authenticateRequest, validateProjectAccess } from "./auth";
+import { checkProjectAccess, checkProjectAdmin } from "./auth";
 import {
   MAX_WEBHOOKS_PER_PROJECT,
   MAX_WEBHOOK_NAME_LENGTH,
   MAX_WEBHOOK_TEMPLATE_LENGTH,
 } from "./constants";
 import { encrypt } from "./encryption";
+import { agentFeatureGuard, authGuard } from "./guards";
 import {
   WEBHOOK_EVENT_TYPES,
   generateSigningSecret,
@@ -31,7 +31,7 @@ import {
   verifyWebhookSignature,
 } from "./triggers/webhook";
 
-import type { AuthenticatedUser } from "./auth";
+import type { InsertAgentWebhook } from "lib/db/schema";
 
 /** Max receiver payload size in bytes (256 KB). */
 const MAX_PAYLOAD_SIZE = 256 * 1024;
@@ -41,32 +41,18 @@ const MAX_PAYLOAD_SIZE = 256 * 1024;
 // ─────────────────────────────────────────────
 
 const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
+  .use(agentFeatureGuard)
+  .use(authGuard)
   .get(
     "/",
-    async ({ request, query, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      try {
-        await validateProjectAccess(query.projectId, auth.organizations);
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
+    async ({ query, auth, set }) => {
+      const accessCheck = await checkProjectAccess(
+        query.projectId,
+        auth.organizations,
+      );
+      if (!accessCheck.ok) {
+        set.status = accessCheck.status;
+        return accessCheck.response;
       }
 
       const webhooks = await dbPool.query.agentWebhooks.findMany({
@@ -93,49 +79,18 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
   )
   .post(
     "/",
-    async ({ request, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      let organizationId: string;
-      try {
-        const access = await validateProjectAccess(
-          body.projectId,
-          auth.organizations,
-        );
-        organizationId = access.organizationId;
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
-      }
-
-      // Verify admin role
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === organizationId,
+    async ({ body, auth, set }) => {
+      const adminCheck = await checkProjectAdmin(
+        body.projectId,
+        auth.organizations,
+        "manage webhooks",
       );
-      const isAdmin =
-        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can manage webhooks",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
+
+      const { organizationId } = adminCheck.value;
 
       // Validate event type
       if (
@@ -219,48 +174,15 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
   )
   .put(
     "/:id",
-    async ({ request, params, body, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      let organizationId: string;
-      try {
-        const access = await validateProjectAccess(
-          body.projectId,
-          auth.organizations,
-        );
-        organizationId = access.organizationId;
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
-      }
-
-      // Verify admin role
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === organizationId,
+    async ({ params, body, auth, set }) => {
+      const adminCheck = await checkProjectAdmin(
+        body.projectId,
+        auth.organizations,
+        "manage webhooks",
       );
-      const isAdmin =
-        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can manage webhooks",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       // Verify webhook exists and belongs to the project
@@ -275,7 +197,7 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         return { error: "Webhook not found" };
       }
 
-      const updates: Record<string, unknown> = {
+      const updates: Partial<InsertAgentWebhook> = {
         updatedAt: new Date().toISOString(),
       };
 
@@ -350,48 +272,15 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
   )
   .delete(
     "/:id",
-    async ({ request, params, query, set }) => {
-      const enabled = await isAgentEnabled();
-      if (!enabled) {
-        set.status = 403;
-        return { error: "Agent feature is not enabled" };
-      }
-
-      let auth: AuthenticatedUser;
-      try {
-        auth = await authenticateRequest(request);
-      } catch (err) {
-        set.status = 401;
-        return {
-          error: err instanceof Error ? err.message : "Authentication failed",
-        };
-      }
-
-      let organizationId: string;
-      try {
-        const access = await validateProjectAccess(
-          query.projectId,
-          auth.organizations,
-        );
-        organizationId = access.organizationId;
-      } catch (err) {
-        set.status = 403;
-        return {
-          error: err instanceof Error ? err.message : "Access denied",
-        };
-      }
-
-      // Verify admin role
-      const orgClaim = auth.organizations.find(
-        (org) => org.id === organizationId,
+    async ({ params, query, auth, set }) => {
+      const adminCheck = await checkProjectAdmin(
+        query.projectId,
+        auth.organizations,
+        "manage webhooks",
       );
-      const isAdmin =
-        orgClaim?.roles.includes("admin") || orgClaim?.roles.includes("owner");
-      if (!isAdmin) {
-        set.status = 403;
-        return {
-          error: "Only organization admins can manage webhooks",
-        };
+      if (!adminCheck.ok) {
+        set.status = adminCheck.status;
+        return adminCheck.response;
       }
 
       const deleted = await dbPool
@@ -427,119 +316,121 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
  * The receiver route intentionally omits a TypeBox body schema because
  * Elysia would parse the body before we can read the raw text for HMAC
  * verification. We read `request.text()` manually instead.
+ *
+ * This route uses only agentFeatureGuard (no authGuard) since it
+ * authenticates via HMAC signature instead of JWT tokens.
  */
 const aiWebhookReceiverRoutes = new Elysia({
   prefix: "/api/ai/webhook",
-}).post(
-  "/:projectId/:webhookId",
-  async ({ request, params, headers, set }) => {
-    // Generic error used for all "not found" / "unauthorized" paths
-    // to prevent webhook and project ID enumeration.
-    const GENERIC_REJECT = { error: "Webhook verification failed" } as const;
+})
+  .use(agentFeatureGuard)
+  .post(
+    "/:projectId/:webhookId",
+    async ({ request, params, headers, set }) => {
+      // Generic error used for all "not found" / "unauthorized" paths
+      // to prevent webhook and project ID enumeration.
+      const GENERIC_REJECT = { error: "Webhook verification failed" } as const;
 
-    const enabled = await isAgentEnabled();
-    if (!enabled) {
-      set.status = 403;
-      return { error: "Agent feature is not enabled" };
-    }
-
-    const signature = headers["x-webhook-signature"];
-    if (!signature) {
-      set.status = 401;
-      return GENERIC_REJECT;
-    }
-
-    try {
-      // Enforce payload size limit (256 KB)
-      const contentLength = Number(headers["content-length"] ?? "0");
-      if (contentLength > MAX_PAYLOAD_SIZE) {
-        set.status = 413;
-        return { error: "Payload too large" };
-      }
-
-      // Load webhook config
-      const webhook = await dbPool.query.agentWebhooks.findFirst({
-        where: and(
-          eq(agentWebhooks.id, params.webhookId),
-          eq(agentWebhooks.projectId, params.projectId),
-          eq(agentWebhooks.enabled, true),
-        ),
-      });
-
-      if (!webhook) {
-        // Return same error as invalid signature to prevent enumeration
+      const signature = headers["x-webhook-signature"];
+      if (!signature) {
         set.status = 401;
         return GENERIC_REJECT;
       }
 
-      // Read raw body and enforce actual size limit
-      const rawBody = await request.text();
-      if (rawBody.length > MAX_PAYLOAD_SIZE) {
-        set.status = 413;
-        return { error: "Payload too large" };
-      }
-
-      // Verify HMAC-SHA256 signature (secret is decrypted inside verifyWebhookSignature)
-      const isValid = verifyWebhookSignature(
-        rawBody,
-        signature,
-        webhook.signingSecret,
-      );
-
-      if (!isValid) {
-        set.status = 401;
-        return GENERIC_REJECT;
-      }
-
-      // Parse payload
-      let eventPayload: Record<string, unknown>;
       try {
-        eventPayload = JSON.parse(rawBody) as Record<string, unknown>;
-      } catch {
-        set.status = 400;
-        return { error: "Invalid JSON payload" };
-      }
+        // Enforce payload size limit (256 KB)
+        const contentLength = Number(headers["content-length"] ?? "0");
+        if (contentLength > MAX_PAYLOAD_SIZE) {
+          set.status = 413;
+          return { error: "Payload too large" };
+        }
 
-      // Determine event type from header or payload or webhook config
-      const eventType =
-        headers["x-webhook-event"] ??
-        (eventPayload.eventType as string | undefined) ??
-        webhook.eventType;
+        // Load webhook config
+        const webhook = await dbPool.query.agentWebhooks.findFirst({
+          where: and(
+            eq(agentWebhooks.id, params.webhookId),
+            eq(agentWebhooks.projectId, params.projectId),
+            eq(agentWebhooks.enabled, true),
+          ),
+        });
 
-      // Fire-and-forget: trigger the agent in the background
-      handleWebhook({
-        webhookId: webhook.id,
-        projectId: params.projectId,
-        organizationId: webhook.organizationId,
-        eventType,
-        eventPayload,
-      }).catch((err) => {
-        console.error(
-          "[AI Webhook] Failed to handle webhook:",
-          err instanceof Error ? err.message : String(err),
+        if (!webhook) {
+          // Return same error as invalid signature to prevent enumeration
+          set.status = 401;
+          return GENERIC_REJECT;
+        }
+
+        // Read raw body and enforce actual size limit
+        const rawBody = await request.text();
+        if (rawBody.length > MAX_PAYLOAD_SIZE) {
+          set.status = 413;
+          return { error: "Payload too large" };
+        }
+
+        // Verify HMAC-SHA256 signature (secret is decrypted inside verifyWebhookSignature)
+        const isValid = verifyWebhookSignature(
+          rawBody,
+          signature,
+          webhook.signingSecret,
         );
-      });
 
-      set.status = 200;
-      return { received: true };
-    } catch (err) {
-      console.error("[AI Webhook] Receiver error:", err);
-      set.status = 500;
-      return { error: "Internal server error" };
-    }
-  },
-  {
-    params: t.Object({
-      projectId: t.String(),
-      webhookId: t.String(),
-    }),
-    headers: t.Object({
-      "x-webhook-signature": t.Optional(t.String()),
-      "x-webhook-event": t.Optional(t.String()),
-      "content-length": t.Optional(t.String()),
-    }),
-  },
-);
+        if (!isValid) {
+          set.status = 401;
+          return GENERIC_REJECT;
+        }
+
+        // Parse payload
+        let eventPayload: Record<string, unknown>;
+        try {
+          eventPayload = JSON.parse(rawBody) as Record<string, unknown>;
+        } catch {
+          set.status = 400;
+          return { error: "Invalid JSON payload" };
+        }
+
+        // Determine event type from header or payload or webhook config
+        const eventType =
+          headers["x-webhook-event"] ??
+          (eventPayload.eventType as string | undefined) ??
+          webhook.eventType;
+
+        // Fire-and-forget: trigger the agent in the background
+        handleWebhook({
+          webhookId: webhook.id,
+          projectId: params.projectId,
+          organizationId: webhook.organizationId,
+          eventType,
+          eventPayload,
+        }).catch((err) => {
+          console.error(
+            "[AI Webhook] Failed to handle webhook:",
+            err instanceof Error ? err.message : String(err),
+          );
+        });
+
+        set.status = 200;
+        return { received: true };
+      } catch (err) {
+        console.error("[AI Webhook] Receiver error:", err);
+        set.status = 500;
+        return { error: "Internal server error" };
+      }
+    },
+    {
+      params: t.Object({
+        projectId: t.String(),
+        webhookId: t.String(),
+      }),
+      headers: t.Object(
+        {
+          "x-webhook-signature": t.Optional(t.String()),
+          "x-webhook-event": t.Optional(t.String()),
+          "content-length": t.Optional(t.String()),
+        },
+        { additionalProperties: true },
+      ),
+    },
+  );
 
 export default aiWebhookRoutes;
 export { aiWebhookReceiverRoutes };

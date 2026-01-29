@@ -1,5 +1,5 @@
 /**
- * Permission check helper for AI agent write tools.
+ * Permission check wrapper for AI agent write tools.
  *
  * Wraps the AuthZ checkPermission() call to provide clear,
  * descriptive errors when permission is denied.
@@ -13,17 +13,13 @@
 
 import { checkPermission } from "lib/authz/sync";
 
-import type { WriteToolContext } from "./context";
+import type { WriteToolContext } from "../core/context";
 
 export type PermissionLevel = "editor" | "member";
 
 /**
  * Require a project-level permission for the current user.
  * Throws a descriptive error if the permission check fails.
- *
- * @param context - Write tool context with auth credentials
- * @param level - Required permission level ("editor" or "member")
- * @throws Error with human-readable message if denied
  */
 export async function requireProjectPermission(
   context: WriteToolContext,

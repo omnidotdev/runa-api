@@ -145,20 +145,118 @@ export async function authenticateRequest(
   return { user, organizations, accessToken };
 }
 
+// ─────────────────────────────────────────────
+// Result-based Authorization Helpers
+// ─────────────────────────────────────────────
+
 /**
- * Validate that a user has access to a project via their organization membership.
+ * Standard error response shape for authorization failures.
  */
-export async function validateProjectAccess(
+interface AuthErrorResponse {
+  error: string;
+}
+
+/**
+ * Discriminated union for authorization check results.
+ * Enables type-safe early returns without try/catch boilerplate.
+ */
+export type AuthResult<T> =
+  | { ok: true; value: T }
+  | { ok: false; status: 403; response: AuthErrorResponse };
+
+/**
+ * Async authorization result for functions that need database access.
+ */
+export type AsyncAuthResult<T> = Promise<
+  | { ok: true; value: T }
+  | { ok: false; status: 403 | 404; response: AuthErrorResponse }
+>;
+
+/**
+ * Check if user is a member of the specified organization.
+ * Returns a result object instead of throwing.
+ *
+ * @example
+ * const result = checkOrgMember(auth.organizations, query.organizationId);
+ * if (!result.ok) { set.status = result.status; return result.response; }
+ * // result.value is now the OrganizationClaim
+ */
+export function checkOrgMember(
+  organizations: OrganizationClaim[],
+  organizationId: string,
+): AuthResult<OrganizationClaim> {
+  const orgClaim = organizations.find((org) => org.id === organizationId);
+
+  if (!orgClaim) {
+    return {
+      ok: false,
+      status: 403,
+      response: { error: "Access denied to this organization" },
+    };
+  }
+
+  return { ok: true, value: orgClaim };
+}
+
+/**
+ * Check if user is an admin/owner of the specified organization.
+ * Returns a result object instead of throwing.
+ *
+ * @example
+ * const result = checkOrgAdmin(auth.organizations, body.organizationId, "manage personas");
+ * if (!result.ok) { set.status = result.status; return result.response; }
+ */
+export function checkOrgAdmin(
+  organizations: OrganizationClaim[],
+  organizationId: string,
+  action = "perform this action",
+): AuthResult<OrganizationClaim> {
+  const orgClaim = organizations.find((org) => org.id === organizationId);
+
+  if (!orgClaim) {
+    return {
+      ok: false,
+      status: 403,
+      response: { error: "Access denied to this organization" },
+    };
+  }
+
+  const isAdmin = orgClaim.roles.some((role) => ADMIN_ROLES.has(role));
+
+  if (!isAdmin) {
+    return {
+      ok: false,
+      status: 403,
+      response: { error: `Only organization admins can ${action}` },
+    };
+  }
+
+  return { ok: true, value: orgClaim };
+}
+
+/**
+ * Check if user has access to a project via organization membership.
+ * Returns a result object instead of throwing.
+ *
+ * @example
+ * const result = await checkProjectAccess(query.projectId, auth.organizations);
+ * if (!result.ok) { set.status = result.status; return result.response; }
+ */
+export async function checkProjectAccess(
   projectId: string,
   organizations: OrganizationClaim[],
-): Promise<{ organizationId: string }> {
+): AsyncAuthResult<{ organizationId: string }> {
   const project = await dbPool.query.projects.findFirst({
     where: eq(projects.id, projectId),
     columns: { organizationId: true },
   });
 
   if (!project) {
-    throw new Error("Project not found");
+    return {
+      ok: false,
+      status: 404,
+      response: { error: "Project not found" },
+    };
   }
 
   const hasAccess = organizations.some(
@@ -166,72 +264,59 @@ export async function validateProjectAccess(
   );
 
   if (!hasAccess) {
-    throw new Error("Access denied: user is not a member of this organization");
+    return {
+      ok: false,
+      status: 403,
+      response: {
+        error: "Access denied: user is not a member of this organization",
+      },
+    };
   }
 
-  return { organizationId: project.organizationId };
+  return { ok: true, value: { organizationId: project.organizationId } };
 }
 
 /**
- * Verify the user has admin/owner role in the specified organization.
+ * Check if user has project access AND admin role in the project's organization.
+ * Combines checkProjectAccess and checkOrgAdmin into a single call.
  *
- * @param organizations - User's organization claims from JWT
- * @param organizationId - Organization ID to check
- * @param action - Description of the action (for error message)
- * @returns The matching organization claim
- * @throws Error if user lacks access or admin role
+ * @example
+ * const result = await checkProjectAdmin(body.projectId, auth.organizations, "manage webhooks");
+ * if (!result.ok) { set.status = result.status; return result.response; }
+ * // result.value contains both organizationId and orgClaim
  */
-export function requireOrgAdmin(
+export async function checkProjectAdmin(
+  projectId: string,
   organizations: OrganizationClaim[],
-  organizationId: string,
   action = "perform this action",
-): OrganizationClaim {
-  const orgClaim = organizations.find((org) => org.id === organizationId);
+): AsyncAuthResult<{ organizationId: string; orgClaim: OrganizationClaim }> {
+  const projectResult = await checkProjectAccess(projectId, organizations);
+  if (!projectResult.ok) return projectResult;
 
-  if (!orgClaim) {
-    throw new Error("Access denied to this organization");
-  }
+  const adminResult = checkOrgAdmin(
+    organizations,
+    projectResult.value.organizationId,
+    action,
+  );
+  if (!adminResult.ok) return adminResult;
 
-  const isAdmin = orgClaim.roles.some((role) => ADMIN_ROLES.has(role));
-
-  if (!isAdmin) {
-    throw new Error(`Only organization admins can ${action}`);
-  }
-
-  return orgClaim;
+  return {
+    ok: true,
+    value: {
+      organizationId: projectResult.value.organizationId,
+      orgClaim: adminResult.value,
+    },
+  };
 }
 
 /**
- * Check if user has any access to the specified organization.
- *
- * @param organizations - User's organization claims from JWT
- * @param organizationId - Organization ID to check
- * @returns The matching organization claim
- * @throws Error if user is not a member
+ * Check if user has organization-level access for project creation.
+ * Returns a result object instead of throwing.
  */
-export function requireOrgMember(
-  organizations: OrganizationClaim[],
-  organizationId: string,
-): OrganizationClaim {
-  const orgClaim = organizations.find((org) => org.id === organizationId);
-
-  if (!orgClaim) {
-    throw new Error("Access denied to this organization");
-  }
-
-  return orgClaim;
-}
-
-/**
- * Validate that a user has organization-level access for project creation.
- *
- * Project creation requires "editor", "admin", or "owner" role.
- * This is a higher permission level than simply viewing projects.
- */
-export async function validateOrganizationAccess(
+export async function checkOrganizationAccess(
   organizationId: string,
   organizations: OrganizationClaim[],
-): Promise<{
+): AsyncAuthResult<{
   organizationId: string;
   organizationSlug: string;
   roles: string[];
@@ -239,7 +324,13 @@ export async function validateOrganizationAccess(
   const orgClaim = organizations.find((org) => org.id === organizationId);
 
   if (!orgClaim) {
-    throw new Error("Access denied: user is not a member of this organization");
+    return {
+      ok: false,
+      status: 403,
+      response: {
+        error: "Access denied: user is not a member of this organization",
+      },
+    };
   }
 
   const canCreateProjects = orgClaim.roles.some((role) =>
@@ -247,14 +338,22 @@ export async function validateOrganizationAccess(
   );
 
   if (!canCreateProjects) {
-    throw new Error(
-      "Access denied: insufficient permissions to create projects. Requires editor, admin, or owner role.",
-    );
+    return {
+      ok: false,
+      status: 403,
+      response: {
+        error:
+          "Access denied: insufficient permissions to create projects. Requires editor, admin, or owner role.",
+      },
+    };
   }
 
   return {
-    organizationId,
-    organizationSlug: orgClaim.slug,
-    roles: orgClaim.roles,
+    ok: true,
+    value: {
+      organizationId,
+      organizationSlug: orgClaim.slug,
+      roles: orgClaim.roles,
+    },
   };
 }
