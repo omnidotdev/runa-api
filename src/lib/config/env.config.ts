@@ -36,8 +36,6 @@ export const {
   SELF_HOSTED,
   // AI Agent (OpenRouter)
   OPENROUTER_API_KEY,
-  AGENT_DEFAULT_MODEL,
-  AGENT_MAX_ITERATIONS,
   // Env var override for enabling agent without Unleash (local dev)
   AGENT_ENABLED,
   // BYOK encryption key for org-provided API keys (AES-256-GCM)

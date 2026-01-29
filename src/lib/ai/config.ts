@@ -1,10 +1,6 @@
 import { createOpenRouterText } from "@tanstack/ai-openrouter";
 
-import {
-  AGENT_DEFAULT_MODEL,
-  AGENT_MAX_ITERATIONS,
-  OPENROUTER_API_KEY,
-} from "lib/config/env.config";
+import { OPENROUTER_API_KEY } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { decrypt } from "./encryption";
 
@@ -55,7 +51,7 @@ function isAllowedModel(model: string): model is AllowedModel {
 }
 
 /**
- * Resolved agent configuration combining env defaults with org-level overrides.
+ * Resolved agent configuration combining defaults with org-level overrides.
  */
 export interface ResolvedAgentConfig {
   model: string;
@@ -71,7 +67,7 @@ export interface ResolvedAgentConfig {
 
 /**
  * Load agent configuration for an organization.
- * Falls back to environment defaults if no org config exists.
+ * Falls back to defaults if no org config exists.
  */
 export async function resolveAgentConfig(
   organizationId: string,
@@ -85,10 +81,6 @@ export async function resolveAgentConfig(
   } catch {
     // Fall through to defaults if DB query fails
   }
-
-  const envMaxIterations = AGENT_MAX_ITERATIONS
-    ? Number.parseInt(AGENT_MAX_ITERATIONS, 10)
-    : DEFAULT_MAX_ITERATIONS;
 
   // Decrypt org-provided API key if present
   let orgApiKey: string | null = null;
@@ -126,9 +118,9 @@ export async function resolveAgentConfig(
   }
 
   return {
-    model: orgConfig?.model ?? AGENT_DEFAULT_MODEL ?? DEFAULT_MODEL,
+    model: orgConfig?.model ?? DEFAULT_MODEL,
     maxIterations: Math.min(
-      orgConfig?.maxIterationsPerRequest ?? envMaxIterations,
+      orgConfig?.maxIterationsPerRequest ?? DEFAULT_MAX_ITERATIONS,
       MAX_ITERATIONS_CAP,
     ),
     requireApprovalForDestructive:
