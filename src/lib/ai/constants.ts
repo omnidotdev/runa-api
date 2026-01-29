@@ -78,6 +78,49 @@ export const MAX_MAX_ITERATIONS = 20;
 export const MAX_DELEGATION_DEPTH = 2;
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Model Configuration
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Default model when none configured (OpenRouter format: provider/model). */
+export const DEFAULT_MODEL = "anthropic/claude-sonnet-4.5";
+
+/**
+ * Allowed model identifiers for OpenRouter.
+ * Uses the format: provider/model-name
+ *
+ * @see https://openrouter.ai/models for full list
+ */
+export const ALLOWED_MODELS = [
+  // Anthropic
+  "anthropic/claude-sonnet-4.5",
+  "anthropic/claude-haiku-4.5",
+  "anthropic/claude-opus-4",
+  // OpenAI
+  "openai/gpt-4o",
+  "openai/gpt-4o-mini",
+  "openai/gpt-4-turbo",
+  "openai/o3-mini",
+  // Google
+  "google/gemini-2.0-flash-001",
+  "google/gemini-2.5-pro-preview-05-06",
+  // DeepSeek
+  "deepseek/deepseek-chat",
+  "deepseek/deepseek-r1",
+  // Meta
+  "meta-llama/llama-3.3-70b-instruct",
+] as const;
+
+/** Union type of allowed model identifiers. */
+export type AllowedModel = (typeof ALLOWED_MODELS)[number];
+
+/**
+ * Check whether a model name is in the allowed list.
+ */
+export function isAllowedModel(model: string): model is AllowedModel {
+  return ALLOWED_MODELS.includes(model as AllowedModel);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Approval Flow
 // ─────────────────────────────────────────────────────────────────────────────
 

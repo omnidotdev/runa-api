@@ -3,52 +3,15 @@ import { createOpenRouterText } from "@tanstack/ai-openrouter";
 import { OPENROUTER_API_KEY } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { decrypt } from "./encryption";
+import {
+  ALLOWED_MODELS,
+  DEFAULT_MAX_ITERATIONS,
+  DEFAULT_MODEL,
+  isAllowedModel,
+  MAX_MAX_ITERATIONS,
+} from "./constants";
 
 import type { SelectAgentConfig, SelectAgentPersona } from "lib/db/schema";
-
-/** Default model when none configured (OpenRouter format: provider/model). */
-const DEFAULT_MODEL = "anthropic/claude-sonnet-4.5";
-
-/** Default max agent loop iterations. */
-const DEFAULT_MAX_ITERATIONS = 10;
-
-/** Maximum allowed iterations (safety cap). */
-const MAX_ITERATIONS_CAP = 20;
-
-/**
- * Allowed model identifiers for OpenRouter.
- * Uses the format: provider/model-name
- *
- * @see https://openrouter.ai/models for full list
- */
-const ALLOWED_MODELS = [
-  // Anthropic
-  "anthropic/claude-sonnet-4.5",
-  "anthropic/claude-haiku-4.5",
-  "anthropic/claude-opus-4",
-  // OpenAI
-  "openai/gpt-4o",
-  "openai/gpt-4o-mini",
-  "openai/gpt-4-turbo",
-  "openai/o3-mini",
-  // Google
-  "google/gemini-2.0-flash-001",
-  "google/gemini-2.5-pro-preview-05-06",
-  // DeepSeek
-  "deepseek/deepseek-chat",
-  "deepseek/deepseek-r1",
-  // Meta
-  "meta-llama/llama-3.3-70b-instruct",
-] as const;
-
-type AllowedModel = (typeof ALLOWED_MODELS)[number];
-
-/**
- * Check whether a model name is in the allowed list.
- */
-function isAllowedModel(model: string): model is AllowedModel {
-  return ALLOWED_MODELS.includes(model as AllowedModel);
-}
 
 /**
  * Resolved agent configuration combining defaults with org-level overrides.
@@ -121,7 +84,7 @@ export async function resolveAgentConfig(
     model: orgConfig?.model ?? DEFAULT_MODEL,
     maxIterations: Math.min(
       orgConfig?.maxIterationsPerRequest ?? DEFAULT_MAX_ITERATIONS,
-      MAX_ITERATIONS_CAP,
+      MAX_MAX_ITERATIONS,
     ),
     requireApprovalForDestructive:
       orgConfig?.requireApprovalForDestructive ?? true,
