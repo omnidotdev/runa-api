@@ -12,12 +12,6 @@ import aiRoutes from "lib/ai/chat.endpoint";
 import aiConfigRoutes, { aiConfigKeyRoutes } from "lib/ai/config.endpoint";
 import aiPersonaRoutes from "lib/ai/persona.endpoint";
 import projectCreationRoutes from "lib/ai/projectCreation.endpoint";
-import aiScheduleRoutes, {
-  aiScheduleCronPlugin,
-} from "lib/ai/schedule.endpoint";
-import aiWebhookRoutes, {
-  aiWebhookReceiverRoutes,
-} from "lib/ai/webhook.endpoint";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
@@ -173,10 +167,6 @@ async function startServer(): Promise<void> {
     .use(aiConfigRoutes)
     .use(aiConfigKeyRoutes)
     .use(aiPersonaRoutes)
-    .use(aiWebhookRoutes)
-    .use(aiWebhookReceiverRoutes)
-    .use(aiScheduleRoutes)
-    .use(aiScheduleCronPlugin)
     .use(entitlementsWebhook)
     .use(idpWebhook)
     .use(

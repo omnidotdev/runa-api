@@ -358,6 +358,13 @@
       "when": 1769660604013,
       "tag": "0050_panoramic_exiles",
       "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1769722484728,
+      "tag": "0051_typical_franklin_storm",
+      "breakpoints": true
     }
   ]
 }

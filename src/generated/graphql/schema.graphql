@@ -68,12 +68,6 @@ type Query implements Node {
   """Get a single `UserPreference`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
-  """Get a single `AgentWebhook`."""
-  agentWebhook(rowId: UUID!): AgentWebhook
-
-  """Get a single `AgentSchedule`."""
-  agentSchedule(rowId: UUID!): AgentSchedule
-
   """Get a single `AgentSession`."""
   agentSession(rowId: UUID!): AgentSession
 
@@ -191,22 +185,6 @@ type Query implements Node {
     """
     id: ID!
   ): UserPreference
-
-  """Reads a single `AgentWebhook` using its globally unique `ID`."""
-  agentWebhookById(
-    """
-    The globally unique `ID` to be used in selecting a single `AgentWebhook`.
-    """
-    id: ID!
-  ): AgentWebhook
-
-  """Reads a single `AgentSchedule` using its globally unique `ID`."""
-  agentScheduleById(
-    """
-    The globally unique `ID` to be used in selecting a single `AgentSchedule`.
-    """
-    id: ID!
-  ): AgentSchedule
 
   """Reads a single `AgentSession` using its globally unique `ID`."""
   agentSessionById(
@@ -665,74 +643,6 @@ type Query implements Node {
     """The method to use when ordering `UserPreference`."""
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
-
-  """Reads and enables pagination through a set of `AgentWebhook`."""
-  agentWebhooks(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentWebhookCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentWebhookFilter
-
-    """The method to use when ordering `AgentWebhook`."""
-    orderBy: [AgentWebhookOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentWebhookConnection
-
-  """Reads and enables pagination through a set of `AgentSchedule`."""
-  agentSchedules(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentScheduleCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentScheduleFilter
-
-    """The method to use when ordering `AgentSchedule`."""
-    orderBy: [AgentScheduleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentScheduleConnection
 
   """Reads and enables pagination through a set of `AgentSession`."""
   agentSessions(
@@ -1279,74 +1189,6 @@ type Project implements Node {
     """The method to use when ordering `AgentSession`."""
     orderBy: [AgentSessionOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentSessionConnection!
-
-  """Reads and enables pagination through a set of `AgentSchedule`."""
-  agentSchedules(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentScheduleCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentScheduleFilter
-
-    """The method to use when ordering `AgentSchedule`."""
-    orderBy: [AgentScheduleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentScheduleConnection!
-
-  """Reads and enables pagination through a set of `AgentWebhook`."""
-  agentWebhooks(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentWebhookCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentWebhookFilter
-
-    """The method to use when ordering `AgentWebhook`."""
-    orderBy: [AgentWebhookOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentWebhookConnection!
 }
 
 type ProjectColumn implements Node {
@@ -1865,18 +1707,6 @@ input ProjectFilter {
 
   """Some related `agentSessions` exist."""
   agentSessionsExist: Boolean
-
-  """Filter by the object’s `agentSchedules` relation."""
-  agentSchedules: ProjectToManyAgentScheduleFilter
-
-  """Some related `agentSchedules` exist."""
-  agentSchedulesExist: Boolean
-
-  """Filter by the object’s `agentWebhooks` relation."""
-  agentWebhooks: ProjectToManyAgentWebhookFilter
-
-  """Some related `agentWebhooks` exist."""
-  agentWebhooksExist: Boolean
 
   """Filter by the object’s `projectColumn` relation."""
   projectColumn: ProjectColumnFilter
@@ -4107,284 +3937,6 @@ input ProjectToManyAgentSessionFilter {
 }
 
 """
-A filter to be used against many `AgentSchedule` object types. All fields are combined with a logical ‘and.’
-"""
-input ProjectToManyAgentScheduleFilter {
-  """
-  Every related `AgentSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: AgentScheduleFilter
-
-  """
-  Some related `AgentSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: AgentScheduleFilter
-
-  """
-  No related `AgentSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: AgentScheduleFilter
-
-  """Aggregates across related `AgentSchedule` match the filter criteria."""
-  aggregates: AgentScheduleAggregatesFilter
-}
-
-"""
-A filter to be used against `AgentSchedule` object types. All fields are combined with a logical ‘and.’
-"""
-input AgentScheduleFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `organizationId` field."""
-  organizationId: StringFilter
-
-  """Filter by the object’s `projectId` field."""
-  projectId: UUIDFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Filter by the object’s `cronExpression` field."""
-  cronExpression: StringFilter
-
-  """Filter by the object’s `instruction` field."""
-  instruction: StringFilter
-
-  """Filter by the object’s `personaId` field."""
-  personaId: UUIDFilter
-
-  """Filter by the object’s `enabled` field."""
-  enabled: BooleanFilter
-
-  """Filter by the object’s `lastRunAt` field."""
-  lastRunAt: DatetimeFilter
-
-  """Filter by the object’s `nextRunAt` field."""
-  nextRunAt: DatetimeFilter
-
-  """Filter by the object’s `createdAt` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s `updatedAt` field."""
-  updatedAt: DatetimeFilter
-
-  """Filter by the object’s `persona` relation."""
-  persona: AgentPersonaFilter
-
-  """A related `persona` exists."""
-  personaExists: Boolean
-
-  """Filter by the object’s `project` relation."""
-  project: ProjectFilter
-
-  """Checks for all expressions in this list."""
-  and: [AgentScheduleFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [AgentScheduleFilter!]
-
-  """Negates the expression."""
-  not: AgentScheduleFilter
-}
-
-"""
-A filter to be used against `AgentPersona` object types. All fields are combined with a logical ‘and.’
-"""
-input AgentPersonaFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `organizationId` field."""
-  organizationId: StringFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Filter by the object’s `description` field."""
-  description: StringFilter
-
-  """Filter by the object’s `systemPrompt` field."""
-  systemPrompt: StringFilter
-
-  """Filter by the object’s `icon` field."""
-  icon: StringFilter
-
-  """Filter by the object’s `enabled` field."""
-  enabled: BooleanFilter
-
-  """Filter by the object’s `createdAt` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s `updatedAt` field."""
-  updatedAt: DatetimeFilter
-
-  """Filter by the object’s `agentSchedulesByPersonaId` relation."""
-  agentSchedulesByPersonaId: AgentPersonaToManyAgentScheduleFilter
-
-  """Some related `agentSchedulesByPersonaId` exist."""
-  agentSchedulesByPersonaIdExist: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [AgentPersonaFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [AgentPersonaFilter!]
-
-  """Negates the expression."""
-  not: AgentPersonaFilter
-}
-
-"""
-A filter to be used against many `AgentSchedule` object types. All fields are combined with a logical ‘and.’
-"""
-input AgentPersonaToManyAgentScheduleFilter {
-  """
-  Every related `AgentSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: AgentScheduleFilter
-
-  """
-  Some related `AgentSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: AgentScheduleFilter
-
-  """
-  No related `AgentSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: AgentScheduleFilter
-
-  """Aggregates across related `AgentSchedule` match the filter criteria."""
-  aggregates: AgentScheduleAggregatesFilter
-}
-
-"""
-A filter to be used against aggregates of `AgentSchedule` object types.
-"""
-input AgentScheduleAggregatesFilter {
-  """
-  A filter that must pass for the relevant `AgentSchedule` object to be included within the aggregate.
-  """
-  filter: AgentScheduleFilter
-
-  """Distinct count aggregate over matching `AgentSchedule` objects."""
-  distinctCount: AgentScheduleDistinctCountAggregateFilter
-}
-
-input AgentScheduleDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  organizationId: BigIntFilter
-  projectId: BigIntFilter
-  name: BigIntFilter
-  cronExpression: BigIntFilter
-  instruction: BigIntFilter
-  personaId: BigIntFilter
-  enabled: BigIntFilter
-  lastRunAt: BigIntFilter
-  nextRunAt: BigIntFilter
-  createdAt: BigIntFilter
-  updatedAt: BigIntFilter
-}
-
-"""
-A filter to be used against many `AgentWebhook` object types. All fields are combined with a logical ‘and.’
-"""
-input ProjectToManyAgentWebhookFilter {
-  """
-  Every related `AgentWebhook` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: AgentWebhookFilter
-
-  """
-  Some related `AgentWebhook` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: AgentWebhookFilter
-
-  """
-  No related `AgentWebhook` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: AgentWebhookFilter
-
-  """Aggregates across related `AgentWebhook` match the filter criteria."""
-  aggregates: AgentWebhookAggregatesFilter
-}
-
-"""
-A filter to be used against `AgentWebhook` object types. All fields are combined with a logical ‘and.’
-"""
-input AgentWebhookFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `organizationId` field."""
-  organizationId: StringFilter
-
-  """Filter by the object’s `projectId` field."""
-  projectId: UUIDFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Filter by the object’s `eventType` field."""
-  eventType: StringFilter
-
-  """Filter by the object’s `instructionTemplate` field."""
-  instructionTemplate: StringFilter
-
-  """Filter by the object’s `signingSecret` field."""
-  signingSecret: StringFilter
-
-  """Filter by the object’s `enabled` field."""
-  enabled: BooleanFilter
-
-  """Filter by the object’s `lastTriggeredAt` field."""
-  lastTriggeredAt: DatetimeFilter
-
-  """Filter by the object’s `createdAt` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s `updatedAt` field."""
-  updatedAt: DatetimeFilter
-
-  """Filter by the object’s `project` relation."""
-  project: ProjectFilter
-
-  """Checks for all expressions in this list."""
-  and: [AgentWebhookFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [AgentWebhookFilter!]
-
-  """Negates the expression."""
-  not: AgentWebhookFilter
-}
-
-"""A filter to be used against aggregates of `AgentWebhook` object types."""
-input AgentWebhookAggregatesFilter {
-  """
-  A filter that must pass for the relevant `AgentWebhook` object to be included within the aggregate.
-  """
-  filter: AgentWebhookFilter
-
-  """Distinct count aggregate over matching `AgentWebhook` objects."""
-  distinctCount: AgentWebhookDistinctCountAggregateFilter
-}
-
-input AgentWebhookDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  organizationId: BigIntFilter
-  projectId: BigIntFilter
-  name: BigIntFilter
-  eventType: BigIntFilter
-  instructionTemplate: BigIntFilter
-  signingSecret: BigIntFilter
-  enabled: BigIntFilter
-  lastTriggeredAt: BigIntFilter
-  createdAt: BigIntFilter
-  updatedAt: BigIntFilter
-}
-
-"""
 A filter to be used against `ProjectColumn` object types. All fields are combined with a logical ‘and.’
 """
 input ProjectColumnFilter {
@@ -4773,56 +4325,6 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
-  AGENT_SCHEDULES_COUNT_ASC
-  AGENT_SCHEDULES_COUNT_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_ROW_ID_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_ROW_ID_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_PROJECT_ID_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_PROJECT_ID_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_NAME_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_NAME_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_CRON_EXPRESSION_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_CRON_EXPRESSION_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_INSTRUCTION_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_INSTRUCTION_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_PERSONA_ID_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_PERSONA_ID_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_ENABLED_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_ENABLED_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_LAST_RUN_AT_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_LAST_RUN_AT_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_NEXT_RUN_AT_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_NEXT_RUN_AT_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_CREATED_AT_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_CREATED_AT_DESC
-  AGENT_SCHEDULES_DISTINCT_COUNT_UPDATED_AT_ASC
-  AGENT_SCHEDULES_DISTINCT_COUNT_UPDATED_AT_DESC
-  AGENT_WEBHOOKS_COUNT_ASC
-  AGENT_WEBHOOKS_COUNT_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_ROW_ID_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_ROW_ID_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_PROJECT_ID_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_PROJECT_ID_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_NAME_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_NAME_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_EVENT_TYPE_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_EVENT_TYPE_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_INSTRUCTION_TEMPLATE_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_INSTRUCTION_TEMPLATE_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_SIGNING_SECRET_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_SIGNING_SECRET_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_ENABLED_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_ENABLED_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_LAST_TRIGGERED_AT_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_LAST_TRIGGERED_AT_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_CREATED_AT_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_CREATED_AT_DESC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_UPDATED_AT_ASC
-  AGENT_WEBHOOKS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `Column` values."""
@@ -8482,608 +7984,6 @@ enum ProjectProjectLabelOrderBy {
   CREATED_AT_DESC
 }
 
-"""A connection to a list of `AgentSchedule` values."""
-type AgentScheduleConnection {
-  """A list of `AgentSchedule` objects."""
-  nodes: [AgentSchedule!]!
-
-  """
-  A list of edges which contains the `AgentSchedule` and cursor to aid in pagination.
-  """
-  edges: [AgentScheduleEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `AgentSchedule` you could get from the connection."""
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: AgentScheduleAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """The method to use when grouping `AgentSchedule` for these aggregates."""
-    groupBy: [AgentScheduleGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: AgentScheduleHavingInput
-  ): [AgentScheduleAggregates!]
-}
-
-type AgentSchedule implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  organizationId: String!
-  projectId: UUID!
-  name: String!
-  cronExpression: String!
-  instruction: String!
-  personaId: UUID
-  enabled: Boolean!
-  lastRunAt: Datetime
-  nextRunAt: Datetime
-  createdAt: Datetime!
-  updatedAt: Datetime!
-
-  """Reads a single `AgentPersona` that is related to this `AgentSchedule`."""
-  persona: AgentPersona
-
-  """Reads a single `Project` that is related to this `AgentSchedule`."""
-  project: Project
-}
-
-type AgentPersona implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  organizationId: String!
-  name: String!
-  description: String
-  systemPrompt: String!
-  icon: String
-  enabled: Boolean!
-  createdAt: Datetime!
-  updatedAt: Datetime!
-
-  """Reads and enables pagination through a set of `AgentSchedule`."""
-  agentSchedulesByPersonaId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentScheduleCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentScheduleFilter
-
-    """The method to use when ordering `AgentSchedule`."""
-    orderBy: [AgentScheduleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentScheduleConnection!
-}
-
-"""
-A condition to be used against `AgentSchedule` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input AgentScheduleCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `organizationId` field."""
-  organizationId: String
-
-  """Checks for equality with the object’s `projectId` field."""
-  projectId: UUID
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
-  """Checks for equality with the object’s `cronExpression` field."""
-  cronExpression: String
-
-  """Checks for equality with the object’s `instruction` field."""
-  instruction: String
-
-  """Checks for equality with the object’s `personaId` field."""
-  personaId: UUID
-
-  """Checks for equality with the object’s `enabled` field."""
-  enabled: Boolean
-
-  """Checks for equality with the object’s `lastRunAt` field."""
-  lastRunAt: Datetime
-
-  """Checks for equality with the object’s `nextRunAt` field."""
-  nextRunAt: Datetime
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `AgentSchedule`."""
-enum AgentScheduleOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  ORGANIZATION_ID_ASC
-  ORGANIZATION_ID_DESC
-  PROJECT_ID_ASC
-  PROJECT_ID_DESC
-  NAME_ASC
-  NAME_DESC
-  CRON_EXPRESSION_ASC
-  CRON_EXPRESSION_DESC
-  INSTRUCTION_ASC
-  INSTRUCTION_DESC
-  PERSONA_ID_ASC
-  PERSONA_ID_DESC
-  ENABLED_ASC
-  ENABLED_DESC
-  LAST_RUN_AT_ASC
-  LAST_RUN_AT_DESC
-  NEXT_RUN_AT_ASC
-  NEXT_RUN_AT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
-"""A `AgentSchedule` edge in the connection."""
-type AgentScheduleEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `AgentSchedule` at the end of the edge."""
-  node: AgentSchedule!
-}
-
-type AgentScheduleAggregates {
-  keys: [String]
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: AgentScheduleDistinctCountAggregates
-}
-
-type AgentScheduleDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of projectId across the matching connection"""
-  projectId: BigInt
-
-  """Distinct count of name across the matching connection"""
-  name: BigInt
-
-  """Distinct count of cronExpression across the matching connection"""
-  cronExpression: BigInt
-
-  """Distinct count of instruction across the matching connection"""
-  instruction: BigInt
-
-  """Distinct count of personaId across the matching connection"""
-  personaId: BigInt
-
-  """Distinct count of enabled across the matching connection"""
-  enabled: BigInt
-
-  """Distinct count of lastRunAt across the matching connection"""
-  lastRunAt: BigInt
-
-  """Distinct count of nextRunAt across the matching connection"""
-  nextRunAt: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-"""Grouping methods for `AgentSchedule` for usage during aggregation."""
-enum AgentScheduleGroupBy {
-  ORGANIZATION_ID
-  PROJECT_ID
-  NAME
-  CRON_EXPRESSION
-  INSTRUCTION
-  PERSONA_ID
-  ENABLED
-  LAST_RUN_AT
-  LAST_RUN_AT_TRUNCATED_TO_HOUR
-  LAST_RUN_AT_TRUNCATED_TO_DAY
-  NEXT_RUN_AT
-  NEXT_RUN_AT_TRUNCATED_TO_HOUR
-  NEXT_RUN_AT_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `AgentSchedule` aggregates."""
-input AgentScheduleHavingInput {
-  AND: [AgentScheduleHavingInput!]
-  OR: [AgentScheduleHavingInput!]
-  sum: AgentScheduleHavingSumInput
-  distinctCount: AgentScheduleHavingDistinctCountInput
-  min: AgentScheduleHavingMinInput
-  max: AgentScheduleHavingMaxInput
-  average: AgentScheduleHavingAverageInput
-  stddevSample: AgentScheduleHavingStddevSampleInput
-  stddevPopulation: AgentScheduleHavingStddevPopulationInput
-  varianceSample: AgentScheduleHavingVarianceSampleInput
-  variancePopulation: AgentScheduleHavingVariancePopulationInput
-}
-
-input AgentScheduleHavingSumInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentScheduleHavingDistinctCountInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentScheduleHavingMinInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentScheduleHavingMaxInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentScheduleHavingAverageInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentScheduleHavingStddevSampleInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentScheduleHavingStddevPopulationInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentScheduleHavingVarianceSampleInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentScheduleHavingVariancePopulationInput {
-  lastRunAt: HavingDatetimeFilter
-  nextRunAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""A connection to a list of `AgentWebhook` values."""
-type AgentWebhookConnection {
-  """A list of `AgentWebhook` objects."""
-  nodes: [AgentWebhook!]!
-
-  """
-  A list of edges which contains the `AgentWebhook` and cursor to aid in pagination.
-  """
-  edges: [AgentWebhookEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `AgentWebhook` you could get from the connection."""
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: AgentWebhookAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """The method to use when grouping `AgentWebhook` for these aggregates."""
-    groupBy: [AgentWebhookGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: AgentWebhookHavingInput
-  ): [AgentWebhookAggregates!]
-}
-
-type AgentWebhook implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  organizationId: String!
-  projectId: UUID!
-  name: String!
-  eventType: String!
-  instructionTemplate: String!
-  signingSecret: String!
-  enabled: Boolean!
-  lastTriggeredAt: Datetime
-  createdAt: Datetime!
-  updatedAt: Datetime!
-
-  """Reads a single `Project` that is related to this `AgentWebhook`."""
-  project: Project
-}
-
-"""A `AgentWebhook` edge in the connection."""
-type AgentWebhookEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `AgentWebhook` at the end of the edge."""
-  node: AgentWebhook!
-}
-
-type AgentWebhookAggregates {
-  keys: [String]
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: AgentWebhookDistinctCountAggregates
-}
-
-type AgentWebhookDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of projectId across the matching connection"""
-  projectId: BigInt
-
-  """Distinct count of name across the matching connection"""
-  name: BigInt
-
-  """Distinct count of eventType across the matching connection"""
-  eventType: BigInt
-
-  """Distinct count of instructionTemplate across the matching connection"""
-  instructionTemplate: BigInt
-
-  """Distinct count of signingSecret across the matching connection"""
-  signingSecret: BigInt
-
-  """Distinct count of enabled across the matching connection"""
-  enabled: BigInt
-
-  """Distinct count of lastTriggeredAt across the matching connection"""
-  lastTriggeredAt: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-"""Grouping methods for `AgentWebhook` for usage during aggregation."""
-enum AgentWebhookGroupBy {
-  ORGANIZATION_ID
-  PROJECT_ID
-  NAME
-  EVENT_TYPE
-  INSTRUCTION_TEMPLATE
-  SIGNING_SECRET
-  ENABLED
-  LAST_TRIGGERED_AT
-  LAST_TRIGGERED_AT_TRUNCATED_TO_HOUR
-  LAST_TRIGGERED_AT_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `AgentWebhook` aggregates."""
-input AgentWebhookHavingInput {
-  AND: [AgentWebhookHavingInput!]
-  OR: [AgentWebhookHavingInput!]
-  sum: AgentWebhookHavingSumInput
-  distinctCount: AgentWebhookHavingDistinctCountInput
-  min: AgentWebhookHavingMinInput
-  max: AgentWebhookHavingMaxInput
-  average: AgentWebhookHavingAverageInput
-  stddevSample: AgentWebhookHavingStddevSampleInput
-  stddevPopulation: AgentWebhookHavingStddevPopulationInput
-  varianceSample: AgentWebhookHavingVarianceSampleInput
-  variancePopulation: AgentWebhookHavingVariancePopulationInput
-}
-
-input AgentWebhookHavingSumInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentWebhookHavingDistinctCountInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentWebhookHavingMinInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentWebhookHavingMaxInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentWebhookHavingAverageInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentWebhookHavingStddevSampleInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentWebhookHavingStddevPopulationInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentWebhookHavingVarianceSampleInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input AgentWebhookHavingVariancePopulationInput {
-  lastTriggeredAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `AgentWebhook` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input AgentWebhookCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `organizationId` field."""
-  organizationId: String
-
-  """Checks for equality with the object’s `projectId` field."""
-  projectId: UUID
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
-  """Checks for equality with the object’s `eventType` field."""
-  eventType: String
-
-  """Checks for equality with the object’s `instructionTemplate` field."""
-  instructionTemplate: String
-
-  """Checks for equality with the object’s `signingSecret` field."""
-  signingSecret: String
-
-  """Checks for equality with the object’s `enabled` field."""
-  enabled: Boolean
-
-  """Checks for equality with the object’s `lastTriggeredAt` field."""
-  lastTriggeredAt: Datetime
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `AgentWebhook`."""
-enum AgentWebhookOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  ORGANIZATION_ID_ASC
-  ORGANIZATION_ID_DESC
-  PROJECT_ID_ASC
-  PROJECT_ID_DESC
-  NAME_ASC
-  NAME_DESC
-  EVENT_TYPE_ASC
-  EVENT_TYPE_DESC
-  INSTRUCTION_TEMPLATE_ASC
-  INSTRUCTION_TEMPLATE_DESC
-  SIGNING_SECRET_ASC
-  SIGNING_SECRET_DESC
-  ENABLED_ASC
-  ENABLED_DESC
-  LAST_TRIGGERED_AT_ASC
-  LAST_TRIGGERED_AT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
 type ProjectLabel implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -9130,6 +8030,22 @@ type ProjectLabel implements Node {
     """The method to use when ordering `ProjectProjectLabel`."""
     orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectProjectLabelConnection!
+}
+
+type AgentPersona implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  name: String!
+  description: String
+  systemPrompt: String!
+  icon: String
+  enabled: Boolean!
+  createdAt: Datetime!
+  updatedAt: Datetime!
 }
 
 type Setting implements Node {
@@ -9963,6 +8879,47 @@ input AgentPersonaCondition {
   updatedAt: Datetime
 }
 
+"""
+A filter to be used against `AgentPersona` object types. All fields are combined with a logical ‘and.’
+"""
+input AgentPersonaFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `description` field."""
+  description: StringFilter
+
+  """Filter by the object’s `systemPrompt` field."""
+  systemPrompt: StringFilter
+
+  """Filter by the object’s `icon` field."""
+  icon: StringFilter
+
+  """Filter by the object’s `enabled` field."""
+  enabled: BooleanFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Checks for all expressions in this list."""
+  and: [AgentPersonaFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AgentPersonaFilter!]
+
+  """Negates the expression."""
+  not: AgentPersonaFilter
+}
+
 """Methods to use when ordering `AgentPersona`."""
 enum AgentPersonaOrderBy {
   NATURAL
@@ -9986,32 +8943,6 @@ enum AgentPersonaOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_COUNT_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_COUNT_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_ROW_ID_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_PROJECT_ID_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_PROJECT_ID_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_NAME_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_NAME_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_CRON_EXPRESSION_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_CRON_EXPRESSION_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_INSTRUCTION_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_INSTRUCTION_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_PERSONA_ID_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_PERSONA_ID_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_ENABLED_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_ENABLED_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_LAST_RUN_AT_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_LAST_RUN_AT_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_NEXT_RUN_AT_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_NEXT_RUN_AT_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_CREATED_AT_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_CREATED_AT_DESC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_UPDATED_AT_ASC
-  AGENT_SCHEDULES_BY_PERSONA_ID_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `ProjectColumn` values."""
@@ -11118,22 +10049,6 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
-  """Creates a single `AgentWebhook`."""
-  createAgentWebhook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAgentWebhookInput!
-  ): CreateAgentWebhookPayload
-
-  """Creates a single `AgentSchedule`."""
-  createAgentSchedule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAgentScheduleInput!
-  ): CreateAgentSchedulePayload
-
   """Creates a single `AgentSession`."""
   createAgentSession(
     """
@@ -11391,42 +10306,6 @@ type Mutation {
     """
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
-
-  """
-  Updates a single `AgentWebhook` using its globally unique id and a patch.
-  """
-  updateAgentWebhookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentWebhookByIdInput!
-  ): UpdateAgentWebhookPayload
-
-  """Updates a single `AgentWebhook` using a unique key and a patch."""
-  updateAgentWebhook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentWebhookInput!
-  ): UpdateAgentWebhookPayload
-
-  """
-  Updates a single `AgentSchedule` using its globally unique id and a patch.
-  """
-  updateAgentScheduleById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentScheduleByIdInput!
-  ): UpdateAgentSchedulePayload
-
-  """Updates a single `AgentSchedule` using a unique key and a patch."""
-  updateAgentSchedule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentScheduleInput!
-  ): UpdateAgentSchedulePayload
 
   """
   Updates a single `AgentSession` using its globally unique id and a patch.
@@ -11739,38 +10618,6 @@ type Mutation {
     """
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
-
-  """Deletes a single `AgentWebhook` using its globally unique id."""
-  deleteAgentWebhookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentWebhookByIdInput!
-  ): DeleteAgentWebhookPayload
-
-  """Deletes a single `AgentWebhook` using a unique key."""
-  deleteAgentWebhook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentWebhookInput!
-  ): DeleteAgentWebhookPayload
-
-  """Deletes a single `AgentSchedule` using its globally unique id."""
-  deleteAgentScheduleById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentScheduleByIdInput!
-  ): DeleteAgentSchedulePayload
-
-  """Deletes a single `AgentSchedule` using a unique key."""
-  deleteAgentSchedule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentScheduleInput!
-  ): DeleteAgentSchedulePayload
 
   """Deletes a single `AgentSession` using its globally unique id."""
   deleteAgentSessionById(
@@ -12429,107 +11276,6 @@ input UserPreferenceInput {
   updatedAt: Datetime
   viewMode: String
   color: String
-}
-
-"""The output of our create `AgentWebhook` mutation."""
-type CreateAgentWebhookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentWebhook` that was created by this mutation."""
-  agentWebhook: AgentWebhook
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentWebhook`. May be used by Relay 1."""
-  agentWebhookEdge(
-    """The method to use when ordering `AgentWebhook`."""
-    orderBy: [AgentWebhookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentWebhookEdge
-}
-
-"""All input for the create `AgentWebhook` mutation."""
-input CreateAgentWebhookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `AgentWebhook` to be created by this mutation."""
-  agentWebhook: AgentWebhookInput!
-}
-
-"""An input for mutations affecting `AgentWebhook`"""
-input AgentWebhookInput {
-  rowId: UUID
-  organizationId: String!
-  projectId: UUID!
-  name: String!
-  eventType: String!
-  instructionTemplate: String!
-  signingSecret: String!
-  enabled: Boolean
-  lastTriggeredAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our create `AgentSchedule` mutation."""
-type CreateAgentSchedulePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentSchedule` that was created by this mutation."""
-  agentSchedule: AgentSchedule
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentSchedule`. May be used by Relay 1."""
-  agentScheduleEdge(
-    """The method to use when ordering `AgentSchedule`."""
-    orderBy: [AgentScheduleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentScheduleEdge
-}
-
-"""All input for the create `AgentSchedule` mutation."""
-input CreateAgentScheduleInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `AgentSchedule` to be created by this mutation."""
-  agentSchedule: AgentScheduleInput!
-}
-
-"""An input for mutations affecting `AgentSchedule`"""
-input AgentScheduleInput {
-  rowId: UUID
-  organizationId: String!
-  projectId: UUID!
-  name: String!
-  cronExpression: String!
-  instruction: String!
-  personaId: UUID
-  enabled: Boolean
-  lastRunAt: Datetime
-  nextRunAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
 }
 
 """The output of our create `AgentSession` mutation."""
@@ -13718,155 +12464,6 @@ input UpdateUserPreferenceInput {
   patch: UserPreferencePatch!
 }
 
-"""The output of our update `AgentWebhook` mutation."""
-type UpdateAgentWebhookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentWebhook` that was updated by this mutation."""
-  agentWebhook: AgentWebhook
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentWebhook`. May be used by Relay 1."""
-  agentWebhookEdge(
-    """The method to use when ordering `AgentWebhook`."""
-    orderBy: [AgentWebhookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentWebhookEdge
-}
-
-"""All input for the `updateAgentWebhookById` mutation."""
-input UpdateAgentWebhookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AgentWebhook` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `AgentWebhook` being updated.
-  """
-  patch: AgentWebhookPatch!
-}
-
-"""
-Represents an update to a `AgentWebhook`. Fields that are set will be updated.
-"""
-input AgentWebhookPatch {
-  rowId: UUID
-  organizationId: String
-  projectId: UUID
-  name: String
-  eventType: String
-  instructionTemplate: String
-  signingSecret: String
-  enabled: Boolean
-  lastTriggeredAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateAgentWebhook` mutation."""
-input UpdateAgentWebhookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `AgentWebhook` being updated.
-  """
-  patch: AgentWebhookPatch!
-}
-
-"""The output of our update `AgentSchedule` mutation."""
-type UpdateAgentSchedulePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentSchedule` that was updated by this mutation."""
-  agentSchedule: AgentSchedule
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentSchedule`. May be used by Relay 1."""
-  agentScheduleEdge(
-    """The method to use when ordering `AgentSchedule`."""
-    orderBy: [AgentScheduleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentScheduleEdge
-}
-
-"""All input for the `updateAgentScheduleById` mutation."""
-input UpdateAgentScheduleByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AgentSchedule` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `AgentSchedule` being updated.
-  """
-  patch: AgentSchedulePatch!
-}
-
-"""
-Represents an update to a `AgentSchedule`. Fields that are set will be updated.
-"""
-input AgentSchedulePatch {
-  rowId: UUID
-  organizationId: String
-  projectId: UUID
-  name: String
-  cronExpression: String
-  instruction: String
-  personaId: UUID
-  enabled: Boolean
-  lastRunAt: Datetime
-  nextRunAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateAgentSchedule` mutation."""
-input UpdateAgentScheduleInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `AgentSchedule` being updated.
-  """
-  patch: AgentSchedulePatch!
-}
-
 """The output of our update `AgentSession` mutation."""
 type UpdateAgentSessionPayload {
   """
@@ -14957,102 +13554,6 @@ input DeleteUserPreferenceByIdInput {
 
 """All input for the `deleteUserPreference` mutation."""
 input DeleteUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `AgentWebhook` mutation."""
-type DeleteAgentWebhookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentWebhook` that was deleted by this mutation."""
-  agentWebhook: AgentWebhook
-  deletedAgentWebhookId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentWebhook`. May be used by Relay 1."""
-  agentWebhookEdge(
-    """The method to use when ordering `AgentWebhook`."""
-    orderBy: [AgentWebhookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentWebhookEdge
-}
-
-"""All input for the `deleteAgentWebhookById` mutation."""
-input DeleteAgentWebhookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AgentWebhook` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteAgentWebhook` mutation."""
-input DeleteAgentWebhookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `AgentSchedule` mutation."""
-type DeleteAgentSchedulePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentSchedule` that was deleted by this mutation."""
-  agentSchedule: AgentSchedule
-  deletedAgentScheduleId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentSchedule`. May be used by Relay 1."""
-  agentScheduleEdge(
-    """The method to use when ordering `AgentSchedule`."""
-    orderBy: [AgentScheduleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentScheduleEdge
-}
-
-"""All input for the `deleteAgentScheduleById` mutation."""
-input DeleteAgentScheduleByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AgentSchedule` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteAgentSchedule` mutation."""
-input DeleteAgentScheduleInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

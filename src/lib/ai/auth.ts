@@ -277,39 +277,6 @@ export async function checkProjectAccess(
 }
 
 /**
- * Check if user has project access AND admin role in the project's organization.
- * Combines checkProjectAccess and checkOrgAdmin into a single call.
- *
- * @example
- * const result = await checkProjectAdmin(body.projectId, auth.organizations, "manage webhooks");
- * if (!result.ok) { set.status = result.status; return result.response; }
- * // result.value contains both organizationId and orgClaim
- */
-export async function checkProjectAdmin(
-  projectId: string,
-  organizations: OrganizationClaim[],
-  action = "perform this action",
-): AsyncAuthResult<{ organizationId: string; orgClaim: OrganizationClaim }> {
-  const projectResult = await checkProjectAccess(projectId, organizations);
-  if (!projectResult.ok) return projectResult;
-
-  const adminResult = checkOrgAdmin(
-    organizations,
-    projectResult.value.organizationId,
-    action,
-  );
-  if (!adminResult.ok) return adminResult;
-
-  return {
-    ok: true,
-    value: {
-      organizationId: projectResult.value.organizationId,
-      orgClaim: adminResult.value,
-    },
-  };
-}
-
-/**
  * Check if user has organization-level access for project creation.
  * Returns a result object instead of throwing.
  */
