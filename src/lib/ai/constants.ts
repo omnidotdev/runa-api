@@ -74,8 +74,17 @@ export const MIN_MAX_ITERATIONS = 1;
 /** Maximum allowed max iterations. */
 export const MAX_MAX_ITERATIONS = 20;
 
-/** Maximum delegation depth for agent-to-agent handoff. */
+/** Maximum delegation depth for agent-to-agent handoff (0 = primary, 1 = first delegate, etc.). */
 export const MAX_DELEGATION_DEPTH = 2;
+
+/** Max iterations for a delegated sub-agent (lower than primary to bound cost). */
+export const DELEGATE_MAX_ITERATIONS = 5;
+
+/** Wall-clock timeout for a single delegation in milliseconds. */
+export const DELEGATE_TIMEOUT_MS = 60_000;
+
+/** Max response length returned from a delegate (prevents parent context exhaustion). */
+export const MAX_DELEGATE_RESPONSE_LENGTH = 4_000;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Model Configuration

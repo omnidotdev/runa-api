@@ -16,6 +16,12 @@
 import { chat, maxIterations } from "@tanstack/ai";
 
 import { createAdapter, resolvePersona } from "../../config";
+import {
+  DELEGATE_MAX_ITERATIONS,
+  DELEGATE_TIMEOUT_MS,
+  MAX_DELEGATE_RESPONSE_LENGTH,
+  MAX_DELEGATION_DEPTH,
+} from "../../constants";
 import { buildProjectContext } from "../../prompts/projectContext";
 import { buildSystemPrompt } from "../../prompts/system";
 import { delegateToAgentDef } from "../definitions";
@@ -24,18 +30,6 @@ import { createWriteTools } from "./write.tools";
 
 import type { ResolvedAgentConfig } from "../../config";
 import type { WriteToolContext } from "./context";
-
-/** Maximum delegation depth (0 = primary agent, 1 = first delegate, 2 = second delegate). */
-const MAX_DELEGATION_DEPTH = 2;
-
-/** Max iterations for a delegated sub-agent (lower than primary to bound cost). */
-const DELEGATE_MAX_ITERATIONS = 5;
-
-/** Wall-clock timeout for a single delegation in milliseconds. */
-const DELEGATE_TIMEOUT_MS = 60_000;
-
-/** Max response length returned from a delegate (prevents parent context exhaustion). */
-const MAX_DELEGATE_RESPONSE_LENGTH = 4_000;
 
 /**
  * Context required for delegation — extends write context with agent config
