@@ -20,6 +20,8 @@ const knipConfig: KnipConfig = {
     "src/lib/ai/constants.ts",
     // AI utility internals (high-level API is used via barrel export)
     "src/lib/ai/utils/messageRestructure.ts",
+    // Rollback types exported for module consumers
+    "src/lib/ai/rollback/index.ts",
   ],
   ignoreDependencies: [
     // OpenTelemetry deps used by instrumentation.ts (loaded via --import)
