@@ -351,6 +351,13 @@
       "when": 1769644297223,
       "tag": "0049_milky_squadron_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1769660604013,
+      "tag": "0050_panoramic_exiles",
+      "breakpoints": true
     }
   ]
 }

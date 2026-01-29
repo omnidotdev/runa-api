@@ -1711,18 +1711,6 @@ const spec_agentSession = {
         canUpdate: true
       }
     },
-    total_tokens_used: {
-      description: undefined,
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
     tool_call_count: {
       description: undefined,
       codec: TYPES.int,
@@ -7426,26 +7414,21 @@ const colSpec90 = {
   attribute: spec_agentSession.attributes.title
 };
 const colSpec91 = {
-  fieldName: "totalTokensUsed",
-  attributeName: "total_tokens_used",
-  attribute: spec_agentSession.attributes.total_tokens_used
-};
-const colSpec92 = {
   fieldName: "toolCallCount",
   attributeName: "tool_call_count",
   attribute: spec_agentSession.attributes.tool_call_count
 };
-const colSpec93 = {
+const colSpec92 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_agentSession.attributes.created_at
 };
-const colSpec94 = {
+const colSpec93 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_agentSession.attributes.updated_at
 };
-const colSpec95 = {
+const colSpec94 = {
   fieldName: "type",
   attributeName: "type",
   attribute: spec_agentSession.attributes.type
@@ -7527,22 +7510,22 @@ function assertAllowed73(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec96 = {
+const colSpec95 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_taskLabel.attributes.task_id
 };
-const colSpec97 = {
+const colSpec96 = {
   fieldName: "labelId",
   attributeName: "label_id",
   attribute: spec_taskLabel.attributes.label_id
 };
-const colSpec98 = {
+const colSpec97 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_taskLabel.attributes.created_at
 };
-const colSpec99 = {
+const colSpec98 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_taskLabel.attributes.updated_at
@@ -7569,42 +7552,42 @@ function assertAllowed75(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec100 = {
+const colSpec99 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_label.attributes.id
 };
-const colSpec101 = {
+const colSpec100 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_label.attributes.name
 };
-const colSpec102 = {
+const colSpec101 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_label.attributes.color
 };
-const colSpec103 = {
+const colSpec102 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_label.attributes.project_id
 };
-const colSpec104 = {
+const colSpec103 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_label.attributes.created_at
 };
-const colSpec105 = {
+const colSpec104 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_label.attributes.updated_at
 };
-const colSpec106 = {
+const colSpec105 = {
   fieldName: "icon",
   attributeName: "icon",
   attribute: spec_label.attributes.icon
 };
-const colSpec107 = {
+const colSpec106 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_label.attributes.organization_id
@@ -7697,17 +7680,17 @@ function assertAllowed83(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec108 = {
+const colSpec107 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_projectProjectLabel.attributes.project_id
 };
-const colSpec109 = {
+const colSpec108 = {
   fieldName: "projectLabelId",
   attributeName: "project_label_id",
   attribute: spec_projectProjectLabel.attributes.project_label_id
 };
-const colSpec110 = {
+const colSpec109 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectProjectLabel.attributes.created_at
@@ -7734,37 +7717,37 @@ function assertAllowed85(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec111 = {
+const colSpec110 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_projectLabel.attributes.id
 };
-const colSpec112 = {
+const colSpec111 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_projectLabel.attributes.name
 };
-const colSpec113 = {
+const colSpec112 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_projectLabel.attributes.color
 };
-const colSpec114 = {
+const colSpec113 = {
   fieldName: "icon",
   attributeName: "icon",
   attribute: spec_projectLabel.attributes.icon
 };
-const colSpec115 = {
+const colSpec114 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_projectLabel.attributes.organization_id
 };
-const colSpec116 = {
+const colSpec115 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectLabel.attributes.created_at
 };
-const colSpec117 = {
+const colSpec116 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_projectLabel.attributes.updated_at
@@ -7835,62 +7818,62 @@ function assertAllowed91(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec118 = {
+const colSpec117 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_agentSchedule.attributes.id
 };
-const colSpec119 = {
+const colSpec118 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_agentSchedule.attributes.organization_id
 };
-const colSpec120 = {
+const colSpec119 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_agentSchedule.attributes.project_id
 };
-const colSpec121 = {
+const colSpec120 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_agentSchedule.attributes.name
 };
-const colSpec122 = {
+const colSpec121 = {
   fieldName: "cronExpression",
   attributeName: "cron_expression",
   attribute: spec_agentSchedule.attributes.cron_expression
 };
-const colSpec123 = {
+const colSpec122 = {
   fieldName: "instruction",
   attributeName: "instruction",
   attribute: spec_agentSchedule.attributes.instruction
 };
-const colSpec124 = {
+const colSpec123 = {
   fieldName: "personaId",
   attributeName: "persona_id",
   attribute: spec_agentSchedule.attributes.persona_id
 };
-const colSpec125 = {
+const colSpec124 = {
   fieldName: "enabled",
   attributeName: "enabled",
   attribute: spec_agentSchedule.attributes.enabled
 };
-const colSpec126 = {
+const colSpec125 = {
   fieldName: "lastRunAt",
   attributeName: "last_run_at",
   attribute: spec_agentSchedule.attributes.last_run_at
 };
-const colSpec127 = {
+const colSpec126 = {
   fieldName: "nextRunAt",
   attributeName: "next_run_at",
   attribute: spec_agentSchedule.attributes.next_run_at
 };
-const colSpec128 = {
+const colSpec127 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_agentSchedule.attributes.created_at
 };
-const colSpec129 = {
+const colSpec128 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_agentSchedule.attributes.updated_at
@@ -7917,47 +7900,47 @@ function assertAllowed93(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec130 = {
+const colSpec129 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_agentPersona.attributes.id
 };
-const colSpec131 = {
+const colSpec130 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_agentPersona.attributes.organization_id
 };
-const colSpec132 = {
+const colSpec131 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_agentPersona.attributes.name
 };
-const colSpec133 = {
+const colSpec132 = {
   fieldName: "description",
   attributeName: "description",
   attribute: spec_agentPersona.attributes.description
 };
-const colSpec134 = {
+const colSpec133 = {
   fieldName: "systemPrompt",
   attributeName: "system_prompt",
   attribute: spec_agentPersona.attributes.system_prompt
 };
-const colSpec135 = {
+const colSpec134 = {
   fieldName: "icon",
   attributeName: "icon",
   attribute: spec_agentPersona.attributes.icon
 };
-const colSpec136 = {
+const colSpec135 = {
   fieldName: "enabled",
   attributeName: "enabled",
   attribute: spec_agentPersona.attributes.enabled
 };
-const colSpec137 = {
+const colSpec136 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_agentPersona.attributes.created_at
 };
-const colSpec138 = {
+const colSpec137 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_agentPersona.attributes.updated_at
@@ -8006,57 +7989,57 @@ function assertAllowed97(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec139 = {
+const colSpec138 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_agentWebhook.attributes.id
 };
-const colSpec140 = {
+const colSpec139 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_agentWebhook.attributes.organization_id
 };
-const colSpec141 = {
+const colSpec140 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_agentWebhook.attributes.project_id
 };
-const colSpec142 = {
+const colSpec141 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_agentWebhook.attributes.name
 };
-const colSpec143 = {
+const colSpec142 = {
   fieldName: "eventType",
   attributeName: "event_type",
   attribute: spec_agentWebhook.attributes.event_type
 };
-const colSpec144 = {
+const colSpec143 = {
   fieldName: "instructionTemplate",
   attributeName: "instruction_template",
   attribute: spec_agentWebhook.attributes.instruction_template
 };
-const colSpec145 = {
+const colSpec144 = {
   fieldName: "signingSecret",
   attributeName: "signing_secret",
   attribute: spec_agentWebhook.attributes.signing_secret
 };
-const colSpec146 = {
+const colSpec145 = {
   fieldName: "enabled",
   attributeName: "enabled",
   attribute: spec_agentWebhook.attributes.enabled
 };
-const colSpec147 = {
+const colSpec146 = {
   fieldName: "lastTriggeredAt",
   attributeName: "last_triggered_at",
   attribute: spec_agentWebhook.attributes.last_triggered_at
 };
-const colSpec148 = {
+const colSpec147 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_agentWebhook.attributes.created_at
 };
-const colSpec149 = {
+const colSpec148 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_agentWebhook.attributes.updated_at
@@ -8083,37 +8066,37 @@ function assertAllowed99(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec150 = {
+const colSpec149 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_projectColumn.attributes.id
 };
-const colSpec151 = {
+const colSpec150 = {
   fieldName: "icon",
   attributeName: "icon",
   attribute: spec_projectColumn.attributes.icon
 };
-const colSpec152 = {
+const colSpec151 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_projectColumn.attributes.title
 };
-const colSpec153 = {
+const colSpec152 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_projectColumn.attributes.organization_id
 };
-const colSpec154 = {
+const colSpec153 = {
   fieldName: "index",
   attributeName: "index",
   attribute: spec_projectColumn.attributes.index
 };
-const colSpec155 = {
+const colSpec154 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectColumn.attributes.created_at
 };
-const colSpec156 = {
+const colSpec155 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_projectColumn.attributes.updated_at
@@ -8365,47 +8348,47 @@ const relation24 = registry.pgRelations["user"]["agentSessionsByTheirUserId"];
 const relation25 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
 const relation26 = registry.pgRelations["agentPersona"]["agentSchedulesByTheirPersonaId"];
 const relation27 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
-const colSpec157 = {
+const colSpec156 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_settings.attributes.id
 };
-const colSpec158 = {
+const colSpec157 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_settings.attributes.created_at
 };
-const colSpec159 = {
+const colSpec158 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_settings.attributes.updated_at
 };
-const colSpec160 = {
+const colSpec159 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_settings.attributes.view_mode
 };
-const colSpec161 = {
+const colSpec160 = {
   fieldName: "billingAccountId",
   attributeName: "billing_account_id",
   attribute: spec_settings.attributes.billing_account_id
 };
-const colSpec162 = {
+const colSpec161 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_settings.attributes.organization_id
 };
-const colSpec163 = {
+const colSpec162 = {
   fieldName: "subscriptionId",
   attributeName: "subscription_id",
   attribute: spec_settings.attributes.subscription_id
 };
-const colSpec164 = {
+const colSpec163 = {
   fieldName: "deletedAt",
   attributeName: "deleted_at",
   attribute: spec_settings.attributes.deleted_at
 };
-const colSpec165 = {
+const colSpec164 = {
   fieldName: "deletionReason",
   attributeName: "deletion_reason",
   attribute: spec_settings.attributes.deletion_reason
@@ -8421,62 +8404,62 @@ function assertAllowed120(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec166 = {
+const colSpec165 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_agentConfig.attributes.id
 };
-const colSpec167 = {
+const colSpec166 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_agentConfig.attributes.organization_id
 };
-const colSpec168 = {
+const colSpec167 = {
   fieldName: "model",
   attributeName: "model",
   attribute: spec_agentConfig.attributes.model
 };
-const colSpec169 = {
+const colSpec168 = {
   fieldName: "enabled",
   attributeName: "enabled",
   attribute: spec_agentConfig.attributes.enabled
 };
-const colSpec170 = {
+const colSpec169 = {
   fieldName: "maxIterationsPerRequest",
   attributeName: "max_iterations_per_request",
   attribute: spec_agentConfig.attributes.max_iterations_per_request
 };
-const colSpec171 = {
+const colSpec170 = {
   fieldName: "requireApprovalForDestructive",
   attributeName: "require_approval_for_destructive",
   attribute: spec_agentConfig.attributes.require_approval_for_destructive
 };
-const colSpec172 = {
+const colSpec171 = {
   fieldName: "requireApprovalForCreate",
   attributeName: "require_approval_for_create",
   attribute: spec_agentConfig.attributes.require_approval_for_create
 };
-const colSpec173 = {
+const colSpec172 = {
   fieldName: "customInstructions",
   attributeName: "custom_instructions",
   attribute: spec_agentConfig.attributes.custom_instructions
 };
-const colSpec174 = {
+const colSpec173 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_agentConfig.attributes.created_at
 };
-const colSpec175 = {
+const colSpec174 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_agentConfig.attributes.updated_at
 };
-const colSpec176 = {
+const colSpec175 = {
   fieldName: "encryptedApiKey",
   attributeName: "encrypted_api_key",
   attribute: spec_agentConfig.attributes.encrypted_api_key
 };
-const colSpec177 = {
+const colSpec176 = {
   fieldName: "defaultPersonaId",
   attributeName: "default_persona_id",
   attribute: spec_agentConfig.attributes.default_persona_id
@@ -9015,7 +8998,7 @@ const planWrapper13 = (plan, _, fieldArgs) => {
     $projectId = $result.getStepForKey("result").get("id");
   sideEffect([$projectId, $input, $accessToken], async ([projectId, input, accessToken]) => {
     if (!projectId) return;
-    if (undefined !== "true" || !undefined) return;
+    if ("false" !== "true" || !undefined) return;
     const {
         organizationId
       } = input,
@@ -10171,7 +10154,7 @@ const planWrapper35 = (plan, _, _fieldArgs) => {
     $organizationId = $deleteStep.get("organization_id");
   sideEffect([$projectId, $organizationId, $accessToken], async ([projectId, organizationId, accessToken]) => {
     if (!projectId || !organizationId) return;
-    if (undefined !== "true" || !undefined) return;
+    if ("false" !== "true" || !undefined) return;
     const result = await deleteTuples([{
       user: `workspace:${organizationId}`,
       relation: "workspace",
@@ -13659,9 +13642,6 @@ input AgentSessionFilter {
   """Filter by the object’s \`title\` field."""
   title: StringFilter
 
-  """Filter by the object’s \`totalTokensUsed\` field."""
-  totalTokensUsed: IntFilter
-
   """Filter by the object’s \`toolCallCount\` field."""
   toolCallCount: IntFilter
 
@@ -13816,7 +13796,6 @@ input AgentSessionAggregatesFilter {
 }
 
 input AgentSessionSumAggregateFilter {
-  totalTokensUsed: BigIntFilter
   toolCallCount: BigIntFilter
 }
 
@@ -13827,7 +13806,6 @@ input AgentSessionDistinctCountAggregateFilter {
   userId: BigIntFilter
   title: BigIntFilter
   messages: BigIntFilter
-  totalTokensUsed: BigIntFilter
   toolCallCount: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
@@ -13835,37 +13813,30 @@ input AgentSessionDistinctCountAggregateFilter {
 }
 
 input AgentSessionMinAggregateFilter {
-  totalTokensUsed: IntFilter
   toolCallCount: IntFilter
 }
 
 input AgentSessionMaxAggregateFilter {
-  totalTokensUsed: IntFilter
   toolCallCount: IntFilter
 }
 
 input AgentSessionAverageAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
 input AgentSessionStddevSampleAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
 input AgentSessionStddevPopulationAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
 input AgentSessionVarianceSampleAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
 input AgentSessionVariancePopulationAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
@@ -15024,8 +14995,6 @@ enum ProjectOrderBy {
   AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
   AGENT_SESSIONS_COUNT_ASC
   AGENT_SESSIONS_COUNT_DESC
-  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_ASC
@@ -15040,8 +15009,6 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC
-  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC
@@ -15050,32 +15017,18 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
-  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
   AGENT_SCHEDULES_COUNT_ASC
@@ -17004,7 +16957,6 @@ type AgentSession implements Node {
   userId: UUID!
   title: String
   messages: JSON!
-  totalTokensUsed: Int!
   toolCallCount: Int!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -17347,9 +17299,6 @@ type AgentSessionAggregates {
 }
 
 type AgentSessionSumAggregates {
-  """Sum of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigInt!
-
   """Sum of toolCallCount across the matching connection"""
   toolCallCount: BigInt!
 }
@@ -17373,9 +17322,6 @@ type AgentSessionDistinctCountAggregates {
   """Distinct count of messages across the matching connection"""
   messages: BigInt
 
-  """Distinct count of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigInt
-
   """Distinct count of toolCallCount across the matching connection"""
   toolCallCount: BigInt
 
@@ -17390,35 +17336,21 @@ type AgentSessionDistinctCountAggregates {
 }
 
 type AgentSessionMinAggregates {
-  """Minimum of totalTokensUsed across the matching connection"""
-  totalTokensUsed: Int
-
   """Minimum of toolCallCount across the matching connection"""
   toolCallCount: Int
 }
 
 type AgentSessionMaxAggregates {
-  """Maximum of totalTokensUsed across the matching connection"""
-  totalTokensUsed: Int
-
   """Maximum of toolCallCount across the matching connection"""
   toolCallCount: Int
 }
 
 type AgentSessionAverageAggregates {
-  """Mean average of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigFloat
-
   """Mean average of toolCallCount across the matching connection"""
   toolCallCount: BigFloat
 }
 
 type AgentSessionStddevSampleAggregates {
-  """
-  Sample standard deviation of totalTokensUsed across the matching connection
-  """
-  totalTokensUsed: BigFloat
-
   """
   Sample standard deviation of toolCallCount across the matching connection
   """
@@ -17427,28 +17359,17 @@ type AgentSessionStddevSampleAggregates {
 
 type AgentSessionStddevPopulationAggregates {
   """
-  Population standard deviation of totalTokensUsed across the matching connection
-  """
-  totalTokensUsed: BigFloat
-
-  """
   Population standard deviation of toolCallCount across the matching connection
   """
   toolCallCount: BigFloat
 }
 
 type AgentSessionVarianceSampleAggregates {
-  """Sample variance of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigFloat
-
   """Sample variance of toolCallCount across the matching connection"""
   toolCallCount: BigFloat
 }
 
 type AgentSessionVariancePopulationAggregates {
-  """Population variance of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigFloat
-
   """Population variance of toolCallCount across the matching connection"""
   toolCallCount: BigFloat
 }
@@ -17460,7 +17381,6 @@ enum AgentSessionGroupBy {
   USER_ID
   TITLE
   MESSAGES
-  TOTAL_TOKENS_USED
   TOOL_CALL_COUNT
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
@@ -17487,63 +17407,54 @@ input AgentSessionHavingInput {
 }
 
 input AgentSessionHavingSumInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingDistinctCountInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingMinInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingMaxInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingAverageInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingStddevSampleInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingStddevPopulationInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingVarianceSampleInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingVariancePopulationInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
@@ -17568,9 +17479,6 @@ input AgentSessionCondition {
 
   """Checks for equality with the object’s \`title\` field."""
   title: String
-
-  """Checks for equality with the object’s \`totalTokensUsed\` field."""
-  totalTokensUsed: Int
 
   """Checks for equality with the object’s \`toolCallCount\` field."""
   toolCallCount: Int
@@ -17600,8 +17508,6 @@ enum AgentSessionOrderBy {
   USER_ID_DESC
   TITLE_ASC
   TITLE_DESC
-  TOTAL_TOKENS_USED_ASC
-  TOTAL_TOKENS_USED_DESC
   TOOL_CALL_COUNT_ASC
   TOOL_CALL_COUNT_DESC
   CREATED_AT_ASC
@@ -19884,8 +19790,6 @@ enum UserOrderBy {
   AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
   AGENT_SESSIONS_COUNT_ASC
   AGENT_SESSIONS_COUNT_DESC
-  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_ASC
@@ -19900,8 +19804,6 @@ enum UserOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC
-  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC
@@ -19910,32 +19812,18 @@ enum UserOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
-  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
 }
@@ -22945,7 +22833,6 @@ input AgentSessionInput {
   userId: UUID!
   title: String
   messages: JSON
-  totalTokensUsed: Int
   toolCallCount: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -24290,7 +24177,6 @@ input AgentSessionPatch {
   userId: UUID
   title: String
   messages: JSON
-  totalTokensUsed: Int
   toolCallCount: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -29626,9 +29512,6 @@ ${String(oldPlan21)}`);
       toolCallCount($record) {
         return $record.get("tool_call_count");
       },
-      totalTokensUsed($record) {
-        return $record.get("total_tokens_used");
-      },
       updatedAt($record) {
         return $record.get("updated_at");
       },
@@ -29691,11 +29574,6 @@ ${String(oldPlan21)}`);
     plans: {
       toolCallCount($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tool_call_count")}`,
-          sqlAggregate = spec5.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
           sqlAggregate = spec5.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
@@ -29762,11 +29640,6 @@ ${String(oldPlan21)}`);
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
-          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
       type($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("type")}`,
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.varchar);
@@ -29790,11 +29663,6 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tool_call_count")}`,
           sqlAggregate = spec4.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.int);
-      },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
-          sqlAggregate = spec4.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.int);
       }
     }
   },
@@ -29802,11 +29670,6 @@ ${String(oldPlan21)}`);
     plans: {
       toolCallCount($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tool_call_count")}`,
-          sqlAggregate = spec3.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.int);
-      },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
           sqlAggregate = spec3.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.int);
       }
@@ -29818,11 +29681,6 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tool_call_count")}`,
           sqlAggregate = spec7.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
-          sqlAggregate = spec7.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
     }
   },
@@ -29830,11 +29688,6 @@ ${String(oldPlan21)}`);
     plans: {
       toolCallCount($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tool_call_count")}`,
-          sqlAggregate = spec6.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
           sqlAggregate = spec6.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
@@ -29846,11 +29699,6 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tool_call_count")}`,
           sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
-      },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
-          sqlAggregate = spec.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       }
     }
   },
@@ -29860,11 +29708,6 @@ ${String(oldPlan21)}`);
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tool_call_count")}`,
           sqlAggregate = spec9.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
-          sqlAggregate = spec9.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
     }
   },
@@ -29872,11 +29715,6 @@ ${String(oldPlan21)}`);
     plans: {
       toolCallCount($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("tool_call_count")}`,
-          sqlAggregate = spec8.sqlAggregateWrap(sqlAttribute, TYPES.int);
-        return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
-      },
-      totalTokensUsed($pgSelectSingle) {
-        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("total_tokens_used")}`,
           sqlAggregate = spec8.sqlAggregateWrap(sqlAttribute, TYPES.int);
         return $pgSelectSingle.select(sqlAggregate, TYPES.numeric);
       }
@@ -35337,7 +35175,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec174;
+        condition.extensions.pgFilterAttribute = colSpec173;
         return condition;
       },
       customInstructions(queryBuilder, value) {
@@ -35345,7 +35183,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec173;
+        condition.extensions.pgFilterAttribute = colSpec172;
         return condition;
       },
       defaultPersonaId(queryBuilder, value) {
@@ -35353,7 +35191,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec177;
+        condition.extensions.pgFilterAttribute = colSpec176;
         return condition;
       },
       enabled(queryBuilder, value) {
@@ -35361,7 +35199,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec169;
+        condition.extensions.pgFilterAttribute = colSpec168;
         return condition;
       },
       encryptedApiKey(queryBuilder, value) {
@@ -35369,7 +35207,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec176;
+        condition.extensions.pgFilterAttribute = colSpec175;
         return condition;
       },
       maxIterationsPerRequest(queryBuilder, value) {
@@ -35377,7 +35215,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec170;
+        condition.extensions.pgFilterAttribute = colSpec169;
         return condition;
       },
       model(queryBuilder, value) {
@@ -35385,7 +35223,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec168;
+        condition.extensions.pgFilterAttribute = colSpec167;
         return condition;
       },
       not($where, value) {
@@ -35404,7 +35242,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec167;
+        condition.extensions.pgFilterAttribute = colSpec166;
         return condition;
       },
       requireApprovalForCreate(queryBuilder, value) {
@@ -35412,7 +35250,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec172;
+        condition.extensions.pgFilterAttribute = colSpec171;
         return condition;
       },
       requireApprovalForDestructive(queryBuilder, value) {
@@ -35420,7 +35258,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec171;
+        condition.extensions.pgFilterAttribute = colSpec170;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -35428,7 +35266,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec166;
+        condition.extensions.pgFilterAttribute = colSpec165;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -35436,7 +35274,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec175;
+        condition.extensions.pgFilterAttribute = colSpec174;
         return condition;
       }
     }
@@ -35924,7 +35762,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec137;
+        condition.extensions.pgFilterAttribute = colSpec136;
         return condition;
       },
       description(queryBuilder, value) {
@@ -35932,7 +35770,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec133;
+        condition.extensions.pgFilterAttribute = colSpec132;
         return condition;
       },
       enabled(queryBuilder, value) {
@@ -35940,7 +35778,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec136;
+        condition.extensions.pgFilterAttribute = colSpec135;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -35948,7 +35786,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec135;
+        condition.extensions.pgFilterAttribute = colSpec134;
         return condition;
       },
       name(queryBuilder, value) {
@@ -35956,7 +35794,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec132;
+        condition.extensions.pgFilterAttribute = colSpec131;
         return condition;
       },
       not($where, value) {
@@ -35975,7 +35813,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec131;
+        condition.extensions.pgFilterAttribute = colSpec130;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -35983,7 +35821,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec130;
+        condition.extensions.pgFilterAttribute = colSpec129;
         return condition;
       },
       systemPrompt(queryBuilder, value) {
@@ -35991,7 +35829,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec134;
+        condition.extensions.pgFilterAttribute = colSpec133;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -35999,7 +35837,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec138;
+        condition.extensions.pgFilterAttribute = colSpec137;
         return condition;
       }
     }
@@ -36617,7 +36455,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec128;
+        condition.extensions.pgFilterAttribute = colSpec127;
         return condition;
       },
       cronExpression(queryBuilder, value) {
@@ -36625,7 +36463,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec122;
+        condition.extensions.pgFilterAttribute = colSpec121;
         return condition;
       },
       enabled(queryBuilder, value) {
@@ -36633,7 +36471,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec125;
+        condition.extensions.pgFilterAttribute = colSpec124;
         return condition;
       },
       instruction(queryBuilder, value) {
@@ -36641,7 +36479,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec123;
+        condition.extensions.pgFilterAttribute = colSpec122;
         return condition;
       },
       lastRunAt(queryBuilder, value) {
@@ -36649,7 +36487,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec126;
+        condition.extensions.pgFilterAttribute = colSpec125;
         return condition;
       },
       name(queryBuilder, value) {
@@ -36657,7 +36495,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec121;
+        condition.extensions.pgFilterAttribute = colSpec120;
         return condition;
       },
       nextRunAt(queryBuilder, value) {
@@ -36665,7 +36503,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec127;
+        condition.extensions.pgFilterAttribute = colSpec126;
         return condition;
       },
       not($where, value) {
@@ -36684,7 +36522,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec119;
+        condition.extensions.pgFilterAttribute = colSpec118;
         return condition;
       },
       persona($where, value) {
@@ -36718,7 +36556,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec124;
+        condition.extensions.pgFilterAttribute = colSpec123;
         return condition;
       },
       project($where, value) {
@@ -36739,7 +36577,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec120;
+        condition.extensions.pgFilterAttribute = colSpec119;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -36747,7 +36585,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec118;
+        condition.extensions.pgFilterAttribute = colSpec117;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -36755,7 +36593,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec129;
+        condition.extensions.pgFilterAttribute = colSpec128;
         return condition;
       }
     }
@@ -37221,15 +37059,6 @@ export const inputObjects = {
           expression: spec5.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("tool_call_count")}`, spec_agentSession.attributes.tool_call_count.codec)
         };
         return $col;
-      },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec5.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
-        };
-        return $col;
       }
     }
   },
@@ -37284,15 +37113,6 @@ export const inputObjects = {
         $condition.where({
           type: "attribute",
           attribute: "tool_call_count",
-          callback(expression) {
-            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.int)}`;
-          }
-        });
-      },
-      totalTokensUsed($condition, val) {
-        $condition.where({
-          type: "attribute",
-          attribute: "total_tokens_used",
           callback(expression) {
             return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.int)}`;
           }
@@ -37392,15 +37212,6 @@ export const inputObjects = {
         };
         return $col;
       },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
-        };
-        return $col;
-      },
       type($parent, input) {
         if (input == null) return;
         const $col = new PgCondition($parent);
@@ -37466,7 +37277,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec93;
+        condition.extensions.pgFilterAttribute = colSpec92;
         return condition;
       },
       not($where, value) {
@@ -37543,14 +37354,6 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec92;
-        return condition;
-      },
-      totalTokensUsed(queryBuilder, value) {
-        if (value === void 0) return;
-        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-        const condition = new PgCondition(queryBuilder);
         condition.extensions.pgFilterAttribute = colSpec91;
         return condition;
       },
@@ -37559,7 +37362,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec95;
+        condition.extensions.pgFilterAttribute = colSpec94;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -37567,7 +37370,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec94;
+        condition.extensions.pgFilterAttribute = colSpec93;
         return condition;
       },
       user($where, value) {
@@ -37605,11 +37408,6 @@ export const inputObjects = {
           aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.updated_at.codec);
@@ -37627,11 +37425,6 @@ export const inputObjects = {
       toolCallCount($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("tool_call_count")}`,
           aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -37690,11 +37483,6 @@ export const inputObjects = {
           aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.updated_at.codec);
@@ -37712,11 +37500,6 @@ export const inputObjects = {
       toolCallCount($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("tool_call_count")}`,
           aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -37738,11 +37521,6 @@ export const inputObjects = {
           aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.updated_at.codec);
@@ -37760,11 +37538,6 @@ export const inputObjects = {
       toolCallCount($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("tool_call_count")}`,
           aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -37786,11 +37559,6 @@ export const inputObjects = {
           aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.updated_at.codec);
@@ -37810,11 +37578,6 @@ export const inputObjects = {
           aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
       updatedAt($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("updated_at")}`,
           aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.updated_at.codec);
@@ -37832,11 +37595,6 @@ export const inputObjects = {
       toolCallCount($having) {
         const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("tool_call_count")}`,
           aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.tool_call_count.codec);
-        return new PgBooleanFilter($having, aggregateExpression);
-      },
-      totalTokensUsed($having) {
-        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("total_tokens_used")}`,
-          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_agentSession.attributes.total_tokens_used.codec);
         return new PgBooleanFilter($having, aggregateExpression);
       },
       updatedAt($having) {
@@ -37891,12 +37649,6 @@ export const inputObjects = {
       }) {
         obj.set("tool_call_count", bakedInputRuntime(schema, field.type, val));
       },
-      totalTokensUsed(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("total_tokens_used", bakedInputRuntime(schema, field.type, val));
-      },
       type(obj, val, {
         field,
         schema
@@ -37927,15 +37679,6 @@ export const inputObjects = {
           expression: spec4.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("tool_call_count")}`, spec_agentSession.attributes.tool_call_count.codec)
         };
         return $col;
-      },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.int,
-          expression: spec4.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
-        };
-        return $col;
       }
     }
   },
@@ -37947,15 +37690,6 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.int,
           expression: spec3.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("tool_call_count")}`, spec_agentSession.attributes.tool_call_count.codec)
-        };
-        return $col;
-      },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.int,
-          expression: spec3.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
         };
         return $col;
       }
@@ -38006,12 +37740,6 @@ export const inputObjects = {
       }) {
         obj.set("tool_call_count", bakedInputRuntime(schema, field.type, val));
       },
-      totalTokensUsed(obj, val, {
-        field,
-        schema
-      }) {
-        obj.set("total_tokens_used", bakedInputRuntime(schema, field.type, val));
-      },
       type(obj, val, {
         field,
         schema
@@ -38042,15 +37770,6 @@ export const inputObjects = {
           expression: spec7.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("tool_call_count")}`, spec_agentSession.attributes.tool_call_count.codec)
         };
         return $col;
-      },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec7.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
-        };
-        return $col;
       }
     }
   },
@@ -38064,15 +37783,6 @@ export const inputObjects = {
           expression: spec6.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("tool_call_count")}`, spec_agentSession.attributes.tool_call_count.codec)
         };
         return $col;
-      },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec6.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
-        };
-        return $col;
       }
     }
   },
@@ -38084,15 +37794,6 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("tool_call_count")}`, spec_agentSession.attributes.tool_call_count.codec)
-        };
-        return $col;
-      },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.bigint,
-          expression: spec.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
         };
         return $col;
       }
@@ -38192,15 +37893,6 @@ export const inputObjects = {
           expression: spec9.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("tool_call_count")}`, spec_agentSession.attributes.tool_call_count.codec)
         };
         return $col;
-      },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec9.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
-        };
-        return $col;
       }
     }
   },
@@ -38212,15 +37904,6 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.numeric,
           expression: spec8.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("tool_call_count")}`, spec_agentSession.attributes.tool_call_count.codec)
-        };
-        return $col;
-      },
-      totalTokensUsed($parent, input) {
-        if (input == null) return;
-        const $col = new PgCondition($parent);
-        $col.extensions.pgFilterAttribute = {
-          codec: TYPES.numeric,
-          expression: spec8.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)
         };
         return $col;
       }
@@ -38456,7 +38139,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec148;
+        condition.extensions.pgFilterAttribute = colSpec147;
         return condition;
       },
       enabled(queryBuilder, value) {
@@ -38464,7 +38147,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec146;
+        condition.extensions.pgFilterAttribute = colSpec145;
         return condition;
       },
       eventType(queryBuilder, value) {
@@ -38472,7 +38155,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec143;
+        condition.extensions.pgFilterAttribute = colSpec142;
         return condition;
       },
       instructionTemplate(queryBuilder, value) {
@@ -38480,7 +38163,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec144;
+        condition.extensions.pgFilterAttribute = colSpec143;
         return condition;
       },
       lastTriggeredAt(queryBuilder, value) {
@@ -38488,7 +38171,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec147;
+        condition.extensions.pgFilterAttribute = colSpec146;
         return condition;
       },
       name(queryBuilder, value) {
@@ -38496,7 +38179,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec142;
+        condition.extensions.pgFilterAttribute = colSpec141;
         return condition;
       },
       not($where, value) {
@@ -38515,7 +38198,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec140;
+        condition.extensions.pgFilterAttribute = colSpec139;
         return condition;
       },
       project($where, value) {
@@ -38536,7 +38219,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec141;
+        condition.extensions.pgFilterAttribute = colSpec140;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -38544,7 +38227,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec139;
+        condition.extensions.pgFilterAttribute = colSpec138;
         return condition;
       },
       signingSecret(queryBuilder, value) {
@@ -38552,7 +38235,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec145;
+        condition.extensions.pgFilterAttribute = colSpec144;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -38560,7 +38243,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec149;
+        condition.extensions.pgFilterAttribute = colSpec148;
         return condition;
       }
     }
@@ -42713,7 +42396,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec102;
+        condition.extensions.pgFilterAttribute = colSpec101;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -42721,7 +42404,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec104;
+        condition.extensions.pgFilterAttribute = colSpec103;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -42729,7 +42412,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec106;
+        condition.extensions.pgFilterAttribute = colSpec105;
         return condition;
       },
       name(queryBuilder, value) {
@@ -42737,7 +42420,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec101;
+        condition.extensions.pgFilterAttribute = colSpec100;
         return condition;
       },
       not($where, value) {
@@ -42756,7 +42439,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec107;
+        condition.extensions.pgFilterAttribute = colSpec106;
         return condition;
       },
       project($where, value) {
@@ -42790,7 +42473,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec103;
+        condition.extensions.pgFilterAttribute = colSpec102;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -42798,7 +42481,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec100;
+        condition.extensions.pgFilterAttribute = colSpec99;
         return condition;
       },
       taskLabels($where, value) {
@@ -42830,7 +42513,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec105;
+        condition.extensions.pgFilterAttribute = colSpec104;
         return condition;
       }
     }
@@ -44495,7 +44178,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec155;
+        condition.extensions.pgFilterAttribute = colSpec154;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -44503,7 +44186,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec151;
+        condition.extensions.pgFilterAttribute = colSpec150;
         return condition;
       },
       index(queryBuilder, value) {
@@ -44511,7 +44194,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec154;
+        condition.extensions.pgFilterAttribute = colSpec153;
         return condition;
       },
       not($where, value) {
@@ -44530,7 +44213,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec153;
+        condition.extensions.pgFilterAttribute = colSpec152;
         return condition;
       },
       projects($where, value) {
@@ -44562,7 +44245,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec150;
+        condition.extensions.pgFilterAttribute = colSpec149;
         return condition;
       },
       title(queryBuilder, value) {
@@ -44570,7 +44253,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec152;
+        condition.extensions.pgFilterAttribute = colSpec151;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -44578,7 +44261,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec156;
+        condition.extensions.pgFilterAttribute = colSpec155;
         return condition;
       }
     }
@@ -45947,7 +45630,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec113;
+        condition.extensions.pgFilterAttribute = colSpec112;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -45955,7 +45638,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec116;
+        condition.extensions.pgFilterAttribute = colSpec115;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -45963,7 +45646,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec114;
+        condition.extensions.pgFilterAttribute = colSpec113;
         return condition;
       },
       name(queryBuilder, value) {
@@ -45971,7 +45654,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec112;
+        condition.extensions.pgFilterAttribute = colSpec111;
         return condition;
       },
       not($where, value) {
@@ -45990,7 +45673,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec115;
+        condition.extensions.pgFilterAttribute = colSpec114;
         return condition;
       },
       projectProjectLabels($where, value) {
@@ -46022,7 +45705,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec111;
+        condition.extensions.pgFilterAttribute = colSpec110;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -46030,7 +45713,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec117;
+        condition.extensions.pgFilterAttribute = colSpec116;
         return condition;
       }
     }
@@ -46583,7 +46266,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec110;
+        condition.extensions.pgFilterAttribute = colSpec109;
         return condition;
       },
       not($where, value) {
@@ -46615,7 +46298,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec108;
+        condition.extensions.pgFilterAttribute = colSpec107;
         return condition;
       },
       projectLabel($where, value) {
@@ -46636,7 +46319,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec109;
+        condition.extensions.pgFilterAttribute = colSpec108;
         return condition;
       }
     }
@@ -47768,7 +47451,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec161;
+        condition.extensions.pgFilterAttribute = colSpec160;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -47776,7 +47459,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec158;
+        condition.extensions.pgFilterAttribute = colSpec157;
         return condition;
       },
       deletedAt(queryBuilder, value) {
@@ -47784,7 +47467,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec164;
+        condition.extensions.pgFilterAttribute = colSpec163;
         return condition;
       },
       deletionReason(queryBuilder, value) {
@@ -47792,7 +47475,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec165;
+        condition.extensions.pgFilterAttribute = colSpec164;
         return condition;
       },
       not($where, value) {
@@ -47811,7 +47494,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec162;
+        condition.extensions.pgFilterAttribute = colSpec161;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -47819,7 +47502,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec157;
+        condition.extensions.pgFilterAttribute = colSpec156;
         return condition;
       },
       subscriptionId(queryBuilder, value) {
@@ -47827,7 +47510,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec163;
+        condition.extensions.pgFilterAttribute = colSpec162;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -47835,7 +47518,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec159;
+        condition.extensions.pgFilterAttribute = colSpec158;
         return condition;
       },
       viewMode(queryBuilder, value) {
@@ -47843,7 +47526,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec160;
+        condition.extensions.pgFilterAttribute = colSpec159;
         return condition;
       }
     }
@@ -50511,7 +50194,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec98;
+        condition.extensions.pgFilterAttribute = colSpec97;
         return condition;
       },
       label($where, value) {
@@ -50532,7 +50215,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec97;
+        condition.extensions.pgFilterAttribute = colSpec96;
         return condition;
       },
       not($where, value) {
@@ -50564,7 +50247,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec96;
+        condition.extensions.pgFilterAttribute = colSpec95;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -50572,7 +50255,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec99;
+        condition.extensions.pgFilterAttribute = colSpec98;
         return condition;
       }
     }
@@ -56054,12 +55737,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           codec: TYPES.int
         });
       },
-      TOTAL_TOKENS_USED($pgSelect) {
-        $pgSelect.groupBy({
-          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("total_tokens_used")}`,
-          codec: TYPES.int
-        });
-      },
       TYPE($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("type")}`,
@@ -56789,18 +56466,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       TOOL_CALL_COUNT_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "tool_call_count",
-          direction: "DESC"
-        });
-      },
-      TOTAL_TOKENS_USED_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "total_tokens_used",
-          direction: "ASC"
-        });
-      },
-      TOTAL_TOKENS_USED_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "total_tokens_used",
           direction: "DESC"
         });
       },
@@ -62318,44 +61983,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec5.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec5.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -62658,44 +62285,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -62848,44 +62437,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec4.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec4.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -62921,44 +62472,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec3.pgTypeCodecModifier?.(spec_agentSession.attributes.tool_call_count.codec) ?? spec_agentSession.attributes.tool_call_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec3.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec3.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
           direction: "DESC"
         });
       },
@@ -63000,44 +62513,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec7.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec7.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -63073,44 +62548,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec6.pgTypeCodecModifier?.(spec_agentSession.attributes.tool_call_count.codec) ?? spec_agentSession.attributes.tool_call_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec6.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec6.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
           direction: "DESC"
         });
       },
@@ -63152,44 +62589,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -63228,44 +62627,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec9.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec9.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -63301,44 +62662,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec8.pgTypeCodecModifier?.(spec_agentSession.attributes.tool_call_count.codec) ?? spec_agentSession.attributes.tool_call_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec8.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation7.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation7.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec8.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
           direction: "DESC"
         });
       },
@@ -68624,44 +67947,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec5.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec5.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec5.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -68964,44 +68249,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -69154,44 +68401,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec4.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec4.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec4.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -69227,44 +68436,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec3.pgTypeCodecModifier?.(spec_agentSession.attributes.tool_call_count.codec) ?? spec_agentSession.attributes.tool_call_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec3.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec3.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec3.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
           direction: "DESC"
         });
       },
@@ -69306,44 +68477,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec7.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec7.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec7.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -69379,44 +68512,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec6.pgTypeCodecModifier?.(spec_agentSession.attributes.tool_call_count.codec) ?? spec_agentSession.attributes.tool_call_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec6.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec6.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec6.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
           direction: "DESC"
         });
       },
@@ -69458,44 +68553,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -69534,44 +68591,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
-      AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec9.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec9.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec9.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "DESC"
-        });
-      },
       AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -69607,44 +68626,6 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec8.pgTypeCodecModifier?.(spec_agentSession.attributes.tool_call_count.codec) ?? spec_agentSession.attributes.tool_call_count.codec,
-          direction: "DESC"
-        });
-      },
-      AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_ASC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec8.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
-          direction: "ASC"
-        });
-      },
-      AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_DESC($select) {
-        const foreignTableAlias = $select.alias,
-          conditions = [],
-          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
-        relation24.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation24.remoteAttributes[i];
-          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
-        });
-        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
-        const fragment = sql`(${sql.indent`
-select ${spec8.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("total_tokens_used")}`, spec_agentSession.attributes.total_tokens_used.codec)}
-from ${resource_agent_sessionPgResource.from} ${tableAlias}
-where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
-        $select.orderBy({
-          fragment,
-          codec: spec8.pgTypeCodecModifier?.(spec_agentSession.attributes.total_tokens_used.codec) ?? spec_agentSession.attributes.total_tokens_used.codec,
           direction: "DESC"
         });
       },

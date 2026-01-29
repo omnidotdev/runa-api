@@ -3384,9 +3384,6 @@ input AgentSessionFilter {
   """Filter by the object’s `title` field."""
   title: StringFilter
 
-  """Filter by the object’s `totalTokensUsed` field."""
-  totalTokensUsed: IntFilter
-
   """Filter by the object’s `toolCallCount` field."""
   toolCallCount: IntFilter
 
@@ -3541,7 +3538,6 @@ input AgentSessionAggregatesFilter {
 }
 
 input AgentSessionSumAggregateFilter {
-  totalTokensUsed: BigIntFilter
   toolCallCount: BigIntFilter
 }
 
@@ -3552,7 +3548,6 @@ input AgentSessionDistinctCountAggregateFilter {
   userId: BigIntFilter
   title: BigIntFilter
   messages: BigIntFilter
-  totalTokensUsed: BigIntFilter
   toolCallCount: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
@@ -3560,37 +3555,30 @@ input AgentSessionDistinctCountAggregateFilter {
 }
 
 input AgentSessionMinAggregateFilter {
-  totalTokensUsed: IntFilter
   toolCallCount: IntFilter
 }
 
 input AgentSessionMaxAggregateFilter {
-  totalTokensUsed: IntFilter
   toolCallCount: IntFilter
 }
 
 input AgentSessionAverageAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
 input AgentSessionStddevSampleAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
 input AgentSessionStddevPopulationAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
 input AgentSessionVarianceSampleAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
 input AgentSessionVariancePopulationAggregateFilter {
-  totalTokensUsed: BigFloatFilter
   toolCallCount: BigFloatFilter
 }
 
@@ -4749,8 +4737,6 @@ enum ProjectOrderBy {
   AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
   AGENT_SESSIONS_COUNT_ASC
   AGENT_SESSIONS_COUNT_DESC
-  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_ASC
@@ -4765,8 +4751,6 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC
-  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC
@@ -4775,32 +4759,18 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
-  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
   AGENT_SCHEDULES_COUNT_ASC
@@ -6729,7 +6699,6 @@ type AgentSession implements Node {
   userId: UUID!
   title: String
   messages: JSON!
-  totalTokensUsed: Int!
   toolCallCount: Int!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -7072,9 +7041,6 @@ type AgentSessionAggregates {
 }
 
 type AgentSessionSumAggregates {
-  """Sum of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigInt!
-
   """Sum of toolCallCount across the matching connection"""
   toolCallCount: BigInt!
 }
@@ -7098,9 +7064,6 @@ type AgentSessionDistinctCountAggregates {
   """Distinct count of messages across the matching connection"""
   messages: BigInt
 
-  """Distinct count of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigInt
-
   """Distinct count of toolCallCount across the matching connection"""
   toolCallCount: BigInt
 
@@ -7115,35 +7078,21 @@ type AgentSessionDistinctCountAggregates {
 }
 
 type AgentSessionMinAggregates {
-  """Minimum of totalTokensUsed across the matching connection"""
-  totalTokensUsed: Int
-
   """Minimum of toolCallCount across the matching connection"""
   toolCallCount: Int
 }
 
 type AgentSessionMaxAggregates {
-  """Maximum of totalTokensUsed across the matching connection"""
-  totalTokensUsed: Int
-
   """Maximum of toolCallCount across the matching connection"""
   toolCallCount: Int
 }
 
 type AgentSessionAverageAggregates {
-  """Mean average of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigFloat
-
   """Mean average of toolCallCount across the matching connection"""
   toolCallCount: BigFloat
 }
 
 type AgentSessionStddevSampleAggregates {
-  """
-  Sample standard deviation of totalTokensUsed across the matching connection
-  """
-  totalTokensUsed: BigFloat
-
   """
   Sample standard deviation of toolCallCount across the matching connection
   """
@@ -7152,28 +7101,17 @@ type AgentSessionStddevSampleAggregates {
 
 type AgentSessionStddevPopulationAggregates {
   """
-  Population standard deviation of totalTokensUsed across the matching connection
-  """
-  totalTokensUsed: BigFloat
-
-  """
   Population standard deviation of toolCallCount across the matching connection
   """
   toolCallCount: BigFloat
 }
 
 type AgentSessionVarianceSampleAggregates {
-  """Sample variance of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigFloat
-
   """Sample variance of toolCallCount across the matching connection"""
   toolCallCount: BigFloat
 }
 
 type AgentSessionVariancePopulationAggregates {
-  """Population variance of totalTokensUsed across the matching connection"""
-  totalTokensUsed: BigFloat
-
   """Population variance of toolCallCount across the matching connection"""
   toolCallCount: BigFloat
 }
@@ -7185,7 +7123,6 @@ enum AgentSessionGroupBy {
   USER_ID
   TITLE
   MESSAGES
-  TOTAL_TOKENS_USED
   TOOL_CALL_COUNT
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
@@ -7212,63 +7149,54 @@ input AgentSessionHavingInput {
 }
 
 input AgentSessionHavingSumInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingDistinctCountInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingMinInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingMaxInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingAverageInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingStddevSampleInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingStddevPopulationInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingVarianceSampleInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 input AgentSessionHavingVariancePopulationInput {
-  totalTokensUsed: HavingIntFilter
   toolCallCount: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
@@ -7293,9 +7221,6 @@ input AgentSessionCondition {
 
   """Checks for equality with the object’s `title` field."""
   title: String
-
-  """Checks for equality with the object’s `totalTokensUsed` field."""
-  totalTokensUsed: Int
 
   """Checks for equality with the object’s `toolCallCount` field."""
   toolCallCount: Int
@@ -7325,8 +7250,6 @@ enum AgentSessionOrderBy {
   USER_ID_DESC
   TITLE_ASC
   TITLE_DESC
-  TOTAL_TOKENS_USED_ASC
-  TOTAL_TOKENS_USED_DESC
   TOOL_CALL_COUNT_ASC
   TOOL_CALL_COUNT_DESC
   CREATED_AT_ASC
@@ -9609,8 +9532,6 @@ enum UserOrderBy {
   AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
   AGENT_SESSIONS_COUNT_ASC
   AGENT_SESSIONS_COUNT_DESC
-  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_SUM_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_ASC
@@ -9625,8 +9546,6 @@ enum UserOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC
-  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_DISTINCT_COUNT_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC
@@ -9635,32 +9554,18 @@ enum UserOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
-  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_MIN_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_MAX_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_AVERAGE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_STDDEV_SAMPLE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_STDDEV_POPULATION_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_VARIANCE_SAMPLE_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
-  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_ASC
-  AGENT_SESSIONS_VARIANCE_POPULATION_TOTAL_TOKENS_USED_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
 }
@@ -12670,7 +12575,6 @@ input AgentSessionInput {
   userId: UUID!
   title: String
   messages: JSON
-  totalTokensUsed: Int
   toolCallCount: Int
   createdAt: Datetime
   updatedAt: Datetime
@@ -14015,7 +13919,6 @@ input AgentSessionPatch {
   userId: UUID
   title: String
   messages: JSON
-  totalTokensUsed: Int
   toolCallCount: Int
   createdAt: Datetime
   updatedAt: Datetime

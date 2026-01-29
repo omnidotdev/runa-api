@@ -53,7 +53,6 @@ export const agentSessions = pgTable(
     messages: jsonb().notNull().default([]),
 
     // Usage tracking
-    totalTokensUsed: integer().notNull().default(0),
     toolCallCount: integer().notNull().default(0),
 
     createdAt: generateDefaultDate(),

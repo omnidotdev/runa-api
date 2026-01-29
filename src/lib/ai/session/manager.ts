@@ -134,16 +134,13 @@ export async function linkSessionToProject(
 export async function saveSessionMessages(
   sessionId: string,
   messages: unknown[],
-  stats?: { tokensUsed?: number; toolCalls?: number },
+  stats?: { toolCalls?: number },
 ): Promise<void> {
   const updateValues: Partial<InsertAgentSession> = {
     messages: messages as InsertAgentSession["messages"],
     updatedAt: new Date().toISOString(),
   };
 
-  if (stats?.tokensUsed) {
-    updateValues.totalTokensUsed = stats.tokensUsed;
-  }
   if (stats?.toolCalls) {
     updateValues.toolCallCount = stats.toolCalls;
   }
