@@ -1,13 +1,9 @@
-import { createOpenRouterText } from "@tanstack/ai-openrouter";
-
-import { OPENROUTER_API_KEY } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import {
   ALLOWED_MODELS,
   DEFAULT_MAX_ITERATIONS,
   DEFAULT_MODEL,
   MAX_MAX_ITERATIONS,
-  isAllowedModel,
 } from "./constants";
 import { decrypt } from "./encryption";
 
@@ -122,32 +118,8 @@ export async function resolvePersona(
 }
 
 /**
- * Create a TanStack AI OpenRouter adapter for the given model.
- *
- * Validates the model name against the allowed list to prevent arbitrary
- * model strings from being passed to the LLM API.
- *
- * When an org-provided API key is available, it takes precedence over
- * the server-level environment variable (BYOK support).
+ * Get the list of allowed models for the AI agent.
  */
-export function createAdapter(model: string, orgApiKey?: string | null) {
-  if (!isAllowedModel(model)) {
-    throw new Error(
-      `Model "${model}" is not allowed. Allowed models: ${ALLOWED_MODELS.join(", ")}`,
-    );
-  }
-
-  const apiKey = orgApiKey ?? OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new Error("OPENROUTER_API_KEY is not configured");
-  }
-
-  return createOpenRouterText(model, apiKey);
-}
-
-/**
- * Get the list of allowed models for display in UI.
- */
-export function getAllowedModels(): readonly string[] {
-  return ALLOWED_MODELS;
+export function getAllowedModels(): string[] {
+  return [...ALLOWED_MODELS];
 }

@@ -59,6 +59,15 @@ export function buildSystemPrompt(
     );
   }
 
+  // Format current date for the agent
+  const now = new Date();
+  const currentDate = now.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   sections.push(
     `You are Runa Agent, an AI assistant integrated into the Runa project management board.`,
     ``,
@@ -66,6 +75,7 @@ export function buildSystemPrompt(
     `You help users manage their project tasks through natural language. You can view, create, update, move, assign, label, and comment on tasks on their board.`,
     ``,
     `## Current Context`,
+    `- **Today's Date**: ${currentDate}`,
     `- **Project**: ${context.projectName}${context.projectPrefix ? ` (prefix: ${context.projectPrefix})` : ""}`,
     `- **Project ID**: ${context.projectId}`,
     `- **Organization**: ${context.organizationId}`,

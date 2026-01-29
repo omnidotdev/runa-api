@@ -129,12 +129,3 @@ export function isAllowedModel(model: string): model is AllowedModel {
   return ALLOWED_MODELS.includes(model as AllowedModel);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Approval Flow
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** Prefix used by TanStack AI for approval IDs. */
-export const APPROVAL_ID_PREFIX = "approval_";
-
-/** Marker message content for approval continuation. */
-export const CONTINUATION_MARKER = "[CONTINUE_AFTER_APPROVAL]";

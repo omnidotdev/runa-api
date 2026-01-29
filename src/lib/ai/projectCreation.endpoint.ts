@@ -1,36 +1,44 @@
 /**
- * Project Creation AI endpoint.
+ * Project Creation AI endpoint using Vercel AI SDK.
  *
  * POST /api/ai/project-creation/chat - SSE streaming chat for project creation
- *
- * This endpoint operates at the organization level (not project level)
- * since the project doesn't exist yet. It uses a specialized system prompt
- * focused on discovery and planning before project creation.
  */
 
-import { chat, maxIterations, toServerSentEventsResponse } from "@tanstack/ai";
-import { and, eq } from "drizzle-orm";
+import { stepCountIs, streamText, tool } from "ai";
+import { and, count, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
+import { z } from "zod";
 
 import { dbPool } from "lib/db/db";
-import { agentSessions, projects } from "lib/db/schema";
+import {
+  agentSessions,
+  columns,
+  labels,
+  projectColumns,
+  projects,
+  taskLabels,
+  tasks,
+} from "lib/db/schema";
+import { isWithinLimit } from "lib/entitlements/helpers";
 import { isAgentEnabled } from "lib/flags";
 import { authenticateRequest, validateOrganizationAccess } from "./auth";
-import { createAdapter, resolveAgentConfig } from "./config";
+import { resolveAgentConfig } from "./config";
 import { buildProjectCreationPrompt } from "./prompts/projectCreation";
+import { createOpenRouterModel } from "./provider";
 import { ORG_CHAT_LIMIT, USER_CHAT_LIMIT, checkRateLimit } from "./rateLimit";
 import {
   createCreationSession,
   loadCreationSession,
   saveSessionMessages,
 } from "./session/manager";
-import { createProjectCreationTools } from "./tools/server/projectCreation.tools";
+import { linkSessionToProject } from "./session/manager";
+import { logActivity } from "./tools/server/activity";
 
-import type { ModelMessage, StreamChunk } from "@tanstack/ai";
+import type { ModelMessage } from "ai";
 import type { SelectAgentSession } from "lib/db/schema";
 import type { AuthenticatedUser } from "./auth";
 
-/** Elysia/TypeBox schema for ModelMessage validation. */
+/** Elysia/TypeBox schema for message validation. */
 const modelMessageSchema = t.Object(
   {
     role: t.Union([
@@ -44,61 +52,91 @@ const modelMessageSchema = t.Object(
   { additionalProperties: true },
 );
 
-/** Schema for approval responses sent separately from messages. */
-const approvalResponseSchema = t.Object({
-  id: t.String(),
-  approved: t.Boolean(),
-});
-
-/**
- * Approval carrier message for TanStack AI.
- * @see chat.endpoint.ts for detailed explanation
- */
-interface ApprovalCarrierMessage {
-  role: "assistant";
-  parts: Array<{
-    type: "tool-call";
-    id: string;
-    state: "approval-responded";
-    approval: {
-      id: string;
-      approved: boolean;
-    };
-  }>;
+/** In-memory proposal store with TTL. */
+interface StoredProposal {
+  proposal: {
+    name: string;
+    prefix: string;
+    description?: string;
+    columns: Array<{ title: string; icon?: string }>;
+    labels?: Array<{ name: string; color: string }>;
+    initialTasks?: Array<{
+      title: string;
+      columnIndex: number;
+      priority?: string;
+      description?: string;
+      labelNames?: string[];
+    }>;
+  };
+  createdAt: Date;
+  sessionId: string;
+  organizationId: string;
 }
 
-/**
- * Create approval carrier message for TanStack AI.
- */
-function createApprovalCarrierMessage(
-  approvals: Array<{ id: string; approved: boolean }>,
-): ApprovalCarrierMessage {
-  const APPROVAL_PREFIX = "approval_";
+const proposalStore = new Map<string, StoredProposal>();
+const PROPOSAL_TTL_MS = 60 * 60 * 1000;
+const MAX_PROPOSALS = 10000;
+const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
+let lastCleanupTime = 0;
 
-  return {
-    role: "assistant",
-    parts: approvals.map((approval) => {
-      const toolCallId = approval.id.startsWith(APPROVAL_PREFIX)
-        ? approval.id.slice(APPROVAL_PREFIX.length)
-        : approval.id;
+function cleanupExpiredProposals(): void {
+  const now = Date.now();
+  if (now - lastCleanupTime < CLEANUP_INTERVAL_MS) return;
+  lastCleanupTime = now;
 
-      return {
-        type: "tool-call" as const,
-        id: toolCallId,
-        state: "approval-responded" as const,
-        approval: {
-          id: approval.id,
-          approved: approval.approved,
-        },
-      };
-    }),
-  };
+  for (const [id, stored] of proposalStore) {
+    if (now - stored.createdAt.getTime() > PROPOSAL_TTL_MS) {
+      proposalStore.delete(id);
+    }
+  }
+}
+
+function consumeProposal(proposalId: string): StoredProposal | null {
+  const stored = proposalStore.get(proposalId);
+  if (!stored) return null;
+  proposalStore.delete(proposalId);
+  return stored;
+}
+
+function restoreProposal(proposalId: string, proposal: StoredProposal): void {
+  proposalStore.set(proposalId, proposal);
+}
+
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 50);
+}
+
+async function ensureUniqueSlug(
+  baseSlug: string,
+  organizationId: string,
+): Promise<string> {
+  let slug = baseSlug;
+  let suffix = 1;
+
+  while (true) {
+    const existing = await dbPool.query.projects.findFirst({
+      where: (p, { and, eq }) =>
+        and(eq(p.slug, slug), eq(p.organizationId, organizationId)),
+      columns: { id: true },
+    });
+
+    if (!existing) return slug;
+
+    suffix++;
+    slug = `${baseSlug}-${suffix}`;
+
+    if (suffix > 100) {
+      throw new Error("Could not generate unique slug after 100 attempts");
+    }
+  }
 }
 
 /**
  * Project Creation AI routes.
- *
- * POST /api/ai/project-creation/chat - Create projects via conversational AI
  */
 const projectCreationRoutes = new Elysia({
   prefix: "/api/ai/project-creation",
@@ -123,7 +161,7 @@ const projectCreationRoutes = new Elysia({
       };
     }
 
-    // Validate organization access (requires editor/admin/owner role)
+    // Validate organization access
     let orgAccess: {
       organizationId: string;
       organizationSlug: string;
@@ -143,7 +181,7 @@ const projectCreationRoutes = new Elysia({
 
     const { organizationId, organizationSlug } = orgAccess;
 
-    // Rate-limit: per-user and per-org
+    // Rate-limit
     const userLimit = checkRateLimit(`user:${auth.user.id}`, USER_CHAT_LIMIT);
     if (!userLimit.allowed) {
       set.status = 429;
@@ -169,15 +207,12 @@ const projectCreationRoutes = new Elysia({
     let session: SelectAgentSession;
 
     if (body.sessionId) {
-      // First try loading as a creation session (projectId IS NULL)
       let loadedSession: SelectAgentSession | null = await loadCreationSession(
         body.sessionId,
         auth.user.id,
         organizationId,
       );
 
-      // If not found, the session may have been linked to a project after creation.
-      // Query directly to allow follow-up messages after successful project creation.
       if (!loadedSession) {
         const linkedSession = await dbPool.query.agentSessions.findFirst({
           where: and(
@@ -202,12 +237,9 @@ const projectCreationRoutes = new Elysia({
       });
     }
 
-    // Get existing project names and prefixes for collision detection
+    // Get existing project names and prefixes
     const existingProjects = await dbPool
-      .select({
-        name: projects.name,
-        prefix: projects.prefix,
-      })
+      .select({ name: projects.name, prefix: projects.prefix })
       .from(projects)
       .where(eq(projects.organizationId, organizationId));
 
@@ -216,7 +248,7 @@ const projectCreationRoutes = new Elysia({
       .map((p) => p.prefix)
       .filter((p): p is string => p !== null);
 
-    // Build system prompt for project creation
+    // Build system prompt
     const systemPrompt = buildProjectCreationPrompt({
       organizationId,
       organizationName: body.organizationName ?? organizationId,
@@ -228,155 +260,409 @@ const projectCreationRoutes = new Elysia({
       customInstructions: agentConfig.customInstructions,
     });
 
-    // Create project creation tools
-    const { proposeProject, createProjectFromProposal } =
-      createProjectCreationTools({
-        organizationId,
-        organizationSlug,
-        userId: auth.user.id,
-        sessionId: session.id,
-      });
+    // Tool context
+    const toolContext = {
+      organizationId,
+      organizationSlug,
+      userId: auth.user.id,
+      sessionId: session.id,
+    };
 
-    // Filter messages (same pattern as chat.endpoint.ts)
-    const CONTINUATION_MARKER = "[CONTINUE_AFTER_APPROVAL]";
-    const filteredMessages = (body.messages as ModelMessage[]).filter(
-      (m) =>
-        (m.role as string) !== "system" &&
-        !(m.role === "user" && m.content === CONTINUATION_MARKER),
+    // Create model instance
+    const model = createOpenRouterModel(
+      agentConfig.model,
+      agentConfig.orgApiKey,
     );
 
-    // Handle approvals
-    const approvals = body.approvals ?? [];
-    const allMessages =
-      approvals.length > 0
-        ? [
-            ...filteredMessages,
-            createApprovalCarrierMessage(approvals) as unknown as ModelMessage,
-          ]
-        : filteredMessages;
+    // Filter messages
+    const messages: ModelMessage[] = (body.messages as ModelMessage[]).filter(
+      (m) => (m.role as string) !== "system",
+    );
 
-    // Structured request log
     const requestMeta = {
       userId: auth.user.id,
       organizationId,
       sessionId: session.id,
-      messageCount: allMessages.length,
+      messageCount: messages.length,
       isNewSession: !body.sessionId,
       mode: "project_creation",
     };
 
-    // Create adapter
-    const { orgApiKey, model } = agentConfig;
-    const adapter = createAdapter(model, orgApiKey);
+    // Define project creation tools
+    const aiTools = {
+      proposeProject: tool({
+        description:
+          "Present a project proposal to the user for review. Use after gathering context through discovery questions.",
+        inputSchema: z.object({
+          name: z.string().min(3).max(100).describe("Project name"),
+          prefix: z
+            .string()
+            .min(1)
+            .max(10)
+            .transform((s) => s.toUpperCase().replace(/[^A-Z0-9]/g, ""))
+            .describe("Task prefix for numbering (e.g., 'MKT' for MKT-1)"),
+          description: z.string().max(500).optional().describe("Project description"),
+          columns: z
+            .array(
+              z.object({
+                title: z.string().min(1).max(50).describe("Column title"),
+                icon: z.string().optional().describe("Emoji icon"),
+              }),
+            )
+            .min(2)
+            .max(10)
+            .describe("Board columns (workflow stages)"),
+          labels: z
+            .array(
+              z.object({
+                name: z.string().min(1).max(50).describe("Label name"),
+                color: z
+                  .enum(["gray", "red", "orange", "yellow", "green", "blue", "purple", "pink"])
+                  .describe("Label color"),
+              }),
+            )
+            .max(10)
+            .optional()
+            .describe("Optional labels"),
+          initialTasks: z
+            .array(
+              z.object({
+                title: z.string().min(1).max(200).describe("Task title"),
+                columnIndex: z.number().int().min(0).describe("Column index (0-based)"),
+                priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+                description: z.string().optional(),
+                labelNames: z.array(z.string()).optional(),
+              }),
+            )
+            .max(20)
+            .optional()
+            .describe("Optional initial tasks"),
+        }),
+        execute: async (input) => {
+          cleanupExpiredProposals();
 
-    // Create streaming response
-    const aiStream: AsyncIterable<StreamChunk> = chat({
-      adapter,
-      // biome-ignore lint/suspicious/noExplicitAny: dynamic adapter requires cast
-      messages: allMessages as any,
-      tools: [proposeProject, createProjectFromProposal],
-      systemPrompts: [systemPrompt],
-      agentLoopStrategy: maxIterations(agentConfig.maxIterations),
-    });
-
-    // Track tool calls
-    const baseToolCallCount = session.toolCallCount;
-
-    // Wrap stream for persistence
-    const wrappedStream = async function* () {
-      let assistantContent = "";
-      let newToolCallCount = 0;
-      const toolCalls: Array<{
-        name: string;
-        arguments: string;
-        id: string;
-      }> = [];
-      const toolResults: Array<{
-        id: string;
-        output: string;
-      }> = [];
-
-      try {
-        for await (const chunk of aiStream) {
-          yield chunk;
-
-          if (chunk.type === "content" && chunk.content) {
-            assistantContent = chunk.content;
+          if (proposalStore.size >= MAX_PROPOSALS) {
+            throw new Error("Server is experiencing high load. Please try again.");
           }
-          if (chunk.type === "tool_call") {
-            toolCalls.push({
-              name: chunk.toolCall.function.name,
-              arguments: chunk.toolCall.function.arguments,
-              id: chunk.toolCall.id,
-            });
-            newToolCallCount++;
-          }
-          if (chunk.type === "tool_result") {
-            toolResults.push({
-              id: chunk.toolCallId,
-              output: chunk.content,
-            });
-          }
-        }
 
-        // Persist conversation after stream ends
-        if (assistantContent || toolCalls.length > 0) {
-          const toolMessages = toolCalls.flatMap((tc) => {
-            const result = toolResults.find((r) => r.id === tc.id);
-            return [
-              { role: "assistant" as const, content: "", toolCallId: tc.id },
-              ...(result
-                ? [
-                    {
-                      role: "tool" as const,
-                      content: result.output,
-                      toolCallId: tc.id,
-                    },
-                  ]
-                : []),
-            ];
+          const proposalId = crypto.randomUUID();
+
+          proposalStore.set(proposalId, {
+            proposal: input,
+            createdAt: new Date(),
+            sessionId: toolContext.sessionId,
+            organizationId: toolContext.organizationId,
           });
 
-          const assistantMessage = assistantContent
-            ? [{ role: "assistant" as const, content: assistantContent }]
-            : [];
-
-          const finalMessages = [
-            ...allMessages,
-            ...toolMessages,
-            ...assistantMessage,
+          const summaryLines = [
+            `**${input.name}** (prefix: ${input.prefix})`,
+            "",
+            `**Columns (${input.columns.length}):** ${input.columns.map((c) => c.title).join(" → ")}`,
           ];
 
-          const durationMs = Date.now() - requestStartTime;
+          if (input.labels && input.labels.length > 0) {
+            summaryLines.push(
+              `**Labels (${input.labels.length}):** ${input.labels.map((l) => l.name).join(", ")}`,
+            );
+          }
 
-          // Save to database (fire-and-forget)
-          saveSessionMessages(session.id, finalMessages, {
-            toolCalls: baseToolCallCount + newToolCallCount,
-          }).catch((err) => {
-            console.error("[AI] Failed to save session messages:", {
-              ...requestMeta,
-              error: err instanceof Error ? err.message : String(err),
-              durationMs,
+          if (input.initialTasks && input.initialTasks.length > 0) {
+            summaryLines.push(`**Initial tasks:** ${input.initialTasks.length}`);
+          }
+
+          if (input.description) {
+            summaryLines.push("", `_${input.description}_`);
+          }
+
+          return {
+            proposalId,
+            status: "pending_review" as const,
+            summary: summaryLines.join("\n"),
+          };
+        },
+      }),
+
+      createProjectFromProposal: tool({
+        description:
+          "Create the project from a proposal after user approval. Requires approval.",
+        inputSchema: z.object({
+          proposalId: z.string().describe("The proposal ID to execute"),
+        }),
+        needsApproval: true,
+        execute: async (input) => {
+          const stored = consumeProposal(input.proposalId);
+
+          if (!stored) {
+            throw new Error("Proposal not found or expired.");
+          }
+
+          if (stored.sessionId !== toolContext.sessionId) {
+            restoreProposal(input.proposalId, stored);
+            throw new Error("Proposal belongs to a different session.");
+          }
+
+          if (stored.organizationId !== toolContext.organizationId) {
+            restoreProposal(input.proposalId, stored);
+            throw new Error("Proposal belongs to a different organization.");
+          }
+
+          const proposal = stored.proposal;
+
+          try {
+            // Check entitlement: max_projects
+            const projectCountResult = await dbPool
+              .select({ value: count() })
+              .from(projects)
+              .where(eq(projects.organizationId, toolContext.organizationId));
+
+            const currentProjectCount = projectCountResult[0]?.value ?? 0;
+
+            const withinProjectLimit = await isWithinLimit(
+              { organizationId: toolContext.organizationId },
+              "max_projects",
+              currentProjectCount,
+            );
+
+            if (!withinProjectLimit) {
+              restoreProposal(input.proposalId, stored);
+              throw new Error("Project limit reached for your plan.");
+            }
+
+            // Check task limits if initial tasks provided
+            if (proposal.initialTasks && proposal.initialTasks.length > 0) {
+              const taskCountResult = await dbPool
+                .select({ value: count() })
+                .from(tasks)
+                .innerJoin(projects, eq(tasks.projectId, projects.id))
+                .where(eq(projects.organizationId, toolContext.organizationId));
+
+              const currentTaskCount = taskCountResult[0]?.value ?? 0;
+              const newTaskCount = currentTaskCount + proposal.initialTasks.length;
+
+              const withinTaskLimit = await isWithinLimit(
+                { organizationId: toolContext.organizationId },
+                "max_tasks",
+                newTaskCount - 1,
+              );
+
+              if (!withinTaskLimit) {
+                restoreProposal(input.proposalId, stored);
+                throw new Error("Task limit would be exceeded.");
+              }
+            }
+
+            // Get or create default project column
+            let projectColumnId = await dbPool.query.projectColumns
+              .findFirst({
+                where: eq(projectColumns.organizationId, toolContext.organizationId),
+                columns: { id: true },
+              })
+              .then((col) => col?.id);
+
+            if (!projectColumnId) {
+              const [newCol] = await dbPool
+                .insert(projectColumns)
+                .values({
+                  organizationId: toolContext.organizationId,
+                  title: "Active",
+                  index: 0,
+                })
+                .returning({ id: projectColumns.id });
+              projectColumnId = newCol.id;
+            }
+
+            // Generate unique slug
+            const baseSlug = generateSlug(proposal.name);
+            const slug = await ensureUniqueSlug(baseSlug, toolContext.organizationId);
+
+            // Execute atomic creation
+            const result = await dbPool.transaction(async (tx) => {
+              const [project] = await tx
+                .insert(projects)
+                .values({
+                  name: proposal.name,
+                  slug,
+                  prefix: proposal.prefix,
+                  description: proposal.description ?? null,
+                  organizationId: toolContext.organizationId,
+                  projectColumnId,
+                  columnIndex: 0,
+                })
+                .returning({
+                  id: projects.id,
+                  name: projects.name,
+                  slug: projects.slug,
+                  prefix: projects.prefix,
+                });
+
+              const createdColumns: Array<{ id: string; title: string }> = [];
+              for (let i = 0; i < proposal.columns.length; i++) {
+                const col = proposal.columns[i];
+                const [created] = await tx
+                  .insert(columns)
+                  .values({
+                    projectId: project.id,
+                    title: col.title,
+                    icon: col.icon ?? null,
+                    index: i,
+                  })
+                  .returning({ id: columns.id, title: columns.title });
+                createdColumns.push(created);
+              }
+
+              let labelsCreated = 0;
+              const labelNameToId = new Map<string, string>();
+
+              if (proposal.labels && proposal.labels.length > 0) {
+                for (const label of proposal.labels) {
+                  const [created] = await tx
+                    .insert(labels)
+                    .values({
+                      projectId: project.id,
+                      name: label.name,
+                      color: label.color,
+                    })
+                    .returning({ id: labels.id, name: labels.name });
+
+                  labelNameToId.set(created.name.toLowerCase(), created.id);
+                  labelsCreated++;
+                }
+              }
+
+              let tasksCreated = 0;
+              const affectedTaskIds: string[] = [];
+
+              if (proposal.initialTasks && proposal.initialTasks.length > 0) {
+                for (const task of proposal.initialTasks) {
+                  const targetColumn = createdColumns[task.columnIndex];
+                  if (targetColumn) {
+                    const [created] = await tx
+                      .insert(tasks)
+                      .values({
+                        content: task.title,
+                        description: task.description ?? "",
+                        priority: task.priority ?? "medium",
+                        columnId: targetColumn.id,
+                        columnIndex: tasksCreated,
+                        projectId: project.id,
+                        authorId: toolContext.userId,
+                      })
+                      .returning({ id: tasks.id });
+
+                    affectedTaskIds.push(created.id);
+
+                    if (task.labelNames && task.labelNames.length > 0) {
+                      for (const labelName of task.labelNames) {
+                        const labelId = labelNameToId.get(labelName.toLowerCase());
+                        if (labelId) {
+                          await tx.insert(taskLabels).values({
+                            taskId: created.id,
+                            labelId,
+                          });
+                        }
+                      }
+                    }
+
+                    tasksCreated++;
+                  }
+                }
+              }
+
+              return {
+                project,
+                columnsCreated: createdColumns.length,
+                labelsCreated,
+                tasksCreated,
+                affectedTaskIds,
+              };
             });
-          });
 
-          console.info("[AI] Project creation chat completed:", {
-            ...requestMeta,
-            toolCallCount: newToolCallCount,
-            durationMs,
-          });
-        }
-      } catch (err) {
-        console.error("[AI] Stream error:", {
-          sessionId: session.id,
-          error: err instanceof Error ? err.message : String(err),
-        });
-        throw err;
-      }
+            // Link session to new project
+            await linkSessionToProject(toolContext.sessionId, result.project.id);
+
+            // Log activity
+            logActivity({
+              context: {
+                ...toolContext,
+                projectId: result.project.id,
+                accessToken: "",
+              },
+              toolName: "createProjectFromProposal",
+              toolInput: { proposalId: input.proposalId, proposal },
+              toolOutput: {
+                projectId: result.project.id,
+                projectName: result.project.name,
+                columnsCreated: result.columnsCreated,
+                labelsCreated: result.labelsCreated,
+                tasksCreated: result.tasksCreated,
+              },
+              status: "completed",
+              requiresApproval: true,
+              approvalStatus: "approved",
+              affectedTaskIds: result.affectedTaskIds,
+              snapshotBefore: {
+                operation: "createProject",
+                entityType: "project",
+                entityId: result.project.id,
+              },
+            });
+
+            const boardUrl = `/workspaces/${toolContext.organizationSlug}/projects/${result.project.slug}`;
+
+            return {
+              project: {
+                id: result.project.id,
+                name: result.project.name,
+                slug: result.project.slug,
+                prefix: result.project.prefix ?? proposal.prefix,
+              },
+              columnsCreated: result.columnsCreated,
+              labelsCreated: result.labelsCreated,
+              tasksCreated: result.tasksCreated,
+              boardUrl,
+            };
+          } catch (error) {
+            restoreProposal(input.proposalId, stored);
+            throw error;
+          }
+        },
+      }),
     };
 
-    // Return SSE response with session ID header
-    const response = toServerSentEventsResponse(wrappedStream());
+    const baseToolCallCount = session.toolCallCount;
+
+    // Create streaming response
+    const result = streamText({
+      model,
+      messages,
+      tools: aiTools,
+      system: systemPrompt,
+      stopWhen: stepCountIs(agentConfig.maxIterations),
+      onFinish: async (finalResult) => {
+        const durationMs = Date.now() - requestStartTime;
+        const newToolCallCount = finalResult.toolCalls?.length ?? 0;
+
+        const finalMessages = [...messages, ...finalResult.response.messages];
+
+        await saveSessionMessages(session.id, finalMessages, {
+          toolCalls: baseToolCallCount + newToolCallCount,
+        }).catch((err) => {
+          console.error("[AI] Failed to save session messages:", {
+            ...requestMeta,
+            error: err instanceof Error ? err.message : String(err),
+            durationMs,
+          });
+        });
+
+        console.info("[AI] Project creation chat completed:", {
+          ...requestMeta,
+          toolCallCount: newToolCallCount,
+          durationMs,
+        });
+      },
+    });
+
+    const response = result.toUIMessageStreamResponse();
 
     const headers = new Headers(response.headers);
     headers.set("X-Agent-Session-Id", session.id);
@@ -393,7 +679,6 @@ const projectCreationRoutes = new Elysia({
       organizationName: t.Optional(t.String()),
       sessionId: t.Optional(t.String()),
       messages: t.Array(modelMessageSchema),
-      approvals: t.Optional(t.Array(approvalResponseSchema)),
     }),
   },
 );
