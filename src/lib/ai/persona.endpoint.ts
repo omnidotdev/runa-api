@@ -13,38 +13,14 @@ import { Elysia, t } from "elysia";
 import { dbPool } from "lib/db/db";
 import { agentConfigs, agentPersonas } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
-import { authenticateRequest } from "./auth";
+import { authenticateRequest, requireOrgAdmin, requireOrgMember } from "./auth";
+import {
+  MAX_PERSONA_DESCRIPTION_LENGTH,
+  MAX_PERSONA_NAME_LENGTH,
+  MAX_PERSONA_SYSTEM_PROMPT_LENGTH,
+} from "./constants";
 
 import type { AuthenticatedUser } from "./auth";
-
-/** Max system prompt length for personas. */
-const MAX_SYSTEM_PROMPT_LENGTH = 4000;
-
-/** Max persona name length. */
-const MAX_NAME_LENGTH = 100;
-
-/** Max persona description length. */
-const MAX_DESCRIPTION_LENGTH = 500;
-
-/**
- * Verify the user is an admin/owner of the organization.
- * Returns the orgClaim or throws a descriptive error.
- */
-function requireOrgAdmin(
-  organizations: Array<{ id: string; roles: string[] }>,
-  organizationId: string,
-): { id: string; roles: string[] } {
-  const orgClaim = organizations.find((org) => org.id === organizationId);
-  if (!orgClaim) {
-    throw new Error("Access denied to this organization");
-  }
-  const isAdmin =
-    orgClaim.roles.includes("admin") || orgClaim.roles.includes("owner");
-  if (!isAdmin) {
-    throw new Error("Only organization admins can manage personas");
-  }
-  return orgClaim;
-}
 
 const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
   .get(
@@ -66,12 +42,13 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         };
       }
 
-      const hasAccess = auth.organizations.some(
-        (org) => org.id === query.organizationId,
-      );
-      if (!hasAccess) {
+      try {
+        requireOrgMember(auth.organizations, query.organizationId);
+      } catch (err) {
         set.status = 403;
-        return { error: "Access denied to this organization" };
+        return {
+          error: err instanceof Error ? err.message : "Access denied",
+        };
       }
 
       const personas = await dbPool.query.agentPersonas.findMany({
@@ -108,7 +85,11 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
       }
 
       try {
-        requireOrgAdmin(auth.organizations, body.organizationId);
+        requireOrgAdmin(
+          auth.organizations,
+          body.organizationId,
+          "manage personas",
+        );
       } catch (err) {
         set.status = 403;
         return {
@@ -116,7 +97,7 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         };
       }
 
-      const name = body.name.trim().slice(0, MAX_NAME_LENGTH);
+      const name = body.name.trim().slice(0, MAX_PERSONA_NAME_LENGTH);
       if (!name) {
         set.status = 400;
         return { error: "Persona name is required" };
@@ -124,7 +105,7 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
 
       const systemPrompt = body.systemPrompt
         .trim()
-        .slice(0, MAX_SYSTEM_PROMPT_LENGTH);
+        .slice(0, MAX_PERSONA_SYSTEM_PROMPT_LENGTH);
       if (!systemPrompt) {
         set.status = 400;
         return { error: "System prompt is required" };
@@ -136,7 +117,8 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
           organizationId: body.organizationId,
           name,
           description:
-            body.description?.trim().slice(0, MAX_DESCRIPTION_LENGTH) ?? null,
+            body.description?.trim().slice(0, MAX_PERSONA_DESCRIPTION_LENGTH) ??
+            null,
           systemPrompt,
           icon: body.icon?.slice(0, 10) ?? null,
           enabled: body.enabled ?? true,
@@ -177,7 +159,11 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
       }
 
       try {
-        requireOrgAdmin(auth.organizations, body.organizationId);
+        requireOrgAdmin(
+          auth.organizations,
+          body.organizationId,
+          "manage personas",
+        );
       } catch (err) {
         set.status = 403;
         return {
@@ -203,7 +189,7 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
       };
 
       if (body.name !== undefined) {
-        const name = body.name.trim().slice(0, MAX_NAME_LENGTH);
+        const name = body.name.trim().slice(0, MAX_PERSONA_NAME_LENGTH);
         if (!name) {
           set.status = 400;
           return { error: "Persona name cannot be empty" };
@@ -214,7 +200,7 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
       if (body.systemPrompt !== undefined) {
         const systemPrompt = body.systemPrompt
           .trim()
-          .slice(0, MAX_SYSTEM_PROMPT_LENGTH);
+          .slice(0, MAX_PERSONA_SYSTEM_PROMPT_LENGTH);
         if (!systemPrompt) {
           set.status = 400;
           return { error: "System prompt cannot be empty" };
@@ -226,7 +212,7 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
         updates.description =
           body.description === null
             ? null
-            : body.description.trim().slice(0, MAX_DESCRIPTION_LENGTH);
+            : body.description.trim().slice(0, MAX_PERSONA_DESCRIPTION_LENGTH);
       }
 
       if (body.icon !== undefined) {
@@ -282,7 +268,11 @@ const aiPersonaRoutes = new Elysia({ prefix: "/api/ai/personas" })
       }
 
       try {
-        requireOrgAdmin(auth.organizations, body.organizationId);
+        requireOrgAdmin(
+          auth.organizations,
+          body.organizationId,
+          "manage personas",
+        );
       } catch (err) {
         set.status = 403;
         return {

@@ -14,13 +14,6 @@ import type { SelectUser } from "lib/db/schema";
 const OMNI_CLAIMS_ORGANIZATIONS =
   "https://manifold.omni.dev/@omni/claims/organizations";
 
-interface OrganizationClaim {
-  id: string;
-  slug: string;
-  type: "personal" | "team";
-  roles: string[];
-}
-
 interface UserInfoClaims extends JWTPayload {
   sub: string;
   name?: string;
@@ -28,6 +21,22 @@ interface UserInfoClaims extends JWTPayload {
   picture?: string;
   email?: string;
   [key: string]: unknown;
+}
+
+/** Roles that can create projects within an organization. */
+const PROJECT_CREATION_ROLES = new Set(["editor", "admin", "owner"]);
+
+/** Roles that have admin privileges within an organization. */
+const ADMIN_ROLES = new Set(["admin", "owner"]);
+
+/**
+ * Organization claim from JWT.
+ */
+export interface OrganizationClaim {
+  id: string;
+  slug: string;
+  type: "personal" | "team";
+  roles: string[];
 }
 
 /**
@@ -163,8 +172,55 @@ export async function validateProjectAccess(
   return { organizationId: project.organizationId };
 }
 
-/** Roles that can create projects within an organization. */
-const PROJECT_CREATION_ROLES = new Set(["editor", "admin", "owner"]);
+/**
+ * Verify the user has admin/owner role in the specified organization.
+ *
+ * @param organizations - User's organization claims from JWT
+ * @param organizationId - Organization ID to check
+ * @param action - Description of the action (for error message)
+ * @returns The matching organization claim
+ * @throws Error if user lacks access or admin role
+ */
+export function requireOrgAdmin(
+  organizations: OrganizationClaim[],
+  organizationId: string,
+  action = "perform this action",
+): OrganizationClaim {
+  const orgClaim = organizations.find((org) => org.id === organizationId);
+
+  if (!orgClaim) {
+    throw new Error("Access denied to this organization");
+  }
+
+  const isAdmin = orgClaim.roles.some((role) => ADMIN_ROLES.has(role));
+
+  if (!isAdmin) {
+    throw new Error(`Only organization admins can ${action}`);
+  }
+
+  return orgClaim;
+}
+
+/**
+ * Check if user has any access to the specified organization.
+ *
+ * @param organizations - User's organization claims from JWT
+ * @param organizationId - Organization ID to check
+ * @returns The matching organization claim
+ * @throws Error if user is not a member
+ */
+export function requireOrgMember(
+  organizations: OrganizationClaim[],
+  organizationId: string,
+): OrganizationClaim {
+  const orgClaim = organizations.find((org) => org.id === organizationId);
+
+  if (!orgClaim) {
+    throw new Error("Access denied to this organization");
+  }
+
+  return orgClaim;
+}
 
 /**
  * Validate that a user has organization-level access for project creation.

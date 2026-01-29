@@ -21,6 +21,11 @@ import { agentSchedules } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
 import { authenticateRequest, validateProjectAccess } from "./auth";
 import {
+  MAX_SCHEDULES_PER_PROJECT,
+  MAX_SCHEDULE_INSTRUCTION_LENGTH,
+  MAX_SCHEDULE_NAME_LENGTH,
+} from "./constants";
+import {
   computeNextRun,
   isMinimumInterval,
   isValidCron,
@@ -28,15 +33,6 @@ import {
 } from "./triggers/scheduler";
 
 import type { AuthenticatedUser } from "./auth";
-
-/** Max instruction length. */
-const MAX_INSTRUCTION_LENGTH = 4_000;
-
-/** Max schedule name length. */
-const MAX_NAME_LENGTH = 100;
-
-/** Max schedules per project. */
-const MAX_SCHEDULES_PER_PROJECT = 20;
 
 // ─────────────────────────────────────────────
 // Cron Plugin (background polling)
@@ -172,7 +168,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
         };
       }
 
-      const name = body.name.trim().slice(0, MAX_NAME_LENGTH);
+      const name = body.name.trim().slice(0, MAX_SCHEDULE_NAME_LENGTH);
       if (!name) {
         set.status = 400;
         return { error: "Schedule name is required" };
@@ -180,7 +176,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
 
       const instruction = body.instruction
         .trim()
-        .slice(0, MAX_INSTRUCTION_LENGTH);
+        .slice(0, MAX_SCHEDULE_INSTRUCTION_LENGTH);
       if (!instruction) {
         set.status = 400;
         return { error: "Instruction is required" };
@@ -303,7 +299,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
       };
 
       if (body.name !== undefined) {
-        const name = body.name.trim().slice(0, MAX_NAME_LENGTH);
+        const name = body.name.trim().slice(0, MAX_SCHEDULE_NAME_LENGTH);
         if (!name) {
           set.status = 400;
           return { error: "Schedule name cannot be empty" };
@@ -331,7 +327,7 @@ const aiScheduleRoutes = new Elysia({ prefix: "/api/ai/schedules" })
       if (body.instruction !== undefined) {
         const instruction = body.instruction
           .trim()
-          .slice(0, MAX_INSTRUCTION_LENGTH);
+          .slice(0, MAX_SCHEDULE_INSTRUCTION_LENGTH);
         if (!instruction) {
           set.status = 400;
           return { error: "Instruction cannot be empty" };

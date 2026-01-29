@@ -16,6 +16,10 @@ const knipConfig: KnipConfig = {
     "src/instrumentation.ts",
     // Drizzle schema exports (relations, Select/Insert types) for ORM use
     "src/lib/db/schema/**",
+    // AI constants exported for consistent reference across endpoints
+    "src/lib/ai/constants.ts",
+    // AI utility internals (high-level API is used via barrel export)
+    "src/lib/ai/utils/messageRestructure.ts",
   ],
   ignoreDependencies: [
     // OpenTelemetry deps used by instrumentation.ts (loaded via --import)

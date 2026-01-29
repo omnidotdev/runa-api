@@ -18,6 +18,11 @@ import { dbPool } from "lib/db/db";
 import { agentWebhooks } from "lib/db/schema";
 import { isAgentEnabled } from "lib/flags";
 import { authenticateRequest, validateProjectAccess } from "./auth";
+import {
+  MAX_WEBHOOKS_PER_PROJECT,
+  MAX_WEBHOOK_NAME_LENGTH,
+  MAX_WEBHOOK_TEMPLATE_LENGTH,
+} from "./constants";
 import { encrypt } from "./encryption";
 import {
   WEBHOOK_EVENT_TYPES,
@@ -27,15 +32,6 @@ import {
 } from "./triggers/webhook";
 
 import type { AuthenticatedUser } from "./auth";
-
-/** Max instruction template length. */
-const MAX_TEMPLATE_LENGTH = 4_000;
-
-/** Max webhook name length. */
-const MAX_NAME_LENGTH = 100;
-
-/** Max webhooks per project (prevents unbounded resource growth). */
-const MAX_WEBHOOKS_PER_PROJECT = 10;
 
 /** Max receiver payload size in bytes (256 KB). */
 const MAX_PAYLOAD_SIZE = 256 * 1024;
@@ -153,7 +149,7 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
         };
       }
 
-      const name = body.name.trim().slice(0, MAX_NAME_LENGTH);
+      const name = body.name.trim().slice(0, MAX_WEBHOOK_NAME_LENGTH);
       if (!name) {
         set.status = 400;
         return { error: "Webhook name is required" };
@@ -161,7 +157,7 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
 
       const instructionTemplate = body.instructionTemplate
         .trim()
-        .slice(0, MAX_TEMPLATE_LENGTH);
+        .slice(0, MAX_WEBHOOK_TEMPLATE_LENGTH);
       if (!instructionTemplate) {
         set.status = 400;
         return { error: "Instruction template is required" };
@@ -284,7 +280,7 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
       };
 
       if (body.name !== undefined) {
-        const name = body.name.trim().slice(0, MAX_NAME_LENGTH);
+        const name = body.name.trim().slice(0, MAX_WEBHOOK_NAME_LENGTH);
         if (!name) {
           set.status = 400;
           return { error: "Webhook name cannot be empty" };
@@ -309,7 +305,7 @@ const aiWebhookRoutes = new Elysia({ prefix: "/api/ai/webhooks" })
       if (body.instructionTemplate !== undefined) {
         const template = body.instructionTemplate
           .trim()
-          .slice(0, MAX_TEMPLATE_LENGTH);
+          .slice(0, MAX_WEBHOOK_TEMPLATE_LENGTH);
         if (!template) {
           set.status = 400;
           return { error: "Instruction template cannot be empty" };
