@@ -23,7 +23,10 @@ import { ALLOWED_MODELS, isAllowedModel } from "./constants";
  * @param orgApiKey - Optional organization-provided API key (takes precedence over env var)
  * @returns A Vercel AI SDK compatible model instance
  */
-export function createOpenRouterModel(model: string, orgApiKey?: string | null) {
+export function createOpenRouterModel(
+  model: string,
+  orgApiKey?: string | null,
+) {
   if (!isAllowedModel(model)) {
     throw new Error(
       `Model "${model}" is not allowed. Allowed models: ${ALLOWED_MODELS.join(", ")}`,

@@ -40,11 +40,7 @@ import { buildProjectContext } from "../../prompts/projectContext";
 import { buildSystemPrompt } from "../../prompts/system";
 import { createOpenRouterModel } from "../../provider";
 import { logActivity } from "./activity";
-import {
-  getNextColumnIndex,
-  resolveLabel,
-  resolveTask,
-} from "./helpers";
+import { getNextColumnIndex, resolveLabel, resolveTask } from "./helpers";
 import { requireProjectPermission } from "./permissions";
 
 import type { ResolvedAgentConfig } from "../../config";
@@ -71,13 +67,23 @@ export function createDelegationTool(context: DelegationContext) {
     description:
       "Delegate a subtask to another agent persona. The delegate runs independently and returns its response.",
     inputSchema: z.object({
-      personaId: z.string().uuid().describe("ID of the agent persona to delegate to"),
-      instruction: z.string().min(1).max(2000).describe("The instruction for the delegate agent"),
+      personaId: z
+        .string()
+        .uuid()
+        .describe("ID of the agent persona to delegate to"),
+      instruction: z
+        .string()
+        .min(1)
+        .max(2000)
+        .describe("The instruction for the delegate agent"),
     }),
     execute: async (input) => {
       const startTime = Date.now();
 
-      const persona = await resolvePersona(input.personaId, context.organizationId);
+      const persona = await resolvePersona(
+        input.personaId,
+        context.organizationId,
+      );
       if (!persona) {
         return {
           personaName: "Unknown",
@@ -100,7 +106,10 @@ export function createDelegationTool(context: DelegationContext) {
         });
 
         const systemPrompt = buildSystemPrompt(projectContext, persona);
-        const model = createOpenRouterModel(context.agentConfig.model, context.agentConfig.orgApiKey);
+        const model = createOpenRouterModel(
+          context.agentConfig.model,
+          context.agentConfig.orgApiKey,
+        );
 
         // Build delegate tools (query + write only, no destructive)
         const delegateTools = buildDelegateTools(context);
@@ -123,12 +132,16 @@ export function createDelegationTool(context: DelegationContext) {
             stopWhen: stepCountIs(DELEGATE_MAX_ITERATIONS),
           }),
           new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error("DELEGATION_TIMEOUT")), DELEGATE_TIMEOUT_MS)
+            setTimeout(
+              () => reject(new Error("DELEGATION_TIMEOUT")),
+              DELEGATE_TIMEOUT_MS,
+            ),
           ),
         ]);
 
         const durationMs = Date.now() - startTime;
-        const responseText = result.text || "(Delegate did not produce a text response)";
+        const responseText =
+          result.text || "(Delegate did not produce a text response)";
 
         console.info("[AI] Delegation completed:", {
           parentDepth: context.delegationDepth,
@@ -142,7 +155,8 @@ export function createDelegationTool(context: DelegationContext) {
         };
       } catch (error) {
         const durationMs = Date.now() - startTime;
-        const isTimeout = error instanceof Error && error.message === "DELEGATION_TIMEOUT";
+        const isTimeout =
+          error instanceof Error && error.message === "DELEGATION_TIMEOUT";
 
         console.error("[AI] Delegation failed:", {
           parentDepth: context.delegationDepth,
@@ -181,17 +195,26 @@ function buildDelegateTools(context: DelegationContext) {
       inputSchema: z.object({
         search: z.string().optional(),
         columnId: z.string().uuid().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
         limit: z.number().optional().default(50),
       }),
       execute: async (input) => {
         const conditions = [eq(tasks.projectId, toolContext.projectId)];
-        if (input.search) conditions.push(ilike(tasks.content, `%${input.search}%`));
+        if (input.search)
+          conditions.push(ilike(tasks.content, `%${input.search}%`));
         if (input.columnId) conditions.push(eq(tasks.columnId, input.columnId));
         if (input.priority) conditions.push(eq(tasks.priority, input.priority));
 
         const taskRows = await dbPool
-          .select({ id: tasks.id, number: tasks.number, title: tasks.content, priority: tasks.priority, columnId: tasks.columnId })
+          .select({
+            id: tasks.id,
+            number: tasks.number,
+            title: tasks.content,
+            priority: tasks.priority,
+            columnId: tasks.columnId,
+          })
           .from(tasks)
           .where(and(...conditions))
           .limit(input.limit ?? 50);
@@ -218,7 +241,13 @@ function buildDelegateTools(context: DelegationContext) {
           .from(labels)
           .where(eq(labels.projectId, toolContext.projectId));
 
-        return { project: { name: project?.name, columns: projectColumns, labels: projectLabels } };
+        return {
+          project: {
+            name: project?.name,
+            columns: projectColumns,
+            labels: projectLabels,
+          },
+        };
       },
     }),
 
@@ -230,7 +259,9 @@ function buildDelegateTools(context: DelegationContext) {
       }),
       execute: async (input) => {
         const task = await resolveTask(input, toolContext.projectId);
-        return { task: { id: task.id, number: task.number, title: task.content } };
+        return {
+          task: { id: task.id, number: task.number, title: task.content },
+        };
       },
     }),
 
@@ -240,7 +271,9 @@ function buildDelegateTools(context: DelegationContext) {
         title: z.string(),
         columnId: z.string().uuid(),
         description: z.string().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
       }),
       execute: async (input) => {
         await requireProjectPermission(toolContext, "editor");
@@ -296,7 +329,9 @@ function buildDelegateTools(context: DelegationContext) {
         taskNumber: z.number().optional(),
         title: z.string().optional(),
         description: z.string().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
         dueDate: z.string().datetime().nullable().optional(),
       }),
       execute: async (input) => {
@@ -305,7 +340,8 @@ function buildDelegateTools(context: DelegationContext) {
 
         const patch: Record<string, unknown> = {};
         if (input.title) patch.content = input.title;
-        if (input.description !== undefined) patch.description = input.description;
+        if (input.description !== undefined)
+          patch.description = input.description;
         if (input.priority) patch.priority = input.priority;
         if (input.dueDate !== undefined) patch.dueDate = input.dueDate;
 
@@ -409,7 +445,9 @@ function buildDelegateTools(context: DelegationContext) {
         });
 
         if (!membership) {
-          throw new Error(`User ${input.userId} is not a member of this organization.`);
+          throw new Error(
+            `User ${input.userId} is not a member of this organization.`,
+          );
         }
 
         const user = await dbPool.query.users.findFirst({
@@ -445,14 +483,23 @@ function buildDelegateTools(context: DelegationContext) {
         } else {
           await dbPool
             .delete(assignees)
-            .where(and(eq(assignees.taskId, task.id), eq(assignees.userId, input.userId)));
+            .where(
+              and(
+                eq(assignees.taskId, task.id),
+                eq(assignees.userId, input.userId),
+              ),
+            );
         }
 
         logActivity({
           context: toolContext,
           toolName: "assignTask",
           toolInput: input,
-          toolOutput: { taskId: task.id, userId: input.userId, action: input.action },
+          toolOutput: {
+            taskId: task.id,
+            userId: input.userId,
+            action: input.action,
+          },
           status: "completed",
           affectedTaskIds: [task.id],
         });
@@ -489,18 +536,28 @@ function buildDelegateTools(context: DelegationContext) {
         let labelCreated = false;
 
         if (input.labelId) {
-          label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+          label = await resolveLabel(
+            input.labelId,
+            toolContext.projectId,
+            toolContext.organizationId,
+          );
         } else {
           const labelName = input.labelName!.trim();
 
           let existingLabel = await dbPool.query.labels.findFirst({
-            where: and(eq(labels.projectId, toolContext.projectId), eq(labels.name, labelName)),
+            where: and(
+              eq(labels.projectId, toolContext.projectId),
+              eq(labels.name, labelName),
+            ),
             columns: { id: true, name: true },
           });
 
           if (!existingLabel) {
             existingLabel = await dbPool.query.labels.findFirst({
-              where: and(eq(labels.organizationId, toolContext.organizationId), eq(labels.name, labelName)),
+              where: and(
+                eq(labels.organizationId, toolContext.organizationId),
+                eq(labels.name, labelName),
+              ),
               columns: { id: true, name: true },
             });
           }
@@ -510,7 +567,11 @@ function buildDelegateTools(context: DelegationContext) {
           } else if (input.createIfMissing) {
             const [newLabel] = await dbPool
               .insert(labels)
-              .values({ name: labelName, color: input.labelColor ?? "blue", projectId: toolContext.projectId })
+              .values({
+                name: labelName,
+                color: input.labelColor ?? "blue",
+                projectId: toolContext.projectId,
+              })
               .returning({ id: labels.id, name: labels.name });
             label = newLabel;
             labelCreated = true;
@@ -553,11 +614,20 @@ function buildDelegateTools(context: DelegationContext) {
       execute: async (input) => {
         await requireProjectPermission(toolContext, "member");
         const task = await resolveTask(input, toolContext.projectId);
-        const label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+        const label = await resolveLabel(
+          input.labelId,
+          toolContext.projectId,
+          toolContext.organizationId,
+        );
 
         await dbPool
           .delete(taskLabels)
-          .where(and(eq(taskLabels.taskId, task.id), eq(taskLabels.labelId, input.labelId)));
+          .where(
+            and(
+              eq(taskLabels.taskId, task.id),
+              eq(taskLabels.labelId, input.labelId),
+            ),
+          );
 
         logActivity({
           context: toolContext,

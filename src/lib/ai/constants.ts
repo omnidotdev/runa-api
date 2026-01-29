@@ -128,4 +128,3 @@ export type AllowedModel = (typeof ALLOWED_MODELS)[number];
 export function isAllowedModel(model: string): model is AllowedModel {
   return ALLOWED_MODELS.includes(model as AllowedModel);
 }
-

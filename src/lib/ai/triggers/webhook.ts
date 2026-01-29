@@ -77,7 +77,10 @@ export function verifyWebhookSignature(
 // ─────────────────────────────────────────────
 
 const WEBHOOK_RATE_LIMIT = { maxRequests: 5, windowMs: 3_600_000 } as const;
-const PROJECT_WEBHOOK_RATE_LIMIT = { maxRequests: 20, windowMs: 3_600_000 } as const;
+const PROJECT_WEBHOOK_RATE_LIMIT = {
+  maxRequests: 20,
+  windowMs: 3_600_000,
+} as const;
 
 // ─────────────────────────────────────────────
 // Supported Event Types
@@ -125,10 +128,16 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
     const enabled = await isAgentEnabled();
     if (!enabled) return;
 
-    const webhookRateResult = checkRateLimit(`webhook:id:${ctx.webhookId}`, WEBHOOK_RATE_LIMIT);
+    const webhookRateResult = checkRateLimit(
+      `webhook:id:${ctx.webhookId}`,
+      WEBHOOK_RATE_LIMIT,
+    );
     if (!webhookRateResult.allowed) return;
 
-    const projectRateResult = checkRateLimit(`webhook:project:${ctx.projectId}`, PROJECT_WEBHOOK_RATE_LIMIT);
+    const projectRateResult = checkRateLimit(
+      `webhook:project:${ctx.projectId}`,
+      PROJECT_WEBHOOK_RATE_LIMIT,
+    );
     if (!projectRateResult.allowed) return;
 
     const webhook = await dbPool.query.agentWebhooks.findFirst({
@@ -167,8 +176,14 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
       customInstructions: agentConfig.customInstructions,
     });
 
-    const systemPrompt = buildSystemPrompt(projectContext, agentConfig.defaultPersona);
-    const model = createOpenRouterModel(agentConfig.model, agentConfig.orgApiKey);
+    const systemPrompt = buildSystemPrompt(
+      projectContext,
+      agentConfig.defaultPersona,
+    );
+    const model = createOpenRouterModel(
+      agentConfig.model,
+      agentConfig.orgApiKey,
+    );
 
     const toolContext: WriteToolContext = {
       projectId: ctx.projectId,
@@ -199,7 +214,9 @@ export async function handleWebhook(ctx: WebhookContext): Promise<void> {
 
     const allMessages = [
       { role: "user" as const, content: userMessage },
-      ...(result.text ? [{ role: "assistant" as const, content: result.text }] : []),
+      ...(result.text
+        ? [{ role: "assistant" as const, content: result.text }]
+        : []),
     ];
 
     await saveSessionMessages(session.id, allMessages);
@@ -233,17 +250,26 @@ function buildWebhookTools(toolContext: WriteToolContext) {
       inputSchema: z.object({
         search: z.string().optional(),
         columnId: z.string().uuid().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
         limit: z.number().optional().default(50),
       }),
       execute: async (input) => {
         const conditions = [eq(tasks.projectId, toolContext.projectId)];
-        if (input.search) conditions.push(ilike(tasks.content, `%${input.search}%`));
+        if (input.search)
+          conditions.push(ilike(tasks.content, `%${input.search}%`));
         if (input.columnId) conditions.push(eq(tasks.columnId, input.columnId));
         if (input.priority) conditions.push(eq(tasks.priority, input.priority));
 
         const taskRows = await dbPool
-          .select({ id: tasks.id, number: tasks.number, title: tasks.content, priority: tasks.priority, columnId: tasks.columnId })
+          .select({
+            id: tasks.id,
+            number: tasks.number,
+            title: tasks.content,
+            priority: tasks.priority,
+            columnId: tasks.columnId,
+          })
           .from(tasks)
           .where(and(...conditions))
           .limit(input.limit ?? 50);
@@ -270,7 +296,13 @@ function buildWebhookTools(toolContext: WriteToolContext) {
           .from(labels)
           .where(eq(labels.projectId, toolContext.projectId));
 
-        return { project: { name: project?.name, columns: projectColumns, labels: projectLabels } };
+        return {
+          project: {
+            name: project?.name,
+            columns: projectColumns,
+            labels: projectLabels,
+          },
+        };
       },
     }),
 
@@ -282,7 +314,9 @@ function buildWebhookTools(toolContext: WriteToolContext) {
       }),
       execute: async (input) => {
         const task = await resolveTask(input, toolContext.projectId);
-        return { task: { id: task.id, number: task.number, title: task.content } };
+        return {
+          task: { id: task.id, number: task.number, title: task.content },
+        };
       },
     }),
 
@@ -292,7 +326,9 @@ function buildWebhookTools(toolContext: WriteToolContext) {
         title: z.string(),
         columnId: z.string().uuid(),
         description: z.string().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
       }),
       execute: async (input) => {
         const taskCount = await dbPool
@@ -344,7 +380,9 @@ function buildWebhookTools(toolContext: WriteToolContext) {
         taskNumber: z.number().optional(),
         title: z.string().optional(),
         description: z.string().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
         dueDate: z.string().datetime().nullable().optional(),
       }),
       execute: async (input) => {
@@ -352,7 +390,8 @@ function buildWebhookTools(toolContext: WriteToolContext) {
 
         const patch: Record<string, unknown> = {};
         if (input.title) patch.content = input.title;
-        if (input.description !== undefined) patch.description = input.description;
+        if (input.description !== undefined)
+          patch.description = input.description;
         if (input.priority) patch.priority = input.priority;
         if (input.dueDate !== undefined) patch.dueDate = input.dueDate;
 
@@ -453,7 +492,9 @@ function buildWebhookTools(toolContext: WriteToolContext) {
         });
 
         if (!membership) {
-          throw new Error(`User ${input.userId} is not a member of this organization.`);
+          throw new Error(
+            `User ${input.userId} is not a member of this organization.`,
+          );
         }
 
         const user = await dbPool.query.users.findFirst({
@@ -489,14 +530,23 @@ function buildWebhookTools(toolContext: WriteToolContext) {
         } else {
           await dbPool
             .delete(assignees)
-            .where(and(eq(assignees.taskId, task.id), eq(assignees.userId, input.userId)));
+            .where(
+              and(
+                eq(assignees.taskId, task.id),
+                eq(assignees.userId, input.userId),
+              ),
+            );
         }
 
         logActivity({
           context: toolContext,
           toolName: "assignTask",
           toolInput: input,
-          toolOutput: { taskId: task.id, userId: input.userId, action: input.action },
+          toolOutput: {
+            taskId: task.id,
+            userId: input.userId,
+            action: input.action,
+          },
           status: "completed",
           affectedTaskIds: [task.id],
         });
@@ -531,18 +581,28 @@ function buildWebhookTools(toolContext: WriteToolContext) {
         let labelCreated = false;
 
         if (input.labelId) {
-          label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+          label = await resolveLabel(
+            input.labelId,
+            toolContext.projectId,
+            toolContext.organizationId,
+          );
         } else {
           const labelName = input.labelName!.trim();
 
           let existingLabel = await dbPool.query.labels.findFirst({
-            where: and(eq(labels.projectId, toolContext.projectId), eq(labels.name, labelName)),
+            where: and(
+              eq(labels.projectId, toolContext.projectId),
+              eq(labels.name, labelName),
+            ),
             columns: { id: true, name: true },
           });
 
           if (!existingLabel) {
             existingLabel = await dbPool.query.labels.findFirst({
-              where: and(eq(labels.organizationId, toolContext.organizationId), eq(labels.name, labelName)),
+              where: and(
+                eq(labels.organizationId, toolContext.organizationId),
+                eq(labels.name, labelName),
+              ),
               columns: { id: true, name: true },
             });
           }
@@ -552,7 +612,11 @@ function buildWebhookTools(toolContext: WriteToolContext) {
           } else if (input.createIfMissing) {
             const [newLabel] = await dbPool
               .insert(labels)
-              .values({ name: labelName, color: input.labelColor ?? "blue", projectId: toolContext.projectId })
+              .values({
+                name: labelName,
+                color: input.labelColor ?? "blue",
+                projectId: toolContext.projectId,
+              })
               .returning({ id: labels.id, name: labels.name });
             label = newLabel;
             labelCreated = true;
@@ -594,11 +658,20 @@ function buildWebhookTools(toolContext: WriteToolContext) {
       }),
       execute: async (input) => {
         const task = await resolveTask(input, toolContext.projectId);
-        const label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+        const label = await resolveLabel(
+          input.labelId,
+          toolContext.projectId,
+          toolContext.organizationId,
+        );
 
         await dbPool
           .delete(taskLabels)
-          .where(and(eq(taskLabels.taskId, task.id), eq(taskLabels.labelId, input.labelId)));
+          .where(
+            and(
+              eq(taskLabels.taskId, task.id),
+              eq(taskLabels.labelId, input.labelId),
+            ),
+          );
 
         logActivity({
           context: toolContext,

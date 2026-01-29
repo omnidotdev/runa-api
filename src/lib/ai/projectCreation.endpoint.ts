@@ -28,10 +28,10 @@ import { createOpenRouterModel } from "./provider";
 import { ORG_CHAT_LIMIT, USER_CHAT_LIMIT, checkRateLimit } from "./rateLimit";
 import {
   createCreationSession,
+  linkSessionToProject,
   loadCreationSession,
   saveSessionMessages,
 } from "./session/manager";
-import { linkSessionToProject } from "./session/manager";
 import { logActivity } from "./tools/server/activity";
 
 import type { ModelMessage } from "ai";
@@ -301,7 +301,11 @@ const projectCreationRoutes = new Elysia({
             .max(10)
             .transform((s) => s.toUpperCase().replace(/[^A-Z0-9]/g, ""))
             .describe("Task prefix for numbering (e.g., 'MKT' for MKT-1)"),
-          description: z.string().max(500).optional().describe("Project description"),
+          description: z
+            .string()
+            .max(500)
+            .optional()
+            .describe("Project description"),
           columns: z
             .array(
               z.object({
@@ -317,7 +321,16 @@ const projectCreationRoutes = new Elysia({
               z.object({
                 name: z.string().min(1).max(50).describe("Label name"),
                 color: z
-                  .enum(["gray", "red", "orange", "yellow", "green", "blue", "purple", "pink"])
+                  .enum([
+                    "gray",
+                    "red",
+                    "orange",
+                    "yellow",
+                    "green",
+                    "blue",
+                    "purple",
+                    "pink",
+                  ])
                   .describe("Label color"),
               }),
             )
@@ -328,8 +341,14 @@ const projectCreationRoutes = new Elysia({
             .array(
               z.object({
                 title: z.string().min(1).max(200).describe("Task title"),
-                columnIndex: z.number().int().min(0).describe("Column index (0-based)"),
-                priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+                columnIndex: z
+                  .number()
+                  .int()
+                  .min(0)
+                  .describe("Column index (0-based)"),
+                priority: z
+                  .enum(["none", "low", "medium", "high", "urgent"])
+                  .optional(),
                 description: z.string().optional(),
                 labelNames: z.array(z.string()).optional(),
               }),
@@ -342,7 +361,9 @@ const projectCreationRoutes = new Elysia({
           cleanupExpiredProposals();
 
           if (proposalStore.size >= MAX_PROPOSALS) {
-            throw new Error("Server is experiencing high load. Please try again.");
+            throw new Error(
+              "Server is experiencing high load. Please try again.",
+            );
           }
 
           const proposalId = crypto.randomUUID();
@@ -367,7 +388,9 @@ const projectCreationRoutes = new Elysia({
           }
 
           if (input.initialTasks && input.initialTasks.length > 0) {
-            summaryLines.push(`**Initial tasks:** ${input.initialTasks.length}`);
+            summaryLines.push(
+              `**Initial tasks:** ${input.initialTasks.length}`,
+            );
           }
 
           if (input.description) {
@@ -437,7 +460,8 @@ const projectCreationRoutes = new Elysia({
                 .where(eq(projects.organizationId, toolContext.organizationId));
 
               const currentTaskCount = taskCountResult[0]?.value ?? 0;
-              const newTaskCount = currentTaskCount + proposal.initialTasks.length;
+              const newTaskCount =
+                currentTaskCount + proposal.initialTasks.length;
 
               const withinTaskLimit = await isWithinLimit(
                 { organizationId: toolContext.organizationId },
@@ -454,7 +478,10 @@ const projectCreationRoutes = new Elysia({
             // Get or create default project column
             let projectColumnId = await dbPool.query.projectColumns
               .findFirst({
-                where: eq(projectColumns.organizationId, toolContext.organizationId),
+                where: eq(
+                  projectColumns.organizationId,
+                  toolContext.organizationId,
+                ),
                 columns: { id: true },
               })
               .then((col) => col?.id);
@@ -473,7 +500,10 @@ const projectCreationRoutes = new Elysia({
 
             // Generate unique slug
             const baseSlug = generateSlug(proposal.name);
-            const slug = await ensureUniqueSlug(baseSlug, toolContext.organizationId);
+            const slug = await ensureUniqueSlug(
+              baseSlug,
+              toolContext.organizationId,
+            );
 
             // Execute atomic creation
             const result = await dbPool.transaction(async (tx) => {
@@ -553,7 +583,9 @@ const projectCreationRoutes = new Elysia({
 
                     if (task.labelNames && task.labelNames.length > 0) {
                       for (const labelName of task.labelNames) {
-                        const labelId = labelNameToId.get(labelName.toLowerCase());
+                        const labelId = labelNameToId.get(
+                          labelName.toLowerCase(),
+                        );
                         if (labelId) {
                           await tx.insert(taskLabels).values({
                             taskId: created.id,
@@ -578,7 +610,10 @@ const projectCreationRoutes = new Elysia({
             });
 
             // Link session to new project
-            await linkSessionToProject(toolContext.sessionId, result.project.id);
+            await linkSessionToProject(
+              toolContext.sessionId,
+              result.project.id,
+            );
 
             // Log activity
             logActivity({

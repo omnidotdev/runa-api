@@ -38,7 +38,7 @@ import {
   saveSessionMessages,
 } from "./session/manager";
 import { logActivity } from "./tools/server/activity";
-import { createDelegationTool, type DelegationContext } from "./tools/server/delegation.tools";
+import { createDelegationTool } from "./tools/server/delegation.tools";
 import {
   getColumnTitles,
   getNextColumnIndex,
@@ -53,6 +53,7 @@ import type { ModelMessage } from "ai";
 import type { SelectAgentSession } from "lib/db/schema";
 import type { AuthenticatedUser } from "./auth";
 import type { WriteToolContext } from "./tools/server/context";
+import type { DelegationContext } from "./tools/server/delegation.tools";
 
 /**
  * AI Agent routes.
@@ -206,12 +207,34 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
           description:
             "Search and filter tasks in the current project. Use this to find tasks by keyword, assignee, label, priority, column/status, or to list all tasks.",
           inputSchema: z.object({
-            search: z.string().optional().describe("Search keyword to match against task titles"),
-            columnId: z.string().uuid().optional().describe("Filter by column/status ID"),
-            priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional().describe("Filter by priority level"),
-            assigneeId: z.string().uuid().optional().describe("Filter by assignee user ID"),
-            labelId: z.string().uuid().optional().describe("Filter by label ID"),
-            limit: z.number().optional().default(50).describe("Maximum number of tasks to return"),
+            search: z
+              .string()
+              .optional()
+              .describe("Search keyword to match against task titles"),
+            columnId: z
+              .string()
+              .uuid()
+              .optional()
+              .describe("Filter by column/status ID"),
+            priority: z
+              .enum(["none", "low", "medium", "high", "urgent"])
+              .optional()
+              .describe("Filter by priority level"),
+            assigneeId: z
+              .string()
+              .uuid()
+              .optional()
+              .describe("Filter by assignee user ID"),
+            labelId: z
+              .string()
+              .uuid()
+              .optional()
+              .describe("Filter by label ID"),
+            limit: z
+              .number()
+              .optional()
+              .default(50)
+              .describe("Maximum number of tasks to return"),
           }),
           execute: async (input) => {
             const conditions = [eq(tasks.projectId, toolContext.projectId)];
@@ -247,7 +270,9 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
                 .select({ taskId: assignees.taskId })
                 .from(assignees)
                 .where(eq(assignees.userId, input.assigneeId));
-              const assignedIdSet = new Set(assignedTaskIds.map((a) => a.taskId));
+              const assignedIdSet = new Set(
+                assignedTaskIds.map((a) => a.taskId),
+              );
               taskRows = taskRows.filter((t) => assignedIdSet.has(t.id));
             }
 
@@ -262,47 +287,58 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
 
             const taskIds = taskRows.map((t) => t.id);
 
-            const [taskAssignees, taskLabelRows, columnRows] = await Promise.all([
-              taskIds.length > 0
-                ? dbPool
-                    .select({
-                      taskId: assignees.taskId,
-                      userId: assignees.userId,
-                      userName: users.name,
-                    })
-                    .from(assignees)
-                    .innerJoin(users, eq(assignees.userId, users.id))
-                    .where(inArray(assignees.taskId, taskIds))
-                : [],
-              taskIds.length > 0
-                ? dbPool
-                    .select({
-                      taskId: taskLabels.taskId,
-                      labelId: labels.id,
-                      labelName: labels.name,
-                      labelColor: labels.color,
-                    })
-                    .from(taskLabels)
-                    .innerJoin(labels, eq(taskLabels.labelId, labels.id))
-                    .where(inArray(taskLabels.taskId, taskIds))
-                : [],
-              dbPool
-                .select({ id: columns.id, title: columns.title })
-                .from(columns)
-                .where(eq(columns.projectId, toolContext.projectId)),
-            ]);
+            const [taskAssignees, taskLabelRows, columnRows] =
+              await Promise.all([
+                taskIds.length > 0
+                  ? dbPool
+                      .select({
+                        taskId: assignees.taskId,
+                        userId: assignees.userId,
+                        userName: users.name,
+                      })
+                      .from(assignees)
+                      .innerJoin(users, eq(assignees.userId, users.id))
+                      .where(inArray(assignees.taskId, taskIds))
+                  : [],
+                taskIds.length > 0
+                  ? dbPool
+                      .select({
+                        taskId: taskLabels.taskId,
+                        labelId: labels.id,
+                        labelName: labels.name,
+                        labelColor: labels.color,
+                      })
+                      .from(taskLabels)
+                      .innerJoin(labels, eq(taskLabels.labelId, labels.id))
+                      .where(inArray(taskLabels.taskId, taskIds))
+                  : [],
+                dbPool
+                  .select({ id: columns.id, title: columns.title })
+                  .from(columns)
+                  .where(eq(columns.projectId, toolContext.projectId)),
+              ]);
 
             const columnMap = new Map(columnRows.map((c) => [c.id, c.title]));
-            const assigneeMap = new Map<string, Array<{ id: string; name: string }>>();
+            const assigneeMap = new Map<
+              string,
+              Array<{ id: string; name: string }>
+            >();
             for (const a of taskAssignees) {
               const existing = assigneeMap.get(a.taskId) ?? [];
               existing.push({ id: a.userId, name: a.userName });
               assigneeMap.set(a.taskId, existing);
             }
-            const labelMap = new Map<string, Array<{ id: string; name: string; color: string }>>();
+            const labelMap = new Map<
+              string,
+              Array<{ id: string; name: string; color: string }>
+            >();
             for (const l of taskLabelRows) {
               const existing = labelMap.get(l.taskId) ?? [];
-              existing.push({ id: l.labelId, name: l.labelName, color: l.labelColor });
+              existing.push({
+                id: l.labelId,
+                name: l.labelName,
+                color: l.labelColor,
+              });
               labelMap.set(l.taskId, existing);
             }
 
@@ -329,12 +365,21 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
           description:
             "Get details about the current project, including all columns (statuses), labels, and task counts per column.",
           inputSchema: z.object({
-            includeTaskCounts: z.boolean().optional().default(true).describe("Include task count per column"),
+            includeTaskCounts: z
+              .boolean()
+              .optional()
+              .default(true)
+              .describe("Include task count per column"),
           }),
           execute: async (input) => {
             const project = await dbPool.query.projects.findFirst({
               where: eq(projects.id, toolContext.projectId),
-              columns: { id: true, name: true, prefix: true, description: true },
+              columns: {
+                id: true,
+                name: true,
+                prefix: true,
+                description: true,
+              },
             });
 
             if (!project) {
@@ -342,22 +387,40 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             }
 
             const projectColumns = await dbPool
-              .select({ id: columns.id, title: columns.title, icon: columns.icon, index: columns.index })
+              .select({
+                id: columns.id,
+                title: columns.title,
+                icon: columns.icon,
+                index: columns.index,
+              })
               .from(columns)
               .where(eq(columns.projectId, toolContext.projectId))
               .orderBy(columns.index);
 
             const projectLabels = await dbPool
-              .select({ id: labels.id, name: labels.name, color: labels.color, icon: labels.icon })
+              .select({
+                id: labels.id,
+                name: labels.name,
+                color: labels.color,
+                icon: labels.icon,
+              })
               .from(labels)
               .where(eq(labels.projectId, toolContext.projectId));
 
             const orgLabels = await dbPool
-              .select({ id: labels.id, name: labels.name, color: labels.color, icon: labels.icon })
+              .select({
+                id: labels.id,
+                name: labels.name,
+                color: labels.color,
+                icon: labels.icon,
+              })
               .from(labels)
               .where(eq(labels.organizationId, toolContext.organizationId));
 
-            let columnsWithCounts = projectColumns.map((c) => ({ ...c, taskCount: 0 }));
+            let columnsWithCounts = projectColumns.map((c) => ({
+              ...c,
+              taskCount: 0,
+            }));
             let totalTasks = 0;
 
             if (input.includeTaskCounts !== false) {
@@ -367,7 +430,9 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
                 .where(eq(tasks.projectId, toolContext.projectId))
                 .groupBy(tasks.columnId);
 
-              const countMap = new Map(taskCounts.map((tc) => [tc.columnId, tc.count]));
+              const countMap = new Map(
+                taskCounts.map((tc) => [tc.columnId, tc.count]),
+              );
               columnsWithCounts = projectColumns.map((c) => ({
                 ...c,
                 taskCount: countMap.get(c.id) ?? 0,
@@ -394,7 +459,10 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             "Get full details of a single task by its ID or task number.",
           inputSchema: z.object({
             taskId: z.string().uuid().optional().describe("Task UUID"),
-            taskNumber: z.number().optional().describe("Task number (e.g., 42 for T-42)"),
+            taskNumber: z
+              .number()
+              .optional()
+              .describe("Task number (e.g., 42 for T-42)"),
           }),
           execute: async (input) => {
             if (!input.taskId && input.taskNumber === undefined) {
@@ -405,11 +473,17 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
 
             if (input.taskId) {
               taskRow = await dbPool.query.tasks.findFirst({
-                where: and(eq(tasks.id, input.taskId), eq(tasks.projectId, toolContext.projectId)),
+                where: and(
+                  eq(tasks.id, input.taskId),
+                  eq(tasks.projectId, toolContext.projectId),
+                ),
               });
             } else if (input.taskNumber !== undefined) {
               taskRow = await dbPool.query.tasks.findFirst({
-                where: and(eq(tasks.number, input.taskNumber), eq(tasks.projectId, toolContext.projectId)),
+                where: and(
+                  eq(tasks.number, input.taskNumber),
+                  eq(tasks.projectId, toolContext.projectId),
+                ),
               });
             }
 
@@ -417,27 +491,36 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               return { task: null };
             }
 
-            const [taskAssignees, taskLabelRows, column, commentCount] = await Promise.all([
-              dbPool
-                .select({ userId: users.id, userName: users.name, userEmail: users.email })
-                .from(assignees)
-                .innerJoin(users, eq(assignees.userId, users.id))
-                .where(eq(assignees.taskId, taskRow.id)),
-              dbPool
-                .select({ labelId: labels.id, labelName: labels.name, labelColor: labels.color })
-                .from(taskLabels)
-                .innerJoin(labels, eq(taskLabels.labelId, labels.id))
-                .where(eq(taskLabels.taskId, taskRow.id)),
-              dbPool.query.columns.findFirst({
-                where: eq(columns.id, taskRow.columnId),
-                columns: { title: true },
-              }),
-              dbPool
-                .select({ count: count() })
-                .from(posts)
-                .where(eq(posts.taskId, taskRow.id))
-                .then((rows) => rows[0]?.count ?? 0),
-            ]);
+            const [taskAssignees, taskLabelRows, column, commentCount] =
+              await Promise.all([
+                dbPool
+                  .select({
+                    userId: users.id,
+                    userName: users.name,
+                    userEmail: users.email,
+                  })
+                  .from(assignees)
+                  .innerJoin(users, eq(assignees.userId, users.id))
+                  .where(eq(assignees.taskId, taskRow.id)),
+                dbPool
+                  .select({
+                    labelId: labels.id,
+                    labelName: labels.name,
+                    labelColor: labels.color,
+                  })
+                  .from(taskLabels)
+                  .innerJoin(labels, eq(taskLabels.labelId, labels.id))
+                  .where(eq(taskLabels.taskId, taskRow.id)),
+                dbPool.query.columns.findFirst({
+                  where: eq(columns.id, taskRow.columnId),
+                  columns: { title: true },
+                }),
+                dbPool
+                  .select({ count: count() })
+                  .from(posts)
+                  .where(eq(posts.taskId, taskRow.id))
+                  .then((rows) => rows[0]?.count ?? 0),
+              ]);
 
             return {
               task: {
@@ -449,8 +532,16 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
                 columnId: taskRow.columnId,
                 columnTitle: column?.title ?? "Unknown",
                 dueDate: taskRow.dueDate,
-                assignees: taskAssignees.map((a) => ({ id: a.userId, name: a.userName, email: a.userEmail })),
-                labels: taskLabelRows.map((l) => ({ id: l.labelId, name: l.labelName, color: l.labelColor })),
+                assignees: taskAssignees.map((a) => ({
+                  id: a.userId,
+                  name: a.userName,
+                  email: a.userEmail,
+                })),
+                labels: taskLabelRows.map((l) => ({
+                  id: l.labelId,
+                  name: l.labelName,
+                  color: l.labelColor,
+                })),
                 commentCount,
                 createdAt: taskRow.createdAt,
                 updatedAt: taskRow.updatedAt,
@@ -466,10 +557,20 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
           description: "Create a new task in the current project.",
           inputSchema: z.object({
             title: z.string().describe("Task title"),
-            columnId: z.string().uuid().describe("Column ID to place the task in"),
+            columnId: z
+              .string()
+              .uuid()
+              .describe("Column ID to place the task in"),
             description: z.string().optional().describe("Task description"),
-            priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional().describe("Priority level"),
-            dueDate: z.string().datetime().optional().describe("Due date in ISO 8601 format"),
+            priority: z
+              .enum(["none", "low", "medium", "high", "urgent"])
+              .optional()
+              .describe("Priority level"),
+            dueDate: z
+              .string()
+              .datetime()
+              .optional()
+              .describe("Due date in ISO 8601 format"),
           }),
           needsApproval: agentConfig.requireApprovalForCreate,
           execute: async (input) => {
@@ -492,16 +593,23 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             }
 
             const column = await dbPool.query.columns.findFirst({
-              where: and(eq(columns.id, input.columnId), eq(columns.projectId, toolContext.projectId)),
+              where: and(
+                eq(columns.id, input.columnId),
+                eq(columns.projectId, toolContext.projectId),
+              ),
               columns: { id: true, title: true },
             });
 
             if (!column) {
-              throw new Error(`Column ${input.columnId} not found in this project.`);
+              throw new Error(
+                `Column ${input.columnId} not found in this project.`,
+              );
             }
 
             const nextIndex = await getNextColumnIndex(input.columnId);
-            const descriptionHtml = input.description ? markdownToHtml(input.description) : "";
+            const descriptionHtml = input.description
+              ? markdownToHtml(input.description)
+              : "";
 
             const [created] = await dbPool
               .insert(tasks)
@@ -515,10 +623,23 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
                 authorId: toolContext.userId,
                 dueDate: input.dueDate ?? null,
               })
-              .returning({ id: tasks.id, number: tasks.number, title: tasks.content, columnId: tasks.columnId, priority: tasks.priority });
+              .returning({
+                id: tasks.id,
+                number: tasks.number,
+                title: tasks.content,
+                columnId: tasks.columnId,
+                priority: tasks.priority,
+              });
 
             const result = {
-              task: { id: created.id, number: created.number, title: created.title, columnId: created.columnId, columnTitle: column.title, priority: created.priority },
+              task: {
+                id: created.id,
+                number: created.number,
+                title: created.title,
+                columnId: created.columnId,
+                columnTitle: column.title,
+                priority: created.priority,
+              },
             };
 
             logActivity({
@@ -528,7 +649,11 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               toolOutput: result,
               status: "completed",
               affectedTaskIds: [created.id],
-              snapshotBefore: { operation: "create", entityType: "task", entityId: created.id },
+              snapshotBefore: {
+                operation: "create",
+                entityType: "task",
+                entityId: created.id,
+              },
             });
 
             return result;
@@ -536,14 +661,23 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         }),
 
         updateTask: tool({
-          description: "Update a task's title, description, priority, or due date.",
+          description:
+            "Update a task's title, description, priority, or due date.",
           inputSchema: z.object({
             taskId: z.string().uuid().optional().describe("Task UUID"),
             taskNumber: z.number().optional().describe("Task number"),
             title: z.string().optional().describe("New task title"),
             description: z.string().optional().describe("New task description"),
-            priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional().describe("New priority level"),
-            dueDate: z.string().datetime().nullable().optional().describe("New due date or null to clear"),
+            priority: z
+              .enum(["none", "low", "medium", "high", "urgent"])
+              .optional()
+              .describe("New priority level"),
+            dueDate: z
+              .string()
+              .datetime()
+              .nullable()
+              .optional()
+              .describe("New due date or null to clear"),
           }),
           execute: async (input) => {
             await requireProjectPermission(toolContext, "editor");
@@ -551,7 +685,8 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
 
             const patch: Record<string, unknown> = {};
             if (input.title !== undefined) patch.content = input.title;
-            if (input.description !== undefined) patch.description = markdownToHtml(input.description);
+            if (input.description !== undefined)
+              patch.description = markdownToHtml(input.description);
             if (input.priority !== undefined) patch.priority = input.priority;
             if (input.dueDate !== undefined) patch.dueDate = input.dueDate;
 
@@ -563,9 +698,23 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               .update(tasks)
               .set(patch)
               .where(eq(tasks.id, task.id))
-              .returning({ id: tasks.id, number: tasks.number, title: tasks.content, priority: tasks.priority, dueDate: tasks.dueDate });
+              .returning({
+                id: tasks.id,
+                number: tasks.number,
+                title: tasks.content,
+                priority: tasks.priority,
+                dueDate: tasks.dueDate,
+              });
 
-            const result = { task: { id: updated.id, number: updated.number, title: updated.title, priority: updated.priority, dueDate: updated.dueDate } };
+            const result = {
+              task: {
+                id: updated.id,
+                number: updated.number,
+                title: updated.title,
+                priority: updated.priority,
+                dueDate: updated.dueDate,
+              },
+            };
 
             logActivity({
               context: toolContext,
@@ -574,7 +723,17 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               toolOutput: result,
               status: "completed",
               affectedTaskIds: [task.id],
-              snapshotBefore: { operation: "update", entityType: "task", entityId: task.id, previousState: { content: task.content, description: task.description, priority: task.priority, dueDate: task.dueDate } },
+              snapshotBefore: {
+                operation: "update",
+                entityType: "task",
+                entityId: task.id,
+                previousState: {
+                  content: task.content,
+                  description: task.description,
+                  priority: task.priority,
+                  dueDate: task.dueDate,
+                },
+              },
             });
 
             return result;
@@ -593,12 +752,17 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             const task = await resolveTask(input, toolContext.projectId);
 
             const targetColumn = await dbPool.query.columns.findFirst({
-              where: and(eq(columns.id, input.columnId), eq(columns.projectId, toolContext.projectId)),
+              where: and(
+                eq(columns.id, input.columnId),
+                eq(columns.projectId, toolContext.projectId),
+              ),
               columns: { id: true, title: true },
             });
 
             if (!targetColumn) {
-              throw new Error(`Column ${input.columnId} not found in this project.`);
+              throw new Error(
+                `Column ${input.columnId} not found in this project.`,
+              );
             }
 
             const sourceColumn = await dbPool.query.columns.findFirst({
@@ -626,7 +790,15 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               toolOutput: result,
               status: "completed",
               affectedTaskIds: [task.id],
-              snapshotBefore: { operation: "move", entityType: "task", entityId: task.id, previousState: { columnId: task.columnId, columnIndex: task.columnIndex } },
+              snapshotBefore: {
+                operation: "move",
+                entityType: "task",
+                entityId: task.id,
+                previousState: {
+                  columnId: task.columnId,
+                  columnIndex: task.columnIndex,
+                },
+              },
             });
 
             return result;
@@ -639,18 +811,28 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             taskId: z.string().uuid().optional().describe("Task UUID"),
             taskNumber: z.number().optional().describe("Task number"),
             userId: z.string().uuid().describe("User ID to assign or unassign"),
-            action: z.enum(["add", "remove"]).describe("Whether to add or remove the assignee"),
+            action: z
+              .enum(["add", "remove"])
+              .describe("Whether to add or remove the assignee"),
           }),
           execute: async (input) => {
             await requireProjectPermission(toolContext, "member");
             const task = await resolveTask(input, toolContext.projectId);
 
             const membership = await dbPool.query.userOrganizations.findFirst({
-              where: and(eq(userOrganizations.userId, input.userId), eq(userOrganizations.organizationId, toolContext.organizationId)),
+              where: and(
+                eq(userOrganizations.userId, input.userId),
+                eq(
+                  userOrganizations.organizationId,
+                  toolContext.organizationId,
+                ),
+              ),
             });
 
             if (!membership) {
-              throw new Error(`User ${input.userId} is not a member of this organization.`);
+              throw new Error(
+                `User ${input.userId} is not a member of this organization.`,
+              );
             }
 
             const user = await dbPool.query.users.findFirst({
@@ -669,17 +851,38 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
                 .where(eq(assignees.taskId, task.id))
                 .then((rows) => rows[0]?.count ?? 0);
 
-              const withinLimit = await isWithinLimit({ organizationId: toolContext.organizationId }, "max_assignees", assigneeCount);
+              const withinLimit = await isWithinLimit(
+                { organizationId: toolContext.organizationId },
+                "max_assignees",
+                assigneeCount,
+              );
               if (!withinLimit) {
                 throw new Error("Assignee limit reached for your plan.");
               }
 
-              await dbPool.insert(assignees).values({ taskId: task.id, userId: input.userId }).onConflictDoNothing();
+              await dbPool
+                .insert(assignees)
+                .values({ taskId: task.id, userId: input.userId })
+                .onConflictDoNothing();
             } else {
-              await dbPool.delete(assignees).where(and(eq(assignees.taskId, task.id), eq(assignees.userId, input.userId)));
+              await dbPool
+                .delete(assignees)
+                .where(
+                  and(
+                    eq(assignees.taskId, task.id),
+                    eq(assignees.userId, input.userId),
+                  ),
+                );
             }
 
-            const result = { taskId: task.id, taskNumber: task.number, taskTitle: task.content, userId: input.userId, userName: user.name, action: input.action };
+            const result = {
+              taskId: task.id,
+              taskNumber: task.number,
+              taskTitle: task.content,
+              userId: input.userId,
+              userName: user.name,
+              action: input.action,
+            };
 
             logActivity({
               context: toolContext,
@@ -688,7 +891,12 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               toolOutput: result,
               status: "completed",
               affectedTaskIds: [task.id],
-              snapshotBefore: { operation: input.action === "add" ? "assign" : "unassign", entityType: "assignee", entityId: task.id, previousState: { taskId: task.id, userId: input.userId } },
+              snapshotBefore: {
+                operation: input.action === "add" ? "assign" : "unassign",
+                entityType: "assignee",
+                entityId: task.id,
+                previousState: { taskId: task.id, userId: input.userId },
+              },
             });
 
             return result;
@@ -702,8 +910,16 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             taskNumber: z.number().optional().describe("Task number"),
             labelId: z.string().uuid().optional().describe("Label ID"),
             labelName: z.string().optional().describe("Label name"),
-            createIfMissing: z.boolean().optional().default(false).describe("Create label if not found"),
-            labelColor: z.string().optional().default("blue").describe("Color for new label"),
+            createIfMissing: z
+              .boolean()
+              .optional()
+              .default(false)
+              .describe("Create label if not found"),
+            labelColor: z
+              .string()
+              .optional()
+              .default("blue")
+              .describe("Color for new label"),
           }),
           execute: async (input) => {
             await requireProjectPermission(toolContext, "member");
@@ -717,18 +933,28 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
             let labelCreated = false;
 
             if (input.labelId) {
-              label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+              label = await resolveLabel(
+                input.labelId,
+                toolContext.projectId,
+                toolContext.organizationId,
+              );
             } else {
               const labelName = input.labelName!.trim();
 
               let existingLabel = await dbPool.query.labels.findFirst({
-                where: and(eq(labels.projectId, toolContext.projectId), eq(labels.name, labelName)),
+                where: and(
+                  eq(labels.projectId, toolContext.projectId),
+                  eq(labels.name, labelName),
+                ),
                 columns: { id: true, name: true },
               });
 
               if (!existingLabel) {
                 existingLabel = await dbPool.query.labels.findFirst({
-                  where: and(eq(labels.organizationId, toolContext.organizationId), eq(labels.name, labelName)),
+                  where: and(
+                    eq(labels.organizationId, toolContext.organizationId),
+                    eq(labels.name, labelName),
+                  ),
                   columns: { id: true, name: true },
                 });
               }
@@ -738,7 +964,11 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               } else if (input.createIfMissing) {
                 const [newLabel] = await dbPool
                   .insert(labels)
-                  .values({ name: labelName, color: input.labelColor ?? "blue", projectId: toolContext.projectId })
+                  .values({
+                    name: labelName,
+                    color: input.labelColor ?? "blue",
+                    projectId: toolContext.projectId,
+                  })
                   .returning({ id: labels.id, name: labels.name });
                 label = newLabel;
                 labelCreated = true;
@@ -747,9 +977,19 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               }
             }
 
-            await dbPool.insert(taskLabels).values({ taskId: task.id, labelId: label.id }).onConflictDoNothing();
+            await dbPool
+              .insert(taskLabels)
+              .values({ taskId: task.id, labelId: label.id })
+              .onConflictDoNothing();
 
-            const result = { taskId: task.id, taskNumber: task.number, taskTitle: task.content, labelId: label.id, labelName: label.name, labelCreated };
+            const result = {
+              taskId: task.id,
+              taskNumber: task.number,
+              taskTitle: task.content,
+              labelId: label.id,
+              labelName: label.name,
+              labelCreated,
+            };
 
             logActivity({
               context: toolContext,
@@ -758,7 +998,12 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               toolOutput: result,
               status: "completed",
               affectedTaskIds: [task.id],
-              snapshotBefore: { operation: "addLabel", entityType: "taskLabel", entityId: task.id, previousState: { taskId: task.id, labelId: label.id } },
+              snapshotBefore: {
+                operation: "addLabel",
+                entityType: "taskLabel",
+                entityId: task.id,
+                previousState: { taskId: task.id, labelId: label.id },
+              },
             });
 
             return result;
@@ -775,11 +1020,28 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
           execute: async (input) => {
             await requireProjectPermission(toolContext, "member");
             const task = await resolveTask(input, toolContext.projectId);
-            const label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+            const label = await resolveLabel(
+              input.labelId,
+              toolContext.projectId,
+              toolContext.organizationId,
+            );
 
-            await dbPool.delete(taskLabels).where(and(eq(taskLabels.taskId, task.id), eq(taskLabels.labelId, input.labelId)));
+            await dbPool
+              .delete(taskLabels)
+              .where(
+                and(
+                  eq(taskLabels.taskId, task.id),
+                  eq(taskLabels.labelId, input.labelId),
+                ),
+              );
 
-            const result = { taskId: task.id, taskNumber: task.number, taskTitle: task.content, labelId: label.id, labelName: label.name };
+            const result = {
+              taskId: task.id,
+              taskNumber: task.number,
+              taskTitle: task.content,
+              labelId: label.id,
+              labelName: label.name,
+            };
 
             logActivity({
               context: toolContext,
@@ -788,7 +1050,12 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               toolOutput: result,
               status: "completed",
               affectedTaskIds: [task.id],
-              snapshotBefore: { operation: "removeLabel", entityType: "taskLabel", entityId: task.id, previousState: { taskId: task.id, labelId: label.id } },
+              snapshotBefore: {
+                operation: "removeLabel",
+                entityType: "taskLabel",
+                entityId: task.id,
+                previousState: { taskId: task.id, labelId: label.id },
+              },
             });
 
             return result;
@@ -808,10 +1075,19 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
 
             const [comment] = await dbPool
               .insert(posts)
-              .values({ description: input.content, authorId: toolContext.userId, taskId: task.id })
+              .values({
+                description: input.content,
+                authorId: toolContext.userId,
+                taskId: task.id,
+              })
               .returning({ id: posts.id });
 
-            const result = { commentId: comment.id, taskId: task.id, taskNumber: task.number, taskTitle: task.content };
+            const result = {
+              commentId: comment.id,
+              taskId: task.id,
+              taskNumber: task.number,
+              taskTitle: task.content,
+            };
 
             logActivity({
               context: toolContext,
@@ -820,7 +1096,11 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               toolOutput: result,
               status: "completed",
               affectedTaskIds: [task.id],
-              snapshotBefore: { operation: "addComment", entityType: "comment", entityId: comment.id },
+              snapshotBefore: {
+                operation: "addComment",
+                entityType: "comment",
+                entityId: comment.id,
+              },
             });
 
             return result;
@@ -843,7 +1123,11 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
 
             await dbPool.delete(tasks).where(eq(tasks.id, task.id));
 
-            const result = { deletedTaskId: task.id, deletedTaskNumber: task.number, deletedTaskTitle: task.content };
+            const result = {
+              deletedTaskId: task.id,
+              deletedTaskNumber: task.number,
+              deletedTaskTitle: task.content,
+            };
 
             logActivity({
               context: toolContext,
@@ -853,7 +1137,20 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               status: "completed",
               requiresApproval: agentConfig.requireApprovalForDestructive,
               affectedTaskIds: [task.id],
-              snapshotBefore: { operation: "delete", entityType: "task", entityId: task.id, previousState: { content: task.content, description: task.description, priority: task.priority, columnId: task.columnId, columnIndex: task.columnIndex, dueDate: task.dueDate, authorId: task.authorId } },
+              snapshotBefore: {
+                operation: "delete",
+                entityType: "task",
+                entityId: task.id,
+                previousState: {
+                  content: task.content,
+                  description: task.description,
+                  priority: task.priority,
+                  columnId: task.columnId,
+                  columnIndex: task.columnIndex,
+                  dueDate: task.dueDate,
+                  authorId: task.authorId,
+                },
+              },
             });
 
             return result;
@@ -861,44 +1158,78 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         }),
 
         batchMoveTasks: tool({
-          description: "Move multiple tasks to a target column in one operation.",
+          description:
+            "Move multiple tasks to a target column in one operation.",
           inputSchema: z.object({
-            tasks: z.array(z.object({
-              taskId: z.string().uuid().optional(),
-              taskNumber: z.number().optional(),
-            })).min(1).max(50).describe("Tasks to move (1-50)"),
+            tasks: z
+              .array(
+                z.object({
+                  taskId: z.string().uuid().optional(),
+                  taskNumber: z.number().optional(),
+                }),
+              )
+              .min(1)
+              .max(50)
+              .describe("Tasks to move (1-50)"),
             columnId: z.string().uuid().describe("Target column ID"),
           }),
           needsApproval: agentConfig.requireApprovalForDestructive,
           execute: async (input) => {
             await requireProjectPermission(toolContext, "editor");
 
-            const resolvedTasks = await resolveTasks(input.tasks, toolContext.projectId);
+            const resolvedTasks = await resolveTasks(
+              input.tasks,
+              toolContext.projectId,
+            );
             const sourceColumnIds = resolvedTasks.map((t) => t.columnId);
             const columnTitleMap = await getColumnTitles(sourceColumnIds);
 
             const result = await dbPool.transaction(async (tx) => {
               const targetColumn = await tx.query.columns.findFirst({
-                where: and(eq(columns.id, input.columnId), eq(columns.projectId, toolContext.projectId)),
+                where: and(
+                  eq(columns.id, input.columnId),
+                  eq(columns.projectId, toolContext.projectId),
+                ),
                 columns: { id: true, title: true },
               });
 
               if (!targetColumn) {
-                throw new Error(`Column ${input.columnId} not found in this project.`);
+                throw new Error(
+                  `Column ${input.columnId} not found in this project.`,
+                );
               }
 
-              const movedTasks: Array<{ id: string; number: number | null; title: string; fromColumn: string }> = [];
+              const movedTasks: Array<{
+                id: string;
+                number: number | null;
+                title: string;
+                fromColumn: string;
+              }> = [];
               const affectedIds: string[] = [];
               let nextIndex = await getNextColumnIndex(input.columnId);
 
               for (const task of resolvedTasks) {
-                await tx.update(tasks).set({ columnId: input.columnId, columnIndex: nextIndex }).where(eq(tasks.id, task.id));
+                await tx
+                  .update(tasks)
+                  .set({ columnId: input.columnId, columnIndex: nextIndex })
+                  .where(eq(tasks.id, task.id));
                 nextIndex++;
-                movedTasks.push({ id: task.id, number: task.number, title: task.content, fromColumn: columnTitleMap.get(task.columnId) ?? "Unknown" });
+                movedTasks.push({
+                  id: task.id,
+                  number: task.number,
+                  title: task.content,
+                  fromColumn: columnTitleMap.get(task.columnId) ?? "Unknown",
+                });
                 affectedIds.push(task.id);
               }
 
-              return { movedCount: movedTasks.length, targetColumn: targetColumn.title, movedTasks, errors: [], affectedIds };
+              return {
+                movedCount: movedTasks.length,
+                targetColumn: targetColumn.title,
+                movedTasks,
+                errors: [],
+                affectedIds,
+              };
             });
 
             logActivity({
@@ -909,22 +1240,49 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               status: "completed",
               requiresApproval: agentConfig.requireApprovalForDestructive,
               affectedTaskIds: result.affectedIds,
-              snapshotBefore: { operation: "batchMove", entityType: "task", tasks: resolvedTasks.map((t) => ({ taskId: t.id, columnId: t.columnId, columnIndex: t.columnIndex })) },
+              snapshotBefore: {
+                operation: "batchMove",
+                entityType: "task",
+                tasks: resolvedTasks.map((t) => ({
+                  taskId: t.id,
+                  columnId: t.columnId,
+                  columnIndex: t.columnIndex,
+                })),
+              },
             });
 
-            return { movedCount: result.movedCount, targetColumn: result.targetColumn, movedTasks: result.movedTasks, errors: result.errors };
+            return {
+              movedCount: result.movedCount,
+              targetColumn: result.targetColumn,
+              movedTasks: result.movedTasks,
+              errors: result.errors,
+            };
           },
         }),
 
         batchUpdateTasks: tool({
           description: "Update fields on multiple tasks at once.",
           inputSchema: z.object({
-            tasks: z.array(z.object({
-              taskId: z.string().uuid().optional(),
-              taskNumber: z.number().optional(),
-            })).min(1).max(50).describe("Tasks to update (1-50)"),
-            priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional().describe("New priority for all tasks"),
-            dueDate: z.string().datetime().nullable().optional().describe("New due date for all tasks"),
+            tasks: z
+              .array(
+                z.object({
+                  taskId: z.string().uuid().optional(),
+                  taskNumber: z.number().optional(),
+                }),
+              )
+              .min(1)
+              .max(50)
+              .describe("Tasks to update (1-50)"),
+            priority: z
+              .enum(["none", "low", "medium", "high", "urgent"])
+              .optional()
+              .describe("New priority for all tasks"),
+            dueDate: z
+              .string()
+              .datetime()
+              .nullable()
+              .optional()
+              .describe("New due date for all tasks"),
           }),
           needsApproval: agentConfig.requireApprovalForDestructive,
           execute: async (input) => {
@@ -938,19 +1296,35 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               throw new Error("No fields to update.");
             }
 
-            const resolvedTasks = await resolveTasks(input.tasks, toolContext.projectId);
+            const resolvedTasks = await resolveTasks(
+              input.tasks,
+              toolContext.projectId,
+            );
 
             const result = await dbPool.transaction(async (tx) => {
-              const updatedTasks: Array<{ id: string; number: number | null; title: string }> = [];
+              const updatedTasks: Array<{
+                id: string;
+                number: number | null;
+                title: string;
+              }> = [];
               const affectedIds: string[] = [];
 
               for (const task of resolvedTasks) {
                 await tx.update(tasks).set(patch).where(eq(tasks.id, task.id));
-                updatedTasks.push({ id: task.id, number: task.number, title: task.content });
+                updatedTasks.push({
+                  id: task.id,
+                  number: task.number,
+                  title: task.content,
+                });
                 affectedIds.push(task.id);
               }
 
-              return { updatedCount: updatedTasks.length, updatedTasks, errors: [], affectedIds };
+              return {
+                updatedCount: updatedTasks.length,
+                updatedTasks,
+                errors: [],
+                affectedIds,
+              };
             });
 
             logActivity({
@@ -961,38 +1335,73 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               status: "completed",
               requiresApproval: agentConfig.requireApprovalForDestructive,
               affectedTaskIds: result.affectedIds,
-              snapshotBefore: { operation: "batchUpdate", entityType: "task", tasks: resolvedTasks.map((t) => ({ taskId: t.id, priority: t.priority, dueDate: t.dueDate })) },
+              snapshotBefore: {
+                operation: "batchUpdate",
+                entityType: "task",
+                tasks: resolvedTasks.map((t) => ({
+                  taskId: t.id,
+                  priority: t.priority,
+                  dueDate: t.dueDate,
+                })),
+              },
             });
 
-            return { updatedCount: result.updatedCount, updatedTasks: result.updatedTasks, errors: result.errors };
+            return {
+              updatedCount: result.updatedCount,
+              updatedTasks: result.updatedTasks,
+              errors: result.errors,
+            };
           },
         }),
 
         batchDeleteTasks: tool({
-          description: "Permanently delete multiple tasks. This cannot be undone.",
+          description:
+            "Permanently delete multiple tasks. This cannot be undone.",
           inputSchema: z.object({
-            tasks: z.array(z.object({
-              taskId: z.string().uuid().optional(),
-              taskNumber: z.number().optional(),
-            })).min(1).max(50).describe("Tasks to delete (1-50)"),
+            tasks: z
+              .array(
+                z.object({
+                  taskId: z.string().uuid().optional(),
+                  taskNumber: z.number().optional(),
+                }),
+              )
+              .min(1)
+              .max(50)
+              .describe("Tasks to delete (1-50)"),
           }),
           needsApproval: agentConfig.requireApprovalForDestructive,
           execute: async (input) => {
             await requireProjectPermission(toolContext, "editor");
 
-            const resolvedTasks = await resolveTasks(input.tasks, toolContext.projectId);
+            const resolvedTasks = await resolveTasks(
+              input.tasks,
+              toolContext.projectId,
+            );
 
             const result = await dbPool.transaction(async (tx) => {
-              const deletedTasks: Array<{ id: string; number: number | null; title: string }> = [];
+              const deletedTasks: Array<{
+                id: string;
+                number: number | null;
+                title: string;
+              }> = [];
               const affectedIds: string[] = [];
 
               for (const task of resolvedTasks) {
                 await tx.delete(tasks).where(eq(tasks.id, task.id));
-                deletedTasks.push({ id: task.id, number: task.number, title: task.content });
+                deletedTasks.push({
+                  id: task.id,
+                  number: task.number,
+                  title: task.content,
+                });
                 affectedIds.push(task.id);
               }
 
-              return { deletedCount: deletedTasks.length, deletedTasks, errors: [], affectedIds };
+              return {
+                deletedCount: deletedTasks.length,
+                deletedTasks,
+                errors: [],
+                affectedIds,
+              };
             });
 
             logActivity({
@@ -1003,10 +1412,27 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               status: "completed",
               requiresApproval: agentConfig.requireApprovalForDestructive,
               affectedTaskIds: result.affectedIds,
-              snapshotBefore: { operation: "batchDelete", entityType: "task", tasks: resolvedTasks.map((t) => ({ taskId: t.id, content: t.content, description: t.description, priority: t.priority, columnId: t.columnId, columnIndex: t.columnIndex, dueDate: t.dueDate, authorId: t.authorId })) },
+              snapshotBefore: {
+                operation: "batchDelete",
+                entityType: "task",
+                tasks: resolvedTasks.map((t) => ({
+                  taskId: t.id,
+                  content: t.content,
+                  description: t.description,
+                  priority: t.priority,
+                  columnId: t.columnId,
+                  columnIndex: t.columnIndex,
+                  dueDate: t.dueDate,
+                  authorId: t.authorId,
+                })),
+              },
             });
 
-            return { deletedCount: result.deletedCount, deletedTasks: result.deletedTasks, errors: result.errors };
+            return {
+              deletedCount: result.deletedCount,
+              deletedTasks: result.deletedTasks,
+              errors: result.errors,
+            };
           },
         }),
 

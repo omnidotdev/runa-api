@@ -156,7 +156,9 @@ async function executeSchedule(schedule: SelectAgentSchedule): Promise<void> {
 
   const allMessages = [
     { role: "user" as const, content: userMessage },
-    ...(result.text ? [{ role: "assistant" as const, content: result.text }] : []),
+    ...(result.text
+      ? [{ role: "assistant" as const, content: result.text }]
+      : []),
   ];
 
   await saveSessionMessages(session.id, allMessages);
@@ -188,7 +190,9 @@ export async function pollSchedules(): Promise<void> {
 
     if (claimedSchedules.length === 0) return;
 
-    console.info(`[AI Scheduler] Claimed ${claimedSchedules.length} due schedule(s)`);
+    console.info(
+      `[AI Scheduler] Claimed ${claimedSchedules.length} due schedule(s)`,
+    );
 
     for (const schedule of claimedSchedules) {
       if (runningSchedules.has(schedule.id)) {
@@ -205,7 +209,10 @@ export async function pollSchedules(): Promise<void> {
 
       executeSchedule(schedule)
         .then(() => {
-          console.info("[AI Scheduler] Completed:", { scheduleId: schedule.id, name: schedule.name });
+          console.info("[AI Scheduler] Completed:", {
+            scheduleId: schedule.id,
+            name: schedule.name,
+          });
         })
         .catch((err) => {
           console.error("[AI Scheduler] Execution failed:", {
@@ -224,7 +231,10 @@ export async function pollSchedules(): Promise<void> {
         });
     }
   } catch (err) {
-    console.error("[AI Scheduler] Poll error:", err instanceof Error ? err.message : String(err));
+    console.error(
+      "[AI Scheduler] Poll error:",
+      err instanceof Error ? err.message : String(err),
+    );
   }
 }
 
@@ -254,7 +264,10 @@ export async function executeScheduleById(scheduleId: string): Promise<void> {
 
     await executeSchedule(schedule);
 
-    console.info("[AI Scheduler] Manual run completed:", { scheduleId, name: schedule.name });
+    console.info("[AI Scheduler] Manual run completed:", {
+      scheduleId,
+      name: schedule.name,
+    });
   } finally {
     runningSchedules.delete(scheduleId);
   }
@@ -271,17 +284,26 @@ function buildScheduleTools(toolContext: WriteToolContext) {
       inputSchema: z.object({
         search: z.string().optional(),
         columnId: z.string().uuid().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
         limit: z.number().optional().default(50),
       }),
       execute: async (input) => {
         const conditions = [eq(tasks.projectId, toolContext.projectId)];
-        if (input.search) conditions.push(ilike(tasks.content, `%${input.search}%`));
+        if (input.search)
+          conditions.push(ilike(tasks.content, `%${input.search}%`));
         if (input.columnId) conditions.push(eq(tasks.columnId, input.columnId));
         if (input.priority) conditions.push(eq(tasks.priority, input.priority));
 
         const taskRows = await dbPool
-          .select({ id: tasks.id, number: tasks.number, title: tasks.content, priority: tasks.priority, columnId: tasks.columnId })
+          .select({
+            id: tasks.id,
+            number: tasks.number,
+            title: tasks.content,
+            priority: tasks.priority,
+            columnId: tasks.columnId,
+          })
           .from(tasks)
           .where(and(...conditions))
           .limit(input.limit ?? 50);
@@ -308,7 +330,13 @@ function buildScheduleTools(toolContext: WriteToolContext) {
           .from(labels)
           .where(eq(labels.projectId, toolContext.projectId));
 
-        return { project: { name: project?.name, columns: projectColumns, labels: projectLabels } };
+        return {
+          project: {
+            name: project?.name,
+            columns: projectColumns,
+            labels: projectLabels,
+          },
+        };
       },
     }),
 
@@ -320,7 +348,9 @@ function buildScheduleTools(toolContext: WriteToolContext) {
       }),
       execute: async (input) => {
         const task = await resolveTask(input, toolContext.projectId);
-        return { task: { id: task.id, number: task.number, title: task.content } };
+        return {
+          task: { id: task.id, number: task.number, title: task.content },
+        };
       },
     }),
 
@@ -330,7 +360,9 @@ function buildScheduleTools(toolContext: WriteToolContext) {
         title: z.string(),
         columnId: z.string().uuid(),
         description: z.string().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
       }),
       execute: async (input) => {
         const taskCount = await dbPool
@@ -382,7 +414,9 @@ function buildScheduleTools(toolContext: WriteToolContext) {
         taskNumber: z.number().optional(),
         title: z.string().optional(),
         description: z.string().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
         dueDate: z.string().datetime().nullable().optional(),
       }),
       execute: async (input) => {
@@ -390,7 +424,8 @@ function buildScheduleTools(toolContext: WriteToolContext) {
 
         const patch: Record<string, unknown> = {};
         if (input.title) patch.content = input.title;
-        if (input.description !== undefined) patch.description = input.description;
+        if (input.description !== undefined)
+          patch.description = input.description;
         if (input.priority) patch.priority = input.priority;
         if (input.dueDate !== undefined) patch.dueDate = input.dueDate;
 
@@ -491,7 +526,9 @@ function buildScheduleTools(toolContext: WriteToolContext) {
         });
 
         if (!membership) {
-          throw new Error(`User ${input.userId} is not a member of this organization.`);
+          throw new Error(
+            `User ${input.userId} is not a member of this organization.`,
+          );
         }
 
         const user = await dbPool.query.users.findFirst({
@@ -527,14 +564,23 @@ function buildScheduleTools(toolContext: WriteToolContext) {
         } else {
           await dbPool
             .delete(assignees)
-            .where(and(eq(assignees.taskId, task.id), eq(assignees.userId, input.userId)));
+            .where(
+              and(
+                eq(assignees.taskId, task.id),
+                eq(assignees.userId, input.userId),
+              ),
+            );
         }
 
         logActivity({
           context: toolContext,
           toolName: "assignTask",
           toolInput: input,
-          toolOutput: { taskId: task.id, userId: input.userId, action: input.action },
+          toolOutput: {
+            taskId: task.id,
+            userId: input.userId,
+            action: input.action,
+          },
           status: "completed",
           affectedTaskIds: [task.id],
         });
@@ -569,18 +615,28 @@ function buildScheduleTools(toolContext: WriteToolContext) {
         let labelCreated = false;
 
         if (input.labelId) {
-          label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+          label = await resolveLabel(
+            input.labelId,
+            toolContext.projectId,
+            toolContext.organizationId,
+          );
         } else {
           const labelName = input.labelName!.trim();
 
           let existingLabel = await dbPool.query.labels.findFirst({
-            where: and(eq(labels.projectId, toolContext.projectId), eq(labels.name, labelName)),
+            where: and(
+              eq(labels.projectId, toolContext.projectId),
+              eq(labels.name, labelName),
+            ),
             columns: { id: true, name: true },
           });
 
           if (!existingLabel) {
             existingLabel = await dbPool.query.labels.findFirst({
-              where: and(eq(labels.organizationId, toolContext.organizationId), eq(labels.name, labelName)),
+              where: and(
+                eq(labels.organizationId, toolContext.organizationId),
+                eq(labels.name, labelName),
+              ),
               columns: { id: true, name: true },
             });
           }
@@ -590,7 +646,11 @@ function buildScheduleTools(toolContext: WriteToolContext) {
           } else if (input.createIfMissing) {
             const [newLabel] = await dbPool
               .insert(labels)
-              .values({ name: labelName, color: input.labelColor ?? "blue", projectId: toolContext.projectId })
+              .values({
+                name: labelName,
+                color: input.labelColor ?? "blue",
+                projectId: toolContext.projectId,
+              })
               .returning({ id: labels.id, name: labels.name });
             label = newLabel;
             labelCreated = true;
@@ -632,11 +692,20 @@ function buildScheduleTools(toolContext: WriteToolContext) {
       }),
       execute: async (input) => {
         const task = await resolveTask(input, toolContext.projectId);
-        const label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+        const label = await resolveLabel(
+          input.labelId,
+          toolContext.projectId,
+          toolContext.organizationId,
+        );
 
         await dbPool
           .delete(taskLabels)
-          .where(and(eq(taskLabels.taskId, task.id), eq(taskLabels.labelId, input.labelId)));
+          .where(
+            and(
+              eq(taskLabels.taskId, task.id),
+              eq(taskLabels.labelId, input.labelId),
+            ),
+          );
 
         logActivity({
           context: toolContext,

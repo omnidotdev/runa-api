@@ -116,10 +116,16 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
     const enabled = await isAgentEnabled();
     if (!enabled) return;
 
-    const userRateResult = checkRateLimit(`mention:user:${ctx.userId}`, USER_RATE_LIMIT);
+    const userRateResult = checkRateLimit(
+      `mention:user:${ctx.userId}`,
+      USER_RATE_LIMIT,
+    );
     if (!userRateResult.allowed) return;
 
-    const taskRateResult = checkRateLimit(`mention:task:${ctx.taskId}`, TASK_RATE_LIMIT);
+    const taskRateResult = checkRateLimit(
+      `mention:task:${ctx.taskId}`,
+      TASK_RATE_LIMIT,
+    );
     if (!taskRateResult.allowed) return;
 
     const task = await dbPool.query.tasks.findFirst({
@@ -159,8 +165,14 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
       customInstructions: agentConfig.customInstructions,
     });
 
-    const systemPrompt = buildSystemPrompt(projectContext, agentConfig.defaultPersona);
-    const model = createOpenRouterModel(agentConfig.model, agentConfig.orgApiKey);
+    const systemPrompt = buildSystemPrompt(
+      projectContext,
+      agentConfig.defaultPersona,
+    );
+    const model = createOpenRouterModel(
+      agentConfig.model,
+      agentConfig.orgApiKey,
+    );
 
     const toolContext: WriteToolContext = {
       projectId,
@@ -186,9 +198,8 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
       stopWhen: stepCountIs(agentConfig.maxIterations),
     });
 
-    const allMessages: Array<{ role: "user" | "assistant"; content: string }> = [
-      { role: "user", content: userMessage },
-    ];
+    const allMessages: Array<{ role: "user" | "assistant"; content: string }> =
+      [{ role: "user", content: userMessage }];
 
     if (result.text) {
       const replyHtml = textToHtml(result.text);
@@ -229,17 +240,26 @@ function buildMentionTools(toolContext: WriteToolContext) {
       inputSchema: z.object({
         search: z.string().optional(),
         columnId: z.string().uuid().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
         limit: z.number().optional().default(50),
       }),
       execute: async (input) => {
         const conditions = [eq(tasks.projectId, toolContext.projectId)];
-        if (input.search) conditions.push(ilike(tasks.content, `%${input.search}%`));
+        if (input.search)
+          conditions.push(ilike(tasks.content, `%${input.search}%`));
         if (input.columnId) conditions.push(eq(tasks.columnId, input.columnId));
         if (input.priority) conditions.push(eq(tasks.priority, input.priority));
 
         const taskRows = await dbPool
-          .select({ id: tasks.id, number: tasks.number, title: tasks.content, priority: tasks.priority, columnId: tasks.columnId })
+          .select({
+            id: tasks.id,
+            number: tasks.number,
+            title: tasks.content,
+            priority: tasks.priority,
+            columnId: tasks.columnId,
+          })
           .from(tasks)
           .where(and(...conditions))
           .limit(input.limit ?? 50);
@@ -266,7 +286,13 @@ function buildMentionTools(toolContext: WriteToolContext) {
           .from(labels)
           .where(eq(labels.projectId, toolContext.projectId));
 
-        return { project: { name: project?.name, columns: projectColumns, labels: projectLabels } };
+        return {
+          project: {
+            name: project?.name,
+            columns: projectColumns,
+            labels: projectLabels,
+          },
+        };
       },
     }),
 
@@ -278,7 +304,9 @@ function buildMentionTools(toolContext: WriteToolContext) {
       }),
       execute: async (input) => {
         const task = await resolveTask(input, toolContext.projectId);
-        return { task: { id: task.id, number: task.number, title: task.content } };
+        return {
+          task: { id: task.id, number: task.number, title: task.content },
+        };
       },
     }),
 
@@ -288,7 +316,9 @@ function buildMentionTools(toolContext: WriteToolContext) {
         title: z.string(),
         columnId: z.string().uuid(),
         description: z.string().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
       }),
       execute: async (input) => {
         const taskCount = await dbPool
@@ -340,7 +370,9 @@ function buildMentionTools(toolContext: WriteToolContext) {
         taskNumber: z.number().optional(),
         title: z.string().optional(),
         description: z.string().optional(),
-        priority: z.enum(["none", "low", "medium", "high", "urgent"]).optional(),
+        priority: z
+          .enum(["none", "low", "medium", "high", "urgent"])
+          .optional(),
         dueDate: z.string().datetime().nullable().optional(),
       }),
       execute: async (input) => {
@@ -348,7 +380,8 @@ function buildMentionTools(toolContext: WriteToolContext) {
 
         const patch: Record<string, unknown> = {};
         if (input.title) patch.content = input.title;
-        if (input.description !== undefined) patch.description = input.description;
+        if (input.description !== undefined)
+          patch.description = input.description;
         if (input.priority) patch.priority = input.priority;
         if (input.dueDate !== undefined) patch.dueDate = input.dueDate;
 
@@ -449,7 +482,9 @@ function buildMentionTools(toolContext: WriteToolContext) {
         });
 
         if (!membership) {
-          throw new Error(`User ${input.userId} is not a member of this organization.`);
+          throw new Error(
+            `User ${input.userId} is not a member of this organization.`,
+          );
         }
 
         const user = await dbPool.query.users.findFirst({
@@ -485,14 +520,23 @@ function buildMentionTools(toolContext: WriteToolContext) {
         } else {
           await dbPool
             .delete(assignees)
-            .where(and(eq(assignees.taskId, task.id), eq(assignees.userId, input.userId)));
+            .where(
+              and(
+                eq(assignees.taskId, task.id),
+                eq(assignees.userId, input.userId),
+              ),
+            );
         }
 
         logActivity({
           context: toolContext,
           toolName: "assignTask",
           toolInput: input,
-          toolOutput: { taskId: task.id, userId: input.userId, action: input.action },
+          toolOutput: {
+            taskId: task.id,
+            userId: input.userId,
+            action: input.action,
+          },
           status: "completed",
           affectedTaskIds: [task.id],
         });
@@ -527,18 +571,28 @@ function buildMentionTools(toolContext: WriteToolContext) {
         let labelCreated = false;
 
         if (input.labelId) {
-          label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+          label = await resolveLabel(
+            input.labelId,
+            toolContext.projectId,
+            toolContext.organizationId,
+          );
         } else {
           const labelName = input.labelName!.trim();
 
           let existingLabel = await dbPool.query.labels.findFirst({
-            where: and(eq(labels.projectId, toolContext.projectId), eq(labels.name, labelName)),
+            where: and(
+              eq(labels.projectId, toolContext.projectId),
+              eq(labels.name, labelName),
+            ),
             columns: { id: true, name: true },
           });
 
           if (!existingLabel) {
             existingLabel = await dbPool.query.labels.findFirst({
-              where: and(eq(labels.organizationId, toolContext.organizationId), eq(labels.name, labelName)),
+              where: and(
+                eq(labels.organizationId, toolContext.organizationId),
+                eq(labels.name, labelName),
+              ),
               columns: { id: true, name: true },
             });
           }
@@ -548,7 +602,11 @@ function buildMentionTools(toolContext: WriteToolContext) {
           } else if (input.createIfMissing) {
             const [newLabel] = await dbPool
               .insert(labels)
-              .values({ name: labelName, color: input.labelColor ?? "blue", projectId: toolContext.projectId })
+              .values({
+                name: labelName,
+                color: input.labelColor ?? "blue",
+                projectId: toolContext.projectId,
+              })
               .returning({ id: labels.id, name: labels.name });
             label = newLabel;
             labelCreated = true;
@@ -590,11 +648,20 @@ function buildMentionTools(toolContext: WriteToolContext) {
       }),
       execute: async (input) => {
         const task = await resolveTask(input, toolContext.projectId);
-        const label = await resolveLabel(input.labelId, toolContext.projectId, toolContext.organizationId);
+        const label = await resolveLabel(
+          input.labelId,
+          toolContext.projectId,
+          toolContext.organizationId,
+        );
 
         await dbPool
           .delete(taskLabels)
-          .where(and(eq(taskLabels.taskId, task.id), eq(taskLabels.labelId, input.labelId)));
+          .where(
+            and(
+              eq(taskLabels.taskId, task.id),
+              eq(taskLabels.labelId, input.labelId),
+            ),
+          );
 
         logActivity({
           context: toolContext,
