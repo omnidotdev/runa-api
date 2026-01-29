@@ -1,7 +1,13 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
-import { columns, labels, projects, userOrganizations } from "lib/db/schema";
+import {
+  agentPersonas,
+  columns,
+  labels,
+  projects,
+  userOrganizations,
+} from "lib/db/schema";
 
 /**
  * Project context provided to the agent's system prompt.
@@ -31,6 +37,12 @@ export interface ProjectContext {
     name: string;
     email: string;
   }>;
+  /** Available personas for delegation (enabled personas in the organization). */
+  personas: Array<{
+    id: string;
+    name: string;
+    description: string | null;
+  }>;
 }
 
 /**
@@ -46,7 +58,7 @@ export async function buildProjectContext(params: {
   userName: string;
   customInstructions: string | null;
 }): Promise<ProjectContext> {
-  const [project, projectColumns, projectLabels, orgMembers] =
+  const [project, projectColumns, projectLabels, orgMembers, orgPersonas] =
     await Promise.all([
       dbPool.query.projects.findFirst({
         where: eq(projects.id, params.projectId),
@@ -96,6 +108,20 @@ export async function buildProjectContext(params: {
 
           return memberUsers;
         }),
+      // Fetch enabled personas for delegation
+      dbPool
+        .select({
+          id: agentPersonas.id,
+          name: agentPersonas.name,
+          description: agentPersonas.description,
+        })
+        .from(agentPersonas)
+        .where(
+          and(
+            eq(agentPersonas.organizationId, params.organizationId),
+            eq(agentPersonas.enabled, true),
+          ),
+        ),
     ]);
 
   if (!project) {
@@ -126,5 +152,6 @@ export async function buildProjectContext(params: {
     columns: projectColumns,
     labels: allLabels,
     members: orgMembers,
+    personas: orgPersonas,
   };
 }

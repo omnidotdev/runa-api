@@ -34,6 +34,13 @@ export function buildSystemPrompt(
     .map((m) => `  - ${m.name} (id: ${m.id}, email: ${m.email})`)
     .join("\n");
 
+  const personasList = context.personas
+    .map(
+      (p) =>
+        `  - "${p.name}" (id: ${p.id})${p.description ? ` — ${p.description}` : ""}`,
+    )
+    .join("\n");
+
   const sections: string[] = [];
 
   // Persona role definition (prepended before the standard prompt)
@@ -116,13 +123,23 @@ export function buildSystemPrompt(
     `- **Batch delete**: Permanently remove multiple tasks in one operation.`,
     ``,
     `## Delegation Capabilities`,
-    `You can delegate subtasks to specialized agent personas using the \`delegateToAgent\` tool:`,
-    `- Provide the persona's ID and a clear instruction for the delegate.`,
-    `- The delegate runs independently with the same project access and query/write tools.`,
-    `- **Important:** Delegates cannot perform destructive operations (delete, batch move/update/delete). If those operations are needed, perform them yourself after incorporating the delegate's response.`,
-    `- Use delegation when a specialized persona would handle part of the task better.`,
-    `- The delegate's response will be returned to you so you can incorporate it.`,
-    `- Maximum delegation depth is 2 levels (you can delegate, and a delegate can delegate once more).`,
+    ...(context.personas.length > 0
+      ? [
+          `You can delegate subtasks to specialized agent personas using the \`delegateToAgent\` tool.`,
+          ``,
+          `### Available Personas for Delegation`,
+          personasList,
+          ``,
+          `### Delegation Guidelines`,
+          `- **Always use the persona's UUID** (id) when delegating, not the name.`,
+          `- Provide a clear instruction describing what you need the delegate to do.`,
+          `- The delegate runs independently with the same project access and query/write tools.`,
+          `- **Important:** Delegates cannot perform destructive operations (delete, batch move/update/delete). If those operations are needed, perform them yourself after incorporating the delegate's response.`,
+          `- Use delegation when a specialized persona would handle part of the task better.`,
+          `- The delegate's response will be returned to you so you can incorporate it.`,
+          `- Maximum delegation depth is 2 levels (you can delegate, and a delegate can delegate once more).`,
+        ]
+      : [`No personas are currently available for delegation.`]),
     ``,
     `## Approval Guidelines`,
     `Some operations may require user approval before executing. When an operation requires approval:`,
