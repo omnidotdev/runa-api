@@ -4,10 +4,16 @@
  * Extracted from write.tools.ts for reuse across write and destructive tools.
  */
 
-import { and, eq, max, or } from "drizzle-orm";
+import { and, eq, inArray, max, or } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
-import { labels, tasks } from "lib/db/schema";
+import { columns, labels, tasks } from "lib/db/schema";
+
+/** Task reference input type. */
+export interface TaskRef {
+  taskId?: string;
+  taskNumber?: number;
+}
 
 /**
  * Resolve a task by ID or project-scoped number.
@@ -77,4 +83,91 @@ export async function getNextColumnIndex(columnId: string): Promise<number> {
 
   const current = result[0]?.maxIndex;
   return current !== null && current !== undefined ? current + 1 : 0;
+}
+
+// ─────────────────────────────────────────────
+// Batch Helpers (N+1 Prevention)
+// ─────────────────────────────────────────────
+
+/**
+ * Batch resolve tasks by ID or project-scoped number.
+ *
+ * Uses a single query with `inArray()` instead of N sequential queries.
+ * Returns tasks in the same order as input refs, throwing if any task is not found.
+ */
+export async function resolveTasks(
+  refs: TaskRef[],
+  projectId: string,
+): Promise<Array<typeof tasks.$inferSelect>> {
+  if (refs.length === 0) return [];
+
+  // Separate refs by type for efficient batching
+  const idRefs = refs.filter((r) => r.taskId);
+  const numberRefs = refs.filter(
+    (r) => r.taskNumber !== undefined && !r.taskId,
+  );
+
+  const taskIds = idRefs.map((r) => r.taskId!);
+  const taskNumbers = numberRefs.map((r) => r.taskNumber!);
+
+  // Build a single query with OR conditions for both ID and number lookups
+  const conditions = [];
+  if (taskIds.length > 0) {
+    conditions.push(
+      and(inArray(tasks.id, taskIds), eq(tasks.projectId, projectId)),
+    );
+  }
+  if (taskNumbers.length > 0) {
+    conditions.push(
+      and(inArray(tasks.number, taskNumbers), eq(tasks.projectId, projectId)),
+    );
+  }
+
+  if (conditions.length === 0) {
+    throw new Error("No valid task references provided.");
+  }
+
+  const foundTasks = await dbPool.query.tasks.findMany({
+    where: conditions.length === 1 ? conditions[0] : or(...conditions),
+  });
+
+  // Build lookup maps for O(1) access
+  const byId = new Map(foundTasks.map((t) => [t.id, t]));
+  const byNumber = new Map(
+    foundTasks.filter((t) => t.number !== null).map((t) => [t.number!, t]),
+  );
+
+  // Return in original order, throwing if any ref is missing
+  const result: Array<typeof tasks.$inferSelect> = [];
+  for (const ref of refs) {
+    const task = ref.taskId
+      ? byId.get(ref.taskId)
+      : byNumber.get(ref.taskNumber!);
+    if (!task) {
+      const refStr = ref.taskId ?? `T-${ref.taskNumber}`;
+      throw new Error(`Task ${refStr} not found in this project.`);
+    }
+    result.push(task);
+  }
+
+  return result;
+}
+
+/**
+ * Batch fetch column titles by IDs.
+ *
+ * Returns a Map of columnId -> title for O(1) lookup.
+ */
+export async function getColumnTitles(
+  columnIds: string[],
+): Promise<Map<string, string>> {
+  if (columnIds.length === 0) return new Map();
+
+  const uniqueIds = [...new Set(columnIds)];
+  const rows = await dbPool
+    .select({ id: columns.id, title: columns.title })
+    .from(columns)
+    .where(inArray(columns.id, uniqueIds));
+
+  return new Map(rows.map((r) => [r.id, r.title]));
 }

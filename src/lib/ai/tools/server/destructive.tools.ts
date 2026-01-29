@@ -27,7 +27,12 @@ import {
   withApproval,
 } from "../definitions";
 import { logActivity } from "./activity";
-import { getNextColumnIndex, resolveTask } from "./helpers";
+import {
+  getColumnTitles,
+  getNextColumnIndex,
+  resolveTask,
+  resolveTasks,
+} from "./helpers";
 import { requireProjectPermission } from "./permissions";
 
 import type { ResolvedAgentConfig } from "../../config";
@@ -139,6 +144,16 @@ export function createDestructiveTools(
       }
 
       try {
+        // Batch resolve all tasks in ONE query instead of N queries
+        const resolvedTasks = await resolveTasks(
+          input.tasks,
+          context.projectId,
+        );
+
+        // Batch fetch all source column titles in ONE query
+        const sourceColumnIds = resolvedTasks.map((t) => t.columnId);
+        const columnTitleMap = await getColumnTitles(sourceColumnIds);
+
         const taskSnapshots: Array<{
           taskId: string;
           columnId: string;
@@ -172,20 +187,12 @@ export function createDestructiveTools(
           // Pre-fetch the base index once to avoid duplicate indices within the batch
           let nextIndex = await getNextColumnIndex(input.columnId);
 
-          for (const taskRef of input.tasks) {
-            const task = await resolveTask(taskRef, context.projectId);
-
+          for (const task of resolvedTasks) {
             // Snapshot position before the move
             taskSnapshots.push({
               taskId: task.id,
               columnId: task.columnId,
               columnIndex: task.columnIndex,
-            });
-
-            // Get source column title
-            const sourceColumn = await tx.query.columns.findFirst({
-              where: eq(columns.id, task.columnId),
-              columns: { title: true },
             });
 
             await tx
@@ -202,7 +209,7 @@ export function createDestructiveTools(
               id: task.id,
               number: task.number,
               title: task.content,
-              fromColumn: sourceColumn?.title ?? "Unknown",
+              fromColumn: columnTitleMap.get(task.columnId) ?? "Unknown",
             });
             affectedIds.push(task.id);
           }
@@ -282,6 +289,9 @@ export function createDestructiveTools(
         );
       }
 
+      // Batch resolve all tasks in ONE query instead of N queries
+      const resolvedTasks = await resolveTasks(input.tasks, context.projectId);
+
       const taskSnapshots: Array<{
         taskId: string;
         priority: string;
@@ -296,9 +306,7 @@ export function createDestructiveTools(
         }> = [];
         const affectedIds: string[] = [];
 
-        for (const taskRef of input.tasks) {
-          const task = await resolveTask(taskRef, context.projectId);
-
+        for (const task of resolvedTasks) {
           // Snapshot fields before the update
           taskSnapshots.push({
             taskId: task.id,
@@ -377,6 +385,9 @@ export function createDestructiveTools(
     }
 
     try {
+      // Batch resolve all tasks in ONE query instead of N queries
+      const resolvedTasks = await resolveTasks(input.tasks, context.projectId);
+
       const taskSnapshots: Array<{
         taskId: string;
         content: string;
@@ -396,9 +407,7 @@ export function createDestructiveTools(
         }> = [];
         const affectedIds: string[] = [];
 
-        for (const taskRef of input.tasks) {
-          const task = await resolveTask(taskRef, context.projectId);
-
+        for (const task of resolvedTasks) {
           // Snapshot full task state before deletion
           taskSnapshots.push({
             taskId: task.id,
