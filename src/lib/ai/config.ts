@@ -2,14 +2,14 @@ import { createOpenRouterText } from "@tanstack/ai-openrouter";
 
 import { OPENROUTER_API_KEY } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { decrypt } from "./encryption";
 import {
   ALLOWED_MODELS,
   DEFAULT_MAX_ITERATIONS,
   DEFAULT_MODEL,
-  isAllowedModel,
   MAX_MAX_ITERATIONS,
+  isAllowedModel,
 } from "./constants";
+import { decrypt } from "./encryption";
 
 import type { SelectAgentConfig, SelectAgentPersona } from "lib/db/schema";
 
