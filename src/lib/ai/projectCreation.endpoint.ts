@@ -382,6 +382,32 @@ const projectCreationRoutes = new Elysia({
           },
         }),
 
+        getOrganizationProjects: tool({
+          description:
+            "Get existing projects in the organization. Use this at the start of conversation to understand context and provide personalized suggestions.",
+          inputSchema: z.object({}),
+          execute: async () => {
+            const orgProjects = await dbPool
+              .select({
+                name: projects.name,
+                prefix: projects.prefix,
+                description: projects.description,
+              })
+              .from(projects)
+              .where(eq(projects.organizationId, toolContext.organizationId))
+              .limit(20);
+
+            return {
+              projects: orgProjects.map((p) => ({
+                name: p.name,
+                prefix: p.prefix,
+                description: p.description,
+              })),
+              count: orgProjects.length,
+            };
+          },
+        }),
+
         createProjectFromProposal: tool({
           description:
             "Create the project from a proposal after user approval. Requires approval.",
