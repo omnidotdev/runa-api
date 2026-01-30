@@ -365,6 +365,13 @@
       "when": 1769722484728,
       "tag": "0051_typical_franklin_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1769743183657,
+      "tag": "0052_flippant_justin_hammer",
+      "breakpoints": true
     }
   ]
 }

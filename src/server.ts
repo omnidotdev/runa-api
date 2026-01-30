@@ -12,6 +12,7 @@ import aiRoutes from "lib/ai/chat.endpoint";
 import aiConfigRoutes, { aiConfigKeyRoutes } from "lib/ai/config.endpoint";
 import aiPersonaRoutes from "lib/ai/persona.endpoint";
 import projectCreationRoutes from "lib/ai/projectCreation.endpoint";
+import undoRoutes from "lib/ai/undo.endpoint";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
@@ -164,6 +165,7 @@ async function startServer(): Promise<void> {
     .use(authzRoutes)
     .use(aiRoutes)
     .use(projectCreationRoutes)
+    .use(undoRoutes)
     .use(aiConfigRoutes)
     .use(aiConfigKeyRoutes)
     .use(aiPersonaRoutes)

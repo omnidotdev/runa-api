@@ -61,6 +61,7 @@ const mentionDetector = (): PlanWrapperFn =>
               userId: observer.id,
               accessToken,
               commentText: postInput.description,
+              parentId: postInput.parentId,
             }).catch((err) => {
               console.error(
                 "[AI Mention] Failed to handle mention:",

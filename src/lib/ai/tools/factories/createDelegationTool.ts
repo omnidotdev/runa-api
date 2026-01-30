@@ -43,7 +43,7 @@ export function createDelegationTool(context: DelegationContext) {
 
   return tool({
     description:
-      "Delegate a subtask to another agent persona. The delegate runs independently and returns its response.",
+      "Delegate a subtask to another agent persona. The delegate runs independently, EXECUTES any required actions (like creating/updating/reordering tasks), and returns its response. Check the executedTools array to see what actions the delegate already performed - do NOT repeat those actions yourself.",
     inputSchema: delegationSchema,
     execute: async (input) => {
       const startTime = Date.now();
@@ -118,15 +118,26 @@ export function createDelegationTool(context: DelegationContext) {
         const responseText =
           result.text || "(Delegate did not produce a text response)";
 
+        // Extract tool calls from all steps to inform the parent
+        const executedTools: string[] = [];
+        for (const step of result.steps) {
+          for (const toolCall of step.toolCalls) {
+            executedTools.push(toolCall.toolName);
+          }
+        }
+
         console.info("[AI] Delegation completed:", {
           parentDepth: context.delegationDepth,
           targetPersonaName: persona.name,
+          executedTools,
           durationMs,
         });
 
         return {
           personaName: persona.name,
           response: responseText.slice(0, MAX_DELEGATE_RESPONSE_LENGTH),
+          // Include executed tools so parent knows not to repeat them
+          executedTools,
         };
       } catch (error) {
         const durationMs = Date.now() - startTime;

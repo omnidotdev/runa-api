@@ -16,16 +16,19 @@ import {
   batchDeleteTasksSchema,
   batchMoveTasksSchema,
   batchUpdateTasksSchema,
+  deleteColumnSchema,
   deleteTaskSchema,
 } from "../core/schemas";
 import {
   BATCH_DELETE_TASKS_DESCRIPTION,
   BATCH_MOVE_TASKS_DESCRIPTION,
   BATCH_UPDATE_TASKS_DESCRIPTION,
+  DELETE_COLUMN_DESCRIPTION,
   DELETE_TASK_DESCRIPTION,
   executeBatchDeleteTasks,
   executeBatchMoveTasks,
   executeBatchUpdateTasks,
+  executeDeleteColumn,
   executeDeleteTask,
 } from "../definitions/destructive";
 import { logActivity } from "../wrappers/withActivityLogging";
@@ -215,6 +218,49 @@ export function createDestructiveTools(
           };
         } catch (error) {
           logFailure("batchDeleteTasks", input, error);
+          throw error;
+        }
+      },
+    }),
+
+    deleteColumn: tool({
+      description: DELETE_COLUMN_DESCRIPTION,
+      inputSchema: deleteColumnSchema,
+      needsApproval: requireApproval,
+      execute: async (input) => {
+        try {
+          await requireProjectPermission(ctx, "editor");
+
+          const result = await executeDeleteColumn(input, ctx);
+
+          logActivity({
+            context: ctx,
+            toolName: "deleteColumn",
+            toolInput: input,
+            toolOutput: {
+              deletedColumnId: result.deletedColumnId,
+              deletedColumnTitle: result.deletedColumnTitle,
+              movedTasksCount: result.movedTasksCount,
+              deletedTasksCount: result.deletedTasksCount,
+            },
+            status: "completed",
+            requiresApproval: requireApproval,
+            snapshotBefore: {
+              operation: "deleteColumn",
+              entityType: "column",
+              entityId: result.deletedColumnId,
+              previousState: result.snapshotBefore,
+            },
+          });
+
+          return {
+            deletedColumnId: result.deletedColumnId,
+            deletedColumnTitle: result.deletedColumnTitle,
+            movedTasksCount: result.movedTasksCount,
+            deletedTasksCount: result.deletedTasksCount,
+          };
+        } catch (error) {
+          logFailure("deleteColumn", input, error);
           throw error;
         }
       },

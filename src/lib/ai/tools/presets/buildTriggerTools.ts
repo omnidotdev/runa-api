@@ -8,6 +8,7 @@
  * Excludes: destructive tools (triggers shouldn't delete data)
  */
 
+import { markdownToHtml } from "../core/markdown";
 import { createQueryTools } from "../factories/createQueryTools";
 import { createWriteTools } from "../factories/createWriteTools";
 
@@ -26,6 +27,7 @@ export function buildTriggerTools(ctx: WriteToolContext) {
     ...createWriteTools(ctx, {
       skipPermissionCheck: true,
       enableActivityLogging: true,
+      markdownToHtml,
     }),
   };
 }

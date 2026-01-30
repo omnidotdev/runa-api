@@ -11,25 +11,37 @@ import {
   addCommentSchema,
   addLabelSchema,
   assignTaskSchema,
+  createColumnSchema,
   createTaskSchema,
   moveTaskSchema,
   removeLabelSchema,
+  reorderColumnsSchema,
+  reorderTasksSchema,
+  updateColumnSchema,
   updateTaskSchema,
 } from "../core/schemas";
 import {
   ADD_COMMENT_DESCRIPTION,
   ADD_LABEL_DESCRIPTION,
   ASSIGN_TASK_DESCRIPTION,
+  CREATE_COLUMN_DESCRIPTION,
   CREATE_TASK_DESCRIPTION,
   MOVE_TASK_DESCRIPTION,
   REMOVE_LABEL_DESCRIPTION,
+  REORDER_COLUMNS_DESCRIPTION,
+  REORDER_TASKS_DESCRIPTION,
+  UPDATE_COLUMN_DESCRIPTION,
   UPDATE_TASK_DESCRIPTION,
   executeAddComment,
   executeAddLabel,
   executeAssignTask,
+  executeCreateColumn,
   executeCreateTask,
   executeMoveTask,
   executeRemoveLabel,
+  executeReorderColumns,
+  executeReorderTasks,
+  executeUpdateColumn,
   executeUpdateTask,
 } from "../definitions/write";
 import { logActivity } from "../wrappers/withActivityLogging";
@@ -327,6 +339,144 @@ export function createWriteTools(
           return result;
         } catch (error) {
           logFailure("addComment", input, error);
+          throw error;
+        }
+      },
+    }),
+
+    createColumn: tool({
+      description: CREATE_COLUMN_DESCRIPTION,
+      inputSchema: createColumnSchema,
+      execute: async (input) => {
+        try {
+          if (!skipPermissionCheck) {
+            await requireProjectPermission(ctx, "editor");
+          }
+
+          const result = await executeCreateColumn(input, ctx);
+
+          if (enableActivityLogging) {
+            logActivity({
+              context: ctx,
+              toolName: "createColumn",
+              toolInput: input,
+              toolOutput: result,
+              status: "completed",
+              snapshotBefore: {
+                operation: "createColumn",
+                entityType: "column",
+                entityId: result.column.id,
+              },
+            });
+          }
+
+          return result;
+        } catch (error) {
+          logFailure("createColumn", input, error);
+          throw error;
+        }
+      },
+    }),
+
+    updateColumn: tool({
+      description: UPDATE_COLUMN_DESCRIPTION,
+      inputSchema: updateColumnSchema,
+      execute: async (input) => {
+        try {
+          if (!skipPermissionCheck) {
+            await requireProjectPermission(ctx, "editor");
+          }
+
+          const result = await executeUpdateColumn(input, ctx);
+
+          if (enableActivityLogging) {
+            logActivity({
+              context: ctx,
+              toolName: "updateColumn",
+              toolInput: input,
+              toolOutput: { column: result.column },
+              status: "completed",
+              snapshotBefore: {
+                operation: "updateColumn",
+                entityType: "column",
+                entityId: input.columnId,
+                previousState: result.previousState,
+              },
+            });
+          }
+
+          return { column: result.column };
+        } catch (error) {
+          logFailure("updateColumn", input, error);
+          throw error;
+        }
+      },
+    }),
+
+    reorderColumns: tool({
+      description: REORDER_COLUMNS_DESCRIPTION,
+      inputSchema: reorderColumnsSchema,
+      execute: async (input) => {
+        try {
+          if (!skipPermissionCheck) {
+            await requireProjectPermission(ctx, "editor");
+          }
+
+          const result = await executeReorderColumns(input, ctx);
+
+          if (enableActivityLogging) {
+            logActivity({
+              context: ctx,
+              toolName: "reorderColumns",
+              toolInput: input,
+              toolOutput: { columns: result.columns },
+              status: "completed",
+              snapshotBefore: {
+                operation: "reorderColumns",
+                entityType: "column",
+                previousOrder: result.previousOrder,
+              },
+            });
+          }
+
+          return { columns: result.columns };
+        } catch (error) {
+          logFailure("reorderColumns", input, error);
+          throw error;
+        }
+      },
+    }),
+
+    reorderTasks: tool({
+      description: REORDER_TASKS_DESCRIPTION,
+      inputSchema: reorderTasksSchema,
+      execute: async (input) => {
+        try {
+          if (!skipPermissionCheck) {
+            await requireProjectPermission(ctx, "editor");
+          }
+
+          const result = await executeReorderTasks(input, ctx);
+
+          if (enableActivityLogging) {
+            logActivity({
+              context: ctx,
+              toolName: "reorderTasks",
+              toolInput: input,
+              toolOutput: { tasks: result.tasks, columnId: result.columnId },
+              status: "completed",
+              snapshotBefore: {
+                operation: "reorderTasks",
+                entityType: "task",
+                columnId: result.columnId,
+                previousOrder: result.previousOrder,
+              },
+            });
+          }
+
+          return { tasks: result.tasks, columnId: result.columnId };
+        } catch (error) {
+          logFailure("reorderTasks", input, error);
           throw error;
         }
       },

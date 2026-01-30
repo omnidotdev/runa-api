@@ -44,14 +44,14 @@ type Query implements Node {
   """Get a single `User`."""
   userByIdentityProviderId(identityProviderId: UUID!): User
 
-  """Get a single `Post`."""
-  post(rowId: UUID!): Post
-
   """Get a single `ProjectLabel`."""
   projectLabel(rowId: UUID!): ProjectLabel
 
   """Get a single `Label`."""
   label(rowId: UUID!): Label
+
+  """Get a single `Post`."""
+  post(rowId: UUID!): Post
 
   """Get a single `Column`."""
   column(rowId: UUID!): Column
@@ -136,12 +136,6 @@ type Query implements Node {
     id: ID!
   ): User
 
-  """Reads a single `Post` using its globally unique `ID`."""
-  postById(
-    """The globally unique `ID` to be used in selecting a single `Post`."""
-    id: ID!
-  ): Post
-
   """Reads a single `ProjectLabel` using its globally unique `ID`."""
   projectLabelById(
     """
@@ -155,6 +149,12 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Label`."""
     id: ID!
   ): Label
+
+  """Reads a single `Post` using its globally unique `ID`."""
+  postById(
+    """The globally unique `ID` to be used in selecting a single `Post`."""
+    id: ID!
+  ): Post
 
   """Reads a single `Column` using its globally unique `ID`."""
   columnById(
@@ -406,40 +406,6 @@ type Query implements Node {
     orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserConnection
 
-  """Reads and enables pagination through a set of `Post`."""
-  posts(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: PostFilter
-
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostConnection
-
   """Reads and enables pagination through a set of `ProjectLabel`."""
   projectLabels(
     """Only read the first `n` values of the set."""
@@ -507,6 +473,40 @@ type Query implements Node {
     """The method to use when ordering `Label`."""
     orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): LabelConnection
+
+  """Reads and enables pagination through a set of `Post`."""
+  posts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection
 
   """Reads and enables pagination through a set of `Column`."""
   columns(
@@ -2464,6 +2464,15 @@ input PostFilter {
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s `parentId` field."""
+  parentId: UUIDFilter
+
+  """Filter by the object’s `childPosts` relation."""
+  childPosts: PostToManyPostFilter
+
+  """Some related `childPosts` exist."""
+  childPostsExist: Boolean
+
   """Filter by the object’s `emojis` relation."""
   emojis: PostToManyEmojiFilter
 
@@ -2476,6 +2485,12 @@ input PostFilter {
   """A related `author` exists."""
   authorExists: Boolean
 
+  """Filter by the object’s `parent` relation."""
+  parent: PostFilter
+
+  """A related `parent` exists."""
+  parentExists: Boolean
+
   """Filter by the object’s `task` relation."""
   task: TaskFilter
 
@@ -2487,6 +2502,51 @@ input PostFilter {
 
   """Negates the expression."""
   not: PostFilter
+}
+
+"""
+A filter to be used against many `Post` object types. All fields are combined with a logical ‘and.’
+"""
+input PostToManyPostFilter {
+  """
+  Every related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PostFilter
+
+  """
+  Some related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PostFilter
+
+  """
+  No related `Post` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PostFilter
+
+  """Aggregates across related `Post` match the filter criteria."""
+  aggregates: PostAggregatesFilter
+}
+
+"""A filter to be used against aggregates of `Post` object types."""
+input PostAggregatesFilter {
+  """
+  A filter that must pass for the relevant `Post` object to be included within the aggregate.
+  """
+  filter: PostFilter
+
+  """Distinct count aggregate over matching `Post` objects."""
+  distinctCount: PostDistinctCountAggregateFilter
+}
+
+input PostDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  title: BigIntFilter
+  description: BigIntFilter
+  authorId: BigIntFilter
+  taskId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+  parentId: BigIntFilter
 }
 
 """
@@ -2566,27 +2626,6 @@ input EmojiDistinctCountAggregateFilter {
   emoji: BigIntFilter
   postId: BigIntFilter
   userId: BigIntFilter
-  createdAt: BigIntFilter
-  updatedAt: BigIntFilter
-}
-
-"""A filter to be used against aggregates of `Post` object types."""
-input PostAggregatesFilter {
-  """
-  A filter that must pass for the relevant `Post` object to be included within the aggregate.
-  """
-  filter: PostFilter
-
-  """Distinct count aggregate over matching `Post` objects."""
-  distinctCount: PostDistinctCountAggregateFilter
-}
-
-input PostDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  title: BigIntFilter
-  description: BigIntFilter
-  authorId: BigIntFilter
-  taskId: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
 }
@@ -5113,12 +5152,50 @@ type Post implements Node {
   taskId: UUID!
   createdAt: Datetime!
   updatedAt: Datetime!
+  parentId: UUID
 
   """Reads a single `User` that is related to this `Post`."""
   author: User
 
+  """Reads a single `Post` that is related to this `Post`."""
+  parent: Post
+
   """Reads a single `Task` that is related to this `Post`."""
   task: Task
+
+  """Reads and enables pagination through a set of `Post`."""
+  childPosts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection!
 
   """Reads and enables pagination through a set of `Emoji`."""
   emojis(
@@ -5153,6 +5230,90 @@ type Post implements Node {
     """The method to use when ordering `Emoji`."""
     orderBy: [EmojiOrderBy!] = [PRIMARY_KEY_ASC]
   ): EmojiConnection!
+}
+
+"""
+A condition to be used against `Post` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input PostCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `authorId` field."""
+  authorId: UUID
+
+  """Checks for equality with the object’s `taskId` field."""
+  taskId: UUID
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s `parentId` field."""
+  parentId: UUID
+}
+
+"""Methods to use when ordering `Post`."""
+enum PostOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  AUTHOR_ID_ASC
+  AUTHOR_ID_DESC
+  TASK_ID_ASC
+  TASK_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  PARENT_ID_ASC
+  PARENT_ID_DESC
+  CHILD_POSTS_COUNT_ASC
+  CHILD_POSTS_COUNT_DESC
+  CHILD_POSTS_DISTINCT_COUNT_ROW_ID_ASC
+  CHILD_POSTS_DISTINCT_COUNT_ROW_ID_DESC
+  CHILD_POSTS_DISTINCT_COUNT_TITLE_ASC
+  CHILD_POSTS_DISTINCT_COUNT_TITLE_DESC
+  CHILD_POSTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  CHILD_POSTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  CHILD_POSTS_DISTINCT_COUNT_AUTHOR_ID_ASC
+  CHILD_POSTS_DISTINCT_COUNT_AUTHOR_ID_DESC
+  CHILD_POSTS_DISTINCT_COUNT_TASK_ID_ASC
+  CHILD_POSTS_DISTINCT_COUNT_TASK_ID_DESC
+  CHILD_POSTS_DISTINCT_COUNT_CREATED_AT_ASC
+  CHILD_POSTS_DISTINCT_COUNT_CREATED_AT_DESC
+  CHILD_POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  CHILD_POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  CHILD_POSTS_DISTINCT_COUNT_PARENT_ID_ASC
+  CHILD_POSTS_DISTINCT_COUNT_PARENT_ID_DESC
+  EMOJIS_COUNT_ASC
+  EMOJIS_COUNT_DESC
+  EMOJIS_DISTINCT_COUNT_ROW_ID_ASC
+  EMOJIS_DISTINCT_COUNT_ROW_ID_DESC
+  EMOJIS_DISTINCT_COUNT_EMOJI_ASC
+  EMOJIS_DISTINCT_COUNT_EMOJI_DESC
+  EMOJIS_DISTINCT_COUNT_POST_ID_ASC
+  EMOJIS_DISTINCT_COUNT_POST_ID_DESC
+  EMOJIS_DISTINCT_COUNT_USER_ID_ASC
+  EMOJIS_DISTINCT_COUNT_USER_ID_DESC
+  EMOJIS_DISTINCT_COUNT_CREATED_AT_ASC
+  EMOJIS_DISTINCT_COUNT_CREATED_AT_DESC
+  EMOJIS_DISTINCT_COUNT_UPDATED_AT_ASC
+  EMOJIS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `Emoji` values."""
@@ -5399,6 +5560,9 @@ type PostDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
+
+  """Distinct count of parentId across the matching connection"""
+  parentId: BigInt
 }
 
 """Grouping methods for `Post` for usage during aggregation."""
@@ -5413,6 +5577,7 @@ enum PostGroupBy {
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
+  PARENT_ID
 }
 
 """Conditions for `Post` aggregates."""
@@ -5473,67 +5638,6 @@ input PostHavingVarianceSampleInput {
 input PostHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `Post` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input PostCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
-  """Checks for equality with the object’s `authorId` field."""
-  authorId: UUID
-
-  """Checks for equality with the object’s `taskId` field."""
-  taskId: UUID
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `Post`."""
-enum PostOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  TITLE_ASC
-  TITLE_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  AUTHOR_ID_ASC
-  AUTHOR_ID_DESC
-  TASK_ID_ASC
-  TASK_ID_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-  EMOJIS_COUNT_ASC
-  EMOJIS_COUNT_DESC
-  EMOJIS_DISTINCT_COUNT_ROW_ID_ASC
-  EMOJIS_DISTINCT_COUNT_ROW_ID_DESC
-  EMOJIS_DISTINCT_COUNT_EMOJI_ASC
-  EMOJIS_DISTINCT_COUNT_EMOJI_DESC
-  EMOJIS_DISTINCT_COUNT_POST_ID_ASC
-  EMOJIS_DISTINCT_COUNT_POST_ID_DESC
-  EMOJIS_DISTINCT_COUNT_USER_ID_ASC
-  EMOJIS_DISTINCT_COUNT_USER_ID_DESC
-  EMOJIS_DISTINCT_COUNT_CREATED_AT_ASC
-  EMOJIS_DISTINCT_COUNT_CREATED_AT_DESC
-  EMOJIS_DISTINCT_COUNT_UPDATED_AT_ASC
-  EMOJIS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """
@@ -5634,6 +5738,8 @@ enum TaskOrderBy {
   POSTS_DISTINCT_COUNT_CREATED_AT_DESC
   POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
   POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  POSTS_DISTINCT_COUNT_PARENT_ID_ASC
+  POSTS_DISTINCT_COUNT_PARENT_ID_DESC
   TASK_LABELS_COUNT_ASC
   TASK_LABELS_COUNT_DESC
   TASK_LABELS_DISTINCT_COUNT_TASK_ID_ASC
@@ -8302,6 +8408,8 @@ enum UserOrderBy {
   AUTHORED_POSTS_DISTINCT_COUNT_CREATED_AT_DESC
   AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
   AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  AUTHORED_POSTS_DISTINCT_COUNT_PARENT_ID_ASC
+  AUTHORED_POSTS_DISTINCT_COUNT_PARENT_ID_DESC
   AUTHORED_TASKS_COUNT_ASC
   AUTHORED_TASKS_COUNT_DESC
   AUTHORED_TASKS_SUM_COLUMN_INDEX_ASC
@@ -9993,14 +10101,6 @@ type Mutation {
     input: CreateUserInput!
   ): CreateUserPayload
 
-  """Creates a single `Post`."""
-  createPost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePostInput!
-  ): CreatePostPayload
-
   """Creates a single `ProjectLabel`."""
   createProjectLabel(
     """
@@ -10016,6 +10116,14 @@ type Mutation {
     """
     input: CreateLabelInput!
   ): CreateLabelPayload
+
+  """Creates a single `Post`."""
+  createPost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePostInput!
+  ): CreatePostPayload
 
   """Creates a single `Column`."""
   createColumn(
@@ -10187,22 +10295,6 @@ type Mutation {
     input: UpdateUserInput!
   ): UpdateUserPayload
 
-  """Updates a single `Post` using its globally unique id and a patch."""
-  updatePostById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostByIdInput!
-  ): UpdatePostPayload
-
-  """Updates a single `Post` using a unique key and a patch."""
-  updatePost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostInput!
-  ): UpdatePostPayload
-
   """
   Updates a single `ProjectLabel` using its globally unique id and a patch.
   """
@@ -10236,6 +10328,22 @@ type Mutation {
     """
     input: UpdateLabelInput!
   ): UpdateLabelPayload
+
+  """Updates a single `Post` using its globally unique id and a patch."""
+  updatePostById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostByIdInput!
+  ): UpdatePostPayload
+
+  """Updates a single `Post` using a unique key and a patch."""
+  updatePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostInput!
+  ): UpdatePostPayload
 
   """Updates a single `Column` using its globally unique id and a patch."""
   updateColumnById(
@@ -10507,22 +10615,6 @@ type Mutation {
     input: DeleteUserInput!
   ): DeleteUserPayload
 
-  """Deletes a single `Post` using its globally unique id."""
-  deletePostById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostByIdInput!
-  ): DeletePostPayload
-
-  """Deletes a single `Post` using a unique key."""
-  deletePost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostInput!
-  ): DeletePostPayload
-
   """Deletes a single `ProjectLabel` using its globally unique id."""
   deleteProjectLabelById(
     """
@@ -10554,6 +10646,22 @@ type Mutation {
     """
     input: DeleteLabelInput!
   ): DeleteLabelPayload
+
+  """Deletes a single `Post` using its globally unique id."""
+  deletePostById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostByIdInput!
+  ): DeletePostPayload
+
+  """Deletes a single `Post` using a unique key."""
+  deletePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostInput!
+  ): DeletePostPayload
 
   """Deletes a single `Column` using its globally unique id."""
   deleteColumnById(
@@ -10952,52 +11060,6 @@ input UserInput {
   email: String!
 }
 
-"""The output of our create `Post` mutation."""
-type CreatePostPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Post` that was created by this mutation."""
-  post: Post
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Post`. May be used by Relay 1."""
-  postEdge(
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostEdge
-}
-
-"""All input for the create `Post` mutation."""
-input CreatePostInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Post` to be created by this mutation."""
-  post: PostInput!
-}
-
-"""An input for mutations affecting `Post`"""
-input PostInput {
-  rowId: UUID
-  title: String
-  description: String
-  authorId: UUID
-  taskId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `ProjectLabel` mutation."""
 type CreateProjectLabelPayload {
   """
@@ -11089,6 +11151,53 @@ input LabelInput {
   updatedAt: Datetime
   icon: String
   organizationId: String
+}
+
+"""The output of our create `Post` mutation."""
+type CreatePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was created by this mutation."""
+  post: Post
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the create `Post` mutation."""
+input CreatePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Post` to be created by this mutation."""
+  post: PostInput!
+}
+
+"""An input for mutations affecting `Post`"""
+input PostInput {
+  rowId: UUID
+  title: String
+  description: String
+  authorId: UUID
+  taskId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+  parentId: UUID
 }
 
 """The output of our create `Column` mutation."""
@@ -11972,74 +12081,6 @@ input UpdateUserInput {
   patch: UserPatch!
 }
 
-"""The output of our update `Post` mutation."""
-type UpdatePostPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Post` that was updated by this mutation."""
-  post: Post
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Post`. May be used by Relay 1."""
-  postEdge(
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostEdge
-}
-
-"""All input for the `updatePostById` mutation."""
-input UpdatePostByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Post` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Post` being updated.
-  """
-  patch: PostPatch!
-}
-
-"""Represents an update to a `Post`. Fields that are set will be updated."""
-input PostPatch {
-  rowId: UUID
-  title: String
-  description: String
-  authorId: UUID
-  taskId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updatePost` mutation."""
-input UpdatePostInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Post` being updated.
-  """
-  patch: PostPatch!
-}
-
 """The output of our update `ProjectLabel` mutation."""
 type UpdateProjectLabelPayload {
   """
@@ -12179,6 +12220,75 @@ input UpdateLabelInput {
   An object where the defined keys will be set on the `Label` being updated.
   """
   patch: LabelPatch!
+}
+
+"""The output of our update `Post` mutation."""
+type UpdatePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was updated by this mutation."""
+  post: Post
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the `updatePostById` mutation."""
+input UpdatePostByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Post` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Post` being updated.
+  """
+  patch: PostPatch!
+}
+
+"""Represents an update to a `Post`. Fields that are set will be updated."""
+input PostPatch {
+  rowId: UUID
+  title: String
+  description: String
+  authorId: UUID
+  taskId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  parentId: UUID
+}
+
+"""All input for the `updatePost` mutation."""
+input UpdatePostInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Post` being updated.
+  """
+  patch: PostPatch!
 }
 
 """The output of our update `Column` mutation."""
@@ -13226,54 +13336,6 @@ input DeleteUserInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Post` mutation."""
-type DeletePostPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Post` that was deleted by this mutation."""
-  post: Post
-  deletedPostId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Post`. May be used by Relay 1."""
-  postEdge(
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PostEdge
-}
-
-"""All input for the `deletePostById` mutation."""
-input DeletePostByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Post` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deletePost` mutation."""
-input DeletePostInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `ProjectLabel` mutation."""
 type DeleteProjectLabelPayload {
   """
@@ -13362,6 +13424,54 @@ input DeleteLabelByIdInput {
 
 """All input for the `deleteLabel` mutation."""
 input DeleteLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Post` mutation."""
+type DeletePostPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Post` that was deleted by this mutation."""
+  post: Post
+  deletedPostId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Post`. May be used by Relay 1."""
+  postEdge(
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PostEdge
+}
+
+"""All input for the `deletePostById` mutation."""
+input DeletePostByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Post` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deletePost` mutation."""
+input DeletePostInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

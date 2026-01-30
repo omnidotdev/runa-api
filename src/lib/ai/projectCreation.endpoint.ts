@@ -387,26 +387,106 @@ const projectCreationRoutes = new Elysia({
             "Create the project from a proposal after user approval. Requires approval.",
           inputSchema: z.object({
             proposalId: z.string().describe("The proposal ID to execute"),
+            overrideProposal: z
+              .object({
+                name: z.string().min(3).max(100),
+                prefix: z
+                  .string()
+                  .min(1)
+                  .max(10)
+                  .transform((s) => s.toUpperCase().replace(/[^A-Z0-9]/g, "")),
+                description: z.string().max(500).optional(),
+                columns: z
+                  .array(
+                    z.object({
+                      title: z.string().min(1).max(50),
+                      icon: z.string().optional(),
+                    }),
+                  )
+                  .min(2)
+                  .max(10),
+                labels: z
+                  .array(
+                    z.object({
+                      name: z.string().min(1).max(50),
+                      color: z.enum([
+                        "gray",
+                        "red",
+                        "orange",
+                        "yellow",
+                        "green",
+                        "blue",
+                        "purple",
+                        "pink",
+                      ]),
+                    }),
+                  )
+                  .max(10)
+                  .optional(),
+                initialTasks: z
+                  .array(
+                    z.object({
+                      title: z.string().min(1).max(200),
+                      columnIndex: z.number().int().min(0),
+                      priority: z
+                        .enum(["none", "low", "medium", "high", "urgent"])
+                        .optional(),
+                      description: z.string().optional(),
+                      labelNames: z.array(z.string()).optional(),
+                    }),
+                  )
+                  .max(20)
+                  .optional(),
+              })
+              .optional()
+              .describe(
+                "Optional user-edited proposal that overrides the stored proposal",
+              ),
           }),
           needsApproval: true,
           execute: async (input) => {
-            const stored = consumeProposal(input.proposalId);
+            // If user provided an overrideProposal, use it directly (client-side edited)
+            let proposal: StoredProposal["proposal"];
+            let stored: StoredProposal | null = null;
 
-            if (!stored) {
-              throw new Error("Proposal not found or expired.");
+            if (input.overrideProposal) {
+              // Validate proposalId exists but use override data
+              stored = proposalStore.get(input.proposalId) ?? null;
+              if (stored) {
+                // Validate session/org match
+                if (stored.sessionId !== toolContext.sessionId) {
+                  throw new Error("Proposal belongs to a different session.");
+                }
+                if (stored.organizationId !== toolContext.organizationId) {
+                  throw new Error(
+                    "Proposal belongs to a different organization.",
+                  );
+                }
+                // Consume the stored proposal since we're using the override
+                proposalStore.delete(input.proposalId);
+              }
+              proposal = input.overrideProposal;
+            } else {
+              stored = consumeProposal(input.proposalId);
+
+              if (!stored) {
+                throw new Error("Proposal not found or expired.");
+              }
+
+              if (stored.sessionId !== toolContext.sessionId) {
+                restoreProposal(input.proposalId, stored);
+                throw new Error("Proposal belongs to a different session.");
+              }
+
+              if (stored.organizationId !== toolContext.organizationId) {
+                restoreProposal(input.proposalId, stored);
+                throw new Error(
+                  "Proposal belongs to a different organization.",
+                );
+              }
+
+              proposal = stored.proposal;
             }
-
-            if (stored.sessionId !== toolContext.sessionId) {
-              restoreProposal(input.proposalId, stored);
-              throw new Error("Proposal belongs to a different session.");
-            }
-
-            if (stored.organizationId !== toolContext.organizationId) {
-              restoreProposal(input.proposalId, stored);
-              throw new Error("Proposal belongs to a different organization.");
-            }
-
-            const proposal = stored.proposal;
 
             try {
               // Check entitlement: max_projects
@@ -424,7 +504,7 @@ const projectCreationRoutes = new Elysia({
               );
 
               if (!withinProjectLimit) {
-                restoreProposal(input.proposalId, stored);
+                if (stored) restoreProposal(input.proposalId, stored);
                 throw new Error("Project limit reached for your plan.");
               }
 
@@ -449,7 +529,7 @@ const projectCreationRoutes = new Elysia({
                 );
 
                 if (!withinTaskLimit) {
-                  restoreProposal(input.proposalId, stored);
+                  if (stored) restoreProposal(input.proposalId, stored);
                   throw new Error("Task limit would be exceeded.");
                 }
               }
@@ -636,7 +716,10 @@ const projectCreationRoutes = new Elysia({
                 boardUrl,
               };
             } catch (error) {
-              restoreProposal(input.proposalId, stored);
+              // Only restore proposal if we consumed from store (not using override)
+              if (stored && !input.overrideProposal) {
+                restoreProposal(input.proposalId, stored);
+              }
               throw error;
             }
           },

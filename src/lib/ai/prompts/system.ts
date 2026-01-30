@@ -144,9 +144,9 @@ export function buildSystemPrompt(
           `- **Always use the persona's UUID** (id) when delegating, not the name.`,
           `- Provide a clear instruction describing what you need the delegate to do.`,
           `- The delegate runs independently with the same project access and query/write tools.`,
-          `- **Important:** Delegates cannot perform destructive operations (delete, batch move/update/delete). If those operations are needed, perform them yourself after incorporating the delegate's response.`,
+          `- **Critical:** The delegate EXECUTES actions directly (creating, updating, reordering tasks). The response includes an \`executedTools\` array showing what actions were already performed. **Do NOT repeat actions the delegate already executed** - just summarize what was done for the user.`,
+          `- Delegates cannot perform destructive operations (delete, batch move/update/delete). If those operations are needed, perform them yourself after reviewing the delegate's response.`,
           `- Use delegation when a specialized persona would handle part of the task better.`,
-          `- The delegate's response will be returned to you so you can incorporate it.`,
           `- Maximum delegation depth is 2 levels (you can delegate, and a delegate can delegate once more).`,
         ]
       : [`No personas are currently available for delegation.`]),

@@ -7,9 +7,14 @@ import { tasks } from "./task.table";
 import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
 /**
  * Post table.
+ *
+ * Supports threaded replies via the parentId column (flat 1-level threading).
+ * When parentId is null, the post is a top-level comment.
+ * When parentId is set, the post is a reply to that comment.
  */
 export const posts = pgTable(
   "post",
@@ -25,6 +30,14 @@ export const posts = pgTable(
       .references(() => tasks.id, {
         onDelete: "cascade",
       }),
+    /**
+     * Parent comment ID for flat threading (1-level deep).
+     * - null = top-level comment
+     * - set = reply to parent comment
+     */
+    parentId: uuid().references((): AnyPgColumn => posts.id, {
+      onDelete: "cascade",
+    }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
@@ -32,6 +45,7 @@ export const posts = pgTable(
     uniqueIndex().on(table.id),
     index().on(table.authorId),
     index().on(table.taskId),
+    index().on(table.parentId),
   ],
 );
 
@@ -40,7 +54,22 @@ export const postRelations = relations(posts, ({ one, many }) => ({
     fields: [posts.taskId],
     references: [tasks.id],
   }),
+  /** Author of the comment (null for agent-authored comments). */
+  author: one(users, {
+    fields: [posts.authorId],
+    references: [users.id],
+  }),
   emojis: many(emojis),
+  /** Parent comment (if this is a reply). */
+  parent: one(posts, {
+    fields: [posts.parentId],
+    references: [posts.id],
+    relationName: "replies",
+  }),
+  /** Replies to this comment. */
+  replies: many(posts, {
+    relationName: "replies",
+  }),
 }));
 
 export type InsertPost = InferInsertModel<typeof posts>;

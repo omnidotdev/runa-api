@@ -14,4 +14,5 @@ export {
   BATCH_UPDATE_TASKS_DESCRIPTION,
   executeBatchUpdateTasks,
 } from "./batchUpdateTasks";
+export { DELETE_COLUMN_DESCRIPTION, executeDeleteColumn } from "./deleteColumn";
 export { DELETE_TASK_DESCRIPTION, executeDeleteTask } from "./deleteTask";

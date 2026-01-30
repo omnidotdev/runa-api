@@ -171,6 +171,60 @@ export const batchDeleteTasksSchema = z.object({
 });
 
 // ─────────────────────────────────────────────
+// Column Tool Schemas
+// ─────────────────────────────────────────────
+
+export const createColumnSchema = z.object({
+  title: z.string().min(1).max(50).describe("Column title"),
+  icon: z.string().optional().describe("Emoji icon for the column"),
+  position: z
+    .enum(["start", "end"])
+    .optional()
+    .default("end")
+    .describe("Where to insert: start or end of board"),
+});
+
+export const updateColumnSchema = z.object({
+  columnId: z.string().uuid().describe("Column ID to update"),
+  title: z.string().min(1).max(50).optional().describe("New column title"),
+  icon: z.string().optional().describe("New emoji icon"),
+});
+
+export const deleteColumnSchema = z.object({
+  columnId: z.string().uuid().describe("Column ID to delete"),
+  moveTasksTo: z
+    .string()
+    .uuid()
+    .optional()
+    .describe(
+      "Column ID to move existing tasks to. If not provided, tasks will be deleted.",
+    ),
+});
+
+export const reorderColumnsSchema = z.object({
+  columnIds: z
+    .array(z.string().uuid())
+    .min(1)
+    .describe(
+      "Column IDs in desired order. All project columns must be included.",
+    ),
+});
+
+export const reorderTasksSchema = z.object({
+  columnId: z
+    .string()
+    .uuid()
+    .describe("Column ID containing the tasks to reorder"),
+  taskIds: z
+    .array(z.string().uuid())
+    .min(1)
+    .max(100)
+    .describe(
+      "Task IDs in desired order. All tasks in the column must be included.",
+    ),
+});
+
+// ─────────────────────────────────────────────
 // Delegation Tool Schema
 // ─────────────────────────────────────────────
 
@@ -204,3 +258,8 @@ export type DeleteTaskInput = z.infer<typeof deleteTaskSchema>;
 export type BatchMoveTasksInput = z.infer<typeof batchMoveTasksSchema>;
 export type BatchUpdateTasksInput = z.infer<typeof batchUpdateTasksSchema>;
 export type BatchDeleteTasksInput = z.infer<typeof batchDeleteTasksSchema>;
+export type CreateColumnInput = z.infer<typeof createColumnSchema>;
+export type UpdateColumnInput = z.infer<typeof updateColumnSchema>;
+export type DeleteColumnInput = z.infer<typeof deleteColumnSchema>;
+export type ReorderColumnsInput = z.infer<typeof reorderColumnsSchema>;
+export type ReorderTasksInput = z.infer<typeof reorderTasksSchema>;
