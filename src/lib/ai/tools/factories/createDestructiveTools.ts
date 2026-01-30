@@ -8,28 +8,20 @@
  * (no `skipPermissionCheck` option) because they can cause irreversible
  * data loss. Even in trusted contexts like triggers, destructive operations
  * should be gated.
+ *
+ * Consolidated tool set:
+ * - Task: deleteTasks
+ * - Column: deleteColumns
  */
 
 import { tool } from "ai";
 
+import { deleteColumnsSchema, deleteTasksSchema } from "../core/schemas";
 import {
-  batchDeleteTasksSchema,
-  batchMoveTasksSchema,
-  batchUpdateTasksSchema,
-  deleteColumnSchema,
-  deleteTaskSchema,
-} from "../core/schemas";
-import {
-  BATCH_DELETE_TASKS_DESCRIPTION,
-  BATCH_MOVE_TASKS_DESCRIPTION,
-  BATCH_UPDATE_TASKS_DESCRIPTION,
-  DELETE_COLUMN_DESCRIPTION,
-  DELETE_TASK_DESCRIPTION,
-  executeBatchDeleteTasks,
-  executeBatchMoveTasks,
-  executeBatchUpdateTasks,
-  executeDeleteColumn,
-  executeDeleteTask,
+  DELETE_COLUMNS_DESCRIPTION,
+  DELETE_TASKS_DESCRIPTION,
+  executeDeleteColumns,
+  executeDeleteTasks,
 } from "../definitions/destructive";
 import { logActivity } from "../wrappers/withActivityLogging";
 import { requireProjectPermission } from "../wrappers/withPermission";
@@ -56,158 +48,29 @@ export function createDestructiveTools(
   };
 
   return {
-    deleteTask: tool({
-      description: DELETE_TASK_DESCRIPTION,
-      inputSchema: deleteTaskSchema,
+    deleteTasks: tool({
+      description: DELETE_TASKS_DESCRIPTION,
+      inputSchema: deleteTasksSchema,
       needsApproval: requireApproval,
       execute: async (input) => {
         try {
           await requireProjectPermission(ctx, "editor");
 
-          const result = await executeDeleteTask(input, ctx);
+          const result = await executeDeleteTasks(input, ctx);
 
           logActivity({
             context: ctx,
-            toolName: "deleteTask",
-            toolInput: input,
-            toolOutput: {
-              deletedTaskId: result.deletedTaskId,
-              deletedTaskNumber: result.deletedTaskNumber,
-              deletedTaskTitle: result.deletedTaskTitle,
-            },
-            status: "completed",
-            requiresApproval: requireApproval,
-            affectedTaskIds: [result.deletedTaskId],
-            snapshotBefore: {
-              operation: "delete",
-              entityType: "task",
-              entityId: result.deletedTaskId,
-              previousState: result.snapshotBefore,
-            },
-          });
-
-          return {
-            deletedTaskId: result.deletedTaskId,
-            deletedTaskNumber: result.deletedTaskNumber,
-            deletedTaskTitle: result.deletedTaskTitle,
-          };
-        } catch (error) {
-          logFailure("deleteTask", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    // Note: batchMoveTasks never requires approval - moves are non-destructive and undoable
-    batchMoveTasks: tool({
-      description: BATCH_MOVE_TASKS_DESCRIPTION,
-      inputSchema: batchMoveTasksSchema,
-      needsApproval: false,
-      execute: async (input) => {
-        try {
-          await requireProjectPermission(ctx, "editor");
-
-          const result = await executeBatchMoveTasks(input, ctx);
-
-          logActivity({
-            context: ctx,
-            toolName: "batchMoveTasks",
-            toolInput: input,
-            toolOutput: {
-              movedCount: result.movedCount,
-              targetColumn: result.targetColumn,
-              movedTasks: result.movedTasks,
-              errors: result.errors,
-            },
-            status: "completed",
-            requiresApproval: false,
-            affectedTaskIds: result.affectedIds,
-            snapshotBefore: {
-              operation: "batchMove",
-              entityType: "task",
-              tasks: result.snapshotBefore,
-            },
-          });
-
-          return {
-            movedCount: result.movedCount,
-            targetColumn: result.targetColumn,
-            movedTasks: result.movedTasks,
-            errors: result.errors,
-          };
-        } catch (error) {
-          logFailure("batchMoveTasks", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    // Note: batchUpdateTasks never requires approval - updates are non-destructive and undoable
-    batchUpdateTasks: tool({
-      description: BATCH_UPDATE_TASKS_DESCRIPTION,
-      inputSchema: batchUpdateTasksSchema,
-      needsApproval: false,
-      execute: async (input) => {
-        try {
-          await requireProjectPermission(ctx, "editor");
-
-          const result = await executeBatchUpdateTasks(input, ctx);
-
-          logActivity({
-            context: ctx,
-            toolName: "batchUpdateTasks",
-            toolInput: input,
-            toolOutput: {
-              updatedCount: result.updatedCount,
-              updatedTasks: result.updatedTasks,
-              errors: result.errors,
-            },
-            status: "completed",
-            requiresApproval: false,
-            affectedTaskIds: result.affectedIds,
-            snapshotBefore: {
-              operation: "batchUpdate",
-              entityType: "task",
-              tasks: result.snapshotBefore,
-            },
-          });
-
-          return {
-            updatedCount: result.updatedCount,
-            updatedTasks: result.updatedTasks,
-            errors: result.errors,
-          };
-        } catch (error) {
-          logFailure("batchUpdateTasks", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    batchDeleteTasks: tool({
-      description: BATCH_DELETE_TASKS_DESCRIPTION,
-      inputSchema: batchDeleteTasksSchema,
-      needsApproval: requireApproval,
-      execute: async (input) => {
-        try {
-          await requireProjectPermission(ctx, "editor");
-
-          const result = await executeBatchDeleteTasks(input, ctx);
-
-          logActivity({
-            context: ctx,
-            toolName: "batchDeleteTasks",
+            toolName: "deleteTasks",
             toolInput: input,
             toolOutput: {
               deletedCount: result.deletedCount,
               deletedTasks: result.deletedTasks,
-              errors: result.errors,
             },
             status: "completed",
             requiresApproval: requireApproval,
             affectedTaskIds: result.affectedIds,
             snapshotBefore: {
-              operation: "batchDelete",
+              operation: "delete",
               entityType: "task",
               tasks: result.snapshotBefore,
             },
@@ -216,53 +79,47 @@ export function createDestructiveTools(
           return {
             deletedCount: result.deletedCount,
             deletedTasks: result.deletedTasks,
-            errors: result.errors,
           };
         } catch (error) {
-          logFailure("batchDeleteTasks", input, error);
+          logFailure("deleteTasks", input, error);
           throw error;
         }
       },
     }),
 
-    deleteColumn: tool({
-      description: DELETE_COLUMN_DESCRIPTION,
-      inputSchema: deleteColumnSchema,
+    deleteColumns: tool({
+      description: DELETE_COLUMNS_DESCRIPTION,
+      inputSchema: deleteColumnsSchema,
       needsApproval: requireApproval,
       execute: async (input) => {
         try {
           await requireProjectPermission(ctx, "editor");
 
-          const result = await executeDeleteColumn(input, ctx);
+          const result = await executeDeleteColumns(input, ctx);
 
           logActivity({
             context: ctx,
-            toolName: "deleteColumn",
+            toolName: "deleteColumns",
             toolInput: input,
             toolOutput: {
-              deletedColumnId: result.deletedColumnId,
-              deletedColumnTitle: result.deletedColumnTitle,
-              movedTasksCount: result.movedTasksCount,
-              deletedTasksCount: result.deletedTasksCount,
+              deletedCount: result.deletedCount,
+              columns: result.columns,
             },
             status: "completed",
             requiresApproval: requireApproval,
             snapshotBefore: {
-              operation: "deleteColumn",
+              operation: "delete",
               entityType: "column",
-              entityId: result.deletedColumnId,
-              previousState: result.snapshotBefore,
+              columns: result.snapshotBefore,
             },
           });
 
           return {
-            deletedColumnId: result.deletedColumnId,
-            deletedColumnTitle: result.deletedColumnTitle,
-            movedTasksCount: result.movedTasksCount,
-            deletedTasksCount: result.deletedTasksCount,
+            deletedCount: result.deletedCount,
+            columns: result.columns,
           };
         } catch (error) {
-          logFailure("deleteColumn", input, error);
+          logFailure("deleteColumns", input, error);
           throw error;
         }
       },

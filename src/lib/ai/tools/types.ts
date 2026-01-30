@@ -2,12 +2,6 @@
  * Shared types for AI agent tools.
  */
 
-/** Task reference - either by ID or project-scoped number. */
-export interface TaskRef {
-  taskId?: string;
-  taskNumber?: number;
-}
-
 /** Options for creating write tools. */
 export interface WriteToolsOptions {
   /** Skip permission checks (default: false). Use for trusted contexts like triggers. */

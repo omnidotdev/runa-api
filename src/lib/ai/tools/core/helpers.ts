@@ -1,72 +1,15 @@
 /**
  * Shared helpers for AI agent tool implementations.
  *
- * Provides task/label resolution and batch operations.
+ * Provides batch task/column resolution for unified array-based tools.
  */
 
 import { and, eq, inArray, max, or } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
-import { columns, labels, tasks } from "lib/db/schema";
+import { columns, tasks } from "lib/db/schema";
 
-import type { TaskRef } from "../types";
-
-/**
- * Resolve a task by ID or project-scoped number.
- * Throws if neither is provided or the task is not found.
- */
-export async function resolveTask(
-  input: { taskId?: string; taskNumber?: number },
-  projectId: string,
-) {
-  if (!input.taskId && input.taskNumber === undefined) {
-    throw new Error("Either taskId or taskNumber must be provided.");
-  }
-
-  const condition = input.taskId
-    ? and(eq(tasks.id, input.taskId), eq(tasks.projectId, projectId))
-    : and(eq(tasks.number, input.taskNumber!), eq(tasks.projectId, projectId));
-
-  const task = await dbPool.query.tasks.findFirst({
-    where: condition,
-  });
-
-  if (!task) {
-    const ref = input.taskId ?? `T-${input.taskNumber}`;
-    throw new Error(`Task ${ref} not found in this project.`);
-  }
-
-  return task;
-}
-
-/**
- * Resolve a label by ID, ensuring it belongs to the given project or organization.
- * Throws if the label is not found.
- */
-export async function resolveLabel(
-  labelId: string,
-  projectId: string,
-  organizationId: string,
-): Promise<{ id: string; name: string }> {
-  const label = await dbPool.query.labels.findFirst({
-    where: and(
-      eq(labels.id, labelId),
-      or(
-        eq(labels.projectId, projectId),
-        eq(labels.organizationId, organizationId),
-      ),
-    ),
-    columns: { id: true, name: true },
-  });
-
-  if (!label) {
-    throw new Error(
-      `Label ${labelId} not found in this project or organization.`,
-    );
-  }
-
-  return label;
-}
+import type { TaskRef } from "./schemas";
 
 /**
  * Get the next column index for appending a task at the end of a column.
@@ -146,20 +89,32 @@ export async function resolveTasks(
 }
 
 /**
- * Batch fetch column titles by IDs.
+ * Batch resolve columns by IDs, ensuring they belong to the project.
  *
- * Returns a Map of columnId -> title for O(1) lookup.
+ * Returns a Map of columnId -> column data for O(1) lookup.
+ * Throws if any column is not found.
  */
-export async function getColumnTitles(
+export async function resolveColumns(
   columnIds: string[],
-): Promise<Map<string, string>> {
+  projectId: string,
+): Promise<Map<string, { id: string; title: string }>> {
   if (columnIds.length === 0) return new Map();
 
   const uniqueIds = [...new Set(columnIds)];
   const rows = await dbPool
     .select({ id: columns.id, title: columns.title })
     .from(columns)
-    .where(inArray(columns.id, uniqueIds));
+    .where(
+      and(inArray(columns.id, uniqueIds), eq(columns.projectId, projectId)),
+    );
 
-  return new Map(rows.map((r) => [r.id, r.title]));
+  const result = new Map(rows.map((r) => [r.id, r]));
+
+  for (const id of uniqueIds) {
+    if (!result.has(id)) {
+      throw new Error(`Column ${id} not found in this project.`);
+    }
+  }
+
+  return result;
 }

@@ -2,6 +2,15 @@
  * Shared Zod schemas for AI agent tool inputs.
  *
  * Single source of truth for all tool input validation.
+ *
+ * All tools use unified array-based schemas where:
+ * - Single operations = array of 1
+ * - Batch operations = array of N (max 50)
+ *
+ * Consolidated tool set:
+ * - Task: createTasks, updateTasks, deleteTasks
+ * - Column: createColumns, updateColumns, deleteColumns
+ * - Comment: createComments
  */
 
 import { z } from "zod";
@@ -15,6 +24,14 @@ const taskNumberSchema = z
   .number()
   .optional()
   .describe("Task number (e.g., 42 for T-42)");
+
+/** Task reference - either by ID or project-scoped number. */
+const taskRefSchema = z
+  .object({
+    taskId: taskIdSchema,
+    taskNumber: taskNumberSchema,
+  })
+  .describe("Task reference by ID or number");
 
 const prioritySchema = z
   .enum(["none", "low", "medium", "high", "urgent"])
@@ -65,13 +82,14 @@ export const getTaskSchema = z.object({
 });
 
 // ─────────────────────────────────────────────
-// Write Tool Schemas
+// Task Tool Schemas
 // ─────────────────────────────────────────────
 
-export const createTaskSchema = z.object({
+/** Single task creation item. */
+const createTaskItemSchema = z.object({
   title: z.string().describe("Task title"),
   columnId: z.string().uuid().describe("Column ID to place the task in"),
-  description: z.string().optional().describe("Task description"),
+  description: z.string().optional().describe("Task description (markdown)"),
   priority: prioritySchema.optional().describe("Priority level"),
   dueDate: z
     .string()
@@ -80,35 +98,18 @@ export const createTaskSchema = z.object({
     .describe("Due date in ISO 8601 format"),
 });
 
-export const updateTaskSchema = z.object({
-  taskId: taskIdSchema,
-  taskNumber: taskNumberSchema,
-  title: z.string().optional().describe("New task title"),
-  description: z.string().optional().describe("New task description"),
-  priority: prioritySchema.optional().describe("New priority level"),
-  dueDate: dueDateSchema.describe("New due date or null to clear"),
+export const createTasksSchema = z.object({
+  tasks: z
+    .array(createTaskItemSchema)
+    .min(1)
+    .max(50)
+    .describe("Tasks to create (1-50)"),
 });
 
-export const moveTaskSchema = z.object({
-  taskId: taskIdSchema,
-  taskNumber: taskNumberSchema,
-  columnId: z.string().uuid().describe("Target column ID"),
-});
-
-export const assignTaskSchema = z.object({
-  taskId: taskIdSchema,
-  taskNumber: taskNumberSchema,
-  userId: z.string().uuid().describe("User ID to assign or unassign"),
-  action: z
-    .enum(["add", "remove"])
-    .describe("Whether to add or remove the assignee"),
-});
-
-export const addLabelSchema = z.object({
-  taskId: taskIdSchema,
-  taskNumber: taskNumberSchema,
+/** Label reference for add operations. */
+const labelAddSchema = z.object({
   labelId: z.string().uuid().optional().describe("Label ID"),
-  labelName: z.string().optional().describe("Label name"),
+  labelName: z.string().optional().describe("Label name (if ID not provided)"),
   createIfMissing: z
     .boolean()
     .optional()
@@ -121,48 +122,89 @@ export const addLabelSchema = z.object({
     .describe("Color for new label"),
 });
 
-export const removeLabelSchema = z.object({
+/** Assignee operations for a task update. */
+const assigneeOpsSchema = z
+  .object({
+    add: z
+      .array(z.string().uuid())
+      .optional()
+      .describe("User IDs to add as assignees"),
+    remove: z
+      .array(z.string().uuid())
+      .optional()
+      .describe("User IDs to remove as assignees"),
+    set: z
+      .array(z.string().uuid())
+      .optional()
+      .describe("Replace all assignees with these user IDs"),
+  })
+  .describe("Assignee operations");
+
+/** Label operations for a task update. */
+const labelOpsSchema = z
+  .object({
+    add: z
+      .array(labelAddSchema)
+      .optional()
+      .describe("Labels to add (by ID or name)"),
+    remove: z
+      .array(z.string().uuid())
+      .optional()
+      .describe("Label IDs to remove"),
+    set: z
+      .array(z.string().uuid())
+      .optional()
+      .describe("Replace all labels with these label IDs"),
+  })
+  .describe("Label operations");
+
+/**
+ * Single task update item.
+ *
+ * Unified schema supporting:
+ * - Field updates (title, description, priority, dueDate)
+ * - Move to column (columnId)
+ * - Reorder within column (columnIndex)
+ * - Assignee management (assignees.add/remove/set)
+ * - Label management (labels.add/remove/set)
+ */
+const updateTaskItemSchema = z.object({
+  // Task reference (required)
   taskId: taskIdSchema,
   taskNumber: taskNumberSchema,
-  labelId: z.string().uuid().describe("Label ID to remove"),
+
+  // Field updates
+  title: z.string().optional().describe("New task title"),
+  description: z
+    .string()
+    .optional()
+    .describe("New task description (markdown)"),
+  priority: prioritySchema.optional().describe("New priority level"),
+  dueDate: dueDateSchema.describe("New due date or null to clear"),
+
+  // Move operations
+  columnId: z.string().uuid().optional().describe("Move task to this column"),
+  columnIndex: z
+    .number()
+    .int()
+    .min(0)
+    .optional()
+    .describe("New position within column (0-indexed)"),
+
+  // Relationship operations
+  assignees: assigneeOpsSchema.optional(),
+  labels: labelOpsSchema.optional(),
 });
 
-export const addCommentSchema = z.object({
-  taskId: taskIdSchema,
-  taskNumber: taskNumberSchema,
-  content: z.string().describe("Comment text"),
-});
-
-// ─────────────────────────────────────────────
-// Destructive Tool Schemas
-// ─────────────────────────────────────────────
-
-export const deleteTaskSchema = z.object({
-  taskId: taskIdSchema,
-  taskNumber: taskNumberSchema,
-});
-
-const taskRefSchema = z.object({
-  taskId: z.string().uuid().optional(),
-  taskNumber: z.number().optional(),
-});
-
-export const batchMoveTasksSchema = z.object({
-  tasks: z.array(taskRefSchema).min(1).max(50).describe("Tasks to move (1-50)"),
-  columnId: z.string().uuid().describe("Target column ID"),
-});
-
-export const batchUpdateTasksSchema = z.object({
-  tasks: z
-    .array(taskRefSchema)
+export const updateTasksSchema = z.object({
+  updates: z
+    .array(updateTaskItemSchema)
     .min(1)
     .max(50)
-    .describe("Tasks to update (1-50)"),
-  priority: prioritySchema.optional().describe("New priority for all tasks"),
-  dueDate: dueDateSchema.describe("New due date for all tasks"),
+    .describe("Task updates to apply (1-50)"),
 });
 
-export const batchDeleteTasksSchema = z.object({
+export const deleteTasksSchema = z.object({
   tasks: z
     .array(taskRefSchema)
     .min(1)
@@ -174,7 +216,8 @@ export const batchDeleteTasksSchema = z.object({
 // Column Tool Schemas
 // ─────────────────────────────────────────────
 
-export const createColumnSchema = z.object({
+/** Single column creation item. */
+const createColumnItemSchema = z.object({
   title: z.string().min(1).max(50).describe("Column title"),
   icon: z.string().optional().describe("Emoji icon for the column"),
   position: z
@@ -184,13 +227,41 @@ export const createColumnSchema = z.object({
     .describe("Where to insert: start or end of board"),
 });
 
-export const updateColumnSchema = z.object({
+export const createColumnsSchema = z.object({
+  columns: z
+    .array(createColumnItemSchema)
+    .min(1)
+    .max(20)
+    .describe("Columns to create (1-20)"),
+});
+
+/**
+ * Single column update item.
+ *
+ * Supports field updates and reordering via index.
+ */
+const updateColumnItemSchema = z.object({
   columnId: z.string().uuid().describe("Column ID to update"),
   title: z.string().min(1).max(50).optional().describe("New column title"),
   icon: z.string().optional().describe("New emoji icon"),
+  index: z
+    .number()
+    .int()
+    .min(0)
+    .optional()
+    .describe("New position in board (0-indexed, for reordering)"),
 });
 
-export const deleteColumnSchema = z.object({
+export const updateColumnsSchema = z.object({
+  updates: z
+    .array(updateColumnItemSchema)
+    .min(1)
+    .max(20)
+    .describe("Column updates to apply (1-20)"),
+});
+
+/** Single column deletion item. */
+const deleteColumnItemSchema = z.object({
   columnId: z.string().uuid().describe("Column ID to delete"),
   moveTasksTo: z
     .string()
@@ -201,27 +272,31 @@ export const deleteColumnSchema = z.object({
     ),
 });
 
-export const reorderColumnsSchema = z.object({
-  columnIds: z
-    .array(z.string().uuid())
+export const deleteColumnsSchema = z.object({
+  columns: z
+    .array(deleteColumnItemSchema)
     .min(1)
-    .describe(
-      "Column IDs in desired order. All project columns must be included.",
-    ),
+    .max(20)
+    .describe("Columns to delete (1-20)"),
 });
 
-export const reorderTasksSchema = z.object({
-  columnId: z
-    .string()
-    .uuid()
-    .describe("Column ID containing the tasks to reorder"),
-  taskIds: z
-    .array(z.string().uuid())
+// ─────────────────────────────────────────────
+// Comment Tool Schema
+// ─────────────────────────────────────────────
+
+/** Single comment item. */
+const createCommentItemSchema = z.object({
+  taskId: taskIdSchema,
+  taskNumber: taskNumberSchema,
+  content: z.string().describe("Comment text"),
+});
+
+export const createCommentsSchema = z.object({
+  comments: z
+    .array(createCommentItemSchema)
     .min(1)
-    .max(100)
-    .describe(
-      "Task IDs in desired order. All tasks in the column must be included.",
-    ),
+    .max(50)
+    .describe("Comments to create (1-50)"),
 });
 
 // ─────────────────────────────────────────────
@@ -244,22 +319,20 @@ export const delegationSchema = z.object({
 // Type Exports
 // ─────────────────────────────────────────────
 
+export type TaskRef = z.infer<typeof taskRefSchema>;
+export type LabelAdd = z.infer<typeof labelAddSchema>;
+
 export type QueryTasksInput = z.infer<typeof queryTasksSchema>;
 export type QueryProjectInput = z.infer<typeof queryProjectSchema>;
 export type GetTaskInput = z.infer<typeof getTaskSchema>;
-export type CreateTaskInput = z.infer<typeof createTaskSchema>;
-export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
-export type MoveTaskInput = z.infer<typeof moveTaskSchema>;
-export type AssignTaskInput = z.infer<typeof assignTaskSchema>;
-export type AddLabelInput = z.infer<typeof addLabelSchema>;
-export type RemoveLabelInput = z.infer<typeof removeLabelSchema>;
-export type AddCommentInput = z.infer<typeof addCommentSchema>;
-export type DeleteTaskInput = z.infer<typeof deleteTaskSchema>;
-export type BatchMoveTasksInput = z.infer<typeof batchMoveTasksSchema>;
-export type BatchUpdateTasksInput = z.infer<typeof batchUpdateTasksSchema>;
-export type BatchDeleteTasksInput = z.infer<typeof batchDeleteTasksSchema>;
-export type CreateColumnInput = z.infer<typeof createColumnSchema>;
-export type UpdateColumnInput = z.infer<typeof updateColumnSchema>;
-export type DeleteColumnInput = z.infer<typeof deleteColumnSchema>;
-export type ReorderColumnsInput = z.infer<typeof reorderColumnsSchema>;
-export type ReorderTasksInput = z.infer<typeof reorderTasksSchema>;
+
+export type CreateTasksInput = z.infer<typeof createTasksSchema>;
+export type UpdateTasksInput = z.infer<typeof updateTasksSchema>;
+export type UpdateTaskItem = z.infer<typeof updateTaskItemSchema>;
+export type DeleteTasksInput = z.infer<typeof deleteTasksSchema>;
+
+export type CreateColumnsInput = z.infer<typeof createColumnsSchema>;
+export type UpdateColumnsInput = z.infer<typeof updateColumnsSchema>;
+export type DeleteColumnsInput = z.infer<typeof deleteColumnsSchema>;
+
+export type CreateCommentsInput = z.infer<typeof createCommentsSchema>;

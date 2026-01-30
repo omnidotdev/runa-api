@@ -3,46 +3,33 @@
  *
  * Write tools require permission checks and activity logging.
  * Options allow skipping permission checks for trusted contexts.
+ *
+ * Consolidated tool set:
+ * - Task: createTasks, updateTasks
+ * - Column: createColumns, updateColumns
+ * - Comment: createComments
  */
 
 import { tool } from "ai";
 
 import {
-  addCommentSchema,
-  addLabelSchema,
-  assignTaskSchema,
-  createColumnSchema,
-  createTaskSchema,
-  moveTaskSchema,
-  removeLabelSchema,
-  reorderColumnsSchema,
-  reorderTasksSchema,
-  updateColumnSchema,
-  updateTaskSchema,
+  createColumnsSchema,
+  createCommentsSchema,
+  createTasksSchema,
+  updateColumnsSchema,
+  updateTasksSchema,
 } from "../core/schemas";
 import {
-  ADD_COMMENT_DESCRIPTION,
-  ADD_LABEL_DESCRIPTION,
-  ASSIGN_TASK_DESCRIPTION,
-  CREATE_COLUMN_DESCRIPTION,
-  CREATE_TASK_DESCRIPTION,
-  MOVE_TASK_DESCRIPTION,
-  REMOVE_LABEL_DESCRIPTION,
-  REORDER_COLUMNS_DESCRIPTION,
-  REORDER_TASKS_DESCRIPTION,
-  UPDATE_COLUMN_DESCRIPTION,
-  UPDATE_TASK_DESCRIPTION,
-  executeAddComment,
-  executeAddLabel,
-  executeAssignTask,
-  executeCreateColumn,
-  executeCreateTask,
-  executeMoveTask,
-  executeRemoveLabel,
-  executeReorderColumns,
-  executeReorderTasks,
-  executeUpdateColumn,
-  executeUpdateTask,
+  CREATE_COLUMNS_DESCRIPTION,
+  CREATE_COMMENTS_DESCRIPTION,
+  CREATE_TASKS_DESCRIPTION,
+  UPDATE_COLUMNS_DESCRIPTION,
+  UPDATE_TASKS_DESCRIPTION,
+  executeCreateColumns,
+  executeCreateComments,
+  executeCreateTasks,
+  executeUpdateColumns,
+  executeUpdateTasks,
 } from "../definitions/write";
 import { logActivity } from "../wrappers/withActivityLogging";
 import { requireProjectPermission } from "../wrappers/withPermission";
@@ -81,9 +68,9 @@ export function createWriteTools(
   };
 
   return {
-    createTask: tool({
-      description: CREATE_TASK_DESCRIPTION,
-      inputSchema: createTaskSchema,
+    createTasks: tool({
+      description: CREATE_TASKS_DESCRIPTION,
+      inputSchema: createTasksSchema,
       needsApproval: createTaskNeedsApproval,
       execute: async (input) => {
         try {
@@ -91,392 +78,168 @@ export function createWriteTools(
             await requireProjectPermission(ctx, "editor");
           }
 
-          const result = await executeCreateTask(input, ctx, markdownToHtml);
+          const result = await executeCreateTasks(input, ctx, markdownToHtml);
 
           if (enableActivityLogging) {
             logActivity({
               context: ctx,
-              toolName: "createTask",
+              toolName: "createTasks",
               toolInput: input,
               toolOutput: result,
               status: "completed",
-              affectedTaskIds: [result.task.id],
+              affectedTaskIds: result.affectedIds,
               snapshotBefore: {
                 operation: "create",
                 entityType: "task",
-                entityId: result.task.id,
+                count: result.createdCount,
               },
             });
           }
 
           return result;
         } catch (error) {
-          logFailure("createTask", input, error);
+          logFailure("createTasks", input, error);
           throw error;
         }
       },
     }),
 
-    updateTask: tool({
-      description: UPDATE_TASK_DESCRIPTION,
-      inputSchema: updateTaskSchema,
+    updateTasks: tool({
+      description: UPDATE_TASKS_DESCRIPTION,
+      inputSchema: updateTasksSchema,
       execute: async (input) => {
         try {
           if (!skipPermissionCheck) {
             await requireProjectPermission(ctx, "editor");
           }
 
-          const result = await executeUpdateTask(input, ctx, markdownToHtml);
+          const result = await executeUpdateTasks(input, ctx, markdownToHtml);
 
           if (enableActivityLogging) {
             logActivity({
               context: ctx,
-              toolName: "updateTask",
+              toolName: "updateTasks",
               toolInput: input,
               toolOutput: result,
               status: "completed",
-              affectedTaskIds: [result.task.id],
+              affectedTaskIds: result.affectedIds,
               snapshotBefore: {
                 operation: "update",
                 entityType: "task",
-                entityId: result.task.id,
-                previousState: result.previousState,
+                tasks: result.snapshotBefore,
               },
             });
           }
 
           return {
-            task: result.task,
+            updatedCount: result.updatedCount,
+            tasks: result.tasks,
           };
         } catch (error) {
-          logFailure("updateTask", input, error);
+          logFailure("updateTasks", input, error);
           throw error;
         }
       },
     }),
 
-    moveTask: tool({
-      description: MOVE_TASK_DESCRIPTION,
-      inputSchema: moveTaskSchema,
+    createColumns: tool({
+      description: CREATE_COLUMNS_DESCRIPTION,
+      inputSchema: createColumnsSchema,
       execute: async (input) => {
         try {
           if (!skipPermissionCheck) {
             await requireProjectPermission(ctx, "editor");
           }
 
-          const result = await executeMoveTask(input, ctx);
+          const result = await executeCreateColumns(input, ctx);
 
           if (enableActivityLogging) {
             logActivity({
               context: ctx,
-              toolName: "moveTask",
-              toolInput: input,
-              toolOutput: result,
-              status: "completed",
-              affectedTaskIds: [result.task.id],
-              snapshotBefore: {
-                operation: "move",
-                entityType: "task",
-                entityId: result.task.id,
-                previousState: result.previousState,
-              },
-            });
-          }
-
-          return {
-            task: result.task,
-            fromColumn: result.fromColumn,
-            toColumn: result.toColumn,
-          };
-        } catch (error) {
-          logFailure("moveTask", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    assignTask: tool({
-      description: ASSIGN_TASK_DESCRIPTION,
-      inputSchema: assignTaskSchema,
-      execute: async (input) => {
-        try {
-          if (!skipPermissionCheck) {
-            await requireProjectPermission(ctx, "member");
-          }
-
-          const result = await executeAssignTask(input, ctx);
-
-          if (enableActivityLogging) {
-            logActivity({
-              context: ctx,
-              toolName: "assignTask",
-              toolInput: input,
-              toolOutput: result,
-              status: "completed",
-              affectedTaskIds: [result.taskId],
-              snapshotBefore: {
-                operation: input.action === "add" ? "assign" : "unassign",
-                entityType: "assignee",
-                entityId: result.taskId,
-                previousState: { taskId: result.taskId, userId: input.userId },
-              },
-            });
-          }
-
-          return result;
-        } catch (error) {
-          logFailure("assignTask", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    addLabel: tool({
-      description: ADD_LABEL_DESCRIPTION,
-      inputSchema: addLabelSchema,
-      execute: async (input) => {
-        try {
-          if (!skipPermissionCheck) {
-            await requireProjectPermission(ctx, "member");
-          }
-
-          const result = await executeAddLabel(input, ctx);
-
-          if (enableActivityLogging) {
-            logActivity({
-              context: ctx,
-              toolName: "addLabel",
-              toolInput: input,
-              toolOutput: result,
-              status: "completed",
-              affectedTaskIds: [result.taskId],
-              snapshotBefore: {
-                operation: "addLabel",
-                entityType: "taskLabel",
-                entityId: result.taskId,
-                previousState: {
-                  taskId: result.taskId,
-                  labelId: result.labelId,
-                },
-              },
-            });
-          }
-
-          return result;
-        } catch (error) {
-          logFailure("addLabel", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    removeLabel: tool({
-      description: REMOVE_LABEL_DESCRIPTION,
-      inputSchema: removeLabelSchema,
-      execute: async (input) => {
-        try {
-          if (!skipPermissionCheck) {
-            await requireProjectPermission(ctx, "member");
-          }
-
-          const result = await executeRemoveLabel(input, ctx);
-
-          if (enableActivityLogging) {
-            logActivity({
-              context: ctx,
-              toolName: "removeLabel",
-              toolInput: input,
-              toolOutput: result,
-              status: "completed",
-              affectedTaskIds: [result.taskId],
-              snapshotBefore: {
-                operation: "removeLabel",
-                entityType: "taskLabel",
-                entityId: result.taskId,
-                previousState: {
-                  taskId: result.taskId,
-                  labelId: result.labelId,
-                },
-              },
-            });
-          }
-
-          return result;
-        } catch (error) {
-          logFailure("removeLabel", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    addComment: tool({
-      description: ADD_COMMENT_DESCRIPTION,
-      inputSchema: addCommentSchema,
-      execute: async (input) => {
-        try {
-          if (!skipPermissionCheck) {
-            await requireProjectPermission(ctx, "member");
-          }
-
-          const result = await executeAddComment(input, ctx);
-
-          if (enableActivityLogging) {
-            logActivity({
-              context: ctx,
-              toolName: "addComment",
-              toolInput: input,
-              toolOutput: result,
-              status: "completed",
-              affectedTaskIds: [result.taskId],
-              snapshotBefore: {
-                operation: "addComment",
-                entityType: "comment",
-                entityId: result.commentId,
-              },
-            });
-          }
-
-          return result;
-        } catch (error) {
-          logFailure("addComment", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    createColumn: tool({
-      description: CREATE_COLUMN_DESCRIPTION,
-      inputSchema: createColumnSchema,
-      execute: async (input) => {
-        try {
-          if (!skipPermissionCheck) {
-            await requireProjectPermission(ctx, "editor");
-          }
-
-          const result = await executeCreateColumn(input, ctx);
-
-          if (enableActivityLogging) {
-            logActivity({
-              context: ctx,
-              toolName: "createColumn",
+              toolName: "createColumns",
               toolInput: input,
               toolOutput: result,
               status: "completed",
               snapshotBefore: {
-                operation: "createColumn",
+                operation: "create",
                 entityType: "column",
-                entityId: result.column.id,
+                count: result.createdCount,
               },
             });
           }
 
           return result;
         } catch (error) {
-          logFailure("createColumn", input, error);
+          logFailure("createColumns", input, error);
           throw error;
         }
       },
     }),
 
-    updateColumn: tool({
-      description: UPDATE_COLUMN_DESCRIPTION,
-      inputSchema: updateColumnSchema,
+    updateColumns: tool({
+      description: UPDATE_COLUMNS_DESCRIPTION,
+      inputSchema: updateColumnsSchema,
       execute: async (input) => {
         try {
           if (!skipPermissionCheck) {
             await requireProjectPermission(ctx, "editor");
           }
 
-          const result = await executeUpdateColumn(input, ctx);
+          const result = await executeUpdateColumns(input, ctx);
 
           if (enableActivityLogging) {
             logActivity({
               context: ctx,
-              toolName: "updateColumn",
-              toolInput: input,
-              toolOutput: { column: result.column },
-              status: "completed",
-              snapshotBefore: {
-                operation: "updateColumn",
-                entityType: "column",
-                entityId: input.columnId,
-                previousState: result.previousState,
-              },
-            });
-          }
-
-          return { column: result.column };
-        } catch (error) {
-          logFailure("updateColumn", input, error);
-          throw error;
-        }
-      },
-    }),
-
-    reorderColumns: tool({
-      description: REORDER_COLUMNS_DESCRIPTION,
-      inputSchema: reorderColumnsSchema,
-      execute: async (input) => {
-        try {
-          if (!skipPermissionCheck) {
-            await requireProjectPermission(ctx, "editor");
-          }
-
-          const result = await executeReorderColumns(input, ctx);
-
-          if (enableActivityLogging) {
-            logActivity({
-              context: ctx,
-              toolName: "reorderColumns",
+              toolName: "updateColumns",
               toolInput: input,
               toolOutput: { columns: result.columns },
               status: "completed",
               snapshotBefore: {
-                operation: "reorderColumns",
+                operation: "update",
                 entityType: "column",
-                previousOrder: result.previousOrder,
+                columns: result.snapshotBefore,
               },
             });
           }
 
           return { columns: result.columns };
         } catch (error) {
-          logFailure("reorderColumns", input, error);
+          logFailure("updateColumns", input, error);
           throw error;
         }
       },
     }),
 
-    reorderTasks: tool({
-      description: REORDER_TASKS_DESCRIPTION,
-      inputSchema: reorderTasksSchema,
+    createComments: tool({
+      description: CREATE_COMMENTS_DESCRIPTION,
+      inputSchema: createCommentsSchema,
       execute: async (input) => {
         try {
           if (!skipPermissionCheck) {
-            await requireProjectPermission(ctx, "editor");
+            await requireProjectPermission(ctx, "member");
           }
 
-          const result = await executeReorderTasks(input, ctx);
+          const result = await executeCreateComments(input, ctx);
 
           if (enableActivityLogging) {
             logActivity({
               context: ctx,
-              toolName: "reorderTasks",
+              toolName: "createComments",
               toolInput: input,
-              toolOutput: { tasks: result.tasks, columnId: result.columnId },
+              toolOutput: result,
               status: "completed",
+              affectedTaskIds: result.affectedIds,
               snapshotBefore: {
-                operation: "reorderTasks",
-                entityType: "task",
-                columnId: result.columnId,
-                previousOrder: result.previousOrder,
+                operation: "create",
+                entityType: "comment",
+                count: result.count,
               },
             });
           }
 
-          return { tasks: result.tasks, columnId: result.columnId };
+          return result;
         } catch (error) {
-          logFailure("reorderTasks", input, error);
+          logFailure("createComments", input, error);
           throw error;
         }
       },
