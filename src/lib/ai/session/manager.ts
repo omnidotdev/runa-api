@@ -152,6 +152,22 @@ export async function saveSessionMessages(
 }
 
 /**
+ * Update a session's title.
+ */
+export async function updateSessionTitle(
+  sessionId: string,
+  title: string,
+): Promise<void> {
+  await dbPool
+    .update(agentSessions)
+    .set({
+      title,
+      updatedAt: new Date().toISOString(),
+    })
+    .where(eq(agentSessions.id, sessionId));
+}
+
+/**
  * List sessions for a user in a project, ordered by most recent.
  */
 export async function listSessions(

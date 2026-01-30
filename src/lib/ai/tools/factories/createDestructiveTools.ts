@@ -98,10 +98,11 @@ export function createDestructiveTools(
       },
     }),
 
+    // Note: batchMoveTasks never requires approval - moves are non-destructive and undoable
     batchMoveTasks: tool({
       description: BATCH_MOVE_TASKS_DESCRIPTION,
       inputSchema: batchMoveTasksSchema,
-      needsApproval: requireApproval,
+      needsApproval: false,
       execute: async (input) => {
         try {
           await requireProjectPermission(ctx, "editor");
@@ -119,7 +120,7 @@ export function createDestructiveTools(
               errors: result.errors,
             },
             status: "completed",
-            requiresApproval: requireApproval,
+            requiresApproval: false,
             affectedTaskIds: result.affectedIds,
             snapshotBefore: {
               operation: "batchMove",
@@ -141,10 +142,11 @@ export function createDestructiveTools(
       },
     }),
 
+    // Note: batchUpdateTasks never requires approval - updates are non-destructive and undoable
     batchUpdateTasks: tool({
       description: BATCH_UPDATE_TASKS_DESCRIPTION,
       inputSchema: batchUpdateTasksSchema,
-      needsApproval: requireApproval,
+      needsApproval: false,
       execute: async (input) => {
         try {
           await requireProjectPermission(ctx, "editor");
@@ -161,7 +163,7 @@ export function createDestructiveTools(
               errors: result.errors,
             },
             status: "completed",
-            requiresApproval: requireApproval,
+            requiresApproval: false,
             affectedTaskIds: result.affectedIds,
             snapshotBefore: {
               operation: "batchUpdate",

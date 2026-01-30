@@ -22,6 +22,10 @@ import {
   loadSession,
   saveSessionMessages,
 } from "./session/manager";
+import {
+  extractTextFromContent,
+  generateSessionTitle,
+} from "./session/titleGenerator";
 import { buildChatTools } from "./tools";
 
 import type { ModelMessage } from "ai";
@@ -185,6 +189,32 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
               durationMs,
             });
           });
+
+          // Generate title for new sessions (fire-and-forget)
+          if (!body.sessionId && finalMessages.length >= 2) {
+            const userMsg = finalMessages.find(
+              (m) => (m as ModelMessage).role === "user",
+            ) as ModelMessage | undefined;
+            const assistantMsg = finalMessages.find(
+              (m) => (m as ModelMessage).role === "assistant",
+            ) as ModelMessage | undefined;
+
+            if (userMsg && assistantMsg) {
+              const userText = extractTextFromContent(userMsg.content);
+              const assistantText = extractTextFromContent(
+                assistantMsg.content,
+              );
+
+              if (userText && assistantText) {
+                await generateSessionTitle(
+                  session.id,
+                  userText,
+                  assistantText,
+                  agentConfig.orgApiKey,
+                );
+              }
+            }
+          }
 
           console.info("[AI] Chat completed:", {
             ...requestMeta,
