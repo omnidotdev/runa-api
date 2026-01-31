@@ -4,6 +4,7 @@ import { dbPool } from "lib/db/db";
 import { agentSessions } from "lib/db/schema";
 
 import type { InsertAgentSession, SelectAgentSession } from "lib/db/schema";
+import type { DiscoveryState } from "../discovery/state";
 
 /**
  * Create a new agent chat session for an existing project.
@@ -199,4 +200,48 @@ export async function listSessions(
     )
     .orderBy(desc(agentSessions.updatedAt))
     .limit(limit);
+}
+
+/**
+ * Load discovery state from session metadata.
+ * Returns null if no discovery state exists.
+ */
+export async function loadDiscoveryState(
+  sessionId: string,
+): Promise<DiscoveryState | null> {
+  const session = await dbPool.query.agentSessions.findFirst({
+    where: eq(agentSessions.id, sessionId),
+    columns: { metadata: true },
+  });
+
+  const metadata = session?.metadata as
+    | { discoveryState?: DiscoveryState }
+    | undefined;
+  return metadata?.discoveryState ?? null;
+}
+
+/**
+ * Save discovery state to session metadata.
+ */
+export async function saveDiscoveryState(
+  sessionId: string,
+  discoveryState: DiscoveryState,
+): Promise<void> {
+  const session = await dbPool.query.agentSessions.findFirst({
+    where: eq(agentSessions.id, sessionId),
+    columns: { metadata: true },
+  });
+
+  const currentMetadata = (session?.metadata as Record<string, unknown>) ?? {};
+
+  await dbPool
+    .update(agentSessions)
+    .set({
+      metadata: {
+        ...currentMetadata,
+        discoveryState,
+      },
+      updatedAt: new Date().toISOString(),
+    })
+    .where(eq(agentSessions.id, sessionId));
 }

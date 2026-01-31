@@ -1448,6 +1448,18 @@ const spec_agentSession = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    metadata: {
+      description: undefined,
+      codec: TYPES.jsonb,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   description: undefined,
@@ -12919,6 +12931,7 @@ input AgentSessionDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   type: BigIntFilter
+  metadata: BigIntFilter
 }
 
 input AgentSessionMinAggregateFilter {
@@ -13848,6 +13861,8 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
@@ -15809,6 +15824,7 @@ type AgentSession implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   type: String!
+  metadata: JSON!
 
   """Reads a single \`Project\` that is related to this \`AgentSession\`."""
   project: Project
@@ -16181,6 +16197,9 @@ type AgentSessionDistinctCountAggregates {
 
   """Distinct count of type across the matching connection"""
   type: BigInt
+
+  """Distinct count of metadata across the matching connection"""
+  metadata: BigInt
 }
 
 type AgentSessionMinAggregates {
@@ -16237,6 +16256,7 @@ enum AgentSessionGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   TYPE
+  METADATA
 }
 
 """Conditions for \`AgentSession\` aggregates."""
@@ -18076,6 +18096,8 @@ enum UserOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
@@ -20932,6 +20954,7 @@ input AgentSessionInput {
   createdAt: Datetime
   updatedAt: Datetime
   type: String
+  metadata: JSON
 }
 
 """The output of our create \`Setting\` mutation."""
@@ -22128,6 +22151,7 @@ input AgentSessionPatch {
   createdAt: Datetime
   updatedAt: Datetime
   type: String
+  metadata: JSON
 }
 
 """All input for the \`updateAgentSession\` mutation."""
@@ -27018,6 +27042,11 @@ ${String(oldPlan21)}`);
       },
       messages($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("messages")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.jsonb);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      metadata($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("metadata")}`,
           sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.jsonb);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
@@ -33381,6 +33410,15 @@ export const inputObjects = {
         };
         return $col;
       },
+      metadata($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("metadata")}`, spec_agentSession.attributes.metadata.codec)
+        };
+        return $col;
+      },
       organizationId($parent, input) {
         if (input == null) return;
         const $col = new PgCondition($parent);
@@ -33833,6 +33871,12 @@ export const inputObjects = {
       }) {
         obj.set("messages", bakedInputRuntime(schema, field.type, val));
       },
+      metadata(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("metadata", bakedInputRuntime(schema, field.type, val));
+      },
       organizationId(obj, val, {
         field,
         schema
@@ -33923,6 +33967,12 @@ export const inputObjects = {
         schema
       }) {
         obj.set("messages", bakedInputRuntime(schema, field.type, val));
+      },
+      metadata(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("metadata", bakedInputRuntime(schema, field.type, val));
       },
       organizationId(obj, val, {
         field,
@@ -50328,6 +50378,12 @@ export const enums = {
           codec: TYPES.jsonb
         });
       },
+      METADATA($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("metadata")}`,
+          codec: TYPES.jsonb
+        });
+      },
       ORGANIZATION_ID($pgSelect) {
         $pgSelect.groupBy({
           fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
@@ -56320,6 +56376,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("metadata")}`, spec_agentSession.attributes.metadata.codec)}
+from ${resource_agent_sessionPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.metadata.codec) ?? spec_agentSession.attributes.metadata.codec,
+          direction: "ASC"
+        });
+      },
+      AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
+        relation7.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation7.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("metadata")}`, spec_agentSession.attributes.metadata.codec)}
+from ${resource_agent_sessionPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.metadata.codec) ?? spec_agentSession.attributes.metadata.codec,
+          direction: "DESC"
+        });
+      },
       AGENT_SESSIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -61865,6 +61959,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         $select.orderBy({
           fragment,
           codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.messages.codec) ?? spec_agentSession.attributes.messages.codec,
+          direction: "DESC"
+        });
+      },
+      AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
+        relation23.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation23.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("metadata")}`, spec_agentSession.attributes.metadata.codec)}
+from ${resource_agent_sessionPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.metadata.codec) ?? spec_agentSession.attributes.metadata.codec,
+          direction: "ASC"
+        });
+      },
+      AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_agent_sessionPgResource.name));
+        relation23.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation23.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_agent_sessionPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("metadata")}`, spec_agentSession.attributes.metadata.codec)}
+from ${resource_agent_sessionPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_agentSession.attributes.metadata.codec) ?? spec_agentSession.attributes.metadata.codec,
           direction: "DESC"
         });
       },

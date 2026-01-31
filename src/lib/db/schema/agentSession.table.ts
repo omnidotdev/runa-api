@@ -55,6 +55,9 @@ export const agentSessions = pgTable(
     // Usage tracking
     toolCallCount: integer().notNull().default(0),
 
+    // Session metadata for discovery state, custom data, etc.
+    metadata: jsonb().notNull().default({}),
+
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

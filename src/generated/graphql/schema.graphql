@@ -3421,6 +3421,7 @@ input AgentSessionDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   type: BigIntFilter
+  metadata: BigIntFilter
 }
 
 input AgentSessionMinAggregateFilter {
@@ -4350,6 +4351,8 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
@@ -6311,6 +6314,7 @@ type AgentSession implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   type: String!
+  metadata: JSON!
 
   """Reads a single `Project` that is related to this `AgentSession`."""
   project: Project
@@ -6683,6 +6687,9 @@ type AgentSessionDistinctCountAggregates {
 
   """Distinct count of type across the matching connection"""
   type: BigInt
+
+  """Distinct count of metadata across the matching connection"""
+  metadata: BigInt
 }
 
 type AgentSessionMinAggregates {
@@ -6739,6 +6746,7 @@ enum AgentSessionGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   TYPE
+  METADATA
 }
 
 """Conditions for `AgentSession` aggregates."""
@@ -8578,6 +8586,8 @@ enum UserOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
@@ -11434,6 +11444,7 @@ input AgentSessionInput {
   createdAt: Datetime
   updatedAt: Datetime
   type: String
+  metadata: JSON
 }
 
 """The output of our create `Setting` mutation."""
@@ -12630,6 +12641,7 @@ input AgentSessionPatch {
   createdAt: Datetime
   updatedAt: Datetime
   type: String
+  metadata: JSON
 }
 
 """All input for the `updateAgentSession` mutation."""

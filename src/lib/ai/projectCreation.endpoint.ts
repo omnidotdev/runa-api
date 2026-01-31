@@ -22,7 +22,15 @@ import {
 import { isWithinLimit } from "lib/entitlements/helpers";
 import { checkOrganizationAccess } from "./auth";
 import { resolveAgentConfig } from "./config";
+import { generateProjectContext } from "./context/projectContext";
+import {
+  createEmptyDiscoveryState,
+  getKnownFacts,
+  getMissingFacts,
+  updateDiscoveryState,
+} from "./discovery/state";
 import { agentFeatureGuard, authGuard } from "./guards";
+import { generatePrefixSuggestions } from "./intelligence/naming";
 import { buildProjectCreationPrompt } from "./prompts/projectCreation";
 import { createOpenRouterModel } from "./provider";
 import { ORG_CHAT_LIMIT, USER_CHAT_LIMIT, checkRateLimit } from "./rateLimit";
@@ -30,12 +38,16 @@ import {
   createCreationSession,
   linkSessionToProject,
   loadCreationSession,
+  loadDiscoveryState,
+  saveDiscoveryState,
   saveSessionMessages,
 } from "./session/manager";
 import { logActivity } from "./tools";
+import { markdownToHtml } from "./tools/core/markdown";
 
 import type { ModelMessage } from "ai";
 import type { SelectAgentSession } from "lib/db/schema";
+import type { DiscoveryFacts } from "./discovery/state";
 
 /** Elysia/TypeBox schema for message validation. */
 const modelMessageSchema = t.Object(
@@ -50,6 +62,28 @@ const modelMessageSchema = t.Object(
   },
   { additionalProperties: true },
 );
+
+/** Elysia/TypeBox schema for project template. */
+const templateSchema = t.Object({
+  id: t.String(),
+  name: t.String(),
+  description: t.String(),
+  icon: t.String(),
+  columns: t.Array(
+    t.Object({
+      title: t.String(),
+      icon: t.Optional(t.String()),
+    }),
+  ),
+  labels: t.Optional(
+    t.Array(
+      t.Object({
+        name: t.String(),
+        color: t.String(),
+      }),
+    ),
+  ),
+});
 
 /** In-memory proposal store with TTL. */
 interface StoredProposal {
@@ -214,16 +248,18 @@ const projectCreationRoutes = new Elysia({
         });
       }
 
-      // Get existing project names and prefixes
-      const existingProjects = await dbPool
-        .select({ name: projects.name, prefix: projects.prefix })
-        .from(projects)
-        .where(eq(projects.organizationId, organizationId));
+      // Generate smart project context (replaces raw project list dumping)
+      const projectContext = await generateProjectContext(organizationId);
 
-      const existingProjectNames = existingProjects.map((p) => p.name);
-      const existingProjectPrefixes = existingProjects
-        .map((p) => p.prefix)
-        .filter((p): p is string => p !== null);
+      // Load discovery state for this session
+      const discoveryState = await loadDiscoveryState(session.id);
+
+      // Generate prefix suggestions based on context
+      const prefixSuggestions = generatePrefixSuggestions(
+        projectContext,
+        discoveryState?.facts.purpose,
+        undefined,
+      );
 
       // Build system prompt
       const systemPrompt = buildProjectCreationPrompt({
@@ -232,9 +268,11 @@ const projectCreationRoutes = new Elysia({
         organizationSlug,
         userId: auth.user.id,
         userName: auth.user.name,
-        existingProjectNames,
-        existingProjectPrefixes,
+        projectContext,
+        discoveryState,
+        prefixSuggestions,
         customInstructions: agentConfig.customInstructions,
+        template: body.template,
       });
 
       // Tool context
@@ -269,7 +307,7 @@ const projectCreationRoutes = new Elysia({
       const aiTools = {
         proposeProject: tool({
           description:
-            "Present a project proposal to the user for review. Use after gathering context through discovery questions.",
+            "Present a project proposal to the user for review. Can be called multiple times to iterate based on user feedback. Use after discovery OR to refine a previous proposal.",
           inputSchema: z.object({
             name: z.string().min(3).max(100).describe("Project name"),
             prefix: z
@@ -404,6 +442,79 @@ const projectCreationRoutes = new Elysia({
                 description: p.description,
               })),
               count: orgProjects.length,
+            };
+          },
+        }),
+
+        updateDiscoveryState: tool({
+          description:
+            "Update the discovery state with facts learned during conversation. Call this when you learn something new about what the user is building.",
+          inputSchema: z.object({
+            purpose: z
+              .string()
+              .max(200)
+              .optional()
+              .describe(
+                "What the project is for (e.g., 'mobile app', 'marketing campaign')",
+              ),
+            workflow: z
+              .string()
+              .max(300)
+              .optional()
+              .describe(
+                "Description of the workflow (e.g., 'ideation → design → review')",
+              ),
+            teamContext: z
+              .string()
+              .max(100)
+              .optional()
+              .describe("Team size or context (e.g., 'solo', 'small team')"),
+            categorizationNeeds: z
+              .string()
+              .max(200)
+              .optional()
+              .describe("What types of work need categorization"),
+            timeline: z
+              .string()
+              .max(100)
+              .optional()
+              .describe("Timeline or urgency (e.g., 'urgent', 'ongoing')"),
+            domain: z
+              .string()
+              .max(100)
+              .optional()
+              .describe("Specific domain or industry context"),
+            additionalContext: z
+              .string()
+              .max(300)
+              .optional()
+              .describe("Any other relevant context learned"),
+          }),
+          execute: async (input) => {
+            const currentState =
+              (await loadDiscoveryState(toolContext.sessionId)) ??
+              createEmptyDiscoveryState();
+
+            const newFacts: Partial<DiscoveryFacts> = {};
+            for (const [key, value] of Object.entries(input)) {
+              if (value !== undefined && value.trim() !== "") {
+                newFacts[key as keyof DiscoveryFacts] = value;
+              }
+            }
+
+            const updatedState = updateDiscoveryState(currentState, newFacts);
+            await saveDiscoveryState(toolContext.sessionId, updatedState);
+
+            const missing = getMissingFacts(updatedState);
+            const known = getKnownFacts(updatedState);
+
+            return {
+              success: true,
+              factsLearned: Object.keys(newFacts).length,
+              totalFactsKnown: known.length,
+              readyToPropose: updatedState.readyToPropose,
+              missingFacts: missing,
+              knownFacts: known.map((f) => f.key),
             };
           },
         }),
@@ -651,11 +762,16 @@ const projectCreationRoutes = new Elysia({
                   for (const task of proposal.initialTasks) {
                     const targetColumn = createdColumns[task.columnIndex];
                     if (targetColumn) {
+                      // Convert markdown description to HTML for storage
+                      const htmlDescription = task.description
+                        ? markdownToHtml(task.description)
+                        : "";
+
                       const [created] = await tx
                         .insert(tasks)
                         .values({
                           content: task.title,
-                          description: task.description ?? "",
+                          description: htmlDescription,
                           priority: task.priority ?? "medium",
                           columnId: targetColumn.id,
                           columnIndex: tasksCreated,
@@ -801,6 +917,7 @@ const projectCreationRoutes = new Elysia({
         organizationId: t.String(),
         organizationName: t.Optional(t.String()),
         sessionId: t.Optional(t.String()),
+        template: t.Optional(templateSchema),
         messages: t.Array(modelMessageSchema),
       }),
     },
