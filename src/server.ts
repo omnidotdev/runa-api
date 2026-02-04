@@ -1,5 +1,6 @@
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
+import { rateLimit } from "elysia-rate-limit";
 import { useOpenTelemetry } from "@envelop/opentelemetry";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
@@ -150,6 +151,18 @@ async function startServer(): Promise<void> {
       },
     }),
   })
+    .onAfterHandle(({ set }) => {
+      set.headers["X-Content-Type-Options"] = "nosniff";
+      set.headers["X-Frame-Options"] = "DENY";
+      set.headers["X-XSS-Protection"] = "1; mode=block";
+      set.headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    })
+    .use(
+      rateLimit({
+        max: 100,
+        duration: 60_000,
+      }),
+    )
     .use(maintenanceMiddleware)
     .use(
       cors({
