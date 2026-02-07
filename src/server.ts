@@ -1,11 +1,11 @@
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
-import { rateLimit } from "elysia-rate-limit";
 import { useOpenTelemetry } from "@envelop/opentelemetry";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
 import { Elysia } from "elysia";
+import { rateLimit } from "elysia-rate-limit";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
@@ -47,6 +47,13 @@ function verifyEnvConfig(): void {
 
   if (isSelfHosted && !AUTH_SECRET) {
     throw new Error("AUTH_SECRET is required for self-hosted mode");
+  }
+
+  // Validate AUTH_SECRET strength (minimum 32 bytes for HKDF-SHA256 security)
+  if (AUTH_SECRET && AUTH_SECRET.length < 32) {
+    throw new Error(
+      "AUTH_SECRET must be at least 32 characters. Generate one with: openssl rand -base64 48",
+    );
   }
 
   // biome-ignore lint/suspicious/noConsole: startup logging

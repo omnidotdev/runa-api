@@ -10,7 +10,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
-import { invalidatePermissionCache } from "lib/authz/cache";
+import { invalidatePermissionCache } from "lib/authz";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import {

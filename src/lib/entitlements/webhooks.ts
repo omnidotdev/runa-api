@@ -6,7 +6,7 @@ import { Elysia, t } from "elysia";
 import { BILLING_WEBHOOK_SECRET, isSelfHosted } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { settings } from "lib/db/schema";
-import { invalidateCache } from "./cache";
+import { invalidateCache } from "lib/entitlements";
 
 interface EntitlementWebhookPayload {
   eventType: string;
