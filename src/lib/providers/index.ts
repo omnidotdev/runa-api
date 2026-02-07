@@ -28,7 +28,7 @@ const billingProviderName = resolveProvider(
 );
 
 export const authz = createAuthzProvider(authzProviderName, {
-  apiUrl: AUTHZ_API_URL ?? "",
+  apiUrl: AUTHZ_API_URL,
   serviceKey: WARDEN_SERVICE_KEY,
   vortexUrl: VORTEX_API_URL,
   vortexWebhookSecret: VORTEX_AUTHZ_WEBHOOK_SECRET,
@@ -36,7 +36,7 @@ export const authz = createAuthzProvider(authzProviderName, {
 });
 
 export const billing = createBillingProvider(billingProviderName, {
-  baseUrl: BILLING_BASE_URL ?? "",
+  baseUrl: BILLING_BASE_URL,
   serviceApiKey: BILLING_SERVICE_API_KEY,
   appId: "runa",
 });
