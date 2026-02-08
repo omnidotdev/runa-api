@@ -1179,6 +1179,183 @@ const spec_userPreference = {
   executor: executor
 };
 const userPreferenceCodec = recordCodec(spec_userPreference);
+const userOrganizationIdentifier = sql.identifier("public", "user_organization");
+const organizationTypeCodec = enumCodec({
+  name: "organizationType",
+  identifier: sql.identifier("public", "organization_type"),
+  values: ["personal", "team"],
+  description: undefined,
+  extensions: {
+    oid: "300912",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "organization_type"
+    },
+    tags: {
+      __proto__: null
+    }
+  }
+});
+const memberRoleCodec = enumCodec({
+  name: "memberRole",
+  identifier: sql.identifier("public", "member_role"),
+  values: ["owner", "admin", "member"],
+  description: undefined,
+  extensions: {
+    oid: "300904",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "member_role"
+    },
+    tags: {
+      __proto__: null
+    }
+  }
+});
+const spec_userOrganization = {
+  name: "userOrganization",
+  identifier: userOrganizationIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      description: undefined,
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    slug: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: false,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    type: {
+      description: undefined,
+      codec: organizationTypeCodec,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    role: {
+      description: undefined,
+      codec: memberRoleCodec,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    synced_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      description: undefined,
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  description: undefined,
+  extensions: {
+    oid: "300919",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "user_organization"
+    },
+    tags: {
+      __proto__: null
+    }
+  },
+  executor: executor
+};
+const userOrganizationCodec = recordCodec(spec_userOrganization);
 const settingsIdentifier = sql.identifier("public", "settings");
 const spec_settings = {
   name: "settings",
@@ -1477,23 +1654,6 @@ const spec_task = {
   executor: executor
 };
 const taskCodec = recordCodec(spec_task);
-const organizationTypeCodec = enumCodec({
-  name: "organizationType",
-  identifier: sql.identifier("public", "organization_type"),
-  values: ["personal", "team"],
-  description: undefined,
-  extensions: {
-    oid: "300912",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "organization_type"
-    },
-    tags: {
-      __proto__: null
-    }
-  }
-});
 const projectIdentifier = sql.identifier("public", "project");
 const spec_project = {
   name: "project",
@@ -1661,27 +1821,27 @@ const spec_project = {
   executor: executor
 };
 const projectCodec = recordCodec(spec_project);
-const userOrganizationIdentifier = sql.identifier("public", "user_organization");
-const memberRoleCodec = enumCodec({
-  name: "memberRole",
-  identifier: sql.identifier("public", "member_role"),
-  values: ["owner", "admin", "member"],
+const invitationIdentifier = sql.identifier("public", "invitation");
+const invitationStatusCodec = enumCodec({
+  name: "invitationStatus",
+  identifier: sql.identifier("public", "invitation_status"),
+  values: ["pending", "accepted", "expired", "revoked"],
   description: undefined,
   extensions: {
-    oid: "300904",
+    oid: "396051",
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "member_role"
+      name: "invitation_status"
     },
     tags: {
       __proto__: null
     }
   }
 });
-const spec_userOrganization = {
-  name: "userOrganization",
-  identifier: userOrganizationIdentifier,
+const spec_invitation = {
+  name: "invitation",
+  identifier: invitationIdentifier,
   attributes: {
     __proto__: null,
     id: {
@@ -1689,18 +1849,6 @@ const spec_userOrganization = {
       codec: TYPES.uuid,
       notNull: true,
       hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    user_id: {
-      description: undefined,
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: false,
       extensions: {
         tags: {},
         canSelect: true,
@@ -1720,9 +1868,9 @@ const spec_userOrganization = {
         canUpdate: true
       }
     },
-    slug: {
+    inviter_user_id: {
       description: undefined,
-      codec: TYPES.text,
+      codec: TYPES.uuid,
       notNull: true,
       hasDefault: false,
       extensions: {
@@ -1732,23 +1880,11 @@ const spec_userOrganization = {
         canUpdate: true
       }
     },
-    name: {
+    email: {
       description: undefined,
       codec: TYPES.text,
       notNull: false,
       hasDefault: false,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    type: {
-      description: undefined,
-      codec: organizationTypeCodec,
-      notNull: true,
-      hasDefault: true,
       extensions: {
         tags: {},
         canSelect: true,
@@ -1768,11 +1904,35 @@ const spec_userOrganization = {
         canUpdate: true
       }
     },
-    synced_at: {
+    token: {
+      description: undefined,
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: false,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      description: undefined,
+      codec: invitationStatusCodec,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        tags: {},
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    expires_at: {
       description: undefined,
       codec: TYPES.timestamptz,
       notNull: true,
-      hasDefault: true,
+      hasDefault: false,
       extensions: {
         tags: {},
         canSelect: true,
@@ -1791,28 +1951,16 @@ const spec_userOrganization = {
         canInsert: true,
         canUpdate: true
       }
-    },
-    updated_at: {
-      description: undefined,
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        tags: {},
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
     }
   },
   description: undefined,
   extensions: {
-    oid: "300919",
+    oid: "396061",
     isTableLike: true,
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "user_organization"
+      name: "invitation"
     },
     tags: {
       __proto__: null
@@ -1820,7 +1968,7 @@ const spec_userOrganization = {
   },
   executor: executor
 };
-const userOrganizationCodec = recordCodec(spec_userOrganization);
+const invitationCodec = recordCodec(spec_invitation);
 const project_project_labelUniques = [{
   isPrimary: true,
   attributes: ["project_id", "project_label_id"],
@@ -2267,6 +2415,52 @@ const registryConfig_pgResources_user_preference_user_preference = {
     canDelete: true
   }
 };
+const user_organizationUniques = [{
+  isPrimary: true,
+  attributes: ["id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null
+    }
+  }
+}, {
+  isPrimary: false,
+  attributes: ["user_id", "organization_id"],
+  description: undefined,
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
+    }
+  }
+}];
+const registryConfig_pgResources_user_organization_user_organization = {
+  executor: executor,
+  name: "user_organization",
+  identifier: "main.public.user_organization",
+  from: userOrganizationIdentifier,
+  codec: userOrganizationCodec,
+  uniques: user_organizationUniques,
+  isVirtual: false,
+  description: undefined,
+  extensions: {
+    description: undefined,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "user_organization"
+    },
+    isInsertable: true,
+    isUpdatable: true,
+    isDeletable: true,
+    tags: {},
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  }
+};
 const settingsUniques = [{
   isPrimary: true,
   attributes: ["id"],
@@ -2379,7 +2573,7 @@ const registryConfig_pgResources_project_project = {
     canDelete: true
   }
 };
-const user_organizationUniques = [{
+const invitationUniques = [{
   isPrimary: true,
   attributes: ["id"],
   description: undefined,
@@ -2390,7 +2584,7 @@ const user_organizationUniques = [{
   }
 }, {
   isPrimary: false,
-  attributes: ["user_id", "organization_id"],
+  attributes: ["token"],
   description: undefined,
   extensions: {
     tags: {
@@ -2399,13 +2593,13 @@ const user_organizationUniques = [{
     }
   }
 }];
-const registryConfig_pgResources_user_organization_user_organization = {
+const registryConfig_pgResources_invitation_invitation = {
   executor: executor,
-  name: "user_organization",
-  identifier: "main.public.user_organization",
-  from: userOrganizationIdentifier,
-  codec: userOrganizationCodec,
-  uniques: user_organizationUniques,
+  name: "invitation",
+  identifier: "main.public.invitation",
+  from: invitationIdentifier,
+  codec: invitationCodec,
+  uniques: invitationUniques,
   isVirtual: false,
   description: undefined,
   extensions: {
@@ -2413,7 +2607,7 @@ const registryConfig_pgResources_user_organization_user_organization = {
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "user_organization"
+      name: "invitation"
     },
     isInsertable: true,
     isUpdatable: true,
@@ -2449,14 +2643,16 @@ const registryConfig = {
     userPreference: userPreferenceCodec,
     pgCatalogTextArray: pgCatalogTextArrayCodec,
     varchar: TYPES.varchar,
+    userOrganization: userOrganizationCodec,
+    organizationType: organizationTypeCodec,
+    memberRole: memberRoleCodec,
     settings: settingsCodec,
     timestamp: TYPES.timestamp,
     task: taskCodec,
-    organizationType: organizationTypeCodec,
     project: projectCodec,
     bool: TYPES.boolean,
-    userOrganization: userOrganizationCodec,
-    memberRole: memberRoleCodec
+    invitation: invitationCodec,
+    invitationStatus: invitationStatusCodec
   },
   pgResources: {
     __proto__: null,
@@ -2471,6 +2667,7 @@ const registryConfig = {
     column: registryConfig_pgResources_column_column,
     project_column: registryConfig_pgResources_project_column_project_column,
     user_preference: registryConfig_pgResources_user_preference_user_preference,
+    user_organization: registryConfig_pgResources_user_organization_user_organization,
     settings: {
       executor: executor,
       name: "settings",
@@ -2499,7 +2696,7 @@ const registryConfig = {
     },
     task: registryConfig_pgResources_task_task,
     project: registryConfig_pgResources_project_project,
-    user_organization: registryConfig_pgResources_user_organization_user_organization
+    invitation: registryConfig_pgResources_invitation_invitation
   },
   pgRelations: {
     __proto__: null,
@@ -2591,6 +2788,24 @@ const registryConfig = {
         remoteResourceOptions: registryConfig_pgResources_user_user,
         localCodecPolymorphicTypes: undefined,
         localAttributes: ["user_id"],
+        remoteAttributes: ["id"],
+        isUnique: true,
+        isReferencee: false,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
+      }
+    },
+    invitation: {
+      __proto__: null,
+      userByMyInviterUserId: {
+        localCodec: invitationCodec,
+        remoteResourceOptions: registryConfig_pgResources_user_user,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["inviter_user_id"],
         remoteAttributes: ["id"],
         isUnique: true,
         isReferencee: false,
@@ -3062,6 +3277,21 @@ const registryConfig = {
             behavior: []
           }
         }
+      },
+      invitationsByTheirInviterUserId: {
+        localCodec: userCodec,
+        remoteResourceOptions: registryConfig_pgResources_invitation_invitation,
+        localCodecPolymorphicTypes: undefined,
+        localAttributes: ["id"],
+        remoteAttributes: ["inviter_user_id"],
+        isUnique: false,
+        isReferencee: true,
+        description: undefined,
+        extensions: {
+          tags: {
+            behavior: []
+          }
+        }
       }
     },
     userOrganization: {
@@ -3129,10 +3359,11 @@ const resource_labelPgResource = registry.pgResources["label"];
 const resource_columnPgResource = registry.pgResources["column"];
 const resource_project_columnPgResource = registry.pgResources["project_column"];
 const resource_user_preferencePgResource = registry.pgResources["user_preference"];
+const resource_user_organizationPgResource = registry.pgResources["user_organization"];
 const resource_settingsPgResource = registry.pgResources["settings"];
 const resource_taskPgResource = registry.pgResources["task"];
 const resource_projectPgResource = registry.pgResources["project"];
-const resource_user_organizationPgResource = registry.pgResources["user_organization"];
+const resource_invitationPgResource = registry.pgResources["invitation"];
 const nodeIdHandler_ProjectProjectLabel = {
   typeName: "ProjectProjectLabel",
   codec: nodeIdCodecs_base64JSON_base64JSON,
@@ -3439,6 +3670,32 @@ const nodeFetcher_UserPreference = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_UserPreference));
   return nodeIdHandler_UserPreference.get(nodeIdHandler_UserPreference.getSpec($decoded));
 };
+const nodeIdHandler_UserOrganization = {
+  typeName: "UserOrganization",
+  codec: nodeIdCodecs_base64JSON_base64JSON,
+  deprecationReason: undefined,
+  plan($record) {
+    return list([constant("UserOrganization", false), $record.get("id")]);
+  },
+  getSpec($list) {
+    return {
+      id: inhibitOnNull(access($list, [1]))
+    };
+  },
+  getIdentifiers(value) {
+    return value.slice(1);
+  },
+  get(spec) {
+    return resource_user_organizationPgResource.get(spec);
+  },
+  match(obj) {
+    return obj[0] === "UserOrganization";
+  }
+};
+const nodeFetcher_UserOrganization = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_UserOrganization));
+  return nodeIdHandler_UserOrganization.get(nodeIdHandler_UserOrganization.getSpec($decoded));
+};
 const nodeIdHandler_Setting = {
   typeName: "Setting",
   codec: nodeIdCodecs_base64JSON_base64JSON,
@@ -3517,12 +3774,12 @@ const nodeFetcher_Project = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Project));
   return nodeIdHandler_Project.get(nodeIdHandler_Project.getSpec($decoded));
 };
-const nodeIdHandler_UserOrganization = {
-  typeName: "UserOrganization",
+const nodeIdHandler_Invitation = {
+  typeName: "Invitation",
   codec: nodeIdCodecs_base64JSON_base64JSON,
   deprecationReason: undefined,
   plan($record) {
-    return list([constant("UserOrganization", false), $record.get("id")]);
+    return list([constant("Invitation", false), $record.get("id")]);
   },
   getSpec($list) {
     return {
@@ -3533,15 +3790,15 @@ const nodeIdHandler_UserOrganization = {
     return value.slice(1);
   },
   get(spec) {
-    return resource_user_organizationPgResource.get(spec);
+    return resource_invitationPgResource.get(spec);
   },
   match(obj) {
-    return obj[0] === "UserOrganization";
+    return obj[0] === "Invitation";
   }
 };
-const nodeFetcher_UserOrganization = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_UserOrganization));
-  return nodeIdHandler_UserOrganization.get(nodeIdHandler_UserOrganization.getSpec($decoded));
+const nodeFetcher_Invitation = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Invitation));
+  return nodeIdHandler_Invitation.get(nodeIdHandler_Invitation.getSpec($decoded));
 };
 function qbWhereBuilder(qb) {
   return qb.whereBuilder();
@@ -3714,6 +3971,30 @@ function assertAllowed15(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+function assertAllowed16(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+const allFields2 = [{
+  name: "rowId",
+  type: "UUID!"
+}, {
+  name: "identityProviderId",
+  type: "UUID!"
+}, {
+  name: "name",
+  type: "String!"
+}, {
+  name: "email",
+  type: "String!"
+}];
 const nodeIdHandlerByTypeName = {
   __proto__: null,
   Query: nodeIdHandler_Query,
@@ -3728,10 +4009,11 @@ const nodeIdHandlerByTypeName = {
   Column: nodeIdHandler_Column,
   ProjectColumn: nodeIdHandler_ProjectColumn,
   UserPreference: nodeIdHandler_UserPreference,
+  UserOrganization: nodeIdHandler_UserOrganization,
   Setting: nodeIdHandler_Setting,
   Task: nodeIdHandler_Task,
   Project: nodeIdHandler_Project,
-  UserOrganization: nodeIdHandler_UserOrganization
+  Invitation: nodeIdHandler_Invitation
 };
 const decodeNodeId = makeDecodeNodeId(Object.values(nodeIdHandlerByTypeName));
 function findTypeNameMatch(specifier) {
@@ -3750,17 +4032,6 @@ const coerce = string => {
   if (!/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(string)) throw new GraphQLError("Invalid UUID, expected 32 hexadecimal characters, optionally with hyphens");
   return string;
 };
-function assertAllowed16(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed17(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -3806,6 +4077,17 @@ function assertAllowed20(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed21(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed22(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4062,17 +4344,6 @@ const colSpec12 = {
   attributeName: "next_task_number",
   attribute: spec_project.attributes.next_task_number
 };
-function assertAllowed22(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed23(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -4085,6 +4356,17 @@ function assertAllowed23(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed24(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed25(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4617,7 +4899,7 @@ const resolve68 = (i, v) => sql`${i} < ${v}`;
 const resolve69 = (i, v) => sql`${i} <= ${v}`;
 const resolve70 = (i, v) => sql`${i} > ${v}`;
 const resolve71 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed25(value, mode) {
+function assertAllowed26(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4727,17 +5009,6 @@ const colSpec19 = {
   attributeName: "icon",
   attribute: spec_column.attributes.icon
 };
-function assertAllowed26(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed27(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -4761,6 +5032,17 @@ function assertAllowed28(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed29(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed30(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4831,17 +5113,6 @@ const colSpec31 = {
   attributeName: "number",
   attribute: spec_task.attributes.number
 };
-function assertAllowed30(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed31(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -4865,6 +5136,17 @@ function assertAllowed32(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed33(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed34(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4900,7 +5182,7 @@ const colSpec36 = {
   attributeName: "deleted_at",
   attribute: spec_assignee.attributes.deleted_at
 };
-function assertAllowed34(value, mode) {
+function assertAllowed35(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4911,7 +5193,7 @@ function assertAllowed34(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed35(value, mode) {
+function assertAllowed36(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -4957,17 +5239,6 @@ const colSpec43 = {
   attributeName: "email",
   attribute: spec_user.attributes.email
 };
-function assertAllowed36(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed37(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -4980,6 +5251,17 @@ function assertAllowed37(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed38(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed39(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5040,7 +5322,7 @@ const resolve79 = (i, v) => sql`${i} < ${v}`;
 const resolve80 = (i, v) => sql`${i} <= ${v}`;
 const resolve81 = (i, v) => sql`${i} > ${v}`;
 const resolve82 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed39(value, mode) {
+function assertAllowed40(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5086,17 +5368,6 @@ const colSpec50 = {
   attributeName: "updated_at",
   attribute: spec_post.attributes.updated_at
 };
-function assertAllowed40(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed41(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5120,6 +5391,17 @@ function assertAllowed42(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed43(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed44(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5160,17 +5442,6 @@ const colSpec56 = {
   attributeName: "updated_at",
   attribute: spec_emoji.attributes.updated_at
 };
-function assertAllowed44(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed45(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5183,6 +5454,17 @@ function assertAllowed45(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 function assertAllowed46(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed47(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5243,7 +5525,7 @@ const resolve90 = (i, v) => sql`${i} < ${v}`;
 const resolve91 = (i, v) => sql`${i} <= ${v}`;
 const resolve92 = (i, v) => sql`${i} > ${v}`;
 const resolve93 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed47(value, mode) {
+function assertAllowed48(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5294,7 +5576,7 @@ const colSpec64 = {
   attributeName: "color",
   attribute: spec_userPreference.attributes.color
 };
-function assertAllowed48(value, mode) {
+function assertAllowed49(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5305,7 +5587,7 @@ function assertAllowed48(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed49(value, mode) {
+function assertAllowed50(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5368,7 +5650,7 @@ const resolve108 = (i, v) => sql`${v} > ANY (${i})`;
 const resolve109 = (i, v) => sql`${v} >= ANY (${i})`;
 const resolve110 = (i, v) => sql`${v} < ANY (${i})`;
 const resolve111 = (i, v) => sql`${v} <= ANY (${i})`;
-function assertAllowed50(value, mode) {
+function assertAllowed51(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5379,7 +5661,7 @@ function assertAllowed50(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed51(value, mode) {
+function assertAllowed52(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5440,7 +5722,7 @@ const colSpec74 = {
   attributeName: "updated_at",
   attribute: spec_userOrganization.attributes.updated_at
 };
-function assertAllowed52(value, mode) {
+function assertAllowed53(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5451,7 +5733,7 @@ function assertAllowed52(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function assertAllowed53(value, mode) {
+function assertAllowed54(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -5562,17 +5844,6 @@ const resolve130 = (i, v) => sql`${i} < ${v}`;
 const resolve131 = (i, v) => sql`${i} <= ${v}`;
 const resolve132 = (i, v) => sql`${i} > ${v}`;
 const resolve133 = (i, v) => sql`${i} >= ${v}`;
-function assertAllowed54(value, mode) {
-  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-  if (mode === "list" && !true) {
-    const arr = value;
-    if (arr) {
-      const l = arr.length;
-      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
-    }
-  }
-  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
-}
 function assertAllowed55(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5585,24 +5856,49 @@ function assertAllowed55(value, mode) {
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
 const colSpec75 = {
-  fieldName: "taskId",
-  attributeName: "task_id",
-  attribute: spec_taskLabel.attributes.task_id
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_invitation.attributes.id
 };
 const colSpec76 = {
-  fieldName: "labelId",
-  attributeName: "label_id",
-  attribute: spec_taskLabel.attributes.label_id
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_invitation.attributes.organization_id
 };
 const colSpec77 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_taskLabel.attributes.created_at
+  fieldName: "inviterUserId",
+  attributeName: "inviter_user_id",
+  attribute: spec_invitation.attributes.inviter_user_id
 };
 const colSpec78 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_taskLabel.attributes.updated_at
+  fieldName: "email",
+  attributeName: "email",
+  attribute: spec_invitation.attributes.email
+};
+const colSpec79 = {
+  fieldName: "role",
+  attributeName: "role",
+  attribute: spec_invitation.attributes.role
+};
+const colSpec80 = {
+  fieldName: "token",
+  attributeName: "token",
+  attribute: spec_invitation.attributes.token
+};
+const colSpec81 = {
+  fieldName: "status",
+  attributeName: "status",
+  attribute: spec_invitation.attributes.status
+};
+const colSpec82 = {
+  fieldName: "expiresAt",
+  attributeName: "expires_at",
+  attribute: spec_invitation.attributes.expires_at
+};
+const colSpec83 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_invitation.attributes.created_at
 };
 function assertAllowed56(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -5626,46 +5922,56 @@ function assertAllowed57(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec79 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_label.attributes.id
-};
-const colSpec80 = {
-  fieldName: "name",
-  attributeName: "name",
-  attribute: spec_label.attributes.name
-};
-const colSpec81 = {
-  fieldName: "color",
-  attributeName: "color",
-  attribute: spec_label.attributes.color
-};
-const colSpec82 = {
-  fieldName: "projectId",
-  attributeName: "project_id",
-  attribute: spec_label.attributes.project_id
-};
-const colSpec83 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_label.attributes.created_at
-};
-const colSpec84 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_label.attributes.updated_at
-};
-const colSpec85 = {
-  fieldName: "icon",
-  attributeName: "icon",
-  attribute: spec_label.attributes.icon
-};
-const colSpec86 = {
-  fieldName: "organizationId",
-  attributeName: "organization_id",
-  attribute: spec_label.attributes.organization_id
-};
+const resolve134 = (i, _v, input) => sql`${i} ${input ? sql`IS NULL` : sql`IS NOT NULL`}`;
+const resolveInputCodec42 = () => TYPES.boolean;
+const resolveSqlValue21 = () => sql.null;
+const resolve135 = (i, v) => sql`${i} = ${v}`;
+const forceTextTypesSensitive11 = [TYPES.citext, TYPES.char, TYPES.bpchar];
+function resolveDomains11(c) {
+  let current = c;
+  while (current.domainOfCodec) current = current.domainOfCodec;
+  return current;
+}
+function resolveInputCodec43(c) {
+  if (c.arrayOfCodec) {
+    if (forceTextTypesSensitive11.includes(resolveDomains11(c.arrayOfCodec))) return listOfCodec(TYPES.text, {
+      extensions: {
+        listItemNonNull: c.extensions?.listItemNonNull
+      }
+    });
+    return c;
+  } else {
+    if (forceTextTypesSensitive11.includes(resolveDomains11(c))) return TYPES.text;
+    return c;
+  }
+}
+function resolveSqlIdentifier22(identifier, c) {
+  if (c.arrayOfCodec && forceTextTypesSensitive11.includes(resolveDomains11(c.arrayOfCodec))) return [sql`(${identifier})::text[]`, listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: c.extensions?.listItemNonNull
+    }
+  })];else if (forceTextTypesSensitive11.includes(resolveDomains11(c))) return [sql`(${identifier})::text`, TYPES.text];else return [identifier, c];
+}
+const resolve136 = (i, v) => sql`${i} <> ${v}`;
+const resolve137 = (i, v) => sql`${i} IS DISTINCT FROM ${v}`;
+const resolve138 = (i, v) => sql`${i} IS NOT DISTINCT FROM ${v}`;
+const resolve139 = (i, v) => sql`${i} = ANY(${v})`;
+function resolveInputCodec44(c) {
+  if (forceTextTypesSensitive11.includes(resolveDomains11(c))) return listOfCodec(TYPES.text, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });else return listOfCodec(c, {
+    extensions: {
+      listItemNonNull: !0
+    }
+  });
+}
+const resolve140 = (i, v) => sql`${i} <> ALL(${v})`;
+const resolve141 = (i, v) => sql`${i} < ${v}`;
+const resolve142 = (i, v) => sql`${i} <= ${v}`;
+const resolve143 = (i, v) => sql`${i} > ${v}`;
+const resolve144 = (i, v) => sql`${i} >= ${v}`;
 function assertAllowed58(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5688,6 +5994,26 @@ function assertAllowed59(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec84 = {
+  fieldName: "taskId",
+  attributeName: "task_id",
+  attribute: spec_taskLabel.attributes.task_id
+};
+const colSpec85 = {
+  fieldName: "labelId",
+  attributeName: "label_id",
+  attribute: spec_taskLabel.attributes.label_id
+};
+const colSpec86 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_taskLabel.attributes.created_at
+};
+const colSpec87 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_taskLabel.attributes.updated_at
+};
 function assertAllowed60(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5710,6 +6036,46 @@ function assertAllowed61(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec88 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_label.attributes.id
+};
+const colSpec89 = {
+  fieldName: "name",
+  attributeName: "name",
+  attribute: spec_label.attributes.name
+};
+const colSpec90 = {
+  fieldName: "color",
+  attributeName: "color",
+  attribute: spec_label.attributes.color
+};
+const colSpec91 = {
+  fieldName: "projectId",
+  attributeName: "project_id",
+  attribute: spec_label.attributes.project_id
+};
+const colSpec92 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_label.attributes.created_at
+};
+const colSpec93 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_label.attributes.updated_at
+};
+const colSpec94 = {
+  fieldName: "icon",
+  attributeName: "icon",
+  attribute: spec_label.attributes.icon
+};
+const colSpec95 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_label.attributes.organization_id
+};
 function assertAllowed62(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5754,21 +6120,6 @@ function assertAllowed65(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec87 = {
-  fieldName: "projectId",
-  attributeName: "project_id",
-  attribute: spec_projectProjectLabel.attributes.project_id
-};
-const colSpec88 = {
-  fieldName: "projectLabelId",
-  attributeName: "project_label_id",
-  attribute: spec_projectProjectLabel.attributes.project_label_id
-};
-const colSpec89 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_projectProjectLabel.attributes.created_at
-};
 function assertAllowed66(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5791,41 +6142,6 @@ function assertAllowed67(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec90 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_projectLabel.attributes.id
-};
-const colSpec91 = {
-  fieldName: "name",
-  attributeName: "name",
-  attribute: spec_projectLabel.attributes.name
-};
-const colSpec92 = {
-  fieldName: "color",
-  attributeName: "color",
-  attribute: spec_projectLabel.attributes.color
-};
-const colSpec93 = {
-  fieldName: "icon",
-  attributeName: "icon",
-  attribute: spec_projectLabel.attributes.icon
-};
-const colSpec94 = {
-  fieldName: "organizationId",
-  attributeName: "organization_id",
-  attribute: spec_projectLabel.attributes.organization_id
-};
-const colSpec95 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_projectLabel.attributes.created_at
-};
-const colSpec96 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_projectLabel.attributes.updated_at
-};
 function assertAllowed68(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5848,6 +6164,21 @@ function assertAllowed69(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec96 = {
+  fieldName: "projectId",
+  attributeName: "project_id",
+  attribute: spec_projectProjectLabel.attributes.project_id
+};
+const colSpec97 = {
+  fieldName: "projectLabelId",
+  attributeName: "project_label_id",
+  attribute: spec_projectProjectLabel.attributes.project_label_id
+};
+const colSpec98 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_projectProjectLabel.attributes.created_at
+};
 function assertAllowed70(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5859,41 +6190,6 @@ function assertAllowed70(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const colSpec97 = {
-  fieldName: "rowId",
-  attributeName: "id",
-  attribute: spec_projectColumn.attributes.id
-};
-const colSpec98 = {
-  fieldName: "icon",
-  attributeName: "icon",
-  attribute: spec_projectColumn.attributes.icon
-};
-const colSpec99 = {
-  fieldName: "title",
-  attributeName: "title",
-  attribute: spec_projectColumn.attributes.title
-};
-const colSpec100 = {
-  fieldName: "organizationId",
-  attributeName: "organization_id",
-  attribute: spec_projectColumn.attributes.organization_id
-};
-const colSpec101 = {
-  fieldName: "index",
-  attributeName: "index",
-  attribute: spec_projectColumn.attributes.index
-};
-const colSpec102 = {
-  fieldName: "createdAt",
-  attributeName: "created_at",
-  attribute: spec_projectColumn.attributes.created_at
-};
-const colSpec103 = {
-  fieldName: "updatedAt",
-  attributeName: "updated_at",
-  attribute: spec_projectColumn.attributes.updated_at
-};
 function assertAllowed71(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5905,6 +6201,41 @@ function assertAllowed71(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec99 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_projectLabel.attributes.id
+};
+const colSpec100 = {
+  fieldName: "name",
+  attributeName: "name",
+  attribute: spec_projectLabel.attributes.name
+};
+const colSpec101 = {
+  fieldName: "color",
+  attributeName: "color",
+  attribute: spec_projectLabel.attributes.color
+};
+const colSpec102 = {
+  fieldName: "icon",
+  attributeName: "icon",
+  attribute: spec_projectLabel.attributes.icon
+};
+const colSpec103 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_projectLabel.attributes.organization_id
+};
+const colSpec104 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_projectLabel.attributes.created_at
+};
+const colSpec105 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_projectLabel.attributes.updated_at
+};
 function assertAllowed72(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5927,11 +6258,6 @@ function assertAllowed73(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-const relation = registry.pgRelations["project"]["columnsByTheirProjectId"];
-const relation2 = registry.pgRelations["project"]["tasksByTheirProjectId"];
-const relation3 = registry.pgRelations["project"]["labelsByTheirProjectId"];
-const relation4 = registry.pgRelations["project"]["userPreferencesByTheirProjectId"];
-const relation5 = registry.pgRelations["project"]["projectProjectLabelsByTheirProjectId"];
 function assertAllowed74(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5943,6 +6269,41 @@ function assertAllowed74(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const colSpec106 = {
+  fieldName: "rowId",
+  attributeName: "id",
+  attribute: spec_projectColumn.attributes.id
+};
+const colSpec107 = {
+  fieldName: "icon",
+  attributeName: "icon",
+  attribute: spec_projectColumn.attributes.icon
+};
+const colSpec108 = {
+  fieldName: "title",
+  attributeName: "title",
+  attribute: spec_projectColumn.attributes.title
+};
+const colSpec109 = {
+  fieldName: "organizationId",
+  attributeName: "organization_id",
+  attribute: spec_projectColumn.attributes.organization_id
+};
+const colSpec110 = {
+  fieldName: "index",
+  attributeName: "index",
+  attribute: spec_projectColumn.attributes.index
+};
+const colSpec111 = {
+  fieldName: "createdAt",
+  attributeName: "created_at",
+  attribute: spec_projectColumn.attributes.created_at
+};
+const colSpec112 = {
+  fieldName: "updatedAt",
+  attributeName: "updated_at",
+  attribute: spec_projectColumn.attributes.updated_at
+};
 function assertAllowed75(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -5976,6 +6337,11 @@ function assertAllowed77(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+const relation = registry.pgRelations["project"]["columnsByTheirProjectId"];
+const relation2 = registry.pgRelations["project"]["tasksByTheirProjectId"];
+const relation3 = registry.pgRelations["project"]["labelsByTheirProjectId"];
+const relation4 = registry.pgRelations["project"]["userPreferencesByTheirProjectId"];
+const relation5 = registry.pgRelations["project"]["projectProjectLabelsByTheirProjectId"];
 function assertAllowed78(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
@@ -6053,11 +6419,66 @@ function assertAllowed84(value, mode) {
   }
   if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
+function assertAllowed85(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed86(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed87(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed88(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
+function assertAllowed89(value, mode) {
+  if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+  if (mode === "list" && !true) {
+    const arr = value;
+    if (arr) {
+      const l = arr.length;
+      for (let i = 0; i < l; i++) if (isEmpty(arr[i])) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+    }
+  }
+  if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+}
 const relation6 = registry.pgRelations["post"]["emojisByTheirPostId"];
 const relation7 = registry.pgRelations["task"]["assigneesByTheirTaskId"];
 const relation8 = registry.pgRelations["task"]["postsByTheirTaskId"];
 const relation9 = registry.pgRelations["task"]["taskLabelsByTheirTaskId"];
-function assertAllowed85(value, mode) {
+function assertAllowed90(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6070,7 +6491,7 @@ function assertAllowed85(value, mode) {
 }
 const relation10 = registry.pgRelations["column"]["tasksByTheirColumnId"];
 const relation11 = registry.pgRelations["label"]["taskLabelsByTheirLabelId"];
-function assertAllowed86(value, mode) {
+function assertAllowed91(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6087,54 +6508,55 @@ const relation14 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
 const relation15 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
 const relation16 = registry.pgRelations["user"]["emojisByTheirUserId"];
 const relation17 = registry.pgRelations["user"]["userOrganizationsByTheirUserId"];
-const relation18 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
-const relation19 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
-const colSpec104 = {
+const relation18 = registry.pgRelations["user"]["invitationsByTheirInviterUserId"];
+const relation19 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
+const relation20 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
+const colSpec113 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_settings.attributes.id
 };
-const colSpec105 = {
+const colSpec114 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_settings.attributes.created_at
 };
-const colSpec106 = {
+const colSpec115 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_settings.attributes.updated_at
 };
-const colSpec107 = {
+const colSpec116 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_settings.attributes.view_mode
 };
-const colSpec108 = {
+const colSpec117 = {
   fieldName: "billingAccountId",
   attributeName: "billing_account_id",
   attribute: spec_settings.attributes.billing_account_id
 };
-const colSpec109 = {
+const colSpec118 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_settings.attributes.organization_id
 };
-const colSpec110 = {
+const colSpec119 = {
   fieldName: "subscriptionId",
   attributeName: "subscription_id",
   attribute: spec_settings.attributes.subscription_id
 };
-const colSpec111 = {
+const colSpec120 = {
   fieldName: "deletedAt",
   attributeName: "deleted_at",
   attribute: spec_settings.attributes.deleted_at
 };
-const colSpec112 = {
+const colSpec121 = {
   fieldName: "deletionReason",
   attributeName: "deletion_reason",
   attribute: spec_settings.attributes.deletion_reason
 };
-function assertAllowed87(value, mode) {
+function assertAllowed92(value, mode) {
   if (mode === "object" && !true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
   if (mode === "list" && !true) {
     const arr = value;
@@ -6559,13 +6981,118 @@ const planWrapper10 = (plan, _, fieldArgs) => {
   return plan();
 };
 function oldPlan11(_, args) {
+  const $insert = pgInsertSingle(resource_user_organizationPgResource, Object.create(null));
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const ROLE_RANK = {
+  owner: 3,
+  admin: 2,
+  member: 1
+};
+const planWrapper11 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "userOrganization"]),
+    $observer = context().get("observer"),
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $withPgClient, $authzCache, $accessToken], async ([input, observer, withPgClient, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    if ("create" === "create") {
+      const memberInput = input,
+        organizationId = memberInput.organizationId,
+        pdpAllowed = await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache),
+        callerRole = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+            values: [observer.id, organizationId]
+          })).rows[0]?.role ?? null;
+        });
+      if (!pdpAllowed) {
+        if (!callerRole || callerRole !== "owner" && callerRole !== "admin") throw Error("Unauthorized");
+      }
+      if (callerRole === "member") throw Error("Unauthorized");
+      const totalMembers = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1",
+          values: [organizationId]
+        })).rows[0]?.total ?? 0;
+      });
+      if (!(await isWithinLimit({
+        organizationId
+      }, FEATURE_KEYS.MAX_MEMBERS, totalMembers, billingBypassOrgIds))) throw Error("Maximum number of members reached");
+      if (memberInput.role === "admin" || memberInput.role === "owner") {
+        const totalAdmins = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1 AND role IN ('admin', 'owner')",
+            values: [organizationId]
+          })).rows[0]?.total ?? 0;
+        });
+        if (!(await isWithinLimit({
+          organizationId
+        }, FEATURE_KEYS.MAX_ADMINS, totalAdmins, billingBypassOrgIds))) throw Error("Maximum number of admins reached");
+      }
+      if (memberInput.type === "team") {
+        await withPgClient(null, async client => {
+          if ((await client.query({
+            text: "SELECT id FROM project_column WHERE organization_id = $1 LIMIT 1",
+            values: [organizationId]
+          })).rows.length === 0) await client.query({
+            text: "INSERT INTO project_column (organization_id, emoji, title, index) VALUES ($1, '\uD83D\uDDD3', 'Planned', 0), ($1, '\uD83D\uDEA7', 'In Progress', 1), ($1, '\u2705', 'Completed', 2)",
+            values: [organizationId]
+          });
+        });
+        await withPgClient(null, async client => {
+          if ((await client.query({
+            text: "SELECT id FROM settings WHERE organization_id = $1 LIMIT 1",
+            values: [organizationId]
+          })).rows.length === 0) await client.query({
+            text: "INSERT INTO settings (organization_id, view_mode) VALUES ($1, 'board')",
+            values: [organizationId]
+          });
+        });
+      }
+    } else {
+      const targetRowId = input,
+        target = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT user_id, organization_id, role FROM user_organization WHERE id = $1",
+            values: [targetRowId]
+          })).rows[0] ?? null;
+        });
+      if (!target) throw Error("Membership not found");
+      if (target.user_id === observer.id) throw Error("Cannot modify your own membership");
+      const callerRole = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+          values: [observer.id, target.organization_id]
+        })).rows[0]?.role ?? null;
+      });
+      if (!callerRole) throw Error("Unauthorized");
+      if ((ROLE_RANK[callerRole] ?? 0) <= (ROLE_RANK[target.role] ?? 0)) throw Error("Unauthorized");
+      if (target.role === "owner") {
+        if ((await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1 AND role = 'owner'",
+            values: [target.organization_id]
+          })).rows[0]?.total ?? 0;
+        })) <= 1) throw Error("Cannot remove the last owner");
+      }
+    }
+  });
+  return plan();
+};
+function oldPlan12(_, args) {
   const $insert = pgInsertSingle(resource_taskPgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper11 = (plan, _, fieldArgs) => {
+const planWrapper12 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "task"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6614,14 +7141,14 @@ const planWrapper11 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan13(_, args) {
+function oldPlan14(_, args) {
   const $insert = pgInsertSingle(resource_projectPgResource, Object.create(null));
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper12 = (plan, _, fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "project"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6657,25 +7184,25 @@ const planWrapper12 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan12(...planParams) {
+function oldPlan13(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan13.apply(this, args);
+        $prev = oldPlan14.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at ${"Mutation"}.${"createProject"}, but that function did not return a step!
-${String(oldPlan13)}`);
+${String(oldPlan14)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper13 = (plan, _, fieldArgs) => {
+const planWrapper14 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "project"]),
     $accessToken = context().get("accessToken"),
@@ -6699,6 +7226,55 @@ const planWrapper13 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
+function oldPlan15(_, args) {
+  const $insert = pgInsertSingle(resource_invitationPgResource, Object.create(null));
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper15 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "invitation"]),
+    $observer = context().get("observer"),
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $withPgClient, $authzCache, $accessToken], async ([input, observer, withPgClient, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    if ("create" === "create") {
+      const organizationId = input.organizationId;
+      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) {
+        const callerRole = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+            values: [observer.id, organizationId]
+          })).rows[0]?.role ?? null;
+        });
+        if (!callerRole || callerRole !== "owner" && callerRole !== "admin") throw Error("Unauthorized");
+      }
+    } else {
+      const targetRowId = input,
+        invitation = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT organization_id FROM invitation WHERE id = $1",
+            values: [targetRowId]
+          })).rows[0] ?? null;
+        });
+      if (!invitation) throw Error("Invitation not found");
+      if (!(await checkPermission(observer.id, "organization", invitation.organization_id, "admin", accessToken, authzCache))) {
+        const callerRole = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+            values: [observer.id, invitation.organization_id]
+          })).rows[0]?.role ?? null;
+        });
+        if (!callerRole || callerRole !== "owner" && callerRole !== "admin") throw Error("Unauthorized");
+      }
+    }
+  });
+  return plan();
+};
 const specFromArgs_ProjectProjectLabel = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectProjectLabel, $nodeId);
@@ -6715,7 +7291,7 @@ const specFromArgs_Emoji = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
 };
-const oldPlan14 = (_$root, args) => {
+const oldPlan16 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_emojiPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6724,7 +7300,7 @@ const oldPlan14 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper14 = (plan, _, fieldArgs) => {
+const planWrapper16 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6780,7 +7356,7 @@ const specFromArgs_User = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan15 = (_$root, args) => {
+const oldPlan17 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6789,7 +7365,7 @@ const oldPlan15 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper15 = (plan, _, fieldArgs) => {
+const planWrapper17 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -6805,7 +7381,7 @@ const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan16 = (_$root, args) => {
+const oldPlan18 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6814,7 +7390,7 @@ const oldPlan16 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper16 = (plan, _, fieldArgs) => {
+const planWrapper18 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6866,7 +7442,7 @@ const specFromArgs_Label = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Label, $nodeId);
 };
-const oldPlan17 = (_$root, args) => {
+const oldPlan19 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6875,7 +7451,7 @@ const oldPlan17 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper17 = (plan, _, fieldArgs) => {
+const planWrapper19 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6934,7 +7510,7 @@ const specFromArgs_Column = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Column, $nodeId);
 };
-const oldPlan18 = (_$root, args) => {
+const oldPlan20 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6943,7 +7519,7 @@ const oldPlan18 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper18 = (plan, _, fieldArgs) => {
+const planWrapper20 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6990,7 +7566,7 @@ const specFromArgs_ProjectColumn = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
 };
-const oldPlan19 = (_$root, args) => {
+const oldPlan21 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6999,7 +7575,7 @@ const oldPlan19 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper19 = (plan, _, fieldArgs) => {
+const planWrapper21 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7032,7 +7608,7 @@ const specFromArgs_UserPreference = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
 };
-const oldPlan20 = (_$root, args) => {
+const oldPlan22 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7041,7 +7617,7 @@ const oldPlan20 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper20 = (plan, _, fieldArgs) => {
+const planWrapper22 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -7063,6 +7639,112 @@ const planWrapper20 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
+const specFromArgs_UserOrganization = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_UserOrganization, $nodeId);
+};
+const oldPlan23 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_user_organizationPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper23 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $withPgClient, $authzCache, $accessToken], async ([input, observer, withPgClient, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    if ("update" === "create") {
+      const memberInput = input,
+        organizationId = memberInput.organizationId,
+        pdpAllowed = await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache),
+        callerRole = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+            values: [observer.id, organizationId]
+          })).rows[0]?.role ?? null;
+        });
+      if (!pdpAllowed) {
+        if (!callerRole || callerRole !== "owner" && callerRole !== "admin") throw Error("Unauthorized");
+      }
+      if (callerRole === "member") throw Error("Unauthorized");
+      const totalMembers = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1",
+          values: [organizationId]
+        })).rows[0]?.total ?? 0;
+      });
+      if (!(await isWithinLimit({
+        organizationId
+      }, FEATURE_KEYS.MAX_MEMBERS, totalMembers, billingBypassOrgIds))) throw Error("Maximum number of members reached");
+      if (memberInput.role === "admin" || memberInput.role === "owner") {
+        const totalAdmins = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1 AND role IN ('admin', 'owner')",
+            values: [organizationId]
+          })).rows[0]?.total ?? 0;
+        });
+        if (!(await isWithinLimit({
+          organizationId
+        }, FEATURE_KEYS.MAX_ADMINS, totalAdmins, billingBypassOrgIds))) throw Error("Maximum number of admins reached");
+      }
+      if (memberInput.type === "team") {
+        await withPgClient(null, async client => {
+          if ((await client.query({
+            text: "SELECT id FROM project_column WHERE organization_id = $1 LIMIT 1",
+            values: [organizationId]
+          })).rows.length === 0) await client.query({
+            text: "INSERT INTO project_column (organization_id, emoji, title, index) VALUES ($1, '\uD83D\uDDD3', 'Planned', 0), ($1, '\uD83D\uDEA7', 'In Progress', 1), ($1, '\u2705', 'Completed', 2)",
+            values: [organizationId]
+          });
+        });
+        await withPgClient(null, async client => {
+          if ((await client.query({
+            text: "SELECT id FROM settings WHERE organization_id = $1 LIMIT 1",
+            values: [organizationId]
+          })).rows.length === 0) await client.query({
+            text: "INSERT INTO settings (organization_id, view_mode) VALUES ($1, 'board')",
+            values: [organizationId]
+          });
+        });
+      }
+    } else {
+      const targetRowId = input,
+        target = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT user_id, organization_id, role FROM user_organization WHERE id = $1",
+            values: [targetRowId]
+          })).rows[0] ?? null;
+        });
+      if (!target) throw Error("Membership not found");
+      if (target.user_id === observer.id) throw Error("Cannot modify your own membership");
+      const callerRole = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+          values: [observer.id, target.organization_id]
+        })).rows[0]?.role ?? null;
+      });
+      if (!callerRole) throw Error("Unauthorized");
+      if ((ROLE_RANK[callerRole] ?? 0) <= (ROLE_RANK[target.role] ?? 0)) throw Error("Unauthorized");
+      if (target.role === "owner") {
+        if ((await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1 AND role = 'owner'",
+            values: [target.organization_id]
+          })).rows[0]?.total ?? 0;
+        })) <= 1) throw Error("Cannot remove the last owner");
+      }
+    }
+  });
+  return plan();
+};
 const specFromArgs_Setting = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Setting, $nodeId);
@@ -7071,7 +7753,7 @@ const specFromArgs_Task = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Task, $nodeId);
 };
-const oldPlan21 = (_$root, args) => {
+const oldPlan24 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7080,7 +7762,7 @@ const oldPlan21 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper21 = (plan, _, fieldArgs) => {
+const planWrapper24 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7133,7 +7815,7 @@ const specFromArgs_Project = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
 };
-const oldPlan22 = (_$root, args) => {
+const oldPlan25 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7142,7 +7824,7 @@ const oldPlan22 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper22 = (plan, _, fieldArgs) => {
+const planWrapper25 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7178,9 +7860,9 @@ const planWrapper22 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_UserOrganization = args => {
+const specFromArgs_Invitation = args => {
   const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_UserOrganization, $nodeId);
+  return specFromNodeId(nodeIdHandler_Invitation, $nodeId);
 };
 const specFromArgs_ProjectProjectLabel2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -7190,7 +7872,7 @@ const specFromArgs_TaskLabel2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TaskLabel, $nodeId);
 };
-const oldPlan23 = (_$root, args) => {
+const oldPlan26 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_task_labelPgResource, {
     task_id: args.getRaw(['input', "taskId"]),
     label_id: args.getRaw(['input', "labelId"])
@@ -7200,7 +7882,7 @@ const oldPlan23 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper23 = (plan, _, fieldArgs) => {
+const planWrapper26 = (plan, _, fieldArgs) => {
   const $taskId = fieldArgs.getRaw(["input", "taskId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7228,7 +7910,7 @@ const specFromArgs_Assignee2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Assignee, $nodeId);
 };
-const oldPlan25 = (_$root, args) => {
+const oldPlan28 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_assigneePgResource, {
     task_id: args.getRaw(['input', "taskId"]),
     user_id: args.getRaw(['input', "userId"])
@@ -7238,7 +7920,7 @@ const oldPlan25 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper24 = (plan, _, fieldArgs) => {
+const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input"]),
     $db = context().get("db");
   sideEffect([$input, $db], async ([input, db]) => {
@@ -7269,25 +7951,25 @@ const planWrapper24 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan24(...planParams) {
+function oldPlan27(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan25.apply(this, args);
+        $prev = oldPlan28.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteAssignee"}, but that function did not return a step!
-${String(oldPlan25)}`);
+${String(oldPlan28)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper25 = (plan, _, fieldArgs) => {
+const planWrapper28 = (plan, _, fieldArgs) => {
   const $taskId = fieldArgs.getRaw(["input", "taskId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7315,7 +7997,7 @@ const specFromArgs_Emoji2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
 };
-const oldPlan26 = (_$root, args) => {
+const oldPlan29 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_emojiPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7324,7 +8006,7 @@ const oldPlan26 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper26 = (plan, _, fieldArgs) => {
+const planWrapper29 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7380,7 +8062,7 @@ const specFromArgs_User2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan27 = (_$root, args) => {
+const oldPlan30 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7389,7 +8071,7 @@ const oldPlan27 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper27 = (plan, _, fieldArgs) => {
+const planWrapper30 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -7405,7 +8087,7 @@ const specFromArgs_Post2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan28 = (_$root, args) => {
+const oldPlan31 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7414,7 +8096,7 @@ const oldPlan28 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper28 = (plan, _, fieldArgs) => {
+const planWrapper31 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7466,7 +8148,7 @@ const specFromArgs_Label2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Label, $nodeId);
 };
-const oldPlan29 = (_$root, args) => {
+const oldPlan32 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7475,7 +8157,7 @@ const oldPlan29 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper29 = (plan, _, fieldArgs) => {
+const planWrapper32 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7534,7 +8216,7 @@ const specFromArgs_Column2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Column, $nodeId);
 };
-const oldPlan30 = (_$root, args) => {
+const oldPlan33 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7543,7 +8225,7 @@ const oldPlan30 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper30 = (plan, _, fieldArgs) => {
+const planWrapper33 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7590,7 +8272,7 @@ const specFromArgs_ProjectColumn2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
 };
-const oldPlan31 = (_$root, args) => {
+const oldPlan34 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7599,7 +8281,7 @@ const oldPlan31 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper31 = (plan, _, fieldArgs) => {
+const planWrapper34 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7632,7 +8314,7 @@ const specFromArgs_UserPreference2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
 };
-const oldPlan32 = (_$root, args) => {
+const oldPlan35 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7641,7 +8323,7 @@ const oldPlan32 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper32 = (plan, _, fieldArgs) => {
+const planWrapper35 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -7663,6 +8345,112 @@ const planWrapper32 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
+const specFromArgs_UserOrganization2 = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_UserOrganization, $nodeId);
+};
+const oldPlan36 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_user_organizationPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper36 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $withPgClient, $authzCache, $accessToken], async ([input, observer, withPgClient, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    if ("delete" === "create") {
+      const memberInput = input,
+        organizationId = memberInput.organizationId,
+        pdpAllowed = await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache),
+        callerRole = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+            values: [observer.id, organizationId]
+          })).rows[0]?.role ?? null;
+        });
+      if (!pdpAllowed) {
+        if (!callerRole || callerRole !== "owner" && callerRole !== "admin") throw Error("Unauthorized");
+      }
+      if (callerRole === "member") throw Error("Unauthorized");
+      const totalMembers = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1",
+          values: [organizationId]
+        })).rows[0]?.total ?? 0;
+      });
+      if (!(await isWithinLimit({
+        organizationId
+      }, FEATURE_KEYS.MAX_MEMBERS, totalMembers, billingBypassOrgIds))) throw Error("Maximum number of members reached");
+      if (memberInput.role === "admin" || memberInput.role === "owner") {
+        const totalAdmins = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1 AND role IN ('admin', 'owner')",
+            values: [organizationId]
+          })).rows[0]?.total ?? 0;
+        });
+        if (!(await isWithinLimit({
+          organizationId
+        }, FEATURE_KEYS.MAX_ADMINS, totalAdmins, billingBypassOrgIds))) throw Error("Maximum number of admins reached");
+      }
+      if (memberInput.type === "team") {
+        await withPgClient(null, async client => {
+          if ((await client.query({
+            text: "SELECT id FROM project_column WHERE organization_id = $1 LIMIT 1",
+            values: [organizationId]
+          })).rows.length === 0) await client.query({
+            text: "INSERT INTO project_column (organization_id, emoji, title, index) VALUES ($1, '\uD83D\uDDD3', 'Planned', 0), ($1, '\uD83D\uDEA7', 'In Progress', 1), ($1, '\u2705', 'Completed', 2)",
+            values: [organizationId]
+          });
+        });
+        await withPgClient(null, async client => {
+          if ((await client.query({
+            text: "SELECT id FROM settings WHERE organization_id = $1 LIMIT 1",
+            values: [organizationId]
+          })).rows.length === 0) await client.query({
+            text: "INSERT INTO settings (organization_id, view_mode) VALUES ($1, 'board')",
+            values: [organizationId]
+          });
+        });
+      }
+    } else {
+      const targetRowId = input,
+        target = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT user_id, organization_id, role FROM user_organization WHERE id = $1",
+            values: [targetRowId]
+          })).rows[0] ?? null;
+        });
+      if (!target) throw Error("Membership not found");
+      if (target.user_id === observer.id) throw Error("Cannot modify your own membership");
+      const callerRole = await withPgClient(null, async client => {
+        return (await client.query({
+          text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+          values: [observer.id, target.organization_id]
+        })).rows[0]?.role ?? null;
+      });
+      if (!callerRole) throw Error("Unauthorized");
+      if ((ROLE_RANK[callerRole] ?? 0) <= (ROLE_RANK[target.role] ?? 0)) throw Error("Unauthorized");
+      if (target.role === "owner") {
+        if ((await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT count(*)::int as total FROM user_organization WHERE organization_id = $1 AND role = 'owner'",
+            values: [target.organization_id]
+          })).rows[0]?.total ?? 0;
+        })) <= 1) throw Error("Cannot remove the last owner");
+      }
+    }
+  });
+  return plan();
+};
 const specFromArgs_Setting2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Setting, $nodeId);
@@ -7671,7 +8459,7 @@ const specFromArgs_Task2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Task, $nodeId);
 };
-const oldPlan33 = (_$root, args) => {
+const oldPlan37 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7680,7 +8468,7 @@ const oldPlan33 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper33 = (plan, _, fieldArgs) => {
+const planWrapper37 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7733,7 +8521,7 @@ const specFromArgs_Project2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
 };
-const oldPlan35 = (_$root, args) => {
+const oldPlan39 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7742,7 +8530,7 @@ const oldPlan35 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper34 = (plan, _, fieldArgs) => {
+const planWrapper38 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7778,25 +8566,25 @@ const planWrapper34 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan34(...planParams) {
+function oldPlan38(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan35.apply(this, args);
+        $prev = oldPlan39.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
-${String(oldPlan35)}`);
+${String(oldPlan39)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper35 = (plan, _, _fieldArgs) => {
+const planWrapper39 = (plan, _, _fieldArgs) => {
   const $result = plan(),
     $accessToken = context().get("accessToken"),
     $deleteStep = $result.getStepForKey("result"),
@@ -7814,9 +8602,60 @@ const planWrapper35 = (plan, _, _fieldArgs) => {
   });
   return $result;
 };
-const specFromArgs_UserOrganization2 = args => {
+const specFromArgs_Invitation2 = args => {
   const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_UserOrganization, $nodeId);
+  return specFromNodeId(nodeIdHandler_Invitation, $nodeId);
+};
+const oldPlan40 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_invitationPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper40 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $withPgClient = context().get("withPgClient"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $withPgClient, $authzCache, $accessToken], async ([input, observer, withPgClient, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    if ("delete" === "create") {
+      const organizationId = input.organizationId;
+      if (!(await checkPermission(observer.id, "organization", organizationId, "admin", accessToken, authzCache))) {
+        const callerRole = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+            values: [observer.id, organizationId]
+          })).rows[0]?.role ?? null;
+        });
+        if (!callerRole || callerRole !== "owner" && callerRole !== "admin") throw Error("Unauthorized");
+      }
+    } else {
+      const targetRowId = input,
+        invitation = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT organization_id FROM invitation WHERE id = $1",
+            values: [targetRowId]
+          })).rows[0] ?? null;
+        });
+      if (!invitation) throw Error("Invitation not found");
+      if (!(await checkPermission(observer.id, "organization", invitation.organization_id, "admin", accessToken, authzCache))) {
+        const callerRole = await withPgClient(null, async client => {
+          return (await client.query({
+            text: "SELECT role FROM user_organization WHERE user_id = $1 AND organization_id = $2",
+            values: [observer.id, invitation.organization_id]
+          })).rows[0]?.role ?? null;
+        });
+        if (!callerRole || callerRole !== "owner" && callerRole !== "admin") throw Error("Unauthorized");
+      }
+    }
+  });
+  return plan();
 };
 const getPgSelectSingleFromMutationResult = (resource, pkAttributes, $mutation) => {
   const $result = $mutation.getStepForKey("result", !0);
@@ -7903,6 +8742,12 @@ type Query implements Node {
   """Get a single \`UserPreference\`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
+  """Get a single \`UserOrganization\`."""
+  userOrganization(rowId: UUID!): UserOrganization
+
+  """Get a single \`UserOrganization\`."""
+  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: String!): UserOrganization
+
   """Get a single \`Setting\`."""
   setting(rowId: UUID!): Setting
 
@@ -7921,11 +8766,11 @@ type Query implements Node {
   """Get a single \`Project\`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
 
-  """Get a single \`UserOrganization\`."""
-  userOrganization(rowId: UUID!): UserOrganization
+  """Get a single \`Invitation\`."""
+  invitation(rowId: UUID!): Invitation
 
-  """Get a single \`UserOrganization\`."""
-  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: String!): UserOrganization
+  """Get a single \`Invitation\`."""
+  invitationByToken(token: String!): Invitation
 
   """Reads a single \`ProjectProjectLabel\` using its globally unique \`ID\`."""
   projectProjectLabelById(
@@ -8001,6 +8846,14 @@ type Query implements Node {
     id: ID!
   ): UserPreference
 
+  """Reads a single \`UserOrganization\` using its globally unique \`ID\`."""
+  userOrganizationById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`UserOrganization\`.
+    """
+    id: ID!
+  ): UserOrganization
+
   """Reads a single \`Setting\` using its globally unique \`ID\`."""
   settingById(
     """The globally unique \`ID\` to be used in selecting a single \`Setting\`."""
@@ -8019,13 +8872,13 @@ type Query implements Node {
     id: ID!
   ): Project
 
-  """Reads a single \`UserOrganization\` using its globally unique \`ID\`."""
-  userOrganizationById(
+  """Reads a single \`Invitation\` using its globally unique \`ID\`."""
+  invitationById(
     """
-    The globally unique \`ID\` to be used in selecting a single \`UserOrganization\`.
+    The globally unique \`ID\` to be used in selecting a single \`Invitation\`.
     """
     id: ID!
-  ): UserOrganization
+  ): Invitation
 
   """Reads and enables pagination through a set of \`ProjectProjectLabel\`."""
   projectProjectLabels(
@@ -8401,6 +9254,40 @@ type Query implements Node {
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
 
+  """Reads and enables pagination through a set of \`UserOrganization\`."""
+  userOrganizations(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserOrganizationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserOrganizationFilter
+
+    """The method to use when ordering \`UserOrganization\`."""
+    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserOrganizationConnection
+
   """Reads and enables pagination through a set of \`Setting\`."""
   settings(
     """Only read the first \`n\` values of the set."""
@@ -8503,8 +9390,8 @@ type Query implements Node {
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
 
-  """Reads and enables pagination through a set of \`UserOrganization\`."""
-  userOrganizations(
+  """Reads and enables pagination through a set of \`Invitation\`."""
+  invitations(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -8526,16 +9413,16 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: UserOrganizationCondition
+    condition: InvitationCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: UserOrganizationFilter
+    filter: InvitationFilter
 
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserOrganizationConnection
+    """The method to use when ordering \`Invitation\`."""
+    orderBy: [InvitationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvitationConnection
 
   """
   Returns the currently authenticated user (observer).
@@ -9885,6 +10772,12 @@ input UserFilter {
   """Some related \`userOrganizations\` exist."""
   userOrganizationsExist: Boolean
 
+  """Filter by the object’s \`invitationsByInviterUserId\` relation."""
+  invitationsByInviterUserId: UserToManyInvitationFilter
+
+  """Some related \`invitationsByInviterUserId\` exist."""
+  invitationsByInviterUserIdExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [UserFilter!]
 
@@ -10677,6 +11570,145 @@ input UserOrganizationDistinctCountAggregateFilter {
   syncedAt: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against many \`Invitation\` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyInvitationFilter {
+  """
+  Every related \`Invitation\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InvitationFilter
+
+  """
+  Some related \`Invitation\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InvitationFilter
+
+  """
+  No related \`Invitation\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InvitationFilter
+
+  """Aggregates across related \`Invitation\` match the filter criteria."""
+  aggregates: InvitationAggregatesFilter
+}
+
+"""
+A filter to be used against \`Invitation\` object types. All fields are combined with a logical ‘and.’
+"""
+input InvitationFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`organizationId\` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s \`inviterUserId\` field."""
+  inviterUserId: UUIDFilter
+
+  """Filter by the object’s \`email\` field."""
+  email: StringFilter
+
+  """Filter by the object’s \`role\` field."""
+  role: MemberRoleFilter
+
+  """Filter by the object’s \`token\` field."""
+  token: StringFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: InvitationStatusFilter
+
+  """Filter by the object’s \`expiresAt\` field."""
+  expiresAt: DatetimeFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`inviterUser\` relation."""
+  inviterUser: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [InvitationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [InvitationFilter!]
+
+  """Negates the expression."""
+  not: InvitationFilter
+}
+
+"""
+A filter to be used against InvitationStatus fields. All fields are combined with a logical ‘and.’
+"""
+input InvitationStatusFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: InvitationStatus
+
+  """Not equal to the specified value."""
+  notEqualTo: InvitationStatus
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: InvitationStatus
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: InvitationStatus
+
+  """Included in the specified list."""
+  in: [InvitationStatus!]
+
+  """Not included in the specified list."""
+  notIn: [InvitationStatus!]
+
+  """Less than the specified value."""
+  lessThan: InvitationStatus
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: InvitationStatus
+
+  """Greater than the specified value."""
+  greaterThan: InvitationStatus
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: InvitationStatus
+}
+
+enum InvitationStatus {
+  pending
+  accepted
+  expired
+  revoked
+}
+
+"""A filter to be used against aggregates of \`Invitation\` object types."""
+input InvitationAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`Invitation\` object to be included within the aggregate.
+  """
+  filter: InvitationFilter
+
+  """Distinct count aggregate over matching \`Invitation\` objects."""
+  distinctCount: InvitationDistinctCountAggregateFilter
+}
+
+input InvitationDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  inviterUserId: BigIntFilter
+  email: BigIntFilter
+  role: BigIntFilter
+  token: BigIntFilter
+  status: BigIntFilter
+  expiresAt: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -11941,6 +12973,40 @@ type User implements Node {
     """The method to use when ordering \`UserOrganization\`."""
     orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserOrganizationConnection!
+
+  """Reads and enables pagination through a set of \`Invitation\`."""
+  invitationsByInviterUserId(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InvitationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InvitationFilter
+
+    """The method to use when ordering \`Invitation\`."""
+    orderBy: [InvitationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvitationConnection!
 }
 
 """A connection to a list of \`Assignee\` values."""
@@ -13202,6 +14268,234 @@ enum UserOrganizationOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+"""A connection to a list of \`Invitation\` values."""
+type InvitationConnection {
+  """A list of \`Invitation\` objects."""
+  nodes: [Invitation!]!
+
+  """
+  A list of edges which contains the \`Invitation\` and cursor to aid in pagination.
+  """
+  edges: [InvitationEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Invitation\` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: InvitationAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`Invitation\` for these aggregates."""
+    groupBy: [InvitationGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: InvitationHavingInput
+  ): [InvitationAggregates!]
+}
+
+type Invitation implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  inviterUserId: UUID!
+  email: String
+  role: MemberRole!
+  token: String!
+  status: InvitationStatus!
+  expiresAt: Datetime!
+  createdAt: Datetime!
+
+  """Reads a single \`User\` that is related to this \`Invitation\`."""
+  inviterUser: User
+}
+
+"""A \`Invitation\` edge in the connection."""
+type InvitationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Invitation\` at the end of the edge."""
+  node: Invitation!
+}
+
+type InvitationAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: InvitationDistinctCountAggregates
+}
+
+type InvitationDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of inviterUserId across the matching connection"""
+  inviterUserId: BigInt
+
+  """Distinct count of email across the matching connection"""
+  email: BigInt
+
+  """Distinct count of role across the matching connection"""
+  role: BigInt
+
+  """Distinct count of token across the matching connection"""
+  token: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of expiresAt across the matching connection"""
+  expiresAt: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""Grouping methods for \`Invitation\` for usage during aggregation."""
+enum InvitationGroupBy {
+  ORGANIZATION_ID
+  INVITER_USER_ID
+  EMAIL
+  ROLE
+  STATUS
+  EXPIRES_AT
+  EXPIRES_AT_TRUNCATED_TO_HOUR
+  EXPIRES_AT_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`Invitation\` aggregates."""
+input InvitationHavingInput {
+  AND: [InvitationHavingInput!]
+  OR: [InvitationHavingInput!]
+  sum: InvitationHavingSumInput
+  distinctCount: InvitationHavingDistinctCountInput
+  min: InvitationHavingMinInput
+  max: InvitationHavingMaxInput
+  average: InvitationHavingAverageInput
+  stddevSample: InvitationHavingStddevSampleInput
+  stddevPopulation: InvitationHavingStddevPopulationInput
+  varianceSample: InvitationHavingVarianceSampleInput
+  variancePopulation: InvitationHavingVariancePopulationInput
+}
+
+input InvitationHavingSumInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingDistinctCountInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingMinInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingMaxInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingAverageInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingStddevSampleInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingStddevPopulationInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingVarianceSampleInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingVariancePopulationInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`Invitation\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input InvitationCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s \`inviterUserId\` field."""
+  inviterUserId: UUID
+
+  """Checks for equality with the object’s \`email\` field."""
+  email: String
+
+  """Checks for equality with the object’s \`role\` field."""
+  role: MemberRole
+
+  """Checks for equality with the object’s \`token\` field."""
+  token: String
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: InvitationStatus
+
+  """Checks for equality with the object’s \`expiresAt\` field."""
+  expiresAt: Datetime
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering \`Invitation\`."""
+enum InvitationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  INVITER_USER_ID_ASC
+  INVITER_USER_ID_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  TOKEN_ASC
+  TOKEN_DESC
+  EXPIRES_AT_ASC
+  EXPIRES_AT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
 }
 
 """A connection to a list of \`TaskLabel\` values."""
@@ -14789,6 +16083,26 @@ enum UserOrderBy {
   USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+  INVITATIONS_BY_INVITER_USER_ID_COUNT_ASC
+  INVITATIONS_BY_INVITER_USER_ID_COUNT_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROW_ID_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROW_ID_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_INVITER_USER_ID_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_INVITER_USER_ID_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EMAIL_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EMAIL_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROLE_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROLE_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_TOKEN_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_TOKEN_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_STATUS_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_STATUS_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EXPIRES_AT_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EXPIRES_AT_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of \`ProjectLabel\` values."""
@@ -15694,6 +17008,14 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
+  """Creates a single \`UserOrganization\`."""
+  createUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserOrganizationInput!
+  ): CreateUserOrganizationPayload
+
   """Creates a single \`Setting\`."""
   createSetting(
     """
@@ -15718,13 +17040,13 @@ type Mutation {
     input: CreateProjectInput!
   ): CreateProjectPayload
 
-  """Creates a single \`UserOrganization\`."""
-  createUserOrganization(
+  """Creates a single \`Invitation\`."""
+  createInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateUserOrganizationInput!
-  ): CreateUserOrganizationPayload
+    input: CreateInvitationInput!
+  ): CreateInvitationPayload
 
   """
   Updates a single \`ProjectProjectLabel\` using its globally unique id and a patch.
@@ -15910,6 +17232,24 @@ type Mutation {
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
 
+  """
+  Updates a single \`UserOrganization\` using its globally unique id and a patch.
+  """
+  updateUserOrganizationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserOrganizationByIdInput!
+  ): UpdateUserOrganizationPayload
+
+  """Updates a single \`UserOrganization\` using a unique key and a patch."""
+  updateUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserOrganizationInput!
+  ): UpdateUserOrganizationPayload
+
   """Updates a single \`Setting\` using its globally unique id and a patch."""
   updateSettingById(
     """
@@ -15959,22 +17299,22 @@ type Mutation {
   ): UpdateProjectPayload
 
   """
-  Updates a single \`UserOrganization\` using its globally unique id and a patch.
+  Updates a single \`Invitation\` using its globally unique id and a patch.
   """
-  updateUserOrganizationById(
+  updateInvitationById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateUserOrganizationByIdInput!
-  ): UpdateUserOrganizationPayload
+    input: UpdateInvitationByIdInput!
+  ): UpdateInvitationPayload
 
-  """Updates a single \`UserOrganization\` using a unique key and a patch."""
-  updateUserOrganization(
+  """Updates a single \`Invitation\` using a unique key and a patch."""
+  updateInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateUserOrganizationInput!
-  ): UpdateUserOrganizationPayload
+    input: UpdateInvitationInput!
+  ): UpdateInvitationPayload
 
   """Deletes a single \`ProjectProjectLabel\` using its globally unique id."""
   deleteProjectProjectLabelById(
@@ -16152,6 +17492,22 @@ type Mutation {
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
 
+  """Deletes a single \`UserOrganization\` using its globally unique id."""
+  deleteUserOrganizationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserOrganizationByIdInput!
+  ): DeleteUserOrganizationPayload
+
+  """Deletes a single \`UserOrganization\` using a unique key."""
+  deleteUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserOrganizationInput!
+  ): DeleteUserOrganizationPayload
+
   """Deletes a single \`Setting\` using its globally unique id."""
   deleteSettingById(
     """
@@ -16200,21 +17556,21 @@ type Mutation {
     input: DeleteProjectInput!
   ): DeleteProjectPayload
 
-  """Deletes a single \`UserOrganization\` using its globally unique id."""
-  deleteUserOrganizationById(
+  """Deletes a single \`Invitation\` using its globally unique id."""
+  deleteInvitationById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteUserOrganizationByIdInput!
-  ): DeleteUserOrganizationPayload
+    input: DeleteInvitationByIdInput!
+  ): DeleteInvitationPayload
 
-  """Deletes a single \`UserOrganization\` using a unique key."""
-  deleteUserOrganization(
+  """Deletes a single \`Invitation\` using a unique key."""
+  deleteInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteUserOrganizationInput!
-  ): DeleteUserOrganizationPayload
+    input: DeleteInvitationInput!
+  ): DeleteInvitationPayload
 }
 
 """The output of our create \`ProjectProjectLabel\` mutation."""
@@ -16715,6 +18071,55 @@ input UserPreferenceInput {
   color: String
 }
 
+"""The output of our create \`UserOrganization\` mutation."""
+type CreateUserOrganizationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserOrganization\` that was created by this mutation."""
+  userOrganization: UserOrganization
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering \`UserOrganization\`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the create \`UserOrganization\` mutation."""
+input CreateUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`UserOrganization\` to be created by this mutation."""
+  userOrganization: UserOrganizationInput!
+}
+
+"""An input for mutations affecting \`UserOrganization\`"""
+input UserOrganizationInput {
+  rowId: UUID
+  userId: UUID!
+  organizationId: String!
+  slug: String!
+  name: String
+  type: OrganizationType
+  role: MemberRole
+  syncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`Setting\` mutation."""
 type CreateSettingPayload {
   """
@@ -16865,53 +18270,52 @@ input ProjectInput {
   nextTaskNumber: Int
 }
 
-"""The output of our create \`UserOrganization\` mutation."""
-type CreateUserOrganizationPayload {
+"""The output of our create \`Invitation\` mutation."""
+type CreateInvitationPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`UserOrganization\` that was created by this mutation."""
-  userOrganization: UserOrganization
+  """The \`Invitation\` that was created by this mutation."""
+  invitation: Invitation
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our \`Invitation\`. May be used by Relay 1."""
+  invitationEdge(
+    """The method to use when ordering \`Invitation\`."""
+    orderBy: [InvitationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvitationEdge
 }
 
-"""All input for the create \`UserOrganization\` mutation."""
-input CreateUserOrganizationInput {
+"""All input for the create \`Invitation\` mutation."""
+input CreateInvitationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The \`UserOrganization\` to be created by this mutation."""
-  userOrganization: UserOrganizationInput!
+  """The \`Invitation\` to be created by this mutation."""
+  invitation: InvitationInput!
 }
 
-"""An input for mutations affecting \`UserOrganization\`"""
-input UserOrganizationInput {
+"""An input for mutations affecting \`Invitation\`"""
+input InvitationInput {
   rowId: UUID
-  userId: UUID!
   organizationId: String!
-  slug: String!
-  name: String
-  type: OrganizationType
+  inviterUserId: UUID!
+  email: String
   role: MemberRole
-  syncedAt: Datetime
+  token: String!
+  status: InvitationStatus
+  expiresAt: Datetime!
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
 """The output of our update \`ProjectProjectLabel\` mutation."""
@@ -17675,6 +19079,79 @@ input UpdateUserPreferenceInput {
   patch: UserPreferencePatch!
 }
 
+"""The output of our update \`UserOrganization\` mutation."""
+type UpdateUserOrganizationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserOrganization\` that was updated by this mutation."""
+  userOrganization: UserOrganization
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering \`UserOrganization\`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the \`updateUserOrganizationById\` mutation."""
+input UpdateUserOrganizationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`UserOrganization\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`UserOrganization\` being updated.
+  """
+  patch: UserOrganizationPatch!
+}
+
+"""
+Represents an update to a \`UserOrganization\`. Fields that are set will be updated.
+"""
+input UserOrganizationPatch {
+  rowId: UUID
+  userId: UUID
+  organizationId: String
+  slug: String
+  name: String
+  type: OrganizationType
+  role: MemberRole
+  syncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateUserOrganization\` mutation."""
+input UpdateUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`UserOrganization\` being updated.
+  """
+  patch: UserOrganizationPatch!
+}
+
 """The output of our update \`Setting\` mutation."""
 type UpdateSettingPayload {
   """
@@ -17895,31 +19372,31 @@ input UpdateProjectInput {
   patch: ProjectPatch!
 }
 
-"""The output of our update \`UserOrganization\` mutation."""
-type UpdateUserOrganizationPayload {
+"""The output of our update \`Invitation\` mutation."""
+type UpdateInvitationPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`UserOrganization\` that was updated by this mutation."""
-  userOrganization: UserOrganization
+  """The \`Invitation\` that was updated by this mutation."""
+  invitation: Invitation
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our \`Invitation\`. May be used by Relay 1."""
+  invitationEdge(
+    """The method to use when ordering \`Invitation\`."""
+    orderBy: [InvitationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvitationEdge
 }
 
-"""All input for the \`updateUserOrganizationById\` mutation."""
-input UpdateUserOrganizationByIdInput {
+"""All input for the \`updateInvitationById\` mutation."""
+input UpdateInvitationByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -17927,34 +19404,33 @@ input UpdateUserOrganizationByIdInput {
   clientMutationId: String
 
   """
-  The globally unique \`ID\` which will identify a single \`UserOrganization\` to be updated.
+  The globally unique \`ID\` which will identify a single \`Invitation\` to be updated.
   """
   id: ID!
 
   """
-  An object where the defined keys will be set on the \`UserOrganization\` being updated.
+  An object where the defined keys will be set on the \`Invitation\` being updated.
   """
-  patch: UserOrganizationPatch!
+  patch: InvitationPatch!
 }
 
 """
-Represents an update to a \`UserOrganization\`. Fields that are set will be updated.
+Represents an update to a \`Invitation\`. Fields that are set will be updated.
 """
-input UserOrganizationPatch {
+input InvitationPatch {
   rowId: UUID
-  userId: UUID
   organizationId: String
-  slug: String
-  name: String
-  type: OrganizationType
+  inviterUserId: UUID
+  email: String
   role: MemberRole
-  syncedAt: Datetime
+  token: String
+  status: InvitationStatus
+  expiresAt: Datetime
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
-"""All input for the \`updateUserOrganization\` mutation."""
-input UpdateUserOrganizationInput {
+"""All input for the \`updateInvitation\` mutation."""
+input UpdateInvitationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -17963,9 +19439,9 @@ input UpdateUserOrganizationInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the \`UserOrganization\` being updated.
+  An object where the defined keys will be set on the \`Invitation\` being updated.
   """
-  patch: UserOrganizationPatch!
+  patch: InvitationPatch!
 }
 
 """The output of our delete \`ProjectProjectLabel\` mutation."""
@@ -18499,6 +19975,54 @@ input DeleteUserPreferenceInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`UserOrganization\` mutation."""
+type DeleteUserOrganizationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserOrganization\` that was deleted by this mutation."""
+  userOrganization: UserOrganization
+  deletedUserOrganizationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering \`UserOrganization\`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the \`deleteUserOrganizationById\` mutation."""
+input DeleteUserOrganizationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`UserOrganization\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteUserOrganization\` mutation."""
+input DeleteUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`Setting\` mutation."""
 type DeleteSettingPayload {
   """
@@ -18643,32 +20167,32 @@ input DeleteProjectInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`UserOrganization\` mutation."""
-type DeleteUserOrganizationPayload {
+"""The output of our delete \`Invitation\` mutation."""
+type DeleteInvitationPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`UserOrganization\` that was deleted by this mutation."""
-  userOrganization: UserOrganization
-  deletedUserOrganizationId: ID
+  """The \`Invitation\` that was deleted by this mutation."""
+  invitation: Invitation
+  deletedInvitationId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`UserOrganization\`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering \`UserOrganization\`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our \`Invitation\`. May be used by Relay 1."""
+  invitationEdge(
+    """The method to use when ordering \`Invitation\`."""
+    orderBy: [InvitationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvitationEdge
 }
 
-"""All input for the \`deleteUserOrganizationById\` mutation."""
-input DeleteUserOrganizationByIdInput {
+"""All input for the \`deleteInvitationById\` mutation."""
+input DeleteInvitationByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18676,13 +20200,13 @@ input DeleteUserOrganizationByIdInput {
   clientMutationId: String
 
   """
-  The globally unique \`ID\` which will identify a single \`UserOrganization\` to be deleted.
+  The globally unique \`ID\` which will identify a single \`Invitation\` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the \`deleteUserOrganization\` mutation."""
-input DeleteUserOrganizationInput {
+"""All input for the \`deleteInvitation\` mutation."""
+input DeleteInvitationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18869,6 +20393,63 @@ export const objects = {
         const specifier = nodeIdHandler_Query.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Query.codec.name].encode);
       },
+      invitation(_$root, {
+        $rowId
+      }) {
+        return resource_invitationPgResource.get({
+          id: $rowId
+        });
+      },
+      invitationById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Invitation($nodeId);
+      },
+      invitationByToken(_$root, {
+        $token
+      }) {
+        return resource_invitationPgResource.get({
+          token: $token
+        });
+      },
+      invitations: {
+        plan() {
+          return connection(resource_invitationPgResource.find());
+        },
+        args: {
+          first(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          },
+          last(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          },
+          offset(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          },
+          before(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          },
+          after(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          },
+          condition(_condition, $connection, arg) {
+            const $select = $connection.getSubplan();
+            arg.apply($select, qbWhereBuilder);
+          },
+          filter(_, $connection, fieldArg) {
+            const $pgSelect = $connection.getSubplan();
+            fieldArg.apply($pgSelect, (queryBuilder, value) => {
+              assertAllowed16(value, "object");
+              if (value == null) return;
+              const condition = new PgCondition(queryBuilder);
+              return condition;
+            });
+          },
+          orderBy(parent, $connection, value) {
+            const $select = $connection.getSubplan();
+            value.apply($select);
+          }
+        }
+      },
       label(_$root, {
         $rowId
       }) {
@@ -18926,12 +20507,12 @@ export const objects = {
         const $observer = context().get("observer");
         return lambda($observer, observer => {
           if (!observer) return null;
-          return {
-            rowId: observer.id,
-            identityProviderId: observer.identityProviderId,
-            name: observer.name,
-            email: observer.email
-          };
+          const result = {};
+          for (const field of allFields2) {
+            const key = field.contextKey ?? field.name;
+            if (key === "rowId") result[key] = observer.id;else result[key] = observer[key];
+          }
+          return result;
         });
       },
       post(_$root, {
@@ -19183,7 +20764,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed14(value, "object");
+              assertAllowed15(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -19243,7 +20824,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed12(value, "object");
+              assertAllowed13(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -19363,7 +20944,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed13(value, "object");
+              assertAllowed14(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -19447,7 +21028,7 @@ export const objects = {
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed15(value, "object");
+              assertAllowed12(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -19637,6 +21218,31 @@ ${String(oldPlan4)}`);
           }
         }
       },
+      createInvitation: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan15.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"createInvitation"}, but that function did not return a step!
+${String(oldPlan15)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
       createLabel: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -19691,17 +21297,17 @@ ${String(oldPlan6)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan12.apply(this, args);
+                $prev = oldPlan13.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createProject"}, but that function did not return a step!
-${String(oldPlan12)}`);
+${String(oldPlan13)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19783,17 +21389,17 @@ ${String(oldPlan9)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan12.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"createTask"}, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan12)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19855,12 +21461,23 @@ ${String(oldPlan5)}`);
         }
       },
       createUserOrganization: {
-        plan(_, args) {
-          const $insert = pgInsertSingle(resource_user_organizationPgResource, Object.create(null));
-          args.apply($insert);
-          return object({
-            result: $insert
-          });
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan11.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"createUserOrganization"}, but that function did not return a step!
+${String(oldPlan11)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input(_, $object) {
@@ -19897,17 +21514,17 @@ ${String(oldPlan10)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan24.apply(this, args);
+                $prev = oldPlan27.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteAssignee"}, but that function did not return a step!
-${String(oldPlan24)}`);
+${String(oldPlan27)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19936,17 +21553,17 @@ ${String(oldPlan24)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan30.apply(this, args);
+                $prev = oldPlan33.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteColumn"}, but that function did not return a step!
-${String(oldPlan30)}`);
+${String(oldPlan33)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19975,17 +21592,17 @@ ${String(oldPlan30)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan26.apply(this, args);
+                $prev = oldPlan29.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteEmoji"}, but that function did not return a step!
-${String(oldPlan26)}`);
+${String(oldPlan29)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20010,21 +21627,60 @@ ${String(oldPlan26)}`);
           }
         }
       },
-      deleteLabel: {
+      deleteInvitation: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan29.apply(this, args);
+                $prev = oldPlan40.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteLabel"}, but that function did not return a step!
-${String(oldPlan29)}`);
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteInvitation"}, but that function did not return a step!
+${String(oldPlan40)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deleteInvitationById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_invitationPgResource, specFromArgs_Invitation2(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      deleteLabel: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan32.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteLabel"}, but that function did not return a step!
+${String(oldPlan32)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20053,17 +21709,17 @@ ${String(oldPlan29)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan28.apply(this, args);
+                $prev = oldPlan31.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deletePost"}, but that function did not return a step!
-${String(oldPlan28)}`);
+${String(oldPlan31)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20092,17 +21748,17 @@ ${String(oldPlan28)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan34.apply(this, args);
+                $prev = oldPlan38.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProject"}, but that function did not return a step!
-${String(oldPlan34)}`);
+${String(oldPlan38)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20131,17 +21787,17 @@ ${String(oldPlan34)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan31.apply(this, args);
+                $prev = oldPlan34.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteProjectColumn"}, but that function did not return a step!
-${String(oldPlan31)}`);
+${String(oldPlan34)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20261,17 +21917,17 @@ ${String(oldPlan31)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
+                $prev = oldPlan37.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteTask"}, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan37)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20300,17 +21956,17 @@ ${String(oldPlan33)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan23.apply(this, args);
+                $prev = oldPlan26.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteTaskLabel"}, but that function did not return a step!
-${String(oldPlan23)}`);
+${String(oldPlan26)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20339,17 +21995,17 @@ ${String(oldPlan23)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan27.apply(this, args);
+                $prev = oldPlan30.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUser"}, but that function did not return a step!
-${String(oldPlan27)}`);
+${String(oldPlan30)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20375,14 +22031,23 @@ ${String(oldPlan27)}`);
         }
       },
       deleteUserOrganization: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(resource_user_organizationPgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan36.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUserOrganization"}, but that function did not return a step!
+${String(oldPlan36)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input(_, $object) {
@@ -20408,17 +22073,17 @@ ${String(oldPlan27)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan32.apply(this, args);
+                $prev = oldPlan35.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"deleteUserPreference"}, but that function did not return a step!
-${String(oldPlan32)}`);
+${String(oldPlan35)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20478,17 +22143,17 @@ ${String(oldPlan32)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan18.apply(this, args);
+                $prev = oldPlan20.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateColumn"}, but that function did not return a step!
-${String(oldPlan18)}`);
+${String(oldPlan20)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20517,17 +22182,17 @@ ${String(oldPlan18)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan14.apply(this, args);
+                $prev = oldPlan16.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateEmoji"}, but that function did not return a step!
-${String(oldPlan14)}`);
+${String(oldPlan16)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20552,21 +22217,51 @@ ${String(oldPlan14)}`);
           }
         }
       },
+      updateInvitation: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_invitationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
+      updateInvitationById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_invitationPgResource, specFromArgs_Invitation(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input(_, $object) {
+            return $object;
+          }
+        }
+      },
       updateLabel: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan17.apply(this, args);
+                $prev = oldPlan19.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateLabel"}, but that function did not return a step!
-${String(oldPlan17)}`);
+${String(oldPlan19)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20595,17 +22290,17 @@ ${String(oldPlan17)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan16.apply(this, args);
+                $prev = oldPlan18.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updatePost"}, but that function did not return a step!
-${String(oldPlan16)}`);
+${String(oldPlan18)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20634,17 +22329,17 @@ ${String(oldPlan16)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan22.apply(this, args);
+                $prev = oldPlan25.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProject"}, but that function did not return a step!
-${String(oldPlan22)}`);
+${String(oldPlan25)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20673,17 +22368,17 @@ ${String(oldPlan22)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan19.apply(this, args);
+                $prev = oldPlan21.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateProjectColumn"}, but that function did not return a step!
-${String(oldPlan19)}`);
+${String(oldPlan21)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20803,17 +22498,17 @@ ${String(oldPlan19)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan21.apply(this, args);
+                $prev = oldPlan24.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateTask"}, but that function did not return a step!
-${String(oldPlan21)}`);
+${String(oldPlan24)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20873,17 +22568,17 @@ ${String(oldPlan21)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan15.apply(this, args);
+                $prev = oldPlan17.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUser"}, but that function did not return a step!
-${String(oldPlan15)}`);
+${String(oldPlan17)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20909,14 +22604,23 @@ ${String(oldPlan15)}`);
         }
       },
       updateUserOrganization: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(resource_user_organizationPgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($update);
-          return object({
-            result: $update
-          });
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan23.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUserOrganization"}, but that function did not return a step!
+${String(oldPlan23)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input(_, $object) {
@@ -20942,17 +22646,17 @@ ${String(oldPlan15)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan20.apply(this, args);
+                $prev = oldPlan22.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at ${"Mutation"}.${"updateUserPreference"}, but that function did not return a step!
-${String(oldPlan20)}`);
+${String(oldPlan22)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isExecutableStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21138,7 +22842,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed74(value, "object");
+              assertAllowed78(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -21380,6 +23084,23 @@ ${String(oldPlan20)}`);
       },
       emojiEdge($mutation, fieldArgs) {
         return pgMutationPayloadEdge(resource_emojiPgResource, emojiUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
+  CreateInvitationPayload: {
+    assertStep: assertExecutableStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      invitation($object) {
+        return $object.get("result");
+      },
+      invitationEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_invitationPgResource, invitationUniques[0].attributes, $mutation, fieldArgs);
       },
       query() {
         return rootValue();
@@ -21650,6 +23371,28 @@ ${String(oldPlan20)}`);
       },
       emojiEdge($mutation, fieldArgs) {
         return pgMutationPayloadEdge(resource_emojiPgResource, emojiUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
+  DeleteInvitationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      deletedInvitationId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Invitation.plan($record);
+        return lambda(specifier, nodeIdCodecs_base64JSON_base64JSON.encode);
+      },
+      invitation($object) {
+        return $object.get("result");
+      },
+      invitationEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_invitationPgResource, invitationUniques[0].attributes, $mutation, fieldArgs);
       },
       query() {
         return rootValue();
@@ -22033,6 +23776,129 @@ ${String(oldPlan20)}`);
       }
     }
   },
+  Invitation: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt($record) {
+        return $record.get("created_at");
+      },
+      expiresAt($record) {
+        return $record.get("expires_at");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_Invitation.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Invitation.codec.name].encode);
+      },
+      inviterUser($record) {
+        return resource_userPgResource.get({
+          id: $record.get("inviter_user_id")
+        });
+      },
+      inviterUserId($record) {
+        return $record.get("inviter_user_id");
+      },
+      organizationId($record) {
+        return $record.get("organization_id");
+      },
+      rowId($record) {
+        return $record.get("id");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of invitationUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_invitationPgResource.get(spec);
+    }
+  },
+  InvitationAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      distinctCount($pgSelectSingle) {
+        return $pgSelectSingle;
+      },
+      keys($pgSelectSingle) {
+        const $groupDetails = $pgSelectSingle.getClassStep().getGroupDetails();
+        return lambda([$groupDetails, $pgSelectSingle], ([groupDetails, item]) => {
+          if (groupDetails.indicies.length === 0 || item == null) return null;else return groupDetails.indicies.map(({
+            index
+          }) => item[index]);
+        });
+      }
+    }
+  },
+  InvitationConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate").single();
+      },
+      groupedAggregates: {
+        plan($connection) {
+          return $connection.cloneSubplanWithoutPagination("aggregate");
+        },
+        args: {
+          groupBy(_$parent, $pgSelect, input) {
+            return input.apply($pgSelect);
+          },
+          having(_$parent, $pgSelect, input) {
+            return input.apply($pgSelect, queryBuilder => queryBuilder.havingBuilder());
+          }
+        }
+      },
+      totalCount($connection) {
+        return $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
+      }
+    }
+  },
+  InvitationDistinctCountAggregates: {
+    plans: {
+      createdAt($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("created_at")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      email($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("email")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      expiresAt($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("expires_at")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.timestamptz);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      inviterUserId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("inviter_user_id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      organizationId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("organization_id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      role($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("role")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, memberRoleCodec);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      rowId($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("id")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.uuid);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      status($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("status")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, invitationStatusCodec);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      token($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("token")}`,
+          sqlAggregate = spec2.sqlAggregateWrap(sqlAttribute, TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      }
+    }
+  },
   Label: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -22087,7 +23953,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed85(value, "object");
+              assertAllowed90(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22237,7 +24103,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed84(value, "object");
+              assertAllowed89(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22389,7 +24255,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed16(value, "object");
+              assertAllowed17(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22441,7 +24307,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed18(value, "object");
+              assertAllowed19(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22497,7 +24363,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed20(value, "object");
+              assertAllowed21(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22542,7 +24408,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed17(value, "object");
+              assertAllowed18(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22587,7 +24453,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed19(value, "object");
+              assertAllowed20(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -22703,7 +24569,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed21(value, "object");
+              assertAllowed22(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -23034,7 +24900,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed86(value, "object");
+              assertAllowed91(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -23491,7 +25357,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed75(value, "object");
+              assertAllowed79(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -23562,7 +25428,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed76(value, "object");
+              assertAllowed80(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -23615,7 +25481,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed77(value, "object");
+              assertAllowed81(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -24028,6 +25894,23 @@ ${String(oldPlan20)}`);
       }
     }
   },
+  UpdateInvitationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId($mutation) {
+        return $mutation.getStepForKey("result").getMeta("clientMutationId");
+      },
+      invitation($object) {
+        return $object.get("result");
+      },
+      invitationEdge($mutation, fieldArgs) {
+        return pgMutationPayloadEdge(resource_invitationPgResource, invitationUniques[0].attributes, $mutation, fieldArgs);
+      },
+      query() {
+        return rootValue();
+      }
+    }
+  },
   UpdateLabelPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -24265,7 +26148,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed78(value, "object");
+              assertAllowed82(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -24307,7 +26190,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed79(value, "object");
+              assertAllowed83(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -24349,7 +26232,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed80(value, "object");
+              assertAllowed84(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -24397,7 +26280,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed82(value, "object");
+              assertAllowed86(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -24415,6 +26298,48 @@ ${String(oldPlan20)}`);
       },
       identityProviderId($record) {
         return $record.get("identity_provider_id");
+      },
+      invitationsByInviterUserId: {
+        plan($record) {
+          const $records = resource_invitationPgResource.find({
+            inviter_user_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first(_, $connection, arg) {
+            $connection.setFirst(arg.getRaw());
+          },
+          last(_, $connection, val) {
+            $connection.setLast(val.getRaw());
+          },
+          offset(_, $connection, val) {
+            $connection.setOffset(val.getRaw());
+          },
+          before(_, $connection, val) {
+            $connection.setBefore(val.getRaw());
+          },
+          after(_, $connection, val) {
+            $connection.setAfter(val.getRaw());
+          },
+          condition(_condition, $connection, arg) {
+            const $select = $connection.getSubplan();
+            arg.apply($select, qbWhereBuilder);
+          },
+          filter(_, $connection, fieldArg) {
+            const $pgSelect = $connection.getSubplan();
+            fieldArg.apply($pgSelect, (queryBuilder, value) => {
+              assertAllowed88(value, "object");
+              if (value == null) return;
+              const condition = new PgCondition(queryBuilder);
+              return condition;
+            });
+          },
+          orderBy(parent, $connection, value) {
+            const $select = $connection.getSubplan();
+            value.apply($select);
+          }
+        }
       },
       rowId($record) {
         return $record.get("id");
@@ -24452,7 +26377,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed83(value, "object");
+              assertAllowed87(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -24494,7 +26419,7 @@ ${String(oldPlan20)}`);
           filter(_, $connection, fieldArg) {
             const $pgSelect = $connection.getSubplan();
             fieldArg.apply($pgSelect, (queryBuilder, value) => {
-              assertAllowed81(value, "object");
+              assertAllowed85(value, "object");
               if (value == null) return;
               const condition = new PgCondition(queryBuilder);
               return condition;
@@ -24981,7 +26906,7 @@ export const inputObjects = {
   AssigneeFilter: {
     plans: {
       and($where, value) {
-        assertAllowed35(value, "list");
+        assertAllowed36(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -25002,18 +26927,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed35(value, "object");
+        assertAllowed36(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed35(value, "list");
+        assertAllowed36(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       task($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed35(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -25042,7 +26967,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed34(value, "object");
+        assertAllowed35(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -26340,7 +28265,7 @@ export const inputObjects = {
   ColumnFilter: {
     plans: {
       and($where, value) {
-        assertAllowed28(value, "list");
+        assertAllowed29(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -26369,18 +28294,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed28(value, "object");
+        assertAllowed29(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed28(value, "list");
+        assertAllowed29(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       project($where, value) {
-        assertAllowed27(value, "object");
+        assertAllowed28(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -26409,7 +28334,7 @@ export const inputObjects = {
         return condition;
       },
       tasks($where, value) {
-        assertAllowed26(value, "object");
+        assertAllowed27(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -26420,7 +28345,7 @@ export const inputObjects = {
         return $rel;
       },
       tasksExist($where, value) {
-        assertAllowed26(value, "scalar");
+        assertAllowed27(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -26840,7 +28765,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed29(value, "object");
+        assertAllowed30(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -26860,7 +28785,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed29(value, "object");
+        assertAllowed30(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -26880,7 +28805,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed29(value, "object");
+        assertAllowed30(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -26953,6 +28878,16 @@ export const inputObjects = {
         qb.setMeta("clientMutationId", val);
       },
       emoji(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
+  CreateInvitationInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      invitation(qb, arg) {
         if (arg != null) return qb.setBuilder();
       }
     }
@@ -27387,6 +29322,20 @@ export const inputObjects = {
       }
     }
   },
+  DeleteInvitationByIdInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      }
+    }
+  },
+  DeleteInvitationInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      }
+    }
+  },
   DeleteLabelByIdInput: {
     plans: {
       clientMutationId(qb, val) {
@@ -27686,7 +29635,7 @@ export const inputObjects = {
   EmojiFilter: {
     plans: {
       and($where, value) {
-        assertAllowed45(value, "list");
+        assertAllowed46(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -27707,18 +29656,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed45(value, "object");
+        assertAllowed46(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed45(value, "list");
+        assertAllowed46(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       post($where, value) {
-        assertAllowed44(value, "object");
+        assertAllowed45(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -27755,7 +29704,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed44(value, "object");
+        assertAllowed45(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -28346,6 +30295,842 @@ export const inputObjects = {
       }
     }
   },
+  InvitationAggregatesFilter: {
+    plans: {
+      distinctCount($subquery, input) {
+        if (input == null) return;
+        return $subquery.forAggregate(spec2);
+      },
+      filter($subquery, input) {
+        if (input == null) return;
+        return new PgCondition($subquery, !1, "AND");
+      }
+    }
+  },
+  InvitationCondition: {
+    plans: {
+      createdAt($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "created_at",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+          }
+        });
+      },
+      email($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "email",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
+      expiresAt($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "expires_at",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.timestamptz)}`;
+          }
+        });
+      },
+      inviterUserId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "inviter_user_id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+          }
+        });
+      },
+      organizationId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "organization_id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      },
+      role($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "role",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, memberRoleCodec)}`;
+          }
+        });
+      },
+      rowId($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "id",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.uuid)}`;
+          }
+        });
+      },
+      status($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "status",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, invitationStatusCodec)}`;
+          }
+        });
+      },
+      token($condition, val) {
+        $condition.where({
+          type: "attribute",
+          attribute: "token",
+          callback(expression) {
+            return val === null ? sql`${expression} is null` : sql`${expression} = ${sqlValueWithCodec(val, TYPES.text)}`;
+          }
+        });
+      }
+    }
+  },
+  InvitationDistinctCountAggregateFilter: {
+    plans: {
+      createdAt($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("created_at")}`, spec_invitation.attributes.created_at.codec)
+        };
+        return $col;
+      },
+      email($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("email")}`, spec_invitation.attributes.email.codec)
+        };
+        return $col;
+      },
+      expiresAt($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("expires_at")}`, spec_invitation.attributes.expires_at.codec)
+        };
+        return $col;
+      },
+      inviterUserId($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("inviter_user_id")}`, spec_invitation.attributes.inviter_user_id.codec)
+        };
+        return $col;
+      },
+      organizationId($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("organization_id")}`, spec_invitation.attributes.organization_id.codec)
+        };
+        return $col;
+      },
+      role($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("role")}`, spec_invitation.attributes.role.codec)
+        };
+        return $col;
+      },
+      rowId($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("id")}`, spec_invitation.attributes.id.codec)
+        };
+        return $col;
+      },
+      status($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("status")}`, spec_invitation.attributes.status.codec)
+        };
+        return $col;
+      },
+      token($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec2.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("token")}`, spec_invitation.attributes.token.codec)
+        };
+        return $col;
+      }
+    }
+  },
+  InvitationFilter: {
+    plans: {
+      and($where, value) {
+        assertAllowed57(value, "list");
+        if (value == null) return;
+        return $where.andPlan();
+      },
+      createdAt(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec83;
+        return condition;
+      },
+      email(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec78;
+        return condition;
+      },
+      expiresAt(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec82;
+        return condition;
+      },
+      inviterUser($where, value) {
+        assertAllowed56(value, "object");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: userIdentifier,
+          alias: resource_userPgResource.name
+        });
+        registryConfig.pgRelations.invitation.userByMyInviterUserId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.invitation.userByMyInviterUserId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      inviterUserId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec77;
+        return condition;
+      },
+      not($where, value) {
+        assertAllowed57(value, "object");
+        if (value == null) return;
+        return $where.notPlan().andPlan();
+      },
+      or($where, value) {
+        assertAllowed57(value, "list");
+        if (value == null) return;
+        const $or = $where.orPlan();
+        return () => $or.andPlan();
+      },
+      organizationId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec76;
+        return condition;
+      },
+      role(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec79;
+        return condition;
+      },
+      rowId(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec75;
+        return condition;
+      },
+      status(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec81;
+        return condition;
+      },
+      token(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec80;
+        return condition;
+      }
+    }
+  },
+  InvitationHavingAverageInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec5.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationHavingDistinctCountInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec2.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationHavingInput: {
+    plans: {
+      AND($where) {
+        return $where;
+      },
+      average($having) {
+        return $having;
+      },
+      distinctCount($having) {
+        return $having;
+      },
+      max($having) {
+        return $having;
+      },
+      min($having) {
+        return $having;
+      },
+      OR($where) {
+        return new PgOrFilter($where);
+      },
+      stddevPopulation($having) {
+        return $having;
+      },
+      stddevSample($having) {
+        return $having;
+      },
+      sum($having) {
+        return $having;
+      },
+      variancePopulation($having) {
+        return $having;
+      },
+      varianceSample($having) {
+        return $having;
+      }
+    }
+  },
+  InvitationHavingMaxInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec4.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationHavingMinInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec3.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationHavingStddevPopulationInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec7.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationHavingStddevSampleInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec6.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationHavingSumInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationHavingVariancePopulationInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec9.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationHavingVarianceSampleInput: {
+    plans: {
+      createdAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("created_at")}`,
+          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.created_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      },
+      expiresAt($having) {
+        const attributeExpression = sql.fragment`${$having.alias}.${sql.identifier("expires_at")}`,
+          aggregateExpression = spec8.sqlAggregateWrap(attributeExpression, spec_invitation.attributes.expires_at.codec);
+        return new PgBooleanFilter($having, aggregateExpression);
+      }
+    }
+  },
+  InvitationInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+      },
+      email(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("email", bakedInputRuntime(schema, field.type, val));
+      },
+      expiresAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("expires_at", bakedInputRuntime(schema, field.type, val));
+      },
+      inviterUserId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("inviter_user_id", bakedInputRuntime(schema, field.type, val));
+      },
+      organizationId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
+      },
+      role(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("role", bakedInputRuntime(schema, field.type, val));
+      },
+      rowId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("id", bakedInputRuntime(schema, field.type, val));
+      },
+      status(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("status", bakedInputRuntime(schema, field.type, val));
+      },
+      token(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("token", bakedInputRuntime(schema, field.type, val));
+      }
+    }
+  },
+  InvitationPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("created_at", bakedInputRuntime(schema, field.type, val));
+      },
+      email(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("email", bakedInputRuntime(schema, field.type, val));
+      },
+      expiresAt(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("expires_at", bakedInputRuntime(schema, field.type, val));
+      },
+      inviterUserId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("inviter_user_id", bakedInputRuntime(schema, field.type, val));
+      },
+      organizationId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("organization_id", bakedInputRuntime(schema, field.type, val));
+      },
+      role(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("role", bakedInputRuntime(schema, field.type, val));
+      },
+      rowId(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("id", bakedInputRuntime(schema, field.type, val));
+      },
+      status(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("status", bakedInputRuntime(schema, field.type, val));
+      },
+      token(obj, val, {
+        field,
+        schema
+      }) {
+        obj.set("token", bakedInputRuntime(schema, field.type, val));
+      }
+    }
+  },
+  InvitationStatusFilter: {
+    plans: {
+      distinctFrom($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec43 ? resolveInputCodec43(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve137(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "distinctFrom"
+          });
+        $where.where(fragment);
+      },
+      equalTo($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec43 ? resolveInputCodec43(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve135(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "equalTo"
+          });
+        $where.where(fragment);
+      },
+      greaterThan($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec43 ? resolveInputCodec43(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve143(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThan"
+          });
+        $where.where(fragment);
+      },
+      greaterThanOrEqualTo($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec43 ? resolveInputCodec43(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve144(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "greaterThanOrEqualTo"
+          });
+        $where.where(fragment);
+      },
+      in($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec44 ? resolveInputCodec44(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve139(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "in"
+          });
+        $where.where(fragment);
+      },
+      isNull($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec42 ? resolveInputCodec42(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = resolveSqlValue21 ? resolveSqlValue21($where, value, inputCodec) : sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve134(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "isNull"
+          });
+        $where.where(fragment);
+      },
+      lessThan($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec43 ? resolveInputCodec43(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve141(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThan"
+          });
+        $where.where(fragment);
+      },
+      lessThanOrEqualTo($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec43 ? resolveInputCodec43(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve142(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "lessThanOrEqualTo"
+          });
+        $where.where(fragment);
+      },
+      notDistinctFrom($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec43 ? resolveInputCodec43(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve138(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notDistinctFrom"
+          });
+        $where.where(fragment);
+      },
+      notEqualTo($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec43 ? resolveInputCodec43(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve136(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notEqualTo"
+          });
+        $where.where(fragment);
+      },
+      notIn($where, value) {
+        if (!$where.extensions?.pgFilterAttribute) throw Error("Planning error: expected 'pgFilterAttribute' to be present on the $where plan's extensions; your extensions to `postgraphile-plugin-connection-filter` does not implement the required interfaces.");
+        if (value === void 0) return;
+        const {
+            fieldName: parentFieldName,
+            attributeName,
+            attribute,
+            codec,
+            expression
+          } = $where.extensions.pgFilterAttribute,
+          sourceAlias = attribute ? attribute.expression ? attribute.expression($where.alias) : sql`${$where.alias}.${sql.identifier(attributeName)}` : expression ? expression : $where.alias,
+          sourceCodec = codec ?? attribute.codec,
+          [sqlIdentifier, identifierCodec] = resolveSqlIdentifier22 ? resolveSqlIdentifier22(sourceAlias, sourceCodec) : [sourceAlias, sourceCodec];
+        if (true && value === null) return;
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const resolvedInput = value,
+          inputCodec = resolveInputCodec44 ? resolveInputCodec44(codec ?? attribute.codec) : codec ?? attribute.codec,
+          sqlValue = sqlValueWithCodec(resolvedInput, inputCodec),
+          fragment = resolve140(sqlIdentifier, sqlValue, value, $where, {
+            fieldName: parentFieldName ?? null,
+            operatorName: "notIn"
+          });
+        $where.where(fragment);
+      }
+    }
+  },
   LabelAggregatesFilter: {
     plans: {
       distinctCount($subquery, input) {
@@ -28513,7 +31298,7 @@ export const inputObjects = {
   LabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed60(value, "list");
+        assertAllowed64(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -28522,7 +31307,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec81;
+        condition.extensions.pgFilterAttribute = colSpec90;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -28530,7 +31315,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec83;
+        condition.extensions.pgFilterAttribute = colSpec92;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -28538,7 +31323,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec85;
+        condition.extensions.pgFilterAttribute = colSpec94;
         return condition;
       },
       name(queryBuilder, value) {
@@ -28546,16 +31331,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec80;
+        condition.extensions.pgFilterAttribute = colSpec89;
         return condition;
       },
       not($where, value) {
-        assertAllowed60(value, "object");
+        assertAllowed64(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed60(value, "list");
+        assertAllowed64(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -28565,11 +31350,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec86;
+        condition.extensions.pgFilterAttribute = colSpec95;
         return condition;
       },
       project($where, value) {
-        assertAllowed59(value, "object");
+        assertAllowed63(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -28582,7 +31367,7 @@ export const inputObjects = {
         return $subQuery;
       },
       projectExists($where, value) {
-        assertAllowed59(value, "scalar");
+        assertAllowed63(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -28599,7 +31384,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec82;
+        condition.extensions.pgFilterAttribute = colSpec91;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -28607,11 +31392,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec79;
+        condition.extensions.pgFilterAttribute = colSpec88;
         return condition;
       },
       taskLabels($where, value) {
-        assertAllowed58(value, "object");
+        assertAllowed62(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskLabelIdentifier,
@@ -28622,7 +31407,7 @@ export const inputObjects = {
         return $rel;
       },
       taskLabelsExist($where, value) {
-        assertAllowed58(value, "scalar");
+        assertAllowed62(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskLabelIdentifier,
@@ -28639,7 +31424,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec84;
+        condition.extensions.pgFilterAttribute = colSpec93;
         return condition;
       }
     }
@@ -28936,7 +31721,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed65(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -28956,7 +31741,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed65(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -28976,7 +31761,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed61(value, "object");
+        assertAllowed65(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -29682,12 +32467,12 @@ export const inputObjects = {
   PostFilter: {
     plans: {
       and($where, value) {
-        assertAllowed42(value, "list");
+        assertAllowed43(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       author($where, value) {
-        assertAllowed41(value, "object");
+        assertAllowed42(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -29700,7 +32485,7 @@ export const inputObjects = {
         return $subQuery;
       },
       authorExists($where, value) {
-        assertAllowed41(value, "scalar");
+        assertAllowed42(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -29737,7 +32522,7 @@ export const inputObjects = {
         return condition;
       },
       emojis($where, value) {
-        assertAllowed40(value, "object");
+        assertAllowed41(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: emojiIdentifier,
@@ -29748,7 +32533,7 @@ export const inputObjects = {
         return $rel;
       },
       emojisExist($where, value) {
-        assertAllowed40(value, "scalar");
+        assertAllowed41(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: emojiIdentifier,
@@ -29761,12 +32546,12 @@ export const inputObjects = {
         });
       },
       not($where, value) {
-        assertAllowed42(value, "object");
+        assertAllowed43(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed42(value, "list");
+        assertAllowed43(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -29780,7 +32565,7 @@ export const inputObjects = {
         return condition;
       },
       task($where, value) {
-        assertAllowed41(value, "object");
+        assertAllowed42(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -30098,7 +32883,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed43(value, "object");
+        assertAllowed44(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -30118,7 +32903,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed43(value, "object");
+        assertAllowed44(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -30138,7 +32923,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed43(value, "object");
+        assertAllowed44(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -30295,7 +33080,7 @@ export const inputObjects = {
   ProjectColumnFilter: {
     plans: {
       and($where, value) {
-        assertAllowed72(value, "list");
+        assertAllowed76(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -30304,7 +33089,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec102;
+        condition.extensions.pgFilterAttribute = colSpec111;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -30312,7 +33097,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec98;
+        condition.extensions.pgFilterAttribute = colSpec107;
         return condition;
       },
       index(queryBuilder, value) {
@@ -30320,16 +33105,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec101;
+        condition.extensions.pgFilterAttribute = colSpec110;
         return condition;
       },
       not($where, value) {
-        assertAllowed72(value, "object");
+        assertAllowed76(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed72(value, "list");
+        assertAllowed76(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -30339,11 +33124,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec100;
+        condition.extensions.pgFilterAttribute = colSpec109;
         return condition;
       },
       projects($where, value) {
-        assertAllowed71(value, "object");
+        assertAllowed75(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectIdentifier,
@@ -30354,7 +33139,7 @@ export const inputObjects = {
         return $rel;
       },
       projectsExist($where, value) {
-        assertAllowed71(value, "scalar");
+        assertAllowed75(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -30371,7 +33156,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec97;
+        condition.extensions.pgFilterAttribute = colSpec106;
         return condition;
       },
       title(queryBuilder, value) {
@@ -30379,7 +33164,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec99;
+        condition.extensions.pgFilterAttribute = colSpec108;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -30387,7 +33172,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec103;
+        condition.extensions.pgFilterAttribute = colSpec112;
         return condition;
       }
     }
@@ -30717,7 +33502,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed73(value, "object");
+        assertAllowed77(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -30737,7 +33522,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed73(value, "object");
+        assertAllowed77(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -30757,7 +33542,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed73(value, "object");
+        assertAllowed77(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -31005,7 +33790,7 @@ export const inputObjects = {
   ProjectFilter: {
     plans: {
       and($where, value) {
-        assertAllowed24(value, "list");
+        assertAllowed25(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -31018,7 +33803,7 @@ export const inputObjects = {
         return condition;
       },
       columns($where, value) {
-        assertAllowed22(value, "object");
+        assertAllowed23(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: columnIdentifier,
@@ -31029,7 +33814,7 @@ export const inputObjects = {
         return $rel;
       },
       columnsExist($where, value) {
-        assertAllowed22(value, "scalar");
+        assertAllowed23(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: columnIdentifier,
@@ -31066,7 +33851,7 @@ export const inputObjects = {
         return condition;
       },
       labels($where, value) {
-        assertAllowed22(value, "object");
+        assertAllowed23(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: labelIdentifier,
@@ -31077,7 +33862,7 @@ export const inputObjects = {
         return $rel;
       },
       labelsExist($where, value) {
-        assertAllowed22(value, "scalar");
+        assertAllowed23(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: labelIdentifier,
@@ -31106,12 +33891,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed24(value, "object");
+        assertAllowed25(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed24(value, "list");
+        assertAllowed25(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -31133,7 +33918,7 @@ export const inputObjects = {
         return condition;
       },
       projectColumn($where, value) {
-        assertAllowed23(value, "object");
+        assertAllowed24(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectColumnIdentifier,
@@ -31154,7 +33939,7 @@ export const inputObjects = {
         return condition;
       },
       projectProjectLabels($where, value) {
-        assertAllowed22(value, "object");
+        assertAllowed23(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectProjectLabelIdentifier,
@@ -31165,7 +33950,7 @@ export const inputObjects = {
         return $rel;
       },
       projectProjectLabelsExist($where, value) {
-        assertAllowed22(value, "scalar");
+        assertAllowed23(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectProjectLabelIdentifier,
@@ -31194,7 +33979,7 @@ export const inputObjects = {
         return condition;
       },
       tasks($where, value) {
-        assertAllowed22(value, "object");
+        assertAllowed23(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -31205,7 +33990,7 @@ export const inputObjects = {
         return $rel;
       },
       tasksExist($where, value) {
-        assertAllowed22(value, "scalar");
+        assertAllowed23(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -31226,7 +34011,7 @@ export const inputObjects = {
         return condition;
       },
       userPreferences($where, value) {
-        assertAllowed22(value, "object");
+        assertAllowed23(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userPreferenceIdentifier,
@@ -31237,7 +34022,7 @@ export const inputObjects = {
         return $rel;
       },
       userPreferencesExist($where, value) {
-        assertAllowed22(value, "scalar");
+        assertAllowed23(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userPreferenceIdentifier,
@@ -31651,7 +34436,7 @@ export const inputObjects = {
   ProjectLabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed69(value, "list");
+        assertAllowed73(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -31660,7 +34445,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec92;
+        condition.extensions.pgFilterAttribute = colSpec101;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -31668,7 +34453,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec95;
+        condition.extensions.pgFilterAttribute = colSpec104;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -31676,7 +34461,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec93;
+        condition.extensions.pgFilterAttribute = colSpec102;
         return condition;
       },
       name(queryBuilder, value) {
@@ -31684,16 +34469,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec91;
+        condition.extensions.pgFilterAttribute = colSpec100;
         return condition;
       },
       not($where, value) {
-        assertAllowed69(value, "object");
+        assertAllowed73(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed69(value, "list");
+        assertAllowed73(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -31703,11 +34488,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec94;
+        condition.extensions.pgFilterAttribute = colSpec103;
         return condition;
       },
       projectProjectLabels($where, value) {
-        assertAllowed68(value, "object");
+        assertAllowed72(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: projectProjectLabelIdentifier,
@@ -31718,7 +34503,7 @@ export const inputObjects = {
         return $rel;
       },
       projectProjectLabelsExist($where, value) {
-        assertAllowed68(value, "scalar");
+        assertAllowed72(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectProjectLabelIdentifier,
@@ -31735,7 +34520,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec90;
+        condition.extensions.pgFilterAttribute = colSpec99;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -31743,7 +34528,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec96;
+        condition.extensions.pgFilterAttribute = colSpec105;
         return condition;
       }
     }
@@ -32028,7 +34813,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed70(value, "object");
+        assertAllowed74(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32048,7 +34833,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed70(value, "object");
+        assertAllowed74(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32068,7 +34853,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed70(value, "object");
+        assertAllowed74(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32287,7 +35072,7 @@ export const inputObjects = {
   ProjectProjectLabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed67(value, "list");
+        assertAllowed71(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -32296,22 +35081,22 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec89;
+        condition.extensions.pgFilterAttribute = colSpec98;
         return condition;
       },
       not($where, value) {
-        assertAllowed67(value, "object");
+        assertAllowed71(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed67(value, "list");
+        assertAllowed71(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       project($where, value) {
-        assertAllowed66(value, "object");
+        assertAllowed70(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -32328,11 +35113,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec87;
+        condition.extensions.pgFilterAttribute = colSpec96;
         return condition;
       },
       projectLabel($where, value) {
-        assertAllowed66(value, "object");
+        assertAllowed70(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectLabelIdentifier,
@@ -32349,7 +35134,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec88;
+        condition.extensions.pgFilterAttribute = colSpec97;
         return condition;
       }
     }
@@ -32607,7 +35392,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed25(value, "object");
+        assertAllowed26(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32627,7 +35412,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed25(value, "object");
+        assertAllowed26(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32647,7 +35432,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed25(value, "object");
+        assertAllowed26(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32691,7 +35476,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed63(value, "object");
+        assertAllowed67(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32711,7 +35496,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed63(value, "object");
+        assertAllowed67(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32731,7 +35516,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed63(value, "object");
+        assertAllowed67(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32775,7 +35560,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed69(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32795,7 +35580,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed69(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32815,7 +35600,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed65(value, "object");
+        assertAllowed69(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32859,7 +35644,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed66(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32879,7 +35664,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed66(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32899,7 +35684,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed62(value, "object");
+        assertAllowed66(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32943,7 +35728,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed64(value, "object");
+        assertAllowed68(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32963,7 +35748,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed64(value, "object");
+        assertAllowed68(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -32983,7 +35768,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed64(value, "object");
+        assertAllowed68(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -33136,7 +35921,7 @@ export const inputObjects = {
   SettingFilter: {
     plans: {
       and($where, value) {
-        assertAllowed87(value, "list");
+        assertAllowed92(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -33145,7 +35930,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec108;
+        condition.extensions.pgFilterAttribute = colSpec117;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -33153,7 +35938,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec105;
+        condition.extensions.pgFilterAttribute = colSpec114;
         return condition;
       },
       deletedAt(queryBuilder, value) {
@@ -33161,7 +35946,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec111;
+        condition.extensions.pgFilterAttribute = colSpec120;
         return condition;
       },
       deletionReason(queryBuilder, value) {
@@ -33169,16 +35954,16 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec112;
+        condition.extensions.pgFilterAttribute = colSpec121;
         return condition;
       },
       not($where, value) {
-        assertAllowed87(value, "object");
+        assertAllowed92(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed87(value, "list");
+        assertAllowed92(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -33188,7 +35973,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec109;
+        condition.extensions.pgFilterAttribute = colSpec118;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -33196,7 +35981,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec104;
+        condition.extensions.pgFilterAttribute = colSpec113;
         return condition;
       },
       subscriptionId(queryBuilder, value) {
@@ -33204,7 +35989,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec110;
+        condition.extensions.pgFilterAttribute = colSpec119;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -33212,7 +35997,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec106;
+        condition.extensions.pgFilterAttribute = colSpec115;
         return condition;
       },
       viewMode(queryBuilder, value) {
@@ -33220,7 +36005,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec107;
+        condition.extensions.pgFilterAttribute = colSpec116;
         return condition;
       }
     }
@@ -35172,12 +37957,12 @@ export const inputObjects = {
   TaskFilter: {
     plans: {
       and($where, value) {
-        assertAllowed32(value, "list");
+        assertAllowed33(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       assignees($where, value) {
-        assertAllowed30(value, "object");
+        assertAllowed31(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: assigneeIdentifier,
@@ -35188,7 +37973,7 @@ export const inputObjects = {
         return $rel;
       },
       assigneesExist($where, value) {
-        assertAllowed30(value, "scalar");
+        assertAllowed31(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: assigneeIdentifier,
@@ -35201,7 +37986,7 @@ export const inputObjects = {
         });
       },
       author($where, value) {
-        assertAllowed31(value, "object");
+        assertAllowed32(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -35214,7 +37999,7 @@ export const inputObjects = {
         return $subQuery;
       },
       authorExists($where, value) {
-        assertAllowed31(value, "scalar");
+        assertAllowed32(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -35235,7 +38020,7 @@ export const inputObjects = {
         return condition;
       },
       column($where, value) {
-        assertAllowed31(value, "object");
+        assertAllowed32(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: columnIdentifier,
@@ -35296,7 +38081,7 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed32(value, "object");
+        assertAllowed33(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
@@ -35309,13 +38094,13 @@ export const inputObjects = {
         return condition;
       },
       or($where, value) {
-        assertAllowed32(value, "list");
+        assertAllowed33(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       posts($where, value) {
-        assertAllowed30(value, "object");
+        assertAllowed31(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
@@ -35326,7 +38111,7 @@ export const inputObjects = {
         return $rel;
       },
       postsExist($where, value) {
-        assertAllowed30(value, "scalar");
+        assertAllowed31(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -35347,7 +38132,7 @@ export const inputObjects = {
         return condition;
       },
       project($where, value) {
-        assertAllowed31(value, "object");
+        assertAllowed32(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -35376,7 +38161,7 @@ export const inputObjects = {
         return condition;
       },
       taskLabels($where, value) {
-        assertAllowed30(value, "object");
+        assertAllowed31(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskLabelIdentifier,
@@ -35387,7 +38172,7 @@ export const inputObjects = {
         return $rel;
       },
       taskLabelsExist($where, value) {
-        assertAllowed30(value, "scalar");
+        assertAllowed31(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskLabelIdentifier,
@@ -35879,7 +38664,7 @@ export const inputObjects = {
   TaskLabelFilter: {
     plans: {
       and($where, value) {
-        assertAllowed57(value, "list");
+        assertAllowed61(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -35888,11 +38673,11 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec77;
+        condition.extensions.pgFilterAttribute = colSpec86;
         return condition;
       },
       label($where, value) {
-        assertAllowed56(value, "object");
+        assertAllowed60(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: labelIdentifier,
@@ -35909,22 +38694,22 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec76;
+        condition.extensions.pgFilterAttribute = colSpec85;
         return condition;
       },
       not($where, value) {
-        assertAllowed57(value, "object");
+        assertAllowed61(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed57(value, "list");
+        assertAllowed61(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       task($where, value) {
-        assertAllowed56(value, "object");
+        assertAllowed60(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -35941,7 +38726,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec75;
+        condition.extensions.pgFilterAttribute = colSpec84;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -35949,7 +38734,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec78;
+        condition.extensions.pgFilterAttribute = colSpec87;
         return condition;
       }
     }
@@ -36385,7 +39170,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed34(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36405,7 +39190,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed34(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36425,7 +39210,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed33(value, "object");
+        assertAllowed34(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36469,7 +39254,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed54(value, "object");
+        assertAllowed58(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36489,7 +39274,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed54(value, "object");
+        assertAllowed58(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36509,7 +39294,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed54(value, "object");
+        assertAllowed58(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36553,7 +39338,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed55(value, "object");
+        assertAllowed59(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36573,7 +39358,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed55(value, "object");
+        assertAllowed59(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36593,7 +39378,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed55(value, "object");
+        assertAllowed59(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -36709,6 +39494,26 @@ export const inputObjects = {
     }
   },
   UpdateEmojiInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      patch(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
+  UpdateInvitationByIdInput: {
+    plans: {
+      clientMutationId(qb, val) {
+        qb.setMeta("clientMutationId", val);
+      },
+      patch(qb, arg) {
+        if (arg != null) return qb.setBuilder();
+      }
+    }
+  },
+  UpdateInvitationInput: {
     plans: {
       clientMutationId(qb, val) {
         qb.setMeta("clientMutationId", val);
@@ -37028,12 +39833,12 @@ export const inputObjects = {
   UserFilter: {
     plans: {
       and($where, value) {
-        assertAllowed37(value, "list");
+        assertAllowed38(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
       assignees($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed37(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: assigneeIdentifier,
@@ -37044,7 +39849,7 @@ export const inputObjects = {
         return $rel;
       },
       assigneesExist($where, value) {
-        assertAllowed36(value, "scalar");
+        assertAllowed37(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: assigneeIdentifier,
@@ -37057,7 +39862,7 @@ export const inputObjects = {
         });
       },
       authoredPosts($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed37(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: postIdentifier,
@@ -37068,7 +39873,7 @@ export const inputObjects = {
         return $rel;
       },
       authoredPostsExist($where, value) {
-        assertAllowed36(value, "scalar");
+        assertAllowed37(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: postIdentifier,
@@ -37081,7 +39886,7 @@ export const inputObjects = {
         });
       },
       authoredTasks($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed37(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: taskIdentifier,
@@ -37092,7 +39897,7 @@ export const inputObjects = {
         return $rel;
       },
       authoredTasksExist($where, value) {
-        assertAllowed36(value, "scalar");
+        assertAllowed37(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: taskIdentifier,
@@ -37129,7 +39934,7 @@ export const inputObjects = {
         return condition;
       },
       emojis($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed37(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: emojiIdentifier,
@@ -37140,7 +39945,7 @@ export const inputObjects = {
         return $rel;
       },
       emojisExist($where, value) {
-        assertAllowed36(value, "scalar");
+        assertAllowed37(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: emojiIdentifier,
@@ -37160,6 +39965,30 @@ export const inputObjects = {
         condition.extensions.pgFilterAttribute = colSpec38;
         return condition;
       },
+      invitationsByInviterUserId($where, value) {
+        assertAllowed37(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: invitationIdentifier,
+          alias: resource_invitationPgResource.name,
+          localAttributes: registryConfig.pgRelations.user.invitationsByTheirInviterUserId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.user.invitationsByTheirInviterUserId.remoteAttributes
+        };
+        return $rel;
+      },
+      invitationsByInviterUserIdExist($where, value) {
+        assertAllowed37(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: invitationIdentifier,
+          alias: resource_invitationPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.user.invitationsByTheirInviterUserId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.user.invitationsByTheirInviterUserId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       name(queryBuilder, value) {
         if (value === void 0) return;
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
@@ -37169,12 +39998,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed37(value, "object");
+        assertAllowed38(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed37(value, "list");
+        assertAllowed38(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -37196,7 +40025,7 @@ export const inputObjects = {
         return condition;
       },
       userOrganizations($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed37(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userOrganizationIdentifier,
@@ -37207,7 +40036,7 @@ export const inputObjects = {
         return $rel;
       },
       userOrganizationsExist($where, value) {
-        assertAllowed36(value, "scalar");
+        assertAllowed37(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userOrganizationIdentifier,
@@ -37220,7 +40049,7 @@ export const inputObjects = {
         });
       },
       userPreferences($where, value) {
-        assertAllowed36(value, "object");
+        assertAllowed37(value, "object");
         const $rel = $where.andPlan();
         $rel.extensions.pgFilterRelation = {
           tableExpression: userPreferenceIdentifier,
@@ -37231,7 +40060,7 @@ export const inputObjects = {
         return $rel;
       },
       userPreferencesExist($where, value) {
-        assertAllowed36(value, "scalar");
+        assertAllowed37(value, "scalar");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userPreferenceIdentifier,
@@ -37658,7 +40487,7 @@ export const inputObjects = {
   UserOrganizationFilter: {
     plans: {
       and($where, value) {
-        assertAllowed53(value, "list");
+        assertAllowed54(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -37679,12 +40508,12 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed53(value, "object");
+        assertAllowed54(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed53(value, "list");
+        assertAllowed54(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
@@ -37746,7 +40575,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed52(value, "object");
+        assertAllowed53(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -38311,7 +41140,7 @@ export const inputObjects = {
   UserPreferenceFilter: {
     plans: {
       and($where, value) {
-        assertAllowed49(value, "list");
+        assertAllowed50(value, "list");
         if (value == null) return;
         return $where.andPlan();
       },
@@ -38340,18 +41169,18 @@ export const inputObjects = {
         return condition;
       },
       not($where, value) {
-        assertAllowed49(value, "object");
+        assertAllowed50(value, "object");
         if (value == null) return;
         return $where.notPlan().andPlan();
       },
       or($where, value) {
-        assertAllowed49(value, "list");
+        assertAllowed50(value, "list");
         if (value == null) return;
         const $or = $where.orPlan();
         return () => $or.andPlan();
       },
       project($where, value) {
-        assertAllowed48(value, "object");
+        assertAllowed49(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: projectIdentifier,
@@ -38388,7 +41217,7 @@ export const inputObjects = {
         return condition;
       },
       user($where, value) {
-        assertAllowed48(value, "object");
+        assertAllowed49(value, "object");
         if (value == null) return;
         const $subQuery = $where.existsPlan({
           tableExpression: userIdentifier,
@@ -38710,7 +41539,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed38(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38730,7 +41559,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed38(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38750,7 +41579,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed38(value, "object");
+        assertAllowed39(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38794,7 +41623,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed50(value, "object");
+        assertAllowed51(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38814,7 +41643,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed50(value, "object");
+        assertAllowed51(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38834,7 +41663,91 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed50(value, "object");
+        assertAllowed51(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      }
+    }
+  },
+  UserToManyInvitationFilter: {
+    plans: {
+      aggregates($where, input) {
+        if (input == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = new PgAggregateCondition($where, {
+            sql,
+            tableExpression,
+            alias
+          }, pgWhereConditionSpecListToSQL);
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      every($where, value) {
+        assertAllowed55(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery.notPlan().andPlan();
+      },
+      none($where, value) {
+        assertAllowed55(value, "object");
+        if (value == null) return;
+        if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
+        const {
+            localAttributes,
+            remoteAttributes,
+            tableExpression,
+            alias
+          } = $where.extensions.pgFilterRelation,
+          $subQuery = $where.notPlan().existsPlan({
+            tableExpression,
+            alias
+          });
+        localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+        return $subQuery;
+      },
+      some($where, value) {
+        assertAllowed55(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38878,7 +41791,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed39(value, "object");
+        assertAllowed40(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38898,7 +41811,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed39(value, "object");
+        assertAllowed40(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38918,7 +41831,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed39(value, "object");
+        assertAllowed40(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38962,7 +41875,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed46(value, "object");
+        assertAllowed47(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -38982,7 +41895,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed46(value, "object");
+        assertAllowed47(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -39002,7 +41915,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed46(value, "object");
+        assertAllowed47(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -39046,7 +41959,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed51(value, "object");
+        assertAllowed52(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -39066,7 +41979,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed51(value, "object");
+        assertAllowed52(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -39086,7 +41999,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed51(value, "object");
+        assertAllowed52(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -39130,7 +42043,7 @@ export const inputObjects = {
         return $subQuery;
       },
       every($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed48(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -39150,7 +42063,7 @@ export const inputObjects = {
         return $subQuery.notPlan().andPlan();
       },
       none($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed48(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -39170,7 +42083,7 @@ export const inputObjects = {
         return $subQuery;
       },
       some($where, value) {
-        assertAllowed47(value, "object");
+        assertAllowed48(value, "object");
         if (value == null) return;
         if (!$where.extensions.pgFilterRelation) throw Error("Invalid use of filter, 'pgFilterRelation' expected");
         const {
@@ -41085,6 +43998,186 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
       }
     }
   },
+  InvitationGroupBy: {
+    values: {
+      CREATED_AT($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("created_at")}`,
+          codec: TYPES.timestamptz
+        });
+      },
+      CREATED_AT_TRUNCATED_TO_DAY($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+          codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      CREATED_AT_TRUNCATED_TO_HOUR($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("created_at")}`),
+          codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      EMAIL($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("email")}`,
+          codec: TYPES.text
+        });
+      },
+      EXPIRES_AT($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("expires_at")}`,
+          codec: TYPES.timestamptz
+        });
+      },
+      EXPIRES_AT_TRUNCATED_TO_DAY($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec2.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("expires_at")}`),
+          codec: aggregateGroupBySpec2.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      EXPIRES_AT_TRUNCATED_TO_HOUR($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: aggregateGroupBySpec.sqlWrap(sql`${$pgSelect.alias}.${sql.identifier("expires_at")}`),
+          codec: aggregateGroupBySpec.sqlWrapCodec(TYPES.timestamptz)
+        });
+      },
+      INVITER_USER_ID($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("inviter_user_id")}`,
+          codec: TYPES.uuid
+        });
+      },
+      ORGANIZATION_ID($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("organization_id")}`,
+          codec: TYPES.text
+        });
+      },
+      ROLE($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("role")}`,
+          codec: memberRoleCodec
+        });
+      },
+      STATUS($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("status")}`,
+          codec: invitationStatusCodec
+        });
+      }
+    }
+  },
+  InvitationOrderBy: {
+    values: {
+      CREATED_AT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "created_at",
+          direction: "ASC"
+        });
+      },
+      CREATED_AT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "created_at",
+          direction: "DESC"
+        });
+      },
+      EMAIL_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "email",
+          direction: "ASC"
+        });
+      },
+      EMAIL_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "email",
+          direction: "DESC"
+        });
+      },
+      EXPIRES_AT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "expires_at",
+          direction: "ASC"
+        });
+      },
+      EXPIRES_AT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "expires_at",
+          direction: "DESC"
+        });
+      },
+      INVITER_USER_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "inviter_user_id",
+          direction: "ASC"
+        });
+      },
+      INVITER_USER_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "inviter_user_id",
+          direction: "DESC"
+        });
+      },
+      ORGANIZATION_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "organization_id",
+          direction: "ASC"
+        });
+      },
+      ORGANIZATION_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "organization_id",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        invitationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        invitationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "id",
+          direction: "ASC"
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "id",
+          direction: "DESC"
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      TOKEN_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "token",
+          direction: "ASC"
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      TOKEN_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "token",
+          direction: "DESC"
+        });
+        queryBuilder.setOrderIsUnique();
+      }
+    }
+  },
   LabelGroupBy: {
     values: {
       COLOR($pgSelect) {
@@ -42035,8 +45128,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42054,8 +45147,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42073,8 +45166,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42092,8 +45185,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42111,8 +45204,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42129,8 +45222,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42147,8 +45240,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42166,8 +45259,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42185,8 +45278,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42204,8 +45297,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42223,8 +45316,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42242,8 +45335,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42261,8 +45354,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42280,8 +45373,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42299,8 +45392,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42318,8 +45411,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42337,8 +45430,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42356,8 +45449,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42375,8 +45468,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42394,8 +45487,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42413,8 +45506,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42432,8 +45525,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42451,8 +45544,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42470,8 +45563,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42489,8 +45582,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42508,8 +45601,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42527,8 +45620,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42546,8 +45639,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42565,8 +45658,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42584,8 +45677,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42603,8 +45696,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42622,8 +45715,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42641,8 +45734,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42660,8 +45753,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42679,8 +45772,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42698,8 +45791,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42717,8 +45810,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42736,8 +45829,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42755,8 +45848,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42774,8 +45867,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42793,8 +45886,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42812,8 +45905,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42831,8 +45924,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42850,8 +45943,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42869,8 +45962,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42888,8 +45981,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42907,8 +46000,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42926,8 +46019,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42945,8 +46038,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42964,8 +46057,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -42983,8 +46076,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -43002,8 +46095,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -43021,8 +46114,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -43040,8 +46133,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -43059,8 +46152,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -43078,8 +46171,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -43097,8 +46190,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -43116,8 +46209,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_projectPgResource.name));
-        relation19.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation19.remoteAttributes[i];
+        relation20.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation20.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_projectPgResource.from === "function") throw Error("Function source unsupported");
@@ -43413,8 +46506,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
-        relation18.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation18.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43431,8 +46524,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
-        relation18.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation18.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43449,8 +46542,8 @@ where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
-        relation18.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation18.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43468,8 +46561,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
-        relation18.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation18.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43487,8 +46580,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
-        relation18.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation18.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43506,8 +46599,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
-        relation18.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation18.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43525,8 +46618,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
-        relation18.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation18.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -43544,8 +46637,8 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
         const foreignTableAlias = $select.alias,
           conditions = [],
           tableAlias = sql.identifier(Symbol(resource_project_project_labelPgResource.name));
-        relation18.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = relation18.remoteAttributes[i];
+        relation19.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation19.remoteAttributes[i];
           conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
         });
         if (typeof resource_project_project_labelPgResource.from === "function") throw Error("Function source unsupported");
@@ -49716,6 +52809,384 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
         queryBuilder.setOrderIsUnique();
+      },
+      INVITATIONS_BY_INVITER_USER_ID_COUNT_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_COUNT_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`select count(*)
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.parens(sql.join(conditions.map(c => sql.parens(c)), " AND "))}`})`;
+        $select.orderBy({
+          fragment,
+          codec: TYPES.bigint,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_invitation.attributes.created_at.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.created_at.codec) ?? spec_invitation.attributes.created_at.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("created_at")}`, spec_invitation.attributes.created_at.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.created_at.codec) ?? spec_invitation.attributes.created_at.codec,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EMAIL_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("email")}`, spec_invitation.attributes.email.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.email.codec) ?? spec_invitation.attributes.email.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EMAIL_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("email")}`, spec_invitation.attributes.email.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.email.codec) ?? spec_invitation.attributes.email.codec,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EXPIRES_AT_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("expires_at")}`, spec_invitation.attributes.expires_at.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.expires_at.codec) ?? spec_invitation.attributes.expires_at.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EXPIRES_AT_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("expires_at")}`, spec_invitation.attributes.expires_at.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.expires_at.codec) ?? spec_invitation.attributes.expires_at.codec,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_INVITER_USER_ID_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("inviter_user_id")}`, spec_invitation.attributes.inviter_user_id.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.inviter_user_id.codec) ?? spec_invitation.attributes.inviter_user_id.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_INVITER_USER_ID_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("inviter_user_id")}`, spec_invitation.attributes.inviter_user_id.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.inviter_user_id.codec) ?? spec_invitation.attributes.inviter_user_id.codec,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_invitation.attributes.organization_id.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.organization_id.codec) ?? spec_invitation.attributes.organization_id.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("organization_id")}`, spec_invitation.attributes.organization_id.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.organization_id.codec) ?? spec_invitation.attributes.organization_id.codec,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROLE_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_invitation.attributes.role.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.role.codec) ?? spec_invitation.attributes.role.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROLE_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("role")}`, spec_invitation.attributes.role.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.role.codec) ?? spec_invitation.attributes.role.codec,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_invitation.attributes.id.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.id.codec) ?? spec_invitation.attributes.id.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("id")}`, spec_invitation.attributes.id.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.id.codec) ?? spec_invitation.attributes.id.codec,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_STATUS_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status")}`, spec_invitation.attributes.status.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.status.codec) ?? spec_invitation.attributes.status.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_STATUS_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("status")}`, spec_invitation.attributes.status.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.status.codec) ?? spec_invitation.attributes.status.codec,
+          direction: "DESC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_TOKEN_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("token")}`, spec_invitation.attributes.token.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.token.codec) ?? spec_invitation.attributes.token.codec,
+          direction: "ASC"
+        });
+      },
+      INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_TOKEN_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_invitationPgResource.name));
+        relation18.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation18.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_invitationPgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec2.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("token")}`, spec_invitation.attributes.token.codec)}
+from ${resource_invitationPgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec2.pgTypeCodecModifier?.(spec_invitation.attributes.token.codec) ?? spec_invitation.attributes.token.codec,
+          direction: "DESC"
+        });
       },
       NAME_ASC(queryBuilder) {
         queryBuilder.orderBy({

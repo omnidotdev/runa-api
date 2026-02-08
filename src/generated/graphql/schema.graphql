@@ -65,6 +65,12 @@ type Query implements Node {
   """Get a single `UserPreference`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
+  """Get a single `UserOrganization`."""
+  userOrganization(rowId: UUID!): UserOrganization
+
+  """Get a single `UserOrganization`."""
+  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: String!): UserOrganization
+
   """Get a single `Setting`."""
   setting(rowId: UUID!): Setting
 
@@ -83,11 +89,11 @@ type Query implements Node {
   """Get a single `Project`."""
   projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
 
-  """Get a single `UserOrganization`."""
-  userOrganization(rowId: UUID!): UserOrganization
+  """Get a single `Invitation`."""
+  invitation(rowId: UUID!): Invitation
 
-  """Get a single `UserOrganization`."""
-  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: String!): UserOrganization
+  """Get a single `Invitation`."""
+  invitationByToken(token: String!): Invitation
 
   """Reads a single `ProjectProjectLabel` using its globally unique `ID`."""
   projectProjectLabelById(
@@ -163,6 +169,14 @@ type Query implements Node {
     id: ID!
   ): UserPreference
 
+  """Reads a single `UserOrganization` using its globally unique `ID`."""
+  userOrganizationById(
+    """
+    The globally unique `ID` to be used in selecting a single `UserOrganization`.
+    """
+    id: ID!
+  ): UserOrganization
+
   """Reads a single `Setting` using its globally unique `ID`."""
   settingById(
     """The globally unique `ID` to be used in selecting a single `Setting`."""
@@ -181,13 +195,13 @@ type Query implements Node {
     id: ID!
   ): Project
 
-  """Reads a single `UserOrganization` using its globally unique `ID`."""
-  userOrganizationById(
+  """Reads a single `Invitation` using its globally unique `ID`."""
+  invitationById(
     """
-    The globally unique `ID` to be used in selecting a single `UserOrganization`.
+    The globally unique `ID` to be used in selecting a single `Invitation`.
     """
     id: ID!
-  ): UserOrganization
+  ): Invitation
 
   """Reads and enables pagination through a set of `ProjectProjectLabel`."""
   projectProjectLabels(
@@ -563,6 +577,40 @@ type Query implements Node {
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
 
+  """Reads and enables pagination through a set of `UserOrganization`."""
+  userOrganizations(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserOrganizationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserOrganizationFilter
+
+    """The method to use when ordering `UserOrganization`."""
+    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserOrganizationConnection
+
   """Reads and enables pagination through a set of `Setting`."""
   settings(
     """Only read the first `n` values of the set."""
@@ -665,8 +713,8 @@ type Query implements Node {
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
 
-  """Reads and enables pagination through a set of `UserOrganization`."""
-  userOrganizations(
+  """Reads and enables pagination through a set of `Invitation`."""
+  invitations(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -688,16 +736,16 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: UserOrganizationCondition
+    condition: InvitationCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: UserOrganizationFilter
+    filter: InvitationFilter
 
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserOrganizationConnection
+    """The method to use when ordering `Invitation`."""
+    orderBy: [InvitationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvitationConnection
 
   """
   Returns the currently authenticated user (observer).
@@ -2047,6 +2095,12 @@ input UserFilter {
   """Some related `userOrganizations` exist."""
   userOrganizationsExist: Boolean
 
+  """Filter by the object’s `invitationsByInviterUserId` relation."""
+  invitationsByInviterUserId: UserToManyInvitationFilter
+
+  """Some related `invitationsByInviterUserId` exist."""
+  invitationsByInviterUserIdExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [UserFilter!]
 
@@ -2839,6 +2893,145 @@ input UserOrganizationDistinctCountAggregateFilter {
   syncedAt: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against many `Invitation` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyInvitationFilter {
+  """
+  Every related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InvitationFilter
+
+  """
+  Some related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InvitationFilter
+
+  """
+  No related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InvitationFilter
+
+  """Aggregates across related `Invitation` match the filter criteria."""
+  aggregates: InvitationAggregatesFilter
+}
+
+"""
+A filter to be used against `Invitation` object types. All fields are combined with a logical ‘and.’
+"""
+input InvitationFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `inviterUserId` field."""
+  inviterUserId: UUIDFilter
+
+  """Filter by the object’s `email` field."""
+  email: StringFilter
+
+  """Filter by the object’s `role` field."""
+  role: MemberRoleFilter
+
+  """Filter by the object’s `token` field."""
+  token: StringFilter
+
+  """Filter by the object’s `status` field."""
+  status: InvitationStatusFilter
+
+  """Filter by the object’s `expiresAt` field."""
+  expiresAt: DatetimeFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `inviterUser` relation."""
+  inviterUser: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [InvitationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [InvitationFilter!]
+
+  """Negates the expression."""
+  not: InvitationFilter
+}
+
+"""
+A filter to be used against InvitationStatus fields. All fields are combined with a logical ‘and.’
+"""
+input InvitationStatusFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: InvitationStatus
+
+  """Not equal to the specified value."""
+  notEqualTo: InvitationStatus
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: InvitationStatus
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: InvitationStatus
+
+  """Included in the specified list."""
+  in: [InvitationStatus!]
+
+  """Not included in the specified list."""
+  notIn: [InvitationStatus!]
+
+  """Less than the specified value."""
+  lessThan: InvitationStatus
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: InvitationStatus
+
+  """Greater than the specified value."""
+  greaterThan: InvitationStatus
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: InvitationStatus
+}
+
+enum InvitationStatus {
+  pending
+  accepted
+  expired
+  revoked
+}
+
+"""A filter to be used against aggregates of `Invitation` object types."""
+input InvitationAggregatesFilter {
+  """
+  A filter that must pass for the relevant `Invitation` object to be included within the aggregate.
+  """
+  filter: InvitationFilter
+
+  """Distinct count aggregate over matching `Invitation` objects."""
+  distinctCount: InvitationDistinctCountAggregateFilter
+}
+
+input InvitationDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  inviterUserId: BigIntFilter
+  email: BigIntFilter
+  role: BigIntFilter
+  token: BigIntFilter
+  status: BigIntFilter
+  expiresAt: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -4103,6 +4296,40 @@ type User implements Node {
     """The method to use when ordering `UserOrganization`."""
     orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserOrganizationConnection!
+
+  """Reads and enables pagination through a set of `Invitation`."""
+  invitationsByInviterUserId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InvitationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InvitationFilter
+
+    """The method to use when ordering `Invitation`."""
+    orderBy: [InvitationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvitationConnection!
 }
 
 """A connection to a list of `Assignee` values."""
@@ -5364,6 +5591,234 @@ enum UserOrganizationOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+"""A connection to a list of `Invitation` values."""
+type InvitationConnection {
+  """A list of `Invitation` objects."""
+  nodes: [Invitation!]!
+
+  """
+  A list of edges which contains the `Invitation` and cursor to aid in pagination.
+  """
+  edges: [InvitationEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Invitation` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: InvitationAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Invitation` for these aggregates."""
+    groupBy: [InvitationGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: InvitationHavingInput
+  ): [InvitationAggregates!]
+}
+
+type Invitation implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  inviterUserId: UUID!
+  email: String
+  role: MemberRole!
+  token: String!
+  status: InvitationStatus!
+  expiresAt: Datetime!
+  createdAt: Datetime!
+
+  """Reads a single `User` that is related to this `Invitation`."""
+  inviterUser: User
+}
+
+"""A `Invitation` edge in the connection."""
+type InvitationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Invitation` at the end of the edge."""
+  node: Invitation!
+}
+
+type InvitationAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: InvitationDistinctCountAggregates
+}
+
+type InvitationDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of inviterUserId across the matching connection"""
+  inviterUserId: BigInt
+
+  """Distinct count of email across the matching connection"""
+  email: BigInt
+
+  """Distinct count of role across the matching connection"""
+  role: BigInt
+
+  """Distinct count of token across the matching connection"""
+  token: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of expiresAt across the matching connection"""
+  expiresAt: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""Grouping methods for `Invitation` for usage during aggregation."""
+enum InvitationGroupBy {
+  ORGANIZATION_ID
+  INVITER_USER_ID
+  EMAIL
+  ROLE
+  STATUS
+  EXPIRES_AT
+  EXPIRES_AT_TRUNCATED_TO_HOUR
+  EXPIRES_AT_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `Invitation` aggregates."""
+input InvitationHavingInput {
+  AND: [InvitationHavingInput!]
+  OR: [InvitationHavingInput!]
+  sum: InvitationHavingSumInput
+  distinctCount: InvitationHavingDistinctCountInput
+  min: InvitationHavingMinInput
+  max: InvitationHavingMaxInput
+  average: InvitationHavingAverageInput
+  stddevSample: InvitationHavingStddevSampleInput
+  stddevPopulation: InvitationHavingStddevPopulationInput
+  varianceSample: InvitationHavingVarianceSampleInput
+  variancePopulation: InvitationHavingVariancePopulationInput
+}
+
+input InvitationHavingSumInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingDistinctCountInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingMinInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingMaxInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingAverageInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingStddevSampleInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingStddevPopulationInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingVarianceSampleInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input InvitationHavingVariancePopulationInput {
+  expiresAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `Invitation` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input InvitationCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `inviterUserId` field."""
+  inviterUserId: UUID
+
+  """Checks for equality with the object’s `email` field."""
+  email: String
+
+  """Checks for equality with the object’s `role` field."""
+  role: MemberRole
+
+  """Checks for equality with the object’s `token` field."""
+  token: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: InvitationStatus
+
+  """Checks for equality with the object’s `expiresAt` field."""
+  expiresAt: Datetime
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering `Invitation`."""
+enum InvitationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  INVITER_USER_ID_ASC
+  INVITER_USER_ID_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  TOKEN_ASC
+  TOKEN_DESC
+  EXPIRES_AT_ASC
+  EXPIRES_AT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
 }
 
 """A connection to a list of `TaskLabel` values."""
@@ -6951,6 +7406,26 @@ enum UserOrderBy {
   USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+  INVITATIONS_BY_INVITER_USER_ID_COUNT_ASC
+  INVITATIONS_BY_INVITER_USER_ID_COUNT_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROW_ID_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROW_ID_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_INVITER_USER_ID_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_INVITER_USER_ID_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EMAIL_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EMAIL_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROLE_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_ROLE_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_TOKEN_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_TOKEN_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_STATUS_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_STATUS_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EXPIRES_AT_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_EXPIRES_AT_DESC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  INVITATIONS_BY_INVITER_USER_ID_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `ProjectLabel` values."""
@@ -7856,6 +8331,14 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
+  """Creates a single `UserOrganization`."""
+  createUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserOrganizationInput!
+  ): CreateUserOrganizationPayload
+
   """Creates a single `Setting`."""
   createSetting(
     """
@@ -7880,13 +8363,13 @@ type Mutation {
     input: CreateProjectInput!
   ): CreateProjectPayload
 
-  """Creates a single `UserOrganization`."""
-  createUserOrganization(
+  """Creates a single `Invitation`."""
+  createInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateUserOrganizationInput!
-  ): CreateUserOrganizationPayload
+    input: CreateInvitationInput!
+  ): CreateInvitationPayload
 
   """
   Updates a single `ProjectProjectLabel` using its globally unique id and a patch.
@@ -8072,6 +8555,24 @@ type Mutation {
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
 
+  """
+  Updates a single `UserOrganization` using its globally unique id and a patch.
+  """
+  updateUserOrganizationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserOrganizationByIdInput!
+  ): UpdateUserOrganizationPayload
+
+  """Updates a single `UserOrganization` using a unique key and a patch."""
+  updateUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserOrganizationInput!
+  ): UpdateUserOrganizationPayload
+
   """Updates a single `Setting` using its globally unique id and a patch."""
   updateSettingById(
     """
@@ -8121,22 +8622,22 @@ type Mutation {
   ): UpdateProjectPayload
 
   """
-  Updates a single `UserOrganization` using its globally unique id and a patch.
+  Updates a single `Invitation` using its globally unique id and a patch.
   """
-  updateUserOrganizationById(
+  updateInvitationById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateUserOrganizationByIdInput!
-  ): UpdateUserOrganizationPayload
+    input: UpdateInvitationByIdInput!
+  ): UpdateInvitationPayload
 
-  """Updates a single `UserOrganization` using a unique key and a patch."""
-  updateUserOrganization(
+  """Updates a single `Invitation` using a unique key and a patch."""
+  updateInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateUserOrganizationInput!
-  ): UpdateUserOrganizationPayload
+    input: UpdateInvitationInput!
+  ): UpdateInvitationPayload
 
   """Deletes a single `ProjectProjectLabel` using its globally unique id."""
   deleteProjectProjectLabelById(
@@ -8314,6 +8815,22 @@ type Mutation {
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
 
+  """Deletes a single `UserOrganization` using its globally unique id."""
+  deleteUserOrganizationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserOrganizationByIdInput!
+  ): DeleteUserOrganizationPayload
+
+  """Deletes a single `UserOrganization` using a unique key."""
+  deleteUserOrganization(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserOrganizationInput!
+  ): DeleteUserOrganizationPayload
+
   """Deletes a single `Setting` using its globally unique id."""
   deleteSettingById(
     """
@@ -8362,21 +8879,21 @@ type Mutation {
     input: DeleteProjectInput!
   ): DeleteProjectPayload
 
-  """Deletes a single `UserOrganization` using its globally unique id."""
-  deleteUserOrganizationById(
+  """Deletes a single `Invitation` using its globally unique id."""
+  deleteInvitationById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteUserOrganizationByIdInput!
-  ): DeleteUserOrganizationPayload
+    input: DeleteInvitationByIdInput!
+  ): DeleteInvitationPayload
 
-  """Deletes a single `UserOrganization` using a unique key."""
-  deleteUserOrganization(
+  """Deletes a single `Invitation` using a unique key."""
+  deleteInvitation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteUserOrganizationInput!
-  ): DeleteUserOrganizationPayload
+    input: DeleteInvitationInput!
+  ): DeleteInvitationPayload
 }
 
 """The output of our create `ProjectProjectLabel` mutation."""
@@ -8877,6 +9394,55 @@ input UserPreferenceInput {
   color: String
 }
 
+"""The output of our create `UserOrganization` mutation."""
+type CreateUserOrganizationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserOrganization` that was created by this mutation."""
+  userOrganization: UserOrganization
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserOrganization`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering `UserOrganization`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the create `UserOrganization` mutation."""
+input CreateUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `UserOrganization` to be created by this mutation."""
+  userOrganization: UserOrganizationInput!
+}
+
+"""An input for mutations affecting `UserOrganization`"""
+input UserOrganizationInput {
+  rowId: UUID
+  userId: UUID!
+  organizationId: String!
+  slug: String!
+  name: String
+  type: OrganizationType
+  role: MemberRole
+  syncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `Setting` mutation."""
 type CreateSettingPayload {
   """
@@ -9027,53 +9593,52 @@ input ProjectInput {
   nextTaskNumber: Int
 }
 
-"""The output of our create `UserOrganization` mutation."""
-type CreateUserOrganizationPayload {
+"""The output of our create `Invitation` mutation."""
+type CreateInvitationPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `UserOrganization` that was created by this mutation."""
-  userOrganization: UserOrganization
+  """The `Invitation` that was created by this mutation."""
+  invitation: Invitation
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `UserOrganization`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our `Invitation`. May be used by Relay 1."""
+  invitationEdge(
+    """The method to use when ordering `Invitation`."""
+    orderBy: [InvitationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvitationEdge
 }
 
-"""All input for the create `UserOrganization` mutation."""
-input CreateUserOrganizationInput {
+"""All input for the create `Invitation` mutation."""
+input CreateInvitationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The `UserOrganization` to be created by this mutation."""
-  userOrganization: UserOrganizationInput!
+  """The `Invitation` to be created by this mutation."""
+  invitation: InvitationInput!
 }
 
-"""An input for mutations affecting `UserOrganization`"""
-input UserOrganizationInput {
+"""An input for mutations affecting `Invitation`"""
+input InvitationInput {
   rowId: UUID
-  userId: UUID!
   organizationId: String!
-  slug: String!
-  name: String
-  type: OrganizationType
+  inviterUserId: UUID!
+  email: String
   role: MemberRole
-  syncedAt: Datetime
+  token: String!
+  status: InvitationStatus
+  expiresAt: Datetime!
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
 """The output of our update `ProjectProjectLabel` mutation."""
@@ -9837,6 +10402,79 @@ input UpdateUserPreferenceInput {
   patch: UserPreferencePatch!
 }
 
+"""The output of our update `UserOrganization` mutation."""
+type UpdateUserOrganizationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserOrganization` that was updated by this mutation."""
+  userOrganization: UserOrganization
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserOrganization`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering `UserOrganization`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the `updateUserOrganizationById` mutation."""
+input UpdateUserOrganizationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `UserOrganization` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `UserOrganization` being updated.
+  """
+  patch: UserOrganizationPatch!
+}
+
+"""
+Represents an update to a `UserOrganization`. Fields that are set will be updated.
+"""
+input UserOrganizationPatch {
+  rowId: UUID
+  userId: UUID
+  organizationId: String
+  slug: String
+  name: String
+  type: OrganizationType
+  role: MemberRole
+  syncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateUserOrganization` mutation."""
+input UpdateUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `UserOrganization` being updated.
+  """
+  patch: UserOrganizationPatch!
+}
+
 """The output of our update `Setting` mutation."""
 type UpdateSettingPayload {
   """
@@ -10057,31 +10695,31 @@ input UpdateProjectInput {
   patch: ProjectPatch!
 }
 
-"""The output of our update `UserOrganization` mutation."""
-type UpdateUserOrganizationPayload {
+"""The output of our update `Invitation` mutation."""
+type UpdateInvitationPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `UserOrganization` that was updated by this mutation."""
-  userOrganization: UserOrganization
+  """The `Invitation` that was updated by this mutation."""
+  invitation: Invitation
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `UserOrganization`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our `Invitation`. May be used by Relay 1."""
+  invitationEdge(
+    """The method to use when ordering `Invitation`."""
+    orderBy: [InvitationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvitationEdge
 }
 
-"""All input for the `updateUserOrganizationById` mutation."""
-input UpdateUserOrganizationByIdInput {
+"""All input for the `updateInvitationById` mutation."""
+input UpdateInvitationByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10089,34 +10727,33 @@ input UpdateUserOrganizationByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `UserOrganization` to be updated.
+  The globally unique `ID` which will identify a single `Invitation` to be updated.
   """
   id: ID!
 
   """
-  An object where the defined keys will be set on the `UserOrganization` being updated.
+  An object where the defined keys will be set on the `Invitation` being updated.
   """
-  patch: UserOrganizationPatch!
+  patch: InvitationPatch!
 }
 
 """
-Represents an update to a `UserOrganization`. Fields that are set will be updated.
+Represents an update to a `Invitation`. Fields that are set will be updated.
 """
-input UserOrganizationPatch {
+input InvitationPatch {
   rowId: UUID
-  userId: UUID
   organizationId: String
-  slug: String
-  name: String
-  type: OrganizationType
+  inviterUserId: UUID
+  email: String
   role: MemberRole
-  syncedAt: Datetime
+  token: String
+  status: InvitationStatus
+  expiresAt: Datetime
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
-"""All input for the `updateUserOrganization` mutation."""
-input UpdateUserOrganizationInput {
+"""All input for the `updateInvitation` mutation."""
+input UpdateInvitationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10125,9 +10762,9 @@ input UpdateUserOrganizationInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the `UserOrganization` being updated.
+  An object where the defined keys will be set on the `Invitation` being updated.
   """
-  patch: UserOrganizationPatch!
+  patch: InvitationPatch!
 }
 
 """The output of our delete `ProjectProjectLabel` mutation."""
@@ -10661,6 +11298,54 @@ input DeleteUserPreferenceInput {
   rowId: UUID!
 }
 
+"""The output of our delete `UserOrganization` mutation."""
+type DeleteUserOrganizationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserOrganization` that was deleted by this mutation."""
+  userOrganization: UserOrganization
+  deletedUserOrganizationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserOrganization`. May be used by Relay 1."""
+  userOrganizationEdge(
+    """The method to use when ordering `UserOrganization`."""
+    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserOrganizationEdge
+}
+
+"""All input for the `deleteUserOrganizationById` mutation."""
+input DeleteUserOrganizationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `UserOrganization` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteUserOrganization` mutation."""
+input DeleteUserOrganizationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Setting` mutation."""
 type DeleteSettingPayload {
   """
@@ -10805,32 +11490,32 @@ input DeleteProjectInput {
   rowId: UUID!
 }
 
-"""The output of our delete `UserOrganization` mutation."""
-type DeleteUserOrganizationPayload {
+"""The output of our delete `Invitation` mutation."""
+type DeleteInvitationPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `UserOrganization` that was deleted by this mutation."""
-  userOrganization: UserOrganization
-  deletedUserOrganizationId: ID
+  """The `Invitation` that was deleted by this mutation."""
+  invitation: Invitation
+  deletedInvitationId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `UserOrganization`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
+  """An edge for our `Invitation`. May be used by Relay 1."""
+  invitationEdge(
+    """The method to use when ordering `Invitation`."""
+    orderBy: [InvitationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvitationEdge
 }
 
-"""All input for the `deleteUserOrganizationById` mutation."""
-input DeleteUserOrganizationByIdInput {
+"""All input for the `deleteInvitationById` mutation."""
+input DeleteInvitationByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10838,13 +11523,13 @@ input DeleteUserOrganizationByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `UserOrganization` to be deleted.
+  The globally unique `ID` which will identify a single `Invitation` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the `deleteUserOrganization` mutation."""
-input DeleteUserOrganizationInput {
+"""All input for the `deleteInvitation` mutation."""
+input DeleteInvitationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

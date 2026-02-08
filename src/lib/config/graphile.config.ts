@@ -8,6 +8,7 @@ import {
   AssigneePlugin,
   ColumnPlugin,
   EmojiPlugin,
+  InvitationPlugin,
   LabelPlugin,
   PostPlugin,
   PrimaryKeyMutationsOnlyPlugin,
@@ -18,6 +19,7 @@ import {
   TaskLabelPlugin,
   TaskPlugin,
   UserPlugin,
+  UserOrganizationPlugin,
   UserPreferencePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
@@ -44,6 +46,7 @@ const graphilePreset: GraphileConfig.Preset = {
     AssigneePlugin,
     ColumnPlugin,
     EmojiPlugin,
+    InvitationPlugin,
     LabelPlugin,
     PostPlugin,
     PrimaryKeyMutationsOnlyPlugin,
@@ -54,6 +57,7 @@ const graphilePreset: GraphileConfig.Preset = {
     TaskPlugin,
     TaskLabelPlugin,
     UserPlugin,
+    UserOrganizationPlugin,
     UserPreferencePlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,

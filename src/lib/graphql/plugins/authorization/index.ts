@@ -1,6 +1,7 @@
 export { default as AssigneePlugin } from "./Assignee.plugin";
 export { default as ColumnPlugin } from "./Column.plugin";
 export { default as EmojiPlugin } from "./Emoji.plugin";
+export { default as InvitationPlugin } from "./Invitation.plugin";
 export { default as LabelPlugin } from "./Label.plugin";
 export { default as PostPlugin } from "./Post.plugin";
 export { default as PrimaryKeyMutationsOnlyPlugin } from "./PrimaryKeyMutationsOnly.plugin";
@@ -11,4 +12,5 @@ export { default as SmartTagPlugin } from "./SmartTag.plugin";
 export { default as TaskPlugin } from "./Task.plugin";
 export { default as TaskLabelPlugin } from "./TaskLabel.plugin";
 export { default as UserPlugin } from "./User.plugin";
+export { default as UserOrganizationPlugin } from "./UserOrganization.plugin";
 export { default as UserPreferencePlugin } from "./UserPreference.plugin";

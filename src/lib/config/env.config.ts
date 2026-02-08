@@ -34,6 +34,8 @@ export const {
   FLAGS_CLIENT_KEY,
   // Self-hosted mode
   SELF_HOSTED,
+  // Build metadata
+  BUILD_VERSION,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

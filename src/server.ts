@@ -15,6 +15,7 @@ import {
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
   AUTH_SECRET,
+  BUILD_VERSION,
   CORS_ALLOWED_ORIGINS,
   DATABASE_URL,
   PORT,
@@ -215,6 +216,11 @@ async function startServer(): Promise<void> {
 
       return { status: "ok", database: true };
     })
+    .get("/version", () => ({
+      name: "@omnidotdev/runa-api",
+      version: BUILD_VERSION || "0.1.0",
+      mode: isSelfHosted ? "self-hosted" : "saas",
+    }))
     .listen(PORT);
 
   // biome-ignore lint/suspicious/noConsole: root logging
