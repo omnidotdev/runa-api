@@ -7,7 +7,6 @@ export const {
   // https://stackoverflow.com/a/68578294
   HOST = "0.0.0.0",
   DATABASE_URL,
-  // Self-hosted auth
   AUTH_SECRET,
   AUTH_BASE_URL,
   GRAPHQL_MAX_COMPLEXITY_COST,
@@ -32,8 +31,6 @@ export const {
   // Feature flags
   FLAGS_API_HOST,
   FLAGS_CLIENT_KEY,
-  // Self-hosted mode
-  SELF_HOSTED,
   // Build metadata
   BUILD_VERSION,
 } = process.env;
@@ -41,4 +38,3 @@ export const {
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
-export const isSelfHosted = SELF_HOSTED === "true";

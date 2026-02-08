@@ -21,7 +21,6 @@ import {
   PORT,
   isDevEnv,
   isProdEnv,
-  isSelfHosted,
 } from "lib/config/env.config";
 import { pgPool } from "lib/db/db";
 import entitlementsWebhook from "lib/entitlements/webhooks";
@@ -44,10 +43,6 @@ const HEALTH_CHECK_TIMEOUT_MS = 5000;
 function verifyEnvConfig(): void {
   if (!DATABASE_URL) {
     throw new Error("DATABASE_URL is required");
-  }
-
-  if (isSelfHosted && !AUTH_SECRET) {
-    throw new Error("AUTH_SECRET is required for self-hosted mode");
   }
 
   // Validate AUTH_SECRET strength (minimum 32 bytes for HKDF-SHA256 security)
@@ -219,7 +214,6 @@ async function startServer(): Promise<void> {
     .get("/version", () => ({
       name: "@omnidotdev/runa-api",
       version: BUILD_VERSION || "0.1.0",
-      mode: isSelfHosted ? "self-hosted" : "saas",
     }))
     .listen(PORT);
 

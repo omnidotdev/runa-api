@@ -7,18 +7,13 @@
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { invalidatePermissionCache } from "lib/authz";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import {
-  projectColumns,
-  settings,
-  userOrganizations,
-  users,
-} from "lib/db/schema";
+import { projectColumns, settings, users } from "lib/db/schema";
 
 interface OrganizationCreatedPayload {
   eventType: "organization.created";
@@ -299,51 +294,11 @@ async function handleOrganizationDeleted(
 
 /**
  * Handle member added event.
- * Persists organization membership and invalidates permission cache.
+ * Invalidates permission cache for the affected user.
  */
 async function handleMemberAdded(payload: MemberAddedPayload): Promise<void> {
   const { organizationId, userId, role } = payload;
 
-  try {
-    // Find the local user by IDP user ID
-    const user = await dbPool.query.users.findFirst({
-      where: (table, { eq }) => eq(table.identityProviderId, userId),
-      columns: { id: true },
-    });
-
-    if (user) {
-      // Upsert organization membership
-      await dbPool
-        .insert(userOrganizations)
-        .values({
-          userId: user.id,
-          organizationId,
-          slug: organizationId, // Will be updated with proper slug if available
-          role: role as "owner" | "admin" | "member",
-          syncedAt: new Date().toISOString(),
-        })
-        .onConflictDoUpdate({
-          target: [userOrganizations.userId, userOrganizations.organizationId],
-          set: {
-            role: role as "owner" | "admin" | "member",
-            syncedAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        });
-
-      // biome-ignore lint/suspicious/noConsole: webhook logging
-      console.log(
-        `Persisted member ${userId} in org ${organizationId} with role ${role}`,
-      );
-    }
-  } catch (err) {
-    console.error(
-      `Failed to persist member ${userId} in org ${organizationId}:`,
-      err,
-    );
-  }
-
-  // Invalidate all cached permissions for this user in this org
   invalidatePermissionCache(`${userId}:organization:${organizationId}:`);
 
   // biome-ignore lint/suspicious/noConsole: webhook logging
@@ -354,47 +309,13 @@ async function handleMemberAdded(payload: MemberAddedPayload): Promise<void> {
 
 /**
  * Handle member removed event.
- * Removes organization membership and invalidates permission cache.
+ * Invalidates permission cache for the affected user.
  */
 async function handleMemberRemoved(
   payload: MemberRemovedPayload,
 ): Promise<void> {
   const { organizationId, userId } = payload;
 
-  try {
-    // Find the local user by IDP user ID
-    const user = await dbPool.query.users.findFirst({
-      where: (table, { eq }) => eq(table.identityProviderId, userId),
-      columns: { id: true },
-    });
-
-    if (user) {
-      // Delete organization membership
-      const result = await dbPool
-        .delete(userOrganizations)
-        .where(
-          and(
-            eq(userOrganizations.userId, user.id),
-            eq(userOrganizations.organizationId, organizationId),
-          ),
-        )
-        .returning({ id: userOrganizations.id });
-
-      if (result.length > 0) {
-        // biome-ignore lint/suspicious/noConsole: webhook logging
-        console.log(
-          `Deleted membership for user ${userId} from org ${organizationId}`,
-        );
-      }
-    }
-  } catch (err) {
-    console.error(
-      `Failed to delete membership for user ${userId} from org ${organizationId}:`,
-      err,
-    );
-  }
-
-  // Invalidate all cached permissions for this user in this org
   invalidatePermissionCache(`${userId}:organization:${organizationId}:`);
 
   // Also invalidate project-level permissions for this user
@@ -409,52 +330,13 @@ async function handleMemberRemoved(
 
 /**
  * Handle member role changed event.
- * Updates organization membership role and invalidates permission cache.
+ * Invalidates permission cache for the affected user.
  */
 async function handleMemberRoleChanged(
   payload: MemberRoleChangedPayload,
 ): Promise<void> {
   const { organizationId, userId, oldRole, newRole } = payload;
 
-  try {
-    // Find the local user by IDP user ID
-    const user = await dbPool.query.users.findFirst({
-      where: (table, { eq }) => eq(table.identityProviderId, userId),
-      columns: { id: true },
-    });
-
-    if (user) {
-      // Update organization membership role
-      const result = await dbPool
-        .update(userOrganizations)
-        .set({
-          role: newRole as "owner" | "admin" | "member",
-          syncedAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        })
-        .where(
-          and(
-            eq(userOrganizations.userId, user.id),
-            eq(userOrganizations.organizationId, organizationId),
-          ),
-        )
-        .returning({ id: userOrganizations.id });
-
-      if (result.length > 0) {
-        // biome-ignore lint/suspicious/noConsole: webhook logging
-        console.log(
-          `Updated role for user ${userId} in org ${organizationId}: ${oldRole} → ${newRole}`,
-        );
-      }
-    }
-  } catch (err) {
-    console.error(
-      `Failed to update role for user ${userId} in org ${organizationId}:`,
-      err,
-    );
-  }
-
-  // Invalidate all cached permissions for this user
   invalidatePermissionCache(`${userId}:`);
 
   // biome-ignore lint/suspicious/noConsole: webhook logging

@@ -330,6 +330,13 @@
       "when": 1770526019735,
       "tag": "0046_neat_slyde",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1770536073015,
+      "tag": "0047_lively_gladiator",
+      "breakpoints": true
     }
   ]
 }

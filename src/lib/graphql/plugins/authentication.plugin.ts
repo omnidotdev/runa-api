@@ -1,8 +1,5 @@
 import { useGenericAuth } from "@envelop/generic-auth";
-import {
-  verifyAccessToken as verifyJwksToken,
-  verifySelfHostedToken as verifySymmetricToken,
-} from "@omnidotdev/providers";
+import { verifyAccessToken as verifyJwksToken } from "@omnidotdev/providers";
 import {
   AuthenticationError,
   createAuthQueryClient,
@@ -12,14 +9,8 @@ import {
   validateClaims,
 } from "@omnidotdev/providers/graphql";
 
-import {
-  AUTH_BASE_URL,
-  isDevEnv,
-  isSelfHosted,
-  protectRoutes,
-} from "lib/config/env.config";
+import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/db/schema";
-import { provisionPersonalOrganization } from "lib/provisioning/selfHosted";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { UserInfoClaims } from "@omnidotdev/providers";
@@ -31,26 +22,6 @@ const queryClient = createAuthQueryClient();
 /** Extract organization claims from cached userinfo for a given access token */
 export const getOrganizationClaimsFromCache =
   createGetOrganizationClaimsFromCache(queryClient);
-
-/**
- * Verify self-hosted JWT signed with AUTH_SECRET.
- * Wraps the shared provider function with Runa-specific config.
- */
-async function verifySelfHostedToken(token: string): Promise<UserInfoClaims> {
-  const { AUTH_SECRET, AUTH_SECRET_PREVIOUS } = process.env;
-  if (!AUTH_SECRET) {
-    throw new AuthenticationError(
-      "AUTH_SECRET not configured",
-      "AUTH_SECRET_MISSING",
-    );
-  }
-
-  return verifySymmetricToken(token, {
-    secret: AUTH_SECRET,
-    previousSecret: AUTH_SECRET_PREVIOUS,
-    salt: "runa-self-hosted-auth",
-  });
-}
 
 /**
  * Verify JWT signature using Gatekeeper's JWKS endpoint.
@@ -92,70 +63,59 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
       );
     }
 
-    let claims: UserInfoClaims;
-
-    // Self-hosted mode: verify JWT signed with shared AUTH_SECRET
-    if (isSelfHosted) {
-      claims = await verifySelfHostedToken(accessToken);
-      validateClaims(claims);
-
-      // Populate cache so organizationsPlugin can read org claims
-      queryClient.setQueryData(["UserInfo", { accessToken }], claims);
-    } else {
-      // SaaS mode: validate via external IDP
-      // Better Auth OIDC access tokens are opaque tokens, not JWTs.
-      // Validation is done via the userinfo endpoint which verifies the token server-side.
-      // If the access token looks like a JWT (3 dot-separated parts), we can optionally
-      // verify it for additional security, but this is not required.
-      const isJwtFormat = accessToken.split(".").length === 3;
-      if (isJwtFormat) {
-        try {
-          const verifiedPayload = await verifyAccessToken(accessToken);
-          validateClaims(verifiedPayload, {
-            expectedIssuer: AUTH_BASE_URL,
-          });
-        } catch (jwtError) {
-          // JWT verification failed - this is expected for opaque tokens
-          // Continue with userinfo validation which will definitively validate the token
-          console.warn(
-            "[Auth] JWT verification skipped (opaque token):",
-            jwtError instanceof Error ? jwtError.message : jwtError,
-          );
-        }
-      }
-
-      // Fetch user claims from userinfo endpoint - this validates the access token
-      // and provides the authoritative user identity claims
-      claims = await queryClient.ensureQueryData({
-        queryKey: ["UserInfo", { accessToken }],
-        queryFn: async () => {
-          const response = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-
-          if (!response.ok) {
-            throw new AuthenticationError(
-              "Invalid access token or request failed",
-              "USERINFO_FAILED",
-            );
-          }
-
-          const userInfoClaims: UserInfoClaims = await response.json();
-
-          return userInfoClaims;
-        },
-      });
-
-      if (!claims) {
-        if (!protectRoutes) return null;
-
-        throw new AuthenticationError(
-          "Invalid access token or request failed",
-          "INVALID_CLAIMS",
+    // Validate via external IDP (Gatekeeper)
+    // Better Auth OIDC access tokens are opaque tokens, not JWTs.
+    // Validation is done via the userinfo endpoint which verifies the token server-side.
+    // If the access token looks like a JWT (3 dot-separated parts), we can optionally
+    // verify it for additional security, but this is not required.
+    const isJwtFormat = accessToken.split(".").length === 3;
+    if (isJwtFormat) {
+      try {
+        const verifiedPayload = await verifyAccessToken(accessToken);
+        validateClaims(verifiedPayload, {
+          expectedIssuer: AUTH_BASE_URL,
+        });
+      } catch (jwtError) {
+        // JWT verification failed - this is expected for opaque tokens
+        // Continue with userinfo validation which will definitively validate the token
+        console.warn(
+          "[Auth] JWT verification skipped (opaque token):",
+          jwtError instanceof Error ? jwtError.message : jwtError,
         );
       }
+    }
+
+    // Fetch user claims from userinfo endpoint - this validates the access token
+    // and provides the authoritative user identity claims
+    const claims = await queryClient.ensureQueryData({
+      queryKey: ["UserInfo", { accessToken }],
+      queryFn: async () => {
+        const response = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new AuthenticationError(
+            "Invalid access token or request failed",
+            "USERINFO_FAILED",
+          );
+        }
+
+        const userInfoClaims: UserInfoClaims = await response.json();
+
+        return userInfoClaims;
+      },
+    });
+
+    if (!claims) {
+      if (!protectRoutes) return null;
+
+      throw new AuthenticationError(
+        "Invalid access token or request failed",
+        "INVALID_CLAIMS",
+      );
     }
 
     if (!claims.email)
@@ -184,18 +144,6 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
         },
       })
       .returning();
-
-    // Self-hosted only: auto-provision personal workspace if user has none.
-    // SaaS mode: orgs come from HIDRA Gatekeeper via JWT claims and webhooks.
-    if (isSelfHosted) {
-      await provisionPersonalOrganization({
-        db: ctx.db,
-        userId: user.id,
-        identityProviderId: user.identityProviderId,
-        userName: user.name,
-        userEmail: user.email,
-      });
-    }
 
     return user;
   } catch (err) {

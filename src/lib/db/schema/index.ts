@@ -13,7 +13,6 @@
 export * from "./assignee.table";
 export * from "./column.table";
 export * from "./emoji.table";
-export * from "./invitation.table";
 export * from "./label.table";
 export * from "./post.table";
 export * from "./project.table";
@@ -24,5 +23,4 @@ export * from "./settings.table";
 export * from "./task.table";
 export * from "./taskLabel.table";
 export * from "./user.table";
-export * from "./userOrganization.table";
 export * from "./userPreference.table";
