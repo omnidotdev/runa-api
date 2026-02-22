@@ -2,11 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import {
-  deleteTaskFromIndex,
-  indexTask,
-  isSearchEnabled,
-} from "lib/search";
+import { deleteTaskFromIndex, indexTask, isSearchEnabled } from "lib/search";
 
 import type { Step } from "postgraphile/grafast";
 import type { PlanWrapperFn } from "postgraphile/utils";
