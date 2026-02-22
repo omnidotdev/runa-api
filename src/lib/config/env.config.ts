@@ -33,8 +33,16 @@ export const {
   FLAGS_CLIENT_KEY,
   // Build metadata
   BUILD_VERSION,
+  // Meilisearch (unified search)
+  MEILISEARCH_URL,
+  MEILISEARCH_MASTER_KEY,
+  SEARCH_ENABLED,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
+
+/** Whether search indexing is enabled */
+export const isSearchEnabled =
+  SEARCH_ENABLED === "true" && !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;

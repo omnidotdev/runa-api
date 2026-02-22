@@ -29,6 +29,8 @@ const knipConfig: KnipConfig = {
     "@opentelemetry/sdk-node",
     "@opentelemetry/semantic-conventions",
     "@dataplan/pg",
+    // Conditionally used when SEARCH_ENABLED=true
+    "@omnidotdev/search",
   ],
   tags: ["-knipignore"],
 };

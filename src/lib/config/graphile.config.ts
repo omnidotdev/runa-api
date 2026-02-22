@@ -23,6 +23,11 @@ import {
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
 import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
+import {
+  PostSearchPlugin,
+  ProjectSearchPlugin,
+  TaskSearchPlugin,
+} from "lib/graphql/plugins/search";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
 /**
@@ -57,6 +62,10 @@ const graphilePreset: GraphileConfig.Preset = {
     UserPreferencePlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
+    // Search indexing plugins
+    ProjectSearchPlugin,
+    TaskSearchPlugin,
+    PostSearchPlugin,
   ],
   disablePlugins: ["PgIndexBehaviorsPlugin"],
   schema: {

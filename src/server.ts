@@ -32,6 +32,7 @@ import {
 } from "lib/graphql/plugins";
 import idpWebhook from "lib/idp/webhooks";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
+import { initializeSearchIndexes, search } from "lib/search";
 
 /** Health check timeout in milliseconds */
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
@@ -216,6 +217,13 @@ async function startServer(): Promise<void> {
       version: BUILD_VERSION || "0.1.0",
     }))
     .listen(PORT);
+
+  // Initialize search indexes if search is enabled
+  if (search) {
+    initializeSearchIndexes().catch((err) => {
+      console.error("[Search] Failed to initialize indexes:", err);
+    });
+  }
 
   // biome-ignore lint/suspicious/noConsole: root logging
   console.log(
