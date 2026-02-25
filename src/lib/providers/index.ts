@@ -8,26 +8,20 @@
 import {
   createAuthzProvider,
   createBillingProvider,
-  resolveProvider,
+  createEventsProvider,
 } from "@omnidotdev/providers";
 
 import {
   AUTHZ_API_URL,
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
+  VORTEX_API_KEY,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
   WARDEN_SERVICE_KEY,
 } from "lib/config/env.config";
 
-const authzProviderName = resolveProvider(process.env.AUTHZ_PROVIDER, "warden");
-
-const billingProviderName = resolveProvider(
-  process.env.BILLING_PROVIDER,
-  "aether",
-);
-
-export const authz = createAuthzProvider(authzProviderName, {
+export const authz = createAuthzProvider({
   apiUrl: AUTHZ_API_URL,
   serviceKey: WARDEN_SERVICE_KEY,
   vortexUrl: VORTEX_API_URL,
@@ -35,8 +29,20 @@ export const authz = createAuthzProvider(authzProviderName, {
   source: "runa",
 });
 
-export const billing = createBillingProvider(billingProviderName, {
+export const billing = createBillingProvider({
   baseUrl: BILLING_BASE_URL,
   serviceApiKey: BILLING_SERVICE_API_KEY,
   appId: "runa",
 });
+
+/** @knipignore */
+export const events = createEventsProvider(
+  VORTEX_API_URL
+    ? {
+        provider: "http",
+        baseUrl: VORTEX_API_URL,
+        apiKey: VORTEX_API_KEY,
+        source: "omni.runa",
+      }
+    : {},
+);

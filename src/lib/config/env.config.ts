@@ -26,6 +26,8 @@ export const {
   // Vortex workflow engine (for durable authz tuple sync)
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
+  /** Vortex event streaming API key */
+  VORTEX_API_KEY,
   // Service key for Warden API (service-to-service auth)
   WARDEN_SERVICE_KEY,
   // Feature flags
