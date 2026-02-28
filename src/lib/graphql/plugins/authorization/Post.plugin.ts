@@ -42,7 +42,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!task) throw new Error("Task not found");
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 task.projectId,
                 "member",
@@ -59,7 +59,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!post) throw new Error("Post not found");
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 post.task.projectId,
                 "member",

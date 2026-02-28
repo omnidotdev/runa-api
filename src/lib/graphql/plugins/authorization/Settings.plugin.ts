@@ -40,7 +40,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
             // Check permission on the organization
             const requiredPermission = scope === "delete" ? "owner" : "admin";
             const allowed = await checkPermission(
-              observer.id,
+              observer.identityProviderId,
               "organization",
               settings.organizationId,
               requiredPermission,

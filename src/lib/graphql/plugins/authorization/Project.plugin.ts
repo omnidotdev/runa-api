@@ -58,7 +58,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
 
               // Check admin permission on organization
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "organization",
                 organizationId,
                 "admin",
@@ -97,7 +97,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const projectId = input as string;
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 projectId,
                 "admin",

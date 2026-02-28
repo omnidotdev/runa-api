@@ -54,7 +54,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (label.projectId) {
                 // Project-scoped label
                 const allowed = await checkPermission(
-                  observer.id,
+                  observer.identityProviderId,
                   "project",
                   label.projectId,
                   "admin",
@@ -65,7 +65,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               } else if (label.organizationId) {
                 // Org-scoped label
                 const allowed = await checkPermission(
-                  observer.id,
+                  observer.identityProviderId,
                   "organization",
                   label.organizationId,
                   "admin",
@@ -82,7 +82,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (projectId) {
                 // Project-scoped label
                 const allowed = await checkPermission(
-                  observer.id,
+                  observer.identityProviderId,
                   "project",
                   projectId,
                   "admin",
@@ -109,7 +109,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               } else if (organizationId) {
                 // Org-scoped label
                 const allowed = await checkPermission(
-                  observer.id,
+                  observer.identityProviderId,
                   "organization",
                   organizationId,
                   "admin",
