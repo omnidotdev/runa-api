@@ -1,1 +1,0 @@
-ALTER TABLE "agent_session" DROP COLUMN "total_tokens_used";

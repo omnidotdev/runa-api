@@ -1,1 +1,0 @@
-ALTER TABLE "agent_session" ADD COLUMN "metadata" jsonb DEFAULT '{}'::jsonb NOT NULL;
