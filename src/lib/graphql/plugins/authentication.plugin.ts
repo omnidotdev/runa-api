@@ -97,8 +97,14 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
         });
 
         if (!response.ok) {
+          const body = await response.text().catch(() => "");
+          console.error(
+            `[Auth] Userinfo failed: ${response.status} ${response.statusText}`,
+            body,
+          );
+
           throw new AuthenticationError(
-            "Invalid access token or request failed",
+            `Userinfo request failed (${response.status})`,
             "USERINFO_FAILED",
           );
         }
