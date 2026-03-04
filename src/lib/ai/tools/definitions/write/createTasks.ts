@@ -9,7 +9,7 @@ import { count, eq } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import { tasks } from "lib/db/schema";
-import { isWithinLimit } from "lib/entitlements/helpers";
+import { isWithinLimit } from "lib/entitlements";
 import { getNextColumnIndex, resolveColumns } from "../../core/helpers";
 
 import type { WriteToolContext } from "../../core/context";

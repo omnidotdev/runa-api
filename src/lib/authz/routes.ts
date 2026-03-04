@@ -1,5 +1,6 @@
 import { Elysia, t } from "elysia";
 
+import { deleteTuples, writeTuples } from "lib/authz";
 import {
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
@@ -7,7 +8,6 @@ import {
 } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { projects } from "lib/db/schema";
-import { deleteTuples, writeTuples } from "./sync";
 
 interface TupleKey {
   user: string;

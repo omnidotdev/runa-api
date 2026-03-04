@@ -1,205 +1,42 @@
 import { useGenericAuth } from "@envelop/generic-auth";
-import { QueryClient } from "@tanstack/query-core";
-import { createRemoteJWKSet, jwtVerify } from "jose";
-import ms from "ms";
-
+import { verifyAccessToken as verifyJwksToken } from "@omnidotdev/providers";
 import {
-  AUTH_BASE_URL,
-  isDevEnv,
-  isSelfHosted,
-  protectRoutes,
-} from "lib/config/env.config";
+  AuthenticationError,
+  createAuthQueryClient,
+  createGetOrganizationClaimsFromCache,
+  extractBearerToken,
+  isIntrospectionQuery,
+  validateClaims,
+} from "@omnidotdev/providers/graphql";
+
+import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/db/schema";
-import { provisionPersonalOrganization } from "lib/provisioning/selfHosted";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
-import type { JWTPayload } from "jose";
+import type { UserInfoClaims } from "@omnidotdev/providers";
 import type { InsertUser, SelectUser } from "lib/db/schema";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
 
-/** Claim key for organization claims in JWT. */
-const OMNI_CLAIMS_ORGANIZATIONS =
-  "https://manifold.omni.dev/@omni/claims/organizations";
+const queryClient = createAuthQueryClient();
 
-interface OrganizationClaim {
-  id: string;
-  slug: string;
-  type: "personal" | "team";
-  roles: string[];
-  teams: Array<{ id: string; name: string }>;
-}
-
-interface UserInfoClaims extends JWTPayload {
-  sub: string;
-  name?: string;
-  preferred_username?: string;
-  picture?: string;
-  email?: string;
-  [OMNI_CLAIMS_ORGANIZATIONS]?: OrganizationClaim[];
-}
-
-class AuthenticationError extends Error {
-  readonly code: string;
-
-  constructor(message: string, code: string) {
-    super(message);
-    this.name = "AuthenticationError";
-    this.code = code;
-  }
-}
-
-/**
- * Get symmetric key for self-hosted JWT verification.
- * Uses AUTH_SECRET to derive a 256-bit key via HKDF.
- */
-async function getSelfHostedKey(): Promise<Uint8Array> {
-  const { AUTH_SECRET } = process.env;
-  if (!AUTH_SECRET) {
-    throw new AuthenticationError(
-      "AUTH_SECRET not configured",
-      "AUTH_SECRET_MISSING",
-    );
-  }
-
-  const encoder = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(AUTH_SECRET),
-    "HKDF",
-    false,
-    ["deriveBits"],
-  );
-
-  return new Uint8Array(
-    await crypto.subtle.deriveBits(
-      {
-        name: "HKDF",
-        hash: "SHA-256",
-        salt: encoder.encode("runa-self-hosted-auth"),
-        info: encoder.encode("jwt-signing-key"),
-      },
-      keyMaterial,
-      256,
-    ),
-  );
-}
-
-/**
- * Verify self-hosted JWT signed with AUTH_SECRET.
- */
-async function verifySelfHostedToken(token: string): Promise<UserInfoClaims> {
-  const key = await getSelfHostedKey();
-
-  const { payload } = await jwtVerify(token, key, {
-    issuer: "self-hosted",
-  });
-
-  if (!payload.sub) {
-    throw new AuthenticationError(
-      "Missing required 'sub' claim",
-      "MISSING_SUB_CLAIM",
-    );
-  }
-
-  return payload as UserInfoClaims;
-}
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      staleTime: ms("2m"),
-    },
-  },
-});
-
-/**
- * Remote JWKS for verifying JWT signatures from Gatekeeper.
- * jose's createRemoteJWKSet handles caching and key rotation automatically.
- * Lazily initialized to avoid errors during build scripts when AUTH_BASE_URL is not set.
- * @see https://www.better-auth.com/docs/plugins/jwt
- */
-let JWKS: ReturnType<typeof createRemoteJWKSet> | null = null;
-
-function getJWKS() {
-  if (!JWKS) {
-    if (!AUTH_BASE_URL) {
-      throw new AuthenticationError(
-        "AUTH_BASE_URL is not configured",
-        "AUTH_CONFIG_MISSING",
-      );
-    }
-    JWKS = createRemoteJWKSet(
-      new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`),
-    );
-  }
-  return JWKS;
-}
+/** Extract organization claims from cached userinfo for a given access token */
+export const getOrganizationClaimsFromCache =
+  createGetOrganizationClaimsFromCache(queryClient);
 
 /**
  * Verify JWT signature using Gatekeeper's JWKS endpoint.
- * Returns the verified payload or throws an error.
+ * Wraps the shared provider function with Runa-specific config.
  */
 async function verifyAccessToken(token: string): Promise<UserInfoClaims> {
-  const { payload } = await jwtVerify(token, getJWKS(), {
-    issuer: AUTH_BASE_URL,
-  });
-
-  if (!payload.sub) {
+  if (!AUTH_BASE_URL) {
     throw new AuthenticationError(
-      "Missing required 'sub' claim",
-      "MISSING_SUB_CLAIM",
+      "AUTH_BASE_URL is not configured",
+      "AUTH_CONFIG_MISSING",
     );
   }
 
-  return payload as UserInfoClaims;
+  return verifyJwksToken(token, { authBaseUrl: AUTH_BASE_URL });
 }
-
-/** Extract organization claims from cached userinfo for a given access token. */
-export function getOrganizationClaimsFromCache(
-  accessToken: string,
-): OrganizationClaim[] {
-  const cached = queryClient.getQueryData<UserInfoClaims>([
-    "UserInfo",
-    { accessToken },
-  ]);
-  return cached?.[OMNI_CLAIMS_ORGANIZATIONS] ?? [];
-}
-
-/**
- * Check if a GraphQL query is an introspection query.
- * Introspection queries contain `__schema` or `IntrospectionQuery`.
- */
-function isIntrospectionQuery(query: string | undefined): boolean {
-  if (!query) return false;
-
-  return query.includes("__schema") || query.includes("IntrospectionQuery");
-}
-
-/**
- * Validate token claims.
- */
-const validateClaims = (claims: UserInfoClaims): void => {
-  const now = Math.floor(Date.now() / 1000);
-
-  // validate `exp`
-  if (claims.exp !== undefined && claims.exp < now)
-    throw new AuthenticationError("Token has expired", "TOKEN_EXPIRED");
-
-  // validate `iat` (reject tokens issued in the future with clock skew allowance)
-  if (claims.iat !== undefined && claims.iat > now + ms("1m"))
-    throw new AuthenticationError(
-      "Token issued in the future",
-      "INVALID_TOKEN_IAT",
-    );
-
-  // validate issuer
-  if (AUTH_BASE_URL && claims.iss !== undefined && claims.iss !== AUTH_BASE_URL)
-    throw new AuthenticationError(
-      "Token issuer mismatch",
-      "INVALID_TOKEN_ISSUER",
-    );
-};
 
 /**
  * Validate user session and resolve user if successful.
@@ -207,9 +44,9 @@ const validateClaims = (claims: UserInfoClaims): void => {
  */
 const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
   try {
-    const accessToken = ctx.request.headers
-      .get("authorization")
-      ?.split("Bearer ")[1];
+    const accessToken = extractBearerToken(
+      ctx.request.headers.get("authorization"),
+    );
 
     if (!accessToken) {
       if (!protectRoutes) return null;
@@ -226,65 +63,65 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
       );
     }
 
-    let claims: UserInfoClaims;
-
-    // Self-hosted mode: verify JWT signed with shared AUTH_SECRET
-    if (isSelfHosted) {
-      claims = await verifySelfHostedToken(accessToken);
-      validateClaims(claims);
-    } else {
-      // SaaS mode: validate via external IDP
-      // Better Auth OIDC access tokens are opaque tokens, not JWTs.
-      // Validation is done via the userinfo endpoint which verifies the token server-side.
-      // If the access token looks like a JWT (3 dot-separated parts), we can optionally
-      // verify it for additional security, but this is not required.
-      const isJwtFormat = accessToken.split(".").length === 3;
-      if (isJwtFormat) {
-        try {
-          const verifiedPayload = await verifyAccessToken(accessToken);
-          validateClaims(verifiedPayload);
-        } catch (jwtError) {
-          // JWT verification failed - this is expected for opaque tokens
-          // Continue with userinfo validation which will definitively validate the token
-          console.warn(
-            "[Auth] JWT verification skipped (opaque token):",
-            jwtError instanceof Error ? jwtError.message : jwtError,
-          );
-        }
-      }
-
-      // Fetch user claims from userinfo endpoint - this validates the access token
-      // and provides the authoritative user identity claims
-      claims = await queryClient.ensureQueryData({
-        queryKey: ["UserInfo", { accessToken }],
-        queryFn: async () => {
-          const response = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-
-          if (!response.ok) {
-            throw new AuthenticationError(
-              "Invalid access token or request failed",
-              "USERINFO_FAILED",
-            );
-          }
-
-          const userInfoClaims: UserInfoClaims = await response.json();
-
-          return userInfoClaims;
-        },
-      });
-
-      if (!claims) {
-        if (!protectRoutes) return null;
-
-        throw new AuthenticationError(
-          "Invalid access token or request failed",
-          "INVALID_CLAIMS",
+    // Validate via external IDP (Gatekeeper)
+    // Better Auth OIDC access tokens are opaque tokens, not JWTs.
+    // Validation is done via the userinfo endpoint which verifies the token server-side.
+    // If the access token looks like a JWT (3 dot-separated parts), we can optionally
+    // verify it for additional security, but this is not required.
+    const isJwtFormat = accessToken.split(".").length === 3;
+    if (isJwtFormat) {
+      try {
+        const verifiedPayload = await verifyAccessToken(accessToken);
+        validateClaims(verifiedPayload, {
+          expectedIssuer: AUTH_BASE_URL,
+        });
+      } catch (jwtError) {
+        // JWT verification failed - this is expected for opaque tokens
+        // Continue with userinfo validation which will definitively validate the token
+        console.warn(
+          "[Auth] JWT verification skipped (opaque token):",
+          jwtError instanceof Error ? jwtError.message : jwtError,
         );
       }
+    }
+
+    // Fetch user claims from userinfo endpoint - this validates the access token
+    // and provides the authoritative user identity claims
+    const claims = await queryClient.ensureQueryData({
+      queryKey: ["UserInfo", { accessToken }],
+      queryFn: async () => {
+        const response = await fetch(`${AUTH_BASE_URL}/oauth2/userinfo`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          const body = await response.text().catch(() => "");
+          console.error(
+            `[Auth] Userinfo failed: ${response.status} ${response.statusText}`,
+            body,
+          );
+
+          throw new AuthenticationError(
+            `Userinfo request failed (${response.status})`,
+            "USERINFO_FAILED",
+          );
+        }
+
+        const userInfoClaims: UserInfoClaims = await response.json();
+
+        return userInfoClaims;
+      },
+    });
+
+    if (!claims) {
+      if (!protectRoutes) return null;
+
+      throw new AuthenticationError(
+        "Invalid access token or request failed",
+        "INVALID_CLAIMS",
+      );
     }
 
     if (!claims.email)
@@ -313,18 +150,6 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
         },
       })
       .returning();
-
-    // Self-hosted only: auto-provision personal workspace if user has none.
-    // SaaS mode: orgs come from HIDRA Gatekeeper via JWT claims and webhooks.
-    if (isSelfHosted) {
-      await provisionPersonalOrganization({
-        db: ctx.db,
-        userId: user.id,
-        identityProviderId: user.identityProviderId,
-        userName: user.name,
-        userEmail: user.email,
-      });
-    }
 
     return user;
   } catch (err) {

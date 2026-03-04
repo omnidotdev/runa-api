@@ -16,15 +16,8 @@
 import { and, count, eq, inArray, or } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
-import {
-  assignees,
-  columns,
-  labels,
-  taskLabels,
-  tasks,
-  userOrganizations,
-} from "lib/db/schema";
-import { isWithinLimit } from "lib/entitlements/helpers";
+import { assignees, columns, labels, taskLabels, tasks } from "lib/db/schema";
+import { isWithinLimit } from "lib/entitlements";
 import { getNextColumnIndex, resolveTasks } from "../../core/helpers";
 
 import type { WriteToolContext } from "../../core/context";
@@ -154,22 +147,23 @@ export async function executeUpdateTasks(
 
   // Batch lookups in parallel
   const [
-    memberships,
+    // memberships,
     existingLabelsById,
     existingLabelsByName,
     validColumns,
     currentAssignees,
     currentLabels,
   ] = await Promise.all([
+    // TODO: fix this
     // User memberships
-    allUserIds.size > 0
-      ? dbPool.query.userOrganizations.findMany({
-          where: and(
-            inArray(userOrganizations.userId, [...allUserIds]),
-            eq(userOrganizations.organizationId, ctx.organizationId),
-          ),
-        })
-      : [],
+    // allUserIds.size > 0
+    //   ? dbPool.query.userOrganizations.findMany({
+    //       where: and(
+    //         inArray(userOrganizations.userId, [...allUserIds]),
+    //         eq(userOrganizations.organizationId, ctx.organizationId),
+    //       ),
+    //     })
+    //   : [],
     // Labels by ID
     labelIdsToLookup.size > 0
       ? dbPool.query.labels.findMany({
@@ -225,7 +219,8 @@ export async function executeUpdateTasks(
   ]);
 
   // Create lookup maps
-  const membershipSet = new Set(memberships.map((m) => m.userId));
+  // TODO: fix
+  // const membershipSet = new Set(memberships.map((m) => m.userId));
   const labelByIdMap = new Map(existingLabelsById.map((l) => [l.id, l]));
   const labelByNameMap = new Map(
     existingLabelsByName.map((l) => [l.name.toLowerCase(), l]),
@@ -233,11 +228,12 @@ export async function executeUpdateTasks(
   const validColumnSet = new Set(validColumns.map((c) => c.id));
 
   // Validate all users are organization members
-  for (const userId of allUserIds) {
-    if (!membershipSet.has(userId)) {
-      throw new Error(`User ${userId} is not a member of this organization.`);
-    }
-  }
+  // TODO: fix
+  // for (const userId of allUserIds) {
+  //   if (!membershipSet.has(userId)) {
+  //     throw new Error(`User ${userId} is not a member of this organization.`);
+  //   }
+  // }
 
   // Validate all target columns exist
   for (const colId of columnIdsToValidate) {

@@ -11,7 +11,6 @@ import { and, desc, eq, or } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import { posts, projects, tasks, users } from "lib/db/schema";
-import { isAgentEnabled } from "lib/flags";
 import { resolveAgentConfig } from "../config";
 import { buildProjectContext } from "../prompts/projectContext";
 import { buildSystemPrompt } from "../prompts/system";
@@ -243,8 +242,9 @@ export interface MentionContext {
 
 export async function handleMention(ctx: MentionContext): Promise<void> {
   try {
-    const enabled = await isAgentEnabled();
-    if (!enabled) return;
+    // TODO: integrate flag
+    // const enabled = await isAgentEnabled();
+    // if (!enabled) return;
 
     const userRateResult = checkRateLimit(
       `mention:user:${ctx.userId}`,

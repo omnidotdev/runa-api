@@ -11,7 +11,7 @@
  * - Comment create: "member"
  */
 
-import { checkPermission } from "lib/authz/sync";
+import { checkPermission } from "lib/authz";
 
 import type { WriteToolContext } from "../core/context";
 

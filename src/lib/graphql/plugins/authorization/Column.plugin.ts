@@ -54,7 +54,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!column) throw new Error("Column not found");
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 column.projectId,
                 "admin",
@@ -66,7 +66,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const projectId = (input as InsertColumn).projectId;
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 projectId,
                 "admin",

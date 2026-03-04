@@ -6,6 +6,7 @@ import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
 import { Elysia } from "elysia";
+import { rateLimit } from "elysia-rate-limit";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
@@ -21,12 +22,12 @@ import {
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
   AUTH_SECRET,
+  BUILD_VERSION,
   CORS_ALLOWED_ORIGINS,
   DATABASE_URL,
   PORT,
   isDevEnv,
   isProdEnv,
-  isSelfHosted,
 } from "lib/config/env.config";
 import { pgPool } from "lib/db/db";
 import entitlementsWebhook from "lib/entitlements/webhooks";
@@ -38,6 +39,7 @@ import {
 } from "lib/graphql/plugins";
 import idpWebhook from "lib/idp/webhooks";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
+import { initializeSearchIndexes, search } from "lib/search";
 
 /** Health check timeout in milliseconds */
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
@@ -51,8 +53,11 @@ function verifyEnvConfig(): void {
     throw new Error("DATABASE_URL is required");
   }
 
-  if (isSelfHosted && !AUTH_SECRET) {
-    throw new Error("AUTH_SECRET is required for self-hosted mode");
+  // Validate AUTH_SECRET strength (minimum 32 bytes for HKDF-SHA256 security)
+  if (AUTH_SECRET && AUTH_SECRET.length < 32) {
+    throw new Error(
+      "AUTH_SECRET must be at least 32 characters. Generate one with: openssl rand -base64 48",
+    );
   }
 
   // biome-ignore lint/suspicious/noConsole: startup logging
@@ -221,7 +226,18 @@ async function startServer(): Promise<void> {
 
       return { status: "ok", database: true };
     })
+    .get("/version", () => ({
+      name: "@omnidotdev/runa-api",
+      version: BUILD_VERSION || "0.1.0",
+    }))
     .listen(PORT);
+
+  // Initialize search indexes if search is enabled
+  if (search) {
+    initializeSearchIndexes().catch((err) => {
+      console.error("[Search] Failed to initialize indexes:", err);
+    });
+  }
 
   // biome-ignore lint/suspicious/noConsole: root logging
   console.log(

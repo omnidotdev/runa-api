@@ -57,7 +57,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               const projectId = (input as InsertTask).projectId;
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 projectId,
                 "editor",
@@ -101,7 +101,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!task) throw new Error("Task not found");
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 task.projectId,
                 "editor",

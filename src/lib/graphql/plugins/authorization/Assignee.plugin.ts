@@ -49,7 +49,7 @@ const validateCreatePermissions = (): PlanWrapperFn =>
             if (!task) throw new Error("Task not found");
 
             const allowed = await checkPermission(
-              observer.id,
+              observer.identityProviderId,
               "project",
               task.project.id,
               "member",
@@ -113,7 +113,7 @@ const validateDeletePermissions = (): PlanWrapperFn =>
             if (!task) throw new Error("Task not found");
 
             const allowed = await checkPermission(
-              observer.id,
+              observer.identityProviderId,
               "project",
               task.projectId,
               "member",

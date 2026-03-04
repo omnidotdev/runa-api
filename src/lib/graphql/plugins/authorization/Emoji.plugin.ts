@@ -42,7 +42,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!post) throw new Error("Post not found");
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 post.task.projectId,
                 "member",
@@ -61,7 +61,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
               if (!emoji) throw new Error("Emoji not found");
 
               const allowed = await checkPermission(
-                observer.id,
+                observer.identityProviderId,
                 "project",
                 emoji.post.task.projectId,
                 "member",
