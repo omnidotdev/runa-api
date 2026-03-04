@@ -33,6 +33,8 @@ export const {
   // Feature flags
   FLAGS_API_HOST,
   FLAGS_CLIENT_KEY,
+  // Self-hosted mode
+  SELF_HOSTED,
   // Build metadata
   BUILD_VERSION,
   // Meilisearch (unified search)
@@ -43,6 +45,7 @@ export const {
 
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
+export const isSelfHosted = SELF_HOSTED === "true";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
 
 /** Whether search indexing is enabled */
