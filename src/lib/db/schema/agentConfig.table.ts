@@ -26,8 +26,8 @@ export const agentConfigs = pgTable(
     organizationId: text().notNull().unique(),
 
     // LLM Model (OpenRouter format: provider/model-name)
-    // e.g., "anthropic/claude-sonnet-4.5", "openai/gpt-4o"
-    model: text().notNull().default("anthropic/claude-sonnet-4.5"),
+    // e.g., "anthropic/claude-haiku-4.5", "openai/gpt-4o"
+    model: text().notNull().default("anthropic/claude-haiku-4.5"),
 
     // BYOK: Encrypted OpenRouter API key provided by the organization.
     // Stored as AES-256-GCM ciphertext (base64). Decrypted in-memory only.

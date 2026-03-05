@@ -1,0 +1,1 @@
+ALTER TABLE "agent_config" ALTER COLUMN "model" SET DEFAULT 'anthropic/claude-haiku-4.5';

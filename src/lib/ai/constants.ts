@@ -73,7 +73,7 @@ export const MAX_DELEGATE_RESPONSE_LENGTH = 4_000;
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Default model when none configured (OpenRouter format: provider/model). */
-export const DEFAULT_MODEL = "anthropic/claude-sonnet-4.5";
+export const DEFAULT_MODEL = "anthropic/claude-haiku-4.5";
 
 /**
  * Allowed model identifiers for OpenRouter.

@@ -344,6 +344,13 @@
       "when": 1772649411330,
       "tag": "0048_perfect_king_bedlam",
       "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1772739725682,
+      "tag": "0049_silent_medusa",
+      "breakpoints": true
     }
   ]
 }
