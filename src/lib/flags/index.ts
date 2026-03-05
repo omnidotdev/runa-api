@@ -1,5 +1,5 @@
 import { AGENT_ENABLED } from "lib/config/env.config";
-import { isEnabled } from "./client";
+import { flags } from "lib/providers";
 
 /** @knipignore */
 export const FLAGS = {
@@ -10,9 +10,10 @@ export const FLAGS = {
 
 /**
  * Check if maintenance mode is enabled.
+ * @knipignore
  */
 export const isMaintenanceMode = async (): Promise<boolean> => {
-  return isEnabled(FLAGS.MAINTENANCE, false);
+  return flags.isEnabled(FLAGS.MAINTENANCE);
 };
 
 /**
@@ -24,5 +25,5 @@ export const isMaintenanceMode = async (): Promise<boolean> => {
 export const isAgentEnabled = async (): Promise<boolean> => {
   // Allow env var override for local development
   if (AGENT_ENABLED === "true") return true;
-  return isEnabled(FLAGS.AGENT_ENABLED, false);
+  return flags.isEnabled(FLAGS.AGENT_ENABLED);
 };

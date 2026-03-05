@@ -11,7 +11,7 @@ import { dbPool } from "lib/db/db";
 import { projects } from "lib/db/schema";
 
 /** Summary of organization project context for AI prompts. */
-export interface ProjectContextSummary {
+interface ProjectContextSummary {
   /** Total number of projects in organization. */
   totalCount: number;
   /** Human-readable summary of project patterns. */

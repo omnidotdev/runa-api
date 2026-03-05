@@ -70,6 +70,7 @@ export function createDelegationTool(context: DelegationContext) {
           organizationId: context.organizationId,
           userId: context.userId,
           userName: context.userName,
+          accessToken: context.accessToken,
           customInstructions: context.agentConfig.customInstructions,
         });
 

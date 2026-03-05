@@ -160,14 +160,14 @@ interface AuthErrorResponse {
  * Discriminated union for authorization check results.
  * Enables type-safe early returns without try/catch boilerplate.
  */
-export type AuthResult<T> =
+type AuthResult<T> =
   | { ok: true; value: T }
   | { ok: false; status: 403; response: AuthErrorResponse };
 
 /**
  * Async authorization result for functions that need database access.
  */
-export type AsyncAuthResult<T> = Promise<
+type AsyncAuthResult<T> = Promise<
   | { ok: true; value: T }
   | { ok: false; status: 403 | 404; response: AuthErrorResponse }
 >;

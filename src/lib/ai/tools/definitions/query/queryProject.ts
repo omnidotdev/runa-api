@@ -15,7 +15,7 @@ import type { QueryProjectInput } from "../../core/schemas";
 export const QUERY_PROJECT_DESCRIPTION =
   "Get details about the current project, including all columns (statuses), labels, and task counts per column.";
 
-export interface QueryProjectResult {
+interface QueryProjectResult {
   project: {
     id: string;
     name: string;

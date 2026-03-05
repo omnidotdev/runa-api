@@ -23,7 +23,7 @@ import type { GetTaskInput } from "../../core/schemas";
 export const GET_TASK_DESCRIPTION =
   "Get full details of a single task by its ID or task number.";
 
-export interface GetTaskResult {
+interface GetTaskResult {
   task: {
     id: string;
     number: number | null;

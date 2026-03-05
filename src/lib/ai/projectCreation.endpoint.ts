@@ -19,7 +19,7 @@ import {
   taskLabels,
   tasks,
 } from "lib/db/schema";
-import { isWithinLimit } from "lib/entitlements/helpers";
+import { isWithinLimit } from "lib/entitlements";
 import { checkOrganizationAccess } from "./auth";
 import { resolveAgentConfig } from "./config";
 import { generateProjectContext } from "./context/projectContext";

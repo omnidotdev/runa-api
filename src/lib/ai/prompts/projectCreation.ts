@@ -48,7 +48,7 @@ export interface ProjectContextSummary {
 }
 
 /** Context needed to build the project creation prompt. */
-export interface ProjectCreationContext {
+interface ProjectCreationContext {
   organizationId: string;
   organizationName: string;
   organizationSlug: string;

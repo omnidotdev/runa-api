@@ -11,7 +11,7 @@ import { agentActivities } from "lib/db/schema";
 
 import type { WriteToolContext } from "../core/context";
 
-export interface LogActivityParams {
+interface LogActivityParams {
   context: WriteToolContext;
   toolName: string;
   toolInput: unknown;

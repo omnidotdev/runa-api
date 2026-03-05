@@ -110,6 +110,7 @@ const aiRoutes = new Elysia({ prefix: "/api/ai" })
         organizationId,
         userId: auth.user.id,
         userName: auth.user.name,
+        accessToken: auth.accessToken,
         customInstructions: agentConfig.customInstructions,
       });
 

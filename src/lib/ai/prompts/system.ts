@@ -1,6 +1,6 @@
 import type { ProjectContext } from "./projectContext";
 
-export interface PersonaPrompt {
+interface PersonaPrompt {
   name: string;
   systemPrompt: string;
 }

@@ -1,13 +1,8 @@
 import { and, eq } from "drizzle-orm";
 
+import { AUTH_BASE_URL } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import {
-  agentPersonas,
-  columns,
-  labels,
-  projects,
-  userOrganizations,
-} from "lib/db/schema";
+import { agentPersonas, columns, labels, projects } from "lib/db/schema";
 
 /**
  * Project context provided to the agent's system prompt.
@@ -46,6 +41,43 @@ export interface ProjectContext {
 }
 
 /**
+ * Fetch organization members from the IDP (Gatekeeper).
+ * Returns empty array if the IDP is unreachable (non-blocking for agent).
+ */
+async function fetchOrganizationMembers(
+  organizationId: string,
+  accessToken: string,
+): Promise<Array<{ id: string; name: string; email: string }>> {
+  try {
+    const url = new URL("/api/organization/members", AUTH_BASE_URL);
+    url.searchParams.set("orgId", organizationId);
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) return [];
+
+    const body = (await response.json()) as {
+      data: Array<{
+        user: { id: string; name: string; email: string };
+      }>;
+    };
+
+    return body.data.map((member) => ({
+      id: member.user.id,
+      name: member.user.name,
+      email: member.user.email,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/**
  * Build project context for the agent's system prompt.
  *
  * Fetches current project state including columns, labels, and org members
@@ -56,6 +88,7 @@ export async function buildProjectContext(params: {
   organizationId: string;
   userId: string;
   userName: string;
+  accessToken: string;
   customInstructions: string | null;
 }): Promise<ProjectContext> {
   const [project, projectColumns, projectLabels, orgMembers, orgPersonas] =
@@ -87,27 +120,7 @@ export async function buildProjectContext(params: {
         })
         .from(labels)
         .where(eq(labels.projectId, params.projectId)),
-      dbPool
-        .select({
-          userId: userOrganizations.userId,
-        })
-        .from(userOrganizations)
-        .where(eq(userOrganizations.organizationId, params.organizationId))
-        .then(async (orgMemberships) => {
-          if (orgMemberships.length === 0) return [];
-
-          const memberIds = orgMemberships.map((m) => m.userId);
-          const memberUsers = await dbPool.query.users.findMany({
-            where: (table, { inArray }) => inArray(table.id, memberIds),
-            columns: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          });
-
-          return memberUsers;
-        }),
+      fetchOrganizationMembers(params.organizationId, params.accessToken),
       // Fetch enabled personas for delegation
       dbPool
         .select({

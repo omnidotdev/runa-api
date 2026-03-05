@@ -23,7 +23,7 @@ interface CreateColumnsResultItem {
   index: number;
 }
 
-export interface CreateColumnsResult {
+interface CreateColumnsResult {
   createdCount: number;
   columns: CreateColumnsResultItem[];
   affectedIds: string[];

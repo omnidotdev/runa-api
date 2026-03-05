@@ -34,6 +34,14 @@ import {
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
+import {
+  deleteCommentFromIndex,
+  deleteProjectFromIndex,
+  deleteTaskFromIndex,
+  indexComment,
+  indexProject,
+  indexTask,
+} from "lib/search";
 
 const SRC_DIR = `${__dirname}/..`;
 const CACHE_DIR = `${__dirname}/../../.cache`;
@@ -158,6 +166,14 @@ const generateGraphqlSchema = async () => {
       },
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
+      "lib/search": {
+        indexComment,
+        indexProject,
+        indexTask,
+        deleteCommentFromIndex,
+        deleteProjectFromIndex,
+        deleteTaskFromIndex,
+      },
       "lib/ai/triggers/mention": {
         detectMention,
         handleMention,

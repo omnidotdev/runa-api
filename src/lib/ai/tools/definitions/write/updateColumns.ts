@@ -30,7 +30,7 @@ interface UpdateColumnsSnapshotItem {
   index: number;
 }
 
-export interface UpdateColumnsResult {
+interface UpdateColumnsResult {
   updatedCount: number;
   columns: UpdateColumnsResultItem[];
   affectedIds: string[];

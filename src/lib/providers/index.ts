@@ -32,16 +32,13 @@ export const authz = createAuthzProvider({
   source: "runa",
 });
 
-export const billing = createBillingProvider(
-  BILLING_BASE_URL
-    ? {
-        provider: "aether",
-        baseUrl: BILLING_BASE_URL,
-        serviceApiKey: BILLING_SERVICE_API_KEY,
-        appId: "runa",
-      }
-    : {},
-);
+export const billing = BILLING_BASE_URL
+  ? createBillingProvider({
+      baseUrl: BILLING_BASE_URL,
+      serviceApiKey: BILLING_SERVICE_API_KEY,
+      appId: "runa",
+    })
+  : undefined;
 
 /** @knipignore */
 export const events = createEventsProvider(

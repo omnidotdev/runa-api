@@ -38,7 +38,7 @@ import type { WriteToolContext } from "../core/context";
 import type { MarkdownToHtmlFn } from "../definitions/write";
 import type { WriteToolsOptions } from "../types";
 
-export interface WriteToolsFactoryOptions extends WriteToolsOptions {
+interface WriteToolsFactoryOptions extends WriteToolsOptions {
   /** Markdown to HTML converter for descriptions. */
   markdownToHtml?: MarkdownToHtmlFn;
 }

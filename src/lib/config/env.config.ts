@@ -40,9 +40,19 @@ export const {
   AGENT_ENABLED,
   // BYOK encryption key for org-provided API keys (AES-256-GCM)
   ENCRYPTION_SECRET,
+  // Vortex events API key
+  VORTEX_API_KEY,
+  // Build metadata
+  BUILD_VERSION,
+  // MeiliSearch
+  MEILISEARCH_URL,
+  MEILISEARCH_MASTER_KEY,
+  SEARCH_ENABLED,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
 export const isSelfHosted = SELF_HOSTED === "true";
+export const isSearchEnabled =
+  SEARCH_ENABLED === "true" && !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;

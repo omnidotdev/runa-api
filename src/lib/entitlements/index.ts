@@ -50,6 +50,7 @@ export class EntitlementsUnavailableError extends Error {
 async function getOrganizationEntitlements(
   organizationId: string,
 ): Promise<EntitlementsResponse | null> {
+  if (!billing) return null;
   return billing.getEntitlements("organization", organizationId, APP_ID);
 }
 
@@ -116,6 +117,7 @@ export async function getOrganizationTier(
  * Called from webhook handlers when entitlements change.
  */
 export function invalidateCache(pattern: string): void {
+  if (!billing) return;
   // Extract entity info from pattern for provider cache invalidation
   // Patterns: "organization:orgId:*" or "organization:orgId"
   const parts = pattern.replace(/:\*$/, "").split(":");

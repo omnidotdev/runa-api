@@ -56,17 +56,17 @@ type Query implements Node {
   """Get a single `Column`."""
   column(rowId: UUID!): Column
 
-  """Get a single `AgentPersona`."""
-  agentPersona(rowId: UUID!): AgentPersona
-
-  """Get a single `ProjectColumn`."""
-  projectColumn(rowId: UUID!): ProjectColumn
-
   """Get a single `UserPreference`."""
   userPreference(rowId: UUID!): UserPreference
 
   """Get a single `UserPreference`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
+
+  """Get a single `AgentPersona`."""
+  agentPersona(rowId: UUID!): AgentPersona
+
+  """Get a single `ProjectColumn`."""
+  projectColumn(rowId: UUID!): ProjectColumn
 
   """Get a single `AgentSession`."""
   agentSession(rowId: UUID!): AgentSession
@@ -76,6 +76,12 @@ type Query implements Node {
 
   """Get a single `Setting`."""
   settingByOrganizationId(organizationId: String!): Setting
+
+  """Get a single `AgentConfig`."""
+  agentConfig(rowId: UUID!): AgentConfig
+
+  """Get a single `AgentConfig`."""
+  agentConfigByOrganizationId(organizationId: String!): AgentConfig
 
   """Get a single `Project`."""
   project(rowId: UUID!): Project
@@ -89,20 +95,8 @@ type Query implements Node {
   """Get a single `Task`."""
   taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
 
-  """Get a single `AgentConfig`."""
-  agentConfig(rowId: UUID!): AgentConfig
-
-  """Get a single `AgentConfig`."""
-  agentConfigByOrganizationId(organizationId: String!): AgentConfig
-
   """Get a single `AgentActivity`."""
   agentActivity(rowId: UUID!): AgentActivity
-
-  """Get a single `UserOrganization`."""
-  userOrganization(rowId: UUID!): UserOrganization
-
-  """Get a single `UserOrganization`."""
-  userOrganizationByUserIdAndOrganizationId(userId: UUID!, organizationId: String!): UserOrganization
 
   """Reads a single `ProjectProjectLabel` using its globally unique `ID`."""
   projectProjectLabelById(
@@ -162,6 +156,14 @@ type Query implements Node {
     id: ID!
   ): Column
 
+  """Reads a single `UserPreference` using its globally unique `ID`."""
+  userPreferenceById(
+    """
+    The globally unique `ID` to be used in selecting a single `UserPreference`.
+    """
+    id: ID!
+  ): UserPreference
+
   """Reads a single `AgentPersona` using its globally unique `ID`."""
   agentPersonaById(
     """
@@ -178,14 +180,6 @@ type Query implements Node {
     id: ID!
   ): ProjectColumn
 
-  """Reads a single `UserPreference` using its globally unique `ID`."""
-  userPreferenceById(
-    """
-    The globally unique `ID` to be used in selecting a single `UserPreference`.
-    """
-    id: ID!
-  ): UserPreference
-
   """Reads a single `AgentSession` using its globally unique `ID`."""
   agentSessionById(
     """
@@ -200,6 +194,14 @@ type Query implements Node {
     id: ID!
   ): Setting
 
+  """Reads a single `AgentConfig` using its globally unique `ID`."""
+  agentConfigById(
+    """
+    The globally unique `ID` to be used in selecting a single `AgentConfig`.
+    """
+    id: ID!
+  ): AgentConfig
+
   """Reads a single `Project` using its globally unique `ID`."""
   projectById(
     """The globally unique `ID` to be used in selecting a single `Project`."""
@@ -212,14 +214,6 @@ type Query implements Node {
     id: ID!
   ): Task
 
-  """Reads a single `AgentConfig` using its globally unique `ID`."""
-  agentConfigById(
-    """
-    The globally unique `ID` to be used in selecting a single `AgentConfig`.
-    """
-    id: ID!
-  ): AgentConfig
-
   """Reads a single `AgentActivity` using its globally unique `ID`."""
   agentActivityById(
     """
@@ -227,14 +221,6 @@ type Query implements Node {
     """
     id: ID!
   ): AgentActivity
-
-  """Reads a single `UserOrganization` using its globally unique `ID`."""
-  userOrganizationById(
-    """
-    The globally unique `ID` to be used in selecting a single `UserOrganization`.
-    """
-    id: ID!
-  ): UserOrganization
 
   """Reads and enables pagination through a set of `ProjectProjectLabel`."""
   projectProjectLabels(
@@ -542,6 +528,40 @@ type Query implements Node {
     orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
   ): ColumnConnection
 
+  """Reads and enables pagination through a set of `UserPreference`."""
+  userPreferences(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserPreferenceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserPreferenceFilter
+
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserPreferenceConnection
+
   """Reads and enables pagination through a set of `AgentPersona`."""
   agentPersonas(
     """Only read the first `n` values of the set."""
@@ -609,40 +629,6 @@ type Query implements Node {
     """The method to use when ordering `ProjectColumn`."""
     orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectColumnConnection
-
-  """Reads and enables pagination through a set of `UserPreference`."""
-  userPreferences(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserPreferenceCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserPreferenceFilter
-
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserPreferenceConnection
 
   """Reads and enables pagination through a set of `AgentSession`."""
   agentSessions(
@@ -712,6 +698,40 @@ type Query implements Node {
     orderBy: [SettingOrderBy!] = [PRIMARY_KEY_ASC]
   ): SettingConnection
 
+  """Reads and enables pagination through a set of `AgentConfig`."""
+  agentConfigs(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgentConfigCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgentConfigFilter
+
+    """The method to use when ordering `AgentConfig`."""
+    orderBy: [AgentConfigOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgentConfigConnection
+
   """Reads and enables pagination through a set of `Project`."""
   projects(
     """Only read the first `n` values of the set."""
@@ -780,40 +800,6 @@ type Query implements Node {
     orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaskConnection
 
-  """Reads and enables pagination through a set of `AgentConfig`."""
-  agentConfigs(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AgentConfigCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AgentConfigFilter
-
-    """The method to use when ordering `AgentConfig`."""
-    orderBy: [AgentConfigOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AgentConfigConnection
-
   """Reads and enables pagination through a set of `AgentActivity`."""
   agentActivities(
     """Only read the first `n` values of the set."""
@@ -847,40 +833,6 @@ type Query implements Node {
     """The method to use when ordering `AgentActivity`."""
     orderBy: [AgentActivityOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentActivityConnection
-
-  """Reads and enables pagination through a set of `UserOrganization`."""
-  userOrganizations(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserOrganizationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserOrganizationFilter
-
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserOrganizationConnection
 
   """
   Returns the currently authenticated user (observer).
@@ -2304,12 +2256,6 @@ input UserFilter {
   """Some related `emojis` exist."""
   emojisExist: Boolean
 
-  """Filter by the object’s `userOrganizations` relation."""
-  userOrganizations: UserToManyUserOrganizationFilter
-
-  """Some related `userOrganizations` exist."""
-  userOrganizationsExist: Boolean
-
   """Filter by the object’s `agentActivities` relation."""
   agentActivities: UserToManyAgentActivityFilter
 
@@ -2963,199 +2909,6 @@ input UserToManyEmojiFilter {
 }
 
 """
-A filter to be used against many `UserOrganization` object types. All fields are combined with a logical ‘and.’
-"""
-input UserToManyUserOrganizationFilter {
-  """
-  Every related `UserOrganization` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: UserOrganizationFilter
-
-  """
-  Some related `UserOrganization` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: UserOrganizationFilter
-
-  """
-  No related `UserOrganization` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: UserOrganizationFilter
-
-  """
-  Aggregates across related `UserOrganization` match the filter criteria.
-  """
-  aggregates: UserOrganizationAggregatesFilter
-}
-
-"""
-A filter to be used against `UserOrganization` object types. All fields are combined with a logical ‘and.’
-"""
-input UserOrganizationFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `userId` field."""
-  userId: UUIDFilter
-
-  """Filter by the object’s `organizationId` field."""
-  organizationId: StringFilter
-
-  """Filter by the object’s `slug` field."""
-  slug: StringFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Filter by the object’s `type` field."""
-  type: OrganizationTypeFilter
-
-  """Filter by the object’s `role` field."""
-  role: MemberRoleFilter
-
-  """Filter by the object’s `syncedAt` field."""
-  syncedAt: DatetimeFilter
-
-  """Filter by the object’s `createdAt` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s `updatedAt` field."""
-  updatedAt: DatetimeFilter
-
-  """Filter by the object’s `user` relation."""
-  user: UserFilter
-
-  """Checks for all expressions in this list."""
-  and: [UserOrganizationFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [UserOrganizationFilter!]
-
-  """Negates the expression."""
-  not: UserOrganizationFilter
-}
-
-"""
-A filter to be used against OrganizationType fields. All fields are combined with a logical ‘and.’
-"""
-input OrganizationTypeFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: OrganizationType
-
-  """Not equal to the specified value."""
-  notEqualTo: OrganizationType
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: OrganizationType
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: OrganizationType
-
-  """Included in the specified list."""
-  in: [OrganizationType!]
-
-  """Not included in the specified list."""
-  notIn: [OrganizationType!]
-
-  """Less than the specified value."""
-  lessThan: OrganizationType
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: OrganizationType
-
-  """Greater than the specified value."""
-  greaterThan: OrganizationType
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: OrganizationType
-}
-
-enum OrganizationType {
-  personal
-  team
-}
-
-"""
-A filter to be used against MemberRole fields. All fields are combined with a logical ‘and.’
-"""
-input MemberRoleFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: MemberRole
-
-  """Not equal to the specified value."""
-  notEqualTo: MemberRole
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: MemberRole
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: MemberRole
-
-  """Included in the specified list."""
-  in: [MemberRole!]
-
-  """Not included in the specified list."""
-  notIn: [MemberRole!]
-
-  """Less than the specified value."""
-  lessThan: MemberRole
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: MemberRole
-
-  """Greater than the specified value."""
-  greaterThan: MemberRole
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: MemberRole
-}
-
-enum MemberRole {
-  owner
-  admin
-  member
-}
-
-"""
-A filter to be used against aggregates of `UserOrganization` object types.
-"""
-input UserOrganizationAggregatesFilter {
-  """
-  A filter that must pass for the relevant `UserOrganization` object to be included within the aggregate.
-  """
-  filter: UserOrganizationFilter
-
-  """Distinct count aggregate over matching `UserOrganization` objects."""
-  distinctCount: UserOrganizationDistinctCountAggregateFilter
-}
-
-input UserOrganizationDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  userId: BigIntFilter
-  organizationId: BigIntFilter
-  slug: BigIntFilter
-  name: BigIntFilter
-  type: BigIntFilter
-  role: BigIntFilter
-  syncedAt: BigIntFilter
-  createdAt: BigIntFilter
-  updatedAt: BigIntFilter
-}
-
-"""
 A filter to be used against many `AgentActivity` object types. All fields are combined with a logical ‘and.’
 """
 input UserToManyAgentActivityFilter {
@@ -3250,6 +3003,9 @@ input AgentSessionFilter {
   """Filter by the object’s `userId` field."""
   userId: UUIDFilter
 
+  """Filter by the object’s `type` field."""
+  type: StringFilter
+
   """Filter by the object’s `title` field."""
   title: StringFilter
 
@@ -3261,9 +3017,6 @@ input AgentSessionFilter {
 
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
-
-  """Filter by the object’s `type` field."""
-  type: StringFilter
 
   """Filter by the object’s `agentActivitiesBySessionId` relation."""
   agentActivitiesBySessionId: AgentSessionToManyAgentActivityFilter
@@ -3340,8 +3093,8 @@ input AgentActivityDistinctCountAggregateFilter {
   status: BigIntFilter
   errorMessage: BigIntFilter
   affectedTaskIds: BigIntFilter
-  createdAt: BigIntFilter
   snapshotBefore: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -3415,13 +3168,13 @@ input AgentSessionDistinctCountAggregateFilter {
   organizationId: BigIntFilter
   projectId: BigIntFilter
   userId: BigIntFilter
+  type: BigIntFilter
   title: BigIntFilter
   messages: BigIntFilter
   toolCallCount: BigIntFilter
+  metadata: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
-  type: BigIntFilter
-  metadata: BigIntFilter
 }
 
 input AgentSessionMinAggregateFilter {
@@ -4323,10 +4076,10 @@ enum ProjectOrderBy {
   AGENT_ACTIVITIES_DISTINCT_COUNT_ERROR_MESSAGE_DESC
   AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_ASC
   AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_DESC
-  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_ASC
-  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_ASC
   AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_SESSIONS_COUNT_ASC
   AGENT_SESSIONS_COUNT_DESC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC
@@ -4339,20 +4092,20 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_PROJECT_ID_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TITLE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
-  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
-  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
-  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC
-  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
@@ -4798,40 +4551,6 @@ type User implements Node {
     """The method to use when ordering `Emoji`."""
     orderBy: [EmojiOrderBy!] = [PRIMARY_KEY_ASC]
   ): EmojiConnection!
-
-  """Reads and enables pagination through a set of `UserOrganization`."""
-  userOrganizations(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserOrganizationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserOrganizationFilter
-
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserOrganizationConnection!
 
   """Reads and enables pagination through a set of `AgentActivity`."""
   agentActivities(
@@ -5976,260 +5695,6 @@ enum UserPreferenceOrderBy {
   COLOR_DESC
 }
 
-"""A connection to a list of `UserOrganization` values."""
-type UserOrganizationConnection {
-  """A list of `UserOrganization` objects."""
-  nodes: [UserOrganization!]!
-
-  """
-  A list of edges which contains the `UserOrganization` and cursor to aid in pagination.
-  """
-  edges: [UserOrganizationEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `UserOrganization` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: UserOrganizationAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping `UserOrganization` for these aggregates.
-    """
-    groupBy: [UserOrganizationGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: UserOrganizationHavingInput
-  ): [UserOrganizationAggregates!]
-}
-
-type UserOrganization implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  userId: UUID!
-  organizationId: String!
-  slug: String!
-  name: String
-  type: OrganizationType!
-  role: MemberRole!
-  syncedAt: Datetime!
-  createdAt: Datetime!
-  updatedAt: Datetime!
-
-  """Reads a single `User` that is related to this `UserOrganization`."""
-  user: User
-}
-
-"""A `UserOrganization` edge in the connection."""
-type UserOrganizationEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `UserOrganization` at the end of the edge."""
-  node: UserOrganization!
-}
-
-type UserOrganizationAggregates {
-  keys: [String]
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: UserOrganizationDistinctCountAggregates
-}
-
-type UserOrganizationDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of userId across the matching connection"""
-  userId: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of slug across the matching connection"""
-  slug: BigInt
-
-  """Distinct count of name across the matching connection"""
-  name: BigInt
-
-  """Distinct count of type across the matching connection"""
-  type: BigInt
-
-  """Distinct count of role across the matching connection"""
-  role: BigInt
-
-  """Distinct count of syncedAt across the matching connection"""
-  syncedAt: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-"""Grouping methods for `UserOrganization` for usage during aggregation."""
-enum UserOrganizationGroupBy {
-  USER_ID
-  ORGANIZATION_ID
-  SLUG
-  NAME
-  TYPE
-  ROLE
-  SYNCED_AT
-  SYNCED_AT_TRUNCATED_TO_HOUR
-  SYNCED_AT_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `UserOrganization` aggregates."""
-input UserOrganizationHavingInput {
-  AND: [UserOrganizationHavingInput!]
-  OR: [UserOrganizationHavingInput!]
-  sum: UserOrganizationHavingSumInput
-  distinctCount: UserOrganizationHavingDistinctCountInput
-  min: UserOrganizationHavingMinInput
-  max: UserOrganizationHavingMaxInput
-  average: UserOrganizationHavingAverageInput
-  stddevSample: UserOrganizationHavingStddevSampleInput
-  stddevPopulation: UserOrganizationHavingStddevPopulationInput
-  varianceSample: UserOrganizationHavingVarianceSampleInput
-  variancePopulation: UserOrganizationHavingVariancePopulationInput
-}
-
-input UserOrganizationHavingSumInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input UserOrganizationHavingDistinctCountInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input UserOrganizationHavingMinInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input UserOrganizationHavingMaxInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input UserOrganizationHavingAverageInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input UserOrganizationHavingStddevSampleInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input UserOrganizationHavingStddevPopulationInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input UserOrganizationHavingVarianceSampleInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input UserOrganizationHavingVariancePopulationInput {
-  syncedAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `UserOrganization` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input UserOrganizationCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `userId` field."""
-  userId: UUID
-
-  """Checks for equality with the object’s `organizationId` field."""
-  organizationId: String
-
-  """Checks for equality with the object’s `slug` field."""
-  slug: String
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
-  """Checks for equality with the object’s `type` field."""
-  type: OrganizationType
-
-  """Checks for equality with the object’s `role` field."""
-  role: MemberRole
-
-  """Checks for equality with the object’s `syncedAt` field."""
-  syncedAt: Datetime
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `UserOrganization`."""
-enum UserOrganizationOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  USER_ID_ASC
-  USER_ID_DESC
-  ORGANIZATION_ID_ASC
-  ORGANIZATION_ID_DESC
-  SLUG_ASC
-  SLUG_DESC
-  NAME_ASC
-  NAME_DESC
-  SYNCED_AT_ASC
-  SYNCED_AT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
 """A connection to a list of `AgentActivity` values."""
 type AgentActivityConnection {
   """A list of `AgentActivity` objects."""
@@ -6281,8 +5746,8 @@ type AgentActivity implements Node {
   status: String!
   errorMessage: String
   affectedTaskIds: JSON!
-  createdAt: Datetime!
   snapshotBefore: JSON
+  createdAt: Datetime!
 
   """Reads a single `Project` that is related to this `AgentActivity`."""
   project: Project
@@ -6308,13 +5773,13 @@ type AgentSession implements Node {
   organizationId: String!
   projectId: UUID
   userId: UUID!
+  type: String!
   title: String
   messages: JSON!
   toolCallCount: Int!
+  metadata: JSON!
   createdAt: Datetime!
   updatedAt: Datetime!
-  type: String!
-  metadata: JSON!
 
   """Reads a single `Project` that is related to this `AgentSession`."""
   project: Project
@@ -6483,11 +5948,11 @@ type AgentActivityDistinctCountAggregates {
   """Distinct count of affectedTaskIds across the matching connection"""
   affectedTaskIds: BigInt
 
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
   """Distinct count of snapshotBefore across the matching connection"""
   snapshotBefore: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
 }
 
 """Grouping methods for `AgentActivity` for usage during aggregation."""
@@ -6504,10 +5969,10 @@ enum AgentActivityGroupBy {
   STATUS
   ERROR_MESSAGE
   AFFECTED_TASK_IDS
+  SNAPSHOT_BEFORE
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
-  SNAPSHOT_BEFORE
 }
 
 """Conditions for `AgentActivity` aggregates."""
@@ -6670,6 +6135,9 @@ type AgentSessionDistinctCountAggregates {
   """Distinct count of userId across the matching connection"""
   userId: BigInt
 
+  """Distinct count of type across the matching connection"""
+  type: BigInt
+
   """Distinct count of title across the matching connection"""
   title: BigInt
 
@@ -6679,17 +6147,14 @@ type AgentSessionDistinctCountAggregates {
   """Distinct count of toolCallCount across the matching connection"""
   toolCallCount: BigInt
 
+  """Distinct count of metadata across the matching connection"""
+  metadata: BigInt
+
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
-
-  """Distinct count of type across the matching connection"""
-  type: BigInt
-
-  """Distinct count of metadata across the matching connection"""
-  metadata: BigInt
 }
 
 type AgentSessionMinAggregates {
@@ -6736,17 +6201,17 @@ enum AgentSessionGroupBy {
   ORGANIZATION_ID
   PROJECT_ID
   USER_ID
+  TYPE
   TITLE
   MESSAGES
   TOOL_CALL_COUNT
+  METADATA
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
-  TYPE
-  METADATA
 }
 
 """Conditions for `AgentSession` aggregates."""
@@ -6835,6 +6300,9 @@ input AgentSessionCondition {
   """Checks for equality with the object’s `userId` field."""
   userId: UUID
 
+  """Checks for equality with the object’s `type` field."""
+  type: String
+
   """Checks for equality with the object’s `title` field."""
   title: String
 
@@ -6846,9 +6314,6 @@ input AgentSessionCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
-
-  """Checks for equality with the object’s `type` field."""
-  type: String
 }
 
 """Methods to use when ordering `AgentSession`."""
@@ -6864,6 +6329,8 @@ enum AgentSessionOrderBy {
   PROJECT_ID_DESC
   USER_ID_ASC
   USER_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
   TITLE_ASC
   TITLE_DESC
   TOOL_CALL_COUNT_ASC
@@ -6872,8 +6339,6 @@ enum AgentSessionOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  TYPE_ASC
-  TYPE_DESC
   AGENT_ACTIVITIES_BY_SESSION_ID_COUNT_ASC
   AGENT_ACTIVITIES_BY_SESSION_ID_COUNT_DESC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_ASC
@@ -6902,10 +6367,10 @@ enum AgentSessionOrderBy {
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ERROR_MESSAGE_DESC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_AFFECTED_TASK_IDS_ASC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_AFFECTED_TASK_IDS_DESC
-  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC
-  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SNAPSHOT_BEFORE_ASC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC
 }
 
 """A connection to a list of `TaskLabel` values."""
@@ -8186,15 +7651,15 @@ type AgentConfig implements Node {
   rowId: UUID!
   organizationId: String!
   model: String!
+  encryptedApiKey: String
   enabled: Boolean!
   maxIterationsPerRequest: Int!
   requireApprovalForDestructive: Boolean!
   requireApprovalForCreate: Boolean!
   customInstructions: String
+  defaultPersonaId: UUID
   createdAt: Datetime!
   updatedAt: Datetime!
-  encryptedApiKey: String
-  defaultPersonaId: UUID
 }
 
 """A connection to a list of `User` values."""
@@ -8508,28 +7973,6 @@ enum UserOrderBy {
   EMOJIS_DISTINCT_COUNT_CREATED_AT_DESC
   EMOJIS_DISTINCT_COUNT_UPDATED_AT_ASC
   EMOJIS_DISTINCT_COUNT_UPDATED_AT_DESC
-  USER_ORGANIZATIONS_COUNT_ASC
-  USER_ORGANIZATIONS_COUNT_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_SLUG_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_SLUG_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_NAME_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_NAME_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_TYPE_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_TYPE_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_SYNCED_AT_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_SYNCED_AT_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_ASC
-  USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_DESC
   AGENT_ACTIVITIES_COUNT_ASC
   AGENT_ACTIVITIES_COUNT_DESC
   AGENT_ACTIVITIES_DISTINCT_COUNT_ROW_ID_ASC
@@ -8558,10 +8001,10 @@ enum UserOrderBy {
   AGENT_ACTIVITIES_DISTINCT_COUNT_ERROR_MESSAGE_DESC
   AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_ASC
   AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_DESC
-  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_ASC
-  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_ASC
   AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_ASC
+  AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_SESSIONS_COUNT_ASC
   AGENT_SESSIONS_COUNT_DESC
   AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC
@@ -8574,20 +8017,20 @@ enum UserOrderBy {
   AGENT_SESSIONS_DISTINCT_COUNT_PROJECT_ID_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TITLE_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC
+  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_DESC
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_ASC
   AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC
-  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC
-  AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC
-  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC
-  AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC
@@ -9776,6 +9219,9 @@ type AgentConfigDistinctCountAggregates {
   """Distinct count of model across the matching connection"""
   model: BigInt
 
+  """Distinct count of encryptedApiKey across the matching connection"""
+  encryptedApiKey: BigInt
+
   """Distinct count of enabled across the matching connection"""
   enabled: BigInt
 
@@ -9797,17 +9243,14 @@ type AgentConfigDistinctCountAggregates {
   """Distinct count of customInstructions across the matching connection"""
   customInstructions: BigInt
 
+  """Distinct count of defaultPersonaId across the matching connection"""
+  defaultPersonaId: BigInt
+
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
-
-  """Distinct count of encryptedApiKey across the matching connection"""
-  encryptedApiKey: BigInt
-
-  """Distinct count of defaultPersonaId across the matching connection"""
-  defaultPersonaId: BigInt
 }
 
 type AgentConfigMinAggregates {
@@ -9856,19 +9299,19 @@ type AgentConfigVariancePopulationAggregates {
 """Grouping methods for `AgentConfig` for usage during aggregation."""
 enum AgentConfigGroupBy {
   MODEL
+  ENCRYPTED_API_KEY
   ENABLED
   MAX_ITERATIONS_PER_REQUEST
   REQUIRE_APPROVAL_FOR_DESTRUCTIVE
   REQUIRE_APPROVAL_FOR_CREATE
   CUSTOM_INSTRUCTIONS
+  DEFAULT_PERSONA_ID
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
   UPDATED_AT
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
-  ENCRYPTED_API_KEY
-  DEFAULT_PERSONA_ID
 }
 
 """Conditions for `AgentConfig` aggregates."""
@@ -9954,6 +9397,9 @@ input AgentConfigCondition {
   """Checks for equality with the object’s `model` field."""
   model: String
 
+  """Checks for equality with the object’s `encryptedApiKey` field."""
+  encryptedApiKey: String
+
   """Checks for equality with the object’s `enabled` field."""
   enabled: Boolean
 
@@ -9973,17 +9419,14 @@ input AgentConfigCondition {
   """Checks for equality with the object’s `customInstructions` field."""
   customInstructions: String
 
+  """Checks for equality with the object’s `defaultPersonaId` field."""
+  defaultPersonaId: UUID
+
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
-
-  """Checks for equality with the object’s `encryptedApiKey` field."""
-  encryptedApiKey: String
-
-  """Checks for equality with the object’s `defaultPersonaId` field."""
-  defaultPersonaId: UUID
 }
 
 """
@@ -9998,6 +9441,9 @@ input AgentConfigFilter {
 
   """Filter by the object’s `model` field."""
   model: StringFilter
+
+  """Filter by the object’s `encryptedApiKey` field."""
+  encryptedApiKey: StringFilter
 
   """Filter by the object’s `enabled` field."""
   enabled: BooleanFilter
@@ -10014,17 +9460,14 @@ input AgentConfigFilter {
   """Filter by the object’s `customInstructions` field."""
   customInstructions: StringFilter
 
+  """Filter by the object’s `defaultPersonaId` field."""
+  defaultPersonaId: UUIDFilter
+
   """Filter by the object’s `createdAt` field."""
   createdAt: DatetimeFilter
 
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
-
-  """Filter by the object’s `encryptedApiKey` field."""
-  encryptedApiKey: StringFilter
-
-  """Filter by the object’s `defaultPersonaId` field."""
-  defaultPersonaId: UUIDFilter
 
   """Checks for all expressions in this list."""
   and: [AgentConfigFilter!]
@@ -10047,6 +9490,8 @@ enum AgentConfigOrderBy {
   ORGANIZATION_ID_DESC
   MODEL_ASC
   MODEL_DESC
+  ENCRYPTED_API_KEY_ASC
+  ENCRYPTED_API_KEY_DESC
   ENABLED_ASC
   ENABLED_DESC
   MAX_ITERATIONS_PER_REQUEST_ASC
@@ -10057,14 +9502,12 @@ enum AgentConfigOrderBy {
   REQUIRE_APPROVAL_FOR_CREATE_DESC
   CUSTOM_INSTRUCTIONS_ASC
   CUSTOM_INSTRUCTIONS_DESC
+  DEFAULT_PERSONA_ID_ASC
+  DEFAULT_PERSONA_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  ENCRYPTED_API_KEY_ASC
-  ENCRYPTED_API_KEY_DESC
-  DEFAULT_PERSONA_ID_ASC
-  DEFAULT_PERSONA_ID_DESC
 }
 
 """
@@ -10143,6 +9586,14 @@ type Mutation {
     input: CreateColumnInput!
   ): CreateColumnPayload
 
+  """Creates a single `UserPreference`."""
+  createUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserPreferenceInput!
+  ): CreateUserPreferencePayload
+
   """Creates a single `AgentPersona`."""
   createAgentPersona(
     """
@@ -10158,14 +9609,6 @@ type Mutation {
     """
     input: CreateProjectColumnInput!
   ): CreateProjectColumnPayload
-
-  """Creates a single `UserPreference`."""
-  createUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserPreferenceInput!
-  ): CreateUserPreferencePayload
 
   """Creates a single `AgentSession`."""
   createAgentSession(
@@ -10183,6 +9626,14 @@ type Mutation {
     input: CreateSettingInput!
   ): CreateSettingPayload
 
+  """Creates a single `AgentConfig`."""
+  createAgentConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAgentConfigInput!
+  ): CreateAgentConfigPayload
+
   """Creates a single `Project`."""
   createProject(
     """
@@ -10199,14 +9650,6 @@ type Mutation {
     input: CreateTaskInput!
   ): CreateTaskPayload
 
-  """Creates a single `AgentConfig`."""
-  createAgentConfig(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAgentConfigInput!
-  ): CreateAgentConfigPayload
-
   """Creates a single `AgentActivity`."""
   createAgentActivity(
     """
@@ -10214,14 +9657,6 @@ type Mutation {
     """
     input: CreateAgentActivityInput!
   ): CreateAgentActivityPayload
-
-  """Creates a single `UserOrganization`."""
-  createUserOrganization(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserOrganizationInput!
-  ): CreateUserOrganizationPayload
 
   """
   Updates a single `ProjectProjectLabel` using its globally unique id and a patch.
@@ -10372,6 +9807,24 @@ type Mutation {
   ): UpdateColumnPayload
 
   """
+  Updates a single `UserPreference` using its globally unique id and a patch.
+  """
+  updateUserPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserPreferenceByIdInput!
+  ): UpdateUserPreferencePayload
+
+  """Updates a single `UserPreference` using a unique key and a patch."""
+  updateUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserPreferenceInput!
+  ): UpdateUserPreferencePayload
+
+  """
   Updates a single `AgentPersona` using its globally unique id and a patch.
   """
   updateAgentPersonaById(
@@ -10408,24 +9861,6 @@ type Mutation {
   ): UpdateProjectColumnPayload
 
   """
-  Updates a single `UserPreference` using its globally unique id and a patch.
-  """
-  updateUserPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceByIdInput!
-  ): UpdateUserPreferencePayload
-
-  """Updates a single `UserPreference` using a unique key and a patch."""
-  updateUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceInput!
-  ): UpdateUserPreferencePayload
-
-  """
   Updates a single `AgentSession` using its globally unique id and a patch.
   """
   updateAgentSessionById(
@@ -10458,6 +9893,24 @@ type Mutation {
     """
     input: UpdateSettingInput!
   ): UpdateSettingPayload
+
+  """
+  Updates a single `AgentConfig` using its globally unique id and a patch.
+  """
+  updateAgentConfigById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAgentConfigByIdInput!
+  ): UpdateAgentConfigPayload
+
+  """Updates a single `AgentConfig` using a unique key and a patch."""
+  updateAgentConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAgentConfigInput!
+  ): UpdateAgentConfigPayload
 
   """Updates a single `Project` using its globally unique id and a patch."""
   updateProjectById(
@@ -10492,24 +9945,6 @@ type Mutation {
   ): UpdateTaskPayload
 
   """
-  Updates a single `AgentConfig` using its globally unique id and a patch.
-  """
-  updateAgentConfigById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentConfigByIdInput!
-  ): UpdateAgentConfigPayload
-
-  """Updates a single `AgentConfig` using a unique key and a patch."""
-  updateAgentConfig(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAgentConfigInput!
-  ): UpdateAgentConfigPayload
-
-  """
   Updates a single `AgentActivity` using its globally unique id and a patch.
   """
   updateAgentActivityById(
@@ -10526,24 +9961,6 @@ type Mutation {
     """
     input: UpdateAgentActivityInput!
   ): UpdateAgentActivityPayload
-
-  """
-  Updates a single `UserOrganization` using its globally unique id and a patch.
-  """
-  updateUserOrganizationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserOrganizationByIdInput!
-  ): UpdateUserOrganizationPayload
-
-  """Updates a single `UserOrganization` using a unique key and a patch."""
-  updateUserOrganization(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserOrganizationInput!
-  ): UpdateUserOrganizationPayload
 
   """Deletes a single `ProjectProjectLabel` using its globally unique id."""
   deleteProjectProjectLabelById(
@@ -10689,6 +10106,22 @@ type Mutation {
     input: DeleteColumnInput!
   ): DeleteColumnPayload
 
+  """Deletes a single `UserPreference` using its globally unique id."""
+  deleteUserPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserPreferenceByIdInput!
+  ): DeleteUserPreferencePayload
+
+  """Deletes a single `UserPreference` using a unique key."""
+  deleteUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserPreferenceInput!
+  ): DeleteUserPreferencePayload
+
   """Deletes a single `AgentPersona` using its globally unique id."""
   deleteAgentPersonaById(
     """
@@ -10720,22 +10153,6 @@ type Mutation {
     """
     input: DeleteProjectColumnInput!
   ): DeleteProjectColumnPayload
-
-  """Deletes a single `UserPreference` using its globally unique id."""
-  deleteUserPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceByIdInput!
-  ): DeleteUserPreferencePayload
-
-  """Deletes a single `UserPreference` using a unique key."""
-  deleteUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceInput!
-  ): DeleteUserPreferencePayload
 
   """Deletes a single `AgentSession` using its globally unique id."""
   deleteAgentSessionById(
@@ -10769,6 +10186,22 @@ type Mutation {
     input: DeleteSettingInput!
   ): DeleteSettingPayload
 
+  """Deletes a single `AgentConfig` using its globally unique id."""
+  deleteAgentConfigById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAgentConfigByIdInput!
+  ): DeleteAgentConfigPayload
+
+  """Deletes a single `AgentConfig` using a unique key."""
+  deleteAgentConfig(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAgentConfigInput!
+  ): DeleteAgentConfigPayload
+
   """Deletes a single `Project` using its globally unique id."""
   deleteProjectById(
     """
@@ -10801,22 +10234,6 @@ type Mutation {
     input: DeleteTaskInput!
   ): DeleteTaskPayload
 
-  """Deletes a single `AgentConfig` using its globally unique id."""
-  deleteAgentConfigById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentConfigByIdInput!
-  ): DeleteAgentConfigPayload
-
-  """Deletes a single `AgentConfig` using a unique key."""
-  deleteAgentConfig(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAgentConfigInput!
-  ): DeleteAgentConfigPayload
-
   """Deletes a single `AgentActivity` using its globally unique id."""
   deleteAgentActivityById(
     """
@@ -10832,22 +10249,6 @@ type Mutation {
     """
     input: DeleteAgentActivityInput!
   ): DeleteAgentActivityPayload
-
-  """Deletes a single `UserOrganization` using its globally unique id."""
-  deleteUserOrganizationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserOrganizationByIdInput!
-  ): DeleteUserOrganizationPayload
-
-  """Deletes a single `UserOrganization` using a unique key."""
-  deleteUserOrganization(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserOrganizationInput!
-  ): DeleteUserOrganizationPayload
 }
 
 """The output of our create `ProjectProjectLabel` mutation."""
@@ -11256,6 +10657,53 @@ input ColumnInput {
   icon: String
 }
 
+"""The output of our create `UserPreference` mutation."""
+type CreateUserPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserPreference` that was created by this mutation."""
+  userPreference: UserPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserPreference`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the create `UserPreference` mutation."""
+input CreateUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `UserPreference` to be created by this mutation."""
+  userPreference: UserPreferenceInput!
+}
+
+"""An input for mutations affecting `UserPreference`"""
+input UserPreferenceInput {
+  rowId: UUID
+  userId: UUID!
+  projectId: UUID!
+  hiddenColumnIds: [String]
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+  color: String
+}
+
 """The output of our create `AgentPersona` mutation."""
 type CreateAgentPersonaPayload {
   """
@@ -11350,53 +10798,6 @@ input ProjectColumnInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `UserPreference` mutation."""
-type CreateUserPreferencePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserPreference` that was created by this mutation."""
-  userPreference: UserPreference
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserPreference`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the create `UserPreference` mutation."""
-input CreateUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `UserPreference` to be created by this mutation."""
-  userPreference: UserPreferenceInput!
-}
-
-"""An input for mutations affecting `UserPreference`"""
-input UserPreferenceInput {
-  rowId: UUID
-  userId: UUID!
-  projectId: UUID!
-  hiddenColumnIds: [String]
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-  color: String
-}
-
 """The output of our create `AgentSession` mutation."""
 type CreateAgentSessionPayload {
   """
@@ -11438,13 +10839,13 @@ input AgentSessionInput {
   organizationId: String!
   projectId: UUID
   userId: UUID!
+  type: String
   title: String
   messages: JSON
   toolCallCount: Int
+  metadata: JSON
   createdAt: Datetime
   updatedAt: Datetime
-  type: String
-  metadata: JSON
 }
 
 """The output of our create `Setting` mutation."""
@@ -11493,6 +10894,57 @@ input SettingInput {
   subscriptionId: String
   deletedAt: Datetime
   deletionReason: String
+}
+
+"""The output of our create `AgentConfig` mutation."""
+type CreateAgentConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentConfig` that was created by this mutation."""
+  agentConfig: AgentConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentConfig`. May be used by Relay 1."""
+  agentConfigEdge(
+    """The method to use when ordering `AgentConfig`."""
+    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentConfigEdge
+}
+
+"""All input for the create `AgentConfig` mutation."""
+input CreateAgentConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `AgentConfig` to be created by this mutation."""
+  agentConfig: AgentConfigInput!
+}
+
+"""An input for mutations affecting `AgentConfig`"""
+input AgentConfigInput {
+  rowId: UUID
+  organizationId: String!
+  model: String
+  encryptedApiKey: String
+  enabled: Boolean
+  maxIterationsPerRequest: Int
+  requireApprovalForDestructive: Boolean
+  requireApprovalForCreate: Boolean
+  customInstructions: String
+  defaultPersonaId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create `Project` mutation."""
@@ -11597,57 +11049,6 @@ input TaskInput {
   number: Int
 }
 
-"""The output of our create `AgentConfig` mutation."""
-type CreateAgentConfigPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentConfig` that was created by this mutation."""
-  agentConfig: AgentConfig
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentConfig`. May be used by Relay 1."""
-  agentConfigEdge(
-    """The method to use when ordering `AgentConfig`."""
-    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentConfigEdge
-}
-
-"""All input for the create `AgentConfig` mutation."""
-input CreateAgentConfigInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `AgentConfig` to be created by this mutation."""
-  agentConfig: AgentConfigInput!
-}
-
-"""An input for mutations affecting `AgentConfig`"""
-input AgentConfigInput {
-  rowId: UUID
-  organizationId: String!
-  model: String
-  enabled: Boolean
-  maxIterationsPerRequest: Int
-  requireApprovalForDestructive: Boolean
-  requireApprovalForCreate: Boolean
-  customInstructions: String
-  createdAt: Datetime
-  updatedAt: Datetime
-  encryptedApiKey: String
-  defaultPersonaId: UUID
-}
-
 """The output of our create `AgentActivity` mutation."""
 type CreateAgentActivityPayload {
   """
@@ -11698,57 +11099,8 @@ input AgentActivityInput {
   status: String
   errorMessage: String
   affectedTaskIds: JSON
-  createdAt: Datetime
   snapshotBefore: JSON
-}
-
-"""The output of our create `UserOrganization` mutation."""
-type CreateUserOrganizationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserOrganization` that was created by this mutation."""
-  userOrganization: UserOrganization
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserOrganization`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
-}
-
-"""All input for the create `UserOrganization` mutation."""
-input CreateUserOrganizationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `UserOrganization` to be created by this mutation."""
-  userOrganization: UserOrganizationInput!
-}
-
-"""An input for mutations affecting `UserOrganization`"""
-input UserOrganizationInput {
-  rowId: UUID
-  userId: UUID!
-  organizationId: String!
-  slug: String!
-  name: String
-  type: OrganizationType
-  role: MemberRole
-  syncedAt: Datetime
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
 """The output of our update `ProjectProjectLabel` mutation."""
@@ -12372,6 +11724,77 @@ input UpdateColumnInput {
   patch: ColumnPatch!
 }
 
+"""The output of our update `UserPreference` mutation."""
+type UpdateUserPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserPreference` that was updated by this mutation."""
+  userPreference: UserPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserPreference`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the `updateUserPreferenceById` mutation."""
+input UpdateUserPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `UserPreference` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `UserPreference` being updated.
+  """
+  patch: UserPreferencePatch!
+}
+
+"""
+Represents an update to a `UserPreference`. Fields that are set will be updated.
+"""
+input UserPreferencePatch {
+  rowId: UUID
+  userId: UUID
+  projectId: UUID
+  hiddenColumnIds: [String]
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+  color: String
+}
+
+"""All input for the `updateUserPreference` mutation."""
+input UpdateUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `UserPreference` being updated.
+  """
+  patch: UserPreferencePatch!
+}
+
 """The output of our update `AgentPersona` mutation."""
 type UpdateAgentPersonaPayload {
   """
@@ -12514,77 +11937,6 @@ input UpdateProjectColumnInput {
   patch: ProjectColumnPatch!
 }
 
-"""The output of our update `UserPreference` mutation."""
-type UpdateUserPreferencePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserPreference` that was updated by this mutation."""
-  userPreference: UserPreference
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserPreference`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the `updateUserPreferenceById` mutation."""
-input UpdateUserPreferenceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `UserPreference` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `UserPreference` being updated.
-  """
-  patch: UserPreferencePatch!
-}
-
-"""
-Represents an update to a `UserPreference`. Fields that are set will be updated.
-"""
-input UserPreferencePatch {
-  rowId: UUID
-  userId: UUID
-  projectId: UUID
-  hiddenColumnIds: [String]
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-  color: String
-}
-
-"""All input for the `updateUserPreference` mutation."""
-input UpdateUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `UserPreference` being updated.
-  """
-  patch: UserPreferencePatch!
-}
-
 """The output of our update `AgentSession` mutation."""
 type UpdateAgentSessionPayload {
   """
@@ -12635,13 +11987,13 @@ input AgentSessionPatch {
   organizationId: String
   projectId: UUID
   userId: UUID
+  type: String
   title: String
   messages: JSON
   toolCallCount: Int
+  metadata: JSON
   createdAt: Datetime
   updatedAt: Datetime
-  type: String
-  metadata: JSON
 }
 
 """All input for the `updateAgentSession` mutation."""
@@ -12729,6 +12081,81 @@ input UpdateSettingInput {
   An object where the defined keys will be set on the `Setting` being updated.
   """
   patch: SettingPatch!
+}
+
+"""The output of our update `AgentConfig` mutation."""
+type UpdateAgentConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentConfig` that was updated by this mutation."""
+  agentConfig: AgentConfig
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentConfig`. May be used by Relay 1."""
+  agentConfigEdge(
+    """The method to use when ordering `AgentConfig`."""
+    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentConfigEdge
+}
+
+"""All input for the `updateAgentConfigById` mutation."""
+input UpdateAgentConfigByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AgentConfig` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `AgentConfig` being updated.
+  """
+  patch: AgentConfigPatch!
+}
+
+"""
+Represents an update to a `AgentConfig`. Fields that are set will be updated.
+"""
+input AgentConfigPatch {
+  rowId: UUID
+  organizationId: String
+  model: String
+  encryptedApiKey: String
+  enabled: Boolean
+  maxIterationsPerRequest: Int
+  requireApprovalForDestructive: Boolean
+  requireApprovalForCreate: Boolean
+  customInstructions: String
+  defaultPersonaId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateAgentConfig` mutation."""
+input UpdateAgentConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `AgentConfig` being updated.
+  """
+  patch: AgentConfigPatch!
 }
 
 """The output of our update `Project` mutation."""
@@ -12879,81 +12306,6 @@ input UpdateTaskInput {
   patch: TaskPatch!
 }
 
-"""The output of our update `AgentConfig` mutation."""
-type UpdateAgentConfigPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentConfig` that was updated by this mutation."""
-  agentConfig: AgentConfig
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentConfig`. May be used by Relay 1."""
-  agentConfigEdge(
-    """The method to use when ordering `AgentConfig`."""
-    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentConfigEdge
-}
-
-"""All input for the `updateAgentConfigById` mutation."""
-input UpdateAgentConfigByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AgentConfig` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `AgentConfig` being updated.
-  """
-  patch: AgentConfigPatch!
-}
-
-"""
-Represents an update to a `AgentConfig`. Fields that are set will be updated.
-"""
-input AgentConfigPatch {
-  rowId: UUID
-  organizationId: String
-  model: String
-  enabled: Boolean
-  maxIterationsPerRequest: Int
-  requireApprovalForDestructive: Boolean
-  requireApprovalForCreate: Boolean
-  customInstructions: String
-  createdAt: Datetime
-  updatedAt: Datetime
-  encryptedApiKey: String
-  defaultPersonaId: UUID
-}
-
-"""All input for the `updateAgentConfig` mutation."""
-input UpdateAgentConfigInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `AgentConfig` being updated.
-  """
-  patch: AgentConfigPatch!
-}
-
 """The output of our update `AgentActivity` mutation."""
 type UpdateAgentActivityPayload {
   """
@@ -13013,8 +12365,8 @@ input AgentActivityPatch {
   status: String
   errorMessage: String
   affectedTaskIds: JSON
-  createdAt: Datetime
   snapshotBefore: JSON
+  createdAt: Datetime
 }
 
 """All input for the `updateAgentActivity` mutation."""
@@ -13030,79 +12382,6 @@ input UpdateAgentActivityInput {
   An object where the defined keys will be set on the `AgentActivity` being updated.
   """
   patch: AgentActivityPatch!
-}
-
-"""The output of our update `UserOrganization` mutation."""
-type UpdateUserOrganizationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserOrganization` that was updated by this mutation."""
-  userOrganization: UserOrganization
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserOrganization`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
-}
-
-"""All input for the `updateUserOrganizationById` mutation."""
-input UpdateUserOrganizationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `UserOrganization` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `UserOrganization` being updated.
-  """
-  patch: UserOrganizationPatch!
-}
-
-"""
-Represents an update to a `UserOrganization`. Fields that are set will be updated.
-"""
-input UserOrganizationPatch {
-  rowId: UUID
-  userId: UUID
-  organizationId: String
-  slug: String
-  name: String
-  type: OrganizationType
-  role: MemberRole
-  syncedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateUserOrganization` mutation."""
-input UpdateUserOrganizationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `UserOrganization` being updated.
-  """
-  patch: UserOrganizationPatch!
 }
 
 """The output of our delete `ProjectProjectLabel` mutation."""
@@ -13540,6 +12819,54 @@ input DeleteColumnInput {
   rowId: UUID!
 }
 
+"""The output of our delete `UserPreference` mutation."""
+type DeleteUserPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserPreference` that was deleted by this mutation."""
+  userPreference: UserPreference
+  deletedUserPreferenceId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserPreference`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the `deleteUserPreferenceById` mutation."""
+input DeleteUserPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `UserPreference` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteUserPreference` mutation."""
+input DeleteUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `AgentPersona` mutation."""
 type DeleteAgentPersonaPayload {
   """
@@ -13628,54 +12955,6 @@ input DeleteProjectColumnByIdInput {
 
 """All input for the `deleteProjectColumn` mutation."""
 input DeleteProjectColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `UserPreference` mutation."""
-type DeleteUserPreferencePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserPreference` that was deleted by this mutation."""
-  userPreference: UserPreference
-  deletedUserPreferenceId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserPreference`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the `deleteUserPreferenceById` mutation."""
-input DeleteUserPreferenceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `UserPreference` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteUserPreference` mutation."""
-input DeleteUserPreferenceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -13780,6 +13059,54 @@ input DeleteSettingInput {
   rowId: UUID!
 }
 
+"""The output of our delete `AgentConfig` mutation."""
+type DeleteAgentConfigPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgentConfig` that was deleted by this mutation."""
+  agentConfig: AgentConfig
+  deletedAgentConfigId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgentConfig`. May be used by Relay 1."""
+  agentConfigEdge(
+    """The method to use when ordering `AgentConfig`."""
+    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AgentConfigEdge
+}
+
+"""All input for the `deleteAgentConfigById` mutation."""
+input DeleteAgentConfigByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AgentConfig` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteAgentConfig` mutation."""
+input DeleteAgentConfigInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Project` mutation."""
 type DeleteProjectPayload {
   """
@@ -13876,54 +13203,6 @@ input DeleteTaskInput {
   rowId: UUID!
 }
 
-"""The output of our delete `AgentConfig` mutation."""
-type DeleteAgentConfigPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `AgentConfig` that was deleted by this mutation."""
-  agentConfig: AgentConfig
-  deletedAgentConfigId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `AgentConfig`. May be used by Relay 1."""
-  agentConfigEdge(
-    """The method to use when ordering `AgentConfig`."""
-    orderBy: [AgentConfigOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AgentConfigEdge
-}
-
-"""All input for the `deleteAgentConfigById` mutation."""
-input DeleteAgentConfigByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AgentConfig` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteAgentConfig` mutation."""
-input DeleteAgentConfigInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `AgentActivity` mutation."""
 type DeleteAgentActivityPayload {
   """
@@ -13964,54 +13243,6 @@ input DeleteAgentActivityByIdInput {
 
 """All input for the `deleteAgentActivity` mutation."""
 input DeleteAgentActivityInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `UserOrganization` mutation."""
-type DeleteUserOrganizationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserOrganization` that was deleted by this mutation."""
-  userOrganization: UserOrganization
-  deletedUserOrganizationId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserOrganization`. May be used by Relay 1."""
-  userOrganizationEdge(
-    """The method to use when ordering `UserOrganization`."""
-    orderBy: [UserOrganizationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserOrganizationEdge
-}
-
-"""All input for the `deleteUserOrganizationById` mutation."""
-input DeleteUserOrganizationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `UserOrganization` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteUserOrganization` mutation."""
-input DeleteUserOrganizationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

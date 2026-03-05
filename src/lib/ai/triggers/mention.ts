@@ -231,7 +231,7 @@ function formatThreadHistory(
 // Mention Handler
 // ─────────────────────────────────────────────
 
-export interface MentionContext {
+interface MentionContext {
   taskId: string;
   userId: string;
   accessToken: string;
@@ -300,6 +300,7 @@ export async function handleMention(ctx: MentionContext): Promise<void> {
       organizationId,
       userId: ctx.userId,
       userName: user?.name ?? "Unknown",
+      accessToken: ctx.accessToken,
       customInstructions: agentConfig.customInstructions,
     });
 

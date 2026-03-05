@@ -15,7 +15,7 @@ import { checkPermission } from "lib/authz";
 
 import type { WriteToolContext } from "../core/context";
 
-export type PermissionLevel = "editor" | "member";
+type PermissionLevel = "editor" | "member";
 
 /**
  * Require a project-level permission for the current user.

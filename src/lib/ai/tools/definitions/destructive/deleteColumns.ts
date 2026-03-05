@@ -32,7 +32,7 @@ interface DeleteColumnsSnapshotItem {
   taskIds: string[];
 }
 
-export interface DeleteColumnsResult {
+interface DeleteColumnsResult {
   deletedCount: number;
   columns: DeleteColumnsResultItem[];
   affectedIds: string[];

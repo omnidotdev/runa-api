@@ -22,7 +22,7 @@ import type { QueryTasksInput } from "../../core/schemas";
 export const QUERY_TASKS_DESCRIPTION =
   "Search and filter tasks in the current project. Use this to find tasks by keyword, assignee, label, priority, column/status, or to list all tasks.";
 
-export interface QueryTasksResult {
+interface QueryTasksResult {
   tasks: Array<{
     id: string;
     number: number | null;
