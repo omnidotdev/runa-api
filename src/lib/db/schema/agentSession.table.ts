@@ -21,8 +21,12 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
  *
  * - `project_chat`: Standard chat within an existing project (projectId required)
  * - `project_creation`: Project creation flow (projectId null until created)
+ * - `task_execution`: Autonomous code execution on an assigned task
  */
-export type AgentSessionType = "project_chat" | "project_creation";
+export type AgentSessionType =
+  | "project_chat"
+  | "project_creation"
+  | "task_execution";
 
 /**
  * Agent session table.

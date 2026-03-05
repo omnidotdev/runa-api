@@ -422,6 +422,190 @@ const spec_user = {
   executor: executor
 };
 const userCodec = recordCodec(spec_user);
+const columnIdentifier = sql.identifier("public", "column");
+const spec_column = {
+  name: "column",
+  identifier: columnIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    title: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    index: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    icon: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "57908",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "column"
+    }
+  },
+  executor: executor
+};
+const columnCodec = recordCodec(spec_column);
+const projectColumnIdentifier = sql.identifier("public", "project_column");
+const spec_projectColumn = {
+  name: "projectColumn",
+  identifier: projectColumnIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    icon: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    title: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    index: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "58164",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project_column"
+    }
+  },
+  executor: executor
+};
+const projectColumnCodec = recordCodec(spec_projectColumn);
 const projectLabelIdentifier = sql.identifier("public", "project_label");
 const spec_projectLabel = {
   name: "projectLabel",
@@ -710,98 +894,6 @@ const spec_post = {
   executor: executor
 };
 const postCodec = recordCodec(spec_post);
-const columnIdentifier = sql.identifier("public", "column");
-const spec_column = {
-  name: "column",
-  identifier: columnIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    title: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    index: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    icon: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "57908",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "column"
-    }
-  },
-  executor: executor
-};
-const columnCodec = recordCodec(spec_column);
 const userPreferenceIdentifier = sql.identifier("public", "user_preference");
 const spec_userPreference = {
   name: "userPreference",
@@ -1016,35 +1108,16 @@ const spec_agentPersona = {
   executor: executor
 };
 const agentPersonaCodec = recordCodec(spec_agentPersona);
-const projectColumnIdentifier = sql.identifier("public", "project_column");
-const spec_projectColumn = {
-  name: "projectColumn",
-  identifier: projectColumnIdentifier,
+const githubRepositoryIdentifier = sql.identifier("public", "github_repository");
+const spec_githubRepository = {
+  name: "githubRepository",
+  identifier: githubRepositoryIdentifier,
   attributes: {
     __proto__: null,
     id: {
       codec: TYPES.uuid,
       notNull: true,
       hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    icon: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    title: {
-      codec: TYPES.text,
-      notNull: true,
       extensions: {
         __proto__: null,
         canSelect: true,
@@ -1062,8 +1135,49 @@ const spec_projectColumn = {
         canUpdate: true
       }
     },
-    index: {
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    repo_full_name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    repo_id: {
       codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    default_branch: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    enabled: {
+      codec: TYPES.boolean,
       notNull: true,
       hasDefault: true,
       extensions: {
@@ -1097,17 +1211,243 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "58164",
+    oid: "58732",
     isTableLike: true,
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "project_column"
+      name: "github_repository"
     }
   },
   executor: executor
 };
-const projectColumnCodec = recordCodec(spec_projectColumn);
+const githubRepositoryCodec = recordCodec(spec_githubRepository);
+const githubInstallationIdentifier = sql.identifier("public", "github_installation");
+const spec_githubInstallation = {
+  name: "githubInstallation",
+  identifier: githubInstallationIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    installation_id: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    github_org_login: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    github_org_id: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    enabled: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "58713",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "github_installation"
+    }
+  },
+  executor: executor
+};
+const githubInstallationCodec = recordCodec(spec_githubInstallation);
+const taskExecutionIdentifier = sql.identifier("public", "task_execution");
+const spec_taskExecution = {
+  name: "taskExecution",
+  identifier: taskExecutionIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    task_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    session_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    triggered_by: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.varchar,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    metadata: {
+      codec: TYPES.jsonb,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "58753",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "task_execution"
+    }
+  },
+  executor: executor
+};
+const taskExecutionCodec = recordCodec(spec_taskExecution);
 const agentSessionIdentifier = sql.identifier("public", "agent_session");
 const spec_agentSession = {
   name: "agentSession",
@@ -2096,6 +2436,52 @@ const user_resourceOptionsConfig = {
   },
   uniques: userUniques
 };
+const columnUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const column_resourceOptionsConfig = {
+  executor: executor,
+  name: "column",
+  identifier: "main.public.column",
+  from: columnIdentifier,
+  codec: columnCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "column"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: columnUniques
+};
+const project_columnUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const project_column_resourceOptionsConfig = {
+  executor: executor,
+  name: "project_column",
+  identifier: "main.public.project_column",
+  from: projectColumnIdentifier,
+  codec: projectColumnCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project_column"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: project_columnUniques
+};
 const project_labelUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2165,29 +2551,6 @@ const post_resourceOptionsConfig = {
   },
   uniques: postUniques
 };
-const columnUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const column_resourceOptionsConfig = {
-  executor: executor,
-  name: "column",
-  identifier: "main.public.column",
-  from: columnIdentifier,
-  codec: columnCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "column"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: columnUniques
-};
 const user_preferenceUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2223,28 +2586,55 @@ const agent_personaUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
-const project_columnUniques = [{
+const github_repositoryUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
-const project_column_resourceOptionsConfig = {
+const github_repository_resourceOptionsConfig = {
   executor: executor,
-  name: "project_column",
-  identifier: "main.public.project_column",
-  from: projectColumnIdentifier,
-  codec: projectColumnCodec,
+  name: "github_repository",
+  identifier: "main.public.github_repository",
+  from: githubRepositoryIdentifier,
+  codec: githubRepositoryCodec,
   extensions: {
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "project_column"
+      name: "github_repository"
     },
     canSelect: true,
     canInsert: true,
     canUpdate: true,
     canDelete: true
   },
-  uniques: project_columnUniques
+  uniques: github_repositoryUniques
+};
+const github_installationUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const task_executionUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const task_execution_resourceOptionsConfig = {
+  executor: executor,
+  name: "task_execution",
+  identifier: "main.public.task_execution",
+  from: taskExecutionIdentifier,
+  codec: taskExecutionCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "task_execution"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: task_executionUniques
 };
 const agent_sessionUniques = [{
   attributes: ["id"],
@@ -2393,19 +2783,22 @@ const registryConfig = {
     emoji: emojiCodec,
     text: TYPES.text,
     user: userCodec,
+    column: columnCodec,
+    int4: TYPES.int,
+    projectColumn: projectColumnCodec,
     projectLabel: projectLabelCodec,
     label: labelCodec,
     post: postCodec,
-    column: columnCodec,
-    int4: TYPES.int,
     userPreference: userPreferenceCodec,
     textArray: LIST_TYPES.text,
     varchar: TYPES.varchar,
     agentPersona: agentPersonaCodec,
     bool: TYPES.boolean,
-    projectColumn: projectColumnCodec,
-    agentSession: agentSessionCodec,
+    githubRepository: githubRepositoryCodec,
+    githubInstallation: githubInstallationCodec,
+    taskExecution: taskExecutionCodec,
     jsonb: TYPES.jsonb,
+    agentSession: agentSessionCodec,
     settings: settingsCodec,
     timestamp: TYPES.timestamp,
     agentConfig: agentConfigCodec,
@@ -2420,10 +2813,11 @@ const registryConfig = {
     assignee: assignee_resourceOptionsConfig,
     emoji: emoji_resourceOptionsConfig,
     user: user_resourceOptionsConfig,
+    column: column_resourceOptionsConfig,
+    project_column: project_column_resourceOptionsConfig,
     project_label: project_label_resourceOptionsConfig,
     label: label_resourceOptionsConfig,
     post: post_resourceOptionsConfig,
-    column: column_resourceOptionsConfig,
     user_preference: user_preference_resourceOptionsConfig,
     agent_persona: {
       executor: executor,
@@ -2444,7 +2838,27 @@ const registryConfig = {
       },
       uniques: agent_personaUniques
     },
-    project_column: project_column_resourceOptionsConfig,
+    github_repository: github_repository_resourceOptionsConfig,
+    github_installation: {
+      executor: executor,
+      name: "github_installation",
+      identifier: "main.public.github_installation",
+      from: githubInstallationIdentifier,
+      codec: githubInstallationCodec,
+      extensions: {
+        pg: {
+          serviceName: "main",
+          schemaName: "public",
+          name: "github_installation"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        canDelete: true
+      },
+      uniques: github_installationUniques
+    },
+    task_execution: task_execution_resourceOptionsConfig,
     agent_session: agent_session_resourceOptionsConfig,
     settings: {
       executor: executor,
@@ -2536,6 +2950,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["session_id"],
         isReferencee: true
+      },
+      taskExecutionsByTheirSessionId: {
+        localCodec: agentSessionCodec,
+        remoteResourceOptions: task_execution_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["session_id"],
+        isReferencee: true
       }
     },
     assignee: {
@@ -2585,6 +3006,16 @@ const registryConfig = {
         localCodec: emojiCodec,
         remoteResourceOptions: user_resourceOptionsConfig,
         localAttributes: ["user_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    githubRepository: {
+      __proto__: null,
+      projectByMyProjectId: {
+        localCodec: githubRepositoryCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["project_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -2701,6 +3132,20 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["project_id"],
         isReferencee: true
+      },
+      githubRepositoriesByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: github_repository_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isReferencee: true
+      },
+      taskExecutionsByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: task_execution_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isReferencee: true
       }
     },
     projectColumn: {
@@ -2783,6 +3228,44 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["task_id"],
         isReferencee: true
+      },
+      taskExecutionsByTheirTaskId: {
+        localCodec: taskCodec,
+        remoteResourceOptions: task_execution_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["task_id"],
+        isReferencee: true
+      }
+    },
+    taskExecution: {
+      __proto__: null,
+      projectByMyProjectId: {
+        localCodec: taskExecutionCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["project_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      agentSessionByMySessionId: {
+        localCodec: taskExecutionCodec,
+        remoteResourceOptions: agent_session_resourceOptionsConfig,
+        localAttributes: ["session_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      taskByMyTaskId: {
+        localCodec: taskExecutionCodec,
+        remoteResourceOptions: task_resourceOptionsConfig,
+        localAttributes: ["task_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      userByMyTriggeredBy: {
+        localCodec: taskExecutionCodec,
+        remoteResourceOptions: user_resourceOptionsConfig,
+        localAttributes: ["triggered_by"],
+        remoteAttributes: ["id"],
+        isUnique: true
       }
     },
     taskLabel: {
@@ -2852,6 +3335,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["user_id"],
         isReferencee: true
+      },
+      taskExecutionsByTheirTriggeredBy: {
+        localCodec: userCodec,
+        remoteResourceOptions: task_execution_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["triggered_by"],
+        isReferencee: true
       }
     },
     userPreference: {
@@ -2893,13 +3383,16 @@ const Query_assigneePlan = (_$root, {
 });
 const resource_emojiPgResource = registry.pgResources["emoji"];
 const resource_userPgResource = registry.pgResources["user"];
+const resource_columnPgResource = registry.pgResources["column"];
+const resource_project_columnPgResource = registry.pgResources["project_column"];
 const resource_project_labelPgResource = registry.pgResources["project_label"];
 const resource_labelPgResource = registry.pgResources["label"];
 const resource_postPgResource = registry.pgResources["post"];
-const resource_columnPgResource = registry.pgResources["column"];
 const resource_user_preferencePgResource = registry.pgResources["user_preference"];
 const resource_agent_personaPgResource = registry.pgResources["agent_persona"];
-const resource_project_columnPgResource = registry.pgResources["project_column"];
+const resource_github_repositoryPgResource = registry.pgResources["github_repository"];
+const resource_github_installationPgResource = registry.pgResources["github_installation"];
+const resource_task_executionPgResource = registry.pgResources["task_execution"];
 const resource_agent_sessionPgResource = registry.pgResources["agent_session"];
 const resource_settingsPgResource = registry.pgResources["settings"];
 const resource_agent_configPgResource = registry.pgResources["agent_config"];
@@ -3005,6 +3498,28 @@ const nodeFetcher_User = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_User));
   return nodeIdHandler_User.get(nodeIdHandler_User.getSpec($decoded));
 };
+const nodeIdHandler_Column = makeTableNodeIdHandler({
+  typeName: "Column",
+  identifier: "Column",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_columnPgResource,
+  pk: columnUniques[0].attributes
+});
+const nodeFetcher_Column = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Column));
+  return nodeIdHandler_Column.get(nodeIdHandler_Column.getSpec($decoded));
+};
+const nodeIdHandler_ProjectColumn = makeTableNodeIdHandler({
+  typeName: "ProjectColumn",
+  identifier: "ProjectColumn",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_project_columnPgResource,
+  pk: project_columnUniques[0].attributes
+});
+const nodeFetcher_ProjectColumn = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ProjectColumn));
+  return nodeIdHandler_ProjectColumn.get(nodeIdHandler_ProjectColumn.getSpec($decoded));
+};
 const nodeIdHandler_ProjectLabel = makeTableNodeIdHandler({
   typeName: "ProjectLabel",
   identifier: "ProjectLabel",
@@ -3038,17 +3553,6 @@ const nodeFetcher_Post = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Post));
   return nodeIdHandler_Post.get(nodeIdHandler_Post.getSpec($decoded));
 };
-const nodeIdHandler_Column = makeTableNodeIdHandler({
-  typeName: "Column",
-  identifier: "Column",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_columnPgResource,
-  pk: columnUniques[0].attributes
-});
-const nodeFetcher_Column = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Column));
-  return nodeIdHandler_Column.get(nodeIdHandler_Column.getSpec($decoded));
-};
 const nodeIdHandler_UserPreference = makeTableNodeIdHandler({
   typeName: "UserPreference",
   identifier: "UserPreference",
@@ -3071,16 +3575,38 @@ const nodeFetcher_AgentPersona = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AgentPersona));
   return nodeIdHandler_AgentPersona.get(nodeIdHandler_AgentPersona.getSpec($decoded));
 };
-const nodeIdHandler_ProjectColumn = makeTableNodeIdHandler({
-  typeName: "ProjectColumn",
-  identifier: "ProjectColumn",
+const nodeIdHandler_GithubRepository = makeTableNodeIdHandler({
+  typeName: "GithubRepository",
+  identifier: "GithubRepository",
   nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_project_columnPgResource,
-  pk: project_columnUniques[0].attributes
+  resource: resource_github_repositoryPgResource,
+  pk: github_repositoryUniques[0].attributes
 });
-const nodeFetcher_ProjectColumn = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ProjectColumn));
-  return nodeIdHandler_ProjectColumn.get(nodeIdHandler_ProjectColumn.getSpec($decoded));
+const nodeFetcher_GithubRepository = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_GithubRepository));
+  return nodeIdHandler_GithubRepository.get(nodeIdHandler_GithubRepository.getSpec($decoded));
+};
+const nodeIdHandler_GithubInstallation = makeTableNodeIdHandler({
+  typeName: "GithubInstallation",
+  identifier: "GithubInstallation",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_github_installationPgResource,
+  pk: github_installationUniques[0].attributes
+});
+const nodeFetcher_GithubInstallation = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_GithubInstallation));
+  return nodeIdHandler_GithubInstallation.get(nodeIdHandler_GithubInstallation.getSpec($decoded));
+};
+const nodeIdHandler_TaskExecution = makeTableNodeIdHandler({
+  typeName: "TaskExecution",
+  identifier: "TaskExecution",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_task_executionPgResource,
+  pk: task_executionUniques[0].attributes
+});
+const nodeFetcher_TaskExecution = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TaskExecution));
+  return nodeIdHandler_TaskExecution.get(nodeIdHandler_TaskExecution.getSpec($decoded));
 };
 const nodeIdHandler_AgentSession = makeTableNodeIdHandler({
   typeName: "AgentSession",
@@ -3218,13 +3744,16 @@ const nodeIdHandlerByTypeName = {
   Assignee: nodeIdHandler_Assignee,
   Emoji: nodeIdHandler_Emoji,
   User: nodeIdHandler_User,
+  Column: nodeIdHandler_Column,
+  ProjectColumn: nodeIdHandler_ProjectColumn,
   ProjectLabel: nodeIdHandler_ProjectLabel,
   Label: nodeIdHandler_Label,
   Post: nodeIdHandler_Post,
-  Column: nodeIdHandler_Column,
   UserPreference: nodeIdHandler_UserPreference,
   AgentPersona: nodeIdHandler_AgentPersona,
-  ProjectColumn: nodeIdHandler_ProjectColumn,
+  GithubRepository: nodeIdHandler_GithubRepository,
+  GithubInstallation: nodeIdHandler_GithubInstallation,
+  TaskExecution: nodeIdHandler_TaskExecution,
   AgentSession: nodeIdHandler_AgentSession,
   Setting: nodeIdHandler_Setting,
   AgentConfig: nodeIdHandler_AgentConfig,
@@ -4081,6 +4610,12 @@ const resolveAnyGreaterThanOrEqualTo = (i, v) => sql`${v} <= ANY (${i})`;
 function AgentActivityDistinctCountAggregateFilter_organizationIdApply($parent, input) {
   return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "organization_id", TYPES.bigint, TYPES.text, $parent, input);
 }
+function AgentActivityDistinctCountAggregateFilter_sessionIdApply($parent, input) {
+  return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "session_id", TYPES.bigint, TYPES.uuid, $parent, input);
+}
+function TaskExecutionDistinctCountAggregateFilter_metadataApply($parent, input) {
+  return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "metadata", TYPES.bigint, TYPES.jsonb, $parent, input);
+}
 function ColumnDistinctCountAggregateFilter_iconApply($parent, input) {
   return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "icon", TYPES.bigint, TYPES.text, $parent, input);
 }
@@ -4217,6 +4752,8 @@ const relation4 = registry.pgRelations["project"]["userPreferencesByTheirProject
 const relation5 = registry.pgRelations["project"]["projectProjectLabelsByTheirProjectId"];
 const relation6 = registry.pgRelations["project"]["agentActivitiesByTheirProjectId"];
 const relation7 = registry.pgRelations["project"]["agentSessionsByTheirProjectId"];
+const relation8 = registry.pgRelations["project"]["githubRepositoriesByTheirProjectId"];
+const relation9 = registry.pgRelations["project"]["taskExecutionsByTheirProjectId"];
 const Task_authorIdPlan = $record => {
   return $record.get("author_id");
 };
@@ -4316,8 +4853,20 @@ const PostOrderBy_AUTHOR_ID_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
-const relation8 = registry.pgRelations["post"]["postsByTheirParentId"];
-const relation9 = registry.pgRelations["post"]["emojisByTheirPostId"];
+const PostOrderBy_TASK_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "task_id",
+    direction: "ASC"
+  });
+};
+const PostOrderBy_TASK_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "task_id",
+    direction: "DESC"
+  });
+};
+const relation10 = registry.pgRelations["post"]["postsByTheirParentId"];
+const relation11 = registry.pgRelations["post"]["emojisByTheirPostId"];
 function PostDistinctCountAggregates_titlePlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.text, "title", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
 }
@@ -4345,9 +4894,10 @@ const TaskOrderBy_PROJECT_ID_DESCApply = queryBuilder => {
   });
   queryBuilder.setOrderIsUnique();
 };
-const relation10 = registry.pgRelations["task"]["assigneesByTheirTaskId"];
-const relation11 = registry.pgRelations["task"]["postsByTheirTaskId"];
-const relation12 = registry.pgRelations["task"]["taskLabelsByTheirTaskId"];
+const relation12 = registry.pgRelations["task"]["assigneesByTheirTaskId"];
+const relation13 = registry.pgRelations["task"]["postsByTheirTaskId"];
+const relation14 = registry.pgRelations["task"]["taskLabelsByTheirTaskId"];
+const relation15 = registry.pgRelations["task"]["taskExecutionsByTheirTaskId"];
 const UserPreference_viewModePlan = $record => {
   return $record.get("view_mode");
 };
@@ -4400,8 +4950,52 @@ const UserPreferenceOrderBy_COLOR_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+const AgentActivity_sessionIdPlan = $record => {
+  return $record.get("session_id");
+};
+const AgentActivity_sessionPlan = $record => resource_agent_sessionPgResource.get({
+  id: $record.get("session_id")
+});
 const JSONSerialize = value => value;
-const relation13 = registry.pgRelations["agentSession"]["agentActivitiesByTheirSessionId"];
+const AgentActivityCondition_sessionIdApply = ($condition, val) => applyAttributeCondition("session_id", TYPES.uuid, $condition, val);
+const AgentActivityOrderBy_SESSION_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "session_id",
+    direction: "ASC"
+  });
+};
+const AgentActivityOrderBy_SESSION_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "session_id",
+    direction: "DESC"
+  });
+};
+const AgentActivityOrderBy_STATUS_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "status",
+    direction: "ASC"
+  });
+};
+const AgentActivityOrderBy_STATUS_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "status",
+    direction: "DESC"
+  });
+};
+function TaskExecutionDistinctCountAggregates_sessionIdPlan($pgSelectSingle) {
+  return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "session_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+}
+function TaskExecutionDistinctCountAggregates_metadataPlan($pgSelectSingle) {
+  return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "metadata", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+}
+function TaskExecutionGroupBy_SESSION_IDApply($pgSelect) {
+  applyGroupByAttribute("session_id", TYPES.uuid, $pgSelect);
+}
+function TaskExecutionGroupBy_METADATAApply($pgSelect) {
+  applyGroupByAttribute("metadata", TYPES.jsonb, $pgSelect);
+}
+const relation16 = registry.pgRelations["agentSession"]["agentActivitiesByTheirSessionId"];
+const relation17 = registry.pgRelations["agentSession"]["taskExecutionsByTheirSessionId"];
 function ColumnSumAggregates_indexPlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.int, "index", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
 }
@@ -4464,7 +5058,7 @@ const ColumnOrderBy_ICON_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
-const relation14 = registry.pgRelations["column"]["tasksByTheirColumnId"];
+const relation18 = registry.pgRelations["column"]["tasksByTheirColumnId"];
 function LabelDistinctCountAggregates_colorPlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.text, "color", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
 }
@@ -4472,35 +5066,36 @@ function LabelGroupBy_COLORApply($pgSelect) {
   applyGroupByAttribute("color", TYPES.text, $pgSelect);
 }
 const LabelCondition_colorApply = ($condition, val) => applyAttributeCondition("color", TYPES.text, $condition, val);
-const relation15 = registry.pgRelations["label"]["taskLabelsByTheirLabelId"];
-const relation16 = registry.pgRelations["user"]["assigneesByTheirUserId"];
-const relation17 = registry.pgRelations["user"]["postsByTheirAuthorId"];
-const relation18 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
-const relation19 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
-const relation20 = registry.pgRelations["user"]["emojisByTheirUserId"];
-const relation21 = registry.pgRelations["user"]["agentActivitiesByTheirUserId"];
-const relation22 = registry.pgRelations["user"]["agentSessionsByTheirUserId"];
-const relation23 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
-function AgentPersonaDistinctCountAggregates_enabledPlan($pgSelectSingle) {
+const relation19 = registry.pgRelations["label"]["taskLabelsByTheirLabelId"];
+function GithubRepositoryDistinctCountAggregates_enabledPlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "enabled", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
 }
-function AgentPersonaGroupBy_ENABLEDApply($pgSelect) {
+function GithubRepositoryGroupBy_ENABLEDApply($pgSelect) {
   applyGroupByAttribute("enabled", TYPES.boolean, $pgSelect);
 }
-const AgentPersonaCondition_enabledApply = ($condition, val) => applyAttributeCondition("enabled", TYPES.boolean, $condition, val);
-const AgentPersonaOrderBy_ENABLED_ASCApply = queryBuilder => {
+const GithubRepositoryCondition_enabledApply = ($condition, val) => applyAttributeCondition("enabled", TYPES.boolean, $condition, val);
+const GithubRepositoryOrderBy_ENABLED_ASCApply = queryBuilder => {
   queryBuilder.orderBy({
     attribute: "enabled",
     direction: "ASC"
   });
 };
-const AgentPersonaOrderBy_ENABLED_DESCApply = queryBuilder => {
+const GithubRepositoryOrderBy_ENABLED_DESCApply = queryBuilder => {
   queryBuilder.orderBy({
     attribute: "enabled",
     direction: "DESC"
   });
 };
-const relation24 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
+const relation20 = registry.pgRelations["user"]["assigneesByTheirUserId"];
+const relation21 = registry.pgRelations["user"]["postsByTheirAuthorId"];
+const relation22 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
+const relation23 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
+const relation24 = registry.pgRelations["user"]["emojisByTheirUserId"];
+const relation25 = registry.pgRelations["user"]["agentActivitiesByTheirUserId"];
+const relation26 = registry.pgRelations["user"]["agentSessionsByTheirUserId"];
+const relation27 = registry.pgRelations["user"]["taskExecutionsByTheirTriggeredBy"];
+const relation28 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
+const relation29 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
 const SettingOrderBy_ORGANIZATION_ID_ASCApply = queryBuilder => {
   queryBuilder.orderBy({
     attribute: "organization_id",
@@ -4680,13 +5275,73 @@ const planWrapper5 = (plan, _, fieldArgs) => {
   return plan();
 };
 function oldPlan6(_, args) {
-  const $insert = pgInsertSingle(resource_labelPgResource);
+  const $insert = pgInsertSingle(resource_columnPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
 const planWrapper6 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "column"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const projectId = input.projectId;
+      if (!(await checkPermission(observer.identityProviderId, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+      const project = await db.query.projects.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, projectId);
+        },
+        with: {
+          columns: !0
+        }
+      });
+      if (!project) throw Error("Project not found");
+      if (!(await isWithinLimit({
+        organizationId: project.organizationId
+      }, FEATURE_KEYS.MAX_COLUMNS, project.columns.length, billingBypassOrgIds))) throw Error("Maximum number of columns reached");
+    }
+  });
+  return plan();
+};
+function oldPlan7(_, args) {
+  const $insert = pgInsertSingle(resource_project_columnPgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper7 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "projectColumn"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const organizationId = input.organizationId;
+      if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+function oldPlan8(_, args) {
+  const $insert = pgInsertSingle(resource_labelPgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper8 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "label"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -4723,14 +5378,14 @@ const planWrapper6 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan9(_, args) {
+function oldPlan11(_, args) {
   const $insert = pgInsertSingle(resource_postPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper7 = (plan, _, fieldArgs) => {
+const planWrapper9 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "post"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -4757,25 +5412,25 @@ const planWrapper7 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan8(...planParams) {
+function oldPlan10(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan9.apply(this, args);
+        $prev = oldPlan11.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan9)}`);
+${String(oldPlan11)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper8 = (plan, _, fieldArgs) => {
+const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "post"]),
     $observer = context().get("observer"),
     $accessToken = context().get("accessToken");
@@ -4800,25 +5455,25 @@ const planWrapper8 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan7(...planParams) {
+function oldPlan9(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan8.apply(this, args);
+        $prev = oldPlan10.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan8)}`);
+${String(oldPlan10)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper8(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper9 = (plan, $record) => {
+const planWrapper11 = (plan, $record) => {
   if (!false) return plan();
   const $db = context().get("db");
   sideEffect([$record, $db], async ([record, db]) => {
@@ -4841,80 +5496,20 @@ const planWrapper9 = (plan, $record) => {
   });
   return plan();
 };
-function oldPlan10(_, args) {
-  const $insert = pgInsertSingle(resource_columnPgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper10 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "column"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const projectId = input.projectId;
-      if (!(await checkPermission(observer.identityProviderId, "project", projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-      const project = await db.query.projects.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, projectId);
-        },
-        with: {
-          columns: !0
-        }
-      });
-      if (!project) throw Error("Project not found");
-      if (!(await isWithinLimit({
-        organizationId: project.organizationId
-      }, FEATURE_KEYS.MAX_COLUMNS, project.columns.length, billingBypassOrgIds))) throw Error("Maximum number of columns reached");
-    }
-  });
-  return plan();
-};
-function oldPlan11(_, args) {
+function oldPlan12(_, args) {
   const $insert = pgInsertSingle(resource_user_preferencePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper11 = (plan, _, fieldArgs) => {
+const planWrapper12 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "userPreference"]),
     $observer = context().get("observer"),
     $db = context().get("db");
   sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
     if (input.userId !== observer.id) throw Error("Unauthorized");
-  });
-  return plan();
-};
-function oldPlan12(_, args) {
-  const $insert = pgInsertSingle(resource_project_columnPgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper12 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "projectColumn"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const organizationId = input.organizationId;
-      if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    }
   });
   return plan();
 };
@@ -5198,16 +5793,12 @@ const planWrapper19 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_ProjectLabel = args => {
+const specFromArgs_Column = args => {
   const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_ProjectLabel, $nodeId);
-};
-const specFromArgs_Label = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Label, $nodeId);
+  return specFromNodeId(nodeIdHandler_Column, $nodeId);
 };
 const oldPlan20 = (_$root, args) => {
-  const $update = pgUpdateSingle(resource_labelPgResource, {
+  const $update = pgUpdateSingle(resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
   args.apply($update);
@@ -5216,6 +5807,88 @@ const oldPlan20 = (_$root, args) => {
   });
 };
 const planWrapper20 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const column = await db.query.columns.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          projectId: !0
+        }
+      });
+      if (!column) throw Error("Column not found");
+      if (!(await checkPermission(observer.identityProviderId, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_ProjectColumn = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
+};
+const oldPlan21 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_project_columnPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper21 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const projectColumn = await db.query.projectColumns.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          organizationId: !0
+        }
+      });
+      if (!projectColumn) throw Error("Project column not found");
+      if (!(await checkPermission(observer.identityProviderId, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_ProjectLabel = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ProjectLabel, $nodeId);
+};
+const specFromArgs_Label = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Label, $nodeId);
+};
+const oldPlan22 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_labelPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper22 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5250,7 +5923,7 @@ const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan22 = (_$root, args) => {
+const oldPlan24 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5259,7 +5932,7 @@ const oldPlan22 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper21 = (plan, _, fieldArgs) => {
+const planWrapper23 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5289,68 +5962,29 @@ const planWrapper21 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan21(...planParams) {
+function oldPlan23(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan22.apply(this, args);
+        $prev = oldPlan24.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan22)}`);
+${String(oldPlan24)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const specFromArgs_Column = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Column, $nodeId);
-};
-const oldPlan23 = (_$root, args) => {
-  const $update = pgUpdateSingle(resource_columnPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper23 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const column = await db.query.columns.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          projectId: !0
-        }
-      });
-      if (!column) throw Error("Column not found");
-      if (!(await checkPermission(observer.identityProviderId, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
 const specFromArgs_UserPreference = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
 };
-const oldPlan24 = (_$root, args) => {
+const oldPlan25 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5359,7 +5993,7 @@ const oldPlan24 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper24 = (plan, _, fieldArgs) => {
+const planWrapper25 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5383,44 +6017,17 @@ const specFromArgs_AgentPersona = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AgentPersona, $nodeId);
 };
-const specFromArgs_ProjectColumn = args => {
+const specFromArgs_GithubRepository = args => {
   const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
+  return specFromNodeId(nodeIdHandler_GithubRepository, $nodeId);
 };
-const oldPlan25 = (_$root, args) => {
-  const $update = pgUpdateSingle(resource_project_columnPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
+const specFromArgs_GithubInstallation = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_GithubInstallation, $nodeId);
 };
-const planWrapper25 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const projectColumn = await db.query.projectColumns.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          organizationId: !0
-        }
-      });
-      if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission(observer.identityProviderId, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    }
-  });
-  return plan();
+const specFromArgs_TaskExecution = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_TaskExecution, $nodeId);
 };
 const specFromArgs_AgentSession = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -5699,7 +6306,7 @@ const planWrapper34 = (plan, _, fieldArgs) => {
   return plan();
 };
 const oldPlan35 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_labelPgResource, {
+  const $delete = pgDeleteSingle(resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
   args.apply($delete);
@@ -5708,6 +6315,76 @@ const oldPlan35 = (_$root, args) => {
   });
 };
 const planWrapper35 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const column = await db.query.columns.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          projectId: !0
+        }
+      });
+      if (!column) throw Error("Column not found");
+      if (!(await checkPermission(observer.identityProviderId, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const oldPlan36 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_project_columnPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper36 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const projectColumn = await db.query.projectColumns.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          organizationId: !0
+        }
+      });
+      if (!projectColumn) throw Error("Project column not found");
+      if (!(await checkPermission(observer.identityProviderId, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const oldPlan37 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_labelPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper37 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5738,7 +6415,7 @@ const planWrapper35 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan37 = (_$root, args) => {
+const oldPlan39 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5747,7 +6424,7 @@ const oldPlan37 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper36 = (plan, _, fieldArgs) => {
+const planWrapper38 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5777,25 +6454,25 @@ const planWrapper36 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan36(...planParams) {
+function oldPlan38(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan37.apply(this, args);
+        $prev = oldPlan39.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan37)}`);
+${String(oldPlan39)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper37 = (plan, _, fieldArgs) => {
+const planWrapper39 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([postId]) => {
@@ -5803,42 +6480,7 @@ const planWrapper37 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan38 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_columnPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper38 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const column = await db.query.columns.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          projectId: !0
-        }
-      });
-      if (!column) throw Error("Column not found");
-      if (!(await checkPermission(observer.identityProviderId, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const oldPlan39 = (_$root, args) => {
+const oldPlan40 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5847,7 +6489,7 @@ const oldPlan39 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper39 = (plan, _, fieldArgs) => {
+const planWrapper40 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5863,41 +6505,6 @@ const planWrapper39 = (plan, _, fieldArgs) => {
       });
       if (!preference) throw Error("Not found");
       if (preference.userId !== observer.id) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const oldPlan40 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_project_columnPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper40 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const projectColumn = await db.query.projectColumns.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          organizationId: !0
-        }
-      });
-      if (!projectColumn) throw Error("Project column not found");
-      if (!(await checkPermission(observer.identityProviderId, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6135,21 +6742,26 @@ function UserInput_avatarUrlApply(obj, val, info) {
 function UserInput_emailApply(obj, val, info) {
   obj.set("email", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateColumnPayload_columnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_columnPgResource, columnUniques[0].attributes, $mutation, fieldArgs);
+function ColumnInput_titleApply(obj, val, info) {
+  obj.set("title", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ColumnInput_indexApply(obj, val, info) {
+  obj.set("index", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ColumnInput_iconApply(obj, val, info) {
+  obj.set("icon", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateProjectColumnPayload_projectColumnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_project_columnPgResource, project_columnUniques[0].attributes, $mutation, fieldArgs);
+function ProjectColumnInput_organizationIdApply(obj, val, info) {
+  obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateProjectLabelPayload_projectLabelEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_project_labelPgResource, project_labelUniques[0].attributes, $mutation, fieldArgs);
 function ProjectLabelInput_colorApply(obj, val, info) {
   obj.set("color", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function ProjectLabelInput_iconApply(obj, val, info) {
-  obj.set("icon", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function ProjectLabelInput_organizationIdApply(obj, val, info) {
-  obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateLabelPayload_labelEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_labelPgResource, labelUniques[0].attributes, $mutation, fieldArgs);
 const CreatePostPayload_postEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_postPgResource, postUniques[0].attributes, $mutation, fieldArgs);
-function PostInput_titleApply(obj, val, info) {
-  obj.set("title", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function PostInput_descriptionApply(obj, val, info) {
   obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -6158,10 +6770,6 @@ function PostInput_authorIdApply(obj, val, info) {
 }
 function PostInput_parentIdApply(obj, val, info) {
   obj.set("parent_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateColumnPayload_columnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_columnPgResource, columnUniques[0].attributes, $mutation, fieldArgs);
-function ColumnInput_indexApply(obj, val, info) {
-  obj.set("index", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateUserPreferencePayload_userPreferenceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_user_preferencePgResource, user_preferenceUniques[0].attributes, $mutation, fieldArgs);
 function UserPreferenceInput_hiddenColumnIdsApply(obj, val, info) {
@@ -6177,7 +6785,39 @@ function AgentPersonaInput_systemPromptApply(obj, val, info) {
 function AgentPersonaInput_enabledApply(obj, val, info) {
   obj.set("enabled", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateProjectColumnPayload_projectColumnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_project_columnPgResource, project_columnUniques[0].attributes, $mutation, fieldArgs);
+const CreateGithubRepositoryPayload_githubRepositoryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_github_repositoryPgResource, github_repositoryUniques[0].attributes, $mutation, fieldArgs);
+function GithubRepositoryInput_repoFullNameApply(obj, val, info) {
+  obj.set("repo_full_name", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function GithubRepositoryInput_repoIdApply(obj, val, info) {
+  obj.set("repo_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function GithubRepositoryInput_defaultBranchApply(obj, val, info) {
+  obj.set("default_branch", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateGithubInstallationPayload_githubInstallationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_github_installationPgResource, github_installationUniques[0].attributes, $mutation, fieldArgs);
+function GithubInstallationInput_installationIdApply(obj, val, info) {
+  obj.set("installation_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function GithubInstallationInput_githubOrgLoginApply(obj, val, info) {
+  obj.set("github_org_login", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function GithubInstallationInput_githubOrgIdApply(obj, val, info) {
+  obj.set("github_org_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateTaskExecutionPayload_taskExecutionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_task_executionPgResource, task_executionUniques[0].attributes, $mutation, fieldArgs);
+function TaskExecutionInput_sessionIdApply(obj, val, info) {
+  obj.set("session_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TaskExecutionInput_triggeredByApply(obj, val, info) {
+  obj.set("triggered_by", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TaskExecutionInput_statusApply(obj, val, info) {
+  obj.set("status", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TaskExecutionInput_metadataApply(obj, val, info) {
+  obj.set("metadata", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateAgentSessionPayload_agentSessionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_agent_sessionPgResource, agent_sessionUniques[0].attributes, $mutation, fieldArgs);
 function AgentSessionInput_typeApply(obj, val, info) {
   obj.set("type", bakedInputRuntime(info.schema, info.field.type, val));
@@ -6187,9 +6827,6 @@ function AgentSessionInput_messagesApply(obj, val, info) {
 }
 function AgentSessionInput_toolCallCountApply(obj, val, info) {
   obj.set("tool_call_count", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AgentSessionInput_metadataApply(obj, val, info) {
-  obj.set("metadata", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateSettingPayload_settingEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_settingsPgResource, settingsUniques[0].attributes, $mutation, fieldArgs);
 function SettingInput_billingAccountIdApply(obj, val, info) {
@@ -6259,9 +6896,6 @@ function TaskInput_numberApply(obj, val, info) {
   obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateAgentActivityPayload_agentActivityEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_agent_activityPgResource, agent_activityUniques[0].attributes, $mutation, fieldArgs);
-function AgentActivityInput_sessionIdApply(obj, val, info) {
-  obj.set("session_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function AgentActivityInput_toolNameApply(obj, val, info) {
   obj.set("tool_name", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -6276,9 +6910,6 @@ function AgentActivityInput_requiresApprovalApply(obj, val, info) {
 }
 function AgentActivityInput_approvalStatusApply(obj, val, info) {
   obj.set("approval_status", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AgentActivityInput_statusApply(obj, val, info) {
-  obj.set("status", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function AgentActivityInput_errorMessageApply(obj, val, info) {
   obj.set("error_message", bakedInputRuntime(info.schema, info.field.type, val));
@@ -6335,6 +6966,12 @@ type Query implements Node {
   """Get a single \`User\`."""
   userByIdentityProviderId(identityProviderId: UUID!): User
 
+  """Get a single \`Column\`."""
+  column(rowId: UUID!): Column
+
+  """Get a single \`ProjectColumn\`."""
+  projectColumn(rowId: UUID!): ProjectColumn
+
   """Get a single \`ProjectLabel\`."""
   projectLabel(rowId: UUID!): ProjectLabel
 
@@ -6343,9 +6980,6 @@ type Query implements Node {
 
   """Get a single \`Post\`."""
   post(rowId: UUID!): Post
-
-  """Get a single \`Column\`."""
-  column(rowId: UUID!): Column
 
   """Get a single \`UserPreference\`."""
   userPreference(rowId: UUID!): UserPreference
@@ -6356,8 +6990,14 @@ type Query implements Node {
   """Get a single \`AgentPersona\`."""
   agentPersona(rowId: UUID!): AgentPersona
 
-  """Get a single \`ProjectColumn\`."""
-  projectColumn(rowId: UUID!): ProjectColumn
+  """Get a single \`GithubRepository\`."""
+  githubRepository(rowId: UUID!): GithubRepository
+
+  """Get a single \`GithubInstallation\`."""
+  githubInstallation(rowId: UUID!): GithubInstallation
+
+  """Get a single \`TaskExecution\`."""
+  taskExecution(rowId: UUID!): TaskExecution
 
   """Get a single \`AgentSession\`."""
   agentSession(rowId: UUID!): AgentSession
@@ -6421,6 +7061,20 @@ type Query implements Node {
     id: ID!
   ): User
 
+  """Reads a single \`Column\` using its globally unique \`ID\`."""
+  columnById(
+    """The globally unique \`ID\` to be used in selecting a single \`Column\`."""
+    id: ID!
+  ): Column
+
+  """Reads a single \`ProjectColumn\` using its globally unique \`ID\`."""
+  projectColumnById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`ProjectColumn\`.
+    """
+    id: ID!
+  ): ProjectColumn
+
   """Reads a single \`ProjectLabel\` using its globally unique \`ID\`."""
   projectLabelById(
     """
@@ -6441,12 +7095,6 @@ type Query implements Node {
     id: ID!
   ): Post
 
-  """Reads a single \`Column\` using its globally unique \`ID\`."""
-  columnById(
-    """The globally unique \`ID\` to be used in selecting a single \`Column\`."""
-    id: ID!
-  ): Column
-
   """Reads a single \`UserPreference\` using its globally unique \`ID\`."""
   userPreferenceById(
     """
@@ -6463,13 +7111,29 @@ type Query implements Node {
     id: ID!
   ): AgentPersona
 
-  """Reads a single \`ProjectColumn\` using its globally unique \`ID\`."""
-  projectColumnById(
+  """Reads a single \`GithubRepository\` using its globally unique \`ID\`."""
+  githubRepositoryById(
     """
-    The globally unique \`ID\` to be used in selecting a single \`ProjectColumn\`.
+    The globally unique \`ID\` to be used in selecting a single \`GithubRepository\`.
     """
     id: ID!
-  ): ProjectColumn
+  ): GithubRepository
+
+  """Reads a single \`GithubInstallation\` using its globally unique \`ID\`."""
+  githubInstallationById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`GithubInstallation\`.
+    """
+    id: ID!
+  ): GithubInstallation
+
+  """Reads a single \`TaskExecution\` using its globally unique \`ID\`."""
+  taskExecutionById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`TaskExecution\`.
+    """
+    id: ID!
+  ): TaskExecution
 
   """Reads a single \`AgentSession\` using its globally unique \`ID\`."""
   agentSessionById(
@@ -6683,6 +7347,74 @@ type Query implements Node {
     orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserConnection
 
+  """Reads and enables pagination through a set of \`Column\`."""
+  columns(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ColumnFilter
+
+    """The method to use when ordering \`Column\`."""
+    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ColumnConnection
+
+  """Reads and enables pagination through a set of \`ProjectColumn\`."""
+  projectColumns(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectColumnFilter
+
+    """The method to use when ordering \`ProjectColumn\`."""
+    orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectColumnConnection
+
   """Reads and enables pagination through a set of \`ProjectLabel\`."""
   projectLabels(
     """Only read the first \`n\` values of the set."""
@@ -6785,40 +7517,6 @@ type Query implements Node {
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection
 
-  """Reads and enables pagination through a set of \`Column\`."""
-  columns(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ColumnCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ColumnFilter
-
-    """The method to use when ordering \`Column\`."""
-    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ColumnConnection
-
   """Reads and enables pagination through a set of \`UserPreference\`."""
   userPreferences(
     """Only read the first \`n\` values of the set."""
@@ -6887,8 +7585,8 @@ type Query implements Node {
     orderBy: [AgentPersonaOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentPersonaConnection
 
-  """Reads and enables pagination through a set of \`ProjectColumn\`."""
-  projectColumns(
+  """Reads and enables pagination through a set of \`GithubRepository\`."""
+  githubRepositories(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -6910,16 +7608,84 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: ProjectColumnCondition
+    condition: GithubRepositoryCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: ProjectColumnFilter
+    filter: GithubRepositoryFilter
 
-    """The method to use when ordering \`ProjectColumn\`."""
-    orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectColumnConnection
+    """The method to use when ordering \`GithubRepository\`."""
+    orderBy: [GithubRepositoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryConnection
+
+  """Reads and enables pagination through a set of \`GithubInstallation\`."""
+  githubInstallations(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GithubInstallationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: GithubInstallationFilter
+
+    """The method to use when ordering \`GithubInstallation\`."""
+    orderBy: [GithubInstallationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GithubInstallationConnection
+
+  """Reads and enables pagination through a set of \`TaskExecution\`."""
+  taskExecutions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering \`TaskExecution\`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection
 
   """Reads and enables pagination through a set of \`AgentSession\`."""
   agentSessions(
@@ -7432,6 +8198,74 @@ type Project implements Node {
     """The method to use when ordering \`AgentSession\`."""
     orderBy: [AgentSessionOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentSessionConnection!
+
+  """Reads and enables pagination through a set of \`GithubRepository\`."""
+  githubRepositories(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GithubRepositoryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: GithubRepositoryFilter
+
+    """The method to use when ordering \`GithubRepository\`."""
+    orderBy: [GithubRepositoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryConnection!
+
+  """Reads and enables pagination through a set of \`TaskExecution\`."""
+  taskExecutions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering \`TaskExecution\`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 type ProjectColumn implements Node {
@@ -7951,6 +8785,18 @@ input ProjectFilter {
   """Some related \`agentSessions\` exist."""
   agentSessionsExist: Boolean
 
+  """Filter by the object’s \`githubRepositories\` relation."""
+  githubRepositories: ProjectToManyGithubRepositoryFilter
+
+  """Some related \`githubRepositories\` exist."""
+  githubRepositoriesExist: Boolean
+
+  """Filter by the object’s \`taskExecutions\` relation."""
+  taskExecutions: ProjectToManyTaskExecutionFilter
+
+  """Some related \`taskExecutions\` exist."""
+  taskExecutionsExist: Boolean
+
   """Filter by the object’s \`projectColumn\` relation."""
   projectColumn: ProjectColumnFilter
 
@@ -8412,6 +9258,12 @@ input TaskFilter {
   """Some related \`taskLabels\` exist."""
   taskLabelsExist: Boolean
 
+  """Filter by the object’s \`taskExecutions\` relation."""
+  taskExecutions: TaskToManyTaskExecutionFilter
+
+  """Some related \`taskExecutions\` exist."""
+  taskExecutionsExist: Boolean
+
   """Filter by the object’s \`author\` relation."""
   author: UserFilter
 
@@ -8558,6 +9410,12 @@ input UserFilter {
 
   """Some related \`agentSessions\` exist."""
   agentSessionsExist: Boolean
+
+  """Filter by the object’s \`taskExecutionsByTriggeredBy\` relation."""
+  taskExecutionsByTriggeredBy: UserToManyTaskExecutionFilter
+
+  """Some related \`taskExecutionsByTriggeredBy\` exist."""
+  taskExecutionsByTriggeredByExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -9315,6 +10173,12 @@ input AgentSessionFilter {
   """Some related \`agentActivitiesBySessionId\` exist."""
   agentActivitiesBySessionIdExist: Boolean
 
+  """Filter by the object’s \`taskExecutionsBySessionId\` relation."""
+  taskExecutionsBySessionId: AgentSessionToManyTaskExecutionFilter
+
+  """Some related \`taskExecutionsBySessionId\` exist."""
+  taskExecutionsBySessionIdExist: Boolean
+
   """Filter by the object’s \`project\` relation."""
   project: ProjectFilter
 
@@ -9386,6 +10250,111 @@ input AgentActivityDistinctCountAggregateFilter {
   affectedTaskIds: BigIntFilter
   snapshotBefore: BigIntFilter
   createdAt: BigIntFilter
+}
+
+"""
+A filter to be used against many \`TaskExecution\` object types. All fields are combined with a logical ‘and.’
+"""
+input AgentSessionToManyTaskExecutionFilter {
+  """
+  Every related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related \`TaskExecution\` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
+}
+
+"""
+A filter to be used against \`TaskExecution\` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskExecutionFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`organizationId\` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s \`projectId\` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s \`taskId\` field."""
+  taskId: UUIDFilter
+
+  """Filter by the object’s \`sessionId\` field."""
+  sessionId: UUIDFilter
+
+  """Filter by the object’s \`triggeredBy\` field."""
+  triggeredBy: UUIDFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
+
+  """Filter by the object’s \`session\` relation."""
+  session: AgentSessionFilter
+
+  """A related \`session\` exists."""
+  sessionExists: Boolean
+
+  """Filter by the object’s \`task\` relation."""
+  task: TaskFilter
+
+  """Filter by the object’s \`user\` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [TaskExecutionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TaskExecutionFilter!]
+
+  """Negates the expression."""
+  not: TaskExecutionFilter
+}
+
+"""
+A filter to be used against aggregates of \`TaskExecution\` object types.
+"""
+input TaskExecutionAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`TaskExecution\` object to be included within the aggregate.
+  """
+  filter: TaskExecutionFilter
+
+  """Distinct count aggregate over matching \`TaskExecution\` objects."""
+  distinctCount: TaskExecutionDistinctCountAggregateFilter
+}
+
+input TaskExecutionDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  projectId: BigIntFilter
+  taskId: BigIntFilter
+  sessionId: BigIntFilter
+  triggeredBy: BigIntFilter
+  status: BigIntFilter
+  metadata: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
 }
 
 """
@@ -9494,6 +10463,29 @@ input AgentSessionVarianceSampleAggregateFilter {
 
 input AgentSessionVariancePopulationAggregateFilter {
   toolCallCount: BigFloatFilter
+}
+
+"""
+A filter to be used against many \`TaskExecution\` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyTaskExecutionFilter {
+  """
+  Every related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related \`TaskExecution\` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
 }
 
 """
@@ -9663,6 +10655,29 @@ input TaskLabelDistinctCountAggregateFilter {
   labelId: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against many \`TaskExecution\` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskToManyTaskExecutionFilter {
+  """
+  Every related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related \`TaskExecution\` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
 }
 
 """A filter to be used against aggregates of \`Column\` object types."""
@@ -10018,6 +11033,185 @@ input ProjectToManyAgentSessionFilter {
 
   """Aggregates across related \`AgentSession\` match the filter criteria."""
   aggregates: AgentSessionAggregatesFilter
+}
+
+"""
+A filter to be used against many \`GithubRepository\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyGithubRepositoryFilter {
+  """
+  Every related \`GithubRepository\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: GithubRepositoryFilter
+
+  """
+  Some related \`GithubRepository\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: GithubRepositoryFilter
+
+  """
+  No related \`GithubRepository\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: GithubRepositoryFilter
+
+  """
+  Aggregates across related \`GithubRepository\` match the filter criteria.
+  """
+  aggregates: GithubRepositoryAggregatesFilter
+}
+
+"""
+A filter to be used against \`GithubRepository\` object types. All fields are combined with a logical ‘and.’
+"""
+input GithubRepositoryFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`organizationId\` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s \`projectId\` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s \`repoFullName\` field."""
+  repoFullName: StringFilter
+
+  """Filter by the object’s \`repoId\` field."""
+  repoId: IntFilter
+
+  """Filter by the object’s \`defaultBranch\` field."""
+  defaultBranch: StringFilter
+
+  """Filter by the object’s \`enabled\` field."""
+  enabled: BooleanFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
+
+  """Checks for all expressions in this list."""
+  and: [GithubRepositoryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [GithubRepositoryFilter!]
+
+  """Negates the expression."""
+  not: GithubRepositoryFilter
+}
+
+"""
+A filter to be used against aggregates of \`GithubRepository\` object types.
+"""
+input GithubRepositoryAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`GithubRepository\` object to be included within the aggregate.
+  """
+  filter: GithubRepositoryFilter
+
+  """Sum aggregate over matching \`GithubRepository\` objects."""
+  sum: GithubRepositorySumAggregateFilter
+
+  """Distinct count aggregate over matching \`GithubRepository\` objects."""
+  distinctCount: GithubRepositoryDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching \`GithubRepository\` objects."""
+  min: GithubRepositoryMinAggregateFilter
+
+  """Maximum aggregate over matching \`GithubRepository\` objects."""
+  max: GithubRepositoryMaxAggregateFilter
+
+  """Mean average aggregate over matching \`GithubRepository\` objects."""
+  average: GithubRepositoryAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching \`GithubRepository\` objects.
+  """
+  stddevSample: GithubRepositoryStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching \`GithubRepository\` objects.
+  """
+  stddevPopulation: GithubRepositoryStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching \`GithubRepository\` objects."""
+  varianceSample: GithubRepositoryVarianceSampleAggregateFilter
+
+  """
+  Population variance aggregate over matching \`GithubRepository\` objects.
+  """
+  variancePopulation: GithubRepositoryVariancePopulationAggregateFilter
+}
+
+input GithubRepositorySumAggregateFilter {
+  repoId: BigIntFilter
+}
+
+input GithubRepositoryDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  projectId: BigIntFilter
+  repoFullName: BigIntFilter
+  repoId: BigIntFilter
+  defaultBranch: BigIntFilter
+  enabled: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+input GithubRepositoryMinAggregateFilter {
+  repoId: IntFilter
+}
+
+input GithubRepositoryMaxAggregateFilter {
+  repoId: IntFilter
+}
+
+input GithubRepositoryAverageAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+input GithubRepositoryStddevSampleAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+input GithubRepositoryStddevPopulationAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+input GithubRepositoryVarianceSampleAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+input GithubRepositoryVariancePopulationAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+"""
+A filter to be used against many \`TaskExecution\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyTaskExecutionFilter {
+  """
+  Every related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related \`TaskExecution\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related \`TaskExecution\` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
 }
 
 """
@@ -10411,6 +11605,64 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
+  GITHUB_REPOSITORIES_COUNT_ASC
+  GITHUB_REPOSITORIES_COUNT_DESC
+  GITHUB_REPOSITORIES_SUM_REPO_ID_ASC
+  GITHUB_REPOSITORIES_SUM_REPO_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ROW_ID_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ROW_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_PROJECT_ID_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_PROJECT_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_FULL_NAME_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_FULL_NAME_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_ID_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_DEFAULT_BRANCH_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_DEFAULT_BRANCH_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ENABLED_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ENABLED_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_CREATED_AT_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_CREATED_AT_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_UPDATED_AT_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_UPDATED_AT_DESC
+  GITHUB_REPOSITORIES_MIN_REPO_ID_ASC
+  GITHUB_REPOSITORIES_MIN_REPO_ID_DESC
+  GITHUB_REPOSITORIES_MAX_REPO_ID_ASC
+  GITHUB_REPOSITORIES_MAX_REPO_ID_DESC
+  GITHUB_REPOSITORIES_AVERAGE_REPO_ID_ASC
+  GITHUB_REPOSITORIES_AVERAGE_REPO_ID_DESC
+  GITHUB_REPOSITORIES_STDDEV_SAMPLE_REPO_ID_ASC
+  GITHUB_REPOSITORIES_STDDEV_SAMPLE_REPO_ID_DESC
+  GITHUB_REPOSITORIES_STDDEV_POPULATION_REPO_ID_ASC
+  GITHUB_REPOSITORIES_STDDEV_POPULATION_REPO_ID_DESC
+  GITHUB_REPOSITORIES_VARIANCE_SAMPLE_REPO_ID_ASC
+  GITHUB_REPOSITORIES_VARIANCE_SAMPLE_REPO_ID_DESC
+  GITHUB_REPOSITORIES_VARIANCE_POPULATION_REPO_ID_ASC
+  GITHUB_REPOSITORIES_VARIANCE_POPULATION_REPO_ID_DESC
+  TASK_EXECUTIONS_COUNT_ASC
+  TASK_EXECUTIONS_COUNT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of \`Column\` values."""
@@ -10658,6 +11910,40 @@ type Task implements Node {
     """The method to use when ordering \`TaskLabel\`."""
     orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaskLabelConnection!
+
+  """Reads and enables pagination through a set of \`TaskExecution\`."""
+  taskExecutions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering \`TaskExecution\`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 type User implements Node {
@@ -10910,6 +12196,40 @@ type User implements Node {
     """The method to use when ordering \`AgentSession\`."""
     orderBy: [AgentSessionOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentSessionConnection!
+
+  """Reads and enables pagination through a set of \`TaskExecution\`."""
+  taskExecutionsByTriggeredBy(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering \`TaskExecution\`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 """A connection to a list of \`Assignee\` values."""
@@ -11763,6 +13083,28 @@ enum TaskOrderBy {
   TASK_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_ASC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_DESC
+  TASK_EXECUTIONS_COUNT_ASC
+  TASK_EXECUTIONS_COUNT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of \`UserPreference\` values."""
@@ -12111,6 +13453,40 @@ type AgentSession implements Node {
     """The method to use when ordering \`AgentActivity\`."""
     orderBy: [AgentActivityOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentActivityConnection!
+
+  """Reads and enables pagination through a set of \`TaskExecution\`."""
+  taskExecutionsBySessionId(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering \`TaskExecution\`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 """
@@ -12179,6 +13555,253 @@ enum AgentActivityOrderBy {
   ERROR_MESSAGE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+}
+
+"""A connection to a list of \`TaskExecution\` values."""
+type TaskExecutionConnection {
+  """A list of \`TaskExecution\` objects."""
+  nodes: [TaskExecution!]!
+
+  """
+  A list of edges which contains the \`TaskExecution\` and cursor to aid in pagination.
+  """
+  edges: [TaskExecutionEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`TaskExecution\` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: TaskExecutionAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`TaskExecution\` for these aggregates."""
+    groupBy: [TaskExecutionGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: TaskExecutionHavingInput
+  ): [TaskExecutionAggregates!]
+}
+
+type TaskExecution implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  projectId: UUID!
+  taskId: UUID!
+  sessionId: UUID
+  triggeredBy: UUID!
+  status: String!
+  metadata: JSON!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single \`Project\` that is related to this \`TaskExecution\`."""
+  project: Project
+
+  """Reads a single \`AgentSession\` that is related to this \`TaskExecution\`."""
+  session: AgentSession
+
+  """Reads a single \`Task\` that is related to this \`TaskExecution\`."""
+  task: Task
+
+  """Reads a single \`User\` that is related to this \`TaskExecution\`."""
+  user: User
+}
+
+"""A \`TaskExecution\` edge in the connection."""
+type TaskExecutionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`TaskExecution\` at the end of the edge."""
+  node: TaskExecution!
+}
+
+type TaskExecutionAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: TaskExecutionDistinctCountAggregates
+}
+
+type TaskExecutionDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of taskId across the matching connection"""
+  taskId: BigInt
+
+  """Distinct count of sessionId across the matching connection"""
+  sessionId: BigInt
+
+  """Distinct count of triggeredBy across the matching connection"""
+  triggeredBy: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of metadata across the matching connection"""
+  metadata: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for \`TaskExecution\` for usage during aggregation."""
+enum TaskExecutionGroupBy {
+  ORGANIZATION_ID
+  PROJECT_ID
+  TASK_ID
+  SESSION_ID
+  TRIGGERED_BY
+  STATUS
+  METADATA
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`TaskExecution\` aggregates."""
+input TaskExecutionHavingInput {
+  AND: [TaskExecutionHavingInput!]
+  OR: [TaskExecutionHavingInput!]
+  sum: TaskExecutionHavingSumInput
+  distinctCount: TaskExecutionHavingDistinctCountInput
+  min: TaskExecutionHavingMinInput
+  max: TaskExecutionHavingMaxInput
+  average: TaskExecutionHavingAverageInput
+  stddevSample: TaskExecutionHavingStddevSampleInput
+  stddevPopulation: TaskExecutionHavingStddevPopulationInput
+  varianceSample: TaskExecutionHavingVarianceSampleInput
+  variancePopulation: TaskExecutionHavingVariancePopulationInput
+}
+
+input TaskExecutionHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`TaskExecution\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TaskExecutionCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s \`projectId\` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s \`taskId\` field."""
+  taskId: UUID
+
+  """Checks for equality with the object’s \`sessionId\` field."""
+  sessionId: UUID
+
+  """Checks for equality with the object’s \`triggeredBy\` field."""
+  triggeredBy: UUID
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering \`TaskExecution\`."""
+enum TaskExecutionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  TASK_ID_ASC
+  TASK_ID_DESC
+  SESSION_ID_ASC
+  SESSION_ID_DESC
+  TRIGGERED_BY_ASC
+  TRIGGERED_BY_DESC
+  STATUS_ASC
+  STATUS_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """A \`AgentActivity\` edge in the connection."""
@@ -12662,6 +14285,28 @@ enum AgentSessionOrderBy {
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_COUNT_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_COUNT_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TRIGGERED_BY_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TRIGGERED_BY_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_METADATA_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_METADATA_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of \`TaskLabel\` values."""
@@ -13854,6 +15499,332 @@ enum ProjectProjectLabelOrderBy {
   CREATED_AT_DESC
 }
 
+"""A connection to a list of \`GithubRepository\` values."""
+type GithubRepositoryConnection {
+  """A list of \`GithubRepository\` objects."""
+  nodes: [GithubRepository!]!
+
+  """
+  A list of edges which contains the \`GithubRepository\` and cursor to aid in pagination.
+  """
+  edges: [GithubRepositoryEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`GithubRepository\` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: GithubRepositoryAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping \`GithubRepository\` for these aggregates.
+    """
+    groupBy: [GithubRepositoryGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: GithubRepositoryHavingInput
+  ): [GithubRepositoryAggregates!]
+}
+
+type GithubRepository implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  projectId: UUID!
+  repoFullName: String!
+  repoId: Int!
+  defaultBranch: String!
+  enabled: Boolean!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single \`Project\` that is related to this \`GithubRepository\`."""
+  project: Project
+}
+
+"""A \`GithubRepository\` edge in the connection."""
+type GithubRepositoryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`GithubRepository\` at the end of the edge."""
+  node: GithubRepository!
+}
+
+type GithubRepositoryAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: GithubRepositorySumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: GithubRepositoryDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: GithubRepositoryMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: GithubRepositoryMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: GithubRepositoryAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: GithubRepositoryStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: GithubRepositoryStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: GithubRepositoryVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: GithubRepositoryVariancePopulationAggregates
+}
+
+type GithubRepositorySumAggregates {
+  """Sum of repoId across the matching connection"""
+  repoId: BigInt!
+}
+
+type GithubRepositoryDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of repoFullName across the matching connection"""
+  repoFullName: BigInt
+
+  """Distinct count of repoId across the matching connection"""
+  repoId: BigInt
+
+  """Distinct count of defaultBranch across the matching connection"""
+  defaultBranch: BigInt
+
+  """Distinct count of enabled across the matching connection"""
+  enabled: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type GithubRepositoryMinAggregates {
+  """Minimum of repoId across the matching connection"""
+  repoId: Int
+}
+
+type GithubRepositoryMaxAggregates {
+  """Maximum of repoId across the matching connection"""
+  repoId: Int
+}
+
+type GithubRepositoryAverageAggregates {
+  """Mean average of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+type GithubRepositoryStddevSampleAggregates {
+  """Sample standard deviation of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+type GithubRepositoryStddevPopulationAggregates {
+  """Population standard deviation of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+type GithubRepositoryVarianceSampleAggregates {
+  """Sample variance of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+type GithubRepositoryVariancePopulationAggregates {
+  """Population variance of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+"""Grouping methods for \`GithubRepository\` for usage during aggregation."""
+enum GithubRepositoryGroupBy {
+  ORGANIZATION_ID
+  PROJECT_ID
+  REPO_FULL_NAME
+  REPO_ID
+  DEFAULT_BRANCH
+  ENABLED
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`GithubRepository\` aggregates."""
+input GithubRepositoryHavingInput {
+  AND: [GithubRepositoryHavingInput!]
+  OR: [GithubRepositoryHavingInput!]
+  sum: GithubRepositoryHavingSumInput
+  distinctCount: GithubRepositoryHavingDistinctCountInput
+  min: GithubRepositoryHavingMinInput
+  max: GithubRepositoryHavingMaxInput
+  average: GithubRepositoryHavingAverageInput
+  stddevSample: GithubRepositoryHavingStddevSampleInput
+  stddevPopulation: GithubRepositoryHavingStddevPopulationInput
+  varianceSample: GithubRepositoryHavingVarianceSampleInput
+  variancePopulation: GithubRepositoryHavingVariancePopulationInput
+}
+
+input GithubRepositoryHavingSumInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingDistinctCountInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingMinInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingMaxInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingAverageInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingStddevSampleInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingStddevPopulationInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingVarianceSampleInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingVariancePopulationInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`GithubRepository\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input GithubRepositoryCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s \`projectId\` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s \`repoFullName\` field."""
+  repoFullName: String
+
+  """Checks for equality with the object’s \`repoId\` field."""
+  repoId: Int
+
+  """Checks for equality with the object’s \`defaultBranch\` field."""
+  defaultBranch: String
+
+  """Checks for equality with the object’s \`enabled\` field."""
+  enabled: Boolean
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering \`GithubRepository\`."""
+enum GithubRepositoryOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  REPO_FULL_NAME_ASC
+  REPO_FULL_NAME_DESC
+  REPO_ID_ASC
+  REPO_ID_DESC
+  DEFAULT_BRANCH_ASC
+  DEFAULT_BRANCH_DESC
+  ENABLED_ASC
+  ENABLED_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 type ProjectLabel implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -13913,6 +15884,21 @@ type AgentPersona implements Node {
   description: String
   systemPrompt: String!
   icon: String
+  enabled: Boolean!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+}
+
+type GithubInstallation implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  installationId: Int!
+  githubOrgLogin: String!
+  githubOrgId: Int!
   enabled: Boolean!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -14336,6 +16322,371 @@ enum UserOrderBy {
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_COUNT_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_COUNT_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_SESSION_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_SESSION_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TRIGGERED_BY_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TRIGGERED_BY_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_METADATA_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_METADATA_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of \`ProjectColumn\` values."""
+type ProjectColumnConnection {
+  """A list of \`ProjectColumn\` objects."""
+  nodes: [ProjectColumn!]!
+
+  """
+  A list of edges which contains the \`ProjectColumn\` and cursor to aid in pagination.
+  """
+  edges: [ProjectColumnEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`ProjectColumn\` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectColumnAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping \`ProjectColumn\` for these aggregates."""
+    groupBy: [ProjectColumnGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectColumnHavingInput
+  ): [ProjectColumnAggregates!]
+}
+
+"""A \`ProjectColumn\` edge in the connection."""
+type ProjectColumnEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`ProjectColumn\` at the end of the edge."""
+  node: ProjectColumn!
+}
+
+type ProjectColumnAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: ProjectColumnSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectColumnDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: ProjectColumnMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: ProjectColumnMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: ProjectColumnAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: ProjectColumnStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: ProjectColumnStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: ProjectColumnVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: ProjectColumnVariancePopulationAggregates
+}
+
+type ProjectColumnSumAggregates {
+  """Sum of index across the matching connection"""
+  index: BigInt!
+}
+
+type ProjectColumnDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of index across the matching connection"""
+  index: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type ProjectColumnMinAggregates {
+  """Minimum of index across the matching connection"""
+  index: Int
+}
+
+type ProjectColumnMaxAggregates {
+  """Maximum of index across the matching connection"""
+  index: Int
+}
+
+type ProjectColumnAverageAggregates {
+  """Mean average of index across the matching connection"""
+  index: BigFloat
+}
+
+type ProjectColumnStddevSampleAggregates {
+  """Sample standard deviation of index across the matching connection"""
+  index: BigFloat
+}
+
+type ProjectColumnStddevPopulationAggregates {
+  """Population standard deviation of index across the matching connection"""
+  index: BigFloat
+}
+
+type ProjectColumnVarianceSampleAggregates {
+  """Sample variance of index across the matching connection"""
+  index: BigFloat
+}
+
+type ProjectColumnVariancePopulationAggregates {
+  """Population variance of index across the matching connection"""
+  index: BigFloat
+}
+
+"""Grouping methods for \`ProjectColumn\` for usage during aggregation."""
+enum ProjectColumnGroupBy {
+  ICON
+  TITLE
+  ORGANIZATION_ID
+  INDEX
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`ProjectColumn\` aggregates."""
+input ProjectColumnHavingInput {
+  AND: [ProjectColumnHavingInput!]
+  OR: [ProjectColumnHavingInput!]
+  sum: ProjectColumnHavingSumInput
+  distinctCount: ProjectColumnHavingDistinctCountInput
+  min: ProjectColumnHavingMinInput
+  max: ProjectColumnHavingMaxInput
+  average: ProjectColumnHavingAverageInput
+  stddevSample: ProjectColumnHavingStddevSampleInput
+  stddevPopulation: ProjectColumnHavingStddevPopulationInput
+  varianceSample: ProjectColumnHavingVarianceSampleInput
+  variancePopulation: ProjectColumnHavingVariancePopulationInput
+}
+
+input ProjectColumnHavingSumInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingDistinctCountInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingMinInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingMaxInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingAverageInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingStddevSampleInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingStddevPopulationInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingVarianceSampleInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingVariancePopulationInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`ProjectColumn\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ProjectColumnCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`icon\` field."""
+  icon: String
+
+  """Checks for equality with the object’s \`title\` field."""
+  title: String
+
+  """Checks for equality with the object’s \`organizationId\` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s \`index\` field."""
+  index: Int
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering \`ProjectColumn\`."""
+enum ProjectColumnOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ICON_ASC
+  ICON_DESC
+  TITLE_ASC
+  TITLE_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  INDEX_ASC
+  INDEX_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  PROJECTS_COUNT_ASC
+  PROJECTS_COUNT_DESC
+  PROJECTS_SUM_COLUMN_INDEX_ASC
+  PROJECTS_SUM_COLUMN_INDEX_DESC
+  PROJECTS_SUM_NEXT_TASK_NUMBER_ASC
+  PROJECTS_SUM_NEXT_TASK_NUMBER_DESC
+  PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECTS_DISTINCT_COUNT_NAME_ASC
+  PROJECTS_DISTINCT_COUNT_NAME_DESC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  PROJECTS_DISTINCT_COUNT_PREFIX_ASC
+  PROJECTS_DISTINCT_COUNT_PREFIX_DESC
+  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_ASC
+  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_DESC
+  PROJECTS_DISTINCT_COUNT_SLUG_ASC
+  PROJECTS_DISTINCT_COUNT_SLUG_DESC
+  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_ASC
+  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC
+  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC
+  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC
+  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC
+  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
+  PROJECTS_MIN_COLUMN_INDEX_ASC
+  PROJECTS_MIN_COLUMN_INDEX_DESC
+  PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
+  PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
+  PROJECTS_MAX_COLUMN_INDEX_ASC
+  PROJECTS_MAX_COLUMN_INDEX_DESC
+  PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
+  PROJECTS_MAX_NEXT_TASK_NUMBER_DESC
+  PROJECTS_AVERAGE_COLUMN_INDEX_ASC
+  PROJECTS_AVERAGE_COLUMN_INDEX_DESC
+  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
+  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
+  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_ASC
+  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_DESC
+  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC
+  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC
+  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
+  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
+  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
+  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
+  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC
+  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC
 }
 
 """A connection to a list of \`ProjectLabel\` values."""
@@ -14797,117 +17148,127 @@ enum AgentPersonaOrderBy {
   UPDATED_AT_DESC
 }
 
-"""A connection to a list of \`ProjectColumn\` values."""
-type ProjectColumnConnection {
-  """A list of \`ProjectColumn\` objects."""
-  nodes: [ProjectColumn!]!
+"""A connection to a list of \`GithubInstallation\` values."""
+type GithubInstallationConnection {
+  """A list of \`GithubInstallation\` objects."""
+  nodes: [GithubInstallation!]!
 
   """
-  A list of edges which contains the \`ProjectColumn\` and cursor to aid in pagination.
+  A list of edges which contains the \`GithubInstallation\` and cursor to aid in pagination.
   """
-  edges: [ProjectColumnEdge!]!
+  edges: [GithubInstallationEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """The count of *all* \`ProjectColumn\` you could get from the connection."""
+  """
+  The count of *all* \`GithubInstallation\` you could get from the connection.
+  """
   totalCount: Int!
 
   """
   Aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  aggregates: ProjectColumnAggregates
+  aggregates: GithubInstallationAggregates
 
   """
   Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   groupedAggregates(
-    """The method to use when grouping \`ProjectColumn\` for these aggregates."""
-    groupBy: [ProjectColumnGroupBy!]!
+    """
+    The method to use when grouping \`GithubInstallation\` for these aggregates.
+    """
+    groupBy: [GithubInstallationGroupBy!]!
 
     """Conditions on the grouped aggregates."""
-    having: ProjectColumnHavingInput
-  ): [ProjectColumnAggregates!]
+    having: GithubInstallationHavingInput
+  ): [GithubInstallationAggregates!]
 }
 
-"""A \`ProjectColumn\` edge in the connection."""
-type ProjectColumnEdge {
+"""A \`GithubInstallation\` edge in the connection."""
+type GithubInstallationEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The \`ProjectColumn\` at the end of the edge."""
-  node: ProjectColumn!
+  """The \`GithubInstallation\` at the end of the edge."""
+  node: GithubInstallation!
 }
 
-type ProjectColumnAggregates {
+type GithubInstallationAggregates {
   keys: [String]
 
   """
   Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  sum: ProjectColumnSumAggregates
+  sum: GithubInstallationSumAggregates
 
   """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  distinctCount: ProjectColumnDistinctCountAggregates
+  distinctCount: GithubInstallationDistinctCountAggregates
 
   """
   Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  min: ProjectColumnMinAggregates
+  min: GithubInstallationMinAggregates
 
   """
   Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  max: ProjectColumnMaxAggregates
+  max: GithubInstallationMaxAggregates
 
   """
   Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  average: ProjectColumnAverageAggregates
+  average: GithubInstallationAverageAggregates
 
   """
   Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  stddevSample: ProjectColumnStddevSampleAggregates
+  stddevSample: GithubInstallationStddevSampleAggregates
 
   """
   Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  stddevPopulation: ProjectColumnStddevPopulationAggregates
+  stddevPopulation: GithubInstallationStddevPopulationAggregates
 
   """
   Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  varianceSample: ProjectColumnVarianceSampleAggregates
+  varianceSample: GithubInstallationVarianceSampleAggregates
 
   """
   Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  variancePopulation: ProjectColumnVariancePopulationAggregates
+  variancePopulation: GithubInstallationVariancePopulationAggregates
 }
 
-type ProjectColumnSumAggregates {
-  """Sum of index across the matching connection"""
-  index: BigInt!
+type GithubInstallationSumAggregates {
+  """Sum of installationId across the matching connection"""
+  installationId: BigInt!
+
+  """Sum of githubOrgId across the matching connection"""
+  githubOrgId: BigInt!
 }
 
-type ProjectColumnDistinctCountAggregates {
+type GithubInstallationDistinctCountAggregates {
   """Distinct count of rowId across the matching connection"""
   rowId: BigInt
-
-  """Distinct count of icon across the matching connection"""
-  icon: BigInt
-
-  """Distinct count of title across the matching connection"""
-  title: BigInt
 
   """Distinct count of organizationId across the matching connection"""
   organizationId: BigInt
 
-  """Distinct count of index across the matching connection"""
-  index: BigInt
+  """Distinct count of installationId across the matching connection"""
+  installationId: BigInt
+
+  """Distinct count of githubOrgLogin across the matching connection"""
+  githubOrgLogin: BigInt
+
+  """Distinct count of githubOrgId across the matching connection"""
+  githubOrgId: BigInt
+
+  """Distinct count of enabled across the matching connection"""
+  enabled: BigInt
 
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
@@ -14916,47 +17277,79 @@ type ProjectColumnDistinctCountAggregates {
   updatedAt: BigInt
 }
 
-type ProjectColumnMinAggregates {
-  """Minimum of index across the matching connection"""
-  index: Int
+type GithubInstallationMinAggregates {
+  """Minimum of installationId across the matching connection"""
+  installationId: Int
+
+  """Minimum of githubOrgId across the matching connection"""
+  githubOrgId: Int
 }
 
-type ProjectColumnMaxAggregates {
-  """Maximum of index across the matching connection"""
-  index: Int
+type GithubInstallationMaxAggregates {
+  """Maximum of installationId across the matching connection"""
+  installationId: Int
+
+  """Maximum of githubOrgId across the matching connection"""
+  githubOrgId: Int
 }
 
-type ProjectColumnAverageAggregates {
-  """Mean average of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationAverageAggregates {
+  """Mean average of installationId across the matching connection"""
+  installationId: BigFloat
+
+  """Mean average of githubOrgId across the matching connection"""
+  githubOrgId: BigFloat
 }
 
-type ProjectColumnStddevSampleAggregates {
-  """Sample standard deviation of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationStddevSampleAggregates {
+  """
+  Sample standard deviation of installationId across the matching connection
+  """
+  installationId: BigFloat
+
+  """
+  Sample standard deviation of githubOrgId across the matching connection
+  """
+  githubOrgId: BigFloat
 }
 
-type ProjectColumnStddevPopulationAggregates {
-  """Population standard deviation of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationStddevPopulationAggregates {
+  """
+  Population standard deviation of installationId across the matching connection
+  """
+  installationId: BigFloat
+
+  """
+  Population standard deviation of githubOrgId across the matching connection
+  """
+  githubOrgId: BigFloat
 }
 
-type ProjectColumnVarianceSampleAggregates {
-  """Sample variance of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationVarianceSampleAggregates {
+  """Sample variance of installationId across the matching connection"""
+  installationId: BigFloat
+
+  """Sample variance of githubOrgId across the matching connection"""
+  githubOrgId: BigFloat
 }
 
-type ProjectColumnVariancePopulationAggregates {
-  """Population variance of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationVariancePopulationAggregates {
+  """Population variance of installationId across the matching connection"""
+  installationId: BigFloat
+
+  """Population variance of githubOrgId across the matching connection"""
+  githubOrgId: BigFloat
 }
 
-"""Grouping methods for \`ProjectColumn\` for usage during aggregation."""
-enum ProjectColumnGroupBy {
-  ICON
-  TITLE
+"""
+Grouping methods for \`GithubInstallation\` for usage during aggregation.
+"""
+enum GithubInstallationGroupBy {
   ORGANIZATION_ID
-  INDEX
+  INSTALLATION_ID
+  GITHUB_ORG_LOGIN
+  GITHUB_ORG_ID
+  ENABLED
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
@@ -14965,94 +17358,106 @@ enum ProjectColumnGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
 }
 
-"""Conditions for \`ProjectColumn\` aggregates."""
-input ProjectColumnHavingInput {
-  AND: [ProjectColumnHavingInput!]
-  OR: [ProjectColumnHavingInput!]
-  sum: ProjectColumnHavingSumInput
-  distinctCount: ProjectColumnHavingDistinctCountInput
-  min: ProjectColumnHavingMinInput
-  max: ProjectColumnHavingMaxInput
-  average: ProjectColumnHavingAverageInput
-  stddevSample: ProjectColumnHavingStddevSampleInput
-  stddevPopulation: ProjectColumnHavingStddevPopulationInput
-  varianceSample: ProjectColumnHavingVarianceSampleInput
-  variancePopulation: ProjectColumnHavingVariancePopulationInput
+"""Conditions for \`GithubInstallation\` aggregates."""
+input GithubInstallationHavingInput {
+  AND: [GithubInstallationHavingInput!]
+  OR: [GithubInstallationHavingInput!]
+  sum: GithubInstallationHavingSumInput
+  distinctCount: GithubInstallationHavingDistinctCountInput
+  min: GithubInstallationHavingMinInput
+  max: GithubInstallationHavingMaxInput
+  average: GithubInstallationHavingAverageInput
+  stddevSample: GithubInstallationHavingStddevSampleInput
+  stddevPopulation: GithubInstallationHavingStddevPopulationInput
+  varianceSample: GithubInstallationHavingVarianceSampleInput
+  variancePopulation: GithubInstallationHavingVariancePopulationInput
 }
 
-input ProjectColumnHavingSumInput {
-  index: HavingIntFilter
+input GithubInstallationHavingSumInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingDistinctCountInput {
-  index: HavingIntFilter
+input GithubInstallationHavingDistinctCountInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingMinInput {
-  index: HavingIntFilter
+input GithubInstallationHavingMinInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingMaxInput {
-  index: HavingIntFilter
+input GithubInstallationHavingMaxInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingAverageInput {
-  index: HavingIntFilter
+input GithubInstallationHavingAverageInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingStddevSampleInput {
-  index: HavingIntFilter
+input GithubInstallationHavingStddevSampleInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingStddevPopulationInput {
-  index: HavingIntFilter
+input GithubInstallationHavingStddevPopulationInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingVarianceSampleInput {
-  index: HavingIntFilter
+input GithubInstallationHavingVarianceSampleInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingVariancePopulationInput {
-  index: HavingIntFilter
+input GithubInstallationHavingVariancePopulationInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 """
-A condition to be used against \`ProjectColumn\` object types. All fields are
+A condition to be used against \`GithubInstallation\` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
-input ProjectColumnCondition {
+input GithubInstallationCondition {
   """Checks for equality with the object’s \`rowId\` field."""
   rowId: UUID
-
-  """Checks for equality with the object’s \`icon\` field."""
-  icon: String
-
-  """Checks for equality with the object’s \`title\` field."""
-  title: String
 
   """Checks for equality with the object’s \`organizationId\` field."""
   organizationId: String
 
-  """Checks for equality with the object’s \`index\` field."""
-  index: Int
+  """Checks for equality with the object’s \`installationId\` field."""
+  installationId: Int
+
+  """Checks for equality with the object’s \`githubOrgLogin\` field."""
+  githubOrgLogin: String
+
+  """Checks for equality with the object’s \`githubOrgId\` field."""
+  githubOrgId: Int
+
+  """Checks for equality with the object’s \`enabled\` field."""
+  enabled: Boolean
 
   """Checks for equality with the object’s \`createdAt\` field."""
   createdAt: Datetime
@@ -15061,83 +17466,65 @@ input ProjectColumnCondition {
   updatedAt: Datetime
 }
 
-"""Methods to use when ordering \`ProjectColumn\`."""
-enum ProjectColumnOrderBy {
+"""
+A filter to be used against \`GithubInstallation\` object types. All fields are combined with a logical ‘and.’
+"""
+input GithubInstallationFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`organizationId\` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s \`installationId\` field."""
+  installationId: IntFilter
+
+  """Filter by the object’s \`githubOrgLogin\` field."""
+  githubOrgLogin: StringFilter
+
+  """Filter by the object’s \`githubOrgId\` field."""
+  githubOrgId: IntFilter
+
+  """Filter by the object’s \`enabled\` field."""
+  enabled: BooleanFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`updatedAt\` field."""
+  updatedAt: DatetimeFilter
+
+  """Checks for all expressions in this list."""
+  and: [GithubInstallationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [GithubInstallationFilter!]
+
+  """Negates the expression."""
+  not: GithubInstallationFilter
+}
+
+"""Methods to use when ordering \`GithubInstallation\`."""
+enum GithubInstallationOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   ROW_ID_ASC
   ROW_ID_DESC
-  ICON_ASC
-  ICON_DESC
-  TITLE_ASC
-  TITLE_DESC
   ORGANIZATION_ID_ASC
   ORGANIZATION_ID_DESC
-  INDEX_ASC
-  INDEX_DESC
+  INSTALLATION_ID_ASC
+  INSTALLATION_ID_DESC
+  GITHUB_ORG_LOGIN_ASC
+  GITHUB_ORG_LOGIN_DESC
+  GITHUB_ORG_ID_ASC
+  GITHUB_ORG_ID_DESC
+  ENABLED_ASC
+  ENABLED_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  PROJECTS_COUNT_ASC
-  PROJECTS_COUNT_DESC
-  PROJECTS_SUM_COLUMN_INDEX_ASC
-  PROJECTS_SUM_COLUMN_INDEX_DESC
-  PROJECTS_SUM_NEXT_TASK_NUMBER_ASC
-  PROJECTS_SUM_NEXT_TASK_NUMBER_DESC
-  PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
-  PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
-  PROJECTS_DISTINCT_COUNT_NAME_ASC
-  PROJECTS_DISTINCT_COUNT_NAME_DESC
-  PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC
-  PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC
-  PROJECTS_DISTINCT_COUNT_PREFIX_ASC
-  PROJECTS_DISTINCT_COUNT_PREFIX_DESC
-  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC
-  PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
-  PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
-  PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
-  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_ASC
-  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_DESC
-  PROJECTS_DISTINCT_COUNT_SLUG_ASC
-  PROJECTS_DISTINCT_COUNT_SLUG_DESC
-  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_ASC
-  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC
-  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC
-  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC
-  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC
-  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
-  PROJECTS_MIN_COLUMN_INDEX_ASC
-  PROJECTS_MIN_COLUMN_INDEX_DESC
-  PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
-  PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
-  PROJECTS_MAX_COLUMN_INDEX_ASC
-  PROJECTS_MAX_COLUMN_INDEX_DESC
-  PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
-  PROJECTS_MAX_NEXT_TASK_NUMBER_DESC
-  PROJECTS_AVERAGE_COLUMN_INDEX_ASC
-  PROJECTS_AVERAGE_COLUMN_INDEX_DESC
-  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
-  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
-  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_ASC
-  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_DESC
-  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC
-  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC
-  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
-  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
-  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
-  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
-  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC
-  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC
 }
 
 """A connection to a list of \`Setting\` values."""
@@ -15845,6 +18232,22 @@ type Mutation {
     input: CreateUserInput!
   ): CreateUserPayload
 
+  """Creates a single \`Column\`."""
+  createColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateColumnInput!
+  ): CreateColumnPayload
+
+  """Creates a single \`ProjectColumn\`."""
+  createProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectColumnInput!
+  ): CreateProjectColumnPayload
+
   """Creates a single \`ProjectLabel\`."""
   createProjectLabel(
     """
@@ -15869,14 +18272,6 @@ type Mutation {
     input: CreatePostInput!
   ): CreatePostPayload
 
-  """Creates a single \`Column\`."""
-  createColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateColumnInput!
-  ): CreateColumnPayload
-
   """Creates a single \`UserPreference\`."""
   createUserPreference(
     """
@@ -15893,13 +18288,29 @@ type Mutation {
     input: CreateAgentPersonaInput!
   ): CreateAgentPersonaPayload
 
-  """Creates a single \`ProjectColumn\`."""
-  createProjectColumn(
+  """Creates a single \`GithubRepository\`."""
+  createGithubRepository(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateProjectColumnInput!
-  ): CreateProjectColumnPayload
+    input: CreateGithubRepositoryInput!
+  ): CreateGithubRepositoryPayload
+
+  """Creates a single \`GithubInstallation\`."""
+  createGithubInstallation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateGithubInstallationInput!
+  ): CreateGithubInstallationPayload
+
+  """Creates a single \`TaskExecution\`."""
+  createTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaskExecutionInput!
+  ): CreateTaskExecutionPayload
 
   """Creates a single \`AgentSession\`."""
   createAgentSession(
@@ -16031,6 +18442,40 @@ type Mutation {
     input: UpdateUserInput!
   ): UpdateUserPayload
 
+  """Updates a single \`Column\` using its globally unique id and a patch."""
+  updateColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnByIdInput!
+  ): UpdateColumnPayload
+
+  """Updates a single \`Column\` using a unique key and a patch."""
+  updateColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnInput!
+  ): UpdateColumnPayload
+
+  """
+  Updates a single \`ProjectColumn\` using its globally unique id and a patch.
+  """
+  updateProjectColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectColumnByIdInput!
+  ): UpdateProjectColumnPayload
+
+  """Updates a single \`ProjectColumn\` using a unique key and a patch."""
+  updateProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectColumnInput!
+  ): UpdateProjectColumnPayload
+
   """
   Updates a single \`ProjectLabel\` using its globally unique id and a patch.
   """
@@ -16081,22 +18526,6 @@ type Mutation {
     input: UpdatePostInput!
   ): UpdatePostPayload
 
-  """Updates a single \`Column\` using its globally unique id and a patch."""
-  updateColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnByIdInput!
-  ): UpdateColumnPayload
-
-  """Updates a single \`Column\` using a unique key and a patch."""
-  updateColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnInput!
-  ): UpdateColumnPayload
-
   """
   Updates a single \`UserPreference\` using its globally unique id and a patch.
   """
@@ -16134,22 +18563,58 @@ type Mutation {
   ): UpdateAgentPersonaPayload
 
   """
-  Updates a single \`ProjectColumn\` using its globally unique id and a patch.
+  Updates a single \`GithubRepository\` using its globally unique id and a patch.
   """
-  updateProjectColumnById(
+  updateGithubRepositoryById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateProjectColumnByIdInput!
-  ): UpdateProjectColumnPayload
+    input: UpdateGithubRepositoryByIdInput!
+  ): UpdateGithubRepositoryPayload
 
-  """Updates a single \`ProjectColumn\` using a unique key and a patch."""
-  updateProjectColumn(
+  """Updates a single \`GithubRepository\` using a unique key and a patch."""
+  updateGithubRepository(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateProjectColumnInput!
-  ): UpdateProjectColumnPayload
+    input: UpdateGithubRepositoryInput!
+  ): UpdateGithubRepositoryPayload
+
+  """
+  Updates a single \`GithubInstallation\` using its globally unique id and a patch.
+  """
+  updateGithubInstallationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGithubInstallationByIdInput!
+  ): UpdateGithubInstallationPayload
+
+  """Updates a single \`GithubInstallation\` using a unique key and a patch."""
+  updateGithubInstallation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGithubInstallationInput!
+  ): UpdateGithubInstallationPayload
+
+  """
+  Updates a single \`TaskExecution\` using its globally unique id and a patch.
+  """
+  updateTaskExecutionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskExecutionByIdInput!
+  ): UpdateTaskExecutionPayload
+
+  """Updates a single \`TaskExecution\` using a unique key and a patch."""
+  updateTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskExecutionInput!
+  ): UpdateTaskExecutionPayload
 
   """
   Updates a single \`AgentSession\` using its globally unique id and a patch.
@@ -16333,6 +18798,38 @@ type Mutation {
     input: DeleteUserInput!
   ): DeleteUserPayload
 
+  """Deletes a single \`Column\` using its globally unique id."""
+  deleteColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnByIdInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single \`Column\` using a unique key."""
+  deleteColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single \`ProjectColumn\` using its globally unique id."""
+  deleteProjectColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectColumnByIdInput!
+  ): DeleteProjectColumnPayload
+
+  """Deletes a single \`ProjectColumn\` using a unique key."""
+  deleteProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectColumnInput!
+  ): DeleteProjectColumnPayload
+
   """Deletes a single \`ProjectLabel\` using its globally unique id."""
   deleteProjectLabelById(
     """
@@ -16381,22 +18878,6 @@ type Mutation {
     input: DeletePostInput!
   ): DeletePostPayload
 
-  """Deletes a single \`Column\` using its globally unique id."""
-  deleteColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnByIdInput!
-  ): DeleteColumnPayload
-
-  """Deletes a single \`Column\` using a unique key."""
-  deleteColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnInput!
-  ): DeleteColumnPayload
-
   """Deletes a single \`UserPreference\` using its globally unique id."""
   deleteUserPreferenceById(
     """
@@ -16429,21 +18910,53 @@ type Mutation {
     input: DeleteAgentPersonaInput!
   ): DeleteAgentPersonaPayload
 
-  """Deletes a single \`ProjectColumn\` using its globally unique id."""
-  deleteProjectColumnById(
+  """Deletes a single \`GithubRepository\` using its globally unique id."""
+  deleteGithubRepositoryById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteProjectColumnByIdInput!
-  ): DeleteProjectColumnPayload
+    input: DeleteGithubRepositoryByIdInput!
+  ): DeleteGithubRepositoryPayload
 
-  """Deletes a single \`ProjectColumn\` using a unique key."""
-  deleteProjectColumn(
+  """Deletes a single \`GithubRepository\` using a unique key."""
+  deleteGithubRepository(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteProjectColumnInput!
-  ): DeleteProjectColumnPayload
+    input: DeleteGithubRepositoryInput!
+  ): DeleteGithubRepositoryPayload
+
+  """Deletes a single \`GithubInstallation\` using its globally unique id."""
+  deleteGithubInstallationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGithubInstallationByIdInput!
+  ): DeleteGithubInstallationPayload
+
+  """Deletes a single \`GithubInstallation\` using a unique key."""
+  deleteGithubInstallation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGithubInstallationInput!
+  ): DeleteGithubInstallationPayload
+
+  """Deletes a single \`TaskExecution\` using its globally unique id."""
+  deleteTaskExecutionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskExecutionByIdInput!
+  ): DeleteTaskExecutionPayload
+
+  """Deletes a single \`TaskExecution\` using a unique key."""
+  deleteTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskExecutionInput!
+  ): DeleteTaskExecutionPayload
 
   """Deletes a single \`AgentSession\` using its globally unique id."""
   deleteAgentSessionById(
@@ -16762,6 +19275,98 @@ input UserInput {
   email: String!
 }
 
+"""The output of our create \`Column\` mutation."""
+type CreateColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Column\` that was created by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Column\`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering \`Column\`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the create \`Column\` mutation."""
+input CreateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Column\` to be created by this mutation."""
+  column: ColumnInput!
+}
+
+"""An input for mutations affecting \`Column\`"""
+input ColumnInput {
+  rowId: UUID
+  title: String!
+  projectId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: Int
+  icon: String
+}
+
+"""The output of our create \`ProjectColumn\` mutation."""
+type CreateProjectColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectColumn\` that was created by this mutation."""
+  projectColumn: ProjectColumn
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectColumn\`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering \`ProjectColumn\`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the create \`ProjectColumn\` mutation."""
+input CreateProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`ProjectColumn\` to be created by this mutation."""
+  projectColumn: ProjectColumnInput!
+}
+
+"""An input for mutations affecting \`ProjectColumn\`"""
+input ProjectColumnInput {
+  rowId: UUID
+  icon: String
+  title: String!
+  organizationId: String!
+  index: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`ProjectLabel\` mutation."""
 type CreateProjectLabelPayload {
   """
@@ -16902,52 +19507,6 @@ input PostInput {
   parentId: UUID
 }
 
-"""The output of our create \`Column\` mutation."""
-type CreateColumnPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Column\` that was created by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Column\`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering \`Column\`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the create \`Column\` mutation."""
-input CreateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Column\` to be created by this mutation."""
-  column: ColumnInput!
-}
-
-"""An input for mutations affecting \`Column\`"""
-input ColumnInput {
-  rowId: UUID
-  title: String!
-  projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: Int
-  icon: String
-}
-
 """The output of our create \`UserPreference\` mutation."""
 type CreateUserPreferencePayload {
   """
@@ -17043,48 +19602,146 @@ input AgentPersonaInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`ProjectColumn\` mutation."""
-type CreateProjectColumnPayload {
+"""The output of our create \`GithubRepository\` mutation."""
+type CreateGithubRepositoryPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`ProjectColumn\` that was created by this mutation."""
-  projectColumn: ProjectColumn
+  """The \`GithubRepository\` that was created by this mutation."""
+  githubRepository: GithubRepository
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`ProjectColumn\`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering \`ProjectColumn\`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
+  """An edge for our \`GithubRepository\`. May be used by Relay 1."""
+  githubRepositoryEdge(
+    """The method to use when ordering \`GithubRepository\`."""
+    orderBy: [GithubRepositoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryEdge
 }
 
-"""All input for the create \`ProjectColumn\` mutation."""
-input CreateProjectColumnInput {
+"""All input for the create \`GithubRepository\` mutation."""
+input CreateGithubRepositoryInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The \`ProjectColumn\` to be created by this mutation."""
-  projectColumn: ProjectColumnInput!
+  """The \`GithubRepository\` to be created by this mutation."""
+  githubRepository: GithubRepositoryInput!
 }
 
-"""An input for mutations affecting \`ProjectColumn\`"""
-input ProjectColumnInput {
+"""An input for mutations affecting \`GithubRepository\`"""
+input GithubRepositoryInput {
   rowId: UUID
-  icon: String
-  title: String!
   organizationId: String!
-  index: Int
+  projectId: UUID!
+  repoFullName: String!
+  repoId: Int!
+  defaultBranch: String
+  enabled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`GithubInstallation\` mutation."""
+type CreateGithubInstallationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`GithubInstallation\` that was created by this mutation."""
+  githubInstallation: GithubInstallation
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`GithubInstallation\`. May be used by Relay 1."""
+  githubInstallationEdge(
+    """The method to use when ordering \`GithubInstallation\`."""
+    orderBy: [GithubInstallationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubInstallationEdge
+}
+
+"""All input for the create \`GithubInstallation\` mutation."""
+input CreateGithubInstallationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`GithubInstallation\` to be created by this mutation."""
+  githubInstallation: GithubInstallationInput!
+}
+
+"""An input for mutations affecting \`GithubInstallation\`"""
+input GithubInstallationInput {
+  rowId: UUID
+  organizationId: String!
+  installationId: Int!
+  githubOrgLogin: String!
+  githubOrgId: Int!
+  enabled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`TaskExecution\` mutation."""
+type CreateTaskExecutionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaskExecution\` that was created by this mutation."""
+  taskExecution: TaskExecution
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaskExecution\`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering \`TaskExecution\`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the create \`TaskExecution\` mutation."""
+input CreateTaskExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`TaskExecution\` to be created by this mutation."""
+  taskExecution: TaskExecutionInput!
+}
+
+"""An input for mutations affecting \`TaskExecution\`"""
+input TaskExecutionInput {
+  rowId: UUID
+  organizationId: String!
+  projectId: UUID!
+  taskId: UUID!
+  sessionId: UUID
+  triggeredBy: UUID!
+  status: String
+  metadata: JSON
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -17735,6 +20392,146 @@ input UpdateUserInput {
   patch: UserPatch!
 }
 
+"""The output of our update \`Column\` mutation."""
+type UpdateColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Column\` that was updated by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Column\`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering \`Column\`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the \`updateColumnById\` mutation."""
+input UpdateColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Column\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Column\` being updated.
+  """
+  patch: ColumnPatch!
+}
+
+"""
+Represents an update to a \`Column\`. Fields that are set will be updated.
+"""
+input ColumnPatch {
+  rowId: UUID
+  title: String
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: Int
+  icon: String
+}
+
+"""All input for the \`updateColumn\` mutation."""
+input UpdateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Column\` being updated.
+  """
+  patch: ColumnPatch!
+}
+
+"""The output of our update \`ProjectColumn\` mutation."""
+type UpdateProjectColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectColumn\` that was updated by this mutation."""
+  projectColumn: ProjectColumn
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectColumn\`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering \`ProjectColumn\`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the \`updateProjectColumnById\` mutation."""
+input UpdateProjectColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ProjectColumn\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`ProjectColumn\` being updated.
+  """
+  patch: ProjectColumnPatch!
+}
+
+"""
+Represents an update to a \`ProjectColumn\`. Fields that are set will be updated.
+"""
+input ProjectColumnPatch {
+  rowId: UUID
+  icon: String
+  title: String
+  organizationId: String
+  index: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateProjectColumn\` mutation."""
+input UpdateProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`ProjectColumn\` being updated.
+  """
+  patch: ProjectColumnPatch!
+}
+
 """The output of our update \`ProjectLabel\` mutation."""
 type UpdateProjectLabelPayload {
   """
@@ -17945,76 +20742,6 @@ input UpdatePostInput {
   patch: PostPatch!
 }
 
-"""The output of our update \`Column\` mutation."""
-type UpdateColumnPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Column\` that was updated by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Column\`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering \`Column\`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the \`updateColumnById\` mutation."""
-input UpdateColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Column\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Column\` being updated.
-  """
-  patch: ColumnPatch!
-}
-
-"""
-Represents an update to a \`Column\`. Fields that are set will be updated.
-"""
-input ColumnPatch {
-  rowId: UUID
-  title: String
-  projectId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: Int
-  icon: String
-}
-
-"""All input for the \`updateColumn\` mutation."""
-input UpdateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Column\` being updated.
-  """
-  patch: ColumnPatch!
-}
-
 """The output of our update \`UserPreference\` mutation."""
 type UpdateUserPreferencePayload {
   """
@@ -18158,31 +20885,31 @@ input UpdateAgentPersonaInput {
   patch: AgentPersonaPatch!
 }
 
-"""The output of our update \`ProjectColumn\` mutation."""
-type UpdateProjectColumnPayload {
+"""The output of our update \`GithubRepository\` mutation."""
+type UpdateGithubRepositoryPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`ProjectColumn\` that was updated by this mutation."""
-  projectColumn: ProjectColumn
+  """The \`GithubRepository\` that was updated by this mutation."""
+  githubRepository: GithubRepository
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`ProjectColumn\`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering \`ProjectColumn\`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
+  """An edge for our \`GithubRepository\`. May be used by Relay 1."""
+  githubRepositoryEdge(
+    """The method to use when ordering \`GithubRepository\`."""
+    orderBy: [GithubRepositoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryEdge
 }
 
-"""All input for the \`updateProjectColumnById\` mutation."""
-input UpdateProjectColumnByIdInput {
+"""All input for the \`updateGithubRepositoryById\` mutation."""
+input UpdateGithubRepositoryByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18190,31 +20917,33 @@ input UpdateProjectColumnByIdInput {
   clientMutationId: String
 
   """
-  The globally unique \`ID\` which will identify a single \`ProjectColumn\` to be updated.
+  The globally unique \`ID\` which will identify a single \`GithubRepository\` to be updated.
   """
   id: ID!
 
   """
-  An object where the defined keys will be set on the \`ProjectColumn\` being updated.
+  An object where the defined keys will be set on the \`GithubRepository\` being updated.
   """
-  patch: ProjectColumnPatch!
+  patch: GithubRepositoryPatch!
 }
 
 """
-Represents an update to a \`ProjectColumn\`. Fields that are set will be updated.
+Represents an update to a \`GithubRepository\`. Fields that are set will be updated.
 """
-input ProjectColumnPatch {
+input GithubRepositoryPatch {
   rowId: UUID
-  icon: String
-  title: String
   organizationId: String
-  index: Int
+  projectId: UUID
+  repoFullName: String
+  repoId: Int
+  defaultBranch: String
+  enabled: Boolean
   createdAt: Datetime
   updatedAt: Datetime
 }
 
-"""All input for the \`updateProjectColumn\` mutation."""
-input UpdateProjectColumnInput {
+"""All input for the \`updateGithubRepository\` mutation."""
+input UpdateGithubRepositoryInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18223,9 +20952,153 @@ input UpdateProjectColumnInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the \`ProjectColumn\` being updated.
+  An object where the defined keys will be set on the \`GithubRepository\` being updated.
   """
-  patch: ProjectColumnPatch!
+  patch: GithubRepositoryPatch!
+}
+
+"""The output of our update \`GithubInstallation\` mutation."""
+type UpdateGithubInstallationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`GithubInstallation\` that was updated by this mutation."""
+  githubInstallation: GithubInstallation
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`GithubInstallation\`. May be used by Relay 1."""
+  githubInstallationEdge(
+    """The method to use when ordering \`GithubInstallation\`."""
+    orderBy: [GithubInstallationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubInstallationEdge
+}
+
+"""All input for the \`updateGithubInstallationById\` mutation."""
+input UpdateGithubInstallationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`GithubInstallation\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`GithubInstallation\` being updated.
+  """
+  patch: GithubInstallationPatch!
+}
+
+"""
+Represents an update to a \`GithubInstallation\`. Fields that are set will be updated.
+"""
+input GithubInstallationPatch {
+  rowId: UUID
+  organizationId: String
+  installationId: Int
+  githubOrgLogin: String
+  githubOrgId: Int
+  enabled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateGithubInstallation\` mutation."""
+input UpdateGithubInstallationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`GithubInstallation\` being updated.
+  """
+  patch: GithubInstallationPatch!
+}
+
+"""The output of our update \`TaskExecution\` mutation."""
+type UpdateTaskExecutionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaskExecution\` that was updated by this mutation."""
+  taskExecution: TaskExecution
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaskExecution\`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering \`TaskExecution\`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the \`updateTaskExecutionById\` mutation."""
+input UpdateTaskExecutionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TaskExecution\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`TaskExecution\` being updated.
+  """
+  patch: TaskExecutionPatch!
+}
+
+"""
+Represents an update to a \`TaskExecution\`. Fields that are set will be updated.
+"""
+input TaskExecutionPatch {
+  rowId: UUID
+  organizationId: String
+  projectId: UUID
+  taskId: UUID
+  sessionId: UUID
+  triggeredBy: UUID
+  status: String
+  metadata: JSON
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateTaskExecution\` mutation."""
+input UpdateTaskExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`TaskExecution\` being updated.
+  """
+  patch: TaskExecutionPatch!
 }
 
 """The output of our update \`AgentSession\` mutation."""
@@ -18918,6 +21791,102 @@ input DeleteUserInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`Column\` mutation."""
+type DeleteColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Column\` that was deleted by this mutation."""
+  column: Column
+  deletedColumnId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Column\`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering \`Column\`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the \`deleteColumnById\` mutation."""
+input DeleteColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Column\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteColumn\` mutation."""
+input DeleteColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`ProjectColumn\` mutation."""
+type DeleteProjectColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ProjectColumn\` that was deleted by this mutation."""
+  projectColumn: ProjectColumn
+  deletedProjectColumnId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ProjectColumn\`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering \`ProjectColumn\`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the \`deleteProjectColumnById\` mutation."""
+input DeleteProjectColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ProjectColumn\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteProjectColumn\` mutation."""
+input DeleteProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`ProjectLabel\` mutation."""
 type DeleteProjectLabelPayload {
   """
@@ -19062,54 +22031,6 @@ input DeletePostInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Column\` mutation."""
-type DeleteColumnPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Column\` that was deleted by this mutation."""
-  column: Column
-  deletedColumnId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Column\`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering \`Column\`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the \`deleteColumnById\` mutation."""
-input DeleteColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Column\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteColumn\` mutation."""
-input DeleteColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`UserPreference\` mutation."""
 type DeleteUserPreferencePayload {
   """
@@ -19206,32 +22127,32 @@ input DeleteAgentPersonaInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`ProjectColumn\` mutation."""
-type DeleteProjectColumnPayload {
+"""The output of our delete \`GithubRepository\` mutation."""
+type DeleteGithubRepositoryPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`ProjectColumn\` that was deleted by this mutation."""
-  projectColumn: ProjectColumn
-  deletedProjectColumnId: ID
+  """The \`GithubRepository\` that was deleted by this mutation."""
+  githubRepository: GithubRepository
+  deletedGithubRepositoryId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`ProjectColumn\`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering \`ProjectColumn\`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
+  """An edge for our \`GithubRepository\`. May be used by Relay 1."""
+  githubRepositoryEdge(
+    """The method to use when ordering \`GithubRepository\`."""
+    orderBy: [GithubRepositoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryEdge
 }
 
-"""All input for the \`deleteProjectColumnById\` mutation."""
-input DeleteProjectColumnByIdInput {
+"""All input for the \`deleteGithubRepositoryById\` mutation."""
+input DeleteGithubRepositoryByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -19239,13 +22160,109 @@ input DeleteProjectColumnByIdInput {
   clientMutationId: String
 
   """
-  The globally unique \`ID\` which will identify a single \`ProjectColumn\` to be deleted.
+  The globally unique \`ID\` which will identify a single \`GithubRepository\` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the \`deleteProjectColumn\` mutation."""
-input DeleteProjectColumnInput {
+"""All input for the \`deleteGithubRepository\` mutation."""
+input DeleteGithubRepositoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`GithubInstallation\` mutation."""
+type DeleteGithubInstallationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`GithubInstallation\` that was deleted by this mutation."""
+  githubInstallation: GithubInstallation
+  deletedGithubInstallationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`GithubInstallation\`. May be used by Relay 1."""
+  githubInstallationEdge(
+    """The method to use when ordering \`GithubInstallation\`."""
+    orderBy: [GithubInstallationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubInstallationEdge
+}
+
+"""All input for the \`deleteGithubInstallationById\` mutation."""
+input DeleteGithubInstallationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`GithubInstallation\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteGithubInstallation\` mutation."""
+input DeleteGithubInstallationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`TaskExecution\` mutation."""
+type DeleteTaskExecutionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaskExecution\` that was deleted by this mutation."""
+  taskExecution: TaskExecution
+  deletedTaskExecutionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaskExecution\`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering \`TaskExecution\`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the \`deleteTaskExecutionById\` mutation."""
+input DeleteTaskExecutionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TaskExecution\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteTaskExecution\` mutation."""
+input DeleteTaskExecutionInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -19739,6 +22756,58 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      githubInstallation(_$root, {
+        $rowId
+      }) {
+        return resource_github_installationPgResource.get({
+          id: $rowId
+        });
+      },
+      githubInstallationById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_GithubInstallation($nodeId);
+      },
+      githubInstallations: {
+        plan() {
+          return connection(resource_github_installationPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_projectProjectLabelsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      githubRepositories: {
+        plan() {
+          return connection(resource_github_repositoryPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_projectProjectLabelsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      githubRepository(_$root, {
+        $rowId
+      }) {
+        return resource_github_repositoryPgResource.get({
+          id: $rowId
+        });
+      },
+      githubRepositoryById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_GithubRepository($nodeId);
+      },
       id($parent) {
         const specifier = nodeIdHandler_Query.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Query.codec.name].encode);
@@ -19981,6 +23050,32 @@ export const objects = {
           number: $number
         });
       },
+      taskExecution(_$root, {
+        $rowId
+      }) {
+        return resource_task_executionPgResource.get({
+          id: $rowId
+        });
+      },
+      taskExecutionById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_TaskExecution($nodeId);
+      },
+      taskExecutions: {
+        plan() {
+          return connection(resource_task_executionPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_projectProjectLabelsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       taskLabel: Query_taskLabelPlan,
       taskLabelById(_$parent, args) {
         const $nodeId = args.getRaw("id");
@@ -20172,17 +23267,17 @@ ${String(oldPlan2)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan10.apply(this, args);
+                $prev = oldPlan6.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan10)}`);
+${String(oldPlan6)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20214,21 +23309,45 @@ ${String(oldPlan4)}`);
           input: applyInputToInsert
         }
       },
+      createGithubInstallation: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_github_installationPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createGithubRepository: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_github_repositoryPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createLabel: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan6.apply(this, args);
+                $prev = oldPlan8.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createLabel, but that function did not return a step!
-${String(oldPlan6)}`);
+${String(oldPlan8)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper8(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20241,17 +23360,17 @@ ${String(oldPlan6)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan7.apply(this, args);
+                $prev = oldPlan9.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan7)}`);
+${String(oldPlan9)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20287,17 +23406,17 @@ ${String(oldPlan13)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan12.apply(this, args);
+                $prev = oldPlan7.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProjectColumn, but that function did not return a step!
-${String(oldPlan12)}`);
+${String(oldPlan7)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20365,6 +23484,18 @@ ${String(oldPlan16)}`);
           input: applyInputToInsert
         }
       },
+      createTaskExecution: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_task_executionPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createTaskLabel: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -20415,17 +23546,17 @@ ${String(oldPlan5)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan12.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createUserPreference, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan12)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20577,17 +23708,17 @@ ${String(oldPlan31)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan38.apply(this, args);
+                $prev = oldPlan35.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteColumn, but that function did not return a step!
-${String(oldPlan38)}`);
+${String(oldPlan35)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20643,21 +23774,73 @@ ${String(oldPlan33)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteGithubInstallation: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_github_installationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteGithubInstallationById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_github_installationPgResource, specFromArgs_GithubInstallation(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteGithubRepository: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_github_repositoryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteGithubRepositoryById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_github_repositoryPgResource, specFromArgs_GithubRepository(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteLabel: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan35.apply(this, args);
+                $prev = oldPlan37.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteLabel, but that function did not return a step!
-${String(oldPlan35)}`);
+${String(oldPlan37)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20682,17 +23865,17 @@ ${String(oldPlan35)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan36.apply(this, args);
+                $prev = oldPlan38.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan36)}`);
+${String(oldPlan38)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20752,17 +23935,17 @@ ${String(oldPlan41)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan40.apply(this, args);
+                $prev = oldPlan36.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectColumn, but that function did not return a step!
-${String(oldPlan40)}`);
+${String(oldPlan36)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -20897,6 +24080,32 @@ ${String(oldPlan44)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteTaskExecution: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_task_executionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteTaskExecutionById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_task_executionPgResource, specFromArgs_TaskExecution(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteTaskLabel: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -20971,17 +24180,17 @@ ${String(oldPlan34)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan39.apply(this, args);
+                $prev = oldPlan40.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteUserPreference, but that function did not return a step!
-${String(oldPlan39)}`);
+${String(oldPlan40)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21137,17 +24346,17 @@ ${String(oldPlan39)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan23.apply(this, args);
+                $prev = oldPlan20.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan23)}`);
+${String(oldPlan20)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21203,21 +24412,73 @@ ${String(oldPlan18)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      updateGithubInstallation: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_github_installationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateGithubInstallationById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_github_installationPgResource, specFromArgs_GithubInstallation(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateGithubRepository: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_github_repositoryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateGithubRepositoryById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_github_repositoryPgResource, specFromArgs_GithubRepository(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateLabel: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan20.apply(this, args);
+                $prev = oldPlan22.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateLabel, but that function did not return a step!
-${String(oldPlan20)}`);
+${String(oldPlan22)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21242,17 +24503,17 @@ ${String(oldPlan20)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan21.apply(this, args);
+                $prev = oldPlan23.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan21)}`);
+${String(oldPlan23)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21312,17 +24573,17 @@ ${String(oldPlan26)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan25.apply(this, args);
+                $prev = oldPlan21.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProjectColumn, but that function did not return a step!
-${String(oldPlan25)}`);
+${String(oldPlan21)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21457,6 +24718,32 @@ ${String(oldPlan28)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      updateTaskExecution: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_task_executionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateTaskExecutionById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_task_executionPgResource, specFromArgs_TaskExecution(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateTaskLabel: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_task_labelPgResource, {
@@ -21523,17 +24810,17 @@ ${String(oldPlan19)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan24.apply(this, args);
+                $prev = oldPlan25.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateUserPreference, but that function did not return a step!
-${String(oldPlan24)}`);
+${String(oldPlan25)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21580,14 +24867,8 @@ ${String(oldPlan24)}`);
         return $record.get("requires_approval");
       },
       rowId: Project_rowIdPlan,
-      session($record) {
-        return resource_agent_sessionPgResource.get({
-          id: $record.get("session_id")
-        });
-      },
-      sessionId($record) {
-        return $record.get("session_id");
-      },
+      session: AgentActivity_sessionPlan,
+      sessionId: AgentActivity_sessionIdPlan,
       snapshotBefore($record) {
         return $record.get("snapshot_before");
       },
@@ -21648,9 +24929,7 @@ ${String(oldPlan24)}`);
         return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "requires_approval", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       rowId: ProjectDistinctCountAggregates_rowIdPlan,
-      sessionId($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "session_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
+      sessionId: TaskExecutionDistinctCountAggregates_sessionIdPlan,
       snapshotBefore($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "snapshot_before", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
@@ -21750,7 +25029,7 @@ ${String(oldPlan24)}`);
       defaultPersonaId($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "default_persona_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
-      enabled: AgentPersonaDistinctCountAggregates_enabledPlan,
+      enabled: GithubRepositoryDistinctCountAggregates_enabledPlan,
       encryptedApiKey($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.text, "encrypted_api_key", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
@@ -21866,7 +25145,7 @@ ${String(oldPlan24)}`);
     plans: {
       createdAt: ProjectDistinctCountAggregates_createdAtPlan,
       description: ProjectDistinctCountAggregates_descriptionPlan,
-      enabled: AgentPersonaDistinctCountAggregates_enabledPlan,
+      enabled: GithubRepositoryDistinctCountAggregates_enabledPlan,
       icon: ColumnDistinctCountAggregates_iconPlan,
       name: ProjectDistinctCountAggregates_namePlan,
       organizationId: ProjectDistinctCountAggregates_organizationIdPlan,
@@ -21907,6 +25186,24 @@ ${String(oldPlan24)}`);
       project: ProjectProjectLabel_projectPlan,
       projectId: ProjectProjectLabel_projectIdPlan,
       rowId: Project_rowIdPlan,
+      taskExecutionsBySessionId: {
+        plan($record) {
+          const $records = resource_task_executionPgResource.find({
+            session_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_projectProjectLabelsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       toolCallCount($record) {
         return $record.get("tool_call_count");
       },
@@ -21962,9 +25259,7 @@ ${String(oldPlan24)}`);
       messages($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "messages", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
-      metadata($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "metadata", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
+      metadata: TaskExecutionDistinctCountAggregates_metadataPlan,
       organizationId: ProjectDistinctCountAggregates_organizationIdPlan,
       projectId: UserPreferenceDistinctCountAggregates_projectIdPlan,
       rowId: ProjectDistinctCountAggregates_rowIdPlan,
@@ -22261,6 +25556,24 @@ ${String(oldPlan24)}`);
       query: queryPlan
     }
   },
+  CreateGithubInstallationPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      githubInstallation: planCreatePayloadResult,
+      githubInstallationEdge: CreateGithubInstallationPayload_githubInstallationEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateGithubRepositoryPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      githubRepository: planCreatePayloadResult,
+      githubRepositoryEdge: CreateGithubRepositoryPayload_githubRepositoryEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateLabelPayload: {
     assertStep: assertStep,
     plans: {
@@ -22322,6 +25635,15 @@ ${String(oldPlan24)}`);
       query: queryPlan,
       setting: planCreatePayloadResult,
       settingEdge: CreateSettingPayload_settingEdgePlan
+    }
+  },
+  CreateTaskExecutionPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      taskExecution: planCreatePayloadResult,
+      taskExecutionEdge: CreateTaskExecutionPayload_taskExecutionEdgePlan
     }
   },
   CreateTaskLabelPayload: {
@@ -22458,6 +25780,34 @@ ${String(oldPlan24)}`);
       query: queryPlan
     }
   },
+  DeleteGithubInstallationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedGithubInstallationId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_GithubInstallation.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      githubInstallation: planCreatePayloadResult,
+      githubInstallationEdge: CreateGithubInstallationPayload_githubInstallationEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeleteGithubRepositoryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedGithubRepositoryId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_GithubRepository.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      githubRepository: planCreatePayloadResult,
+      githubRepositoryEdge: CreateGithubRepositoryPayload_githubRepositoryEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteLabelPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -22554,6 +25904,20 @@ ${String(oldPlan24)}`);
       query: queryPlan,
       setting: planCreatePayloadResult,
       settingEdge: CreateSettingPayload_settingEdgePlan
+    }
+  },
+  DeleteTaskExecutionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedTaskExecutionId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_TaskExecution.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      taskExecution: planCreatePayloadResult,
+      taskExecutionEdge: CreateTaskExecutionPayload_taskExecutionEdgePlan
     }
   },
   DeleteTaskLabelPayload: {
@@ -22672,6 +26036,293 @@ ${String(oldPlan24)}`);
       rowId: ProjectDistinctCountAggregates_rowIdPlan,
       updatedAt: ProjectDistinctCountAggregates_updatedAtPlan,
       userId: AssigneeDistinctCountAggregates_userIdPlan
+    }
+  },
+  GithubInstallation: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt: ProjectProjectLabel_createdAtPlan,
+      githubOrgId($record) {
+        return $record.get("github_org_id");
+      },
+      githubOrgLogin($record) {
+        return $record.get("github_org_login");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_GithubInstallation.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_GithubInstallation.codec.name].encode);
+      },
+      installationId($record) {
+        return $record.get("installation_id");
+      },
+      organizationId: Project_organizationIdPlan,
+      rowId: Project_rowIdPlan,
+      updatedAt: Project_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of github_installationUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_github_installationPgResource.get(spec);
+    }
+  },
+  GithubInstallationAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      average: pgAggregatesPlanAggregates,
+      distinctCount: pgAggregatesPlanAggregates,
+      keys: ProjectAggregates_keysPlan,
+      max: pgAggregatesPlanAggregates,
+      min: pgAggregatesPlanAggregates,
+      stddevPopulation: pgAggregatesPlanAggregates,
+      stddevSample: pgAggregatesPlanAggregates,
+      sum: pgAggregatesPlanAggregates,
+      variancePopulation: pgAggregatesPlanAggregates,
+      varianceSample: pgAggregatesPlanAggregates
+    }
+  },
+  GithubInstallationAverageAggregates: {
+    plans: {
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.numeric, pgAggregateSpec_average, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.numeric, pgAggregateSpec_average, $pgSelectSingle);
+      }
+    }
+  },
+  GithubInstallationConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates: pgAggregatesCloneSubplanWithoutPaginationSingle,
+      groupedAggregates: {
+        plan: pgAggregateCloneSubplanWithoutPaginationAsAggregate,
+        args: {
+          groupBy: pgAggregatesApplyGroupedAggregate,
+          having: pgAggregatesApplyConditionsToGroupedAggregates
+        }
+      },
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  GithubInstallationDistinctCountAggregates: {
+    plans: {
+      createdAt: ProjectDistinctCountAggregates_createdAtPlan,
+      enabled: GithubRepositoryDistinctCountAggregates_enabledPlan,
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      githubOrgLogin($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "github_org_login", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      organizationId: ProjectDistinctCountAggregates_organizationIdPlan,
+      rowId: ProjectDistinctCountAggregates_rowIdPlan,
+      updatedAt: ProjectDistinctCountAggregates_updatedAtPlan
+    }
+  },
+  GithubInstallationMaxAggregates: {
+    plans: {
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.int, pgAggregateSpec_max, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.int, pgAggregateSpec_max, $pgSelectSingle);
+      }
+    }
+  },
+  GithubInstallationMinAggregates: {
+    plans: {
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.int, pgAggregateSpec_min, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.int, pgAggregateSpec_min, $pgSelectSingle);
+      }
+    }
+  },
+  GithubInstallationStddevPopulationAggregates: {
+    plans: {
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.numeric, pgAggregateSpec_stddevPopulation, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.numeric, pgAggregateSpec_stddevPopulation, $pgSelectSingle);
+      }
+    }
+  },
+  GithubInstallationStddevSampleAggregates: {
+    plans: {
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.numeric, pgAggregateSpec_stddevSample, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.numeric, pgAggregateSpec_stddevSample, $pgSelectSingle);
+      }
+    }
+  },
+  GithubInstallationSumAggregates: {
+    plans: {
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
+      }
+    }
+  },
+  GithubInstallationVariancePopulationAggregates: {
+    plans: {
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.numeric, pgAggregateSpec_variancePopulation, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.numeric, pgAggregateSpec_variancePopulation, $pgSelectSingle);
+      }
+    }
+  },
+  GithubInstallationVarianceSampleAggregates: {
+    plans: {
+      githubOrgId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "github_org_id", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
+      },
+      installationId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "installation_id", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
+      }
+    }
+  },
+  GithubRepository: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt: ProjectProjectLabel_createdAtPlan,
+      defaultBranch($record) {
+        return $record.get("default_branch");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_GithubRepository.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_GithubRepository.codec.name].encode);
+      },
+      organizationId: Project_organizationIdPlan,
+      project: ProjectProjectLabel_projectPlan,
+      projectId: ProjectProjectLabel_projectIdPlan,
+      repoFullName($record) {
+        return $record.get("repo_full_name");
+      },
+      repoId($record) {
+        return $record.get("repo_id");
+      },
+      rowId: Project_rowIdPlan,
+      updatedAt: Project_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of github_repositoryUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_github_repositoryPgResource.get(spec);
+    }
+  },
+  GithubRepositoryAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      average: pgAggregatesPlanAggregates,
+      distinctCount: pgAggregatesPlanAggregates,
+      keys: ProjectAggregates_keysPlan,
+      max: pgAggregatesPlanAggregates,
+      min: pgAggregatesPlanAggregates,
+      stddevPopulation: pgAggregatesPlanAggregates,
+      stddevSample: pgAggregatesPlanAggregates,
+      sum: pgAggregatesPlanAggregates,
+      variancePopulation: pgAggregatesPlanAggregates,
+      varianceSample: pgAggregatesPlanAggregates
+    }
+  },
+  GithubRepositoryAverageAggregates: {
+    plans: {
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.numeric, pgAggregateSpec_average, $pgSelectSingle);
+      }
+    }
+  },
+  GithubRepositoryConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates: pgAggregatesCloneSubplanWithoutPaginationSingle,
+      groupedAggregates: {
+        plan: pgAggregateCloneSubplanWithoutPaginationAsAggregate,
+        args: {
+          groupBy: pgAggregatesApplyGroupedAggregate,
+          having: pgAggregatesApplyConditionsToGroupedAggregates
+        }
+      },
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  GithubRepositoryDistinctCountAggregates: {
+    plans: {
+      createdAt: ProjectDistinctCountAggregates_createdAtPlan,
+      defaultBranch($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "default_branch", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      enabled: GithubRepositoryDistinctCountAggregates_enabledPlan,
+      organizationId: ProjectDistinctCountAggregates_organizationIdPlan,
+      projectId: UserPreferenceDistinctCountAggregates_projectIdPlan,
+      repoFullName($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "repo_full_name", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      rowId: ProjectDistinctCountAggregates_rowIdPlan,
+      updatedAt: ProjectDistinctCountAggregates_updatedAtPlan
+    }
+  },
+  GithubRepositoryMaxAggregates: {
+    plans: {
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.int, pgAggregateSpec_max, $pgSelectSingle);
+      }
+    }
+  },
+  GithubRepositoryMinAggregates: {
+    plans: {
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.int, pgAggregateSpec_min, $pgSelectSingle);
+      }
+    }
+  },
+  GithubRepositoryStddevPopulationAggregates: {
+    plans: {
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.numeric, pgAggregateSpec_stddevPopulation, $pgSelectSingle);
+      }
+    }
+  },
+  GithubRepositoryStddevSampleAggregates: {
+    plans: {
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.numeric, pgAggregateSpec_stddevSample, $pgSelectSingle);
+      }
+    }
+  },
+  GithubRepositorySumAggregates: {
+    plans: {
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
+      }
+    }
+  },
+  GithubRepositoryVariancePopulationAggregates: {
+    plans: {
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.numeric, pgAggregateSpec_variancePopulation, $pgSelectSingle);
+      }
+    }
+  },
+  GithubRepositoryVarianceSampleAggregates: {
+    plans: {
+      repoId($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.int, "repo_id", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
+      }
     }
   },
   Label: {
@@ -22904,6 +26555,24 @@ ${String(oldPlan24)}`);
         }
       },
       createdAt: ProjectProjectLabel_createdAtPlan,
+      githubRepositories: {
+        plan($record) {
+          const $records = resource_github_repositoryPgResource.find({
+            project_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_projectProjectLabelsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       id($parent) {
         const specifier = nodeIdHandler_Project.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Project.codec.name].encode);
@@ -22960,6 +26629,24 @@ ${String(oldPlan24)}`);
         }
       },
       rowId: Project_rowIdPlan,
+      taskExecutions: {
+        plan($record) {
+          const $records = resource_task_executionPgResource.find({
+            project_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_projectProjectLabelsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       tasks: {
         plan($record) {
           const $records = resource_taskPgResource.find({
@@ -23494,6 +27181,24 @@ ${String(oldPlan24)}`);
       project: ProjectProjectLabel_projectPlan,
       projectId: ProjectProjectLabel_projectIdPlan,
       rowId: Project_rowIdPlan,
+      taskExecutions: {
+        plan($record) {
+          const $records = resource_task_executionPgResource.find({
+            task_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_projectProjectLabelsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       taskLabels: {
         plan($record) {
           const $records = resource_task_labelPgResource.find({
@@ -23580,6 +27285,77 @@ ${String(oldPlan24)}`);
       },
       projectId: UserPreferenceDistinctCountAggregates_projectIdPlan,
       rowId: ProjectDistinctCountAggregates_rowIdPlan,
+      updatedAt: ProjectDistinctCountAggregates_updatedAtPlan
+    }
+  },
+  TaskExecution: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt: ProjectProjectLabel_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_TaskExecution.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_TaskExecution.codec.name].encode);
+      },
+      organizationId: Project_organizationIdPlan,
+      project: ProjectProjectLabel_projectPlan,
+      projectId: ProjectProjectLabel_projectIdPlan,
+      rowId: Project_rowIdPlan,
+      session: AgentActivity_sessionPlan,
+      sessionId: AgentActivity_sessionIdPlan,
+      task: Assignee_taskPlan,
+      taskId: Assignee_taskIdPlan,
+      triggeredBy($record) {
+        return $record.get("triggered_by");
+      },
+      updatedAt: Project_updatedAtPlan,
+      user($record) {
+        return resource_userPgResource.get({
+          id: $record.get("triggered_by")
+        });
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of task_executionUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_task_executionPgResource.get(spec);
+    }
+  },
+  TaskExecutionAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      distinctCount: pgAggregatesPlanAggregates,
+      keys: ProjectAggregates_keysPlan
+    }
+  },
+  TaskExecutionConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates: pgAggregatesCloneSubplanWithoutPaginationSingle,
+      groupedAggregates: {
+        plan: pgAggregateCloneSubplanWithoutPaginationAsAggregate,
+        args: {
+          groupBy: pgAggregatesApplyGroupedAggregate,
+          having: pgAggregatesApplyConditionsToGroupedAggregates
+        }
+      },
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  TaskExecutionDistinctCountAggregates: {
+    plans: {
+      createdAt: ProjectDistinctCountAggregates_createdAtPlan,
+      metadata: TaskExecutionDistinctCountAggregates_metadataPlan,
+      organizationId: ProjectDistinctCountAggregates_organizationIdPlan,
+      projectId: UserPreferenceDistinctCountAggregates_projectIdPlan,
+      rowId: ProjectDistinctCountAggregates_rowIdPlan,
+      sessionId: TaskExecutionDistinctCountAggregates_sessionIdPlan,
+      status($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.varchar, "status", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      taskId: AssigneeDistinctCountAggregates_taskIdPlan,
+      triggeredBy($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "triggered_by", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       updatedAt: ProjectDistinctCountAggregates_updatedAtPlan
     }
   },
@@ -23759,6 +27535,24 @@ ${String(oldPlan24)}`);
       query: queryPlan
     }
   },
+  UpdateGithubInstallationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      githubInstallation: planCreatePayloadResult,
+      githubInstallationEdge: CreateGithubInstallationPayload_githubInstallationEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateGithubRepositoryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      githubRepository: planCreatePayloadResult,
+      githubRepositoryEdge: CreateGithubRepositoryPayload_githubRepositoryEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateLabelPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -23820,6 +27614,15 @@ ${String(oldPlan24)}`);
       query: queryPlan,
       setting: planCreatePayloadResult,
       settingEdge: CreateSettingPayload_settingEdgePlan
+    }
+  },
+  UpdateTaskExecutionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      taskExecution: planCreatePayloadResult,
+      taskExecutionEdge: CreateTaskExecutionPayload_taskExecutionEdgePlan
     }
   },
   UpdateTaskLabelPayload: {
@@ -23981,6 +27784,24 @@ ${String(oldPlan24)}`);
         return $record.get("identity_provider_id");
       },
       rowId: Project_rowIdPlan,
+      taskExecutionsByTriggeredBy: {
+        plan($record) {
+          const $records = resource_task_executionPgResource.find({
+            triggered_by: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_projectProjectLabelsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       updatedAt: Project_updatedAtPlan,
       userPreferences: {
         plan($record) {
@@ -24144,9 +27965,7 @@ export const inputObjects = {
         return applyAttributeCondition("requires_approval", TYPES.boolean, $condition, val);
       },
       rowId: ProjectCondition_rowIdApply,
-      sessionId($condition, val) {
-        return applyAttributeCondition("session_id", TYPES.uuid, $condition, val);
-      },
+      sessionId: AgentActivityCondition_sessionIdApply,
       status($condition, val) {
         return applyAttributeCondition("status", TYPES.text, $condition, val);
       },
@@ -24174,9 +27993,7 @@ export const inputObjects = {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "requires_approval", TYPES.bigint, TYPES.boolean, $parent, input);
       },
       rowId: PostDistinctCountAggregateFilter_rowIdApply,
-      sessionId($parent, input) {
-        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "session_id", TYPES.bigint, TYPES.uuid, $parent, input);
-      },
+      sessionId: AgentActivityDistinctCountAggregateFilter_sessionIdApply,
       snapshotBefore($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "snapshot_before", TYPES.bigint, TYPES.jsonb, $parent, input);
       },
@@ -24329,13 +28146,13 @@ export const inputObjects = {
       approvalStatus: AgentActivityInput_approvalStatusApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
       errorMessage: AgentActivityInput_errorMessageApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       requiresApproval: AgentActivityInput_requiresApprovalApply,
       rowId: EmojiInput_rowIdApply,
-      sessionId: AgentActivityInput_sessionIdApply,
+      sessionId: TaskExecutionInput_sessionIdApply,
       snapshotBefore: AgentActivityInput_snapshotBeforeApply,
-      status: AgentActivityInput_statusApply,
+      status: TaskExecutionInput_statusApply,
       toolInput: AgentActivityInput_toolInputApply,
       toolName: AgentActivityInput_toolNameApply,
       toolOutput: AgentActivityInput_toolOutputApply,
@@ -24349,13 +28166,13 @@ export const inputObjects = {
       approvalStatus: AgentActivityInput_approvalStatusApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
       errorMessage: AgentActivityInput_errorMessageApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       requiresApproval: AgentActivityInput_requiresApprovalApply,
       rowId: EmojiInput_rowIdApply,
-      sessionId: AgentActivityInput_sessionIdApply,
+      sessionId: TaskExecutionInput_sessionIdApply,
       snapshotBefore: AgentActivityInput_snapshotBeforeApply,
-      status: AgentActivityInput_statusApply,
+      status: TaskExecutionInput_statusApply,
       toolInput: AgentActivityInput_toolInputApply,
       toolName: AgentActivityInput_toolNameApply,
       toolOutput: AgentActivityInput_toolOutputApply,
@@ -24371,7 +28188,7 @@ export const inputObjects = {
       defaultPersonaId($condition, val) {
         return applyAttributeCondition("default_persona_id", TYPES.uuid, $condition, val);
       },
-      enabled: AgentPersonaCondition_enabledApply,
+      enabled: GithubRepositoryCondition_enabledApply,
       encryptedApiKey($condition, val) {
         return applyAttributeCondition("encrypted_api_key", TYPES.text, $condition, val);
       },
@@ -24577,7 +28394,7 @@ export const inputObjects = {
       encryptedApiKey: AgentConfigInput_encryptedApiKeyApply,
       maxIterationsPerRequest: AgentConfigInput_maxIterationsPerRequestApply,
       model: AgentConfigInput_modelApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       requireApprovalForCreate: AgentConfigInput_requireApprovalForCreateApply,
       requireApprovalForDestructive: AgentConfigInput_requireApprovalForDestructiveApply,
       rowId: EmojiInput_rowIdApply,
@@ -24594,7 +28411,7 @@ export const inputObjects = {
       encryptedApiKey: AgentConfigInput_encryptedApiKeyApply,
       maxIterationsPerRequest: AgentConfigInput_maxIterationsPerRequestApply,
       model: AgentConfigInput_modelApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       requireApprovalForCreate: AgentConfigInput_requireApprovalForCreateApply,
       requireApprovalForDestructive: AgentConfigInput_requireApprovalForDestructiveApply,
       rowId: EmojiInput_rowIdApply,
@@ -24605,7 +28422,7 @@ export const inputObjects = {
     plans: {
       createdAt: ProjectCondition_createdAtApply,
       description: ProjectCondition_descriptionApply,
-      enabled: AgentPersonaCondition_enabledApply,
+      enabled: GithubRepositoryCondition_enabledApply,
       icon: ColumnCondition_iconApply,
       name: ProjectCondition_nameApply,
       organizationId: ProjectCondition_organizationIdApply,
@@ -24761,9 +28578,9 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       description: PostInput_descriptionApply,
       enabled: AgentPersonaInput_enabledApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       name: UserInput_nameApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       rowId: EmojiInput_rowIdApply,
       systemPrompt: AgentPersonaInput_systemPromptApply,
       updatedAt: TaskLabelInput_updatedAtApply
@@ -24775,9 +28592,9 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       description: PostInput_descriptionApply,
       enabled: AgentPersonaInput_enabledApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       name: UserInput_nameApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       rowId: EmojiInput_rowIdApply,
       systemPrompt: AgentPersonaInput_systemPromptApply,
       updatedAt: TaskLabelInput_updatedAtApply
@@ -24827,9 +28644,7 @@ export const inputObjects = {
       messages($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "messages", TYPES.bigint, TYPES.jsonb, $parent, input);
       },
-      metadata($parent, input) {
-        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "metadata", TYPES.bigint, TYPES.jsonb, $parent, input);
-      },
+      metadata: TaskExecutionDistinctCountAggregateFilter_metadataApply,
       organizationId: AgentActivityDistinctCountAggregateFilter_organizationIdApply,
       projectId: TaskDistinctCountAggregateFilter_projectIdApply,
       rowId: PostDistinctCountAggregateFilter_rowIdApply,
@@ -24890,6 +28705,30 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_agentSession.attributes.id, queryBuilder, value);
+      },
+      taskExecutionsBySessionId($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: taskExecutionIdentifier,
+          alias: resource_task_executionPgResource.name,
+          localAttributes: registryConfig.pgRelations.agentSession.taskExecutionsByTheirSessionId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.agentSession.taskExecutionsByTheirSessionId.remoteAttributes
+        };
+        return $rel;
+      },
+      taskExecutionsBySessionIdExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: taskExecutionIdentifier,
+          alias: resource_task_executionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.agentSession.taskExecutionsByTheirSessionId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.agentSession.taskExecutionsByTheirSessionId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       title(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("title", "title", spec_agentSession.attributes.title, queryBuilder, value);
@@ -25048,11 +28887,11 @@ export const inputObjects = {
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       messages: AgentSessionInput_messagesApply,
-      metadata: AgentSessionInput_metadataApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      metadata: TaskExecutionInput_metadataApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: EmojiInput_rowIdApply,
-      title: PostInput_titleApply,
+      title: ColumnInput_titleApply,
       toolCallCount: AgentSessionInput_toolCallCountApply,
       type: AgentSessionInput_typeApply,
       updatedAt: TaskLabelInput_updatedAtApply,
@@ -25078,11 +28917,11 @@ export const inputObjects = {
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       messages: AgentSessionInput_messagesApply,
-      metadata: AgentSessionInput_metadataApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      metadata: TaskExecutionInput_metadataApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: EmojiInput_rowIdApply,
-      title: PostInput_titleApply,
+      title: ColumnInput_titleApply,
       toolCallCount: AgentSessionInput_toolCallCountApply,
       type: AgentSessionInput_typeApply,
       updatedAt: TaskLabelInput_updatedAtApply,
@@ -25111,6 +28950,14 @@ export const inputObjects = {
     }
   },
   AgentSessionToManyAgentActivityFilter: {
+    plans: {
+      aggregates: ProjectToManyColumnFilter_aggregatesApply,
+      every: ProjectToManyColumnFilter_everyApply,
+      none: ProjectToManyColumnFilter_noneApply,
+      some: ProjectToManyColumnFilter_someApply
+    }
+  },
+  AgentSessionToManyTaskExecutionFilter: {
     plans: {
       aggregates: ProjectToManyColumnFilter_aggregatesApply,
       every: ProjectToManyColumnFilter_everyApply,
@@ -25621,11 +29468,11 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       index: ColumnInput_indexApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: EmojiInput_rowIdApply,
-      title: PostInput_titleApply,
+      title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -25647,11 +29494,11 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       index: ColumnInput_indexApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: EmojiInput_rowIdApply,
-      title: PostInput_titleApply,
+      title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -25740,6 +29587,18 @@ export const inputObjects = {
       emoji: applyCreateFields
     }
   },
+  CreateGithubInstallationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      githubInstallation: applyCreateFields
+    }
+  },
+  CreateGithubRepositoryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      githubRepository: applyCreateFields
+    }
+  },
   CreateLabelInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -25780,6 +29639,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       setting: applyCreateFields
+    }
+  },
+  CreateTaskExecutionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      taskExecution: applyCreateFields
     }
   },
   CreateTaskInput: {
@@ -25891,6 +29756,26 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteGithubInstallationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteGithubInstallationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteGithubRepositoryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteGithubRepositoryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteLabelByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -25962,6 +29847,16 @@ export const inputObjects = {
     }
   },
   DeleteTaskByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteTaskExecutionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteTaskExecutionInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -26191,6 +30086,547 @@ export const inputObjects = {
       rowId: EmojiInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       userId: AssigneeInput_userIdApply
+    }
+  },
+  GithubInstallationCondition: {
+    plans: {
+      createdAt: ProjectCondition_createdAtApply,
+      enabled: GithubRepositoryCondition_enabledApply,
+      githubOrgId($condition, val) {
+        return applyAttributeCondition("github_org_id", TYPES.int, $condition, val);
+      },
+      githubOrgLogin($condition, val) {
+        return applyAttributeCondition("github_org_login", TYPES.text, $condition, val);
+      },
+      installationId($condition, val) {
+        return applyAttributeCondition("installation_id", TYPES.int, $condition, val);
+      },
+      organizationId: ProjectCondition_organizationIdApply,
+      rowId: ProjectCondition_rowIdApply,
+      updatedAt: ProjectCondition_updatedAtApply
+    }
+  },
+  GithubInstallationFilter: {
+    plans: {
+      and: ProjectFilter_andApply,
+      createdAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_githubInstallation.attributes.created_at, queryBuilder, value);
+      },
+      enabled(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("enabled", "enabled", spec_githubInstallation.attributes.enabled, queryBuilder, value);
+      },
+      githubOrgId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("githubOrgId", "github_org_id", spec_githubInstallation.attributes.github_org_id, queryBuilder, value);
+      },
+      githubOrgLogin(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("githubOrgLogin", "github_org_login", spec_githubInstallation.attributes.github_org_login, queryBuilder, value);
+      },
+      installationId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("installationId", "installation_id", spec_githubInstallation.attributes.installation_id, queryBuilder, value);
+      },
+      not: ProjectFilter_notApply,
+      or: ProjectFilter_orApply,
+      organizationId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("organizationId", "organization_id", spec_githubInstallation.attributes.organization_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_githubInstallation.attributes.id, queryBuilder, value);
+      },
+      updatedAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("updatedAt", "updated_at", spec_githubInstallation.attributes.updated_at, queryBuilder, value);
+      }
+    }
+  },
+  GithubInstallationHavingAverageInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationHavingDistinctCountInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationHavingInput: {
+    plans: {
+      AND: pgAggregatesApplyAnd,
+      average: pgAggregatesPlanAggregatesField,
+      distinctCount: pgAggregatesPlanAggregatesField,
+      max: pgAggregatesPlanAggregatesField,
+      min: pgAggregatesPlanAggregatesField,
+      OR: ProjectHavingInput_ORApply,
+      stddevPopulation: pgAggregatesPlanAggregatesField,
+      stddevSample: pgAggregatesPlanAggregatesField,
+      sum: pgAggregatesPlanAggregatesField,
+      variancePopulation: pgAggregatesPlanAggregatesField,
+      varianceSample: pgAggregatesPlanAggregatesField
+    }
+  },
+  GithubInstallationHavingMaxInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationHavingMinInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationHavingStddevPopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationHavingStddevSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationHavingSumInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationHavingVariancePopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationHavingVarianceSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_githubInstallation.attributes.created_at, "created_at", $having);
+      },
+      githubOrgId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_githubInstallation.attributes.github_org_id, "github_org_id", $having);
+      },
+      installationId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_githubInstallation.attributes.installation_id, "installation_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_githubInstallation.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubInstallationInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: ProjectProjectLabelInput_createdAtApply,
+      enabled: AgentPersonaInput_enabledApply,
+      githubOrgId: GithubInstallationInput_githubOrgIdApply,
+      githubOrgLogin: GithubInstallationInput_githubOrgLoginApply,
+      installationId: GithubInstallationInput_installationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
+      rowId: EmojiInput_rowIdApply,
+      updatedAt: TaskLabelInput_updatedAtApply
+    }
+  },
+  GithubInstallationPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: ProjectProjectLabelInput_createdAtApply,
+      enabled: AgentPersonaInput_enabledApply,
+      githubOrgId: GithubInstallationInput_githubOrgIdApply,
+      githubOrgLogin: GithubInstallationInput_githubOrgLoginApply,
+      installationId: GithubInstallationInput_installationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
+      rowId: EmojiInput_rowIdApply,
+      updatedAt: TaskLabelInput_updatedAtApply
+    }
+  },
+  GithubRepositoryAggregatesFilter: {
+    plans: {
+      average: TaskAggregatesFilter_averageApply,
+      distinctCount: AssigneeAggregatesFilter_distinctCountApply,
+      filter: filterApply,
+      max: TaskAggregatesFilter_maxApply,
+      min: TaskAggregatesFilter_minApply,
+      stddevPopulation: TaskAggregatesFilter_stddevPopulationApply,
+      stddevSample: TaskAggregatesFilter_stddevSampleApply,
+      sum: TaskAggregatesFilter_sumApply,
+      variancePopulation: TaskAggregatesFilter_variancePopulationApply,
+      varianceSample: TaskAggregatesFilter_varianceSampleApply
+    }
+  },
+  GithubRepositoryAverageAggregateFilter: {
+    plans: {
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_average, "repo_id", TYPES.numeric, TYPES.int, $parent, input);
+      }
+    }
+  },
+  GithubRepositoryCondition: {
+    plans: {
+      createdAt: ProjectCondition_createdAtApply,
+      defaultBranch($condition, val) {
+        return applyAttributeCondition("default_branch", TYPES.text, $condition, val);
+      },
+      enabled: GithubRepositoryCondition_enabledApply,
+      organizationId: ProjectCondition_organizationIdApply,
+      projectId: TaskCondition_projectIdApply,
+      repoFullName($condition, val) {
+        return applyAttributeCondition("repo_full_name", TYPES.text, $condition, val);
+      },
+      repoId($condition, val) {
+        return applyAttributeCondition("repo_id", TYPES.int, $condition, val);
+      },
+      rowId: ProjectCondition_rowIdApply,
+      updatedAt: ProjectCondition_updatedAtApply
+    }
+  },
+  GithubRepositoryDistinctCountAggregateFilter: {
+    plans: {
+      createdAt: AssigneeDistinctCountAggregateFilter_createdAtApply,
+      defaultBranch($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "default_branch", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      enabled($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "enabled", TYPES.bigint, TYPES.boolean, $parent, input);
+      },
+      organizationId: AgentActivityDistinctCountAggregateFilter_organizationIdApply,
+      projectId: TaskDistinctCountAggregateFilter_projectIdApply,
+      repoFullName($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "repo_full_name", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "repo_id", TYPES.bigint, TYPES.int, $parent, input);
+      },
+      rowId: PostDistinctCountAggregateFilter_rowIdApply,
+      updatedAt: AssigneeDistinctCountAggregateFilter_updatedAtApply
+    }
+  },
+  GithubRepositoryFilter: {
+    plans: {
+      and: ProjectFilter_andApply,
+      createdAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_githubRepository.attributes.created_at, queryBuilder, value);
+      },
+      defaultBranch(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("defaultBranch", "default_branch", spec_githubRepository.attributes.default_branch, queryBuilder, value);
+      },
+      enabled(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("enabled", "enabled", spec_githubRepository.attributes.enabled, queryBuilder, value);
+      },
+      not: ProjectFilter_notApply,
+      or: ProjectFilter_orApply,
+      organizationId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("organizationId", "organization_id", spec_githubRepository.attributes.organization_id, queryBuilder, value);
+      },
+      project($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.githubRepository.projectByMyProjectId.localAttributes, registryConfig.pgRelations.githubRepository.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("projectId", "project_id", spec_githubRepository.attributes.project_id, queryBuilder, value);
+      },
+      repoFullName(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("repoFullName", "repo_full_name", spec_githubRepository.attributes.repo_full_name, queryBuilder, value);
+      },
+      repoId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("repoId", "repo_id", spec_githubRepository.attributes.repo_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_githubRepository.attributes.id, queryBuilder, value);
+      },
+      updatedAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("updatedAt", "updated_at", spec_githubRepository.attributes.updated_at, queryBuilder, value);
+      }
+    }
+  },
+  GithubRepositoryHavingAverageInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryHavingDistinctCountInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryHavingInput: {
+    plans: {
+      AND: pgAggregatesApplyAnd,
+      average: pgAggregatesPlanAggregatesField,
+      distinctCount: pgAggregatesPlanAggregatesField,
+      max: pgAggregatesPlanAggregatesField,
+      min: pgAggregatesPlanAggregatesField,
+      OR: ProjectHavingInput_ORApply,
+      stddevPopulation: pgAggregatesPlanAggregatesField,
+      stddevSample: pgAggregatesPlanAggregatesField,
+      sum: pgAggregatesPlanAggregatesField,
+      variancePopulation: pgAggregatesPlanAggregatesField,
+      varianceSample: pgAggregatesPlanAggregatesField
+    }
+  },
+  GithubRepositoryHavingMaxInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryHavingMinInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryHavingStddevPopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryHavingStddevSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryHavingSumInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryHavingVariancePopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryHavingVarianceSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_githubRepository.attributes.created_at, "created_at", $having);
+      },
+      repoId($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_githubRepository.attributes.repo_id, "repo_id", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_githubRepository.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  GithubRepositoryInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: ProjectProjectLabelInput_createdAtApply,
+      defaultBranch: GithubRepositoryInput_defaultBranchApply,
+      enabled: AgentPersonaInput_enabledApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
+      projectId: ProjectProjectLabelInput_projectIdApply,
+      repoFullName: GithubRepositoryInput_repoFullNameApply,
+      repoId: GithubRepositoryInput_repoIdApply,
+      rowId: EmojiInput_rowIdApply,
+      updatedAt: TaskLabelInput_updatedAtApply
+    }
+  },
+  GithubRepositoryMaxAggregateFilter: {
+    plans: {
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_max, "repo_id", TYPES.int, TYPES.int, $parent, input);
+      }
+    }
+  },
+  GithubRepositoryMinAggregateFilter: {
+    plans: {
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_min, "repo_id", TYPES.int, TYPES.int, $parent, input);
+      }
+    }
+  },
+  GithubRepositoryPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: ProjectProjectLabelInput_createdAtApply,
+      defaultBranch: GithubRepositoryInput_defaultBranchApply,
+      enabled: AgentPersonaInput_enabledApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
+      projectId: ProjectProjectLabelInput_projectIdApply,
+      repoFullName: GithubRepositoryInput_repoFullNameApply,
+      repoId: GithubRepositoryInput_repoIdApply,
+      rowId: EmojiInput_rowIdApply,
+      updatedAt: TaskLabelInput_updatedAtApply
+    }
+  },
+  GithubRepositoryStddevPopulationAggregateFilter: {
+    plans: {
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_stddevPopulation, "repo_id", TYPES.numeric, TYPES.int, $parent, input);
+      }
+    }
+  },
+  GithubRepositoryStddevSampleAggregateFilter: {
+    plans: {
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_stddevSample, "repo_id", TYPES.numeric, TYPES.int, $parent, input);
+      }
+    }
+  },
+  GithubRepositorySumAggregateFilter: {
+    plans: {
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_sum, "repo_id", TYPES.bigint, TYPES.int, $parent, input);
+      }
+    }
+  },
+  GithubRepositoryVariancePopulationAggregateFilter: {
+    plans: {
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_variancePopulation, "repo_id", TYPES.numeric, TYPES.int, $parent, input);
+      }
+    }
+  },
+  GithubRepositoryVarianceSampleAggregateFilter: {
+    plans: {
+      repoId($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_varianceSample, "repo_id", TYPES.numeric, TYPES.int, $parent, input);
+      }
     }
   },
   HavingDatetimeFilter: {
@@ -26455,9 +30891,9 @@ export const inputObjects = {
     plans: {
       color: ProjectLabelInput_colorApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       name: UserInput_nameApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: EmojiInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
@@ -26468,9 +30904,9 @@ export const inputObjects = {
     plans: {
       color: ProjectLabelInput_colorApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       name: UserInput_nameApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: EmojiInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
@@ -26726,7 +31162,7 @@ export const inputObjects = {
       parentId: PostInput_parentIdApply,
       rowId: EmojiInput_rowIdApply,
       taskId: TaskLabelInput_taskIdApply,
-      title: PostInput_titleApply,
+      title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -26739,7 +31175,7 @@ export const inputObjects = {
       parentId: PostInput_parentIdApply,
       rowId: EmojiInput_rowIdApply,
       taskId: TaskLabelInput_taskIdApply,
-      title: PostInput_titleApply,
+      title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -26980,11 +31416,11 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       index: ColumnInput_indexApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       rowId: EmojiInput_rowIdApply,
-      title: PostInput_titleApply,
+      title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -26992,11 +31428,11 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       index: ColumnInput_indexApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       rowId: EmojiInput_rowIdApply,
-      title: PostInput_titleApply,
+      title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -27144,6 +31580,30 @@ export const inputObjects = {
       description(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("description", "description", spec_project.attributes.description, queryBuilder, value);
       },
+      githubRepositories($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: githubRepositoryIdentifier,
+          alias: resource_github_repositoryPgResource.name,
+          localAttributes: registryConfig.pgRelations.project.githubRepositoriesByTheirProjectId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.project.githubRepositoriesByTheirProjectId.remoteAttributes
+        };
+        return $rel;
+      },
+      githubRepositoriesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: githubRepositoryIdentifier,
+          alias: resource_github_repositoryPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.project.githubRepositoriesByTheirProjectId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.project.githubRepositoriesByTheirProjectId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       isPublic(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("isPublic", "is_public", spec_project.attributes.is_public, queryBuilder, value);
       },
@@ -27220,6 +31680,30 @@ export const inputObjects = {
       },
       slug(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("slug", "slug", spec_project.attributes.slug, queryBuilder, value);
+      },
+      taskExecutions($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: taskExecutionIdentifier,
+          alias: resource_task_executionPgResource.name,
+          localAttributes: registryConfig.pgRelations.project.taskExecutionsByTheirProjectId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.project.taskExecutionsByTheirProjectId.remoteAttributes
+        };
+        return $rel;
+      },
+      taskExecutionsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: taskExecutionIdentifier,
+          alias: resource_task_executionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.project.taskExecutionsByTheirProjectId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.project.taskExecutionsByTheirProjectId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       tasks($where, value) {
         assertAllowed(value, "object");
@@ -27442,7 +31926,7 @@ export const inputObjects = {
       isPublic: ProjectInput_isPublicApply,
       name: UserInput_nameApply,
       nextTaskNumber: ProjectInput_nextTaskNumberApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       prefix: ProjectInput_prefixApply,
       projectColumnId: ProjectInput_projectColumnIdApply,
       rowId: EmojiInput_rowIdApply,
@@ -27623,9 +32107,9 @@ export const inputObjects = {
     plans: {
       color: ProjectLabelInput_colorApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       name: UserInput_nameApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       rowId: EmojiInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
@@ -27635,9 +32119,9 @@ export const inputObjects = {
     plans: {
       color: ProjectLabelInput_colorApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ProjectLabelInput_iconApply,
+      icon: ColumnInput_iconApply,
       name: UserInput_nameApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       rowId: EmojiInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
@@ -27675,7 +32159,7 @@ export const inputObjects = {
       isPublic: ProjectInput_isPublicApply,
       name: UserInput_nameApply,
       nextTaskNumber: ProjectInput_nextTaskNumberApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       prefix: ProjectInput_prefixApply,
       projectColumnId: ProjectInput_projectColumnIdApply,
       rowId: EmojiInput_rowIdApply,
@@ -27871,6 +32355,14 @@ export const inputObjects = {
       some: ProjectToManyColumnFilter_someApply
     }
   },
+  ProjectToManyGithubRepositoryFilter: {
+    plans: {
+      aggregates: ProjectToManyColumnFilter_aggregatesApply,
+      every: ProjectToManyColumnFilter_everyApply,
+      none: ProjectToManyColumnFilter_noneApply,
+      some: ProjectToManyColumnFilter_someApply
+    }
+  },
   ProjectToManyLabelFilter: {
     plans: {
       aggregates: ProjectToManyColumnFilter_aggregatesApply,
@@ -27880,6 +32372,14 @@ export const inputObjects = {
     }
   },
   ProjectToManyProjectProjectLabelFilter: {
+    plans: {
+      aggregates: ProjectToManyColumnFilter_aggregatesApply,
+      every: ProjectToManyColumnFilter_everyApply,
+      none: ProjectToManyColumnFilter_noneApply,
+      some: ProjectToManyColumnFilter_someApply
+    }
+  },
+  ProjectToManyTaskExecutionFilter: {
     plans: {
       aggregates: ProjectToManyColumnFilter_aggregatesApply,
       every: ProjectToManyColumnFilter_everyApply,
@@ -28113,7 +32613,7 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       deletedAt: AssigneeInput_deletedAtApply,
       deletionReason: SettingInput_deletionReasonApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       rowId: EmojiInput_rowIdApply,
       subscriptionId: SettingInput_subscriptionIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
@@ -28127,7 +32627,7 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       deletedAt: AssigneeInput_deletedAtApply,
       deletionReason: SettingInput_deletionReasonApply,
-      organizationId: ProjectLabelInput_organizationIdApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
       rowId: EmojiInput_rowIdApply,
       subscriptionId: SettingInput_subscriptionIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
@@ -28341,6 +32841,231 @@ export const inputObjects = {
       updatedAt: AssigneeDistinctCountAggregateFilter_updatedAtApply
     }
   },
+  TaskExecutionAggregatesFilter: {
+    plans: {
+      distinctCount: AssigneeAggregatesFilter_distinctCountApply,
+      filter: filterApply
+    }
+  },
+  TaskExecutionCondition: {
+    plans: {
+      createdAt: ProjectCondition_createdAtApply,
+      organizationId: ProjectCondition_organizationIdApply,
+      projectId: TaskCondition_projectIdApply,
+      rowId: ProjectCondition_rowIdApply,
+      sessionId: AgentActivityCondition_sessionIdApply,
+      status($condition, val) {
+        return applyAttributeCondition("status", TYPES.varchar, $condition, val);
+      },
+      taskId: AssigneeCondition_taskIdApply,
+      triggeredBy($condition, val) {
+        return applyAttributeCondition("triggered_by", TYPES.uuid, $condition, val);
+      },
+      updatedAt: ProjectCondition_updatedAtApply
+    }
+  },
+  TaskExecutionDistinctCountAggregateFilter: {
+    plans: {
+      createdAt: AssigneeDistinctCountAggregateFilter_createdAtApply,
+      metadata: TaskExecutionDistinctCountAggregateFilter_metadataApply,
+      organizationId: AgentActivityDistinctCountAggregateFilter_organizationIdApply,
+      projectId: TaskDistinctCountAggregateFilter_projectIdApply,
+      rowId: PostDistinctCountAggregateFilter_rowIdApply,
+      sessionId: AgentActivityDistinctCountAggregateFilter_sessionIdApply,
+      status($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "status", TYPES.bigint, TYPES.varchar, $parent, input);
+      },
+      taskId: AssigneeDistinctCountAggregateFilter_taskIdApply,
+      triggeredBy($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "triggered_by", TYPES.bigint, TYPES.uuid, $parent, input);
+      },
+      updatedAt: AssigneeDistinctCountAggregateFilter_updatedAtApply
+    }
+  },
+  TaskExecutionFilter: {
+    plans: {
+      and: ProjectFilter_andApply,
+      createdAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_taskExecution.attributes.created_at, queryBuilder, value);
+      },
+      not: ProjectFilter_notApply,
+      or: ProjectFilter_orApply,
+      organizationId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("organizationId", "organization_id", spec_taskExecution.attributes.organization_id, queryBuilder, value);
+      },
+      project($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.taskExecution.projectByMyProjectId.localAttributes, registryConfig.pgRelations.taskExecution.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("projectId", "project_id", spec_taskExecution.attributes.project_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_taskExecution.attributes.id, queryBuilder, value);
+      },
+      session($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_agent_sessionPgResource, agentSessionIdentifier, registryConfig.pgRelations.taskExecution.agentSessionByMySessionId.localAttributes, registryConfig.pgRelations.taskExecution.agentSessionByMySessionId.remoteAttributes, $where, value);
+      },
+      sessionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_agent_sessionPgResource, agentSessionIdentifier, registryConfig.pgRelations.taskExecution.agentSessionByMySessionId.localAttributes, registryConfig.pgRelations.taskExecution.agentSessionByMySessionId.remoteAttributes, $where, value);
+      },
+      sessionId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("sessionId", "session_id", spec_taskExecution.attributes.session_id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_taskExecution.attributes.status, queryBuilder, value);
+      },
+      task($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_taskPgResource, taskIdentifier, registryConfig.pgRelations.taskExecution.taskByMyTaskId.localAttributes, registryConfig.pgRelations.taskExecution.taskByMyTaskId.remoteAttributes, $where, value);
+      },
+      taskId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("taskId", "task_id", spec_taskExecution.attributes.task_id, queryBuilder, value);
+      },
+      triggeredBy(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("triggeredBy", "triggered_by", spec_taskExecution.attributes.triggered_by, queryBuilder, value);
+      },
+      updatedAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("updatedAt", "updated_at", spec_taskExecution.attributes.updated_at, queryBuilder, value);
+      },
+      user($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_userPgResource, userIdentifier, registryConfig.pgRelations.taskExecution.userByMyTriggeredBy.localAttributes, registryConfig.pgRelations.taskExecution.userByMyTriggeredBy.remoteAttributes, $where, value);
+      }
+    }
+  },
+  TaskExecutionHavingAverageInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionHavingDistinctCountInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionHavingInput: {
+    plans: {
+      AND: pgAggregatesApplyAnd,
+      average: pgAggregatesPlanAggregatesField,
+      distinctCount: pgAggregatesPlanAggregatesField,
+      max: pgAggregatesPlanAggregatesField,
+      min: pgAggregatesPlanAggregatesField,
+      OR: ProjectHavingInput_ORApply,
+      stddevPopulation: pgAggregatesPlanAggregatesField,
+      stddevSample: pgAggregatesPlanAggregatesField,
+      sum: pgAggregatesPlanAggregatesField,
+      variancePopulation: pgAggregatesPlanAggregatesField,
+      varianceSample: pgAggregatesPlanAggregatesField
+    }
+  },
+  TaskExecutionHavingMaxInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionHavingMinInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionHavingStddevPopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionHavingStddevSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionHavingSumInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionHavingVariancePopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionHavingVarianceSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_taskExecution.attributes.created_at, "created_at", $having);
+      },
+      updatedAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_taskExecution.attributes.updated_at, "updated_at", $having);
+      }
+    }
+  },
+  TaskExecutionInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: ProjectProjectLabelInput_createdAtApply,
+      metadata: TaskExecutionInput_metadataApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
+      projectId: ProjectProjectLabelInput_projectIdApply,
+      rowId: EmojiInput_rowIdApply,
+      sessionId: TaskExecutionInput_sessionIdApply,
+      status: TaskExecutionInput_statusApply,
+      taskId: TaskLabelInput_taskIdApply,
+      triggeredBy: TaskExecutionInput_triggeredByApply,
+      updatedAt: TaskLabelInput_updatedAtApply
+    }
+  },
+  TaskExecutionPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: ProjectProjectLabelInput_createdAtApply,
+      metadata: TaskExecutionInput_metadataApply,
+      organizationId: ProjectColumnInput_organizationIdApply,
+      projectId: ProjectProjectLabelInput_projectIdApply,
+      rowId: EmojiInput_rowIdApply,
+      sessionId: TaskExecutionInput_sessionIdApply,
+      status: TaskExecutionInput_statusApply,
+      taskId: TaskLabelInput_taskIdApply,
+      triggeredBy: TaskExecutionInput_triggeredByApply,
+      updatedAt: TaskLabelInput_updatedAtApply
+    }
+  },
   TaskFilter: {
     plans: {
       and: ProjectFilter_andApply,
@@ -28438,6 +33163,30 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_task.attributes.id, queryBuilder, value);
+      },
+      taskExecutions($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: taskExecutionIdentifier,
+          alias: resource_task_executionPgResource.name,
+          localAttributes: registryConfig.pgRelations.task.taskExecutionsByTheirTaskId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.task.taskExecutionsByTheirTaskId.remoteAttributes
+        };
+        return $rel;
+      },
+      taskExecutionsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: taskExecutionIdentifier,
+          alias: resource_task_executionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.task.taskExecutionsByTheirTaskId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.task.taskExecutionsByTheirTaskId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       taskLabels($where, value) {
         assertAllowed(value, "object");
@@ -28918,6 +33667,14 @@ export const inputObjects = {
       some: ProjectToManyColumnFilter_someApply
     }
   },
+  TaskToManyTaskExecutionFilter: {
+    plans: {
+      aggregates: ProjectToManyColumnFilter_aggregatesApply,
+      every: ProjectToManyColumnFilter_everyApply,
+      none: ProjectToManyColumnFilter_noneApply,
+      some: ProjectToManyColumnFilter_someApply
+    }
+  },
   TaskToManyTaskLabelFilter: {
     plans: {
       aggregates: ProjectToManyColumnFilter_aggregatesApply,
@@ -29026,6 +33783,30 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateGithubInstallationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateGithubInstallationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateGithubRepositoryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateGithubRepositoryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateLabelByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -29111,6 +33892,18 @@ export const inputObjects = {
     }
   },
   UpdateTaskByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateTaskExecutionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateTaskExecutionInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -29341,6 +34134,30 @@ export const inputObjects = {
       or: ProjectFilter_orApply,
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_user.attributes.id, queryBuilder, value);
+      },
+      taskExecutionsByTriggeredBy($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: taskExecutionIdentifier,
+          alias: resource_task_executionPgResource.name,
+          localAttributes: registryConfig.pgRelations.user.taskExecutionsByTheirTriggeredBy.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.user.taskExecutionsByTheirTriggeredBy.remoteAttributes
+        };
+        return $rel;
+      },
+      taskExecutionsByTriggeredByExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: taskExecutionIdentifier,
+          alias: resource_task_executionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.user.taskExecutionsByTheirTriggeredBy.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.user.taskExecutionsByTheirTriggeredBy.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       updatedAt(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("updatedAt", "updated_at", spec_user.attributes.updated_at, queryBuilder, value);
@@ -29745,6 +34562,14 @@ export const inputObjects = {
       some: ProjectToManyColumnFilter_someApply
     }
   },
+  UserToManyTaskExecutionFilter: {
+    plans: {
+      aggregates: ProjectToManyColumnFilter_aggregatesApply,
+      every: ProjectToManyColumnFilter_everyApply,
+      none: ProjectToManyColumnFilter_noneApply,
+      some: ProjectToManyColumnFilter_someApply
+    }
+  },
   UserToManyTaskFilter: {
     plans: {
       aggregates: ProjectToManyColumnFilter_aggregatesApply,
@@ -29877,9 +34702,7 @@ export const enums = {
       REQUIRES_APPROVAL($pgSelect) {
         applyGroupByAttribute("requires_approval", TYPES.boolean, $pgSelect);
       },
-      SESSION_ID($pgSelect) {
-        applyGroupByAttribute("session_id", TYPES.uuid, $pgSelect);
-      },
+      SESSION_ID: TaskExecutionGroupBy_SESSION_IDApply,
       SNAPSHOT_BEFORE($pgSelect) {
         applyGroupByAttribute("snapshot_before", TYPES.jsonb, $pgSelect);
       },
@@ -29962,30 +34785,10 @@ export const enums = {
       },
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
-      SESSION_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "session_id",
-          direction: "ASC"
-        });
-      },
-      SESSION_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "session_id",
-          direction: "DESC"
-        });
-      },
-      STATUS_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "status",
-          direction: "ASC"
-        });
-      },
-      STATUS_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "status",
-          direction: "DESC"
-        });
-      },
+      SESSION_ID_ASC: AgentActivityOrderBy_SESSION_ID_ASCApply,
+      SESSION_ID_DESC: AgentActivityOrderBy_SESSION_ID_DESCApply,
+      STATUS_ASC: AgentActivityOrderBy_STATUS_ASCApply,
+      STATUS_DESC: AgentActivityOrderBy_STATUS_DESCApply,
       TOOL_NAME_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "tool_name",
@@ -30013,7 +34816,7 @@ export const enums = {
       DEFAULT_PERSONA_ID($pgSelect) {
         applyGroupByAttribute("default_persona_id", TYPES.uuid, $pgSelect);
       },
-      ENABLED: AgentPersonaGroupBy_ENABLEDApply,
+      ENABLED: GithubRepositoryGroupBy_ENABLEDApply,
       ENCRYPTED_API_KEY($pgSelect) {
         applyGroupByAttribute("encrypted_api_key", TYPES.text, $pgSelect);
       },
@@ -30062,8 +34865,8 @@ export const enums = {
           direction: "DESC"
         });
       },
-      ENABLED_ASC: AgentPersonaOrderBy_ENABLED_ASCApply,
-      ENABLED_DESC: AgentPersonaOrderBy_ENABLED_DESCApply,
+      ENABLED_ASC: GithubRepositoryOrderBy_ENABLED_ASCApply,
+      ENABLED_DESC: GithubRepositoryOrderBy_ENABLED_DESCApply,
       ENCRYPTED_API_KEY_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "encrypted_api_key",
@@ -30156,7 +34959,7 @@ export const enums = {
       CREATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
       CREATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
       DESCRIPTION: ProjectGroupBy_DESCRIPTIONApply,
-      ENABLED: AgentPersonaGroupBy_ENABLEDApply,
+      ENABLED: GithubRepositoryGroupBy_ENABLEDApply,
       ICON: ColumnGroupBy_ICONApply,
       NAME: ProjectGroupBy_NAMEApply,
       ORGANIZATION_ID: ProjectGroupBy_ORGANIZATION_IDApply,
@@ -30174,8 +34977,8 @@ export const enums = {
       CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
       DESCRIPTION_ASC: ProjectOrderBy_DESCRIPTION_ASCApply,
       DESCRIPTION_DESC: ProjectOrderBy_DESCRIPTION_DESCApply,
-      ENABLED_ASC: AgentPersonaOrderBy_ENABLED_ASCApply,
-      ENABLED_DESC: AgentPersonaOrderBy_ENABLED_DESCApply,
+      ENABLED_ASC: GithubRepositoryOrderBy_ENABLED_ASCApply,
+      ENABLED_DESC: GithubRepositoryOrderBy_ENABLED_DESCApply,
       ICON_ASC: ColumnOrderBy_ICON_ASCApply,
       ICON_DESC: ColumnOrderBy_ICON_DESCApply,
       NAME_ASC: ProjectOrderBy_NAME_ASCApply,
@@ -30226,9 +35029,7 @@ export const enums = {
       MESSAGES($pgSelect) {
         applyGroupByAttribute("messages", TYPES.jsonb, $pgSelect);
       },
-      METADATA($pgSelect) {
-        applyGroupByAttribute("metadata", TYPES.jsonb, $pgSelect);
-      },
+      METADATA: TaskExecutionGroupBy_METADATAApply,
       ORGANIZATION_ID: ProjectGroupBy_ORGANIZATION_IDApply,
       PROJECT_ID: UserPreferenceGroupBy_PROJECT_IDApply,
       TITLE: PostGroupBy_TITLEApply,
@@ -30247,100 +35048,100 @@ export const enums = {
   AgentSessionOrderBy: {
     values: {
       AGENT_ACTIVITIES_BY_SESSION_ID_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_AFFECTED_TASK_IDS_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.affected_task_ids, "affected_task_ids", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.affected_task_ids, "affected_task_ids", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_AFFECTED_TASK_IDS_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.affected_task_ids, "affected_task_ids", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.affected_task_ids, "affected_task_ids", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_APPROVAL_STATUS_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.approval_status, "approval_status", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.approval_status, "approval_status", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_APPROVAL_STATUS_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.approval_status, "approval_status", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.approval_status, "approval_status", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.created_at, "created_at", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.created_at, "created_at", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.created_at, "created_at", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.created_at, "created_at", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ERROR_MESSAGE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.error_message, "error_message", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.error_message, "error_message", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ERROR_MESSAGE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.error_message, "error_message", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.error_message, "error_message", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.organization_id, "organization_id", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.organization_id, "organization_id", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.organization_id, "organization_id", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.organization_id, "organization_id", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.project_id, "project_id", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.project_id, "project_id", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.project_id, "project_id", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.project_id, "project_id", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_REQUIRES_APPROVAL_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.requires_approval, "requires_approval", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.requires_approval, "requires_approval", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_REQUIRES_APPROVAL_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.requires_approval, "requires_approval", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.requires_approval, "requires_approval", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.id, "id", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.id, "id", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.id, "id", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.id, "id", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.session_id, "session_id", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.session_id, "session_id", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.session_id, "session_id", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.session_id, "session_id", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SNAPSHOT_BEFORE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.snapshot_before, "snapshot_before", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.snapshot_before, "snapshot_before", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.snapshot_before, "snapshot_before", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.snapshot_before, "snapshot_before", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_STATUS_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.status, "status", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.status, "status", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_STATUS_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.status, "status", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.status, "status", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_INPUT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_input, "tool_input", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_input, "tool_input", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_INPUT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_input, "tool_input", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_input, "tool_input", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_NAME_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_name, "tool_name", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_name, "tool_name", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_NAME_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_name, "tool_name", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_name, "tool_name", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_OUTPUT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_output, "tool_output", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_output, "tool_output", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_TOOL_OUTPUT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_output, "tool_output", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_output, "tool_output", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.user_id, "user_id", "ASC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.user_id, "user_id", "ASC", relation16, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.user_id, "user_id", "DESC", relation13, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.user_id, "user_id", "DESC", relation16, resource_agent_activityPgResource, $select);
       },
       CREATED_AT_ASC: ProjectOrderBy_CREATED_AT_ASCApply,
       CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
@@ -30368,6 +35169,72 @@ export const enums = {
       PROJECT_ID_DESC: UserPreferenceOrderBy_PROJECT_ID_DESCApply,
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
+      TASK_EXECUTIONS_BY_SESSION_ID_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_METADATA_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.metadata, "metadata", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_METADATA_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.metadata, "metadata", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.organization_id, "organization_id", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.organization_id, "organization_id", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.project_id, "project_id", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.project_id, "project_id", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.id, "id", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.id, "id", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.session_id, "session_id", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.session_id, "session_id", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_STATUS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.status, "status", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_STATUS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.status, "status", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TASK_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.task_id, "task_id", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TASK_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.task_id, "task_id", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TRIGGERED_BY_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.triggered_by, "triggered_by", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TRIGGERED_BY_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.triggered_by, "triggered_by", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", "ASC", relation17, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", "DESC", relation17, resource_task_executionPgResource, $select);
+      },
       TITLE_ASC: PostOrderBy_TITLE_ASCApply,
       TITLE_DESC: PostOrderBy_TITLE_DESCApply,
       TOOL_CALL_COUNT_ASC(queryBuilder) {
@@ -30498,178 +35365,178 @@ export const enums = {
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
       TASKS_AVERAGE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_AVERAGE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_AVERAGE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_AVERAGE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_AUTHOR_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.author_id, "author_id", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.author_id, "author_id", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_AUTHOR_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.author_id, "author_id", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.author_id, "author_id", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_COLUMN_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_id, "column_id", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_id, "column_id", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_COLUMN_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_id, "column_id", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_id, "column_id", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_CONTENT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.content, "content", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.content, "content", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_CONTENT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.content, "content", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.content, "content", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.created_at, "created_at", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.created_at, "created_at", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.created_at, "created_at", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.created_at, "created_at", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.description, "description", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.description, "description", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.description, "description", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.description, "description", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_DUE_DATE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_DUE_DATE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_PRIORITY_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.priority, "priority", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.priority, "priority", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_PRIORITY_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.priority, "priority", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.priority, "priority", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.project_id, "project_id", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.project_id, "project_id", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.project_id, "project_id", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.project_id, "project_id", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.id, "id", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.id, "id", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.id, "id", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.id, "id", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.updated_at, "updated_at", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.updated_at, "updated_at", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.updated_at, "updated_at", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.updated_at, "updated_at", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_MAX_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_MAX_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_MAX_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_MAX_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_MIN_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_MIN_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_MIN_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_MIN_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_STDDEV_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_STDDEV_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_STDDEV_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_STDDEV_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_SUM_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_SUM_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_SUM_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_SUM_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_VARIANCE_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_VARIANCE_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.column_index, "column_index", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.column_index, "column_index", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
       },
       TASKS_VARIANCE_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.number, "number", "ASC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
       },
       TASKS_VARIANCE_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.number, "number", "DESC", relation14, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
       },
       TITLE_ASC: PostOrderBy_TITLE_ASCApply,
       TITLE_DESC: PostOrderBy_TITLE_DESCApply,
@@ -30748,6 +35615,187 @@ export const enums = {
       USER_ID_DESC: AssigneeOrderBy_USER_ID_DESCApply
     }
   },
+  GithubInstallationGroupBy: {
+    values: {
+      CREATED_AT: ProjectGroupBy_CREATED_ATApply,
+      CREATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
+      CREATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
+      ENABLED: GithubRepositoryGroupBy_ENABLEDApply,
+      GITHUB_ORG_ID($pgSelect) {
+        applyGroupByAttribute("github_org_id", TYPES.int, $pgSelect);
+      },
+      GITHUB_ORG_LOGIN($pgSelect) {
+        applyGroupByAttribute("github_org_login", TYPES.text, $pgSelect);
+      },
+      INSTALLATION_ID($pgSelect) {
+        applyGroupByAttribute("installation_id", TYPES.int, $pgSelect);
+      },
+      ORGANIZATION_ID: ProjectGroupBy_ORGANIZATION_IDApply,
+      UPDATED_AT: ProjectGroupBy_UPDATED_ATApply,
+      UPDATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_UPDATED_AT_TRUNCATED_TO_DAYApply,
+      UPDATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_UPDATED_AT_TRUNCATED_TO_HOURApply
+    }
+  },
+  GithubInstallationOrderBy: {
+    values: {
+      CREATED_AT_ASC: ProjectOrderBy_CREATED_AT_ASCApply,
+      CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
+      ENABLED_ASC: GithubRepositoryOrderBy_ENABLED_ASCApply,
+      ENABLED_DESC: GithubRepositoryOrderBy_ENABLED_DESCApply,
+      GITHUB_ORG_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "github_org_id",
+          direction: "ASC"
+        });
+      },
+      GITHUB_ORG_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "github_org_id",
+          direction: "DESC"
+        });
+      },
+      GITHUB_ORG_LOGIN_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "github_org_login",
+          direction: "ASC"
+        });
+      },
+      GITHUB_ORG_LOGIN_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "github_org_login",
+          direction: "DESC"
+        });
+      },
+      INSTALLATION_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "installation_id",
+          direction: "ASC"
+        });
+      },
+      INSTALLATION_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "installation_id",
+          direction: "DESC"
+        });
+      },
+      ORGANIZATION_ID_ASC: ProjectOrderBy_ORGANIZATION_ID_ASCApply,
+      ORGANIZATION_ID_DESC: ProjectOrderBy_ORGANIZATION_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        github_installationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        github_installationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
+      UPDATED_AT_ASC: ProjectOrderBy_UPDATED_AT_ASCApply,
+      UPDATED_AT_DESC: ProjectOrderBy_UPDATED_AT_DESCApply
+    }
+  },
+  GithubRepositoryGroupBy: {
+    values: {
+      CREATED_AT: ProjectGroupBy_CREATED_ATApply,
+      CREATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
+      CREATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
+      DEFAULT_BRANCH($pgSelect) {
+        applyGroupByAttribute("default_branch", TYPES.text, $pgSelect);
+      },
+      ENABLED: GithubRepositoryGroupBy_ENABLEDApply,
+      ORGANIZATION_ID: ProjectGroupBy_ORGANIZATION_IDApply,
+      PROJECT_ID: UserPreferenceGroupBy_PROJECT_IDApply,
+      REPO_FULL_NAME($pgSelect) {
+        applyGroupByAttribute("repo_full_name", TYPES.text, $pgSelect);
+      },
+      REPO_ID($pgSelect) {
+        applyGroupByAttribute("repo_id", TYPES.int, $pgSelect);
+      },
+      UPDATED_AT: ProjectGroupBy_UPDATED_ATApply,
+      UPDATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_UPDATED_AT_TRUNCATED_TO_DAYApply,
+      UPDATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_UPDATED_AT_TRUNCATED_TO_HOURApply
+    }
+  },
+  GithubRepositoryOrderBy: {
+    values: {
+      CREATED_AT_ASC: ProjectOrderBy_CREATED_AT_ASCApply,
+      CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
+      DEFAULT_BRANCH_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "default_branch",
+          direction: "ASC"
+        });
+      },
+      DEFAULT_BRANCH_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "default_branch",
+          direction: "DESC"
+        });
+      },
+      ENABLED_ASC: GithubRepositoryOrderBy_ENABLED_ASCApply,
+      ENABLED_DESC: GithubRepositoryOrderBy_ENABLED_DESCApply,
+      ORGANIZATION_ID_ASC: ProjectOrderBy_ORGANIZATION_ID_ASCApply,
+      ORGANIZATION_ID_DESC: ProjectOrderBy_ORGANIZATION_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        github_repositoryUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        github_repositoryUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_ID_ASC: UserPreferenceOrderBy_PROJECT_ID_ASCApply,
+      PROJECT_ID_DESC: UserPreferenceOrderBy_PROJECT_ID_DESCApply,
+      REPO_FULL_NAME_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "repo_full_name",
+          direction: "ASC"
+        });
+      },
+      REPO_FULL_NAME_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "repo_full_name",
+          direction: "DESC"
+        });
+      },
+      REPO_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "repo_id",
+          direction: "ASC"
+        });
+      },
+      REPO_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "repo_id",
+          direction: "DESC"
+        });
+      },
+      ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
+      UPDATED_AT_ASC: ProjectOrderBy_UPDATED_AT_ASCApply,
+      UPDATED_AT_DESC: ProjectOrderBy_UPDATED_AT_DESCApply
+    }
+  },
   LabelGroupBy: {
     values: {
       COLOR: LabelGroupBy_COLORApply,
@@ -30798,34 +35846,34 @@ export const enums = {
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
       TASK_LABELS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.created_at, "created_at", "ASC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.created_at, "created_at", "ASC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.created_at, "created_at", "DESC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.created_at, "created_at", "DESC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_LABEL_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.label_id, "label_id", "ASC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.label_id, "label_id", "ASC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_LABEL_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.label_id, "label_id", "DESC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.label_id, "label_id", "DESC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_TASK_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.task_id, "task_id", "ASC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.task_id, "task_id", "ASC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_TASK_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.task_id, "task_id", "DESC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.task_id, "task_id", "DESC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.updated_at, "updated_at", "ASC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.updated_at, "updated_at", "ASC", relation19, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.updated_at, "updated_at", "DESC", relation15, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.updated_at, "updated_at", "DESC", relation19, resource_task_labelPgResource, $select);
       },
       UPDATED_AT_ASC: ProjectOrderBy_UPDATED_AT_ASCApply,
       UPDATED_AT_DESC: ProjectOrderBy_UPDATED_AT_DESCApply
@@ -30853,104 +35901,104 @@ export const enums = {
       AUTHOR_ID_ASC: PostOrderBy_AUTHOR_ID_ASCApply,
       AUTHOR_ID_DESC: PostOrderBy_AUTHOR_ID_DESCApply,
       CHILD_POSTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_AUTHOR_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_AUTHOR_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "DESC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_PARENT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_PARENT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "DESC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_TASK_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_TASK_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "DESC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_TITLE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_TITLE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation10, resource_postPgResource, $select);
       },
       CHILD_POSTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation8, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation10, resource_postPgResource, $select);
       },
       CREATED_AT_ASC: ProjectOrderBy_CREATED_AT_ASCApply,
       CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
       DESCRIPTION_ASC: ProjectOrderBy_DESCRIPTION_ASCApply,
       DESCRIPTION_DESC: ProjectOrderBy_DESCRIPTION_DESCApply,
       EMOJIS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.created_at, "created_at", "ASC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.created_at, "created_at", "ASC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.created_at, "created_at", "DESC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.created_at, "created_at", "DESC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_EMOJI_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.emoji, "emoji", "ASC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.emoji, "emoji", "ASC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_EMOJI_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.emoji, "emoji", "DESC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.emoji, "emoji", "DESC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_POST_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.post_id, "post_id", "ASC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.post_id, "post_id", "ASC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_POST_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.post_id, "post_id", "DESC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.post_id, "post_id", "DESC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.id, "id", "ASC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.id, "id", "ASC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.id, "id", "DESC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.id, "id", "DESC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.updated_at, "updated_at", "ASC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.updated_at, "updated_at", "ASC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.updated_at, "updated_at", "DESC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.updated_at, "updated_at", "DESC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.user_id, "user_id", "ASC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.user_id, "user_id", "ASC", relation11, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.user_id, "user_id", "DESC", relation9, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.user_id, "user_id", "DESC", relation11, resource_emojiPgResource, $select);
       },
       PARENT_ID_ASC(queryBuilder) {
         queryBuilder.orderBy({
@@ -30984,18 +36032,8 @@ export const enums = {
       },
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
-      TASK_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "task_id",
-          direction: "ASC"
-        });
-      },
-      TASK_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "task_id",
-          direction: "DESC"
-        });
-      },
+      TASK_ID_ASC: PostOrderBy_TASK_ID_ASCApply,
+      TASK_ID_DESC: PostOrderBy_TASK_ID_DESCApply,
       TITLE_ASC: PostOrderBy_TITLE_ASCApply,
       TITLE_DESC: PostOrderBy_TITLE_DESCApply,
       UPDATED_AT_ASC: ProjectOrderBy_UPDATED_AT_ASCApply,
@@ -31045,178 +36083,178 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       PROJECTS_AVERAGE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_AVERAGE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.created_at, "created_at", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.created_at, "created_at", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.created_at, "created_at", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.created_at, "created_at", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_NAME_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.name, "name", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.name, "name", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_NAME_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.name, "name", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.name, "name", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.organization_id, "organization_id", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.organization_id, "organization_id", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.organization_id, "organization_id", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.organization_id, "organization_id", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_PREFIX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.prefix, "prefix", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.prefix, "prefix", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_PREFIX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.prefix, "prefix", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.prefix, "prefix", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.project_column_id, "project_column_id", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.project_column_id, "project_column_id", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.project_column_id, "project_column_id", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.project_column_id, "project_column_id", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.id, "id", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.id, "id", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.id, "id", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.id, "id", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_SLUG_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.slug, "slug", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.slug, "slug", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_SLUG_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.slug, "slug", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.slug, "slug", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.updated_at, "updated_at", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.updated_at, "updated_at", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.updated_at, "updated_at", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.updated_at, "updated_at", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_MAX_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_MAX_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_MAX_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_MAX_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_MIN_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_MIN_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_MIN_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_MIN_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_SUM_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_SUM_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_SUM_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_SUM_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.column_index, "column_index", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.column_index, "column_index", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.column_index, "column_index", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.column_index, "column_index", "DESC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation28, resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation24, resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation28, resource_projectPgResource, $select);
       },
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
@@ -31300,28 +36338,28 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       PROJECT_PROJECT_LABELS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation23, resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation29, resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation23, resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation29, resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.created_at, "created_at", "ASC", relation23, resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.created_at, "created_at", "ASC", relation29, resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.created_at, "created_at", "DESC", relation23, resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.created_at, "created_at", "DESC", relation29, resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_id, "project_id", "ASC", relation23, resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_id, "project_id", "ASC", relation29, resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_id, "project_id", "DESC", relation23, resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_id, "project_id", "DESC", relation29, resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_label_id, "project_label_id", "ASC", relation23, resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_label_id, "project_label_id", "ASC", relation29, resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_label_id, "project_label_id", "DESC", relation23, resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_label_id, "project_label_id", "DESC", relation29, resource_project_project_labelPgResource, $select);
       },
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
@@ -31649,6 +36687,114 @@ export const enums = {
       CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
       DESCRIPTION_ASC: ProjectOrderBy_DESCRIPTION_ASCApply,
       DESCRIPTION_DESC: ProjectOrderBy_DESCRIPTION_DESCApply,
+      GITHUB_REPOSITORIES_AVERAGE_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_AVERAGE_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.created_at, "created_at", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.created_at, "created_at", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_DEFAULT_BRANCH_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.default_branch, "default_branch", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_DEFAULT_BRANCH_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.default_branch, "default_branch", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_ENABLED_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.enabled, "enabled", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_ENABLED_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.enabled, "enabled", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.organization_id, "organization_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.organization_id, "organization_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.project_id, "project_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.project_id, "project_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_FULL_NAME_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.repo_full_name, "repo_full_name", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_FULL_NAME_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.repo_full_name, "repo_full_name", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.id, "id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.id, "id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.updated_at, "updated_at", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_githubRepository.attributes.updated_at, "updated_at", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_MAX_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_MAX_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_MIN_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_MIN_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_STDDEV_POPULATION_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_STDDEV_POPULATION_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_STDDEV_SAMPLE_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_STDDEV_SAMPLE_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_SUM_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_SUM_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_VARIANCE_POPULATION_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_VARIANCE_POPULATION_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_VARIANCE_SAMPLE_REPO_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_githubRepository.attributes.repo_id, "repo_id", "ASC", relation8, resource_github_repositoryPgResource, $select);
+      },
+      GITHUB_REPOSITORIES_VARIANCE_SAMPLE_REPO_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_githubRepository.attributes.repo_id, "repo_id", "DESC", relation8, resource_github_repositoryPgResource, $select);
+      },
       IS_PUBLIC_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "is_public",
@@ -31812,6 +36958,72 @@ export const enums = {
           direction: "DESC"
         });
         queryBuilder.setOrderIsUnique();
+      },
+      TASK_EXECUTIONS_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.metadata, "metadata", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.metadata, "metadata", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.organization_id, "organization_id", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.organization_id, "organization_id", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.project_id, "project_id", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.project_id, "project_id", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.id, "id", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.id, "id", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.session_id, "session_id", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.session_id, "session_id", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.status, "status", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.status, "status", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.task_id, "task_id", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.task_id, "task_id", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.triggered_by, "triggered_by", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.triggered_by, "triggered_by", "DESC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", "ASC", relation9, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", "DESC", relation9, resource_task_executionPgResource, $select);
       },
       TASKS_AVERAGE_COLUMN_INDEX_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "ASC", relation2, resource_taskPgResource, $select);
@@ -32193,6 +37405,77 @@ export const enums = {
       VIEW_MODE_DESC: UserPreferenceOrderBy_VIEW_MODE_DESCApply
     }
   },
+  TaskExecutionGroupBy: {
+    values: {
+      CREATED_AT: ProjectGroupBy_CREATED_ATApply,
+      CREATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
+      CREATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
+      METADATA: TaskExecutionGroupBy_METADATAApply,
+      ORGANIZATION_ID: ProjectGroupBy_ORGANIZATION_IDApply,
+      PROJECT_ID: UserPreferenceGroupBy_PROJECT_IDApply,
+      SESSION_ID: TaskExecutionGroupBy_SESSION_IDApply,
+      STATUS($pgSelect) {
+        applyGroupByAttribute("status", TYPES.varchar, $pgSelect);
+      },
+      TASK_ID: AssigneeGroupBy_TASK_IDApply,
+      TRIGGERED_BY($pgSelect) {
+        applyGroupByAttribute("triggered_by", TYPES.uuid, $pgSelect);
+      },
+      UPDATED_AT: ProjectGroupBy_UPDATED_ATApply,
+      UPDATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_UPDATED_AT_TRUNCATED_TO_DAYApply,
+      UPDATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_UPDATED_AT_TRUNCATED_TO_HOURApply
+    }
+  },
+  TaskExecutionOrderBy: {
+    values: {
+      CREATED_AT_ASC: ProjectOrderBy_CREATED_AT_ASCApply,
+      CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
+      ORGANIZATION_ID_ASC: ProjectOrderBy_ORGANIZATION_ID_ASCApply,
+      ORGANIZATION_ID_DESC: ProjectOrderBy_ORGANIZATION_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        task_executionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        task_executionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_ID_ASC: UserPreferenceOrderBy_PROJECT_ID_ASCApply,
+      PROJECT_ID_DESC: UserPreferenceOrderBy_PROJECT_ID_DESCApply,
+      ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
+      SESSION_ID_ASC: AgentActivityOrderBy_SESSION_ID_ASCApply,
+      SESSION_ID_DESC: AgentActivityOrderBy_SESSION_ID_DESCApply,
+      STATUS_ASC: AgentActivityOrderBy_STATUS_ASCApply,
+      STATUS_DESC: AgentActivityOrderBy_STATUS_DESCApply,
+      TASK_ID_ASC: PostOrderBy_TASK_ID_ASCApply,
+      TASK_ID_DESC: PostOrderBy_TASK_ID_DESCApply,
+      TRIGGERED_BY_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "triggered_by",
+          direction: "ASC"
+        });
+      },
+      TRIGGERED_BY_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "triggered_by",
+          direction: "DESC"
+        });
+      },
+      UPDATED_AT_ASC: ProjectOrderBy_UPDATED_AT_ASCApply,
+      UPDATED_AT_DESC: ProjectOrderBy_UPDATED_AT_DESCApply
+    }
+  },
   TaskGroupBy: {
     values: {
       AUTHOR_ID: PostGroupBy_AUTHOR_IDApply,
@@ -32285,40 +37568,40 @@ export const enums = {
   TaskOrderBy: {
     values: {
       ASSIGNEES_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.created_at, "created_at", "ASC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.created_at, "created_at", "ASC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.created_at, "created_at", "DESC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.created_at, "created_at", "DESC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_DELETED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.deleted_at, "deleted_at", "ASC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.deleted_at, "deleted_at", "ASC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_DELETED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.deleted_at, "deleted_at", "DESC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.deleted_at, "deleted_at", "DESC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_TASK_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.task_id, "task_id", "ASC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.task_id, "task_id", "ASC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_TASK_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.task_id, "task_id", "DESC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.task_id, "task_id", "DESC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.updated_at, "updated_at", "ASC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.updated_at, "updated_at", "ASC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.updated_at, "updated_at", "DESC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.updated_at, "updated_at", "DESC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.user_id, "user_id", "ASC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.user_id, "user_id", "ASC", relation12, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.user_id, "user_id", "DESC", relation10, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.user_id, "user_id", "DESC", relation12, resource_assigneePgResource, $select);
       },
       AUTHOR_ID_ASC: PostOrderBy_AUTHOR_ID_ASCApply,
       AUTHOR_ID_DESC: PostOrderBy_AUTHOR_ID_DESCApply,
@@ -32377,58 +37660,58 @@ export const enums = {
         });
       },
       POSTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_AUTHOR_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_AUTHOR_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "DESC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_PARENT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_PARENT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "DESC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TASK_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TASK_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "DESC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TITLE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_TITLE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation13, resource_postPgResource, $select);
       },
       POSTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation11, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation13, resource_postPgResource, $select);
       },
       PRIMARY_KEY_ASC(queryBuilder) {
         taskUniques[0].attributes.forEach(attributeName => {
@@ -32464,35 +37747,101 @@ export const enums = {
       PROJECT_ID_DESC: TaskOrderBy_PROJECT_ID_DESCApply,
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
+      TASK_EXECUTIONS_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.metadata, "metadata", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.metadata, "metadata", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.organization_id, "organization_id", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.organization_id, "organization_id", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.project_id, "project_id", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.project_id, "project_id", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.id, "id", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.id, "id", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.session_id, "session_id", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.session_id, "session_id", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.status, "status", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.status, "status", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.task_id, "task_id", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.task_id, "task_id", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.triggered_by, "triggered_by", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.triggered_by, "triggered_by", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", "ASC", relation15, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", "DESC", relation15, resource_task_executionPgResource, $select);
+      },
       TASK_LABELS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.created_at, "created_at", "ASC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.created_at, "created_at", "ASC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.created_at, "created_at", "DESC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.created_at, "created_at", "DESC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_LABEL_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.label_id, "label_id", "ASC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.label_id, "label_id", "ASC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_LABEL_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.label_id, "label_id", "DESC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.label_id, "label_id", "DESC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_TASK_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.task_id, "task_id", "ASC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.task_id, "task_id", "ASC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_TASK_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.task_id, "task_id", "DESC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.task_id, "task_id", "DESC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.updated_at, "updated_at", "ASC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.updated_at, "updated_at", "ASC", relation14, resource_task_labelPgResource, $select);
       },
       TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.updated_at, "updated_at", "DESC", relation12, resource_task_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskLabel.attributes.updated_at, "updated_at", "DESC", relation14, resource_task_labelPgResource, $select);
       },
       UPDATED_AT_ASC: ProjectOrderBy_UPDATED_AT_ASCApply,
       UPDATED_AT_DESC: ProjectOrderBy_UPDATED_AT_DESCApply
@@ -32515,484 +37864,484 @@ export const enums = {
   UserOrderBy: {
     values: {
       AGENT_ACTIVITIES_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.affected_task_ids, "affected_task_ids", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.affected_task_ids, "affected_task_ids", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_AFFECTED_TASK_IDS_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.affected_task_ids, "affected_task_ids", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.affected_task_ids, "affected_task_ids", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_APPROVAL_STATUS_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.approval_status, "approval_status", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.approval_status, "approval_status", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_APPROVAL_STATUS_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.approval_status, "approval_status", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.approval_status, "approval_status", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.created_at, "created_at", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.created_at, "created_at", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.created_at, "created_at", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.created_at, "created_at", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_ERROR_MESSAGE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.error_message, "error_message", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.error_message, "error_message", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_ERROR_MESSAGE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.error_message, "error_message", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.error_message, "error_message", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.organization_id, "organization_id", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.organization_id, "organization_id", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.organization_id, "organization_id", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.organization_id, "organization_id", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.project_id, "project_id", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.project_id, "project_id", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.project_id, "project_id", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.project_id, "project_id", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_REQUIRES_APPROVAL_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.requires_approval, "requires_approval", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.requires_approval, "requires_approval", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_REQUIRES_APPROVAL_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.requires_approval, "requires_approval", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.requires_approval, "requires_approval", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.id, "id", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.id, "id", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.id, "id", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.id, "id", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_SESSION_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.session_id, "session_id", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.session_id, "session_id", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_SESSION_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.session_id, "session_id", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.session_id, "session_id", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.snapshot_before, "snapshot_before", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.snapshot_before, "snapshot_before", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.snapshot_before, "snapshot_before", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.snapshot_before, "snapshot_before", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_STATUS_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.status, "status", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.status, "status", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_STATUS_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.status, "status", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.status, "status", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_INPUT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_input, "tool_input", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_input, "tool_input", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_INPUT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_input, "tool_input", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_input, "tool_input", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_NAME_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_name, "tool_name", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_name, "tool_name", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_NAME_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_name, "tool_name", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_name, "tool_name", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_OUTPUT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_output, "tool_output", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_output, "tool_output", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_TOOL_OUTPUT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_output, "tool_output", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.tool_output, "tool_output", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.user_id, "user_id", "ASC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.user_id, "user_id", "ASC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_ACTIVITIES_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.user_id, "user_id", "DESC", relation21, resource_agent_activityPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentActivity.attributes.user_id, "user_id", "DESC", relation25, resource_agent_activityPgResource, $select);
       },
       AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_AVERAGE_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.created_at, "created_at", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.created_at, "created_at", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.created_at, "created_at", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.created_at, "created_at", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.messages, "messages", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.messages, "messages", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_MESSAGES_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.messages, "messages", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.messages, "messages", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_METADATA_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.metadata, "metadata", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.metadata, "metadata", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_METADATA_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.metadata, "metadata", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.metadata, "metadata", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.organization_id, "organization_id", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.organization_id, "organization_id", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.organization_id, "organization_id", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.organization_id, "organization_id", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.project_id, "project_id", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.project_id, "project_id", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.project_id, "project_id", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.project_id, "project_id", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.id, "id", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.id, "id", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.id, "id", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.id, "id", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_TITLE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.title, "title", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.title, "title", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_TITLE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.title, "title", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.title, "title", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_TYPE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.type, "type", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.type, "type", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_TYPE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.type, "type", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.type, "type", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.updated_at, "updated_at", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.updated_at, "updated_at", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.updated_at, "updated_at", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.updated_at, "updated_at", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.user_id, "user_id", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.user_id, "user_id", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.user_id, "user_id", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_agentSession.attributes.user_id, "user_id", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_MAX_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_MIN_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_STDDEV_POPULATION_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_STDDEV_SAMPLE_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_SUM_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_agentSession.attributes.tool_call_count, "tool_call_count", "ASC", relation26, resource_agent_sessionPgResource, $select);
       },
       AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation22, resource_agent_sessionPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_agentSession.attributes.tool_call_count, "tool_call_count", "DESC", relation26, resource_agent_sessionPgResource, $select);
       },
       ASSIGNEES_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.created_at, "created_at", "ASC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.created_at, "created_at", "ASC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.created_at, "created_at", "DESC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.created_at, "created_at", "DESC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_DELETED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.deleted_at, "deleted_at", "ASC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.deleted_at, "deleted_at", "ASC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_DELETED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.deleted_at, "deleted_at", "DESC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.deleted_at, "deleted_at", "DESC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_TASK_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.task_id, "task_id", "ASC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.task_id, "task_id", "ASC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_TASK_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.task_id, "task_id", "DESC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.task_id, "task_id", "DESC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.updated_at, "updated_at", "ASC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.updated_at, "updated_at", "ASC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.updated_at, "updated_at", "DESC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.updated_at, "updated_at", "DESC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.user_id, "user_id", "ASC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.user_id, "user_id", "ASC", relation20, resource_assigneePgResource, $select);
       },
       ASSIGNEES_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.user_id, "user_id", "DESC", relation16, resource_assigneePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_assignee.attributes.user_id, "user_id", "DESC", relation20, resource_assigneePgResource, $select);
       },
       AUTHORED_POSTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_AUTHOR_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_AUTHOR_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.author_id, "author_id", "DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.created_at, "created_at", "DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.description, "description", "DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_PARENT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_PARENT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.parent_id, "parent_id", "DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.id, "id", "DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_TASK_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_TASK_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.task_id, "task_id", "DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_TITLE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_TITLE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.title, "title", "DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "ASC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation17, resource_postPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_post.attributes.updated_at, "updated_at", "DESC", relation21, resource_postPgResource, $select);
       },
       AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_AVERAGE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_AVERAGE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_AUTHOR_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.author_id, "author_id", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.author_id, "author_id", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_AUTHOR_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.author_id, "author_id", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.author_id, "author_id", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_id, "column_id", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_id, "column_id", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_id, "column_id", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_id, "column_id", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_CONTENT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.content, "content", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.content, "content", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_CONTENT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.content, "content", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.content, "content", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.created_at, "created_at", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.created_at, "created_at", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.created_at, "created_at", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.created_at, "created_at", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.description, "description", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.description, "description", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.description, "description", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.description, "description", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_DUE_DATE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_DUE_DATE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_PRIORITY_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.priority, "priority", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.priority, "priority", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_PRIORITY_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.priority, "priority", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.priority, "priority", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.project_id, "project_id", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.project_id, "project_id", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.project_id, "project_id", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.project_id, "project_id", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.id, "id", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.id, "id", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.id, "id", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.id, "id", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.updated_at, "updated_at", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.updated_at, "updated_at", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.updated_at, "updated_at", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.updated_at, "updated_at", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_MAX_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_MAX_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_MAX_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_MAX_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_MIN_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_MIN_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_MIN_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_MIN_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_STDDEV_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_STDDEV_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_STDDEV_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_STDDEV_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_SUM_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_SUM_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_SUM_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_SUM_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.column_index, "column_index", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.column_index, "column_index", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.column_index, "column_index", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.column_index, "column_index", "DESC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_VARIANCE_SAMPLE_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.number, "number", "ASC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.number, "number", "ASC", relation22, resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_VARIANCE_SAMPLE_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.number, "number", "DESC", relation18, resource_taskPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_task.attributes.number, "number", "DESC", relation22, resource_taskPgResource, $select);
       },
       AVATAR_URL_ASC(queryBuilder) {
         queryBuilder.orderBy({
@@ -33023,46 +38372,46 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       EMOJIS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.created_at, "created_at", "ASC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.created_at, "created_at", "ASC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.created_at, "created_at", "DESC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.created_at, "created_at", "DESC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_EMOJI_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.emoji, "emoji", "ASC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.emoji, "emoji", "ASC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_EMOJI_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.emoji, "emoji", "DESC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.emoji, "emoji", "DESC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_POST_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.post_id, "post_id", "ASC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.post_id, "post_id", "ASC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_POST_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.post_id, "post_id", "DESC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.post_id, "post_id", "DESC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.id, "id", "ASC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.id, "id", "ASC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.id, "id", "DESC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.id, "id", "DESC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.updated_at, "updated_at", "ASC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.updated_at, "updated_at", "ASC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.updated_at, "updated_at", "DESC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.updated_at, "updated_at", "DESC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.user_id, "user_id", "ASC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.user_id, "user_id", "ASC", relation24, resource_emojiPgResource, $select);
       },
       EMOJIS_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.user_id, "user_id", "DESC", relation20, resource_emojiPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_emoji.attributes.user_id, "user_id", "DESC", relation24, resource_emojiPgResource, $select);
       },
       IDENTITY_PROVIDER_ID_ASC(queryBuilder) {
         queryBuilder.orderBy({
@@ -33100,61 +38449,127 @@ export const enums = {
       },
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.created_at, "created_at", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_METADATA_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.metadata, "metadata", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_METADATA_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.metadata, "metadata", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.organization_id, "organization_id", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.organization_id, "organization_id", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.project_id, "project_id", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.project_id, "project_id", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.id, "id", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.id, "id", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_SESSION_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.session_id, "session_id", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_SESSION_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.session_id, "session_id", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_STATUS_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.status, "status", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_STATUS_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.status, "status", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TASK_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.task_id, "task_id", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TASK_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.task_id, "task_id", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TRIGGERED_BY_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.triggered_by, "triggered_by", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TRIGGERED_BY_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.triggered_by, "triggered_by", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", "ASC", relation27, resource_task_executionPgResource, $select);
+      },
+      TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_taskExecution.attributes.updated_at, "updated_at", "DESC", relation27, resource_task_executionPgResource, $select);
+      },
       UPDATED_AT_ASC: ProjectOrderBy_UPDATED_AT_ASCApply,
       UPDATED_AT_DESC: ProjectOrderBy_UPDATED_AT_DESCApply,
       USER_PREFERENCES_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_COLOR_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.color, "color", "ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.color, "color", "ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_COLOR_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.color, "color", "DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.color, "color", "DESC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.created_at, "created_at", "ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.created_at, "created_at", "ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.created_at, "created_at", "DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.created_at, "created_at", "DESC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_HIDDEN_COLUMN_IDS_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.hidden_column_ids, "hidden_column_ids", "ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.hidden_column_ids, "hidden_column_ids", "ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_HIDDEN_COLUMN_IDS_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.hidden_column_ids, "hidden_column_ids", "DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.hidden_column_ids, "hidden_column_ids", "DESC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.project_id, "project_id", "ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.project_id, "project_id", "ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.project_id, "project_id", "DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.project_id, "project_id", "DESC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.id, "id", "ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.id, "id", "ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.id, "id", "DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.id, "id", "DESC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.updated_at, "updated_at", "ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.updated_at, "updated_at", "ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.updated_at, "updated_at", "DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.updated_at, "updated_at", "DESC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.user_id, "user_id", "ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.user_id, "user_id", "ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.user_id, "user_id", "DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.user_id, "user_id", "DESC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.view_mode, "view_mode", "ASC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.view_mode, "view_mode", "ASC", relation23, resource_user_preferencePgResource, $select);
       },
       USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.view_mode, "view_mode", "DESC", relation19, resource_user_preferencePgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_userPreference.attributes.view_mode, "view_mode", "DESC", relation23, resource_user_preferencePgResource, $select);
       }
     }
   },

@@ -48,6 +48,12 @@ export const {
   MEILISEARCH_URL,
   MEILISEARCH_MASTER_KEY,
   SEARCH_ENABLED,
+  // GitHub App (for agentic task execution)
+  GITHUB_APP_ID,
+  GITHUB_APP_PRIVATE_KEY,
+  GITHUB_WEBHOOK_SECRET,
+  // Docker sandbox image for code execution
+  SANDBOX_IMAGE,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";

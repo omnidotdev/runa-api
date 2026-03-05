@@ -69,6 +69,39 @@ export const DELEGATE_TIMEOUT_MS = 60_000;
 export const MAX_DELEGATE_RESPONSE_LENGTH = 4_000;
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Task Execution
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Maximum agentic iterations for task execution (higher than chat — code tasks need more steps). */
+export const EXECUTION_MAX_ITERATIONS = 40;
+
+/** Wall-clock timeout for task execution in milliseconds (20 minutes). */
+export const EXECUTION_TIMEOUT_MS = 20 * 60 * 1000;
+
+/** Maximum concurrent task executions per organization. */
+export const MAX_CONCURRENT_EXECUTIONS = 3;
+
+/**
+ * Models allowed for task execution.
+ * Restricted to models with strong coding reasoning capabilities.
+ */
+export const ALLOWED_EXECUTION_MODELS = [
+  "anthropic/claude-sonnet-4.5",
+  "anthropic/claude-opus-4.6",
+] as const;
+
+/** Default model for task execution. */
+export const DEFAULT_EXECUTION_MODEL = "anthropic/claude-sonnet-4.5";
+
+export type AllowedExecutionModel = (typeof ALLOWED_EXECUTION_MODELS)[number];
+
+export function isAllowedExecutionModel(
+  model: string,
+): model is AllowedExecutionModel {
+  return ALLOWED_EXECUTION_MODELS.includes(model as AllowedExecutionModel);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Model Configuration
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -84,8 +117,8 @@ export const DEFAULT_MODEL = "anthropic/claude-haiku-4.5";
 export const ALLOWED_MODELS = [
   // Anthropic
   "anthropic/claude-sonnet-4.5",
+  "anthropic/claude-opus-4.6",
   "anthropic/claude-haiku-4.5",
-  "anthropic/claude-opus-4",
   // OpenAI
   "openai/gpt-4o",
   "openai/gpt-4o-mini",

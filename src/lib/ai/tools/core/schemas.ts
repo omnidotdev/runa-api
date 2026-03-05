@@ -316,6 +316,92 @@ export const delegationSchema = z.object({
 });
 
 // ─────────────────────────────────────────────
+// Code Execution Tool Schemas
+// ─────────────────────────────────────────────
+
+export const readFileSchema = z.object({
+  path: z.string().describe("File path relative to repository root"),
+  startLine: z
+    .number()
+    .int()
+    .min(1)
+    .optional()
+    .describe("Line number to start reading from (1-indexed)"),
+  maxLines: z
+    .number()
+    .int()
+    .min(1)
+    .max(500)
+    .optional()
+    .default(200)
+    .describe("Maximum number of lines to read"),
+});
+
+export const listDirectorySchema = z.object({
+  path: z
+    .string()
+    .optional()
+    .default(".")
+    .describe("Directory path relative to repository root"),
+  maxDepth: z
+    .number()
+    .int()
+    .min(1)
+    .max(5)
+    .optional()
+    .default(3)
+    .describe("Maximum directory depth to traverse"),
+});
+
+export const writeFileSchema = z.object({
+  path: z.string().describe("File path relative to repository root"),
+  content: z.string().describe("Complete file content to write"),
+});
+
+export const searchCodeSchema = z.object({
+  pattern: z.string().describe("Regex pattern to search for in file contents"),
+  glob: z
+    .string()
+    .optional()
+    .describe("Glob pattern to filter files (e.g., '*.ts', 'src/**/*.tsx')"),
+  maxResults: z
+    .number()
+    .int()
+    .min(1)
+    .max(50)
+    .optional()
+    .default(20)
+    .describe("Maximum number of results to return"),
+});
+
+export const runCommandSchema = z.object({
+  command: z.string().describe("Shell command to execute in the repository"),
+  timeoutMs: z
+    .number()
+    .int()
+    .min(1000)
+    .max(120_000)
+    .optional()
+    .default(30_000)
+    .describe("Command timeout in milliseconds"),
+});
+
+export const commitChangesSchema = z.object({
+  message: z.string().describe("Git commit message"),
+  files: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "Specific files to stage. If omitted, stages all changes (git add -A).",
+    ),
+});
+
+export const createPullRequestSchema = z.object({
+  title: z.string().describe("Pull request title"),
+  body: z.string().describe("Pull request description (markdown)"),
+});
+
+// ─────────────────────────────────────────────
 // Type Exports
 // ─────────────────────────────────────────────
 
@@ -336,3 +422,11 @@ export type UpdateColumnsInput = z.infer<typeof updateColumnsSchema>;
 export type DeleteColumnsInput = z.infer<typeof deleteColumnsSchema>;
 
 export type CreateCommentsInput = z.infer<typeof createCommentsSchema>;
+
+export type ReadFileInput = z.infer<typeof readFileSchema>;
+export type ListDirectoryInput = z.infer<typeof listDirectorySchema>;
+export type WriteFileInput = z.infer<typeof writeFileSchema>;
+export type SearchCodeInput = z.infer<typeof searchCodeSchema>;
+export type RunCommandInput = z.infer<typeof runCommandSchema>;
+export type CommitChangesInput = z.infer<typeof commitChangesSchema>;
+export type CreatePullRequestInput = z.infer<typeof createPullRequestSchema>;

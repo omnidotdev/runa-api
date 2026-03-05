@@ -11,9 +11,11 @@ import { useGrafast } from "grafast/envelop";
 
 import aiRoutes from "lib/ai/chat.endpoint";
 import aiConfigRoutes, { aiConfigKeyRoutes } from "lib/ai/config.endpoint";
+import githubRoutes from "lib/ai/github.endpoint";
 import aiPersonaRoutes from "lib/ai/persona.endpoint";
 import projectCreationRoutes from "lib/ai/projectCreation.endpoint";
 import registryRoutes from "lib/ai/registry.endpoint";
+import taskExecutionRoutes from "lib/ai/taskExecution.endpoint";
 import undoRoutes from "lib/ai/undo.endpoint";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
@@ -30,6 +32,7 @@ import {
 } from "lib/config/env.config";
 import { pgPool } from "lib/db/db";
 import entitlementsWebhook from "lib/entitlements/webhooks";
+import githubWebhook from "lib/github/webhooks";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import {
   armorPlugin,
@@ -188,8 +191,11 @@ async function startServer(): Promise<void> {
     .use(aiConfigKeyRoutes)
     .use(aiPersonaRoutes)
     .use(registryRoutes)
+    .use(taskExecutionRoutes)
+    .use(githubRoutes)
     .use(entitlementsWebhook)
     .use(idpWebhook)
+    .use(githubWebhook)
     .use(
       yoga({
         schema,

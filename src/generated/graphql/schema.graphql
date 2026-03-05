@@ -44,6 +44,12 @@ type Query implements Node {
   """Get a single `User`."""
   userByIdentityProviderId(identityProviderId: UUID!): User
 
+  """Get a single `Column`."""
+  column(rowId: UUID!): Column
+
+  """Get a single `ProjectColumn`."""
+  projectColumn(rowId: UUID!): ProjectColumn
+
   """Get a single `ProjectLabel`."""
   projectLabel(rowId: UUID!): ProjectLabel
 
@@ -52,9 +58,6 @@ type Query implements Node {
 
   """Get a single `Post`."""
   post(rowId: UUID!): Post
-
-  """Get a single `Column`."""
-  column(rowId: UUID!): Column
 
   """Get a single `UserPreference`."""
   userPreference(rowId: UUID!): UserPreference
@@ -65,8 +68,14 @@ type Query implements Node {
   """Get a single `AgentPersona`."""
   agentPersona(rowId: UUID!): AgentPersona
 
-  """Get a single `ProjectColumn`."""
-  projectColumn(rowId: UUID!): ProjectColumn
+  """Get a single `GithubRepository`."""
+  githubRepository(rowId: UUID!): GithubRepository
+
+  """Get a single `GithubInstallation`."""
+  githubInstallation(rowId: UUID!): GithubInstallation
+
+  """Get a single `TaskExecution`."""
+  taskExecution(rowId: UUID!): TaskExecution
 
   """Get a single `AgentSession`."""
   agentSession(rowId: UUID!): AgentSession
@@ -130,6 +139,20 @@ type Query implements Node {
     id: ID!
   ): User
 
+  """Reads a single `Column` using its globally unique `ID`."""
+  columnById(
+    """The globally unique `ID` to be used in selecting a single `Column`."""
+    id: ID!
+  ): Column
+
+  """Reads a single `ProjectColumn` using its globally unique `ID`."""
+  projectColumnById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectColumn`.
+    """
+    id: ID!
+  ): ProjectColumn
+
   """Reads a single `ProjectLabel` using its globally unique `ID`."""
   projectLabelById(
     """
@@ -150,12 +173,6 @@ type Query implements Node {
     id: ID!
   ): Post
 
-  """Reads a single `Column` using its globally unique `ID`."""
-  columnById(
-    """The globally unique `ID` to be used in selecting a single `Column`."""
-    id: ID!
-  ): Column
-
   """Reads a single `UserPreference` using its globally unique `ID`."""
   userPreferenceById(
     """
@@ -172,13 +189,29 @@ type Query implements Node {
     id: ID!
   ): AgentPersona
 
-  """Reads a single `ProjectColumn` using its globally unique `ID`."""
-  projectColumnById(
+  """Reads a single `GithubRepository` using its globally unique `ID`."""
+  githubRepositoryById(
     """
-    The globally unique `ID` to be used in selecting a single `ProjectColumn`.
+    The globally unique `ID` to be used in selecting a single `GithubRepository`.
     """
     id: ID!
-  ): ProjectColumn
+  ): GithubRepository
+
+  """Reads a single `GithubInstallation` using its globally unique `ID`."""
+  githubInstallationById(
+    """
+    The globally unique `ID` to be used in selecting a single `GithubInstallation`.
+    """
+    id: ID!
+  ): GithubInstallation
+
+  """Reads a single `TaskExecution` using its globally unique `ID`."""
+  taskExecutionById(
+    """
+    The globally unique `ID` to be used in selecting a single `TaskExecution`.
+    """
+    id: ID!
+  ): TaskExecution
 
   """Reads a single `AgentSession` using its globally unique `ID`."""
   agentSessionById(
@@ -392,6 +425,74 @@ type Query implements Node {
     orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserConnection
 
+  """Reads and enables pagination through a set of `Column`."""
+  columns(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ColumnFilter
+
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ColumnConnection
+
+  """Reads and enables pagination through a set of `ProjectColumn`."""
+  projectColumns(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectColumnFilter
+
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectColumnConnection
+
   """Reads and enables pagination through a set of `ProjectLabel`."""
   projectLabels(
     """Only read the first `n` values of the set."""
@@ -494,40 +595,6 @@ type Query implements Node {
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection
 
-  """Reads and enables pagination through a set of `Column`."""
-  columns(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ColumnCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ColumnFilter
-
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ColumnConnection
-
   """Reads and enables pagination through a set of `UserPreference`."""
   userPreferences(
     """Only read the first `n` values of the set."""
@@ -596,8 +663,8 @@ type Query implements Node {
     orderBy: [AgentPersonaOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentPersonaConnection
 
-  """Reads and enables pagination through a set of `ProjectColumn`."""
-  projectColumns(
+  """Reads and enables pagination through a set of `GithubRepository`."""
+  githubRepositories(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -619,16 +686,84 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: ProjectColumnCondition
+    condition: GithubRepositoryCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: ProjectColumnFilter
+    filter: GithubRepositoryFilter
 
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectColumnConnection
+    """The method to use when ordering `GithubRepository`."""
+    orderBy: [GithubRepositoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryConnection
+
+  """Reads and enables pagination through a set of `GithubInstallation`."""
+  githubInstallations(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GithubInstallationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: GithubInstallationFilter
+
+    """The method to use when ordering `GithubInstallation`."""
+    orderBy: [GithubInstallationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GithubInstallationConnection
+
+  """Reads and enables pagination through a set of `TaskExecution`."""
+  taskExecutions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection
 
   """Reads and enables pagination through a set of `AgentSession`."""
   agentSessions(
@@ -1141,6 +1276,74 @@ type Project implements Node {
     """The method to use when ordering `AgentSession`."""
     orderBy: [AgentSessionOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentSessionConnection!
+
+  """Reads and enables pagination through a set of `GithubRepository`."""
+  githubRepositories(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GithubRepositoryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: GithubRepositoryFilter
+
+    """The method to use when ordering `GithubRepository`."""
+    orderBy: [GithubRepositoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryConnection!
+
+  """Reads and enables pagination through a set of `TaskExecution`."""
+  taskExecutions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 type ProjectColumn implements Node {
@@ -1660,6 +1863,18 @@ input ProjectFilter {
   """Some related `agentSessions` exist."""
   agentSessionsExist: Boolean
 
+  """Filter by the object’s `githubRepositories` relation."""
+  githubRepositories: ProjectToManyGithubRepositoryFilter
+
+  """Some related `githubRepositories` exist."""
+  githubRepositoriesExist: Boolean
+
+  """Filter by the object’s `taskExecutions` relation."""
+  taskExecutions: ProjectToManyTaskExecutionFilter
+
+  """Some related `taskExecutions` exist."""
+  taskExecutionsExist: Boolean
+
   """Filter by the object’s `projectColumn` relation."""
   projectColumn: ProjectColumnFilter
 
@@ -2121,6 +2336,12 @@ input TaskFilter {
   """Some related `taskLabels` exist."""
   taskLabelsExist: Boolean
 
+  """Filter by the object’s `taskExecutions` relation."""
+  taskExecutions: TaskToManyTaskExecutionFilter
+
+  """Some related `taskExecutions` exist."""
+  taskExecutionsExist: Boolean
+
   """Filter by the object’s `author` relation."""
   author: UserFilter
 
@@ -2267,6 +2488,12 @@ input UserFilter {
 
   """Some related `agentSessions` exist."""
   agentSessionsExist: Boolean
+
+  """Filter by the object’s `taskExecutionsByTriggeredBy` relation."""
+  taskExecutionsByTriggeredBy: UserToManyTaskExecutionFilter
+
+  """Some related `taskExecutionsByTriggeredBy` exist."""
+  taskExecutionsByTriggeredByExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -3024,6 +3251,12 @@ input AgentSessionFilter {
   """Some related `agentActivitiesBySessionId` exist."""
   agentActivitiesBySessionIdExist: Boolean
 
+  """Filter by the object’s `taskExecutionsBySessionId` relation."""
+  taskExecutionsBySessionId: AgentSessionToManyTaskExecutionFilter
+
+  """Some related `taskExecutionsBySessionId` exist."""
+  taskExecutionsBySessionIdExist: Boolean
+
   """Filter by the object’s `project` relation."""
   project: ProjectFilter
 
@@ -3095,6 +3328,111 @@ input AgentActivityDistinctCountAggregateFilter {
   affectedTaskIds: BigIntFilter
   snapshotBefore: BigIntFilter
   createdAt: BigIntFilter
+}
+
+"""
+A filter to be used against many `TaskExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input AgentSessionToManyTaskExecutionFilter {
+  """
+  Every related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related `TaskExecution` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
+}
+
+"""
+A filter to be used against `TaskExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskExecutionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `taskId` field."""
+  taskId: UUIDFilter
+
+  """Filter by the object’s `sessionId` field."""
+  sessionId: UUIDFilter
+
+  """Filter by the object’s `triggeredBy` field."""
+  triggeredBy: UUIDFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Filter by the object’s `session` relation."""
+  session: AgentSessionFilter
+
+  """A related `session` exists."""
+  sessionExists: Boolean
+
+  """Filter by the object’s `task` relation."""
+  task: TaskFilter
+
+  """Filter by the object’s `user` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [TaskExecutionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TaskExecutionFilter!]
+
+  """Negates the expression."""
+  not: TaskExecutionFilter
+}
+
+"""
+A filter to be used against aggregates of `TaskExecution` object types.
+"""
+input TaskExecutionAggregatesFilter {
+  """
+  A filter that must pass for the relevant `TaskExecution` object to be included within the aggregate.
+  """
+  filter: TaskExecutionFilter
+
+  """Distinct count aggregate over matching `TaskExecution` objects."""
+  distinctCount: TaskExecutionDistinctCountAggregateFilter
+}
+
+input TaskExecutionDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  projectId: BigIntFilter
+  taskId: BigIntFilter
+  sessionId: BigIntFilter
+  triggeredBy: BigIntFilter
+  status: BigIntFilter
+  metadata: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
 }
 
 """
@@ -3203,6 +3541,29 @@ input AgentSessionVarianceSampleAggregateFilter {
 
 input AgentSessionVariancePopulationAggregateFilter {
   toolCallCount: BigFloatFilter
+}
+
+"""
+A filter to be used against many `TaskExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyTaskExecutionFilter {
+  """
+  Every related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related `TaskExecution` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
 }
 
 """
@@ -3372,6 +3733,29 @@ input TaskLabelDistinctCountAggregateFilter {
   labelId: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against many `TaskExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskToManyTaskExecutionFilter {
+  """
+  Every related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related `TaskExecution` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
 }
 
 """A filter to be used against aggregates of `Column` object types."""
@@ -3727,6 +4111,185 @@ input ProjectToManyAgentSessionFilter {
 
   """Aggregates across related `AgentSession` match the filter criteria."""
   aggregates: AgentSessionAggregatesFilter
+}
+
+"""
+A filter to be used against many `GithubRepository` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyGithubRepositoryFilter {
+  """
+  Every related `GithubRepository` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: GithubRepositoryFilter
+
+  """
+  Some related `GithubRepository` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: GithubRepositoryFilter
+
+  """
+  No related `GithubRepository` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: GithubRepositoryFilter
+
+  """
+  Aggregates across related `GithubRepository` match the filter criteria.
+  """
+  aggregates: GithubRepositoryAggregatesFilter
+}
+
+"""
+A filter to be used against `GithubRepository` object types. All fields are combined with a logical ‘and.’
+"""
+input GithubRepositoryFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `repoFullName` field."""
+  repoFullName: StringFilter
+
+  """Filter by the object’s `repoId` field."""
+  repoId: IntFilter
+
+  """Filter by the object’s `defaultBranch` field."""
+  defaultBranch: StringFilter
+
+  """Filter by the object’s `enabled` field."""
+  enabled: BooleanFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Checks for all expressions in this list."""
+  and: [GithubRepositoryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [GithubRepositoryFilter!]
+
+  """Negates the expression."""
+  not: GithubRepositoryFilter
+}
+
+"""
+A filter to be used against aggregates of `GithubRepository` object types.
+"""
+input GithubRepositoryAggregatesFilter {
+  """
+  A filter that must pass for the relevant `GithubRepository` object to be included within the aggregate.
+  """
+  filter: GithubRepositoryFilter
+
+  """Sum aggregate over matching `GithubRepository` objects."""
+  sum: GithubRepositorySumAggregateFilter
+
+  """Distinct count aggregate over matching `GithubRepository` objects."""
+  distinctCount: GithubRepositoryDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `GithubRepository` objects."""
+  min: GithubRepositoryMinAggregateFilter
+
+  """Maximum aggregate over matching `GithubRepository` objects."""
+  max: GithubRepositoryMaxAggregateFilter
+
+  """Mean average aggregate over matching `GithubRepository` objects."""
+  average: GithubRepositoryAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching `GithubRepository` objects.
+  """
+  stddevSample: GithubRepositoryStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching `GithubRepository` objects.
+  """
+  stddevPopulation: GithubRepositoryStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `GithubRepository` objects."""
+  varianceSample: GithubRepositoryVarianceSampleAggregateFilter
+
+  """
+  Population variance aggregate over matching `GithubRepository` objects.
+  """
+  variancePopulation: GithubRepositoryVariancePopulationAggregateFilter
+}
+
+input GithubRepositorySumAggregateFilter {
+  repoId: BigIntFilter
+}
+
+input GithubRepositoryDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  organizationId: BigIntFilter
+  projectId: BigIntFilter
+  repoFullName: BigIntFilter
+  repoId: BigIntFilter
+  defaultBranch: BigIntFilter
+  enabled: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+input GithubRepositoryMinAggregateFilter {
+  repoId: IntFilter
+}
+
+input GithubRepositoryMaxAggregateFilter {
+  repoId: IntFilter
+}
+
+input GithubRepositoryAverageAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+input GithubRepositoryStddevSampleAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+input GithubRepositoryStddevPopulationAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+input GithubRepositoryVarianceSampleAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+input GithubRepositoryVariancePopulationAggregateFilter {
+  repoId: BigFloatFilter
+}
+
+"""
+A filter to be used against many `TaskExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyTaskExecutionFilter {
+  """
+  Every related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related `TaskExecution` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
 }
 
 """
@@ -4120,6 +4683,64 @@ enum ProjectOrderBy {
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
+  GITHUB_REPOSITORIES_COUNT_ASC
+  GITHUB_REPOSITORIES_COUNT_DESC
+  GITHUB_REPOSITORIES_SUM_REPO_ID_ASC
+  GITHUB_REPOSITORIES_SUM_REPO_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ROW_ID_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ROW_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_PROJECT_ID_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_PROJECT_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_FULL_NAME_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_FULL_NAME_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_ID_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_REPO_ID_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_DEFAULT_BRANCH_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_DEFAULT_BRANCH_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ENABLED_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_ENABLED_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_CREATED_AT_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_CREATED_AT_DESC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_UPDATED_AT_ASC
+  GITHUB_REPOSITORIES_DISTINCT_COUNT_UPDATED_AT_DESC
+  GITHUB_REPOSITORIES_MIN_REPO_ID_ASC
+  GITHUB_REPOSITORIES_MIN_REPO_ID_DESC
+  GITHUB_REPOSITORIES_MAX_REPO_ID_ASC
+  GITHUB_REPOSITORIES_MAX_REPO_ID_DESC
+  GITHUB_REPOSITORIES_AVERAGE_REPO_ID_ASC
+  GITHUB_REPOSITORIES_AVERAGE_REPO_ID_DESC
+  GITHUB_REPOSITORIES_STDDEV_SAMPLE_REPO_ID_ASC
+  GITHUB_REPOSITORIES_STDDEV_SAMPLE_REPO_ID_DESC
+  GITHUB_REPOSITORIES_STDDEV_POPULATION_REPO_ID_ASC
+  GITHUB_REPOSITORIES_STDDEV_POPULATION_REPO_ID_DESC
+  GITHUB_REPOSITORIES_VARIANCE_SAMPLE_REPO_ID_ASC
+  GITHUB_REPOSITORIES_VARIANCE_SAMPLE_REPO_ID_DESC
+  GITHUB_REPOSITORIES_VARIANCE_POPULATION_REPO_ID_ASC
+  GITHUB_REPOSITORIES_VARIANCE_POPULATION_REPO_ID_DESC
+  TASK_EXECUTIONS_COUNT_ASC
+  TASK_EXECUTIONS_COUNT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `Column` values."""
@@ -4367,6 +4988,40 @@ type Task implements Node {
     """The method to use when ordering `TaskLabel`."""
     orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaskLabelConnection!
+
+  """Reads and enables pagination through a set of `TaskExecution`."""
+  taskExecutions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 type User implements Node {
@@ -4619,6 +5274,40 @@ type User implements Node {
     """The method to use when ordering `AgentSession`."""
     orderBy: [AgentSessionOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentSessionConnection!
+
+  """Reads and enables pagination through a set of `TaskExecution`."""
+  taskExecutionsByTriggeredBy(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 """A connection to a list of `Assignee` values."""
@@ -5472,6 +6161,28 @@ enum TaskOrderBy {
   TASK_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_ASC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_DESC
+  TASK_EXECUTIONS_COUNT_ASC
+  TASK_EXECUTIONS_COUNT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_SESSION_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TRIGGERED_BY_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_METADATA_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `UserPreference` values."""
@@ -5820,6 +6531,40 @@ type AgentSession implements Node {
     """The method to use when ordering `AgentActivity`."""
     orderBy: [AgentActivityOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentActivityConnection!
+
+  """Reads and enables pagination through a set of `TaskExecution`."""
+  taskExecutionsBySessionId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 """
@@ -5888,6 +6633,253 @@ enum AgentActivityOrderBy {
   ERROR_MESSAGE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+}
+
+"""A connection to a list of `TaskExecution` values."""
+type TaskExecutionConnection {
+  """A list of `TaskExecution` objects."""
+  nodes: [TaskExecution!]!
+
+  """
+  A list of edges which contains the `TaskExecution` and cursor to aid in pagination.
+  """
+  edges: [TaskExecutionEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `TaskExecution` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: TaskExecutionAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `TaskExecution` for these aggregates."""
+    groupBy: [TaskExecutionGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: TaskExecutionHavingInput
+  ): [TaskExecutionAggregates!]
+}
+
+type TaskExecution implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  projectId: UUID!
+  taskId: UUID!
+  sessionId: UUID
+  triggeredBy: UUID!
+  status: String!
+  metadata: JSON!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Project` that is related to this `TaskExecution`."""
+  project: Project
+
+  """Reads a single `AgentSession` that is related to this `TaskExecution`."""
+  session: AgentSession
+
+  """Reads a single `Task` that is related to this `TaskExecution`."""
+  task: Task
+
+  """Reads a single `User` that is related to this `TaskExecution`."""
+  user: User
+}
+
+"""A `TaskExecution` edge in the connection."""
+type TaskExecutionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TaskExecution` at the end of the edge."""
+  node: TaskExecution!
+}
+
+type TaskExecutionAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: TaskExecutionDistinctCountAggregates
+}
+
+type TaskExecutionDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of taskId across the matching connection"""
+  taskId: BigInt
+
+  """Distinct count of sessionId across the matching connection"""
+  sessionId: BigInt
+
+  """Distinct count of triggeredBy across the matching connection"""
+  triggeredBy: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of metadata across the matching connection"""
+  metadata: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `TaskExecution` for usage during aggregation."""
+enum TaskExecutionGroupBy {
+  ORGANIZATION_ID
+  PROJECT_ID
+  TASK_ID
+  SESSION_ID
+  TRIGGERED_BY
+  STATUS
+  METADATA
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `TaskExecution` aggregates."""
+input TaskExecutionHavingInput {
+  AND: [TaskExecutionHavingInput!]
+  OR: [TaskExecutionHavingInput!]
+  sum: TaskExecutionHavingSumInput
+  distinctCount: TaskExecutionHavingDistinctCountInput
+  min: TaskExecutionHavingMinInput
+  max: TaskExecutionHavingMaxInput
+  average: TaskExecutionHavingAverageInput
+  stddevSample: TaskExecutionHavingStddevSampleInput
+  stddevPopulation: TaskExecutionHavingStddevPopulationInput
+  varianceSample: TaskExecutionHavingVarianceSampleInput
+  variancePopulation: TaskExecutionHavingVariancePopulationInput
+}
+
+input TaskExecutionHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `TaskExecution` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TaskExecutionCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `taskId` field."""
+  taskId: UUID
+
+  """Checks for equality with the object’s `sessionId` field."""
+  sessionId: UUID
+
+  """Checks for equality with the object’s `triggeredBy` field."""
+  triggeredBy: UUID
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `TaskExecution`."""
+enum TaskExecutionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  TASK_ID_ASC
+  TASK_ID_DESC
+  SESSION_ID_ASC
+  SESSION_ID_DESC
+  TRIGGERED_BY_ASC
+  TRIGGERED_BY_DESC
+  STATUS_ASC
+  STATUS_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """A `AgentActivity` edge in the connection."""
@@ -6371,6 +7363,28 @@ enum AgentSessionOrderBy {
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_SNAPSHOT_BEFORE_DESC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC
   AGENT_ACTIVITIES_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_COUNT_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_COUNT_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_SESSION_ID_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TRIGGERED_BY_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_TRIGGERED_BY_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_METADATA_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_METADATA_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_BY_SESSION_ID_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `TaskLabel` values."""
@@ -7563,6 +8577,332 @@ enum ProjectProjectLabelOrderBy {
   CREATED_AT_DESC
 }
 
+"""A connection to a list of `GithubRepository` values."""
+type GithubRepositoryConnection {
+  """A list of `GithubRepository` objects."""
+  nodes: [GithubRepository!]!
+
+  """
+  A list of edges which contains the `GithubRepository` and cursor to aid in pagination.
+  """
+  edges: [GithubRepositoryEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `GithubRepository` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: GithubRepositoryAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping `GithubRepository` for these aggregates.
+    """
+    groupBy: [GithubRepositoryGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: GithubRepositoryHavingInput
+  ): [GithubRepositoryAggregates!]
+}
+
+type GithubRepository implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  projectId: UUID!
+  repoFullName: String!
+  repoId: Int!
+  defaultBranch: String!
+  enabled: Boolean!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Project` that is related to this `GithubRepository`."""
+  project: Project
+}
+
+"""A `GithubRepository` edge in the connection."""
+type GithubRepositoryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `GithubRepository` at the end of the edge."""
+  node: GithubRepository!
+}
+
+type GithubRepositoryAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: GithubRepositorySumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: GithubRepositoryDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: GithubRepositoryMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: GithubRepositoryMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: GithubRepositoryAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: GithubRepositoryStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: GithubRepositoryStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: GithubRepositoryVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: GithubRepositoryVariancePopulationAggregates
+}
+
+type GithubRepositorySumAggregates {
+  """Sum of repoId across the matching connection"""
+  repoId: BigInt!
+}
+
+type GithubRepositoryDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of repoFullName across the matching connection"""
+  repoFullName: BigInt
+
+  """Distinct count of repoId across the matching connection"""
+  repoId: BigInt
+
+  """Distinct count of defaultBranch across the matching connection"""
+  defaultBranch: BigInt
+
+  """Distinct count of enabled across the matching connection"""
+  enabled: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type GithubRepositoryMinAggregates {
+  """Minimum of repoId across the matching connection"""
+  repoId: Int
+}
+
+type GithubRepositoryMaxAggregates {
+  """Maximum of repoId across the matching connection"""
+  repoId: Int
+}
+
+type GithubRepositoryAverageAggregates {
+  """Mean average of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+type GithubRepositoryStddevSampleAggregates {
+  """Sample standard deviation of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+type GithubRepositoryStddevPopulationAggregates {
+  """Population standard deviation of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+type GithubRepositoryVarianceSampleAggregates {
+  """Sample variance of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+type GithubRepositoryVariancePopulationAggregates {
+  """Population variance of repoId across the matching connection"""
+  repoId: BigFloat
+}
+
+"""Grouping methods for `GithubRepository` for usage during aggregation."""
+enum GithubRepositoryGroupBy {
+  ORGANIZATION_ID
+  PROJECT_ID
+  REPO_FULL_NAME
+  REPO_ID
+  DEFAULT_BRANCH
+  ENABLED
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `GithubRepository` aggregates."""
+input GithubRepositoryHavingInput {
+  AND: [GithubRepositoryHavingInput!]
+  OR: [GithubRepositoryHavingInput!]
+  sum: GithubRepositoryHavingSumInput
+  distinctCount: GithubRepositoryHavingDistinctCountInput
+  min: GithubRepositoryHavingMinInput
+  max: GithubRepositoryHavingMaxInput
+  average: GithubRepositoryHavingAverageInput
+  stddevSample: GithubRepositoryHavingStddevSampleInput
+  stddevPopulation: GithubRepositoryHavingStddevPopulationInput
+  varianceSample: GithubRepositoryHavingVarianceSampleInput
+  variancePopulation: GithubRepositoryHavingVariancePopulationInput
+}
+
+input GithubRepositoryHavingSumInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingDistinctCountInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingMinInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingMaxInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingAverageInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingStddevSampleInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingStddevPopulationInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingVarianceSampleInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input GithubRepositoryHavingVariancePopulationInput {
+  repoId: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `GithubRepository` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input GithubRepositoryCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `repoFullName` field."""
+  repoFullName: String
+
+  """Checks for equality with the object’s `repoId` field."""
+  repoId: Int
+
+  """Checks for equality with the object’s `defaultBranch` field."""
+  defaultBranch: String
+
+  """Checks for equality with the object’s `enabled` field."""
+  enabled: Boolean
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `GithubRepository`."""
+enum GithubRepositoryOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  REPO_FULL_NAME_ASC
+  REPO_FULL_NAME_DESC
+  REPO_ID_ASC
+  REPO_ID_DESC
+  DEFAULT_BRANCH_ASC
+  DEFAULT_BRANCH_DESC
+  ENABLED_ASC
+  ENABLED_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 type ProjectLabel implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -7622,6 +8962,21 @@ type AgentPersona implements Node {
   description: String
   systemPrompt: String!
   icon: String
+  enabled: Boolean!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+}
+
+type GithubInstallation implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  installationId: Int!
+  githubOrgLogin: String!
+  githubOrgId: Int!
   enabled: Boolean!
   createdAt: Datetime!
   updatedAt: Datetime!
@@ -8045,6 +9400,371 @@ enum UserOrderBy {
   AGENT_SESSIONS_VARIANCE_SAMPLE_TOOL_CALL_COUNT_DESC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_ASC
   AGENT_SESSIONS_VARIANCE_POPULATION_TOOL_CALL_COUNT_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_COUNT_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_COUNT_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_SESSION_ID_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_SESSION_ID_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TRIGGERED_BY_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_TRIGGERED_BY_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_METADATA_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_METADATA_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_BY_TRIGGERED_BY_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of `ProjectColumn` values."""
+type ProjectColumnConnection {
+  """A list of `ProjectColumn` objects."""
+  nodes: [ProjectColumn!]!
+
+  """
+  A list of edges which contains the `ProjectColumn` and cursor to aid in pagination.
+  """
+  edges: [ProjectColumnEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ProjectColumn` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectColumnAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `ProjectColumn` for these aggregates."""
+    groupBy: [ProjectColumnGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectColumnHavingInput
+  ): [ProjectColumnAggregates!]
+}
+
+"""A `ProjectColumn` edge in the connection."""
+type ProjectColumnEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectColumn` at the end of the edge."""
+  node: ProjectColumn!
+}
+
+type ProjectColumnAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: ProjectColumnSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectColumnDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: ProjectColumnMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: ProjectColumnMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: ProjectColumnAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: ProjectColumnStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: ProjectColumnStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: ProjectColumnVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: ProjectColumnVariancePopulationAggregates
+}
+
+type ProjectColumnSumAggregates {
+  """Sum of index across the matching connection"""
+  index: BigInt!
+}
+
+type ProjectColumnDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of index across the matching connection"""
+  index: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type ProjectColumnMinAggregates {
+  """Minimum of index across the matching connection"""
+  index: Int
+}
+
+type ProjectColumnMaxAggregates {
+  """Maximum of index across the matching connection"""
+  index: Int
+}
+
+type ProjectColumnAverageAggregates {
+  """Mean average of index across the matching connection"""
+  index: BigFloat
+}
+
+type ProjectColumnStddevSampleAggregates {
+  """Sample standard deviation of index across the matching connection"""
+  index: BigFloat
+}
+
+type ProjectColumnStddevPopulationAggregates {
+  """Population standard deviation of index across the matching connection"""
+  index: BigFloat
+}
+
+type ProjectColumnVarianceSampleAggregates {
+  """Sample variance of index across the matching connection"""
+  index: BigFloat
+}
+
+type ProjectColumnVariancePopulationAggregates {
+  """Population variance of index across the matching connection"""
+  index: BigFloat
+}
+
+"""Grouping methods for `ProjectColumn` for usage during aggregation."""
+enum ProjectColumnGroupBy {
+  ICON
+  TITLE
+  ORGANIZATION_ID
+  INDEX
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ProjectColumn` aggregates."""
+input ProjectColumnHavingInput {
+  AND: [ProjectColumnHavingInput!]
+  OR: [ProjectColumnHavingInput!]
+  sum: ProjectColumnHavingSumInput
+  distinctCount: ProjectColumnHavingDistinctCountInput
+  min: ProjectColumnHavingMinInput
+  max: ProjectColumnHavingMaxInput
+  average: ProjectColumnHavingAverageInput
+  stddevSample: ProjectColumnHavingStddevSampleInput
+  stddevPopulation: ProjectColumnHavingStddevPopulationInput
+  varianceSample: ProjectColumnHavingVarianceSampleInput
+  variancePopulation: ProjectColumnHavingVariancePopulationInput
+}
+
+input ProjectColumnHavingSumInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingDistinctCountInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingMinInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingMaxInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingAverageInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingStddevSampleInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingStddevPopulationInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingVarianceSampleInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingVariancePopulationInput {
+  index: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `ProjectColumn` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ProjectColumnCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `icon` field."""
+  icon: String
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `index` field."""
+  index: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `ProjectColumn`."""
+enum ProjectColumnOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ICON_ASC
+  ICON_DESC
+  TITLE_ASC
+  TITLE_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  INDEX_ASC
+  INDEX_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  PROJECTS_COUNT_ASC
+  PROJECTS_COUNT_DESC
+  PROJECTS_SUM_COLUMN_INDEX_ASC
+  PROJECTS_SUM_COLUMN_INDEX_DESC
+  PROJECTS_SUM_NEXT_TASK_NUMBER_ASC
+  PROJECTS_SUM_NEXT_TASK_NUMBER_DESC
+  PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECTS_DISTINCT_COUNT_NAME_ASC
+  PROJECTS_DISTINCT_COUNT_NAME_DESC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  PROJECTS_DISTINCT_COUNT_PREFIX_ASC
+  PROJECTS_DISTINCT_COUNT_PREFIX_DESC
+  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_ASC
+  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_DESC
+  PROJECTS_DISTINCT_COUNT_SLUG_ASC
+  PROJECTS_DISTINCT_COUNT_SLUG_DESC
+  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_ASC
+  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC
+  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC
+  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC
+  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC
+  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
+  PROJECTS_MIN_COLUMN_INDEX_ASC
+  PROJECTS_MIN_COLUMN_INDEX_DESC
+  PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
+  PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
+  PROJECTS_MAX_COLUMN_INDEX_ASC
+  PROJECTS_MAX_COLUMN_INDEX_DESC
+  PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
+  PROJECTS_MAX_NEXT_TASK_NUMBER_DESC
+  PROJECTS_AVERAGE_COLUMN_INDEX_ASC
+  PROJECTS_AVERAGE_COLUMN_INDEX_DESC
+  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
+  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
+  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_ASC
+  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_DESC
+  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC
+  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC
+  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
+  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
+  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
+  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
+  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC
+  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC
 }
 
 """A connection to a list of `ProjectLabel` values."""
@@ -8506,117 +10226,127 @@ enum AgentPersonaOrderBy {
   UPDATED_AT_DESC
 }
 
-"""A connection to a list of `ProjectColumn` values."""
-type ProjectColumnConnection {
-  """A list of `ProjectColumn` objects."""
-  nodes: [ProjectColumn!]!
+"""A connection to a list of `GithubInstallation` values."""
+type GithubInstallationConnection {
+  """A list of `GithubInstallation` objects."""
+  nodes: [GithubInstallation!]!
 
   """
-  A list of edges which contains the `ProjectColumn` and cursor to aid in pagination.
+  A list of edges which contains the `GithubInstallation` and cursor to aid in pagination.
   """
-  edges: [ProjectColumnEdge!]!
+  edges: [GithubInstallationEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """The count of *all* `ProjectColumn` you could get from the connection."""
+  """
+  The count of *all* `GithubInstallation` you could get from the connection.
+  """
   totalCount: Int!
 
   """
   Aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  aggregates: ProjectColumnAggregates
+  aggregates: GithubInstallationAggregates
 
   """
   Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   groupedAggregates(
-    """The method to use when grouping `ProjectColumn` for these aggregates."""
-    groupBy: [ProjectColumnGroupBy!]!
+    """
+    The method to use when grouping `GithubInstallation` for these aggregates.
+    """
+    groupBy: [GithubInstallationGroupBy!]!
 
     """Conditions on the grouped aggregates."""
-    having: ProjectColumnHavingInput
-  ): [ProjectColumnAggregates!]
+    having: GithubInstallationHavingInput
+  ): [GithubInstallationAggregates!]
 }
 
-"""A `ProjectColumn` edge in the connection."""
-type ProjectColumnEdge {
+"""A `GithubInstallation` edge in the connection."""
+type GithubInstallationEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The `ProjectColumn` at the end of the edge."""
-  node: ProjectColumn!
+  """The `GithubInstallation` at the end of the edge."""
+  node: GithubInstallation!
 }
 
-type ProjectColumnAggregates {
+type GithubInstallationAggregates {
   keys: [String]
 
   """
   Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  sum: ProjectColumnSumAggregates
+  sum: GithubInstallationSumAggregates
 
   """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  distinctCount: ProjectColumnDistinctCountAggregates
+  distinctCount: GithubInstallationDistinctCountAggregates
 
   """
   Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  min: ProjectColumnMinAggregates
+  min: GithubInstallationMinAggregates
 
   """
   Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  max: ProjectColumnMaxAggregates
+  max: GithubInstallationMaxAggregates
 
   """
   Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  average: ProjectColumnAverageAggregates
+  average: GithubInstallationAverageAggregates
 
   """
   Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  stddevSample: ProjectColumnStddevSampleAggregates
+  stddevSample: GithubInstallationStddevSampleAggregates
 
   """
   Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  stddevPopulation: ProjectColumnStddevPopulationAggregates
+  stddevPopulation: GithubInstallationStddevPopulationAggregates
 
   """
   Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  varianceSample: ProjectColumnVarianceSampleAggregates
+  varianceSample: GithubInstallationVarianceSampleAggregates
 
   """
   Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
-  variancePopulation: ProjectColumnVariancePopulationAggregates
+  variancePopulation: GithubInstallationVariancePopulationAggregates
 }
 
-type ProjectColumnSumAggregates {
-  """Sum of index across the matching connection"""
-  index: BigInt!
+type GithubInstallationSumAggregates {
+  """Sum of installationId across the matching connection"""
+  installationId: BigInt!
+
+  """Sum of githubOrgId across the matching connection"""
+  githubOrgId: BigInt!
 }
 
-type ProjectColumnDistinctCountAggregates {
+type GithubInstallationDistinctCountAggregates {
   """Distinct count of rowId across the matching connection"""
   rowId: BigInt
-
-  """Distinct count of icon across the matching connection"""
-  icon: BigInt
-
-  """Distinct count of title across the matching connection"""
-  title: BigInt
 
   """Distinct count of organizationId across the matching connection"""
   organizationId: BigInt
 
-  """Distinct count of index across the matching connection"""
-  index: BigInt
+  """Distinct count of installationId across the matching connection"""
+  installationId: BigInt
+
+  """Distinct count of githubOrgLogin across the matching connection"""
+  githubOrgLogin: BigInt
+
+  """Distinct count of githubOrgId across the matching connection"""
+  githubOrgId: BigInt
+
+  """Distinct count of enabled across the matching connection"""
+  enabled: BigInt
 
   """Distinct count of createdAt across the matching connection"""
   createdAt: BigInt
@@ -8625,47 +10355,79 @@ type ProjectColumnDistinctCountAggregates {
   updatedAt: BigInt
 }
 
-type ProjectColumnMinAggregates {
-  """Minimum of index across the matching connection"""
-  index: Int
+type GithubInstallationMinAggregates {
+  """Minimum of installationId across the matching connection"""
+  installationId: Int
+
+  """Minimum of githubOrgId across the matching connection"""
+  githubOrgId: Int
 }
 
-type ProjectColumnMaxAggregates {
-  """Maximum of index across the matching connection"""
-  index: Int
+type GithubInstallationMaxAggregates {
+  """Maximum of installationId across the matching connection"""
+  installationId: Int
+
+  """Maximum of githubOrgId across the matching connection"""
+  githubOrgId: Int
 }
 
-type ProjectColumnAverageAggregates {
-  """Mean average of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationAverageAggregates {
+  """Mean average of installationId across the matching connection"""
+  installationId: BigFloat
+
+  """Mean average of githubOrgId across the matching connection"""
+  githubOrgId: BigFloat
 }
 
-type ProjectColumnStddevSampleAggregates {
-  """Sample standard deviation of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationStddevSampleAggregates {
+  """
+  Sample standard deviation of installationId across the matching connection
+  """
+  installationId: BigFloat
+
+  """
+  Sample standard deviation of githubOrgId across the matching connection
+  """
+  githubOrgId: BigFloat
 }
 
-type ProjectColumnStddevPopulationAggregates {
-  """Population standard deviation of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationStddevPopulationAggregates {
+  """
+  Population standard deviation of installationId across the matching connection
+  """
+  installationId: BigFloat
+
+  """
+  Population standard deviation of githubOrgId across the matching connection
+  """
+  githubOrgId: BigFloat
 }
 
-type ProjectColumnVarianceSampleAggregates {
-  """Sample variance of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationVarianceSampleAggregates {
+  """Sample variance of installationId across the matching connection"""
+  installationId: BigFloat
+
+  """Sample variance of githubOrgId across the matching connection"""
+  githubOrgId: BigFloat
 }
 
-type ProjectColumnVariancePopulationAggregates {
-  """Population variance of index across the matching connection"""
-  index: BigFloat
+type GithubInstallationVariancePopulationAggregates {
+  """Population variance of installationId across the matching connection"""
+  installationId: BigFloat
+
+  """Population variance of githubOrgId across the matching connection"""
+  githubOrgId: BigFloat
 }
 
-"""Grouping methods for `ProjectColumn` for usage during aggregation."""
-enum ProjectColumnGroupBy {
-  ICON
-  TITLE
+"""
+Grouping methods for `GithubInstallation` for usage during aggregation.
+"""
+enum GithubInstallationGroupBy {
   ORGANIZATION_ID
-  INDEX
+  INSTALLATION_ID
+  GITHUB_ORG_LOGIN
+  GITHUB_ORG_ID
+  ENABLED
   CREATED_AT
   CREATED_AT_TRUNCATED_TO_HOUR
   CREATED_AT_TRUNCATED_TO_DAY
@@ -8674,94 +10436,106 @@ enum ProjectColumnGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
 }
 
-"""Conditions for `ProjectColumn` aggregates."""
-input ProjectColumnHavingInput {
-  AND: [ProjectColumnHavingInput!]
-  OR: [ProjectColumnHavingInput!]
-  sum: ProjectColumnHavingSumInput
-  distinctCount: ProjectColumnHavingDistinctCountInput
-  min: ProjectColumnHavingMinInput
-  max: ProjectColumnHavingMaxInput
-  average: ProjectColumnHavingAverageInput
-  stddevSample: ProjectColumnHavingStddevSampleInput
-  stddevPopulation: ProjectColumnHavingStddevPopulationInput
-  varianceSample: ProjectColumnHavingVarianceSampleInput
-  variancePopulation: ProjectColumnHavingVariancePopulationInput
+"""Conditions for `GithubInstallation` aggregates."""
+input GithubInstallationHavingInput {
+  AND: [GithubInstallationHavingInput!]
+  OR: [GithubInstallationHavingInput!]
+  sum: GithubInstallationHavingSumInput
+  distinctCount: GithubInstallationHavingDistinctCountInput
+  min: GithubInstallationHavingMinInput
+  max: GithubInstallationHavingMaxInput
+  average: GithubInstallationHavingAverageInput
+  stddevSample: GithubInstallationHavingStddevSampleInput
+  stddevPopulation: GithubInstallationHavingStddevPopulationInput
+  varianceSample: GithubInstallationHavingVarianceSampleInput
+  variancePopulation: GithubInstallationHavingVariancePopulationInput
 }
 
-input ProjectColumnHavingSumInput {
-  index: HavingIntFilter
+input GithubInstallationHavingSumInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingDistinctCountInput {
-  index: HavingIntFilter
+input GithubInstallationHavingDistinctCountInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingMinInput {
-  index: HavingIntFilter
+input GithubInstallationHavingMinInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingMaxInput {
-  index: HavingIntFilter
+input GithubInstallationHavingMaxInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingAverageInput {
-  index: HavingIntFilter
+input GithubInstallationHavingAverageInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingStddevSampleInput {
-  index: HavingIntFilter
+input GithubInstallationHavingStddevSampleInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingStddevPopulationInput {
-  index: HavingIntFilter
+input GithubInstallationHavingStddevPopulationInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingVarianceSampleInput {
-  index: HavingIntFilter
+input GithubInstallationHavingVarianceSampleInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
-input ProjectColumnHavingVariancePopulationInput {
-  index: HavingIntFilter
+input GithubInstallationHavingVariancePopulationInput {
+  installationId: HavingIntFilter
+  githubOrgId: HavingIntFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
 }
 
 """
-A condition to be used against `ProjectColumn` object types. All fields are
+A condition to be used against `GithubInstallation` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
-input ProjectColumnCondition {
+input GithubInstallationCondition {
   """Checks for equality with the object’s `rowId` field."""
   rowId: UUID
-
-  """Checks for equality with the object’s `icon` field."""
-  icon: String
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
 
   """Checks for equality with the object’s `organizationId` field."""
   organizationId: String
 
-  """Checks for equality with the object’s `index` field."""
-  index: Int
+  """Checks for equality with the object’s `installationId` field."""
+  installationId: Int
+
+  """Checks for equality with the object’s `githubOrgLogin` field."""
+  githubOrgLogin: String
+
+  """Checks for equality with the object’s `githubOrgId` field."""
+  githubOrgId: Int
+
+  """Checks for equality with the object’s `enabled` field."""
+  enabled: Boolean
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
@@ -8770,83 +10544,65 @@ input ProjectColumnCondition {
   updatedAt: Datetime
 }
 
-"""Methods to use when ordering `ProjectColumn`."""
-enum ProjectColumnOrderBy {
+"""
+A filter to be used against `GithubInstallation` object types. All fields are combined with a logical ‘and.’
+"""
+input GithubInstallationFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `installationId` field."""
+  installationId: IntFilter
+
+  """Filter by the object’s `githubOrgLogin` field."""
+  githubOrgLogin: StringFilter
+
+  """Filter by the object’s `githubOrgId` field."""
+  githubOrgId: IntFilter
+
+  """Filter by the object’s `enabled` field."""
+  enabled: BooleanFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Checks for all expressions in this list."""
+  and: [GithubInstallationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [GithubInstallationFilter!]
+
+  """Negates the expression."""
+  not: GithubInstallationFilter
+}
+
+"""Methods to use when ordering `GithubInstallation`."""
+enum GithubInstallationOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   ROW_ID_ASC
   ROW_ID_DESC
-  ICON_ASC
-  ICON_DESC
-  TITLE_ASC
-  TITLE_DESC
   ORGANIZATION_ID_ASC
   ORGANIZATION_ID_DESC
-  INDEX_ASC
-  INDEX_DESC
+  INSTALLATION_ID_ASC
+  INSTALLATION_ID_DESC
+  GITHUB_ORG_LOGIN_ASC
+  GITHUB_ORG_LOGIN_DESC
+  GITHUB_ORG_ID_ASC
+  GITHUB_ORG_ID_DESC
+  ENABLED_ASC
+  ENABLED_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  PROJECTS_COUNT_ASC
-  PROJECTS_COUNT_DESC
-  PROJECTS_SUM_COLUMN_INDEX_ASC
-  PROJECTS_SUM_COLUMN_INDEX_DESC
-  PROJECTS_SUM_NEXT_TASK_NUMBER_ASC
-  PROJECTS_SUM_NEXT_TASK_NUMBER_DESC
-  PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
-  PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
-  PROJECTS_DISTINCT_COUNT_NAME_ASC
-  PROJECTS_DISTINCT_COUNT_NAME_DESC
-  PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC
-  PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC
-  PROJECTS_DISTINCT_COUNT_PREFIX_ASC
-  PROJECTS_DISTINCT_COUNT_PREFIX_DESC
-  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC
-  PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
-  PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
-  PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
-  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_ASC
-  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_DESC
-  PROJECTS_DISTINCT_COUNT_SLUG_ASC
-  PROJECTS_DISTINCT_COUNT_SLUG_DESC
-  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_ASC
-  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC
-  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC
-  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC
-  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC
-  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
-  PROJECTS_MIN_COLUMN_INDEX_ASC
-  PROJECTS_MIN_COLUMN_INDEX_DESC
-  PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
-  PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
-  PROJECTS_MAX_COLUMN_INDEX_ASC
-  PROJECTS_MAX_COLUMN_INDEX_DESC
-  PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
-  PROJECTS_MAX_NEXT_TASK_NUMBER_DESC
-  PROJECTS_AVERAGE_COLUMN_INDEX_ASC
-  PROJECTS_AVERAGE_COLUMN_INDEX_DESC
-  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
-  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
-  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_ASC
-  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_DESC
-  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC
-  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC
-  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
-  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
-  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
-  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
-  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC
-  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC
 }
 
 """A connection to a list of `Setting` values."""
@@ -9554,6 +11310,22 @@ type Mutation {
     input: CreateUserInput!
   ): CreateUserPayload
 
+  """Creates a single `Column`."""
+  createColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateColumnInput!
+  ): CreateColumnPayload
+
+  """Creates a single `ProjectColumn`."""
+  createProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectColumnInput!
+  ): CreateProjectColumnPayload
+
   """Creates a single `ProjectLabel`."""
   createProjectLabel(
     """
@@ -9578,14 +11350,6 @@ type Mutation {
     input: CreatePostInput!
   ): CreatePostPayload
 
-  """Creates a single `Column`."""
-  createColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateColumnInput!
-  ): CreateColumnPayload
-
   """Creates a single `UserPreference`."""
   createUserPreference(
     """
@@ -9602,13 +11366,29 @@ type Mutation {
     input: CreateAgentPersonaInput!
   ): CreateAgentPersonaPayload
 
-  """Creates a single `ProjectColumn`."""
-  createProjectColumn(
+  """Creates a single `GithubRepository`."""
+  createGithubRepository(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateProjectColumnInput!
-  ): CreateProjectColumnPayload
+    input: CreateGithubRepositoryInput!
+  ): CreateGithubRepositoryPayload
+
+  """Creates a single `GithubInstallation`."""
+  createGithubInstallation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateGithubInstallationInput!
+  ): CreateGithubInstallationPayload
+
+  """Creates a single `TaskExecution`."""
+  createTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaskExecutionInput!
+  ): CreateTaskExecutionPayload
 
   """Creates a single `AgentSession`."""
   createAgentSession(
@@ -9740,6 +11520,40 @@ type Mutation {
     input: UpdateUserInput!
   ): UpdateUserPayload
 
+  """Updates a single `Column` using its globally unique id and a patch."""
+  updateColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnByIdInput!
+  ): UpdateColumnPayload
+
+  """Updates a single `Column` using a unique key and a patch."""
+  updateColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnInput!
+  ): UpdateColumnPayload
+
+  """
+  Updates a single `ProjectColumn` using its globally unique id and a patch.
+  """
+  updateProjectColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectColumnByIdInput!
+  ): UpdateProjectColumnPayload
+
+  """Updates a single `ProjectColumn` using a unique key and a patch."""
+  updateProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectColumnInput!
+  ): UpdateProjectColumnPayload
+
   """
   Updates a single `ProjectLabel` using its globally unique id and a patch.
   """
@@ -9790,22 +11604,6 @@ type Mutation {
     input: UpdatePostInput!
   ): UpdatePostPayload
 
-  """Updates a single `Column` using its globally unique id and a patch."""
-  updateColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnByIdInput!
-  ): UpdateColumnPayload
-
-  """Updates a single `Column` using a unique key and a patch."""
-  updateColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnInput!
-  ): UpdateColumnPayload
-
   """
   Updates a single `UserPreference` using its globally unique id and a patch.
   """
@@ -9843,22 +11641,58 @@ type Mutation {
   ): UpdateAgentPersonaPayload
 
   """
-  Updates a single `ProjectColumn` using its globally unique id and a patch.
+  Updates a single `GithubRepository` using its globally unique id and a patch.
   """
-  updateProjectColumnById(
+  updateGithubRepositoryById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateProjectColumnByIdInput!
-  ): UpdateProjectColumnPayload
+    input: UpdateGithubRepositoryByIdInput!
+  ): UpdateGithubRepositoryPayload
 
-  """Updates a single `ProjectColumn` using a unique key and a patch."""
-  updateProjectColumn(
+  """Updates a single `GithubRepository` using a unique key and a patch."""
+  updateGithubRepository(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateProjectColumnInput!
-  ): UpdateProjectColumnPayload
+    input: UpdateGithubRepositoryInput!
+  ): UpdateGithubRepositoryPayload
+
+  """
+  Updates a single `GithubInstallation` using its globally unique id and a patch.
+  """
+  updateGithubInstallationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGithubInstallationByIdInput!
+  ): UpdateGithubInstallationPayload
+
+  """Updates a single `GithubInstallation` using a unique key and a patch."""
+  updateGithubInstallation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGithubInstallationInput!
+  ): UpdateGithubInstallationPayload
+
+  """
+  Updates a single `TaskExecution` using its globally unique id and a patch.
+  """
+  updateTaskExecutionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskExecutionByIdInput!
+  ): UpdateTaskExecutionPayload
+
+  """Updates a single `TaskExecution` using a unique key and a patch."""
+  updateTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskExecutionInput!
+  ): UpdateTaskExecutionPayload
 
   """
   Updates a single `AgentSession` using its globally unique id and a patch.
@@ -10042,6 +11876,38 @@ type Mutation {
     input: DeleteUserInput!
   ): DeleteUserPayload
 
+  """Deletes a single `Column` using its globally unique id."""
+  deleteColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnByIdInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single `Column` using a unique key."""
+  deleteColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single `ProjectColumn` using its globally unique id."""
+  deleteProjectColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectColumnByIdInput!
+  ): DeleteProjectColumnPayload
+
+  """Deletes a single `ProjectColumn` using a unique key."""
+  deleteProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectColumnInput!
+  ): DeleteProjectColumnPayload
+
   """Deletes a single `ProjectLabel` using its globally unique id."""
   deleteProjectLabelById(
     """
@@ -10090,22 +11956,6 @@ type Mutation {
     input: DeletePostInput!
   ): DeletePostPayload
 
-  """Deletes a single `Column` using its globally unique id."""
-  deleteColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnByIdInput!
-  ): DeleteColumnPayload
-
-  """Deletes a single `Column` using a unique key."""
-  deleteColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnInput!
-  ): DeleteColumnPayload
-
   """Deletes a single `UserPreference` using its globally unique id."""
   deleteUserPreferenceById(
     """
@@ -10138,21 +11988,53 @@ type Mutation {
     input: DeleteAgentPersonaInput!
   ): DeleteAgentPersonaPayload
 
-  """Deletes a single `ProjectColumn` using its globally unique id."""
-  deleteProjectColumnById(
+  """Deletes a single `GithubRepository` using its globally unique id."""
+  deleteGithubRepositoryById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteProjectColumnByIdInput!
-  ): DeleteProjectColumnPayload
+    input: DeleteGithubRepositoryByIdInput!
+  ): DeleteGithubRepositoryPayload
 
-  """Deletes a single `ProjectColumn` using a unique key."""
-  deleteProjectColumn(
+  """Deletes a single `GithubRepository` using a unique key."""
+  deleteGithubRepository(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteProjectColumnInput!
-  ): DeleteProjectColumnPayload
+    input: DeleteGithubRepositoryInput!
+  ): DeleteGithubRepositoryPayload
+
+  """Deletes a single `GithubInstallation` using its globally unique id."""
+  deleteGithubInstallationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGithubInstallationByIdInput!
+  ): DeleteGithubInstallationPayload
+
+  """Deletes a single `GithubInstallation` using a unique key."""
+  deleteGithubInstallation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGithubInstallationInput!
+  ): DeleteGithubInstallationPayload
+
+  """Deletes a single `TaskExecution` using its globally unique id."""
+  deleteTaskExecutionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskExecutionByIdInput!
+  ): DeleteTaskExecutionPayload
+
+  """Deletes a single `TaskExecution` using a unique key."""
+  deleteTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskExecutionInput!
+  ): DeleteTaskExecutionPayload
 
   """Deletes a single `AgentSession` using its globally unique id."""
   deleteAgentSessionById(
@@ -10471,6 +12353,98 @@ input UserInput {
   email: String!
 }
 
+"""The output of our create `Column` mutation."""
+type CreateColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was created by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the create `Column` mutation."""
+input CreateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Column` to be created by this mutation."""
+  column: ColumnInput!
+}
+
+"""An input for mutations affecting `Column`"""
+input ColumnInput {
+  rowId: UUID
+  title: String!
+  projectId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: Int
+  icon: String
+}
+
+"""The output of our create `ProjectColumn` mutation."""
+type CreateProjectColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectColumn` that was created by this mutation."""
+  projectColumn: ProjectColumn
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectColumn`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the create `ProjectColumn` mutation."""
+input CreateProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectColumn` to be created by this mutation."""
+  projectColumn: ProjectColumnInput!
+}
+
+"""An input for mutations affecting `ProjectColumn`"""
+input ProjectColumnInput {
+  rowId: UUID
+  icon: String
+  title: String!
+  organizationId: String!
+  index: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `ProjectLabel` mutation."""
 type CreateProjectLabelPayload {
   """
@@ -10611,52 +12585,6 @@ input PostInput {
   parentId: UUID
 }
 
-"""The output of our create `Column` mutation."""
-type CreateColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was created by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the create `Column` mutation."""
-input CreateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Column` to be created by this mutation."""
-  column: ColumnInput!
-}
-
-"""An input for mutations affecting `Column`"""
-input ColumnInput {
-  rowId: UUID
-  title: String!
-  projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: Int
-  icon: String
-}
-
 """The output of our create `UserPreference` mutation."""
 type CreateUserPreferencePayload {
   """
@@ -10752,48 +12680,146 @@ input AgentPersonaInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `ProjectColumn` mutation."""
-type CreateProjectColumnPayload {
+"""The output of our create `GithubRepository` mutation."""
+type CreateGithubRepositoryPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `ProjectColumn` that was created by this mutation."""
-  projectColumn: ProjectColumn
+  """The `GithubRepository` that was created by this mutation."""
+  githubRepository: GithubRepository
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `ProjectColumn`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
+  """An edge for our `GithubRepository`. May be used by Relay 1."""
+  githubRepositoryEdge(
+    """The method to use when ordering `GithubRepository`."""
+    orderBy: [GithubRepositoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryEdge
 }
 
-"""All input for the create `ProjectColumn` mutation."""
-input CreateProjectColumnInput {
+"""All input for the create `GithubRepository` mutation."""
+input CreateGithubRepositoryInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The `ProjectColumn` to be created by this mutation."""
-  projectColumn: ProjectColumnInput!
+  """The `GithubRepository` to be created by this mutation."""
+  githubRepository: GithubRepositoryInput!
 }
 
-"""An input for mutations affecting `ProjectColumn`"""
-input ProjectColumnInput {
+"""An input for mutations affecting `GithubRepository`"""
+input GithubRepositoryInput {
   rowId: UUID
-  icon: String
-  title: String!
   organizationId: String!
-  index: Int
+  projectId: UUID!
+  repoFullName: String!
+  repoId: Int!
+  defaultBranch: String
+  enabled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `GithubInstallation` mutation."""
+type CreateGithubInstallationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `GithubInstallation` that was created by this mutation."""
+  githubInstallation: GithubInstallation
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `GithubInstallation`. May be used by Relay 1."""
+  githubInstallationEdge(
+    """The method to use when ordering `GithubInstallation`."""
+    orderBy: [GithubInstallationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubInstallationEdge
+}
+
+"""All input for the create `GithubInstallation` mutation."""
+input CreateGithubInstallationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `GithubInstallation` to be created by this mutation."""
+  githubInstallation: GithubInstallationInput!
+}
+
+"""An input for mutations affecting `GithubInstallation`"""
+input GithubInstallationInput {
+  rowId: UUID
+  organizationId: String!
+  installationId: Int!
+  githubOrgLogin: String!
+  githubOrgId: Int!
+  enabled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `TaskExecution` mutation."""
+type CreateTaskExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaskExecution` that was created by this mutation."""
+  taskExecution: TaskExecution
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaskExecution`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the create `TaskExecution` mutation."""
+input CreateTaskExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TaskExecution` to be created by this mutation."""
+  taskExecution: TaskExecutionInput!
+}
+
+"""An input for mutations affecting `TaskExecution`"""
+input TaskExecutionInput {
+  rowId: UUID
+  organizationId: String!
+  projectId: UUID!
+  taskId: UUID!
+  sessionId: UUID
+  triggeredBy: UUID!
+  status: String
+  metadata: JSON
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -11444,6 +13470,146 @@ input UpdateUserInput {
   patch: UserPatch!
 }
 
+"""The output of our update `Column` mutation."""
+type UpdateColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was updated by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the `updateColumnById` mutation."""
+input UpdateColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Column` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Column` being updated.
+  """
+  patch: ColumnPatch!
+}
+
+"""
+Represents an update to a `Column`. Fields that are set will be updated.
+"""
+input ColumnPatch {
+  rowId: UUID
+  title: String
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: Int
+  icon: String
+}
+
+"""All input for the `updateColumn` mutation."""
+input UpdateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Column` being updated.
+  """
+  patch: ColumnPatch!
+}
+
+"""The output of our update `ProjectColumn` mutation."""
+type UpdateProjectColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectColumn` that was updated by this mutation."""
+  projectColumn: ProjectColumn
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectColumn`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the `updateProjectColumnById` mutation."""
+input UpdateProjectColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectColumn` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ProjectColumn` being updated.
+  """
+  patch: ProjectColumnPatch!
+}
+
+"""
+Represents an update to a `ProjectColumn`. Fields that are set will be updated.
+"""
+input ProjectColumnPatch {
+  rowId: UUID
+  icon: String
+  title: String
+  organizationId: String
+  index: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateProjectColumn` mutation."""
+input UpdateProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ProjectColumn` being updated.
+  """
+  patch: ProjectColumnPatch!
+}
+
 """The output of our update `ProjectLabel` mutation."""
 type UpdateProjectLabelPayload {
   """
@@ -11654,76 +13820,6 @@ input UpdatePostInput {
   patch: PostPatch!
 }
 
-"""The output of our update `Column` mutation."""
-type UpdateColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was updated by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the `updateColumnById` mutation."""
-input UpdateColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Column` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Column` being updated.
-  """
-  patch: ColumnPatch!
-}
-
-"""
-Represents an update to a `Column`. Fields that are set will be updated.
-"""
-input ColumnPatch {
-  rowId: UUID
-  title: String
-  projectId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: Int
-  icon: String
-}
-
-"""All input for the `updateColumn` mutation."""
-input UpdateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Column` being updated.
-  """
-  patch: ColumnPatch!
-}
-
 """The output of our update `UserPreference` mutation."""
 type UpdateUserPreferencePayload {
   """
@@ -11867,31 +13963,31 @@ input UpdateAgentPersonaInput {
   patch: AgentPersonaPatch!
 }
 
-"""The output of our update `ProjectColumn` mutation."""
-type UpdateProjectColumnPayload {
+"""The output of our update `GithubRepository` mutation."""
+type UpdateGithubRepositoryPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `ProjectColumn` that was updated by this mutation."""
-  projectColumn: ProjectColumn
+  """The `GithubRepository` that was updated by this mutation."""
+  githubRepository: GithubRepository
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `ProjectColumn`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
+  """An edge for our `GithubRepository`. May be used by Relay 1."""
+  githubRepositoryEdge(
+    """The method to use when ordering `GithubRepository`."""
+    orderBy: [GithubRepositoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryEdge
 }
 
-"""All input for the `updateProjectColumnById` mutation."""
-input UpdateProjectColumnByIdInput {
+"""All input for the `updateGithubRepositoryById` mutation."""
+input UpdateGithubRepositoryByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11899,31 +13995,33 @@ input UpdateProjectColumnByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `ProjectColumn` to be updated.
+  The globally unique `ID` which will identify a single `GithubRepository` to be updated.
   """
   id: ID!
 
   """
-  An object where the defined keys will be set on the `ProjectColumn` being updated.
+  An object where the defined keys will be set on the `GithubRepository` being updated.
   """
-  patch: ProjectColumnPatch!
+  patch: GithubRepositoryPatch!
 }
 
 """
-Represents an update to a `ProjectColumn`. Fields that are set will be updated.
+Represents an update to a `GithubRepository`. Fields that are set will be updated.
 """
-input ProjectColumnPatch {
+input GithubRepositoryPatch {
   rowId: UUID
-  icon: String
-  title: String
   organizationId: String
-  index: Int
+  projectId: UUID
+  repoFullName: String
+  repoId: Int
+  defaultBranch: String
+  enabled: Boolean
   createdAt: Datetime
   updatedAt: Datetime
 }
 
-"""All input for the `updateProjectColumn` mutation."""
-input UpdateProjectColumnInput {
+"""All input for the `updateGithubRepository` mutation."""
+input UpdateGithubRepositoryInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11932,9 +14030,153 @@ input UpdateProjectColumnInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the `ProjectColumn` being updated.
+  An object where the defined keys will be set on the `GithubRepository` being updated.
   """
-  patch: ProjectColumnPatch!
+  patch: GithubRepositoryPatch!
+}
+
+"""The output of our update `GithubInstallation` mutation."""
+type UpdateGithubInstallationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `GithubInstallation` that was updated by this mutation."""
+  githubInstallation: GithubInstallation
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `GithubInstallation`. May be used by Relay 1."""
+  githubInstallationEdge(
+    """The method to use when ordering `GithubInstallation`."""
+    orderBy: [GithubInstallationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubInstallationEdge
+}
+
+"""All input for the `updateGithubInstallationById` mutation."""
+input UpdateGithubInstallationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `GithubInstallation` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `GithubInstallation` being updated.
+  """
+  patch: GithubInstallationPatch!
+}
+
+"""
+Represents an update to a `GithubInstallation`. Fields that are set will be updated.
+"""
+input GithubInstallationPatch {
+  rowId: UUID
+  organizationId: String
+  installationId: Int
+  githubOrgLogin: String
+  githubOrgId: Int
+  enabled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateGithubInstallation` mutation."""
+input UpdateGithubInstallationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `GithubInstallation` being updated.
+  """
+  patch: GithubInstallationPatch!
+}
+
+"""The output of our update `TaskExecution` mutation."""
+type UpdateTaskExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaskExecution` that was updated by this mutation."""
+  taskExecution: TaskExecution
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaskExecution`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the `updateTaskExecutionById` mutation."""
+input UpdateTaskExecutionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TaskExecution` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `TaskExecution` being updated.
+  """
+  patch: TaskExecutionPatch!
+}
+
+"""
+Represents an update to a `TaskExecution`. Fields that are set will be updated.
+"""
+input TaskExecutionPatch {
+  rowId: UUID
+  organizationId: String
+  projectId: UUID
+  taskId: UUID
+  sessionId: UUID
+  triggeredBy: UUID
+  status: String
+  metadata: JSON
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateTaskExecution` mutation."""
+input UpdateTaskExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `TaskExecution` being updated.
+  """
+  patch: TaskExecutionPatch!
 }
 
 """The output of our update `AgentSession` mutation."""
@@ -12627,6 +14869,102 @@ input DeleteUserInput {
   rowId: UUID!
 }
 
+"""The output of our delete `Column` mutation."""
+type DeleteColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was deleted by this mutation."""
+  column: Column
+  deletedColumnId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the `deleteColumnById` mutation."""
+input DeleteColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Column` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteColumn` mutation."""
+input DeleteColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ProjectColumn` mutation."""
+type DeleteProjectColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectColumn` that was deleted by this mutation."""
+  projectColumn: ProjectColumn
+  deletedProjectColumnId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectColumn`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the `deleteProjectColumnById` mutation."""
+input DeleteProjectColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectColumn` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteProjectColumn` mutation."""
+input DeleteProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `ProjectLabel` mutation."""
 type DeleteProjectLabelPayload {
   """
@@ -12771,54 +15109,6 @@ input DeletePostInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Column` mutation."""
-type DeleteColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was deleted by this mutation."""
-  column: Column
-  deletedColumnId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the `deleteColumnById` mutation."""
-input DeleteColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Column` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteColumn` mutation."""
-input DeleteColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `UserPreference` mutation."""
 type DeleteUserPreferencePayload {
   """
@@ -12915,32 +15205,32 @@ input DeleteAgentPersonaInput {
   rowId: UUID!
 }
 
-"""The output of our delete `ProjectColumn` mutation."""
-type DeleteProjectColumnPayload {
+"""The output of our delete `GithubRepository` mutation."""
+type DeleteGithubRepositoryPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `ProjectColumn` that was deleted by this mutation."""
-  projectColumn: ProjectColumn
-  deletedProjectColumnId: ID
+  """The `GithubRepository` that was deleted by this mutation."""
+  githubRepository: GithubRepository
+  deletedGithubRepositoryId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `ProjectColumn`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
+  """An edge for our `GithubRepository`. May be used by Relay 1."""
+  githubRepositoryEdge(
+    """The method to use when ordering `GithubRepository`."""
+    orderBy: [GithubRepositoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubRepositoryEdge
 }
 
-"""All input for the `deleteProjectColumnById` mutation."""
-input DeleteProjectColumnByIdInput {
+"""All input for the `deleteGithubRepositoryById` mutation."""
+input DeleteGithubRepositoryByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -12948,13 +15238,109 @@ input DeleteProjectColumnByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `ProjectColumn` to be deleted.
+  The globally unique `ID` which will identify a single `GithubRepository` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the `deleteProjectColumn` mutation."""
-input DeleteProjectColumnInput {
+"""All input for the `deleteGithubRepository` mutation."""
+input DeleteGithubRepositoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `GithubInstallation` mutation."""
+type DeleteGithubInstallationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `GithubInstallation` that was deleted by this mutation."""
+  githubInstallation: GithubInstallation
+  deletedGithubInstallationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `GithubInstallation`. May be used by Relay 1."""
+  githubInstallationEdge(
+    """The method to use when ordering `GithubInstallation`."""
+    orderBy: [GithubInstallationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): GithubInstallationEdge
+}
+
+"""All input for the `deleteGithubInstallationById` mutation."""
+input DeleteGithubInstallationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `GithubInstallation` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteGithubInstallation` mutation."""
+input DeleteGithubInstallationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `TaskExecution` mutation."""
+type DeleteTaskExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaskExecution` that was deleted by this mutation."""
+  taskExecution: TaskExecution
+  deletedTaskExecutionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaskExecution`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the `deleteTaskExecutionById` mutation."""
+input DeleteTaskExecutionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TaskExecution` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteTaskExecution` mutation."""
+input DeleteTaskExecutionInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
