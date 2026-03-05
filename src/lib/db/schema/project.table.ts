@@ -47,6 +47,7 @@ export const projects = pgTable(
     isPublic: boolean().notNull().default(false),
     // Counter for auto-incrementing task numbers within this project
     nextTaskNumber: integer("next_task_number").notNull().default(1),
+    color: varchar({ length: 24 }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
