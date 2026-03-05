@@ -79,7 +79,9 @@ const graphilePreset: GraphileConfig.Preset = {
     connectionFilterAllowNullInput: true,
     connectionFilterAllowEmptyObjectInput: true,
   },
-  pgServices: [makePgService({ connectionString: DATABASE_URL })],
+  pgServices: [
+    makePgService({ connectionString: DATABASE_URL, schemas: ["public"] }),
+  ],
   grafast: { explain: isDevEnv },
 };
 
