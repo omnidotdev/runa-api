@@ -337,6 +337,13 @@
       "when": 1770536073015,
       "tag": "0047_lively_gladiator",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1772736053120,
+      "tag": "0048_true_doctor_octopus",
+      "breakpoints": true
     }
   ]
 }
