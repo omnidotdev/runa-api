@@ -717,6 +717,7 @@ type Project implements Node {
   columnIndex: Int!
   isPublic: Boolean!
   nextTaskNumber: Int!
+  color: String
 
   """Reads a single `ProjectColumn` that is related to this `Project`."""
   projectColumn: ProjectColumn
@@ -1325,6 +1326,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s `nextTaskNumber` field."""
   nextTaskNumber: Int
+
+  """Checks for equality with the object’s `color` field."""
+  color: String
 }
 
 """
@@ -1366,6 +1370,9 @@ input ProjectFilter {
 
   """Filter by the object’s `nextTaskNumber` field."""
   nextTaskNumber: IntFilter
+
+  """Filter by the object’s `color` field."""
+  color: StringFilter
 
   """Filter by the object’s `columns` relation."""
   columns: ProjectToManyColumnFilter
@@ -2465,9 +2472,6 @@ input UserPreferenceFilter {
   """Filter by the object’s `viewMode` field."""
   viewMode: StringFilter
 
-  """Filter by the object’s `color` field."""
-  color: StringFilter
-
   """Filter by the object’s `project` relation."""
   project: ProjectFilter
 
@@ -2568,7 +2572,6 @@ input UserPreferenceDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   viewMode: BigIntFilter
-  color: BigIntFilter
 }
 
 """
@@ -4655,7 +4658,6 @@ type UserPreference implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   viewMode: String!
-  color: String
 
   """Reads a single `Project` that is related to this `UserPreference`."""
   project: Project
@@ -4703,9 +4705,6 @@ type UserPreferenceDistinctCountAggregates {
 
   """Distinct count of viewMode across the matching connection"""
   viewMode: BigInt
-
-  """Distinct count of color across the matching connection"""
-  color: BigInt
 }
 
 """Grouping methods for `UserPreference` for usage during aggregation."""
@@ -4805,9 +4804,6 @@ input UserPreferenceCondition {
 
   """Checks for equality with the object’s `viewMode` field."""
   viewMode: String
-
-  """Checks for equality with the object’s `color` field."""
-  color: String
 }
 
 """Methods to use when ordering `UserPreference`."""
@@ -8275,7 +8271,6 @@ input UserPreferenceInput {
   createdAt: Datetime
   updatedAt: Datetime
   viewMode: String
-  color: String
 }
 
 """The output of our create `Setting` mutation."""
@@ -8426,6 +8421,7 @@ input ProjectInput {
   columnIndex: Int
   isPublic: Boolean
   nextTaskNumber: Int
+  color: String
 }
 
 """The output of our update `ProjectProjectLabel` mutation."""
@@ -9171,7 +9167,6 @@ input UserPreferencePatch {
   createdAt: Datetime
   updatedAt: Datetime
   viewMode: String
-  color: String
 }
 
 """All input for the `updateUserPreference` mutation."""
@@ -9392,6 +9387,7 @@ input ProjectPatch {
   columnIndex: Int
   isPublic: Boolean
   nextTaskNumber: Int
+  color: String
 }
 
 """All input for the `updateProject` mutation."""
