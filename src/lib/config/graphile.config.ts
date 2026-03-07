@@ -22,6 +22,7 @@ import {
   UserPreferencePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
 import {
@@ -64,6 +65,8 @@ const graphilePreset: GraphileConfig.Preset = {
     UserPreferencePlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
+    // Event emission plugin
+    EventEmissionPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     TaskSearchPlugin,
