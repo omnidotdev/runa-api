@@ -1,7 +1,8 @@
 import { EXPORTABLE } from "graphile-export";
-import { events } from "lib/providers";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
+
+import { events } from "lib/providers";
 
 import type { PlanWrapperFn } from "postgraphile/utils";
 
