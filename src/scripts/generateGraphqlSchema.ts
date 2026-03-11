@@ -28,7 +28,9 @@ import {
   writeTuples,
 } from "lib/authz";
 import graphilePreset from "lib/config/graphile.config";
+import { columns, userPreferences } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
+import { emitEvent } from "lib/providers";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
@@ -41,6 +43,7 @@ import {
   indexComment,
   indexProject,
   indexTask,
+  isSearchEnabled,
 } from "lib/search";
 
 const SRC_DIR = `${__dirname}/..`;
@@ -164,6 +167,8 @@ const generateGraphqlSchema = async () => {
         FEATURE_KEYS,
         billingBypassOrgIds,
       },
+      "lib/db/schema": { columns, userPreferences },
+      "lib/providers": { emitEvent },
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
       "lib/search": {
@@ -173,6 +178,7 @@ const generateGraphqlSchema = async () => {
         deleteCommentFromIndex,
         deleteProjectFromIndex,
         deleteTaskFromIndex,
+        isSearchEnabled,
       },
       "lib/ai/triggers/mention": {
         detectMention,

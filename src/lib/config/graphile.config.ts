@@ -13,6 +13,7 @@ import {
   PostPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectColumnPlugin,
+  ProjectLinkPlugin,
   ProjectPlugin,
   SettingsPlugin,
   SmartTagPlugin,
@@ -22,6 +23,11 @@ import {
   UserPreferencePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import {
+  DefaultColumnsPlugin,
+  DefaultUserPreferencePlugin,
+} from "lib/graphql/plugins/defaults";
+import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
 import {
@@ -56,6 +62,7 @@ const graphilePreset: GraphileConfig.Preset = {
     PrimaryKeyMutationsOnlyPlugin,
     ProjectPlugin,
     ProjectColumnPlugin,
+    ProjectLinkPlugin,
     SettingsPlugin,
     SmartTagPlugin,
     TaskPlugin,
@@ -64,6 +71,11 @@ const graphilePreset: GraphileConfig.Preset = {
     UserPreferencePlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
+    // Default resource seeding plugins
+    DefaultColumnsPlugin,
+    DefaultUserPreferencePlugin,
+    // Event emission plugin
+    EventEmissionPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     TaskSearchPlugin,
@@ -79,7 +91,9 @@ const graphilePreset: GraphileConfig.Preset = {
     connectionFilterAllowNullInput: true,
     connectionFilterAllowEmptyObjectInput: true,
   },
-  pgServices: [makePgService({ connectionString: DATABASE_URL })],
+  pgServices: [
+    makePgService({ connectionString: DATABASE_URL, schemas: ["public"] }),
+  ],
   grafast: { explain: isDevEnv },
 };
 

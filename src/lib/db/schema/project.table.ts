@@ -15,6 +15,7 @@ import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { columns } from "./column.table";
 import { labels } from "./label.table";
 import { projectColumns } from "./projectColumn.table";
+import { projectLinks } from "./projectLink.table";
 import { tasks } from "./task.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -46,6 +47,7 @@ export const projects = pgTable(
     isPublic: boolean().notNull().default(false),
     // Counter for auto-incrementing task numbers within this project
     nextTaskNumber: integer("next_task_number").notNull().default(1),
+    color: varchar({ length: 24 }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
@@ -65,6 +67,7 @@ export const projectRelations = relations(projects, ({ one, many }) => ({
   tasks: many(tasks),
   labels: many(labels),
   columns: many(columns),
+  projectLinks: many(projectLinks),
 }));
 
 export type InsertProject = InferInsertModel<typeof projects>;

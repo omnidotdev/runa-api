@@ -52,6 +52,13 @@ export const events = createEventsProvider(
     : {},
 );
 
+/**
+ * Plain emit function for use in EXPORTABLE contexts.
+ * `graphile-export` cannot serialize class instances, so this standalone
+ * function delegates to the provider without capturing the instance.
+ */
+export const emitEvent: typeof events.emit = (event) => events.emit(event);
+
 export const flags = createFlagProvider(
   FLAGS_API_HOST
     ? {
