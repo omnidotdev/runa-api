@@ -30,12 +30,12 @@ import {
 import graphilePreset from "lib/config/graphile.config";
 import { columns, userPreferences } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
-import { emitEvent } from "lib/providers";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
+import { emitEvent } from "lib/providers";
 import {
   deleteCommentFromIndex,
   deleteProjectFromIndex,
