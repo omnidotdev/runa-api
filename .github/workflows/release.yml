@@ -33,3 +33,8 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+      - name: Type check
+        run: bunx tsc --noEmit
+
+      - name: Knip
+        run: bun knip

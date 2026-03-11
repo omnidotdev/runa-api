@@ -19,7 +19,7 @@ CREATE TABLE "agent_activity" (
 CREATE TABLE "agent_config" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"organization_id" text NOT NULL,
-	"model" text DEFAULT 'anthropic/claude-sonnet-4.5' NOT NULL,
+	"model" text DEFAULT 'anthropic/claude-haiku-4.5' NOT NULL,
 	"encrypted_api_key" text,
 	"enabled" boolean DEFAULT false NOT NULL,
 	"max_iterations_per_request" integer DEFAULT 10 NOT NULL,

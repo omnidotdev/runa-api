@@ -47,23 +47,26 @@ type Query implements Node {
   """Get a single `Column`."""
   column(rowId: UUID!): Column
 
+  """Get a single `ProjectLink`."""
+  projectLink(rowId: UUID!): ProjectLink
+
   """Get a single `ProjectColumn`."""
   projectColumn(rowId: UUID!): ProjectColumn
 
   """Get a single `ProjectLabel`."""
   projectLabel(rowId: UUID!): ProjectLabel
 
-  """Get a single `Label`."""
-  label(rowId: UUID!): Label
-
-  """Get a single `Post`."""
-  post(rowId: UUID!): Post
-
   """Get a single `UserPreference`."""
   userPreference(rowId: UUID!): UserPreference
 
   """Get a single `UserPreference`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
+
+  """Get a single `Label`."""
+  label(rowId: UUID!): Label
+
+  """Get a single `Post`."""
+  post(rowId: UUID!): Post
 
   """Get a single `AgentPersona`."""
   agentPersona(rowId: UUID!): AgentPersona
@@ -92,17 +95,17 @@ type Query implements Node {
   """Get a single `AgentConfig`."""
   agentConfigByOrganizationId(organizationId: String!): AgentConfig
 
-  """Get a single `Project`."""
-  project(rowId: UUID!): Project
-
-  """Get a single `Project`."""
-  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
-
   """Get a single `Task`."""
   task(rowId: UUID!): Task
 
   """Get a single `Task`."""
   taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
+
+  """Get a single `Project`."""
+  project(rowId: UUID!): Project
+
+  """Get a single `Project`."""
+  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
 
   """Get a single `AgentActivity`."""
   agentActivity(rowId: UUID!): AgentActivity
@@ -145,6 +148,14 @@ type Query implements Node {
     id: ID!
   ): Column
 
+  """Reads a single `ProjectLink` using its globally unique `ID`."""
+  projectLinkById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectLink`.
+    """
+    id: ID!
+  ): ProjectLink
+
   """Reads a single `ProjectColumn` using its globally unique `ID`."""
   projectColumnById(
     """
@@ -161,6 +172,14 @@ type Query implements Node {
     id: ID!
   ): ProjectLabel
 
+  """Reads a single `UserPreference` using its globally unique `ID`."""
+  userPreferenceById(
+    """
+    The globally unique `ID` to be used in selecting a single `UserPreference`.
+    """
+    id: ID!
+  ): UserPreference
+
   """Reads a single `Label` using its globally unique `ID`."""
   labelById(
     """The globally unique `ID` to be used in selecting a single `Label`."""
@@ -172,14 +191,6 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Post`."""
     id: ID!
   ): Post
-
-  """Reads a single `UserPreference` using its globally unique `ID`."""
-  userPreferenceById(
-    """
-    The globally unique `ID` to be used in selecting a single `UserPreference`.
-    """
-    id: ID!
-  ): UserPreference
 
   """Reads a single `AgentPersona` using its globally unique `ID`."""
   agentPersonaById(
@@ -235,17 +246,17 @@ type Query implements Node {
     id: ID!
   ): AgentConfig
 
-  """Reads a single `Project` using its globally unique `ID`."""
-  projectById(
-    """The globally unique `ID` to be used in selecting a single `Project`."""
-    id: ID!
-  ): Project
-
   """Reads a single `Task` using its globally unique `ID`."""
   taskById(
     """The globally unique `ID` to be used in selecting a single `Task`."""
     id: ID!
   ): Task
+
+  """Reads a single `Project` using its globally unique `ID`."""
+  projectById(
+    """The globally unique `ID` to be used in selecting a single `Project`."""
+    id: ID!
+  ): Project
 
   """Reads a single `AgentActivity` using its globally unique `ID`."""
   agentActivityById(
@@ -459,6 +470,40 @@ type Query implements Node {
     orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
   ): ColumnConnection
 
+  """Reads and enables pagination through a set of `ProjectLink`."""
+  projectLinks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectLinkCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectLinkFilter
+
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectLinkConnection
+
   """Reads and enables pagination through a set of `ProjectColumn`."""
   projectColumns(
     """Only read the first `n` values of the set."""
@@ -527,6 +572,40 @@ type Query implements Node {
     orderBy: [ProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLabelConnection
 
+  """Reads and enables pagination through a set of `UserPreference`."""
+  userPreferences(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserPreferenceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserPreferenceFilter
+
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserPreferenceConnection
+
   """Reads and enables pagination through a set of `Label`."""
   labels(
     """Only read the first `n` values of the set."""
@@ -594,40 +673,6 @@ type Query implements Node {
     """The method to use when ordering `Post`."""
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection
-
-  """Reads and enables pagination through a set of `UserPreference`."""
-  userPreferences(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserPreferenceCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserPreferenceFilter
-
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserPreferenceConnection
 
   """Reads and enables pagination through a set of `AgentPersona`."""
   agentPersonas(
@@ -867,40 +912,6 @@ type Query implements Node {
     orderBy: [AgentConfigOrderBy!] = [PRIMARY_KEY_ASC]
   ): AgentConfigConnection
 
-  """Reads and enables pagination through a set of `Project`."""
-  projects(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectFilter
-
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectConnection
-
   """Reads and enables pagination through a set of `Task`."""
   tasks(
     """Only read the first `n` values of the set."""
@@ -934,6 +945,40 @@ type Query implements Node {
     """The method to use when ordering `Task`."""
     orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaskConnection
+
+  """Reads and enables pagination through a set of `Project`."""
+  projects(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectFilter
+
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectConnection
 
   """Reads and enables pagination through a set of `AgentActivity`."""
   agentActivities(
@@ -1035,6 +1080,7 @@ type Project implements Node {
   columnIndex: Int!
   isPublic: Boolean!
   nextTaskNumber: Int!
+  color: String
 
   """Reads a single `ProjectColumn` that is related to this `Project`."""
   projectColumn: ProjectColumn
@@ -1208,6 +1254,40 @@ type Project implements Node {
     """The method to use when ordering `ProjectProjectLabel`."""
     orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectProjectLabelConnection!
+
+  """Reads and enables pagination through a set of `ProjectLink`."""
+  projectLinks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectLinkCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectLinkFilter
+
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectLinkConnection!
 
   """Reads and enables pagination through a set of `AgentActivity`."""
   agentActivities(
@@ -1554,6 +1634,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of nextTaskNumber across the matching connection"""
   nextTaskNumber: BigInt
+
+  """Distinct count of color across the matching connection"""
+  color: BigInt
 }
 
 type ProjectMinAggregates {
@@ -1642,6 +1725,7 @@ enum ProjectGroupBy {
   COLUMN_INDEX
   IS_PUBLIC
   NEXT_TASK_NUMBER
+  COLOR
 }
 
 """Conditions for `Project` aggregates."""
@@ -1779,6 +1863,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s `nextTaskNumber` field."""
   nextTaskNumber: Int
+
+  """Checks for equality with the object’s `color` field."""
+  color: String
 }
 
 """
@@ -1821,6 +1908,9 @@ input ProjectFilter {
   """Filter by the object’s `nextTaskNumber` field."""
   nextTaskNumber: IntFilter
 
+  """Filter by the object’s `color` field."""
+  color: StringFilter
+
   """Filter by the object’s `columns` relation."""
   columns: ProjectToManyColumnFilter
 
@@ -1850,6 +1940,12 @@ input ProjectFilter {
 
   """Some related `projectProjectLabels` exist."""
   projectProjectLabelsExist: Boolean
+
+  """Filter by the object’s `projectLinks` relation."""
+  projectLinks: ProjectToManyProjectLinkFilter
+
+  """Some related `projectLinks` exist."""
+  projectLinksExist: Boolean
 
   """Filter by the object’s `agentActivities` relation."""
   agentActivities: ProjectToManyAgentActivityFilter
@@ -3006,9 +3102,6 @@ input UserPreferenceFilter {
   """Filter by the object’s `viewMode` field."""
   viewMode: StringFilter
 
-  """Filter by the object’s `color` field."""
-  color: StringFilter
-
   """Filter by the object’s `project` relation."""
   project: ProjectFilter
 
@@ -3109,7 +3202,6 @@ input UserPreferenceDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   viewMode: BigIntFilter
-  color: BigIntFilter
 }
 
 """
@@ -4068,6 +4160,148 @@ input ProjectProjectLabelDistinctCountAggregateFilter {
 }
 
 """
+A filter to be used against many `ProjectLink` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyProjectLinkFilter {
+  """
+  Every related `ProjectLink` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectLinkFilter
+
+  """
+  Some related `ProjectLink` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectLinkFilter
+
+  """
+  No related `ProjectLink` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectLinkFilter
+
+  """Aggregates across related `ProjectLink` match the filter criteria."""
+  aggregates: ProjectLinkAggregatesFilter
+}
+
+"""
+A filter to be used against `ProjectLink` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectLinkFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `projectId` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s `url` field."""
+  url: StringFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `order` field."""
+  order: IntFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `project` relation."""
+  project: ProjectFilter
+
+  """Checks for all expressions in this list."""
+  and: [ProjectLinkFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectLinkFilter!]
+
+  """Negates the expression."""
+  not: ProjectLinkFilter
+}
+
+"""A filter to be used against aggregates of `ProjectLink` object types."""
+input ProjectLinkAggregatesFilter {
+  """
+  A filter that must pass for the relevant `ProjectLink` object to be included within the aggregate.
+  """
+  filter: ProjectLinkFilter
+
+  """Sum aggregate over matching `ProjectLink` objects."""
+  sum: ProjectLinkSumAggregateFilter
+
+  """Distinct count aggregate over matching `ProjectLink` objects."""
+  distinctCount: ProjectLinkDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `ProjectLink` objects."""
+  min: ProjectLinkMinAggregateFilter
+
+  """Maximum aggregate over matching `ProjectLink` objects."""
+  max: ProjectLinkMaxAggregateFilter
+
+  """Mean average aggregate over matching `ProjectLink` objects."""
+  average: ProjectLinkAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching `ProjectLink` objects.
+  """
+  stddevSample: ProjectLinkStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching `ProjectLink` objects.
+  """
+  stddevPopulation: ProjectLinkStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `ProjectLink` objects."""
+  varianceSample: ProjectLinkVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching `ProjectLink` objects."""
+  variancePopulation: ProjectLinkVariancePopulationAggregateFilter
+}
+
+input ProjectLinkSumAggregateFilter {
+  order: BigIntFilter
+}
+
+input ProjectLinkDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  projectId: BigIntFilter
+  url: BigIntFilter
+  title: BigIntFilter
+  order: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+input ProjectLinkMinAggregateFilter {
+  order: IntFilter
+}
+
+input ProjectLinkMaxAggregateFilter {
+  order: IntFilter
+}
+
+input ProjectLinkAverageAggregateFilter {
+  order: BigFloatFilter
+}
+
+input ProjectLinkStddevSampleAggregateFilter {
+  order: BigFloatFilter
+}
+
+input ProjectLinkStddevPopulationAggregateFilter {
+  order: BigFloatFilter
+}
+
+input ProjectLinkVarianceSampleAggregateFilter {
+  order: BigFloatFilter
+}
+
+input ProjectLinkVariancePopulationAggregateFilter {
+  order: BigFloatFilter
+}
+
+"""
 A filter to be used against many `AgentActivity` object types. All fields are combined with a logical ‘and.’
 """
 input ProjectToManyAgentActivityFilter {
@@ -4411,6 +4645,7 @@ input ProjectDistinctCountAggregateFilter {
   columnIndex: BigIntFilter
   isPublic: BigIntFilter
   nextTaskNumber: BigIntFilter
+  color: BigIntFilter
 }
 
 input ProjectMinAggregateFilter {
@@ -4477,6 +4712,8 @@ enum ProjectOrderBy {
   IS_PUBLIC_DESC
   NEXT_TASK_NUMBER_ASC
   NEXT_TASK_NUMBER_DESC
+  COLOR_ASC
+  COLOR_DESC
   COLUMNS_COUNT_ASC
   COLUMNS_COUNT_DESC
   COLUMNS_SUM_INDEX_ASC
@@ -4601,8 +4838,6 @@ enum ProjectOrderBy {
   USER_PREFERENCES_DISTINCT_COUNT_UPDATED_AT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_ASC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC
-  USER_PREFERENCES_DISTINCT_COUNT_COLOR_ASC
-  USER_PREFERENCES_DISTINCT_COUNT_COLOR_DESC
   PROJECT_PROJECT_LABELS_COUNT_ASC
   PROJECT_PROJECT_LABELS_COUNT_DESC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC
@@ -4611,6 +4846,38 @@ enum ProjectOrderBy {
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECT_LINKS_COUNT_ASC
+  PROJECT_LINKS_COUNT_DESC
+  PROJECT_LINKS_SUM_ORDER_ASC
+  PROJECT_LINKS_SUM_ORDER_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_PROJECT_ID_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_PROJECT_ID_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_URL_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_URL_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_TITLE_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_TITLE_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_ORDER_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_ORDER_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECT_LINKS_DISTINCT_COUNT_UPDATED_AT_ASC
+  PROJECT_LINKS_DISTINCT_COUNT_UPDATED_AT_DESC
+  PROJECT_LINKS_MIN_ORDER_ASC
+  PROJECT_LINKS_MIN_ORDER_DESC
+  PROJECT_LINKS_MAX_ORDER_ASC
+  PROJECT_LINKS_MAX_ORDER_DESC
+  PROJECT_LINKS_AVERAGE_ORDER_ASC
+  PROJECT_LINKS_AVERAGE_ORDER_DESC
+  PROJECT_LINKS_STDDEV_SAMPLE_ORDER_ASC
+  PROJECT_LINKS_STDDEV_SAMPLE_ORDER_DESC
+  PROJECT_LINKS_STDDEV_POPULATION_ORDER_ASC
+  PROJECT_LINKS_STDDEV_POPULATION_ORDER_DESC
+  PROJECT_LINKS_VARIANCE_SAMPLE_ORDER_ASC
+  PROJECT_LINKS_VARIANCE_SAMPLE_ORDER_DESC
+  PROJECT_LINKS_VARIANCE_POPULATION_ORDER_ASC
+  PROJECT_LINKS_VARIANCE_POPULATION_ORDER_DESC
   AGENT_ACTIVITIES_COUNT_ASC
   AGENT_ACTIVITIES_COUNT_DESC
   AGENT_ACTIVITIES_DISTINCT_COUNT_ROW_ID_ASC
@@ -6230,7 +6497,6 @@ type UserPreference implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   viewMode: String!
-  color: String
 
   """Reads a single `Project` that is related to this `UserPreference`."""
   project: Project
@@ -6278,9 +6544,6 @@ type UserPreferenceDistinctCountAggregates {
 
   """Distinct count of viewMode across the matching connection"""
   viewMode: BigInt
-
-  """Distinct count of color across the matching connection"""
-  color: BigInt
 }
 
 """Grouping methods for `UserPreference` for usage during aggregation."""
@@ -6295,7 +6558,6 @@ enum UserPreferenceGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   VIEW_MODE
-  COLOR
 }
 
 """Conditions for `UserPreference` aggregates."""
@@ -6380,9 +6642,6 @@ input UserPreferenceCondition {
 
   """Checks for equality with the object’s `viewMode` field."""
   viewMode: String
-
-  """Checks for equality with the object’s `color` field."""
-  color: String
 }
 
 """Methods to use when ordering `UserPreference`."""
@@ -6402,8 +6661,6 @@ enum UserPreferenceOrderBy {
   UPDATED_AT_DESC
   VIEW_MODE_ASC
   VIEW_MODE_DESC
-  COLOR_ASC
-  COLOR_DESC
 }
 
 """A connection to a list of `AgentActivity` values."""
@@ -8577,6 +8834,308 @@ enum ProjectProjectLabelOrderBy {
   CREATED_AT_DESC
 }
 
+"""A connection to a list of `ProjectLink` values."""
+type ProjectLinkConnection {
+  """A list of `ProjectLink` objects."""
+  nodes: [ProjectLink!]!
+
+  """
+  A list of edges which contains the `ProjectLink` and cursor to aid in pagination.
+  """
+  edges: [ProjectLinkEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ProjectLink` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectLinkAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `ProjectLink` for these aggregates."""
+    groupBy: [ProjectLinkGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectLinkHavingInput
+  ): [ProjectLinkAggregates!]
+}
+
+type ProjectLink implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  projectId: UUID!
+  url: String!
+  title: String
+  order: Int!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Project` that is related to this `ProjectLink`."""
+  project: Project
+}
+
+"""A `ProjectLink` edge in the connection."""
+type ProjectLinkEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectLink` at the end of the edge."""
+  node: ProjectLink!
+}
+
+type ProjectLinkAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: ProjectLinkSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectLinkDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: ProjectLinkMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: ProjectLinkMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: ProjectLinkAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: ProjectLinkStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: ProjectLinkStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: ProjectLinkVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: ProjectLinkVariancePopulationAggregates
+}
+
+type ProjectLinkSumAggregates {
+  """Sum of order across the matching connection"""
+  order: BigInt!
+}
+
+type ProjectLinkDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of projectId across the matching connection"""
+  projectId: BigInt
+
+  """Distinct count of url across the matching connection"""
+  url: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of order across the matching connection"""
+  order: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type ProjectLinkMinAggregates {
+  """Minimum of order across the matching connection"""
+  order: Int
+}
+
+type ProjectLinkMaxAggregates {
+  """Maximum of order across the matching connection"""
+  order: Int
+}
+
+type ProjectLinkAverageAggregates {
+  """Mean average of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkStddevSampleAggregates {
+  """Sample standard deviation of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkStddevPopulationAggregates {
+  """Population standard deviation of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkVarianceSampleAggregates {
+  """Sample variance of order across the matching connection"""
+  order: BigFloat
+}
+
+type ProjectLinkVariancePopulationAggregates {
+  """Population variance of order across the matching connection"""
+  order: BigFloat
+}
+
+"""Grouping methods for `ProjectLink` for usage during aggregation."""
+enum ProjectLinkGroupBy {
+  PROJECT_ID
+  URL
+  TITLE
+  ORDER
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ProjectLink` aggregates."""
+input ProjectLinkHavingInput {
+  AND: [ProjectLinkHavingInput!]
+  OR: [ProjectLinkHavingInput!]
+  sum: ProjectLinkHavingSumInput
+  distinctCount: ProjectLinkHavingDistinctCountInput
+  min: ProjectLinkHavingMinInput
+  max: ProjectLinkHavingMaxInput
+  average: ProjectLinkHavingAverageInput
+  stddevSample: ProjectLinkHavingStddevSampleInput
+  stddevPopulation: ProjectLinkHavingStddevPopulationInput
+  varianceSample: ProjectLinkHavingVarianceSampleInput
+  variancePopulation: ProjectLinkHavingVariancePopulationInput
+}
+
+input ProjectLinkHavingSumInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingDistinctCountInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingMinInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingMaxInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingAverageInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingStddevSampleInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingStddevPopulationInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingVarianceSampleInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectLinkHavingVariancePopulationInput {
+  order: HavingIntFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `ProjectLink` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input ProjectLinkCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `projectId` field."""
+  projectId: UUID
+
+  """Checks for equality with the object’s `url` field."""
+  url: String
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `order` field."""
+  order: Int
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `ProjectLink`."""
+enum ProjectLinkOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+  URL_ASC
+  URL_DESC
+  TITLE_ASC
+  TITLE_DESC
+  ORDER_ASC
+  ORDER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 """A connection to a list of `GithubRepository` values."""
 type GithubRepositoryConnection {
   """A list of `GithubRepository` objects."""
@@ -9312,8 +9871,6 @@ enum UserOrderBy {
   USER_PREFERENCES_DISTINCT_COUNT_UPDATED_AT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_ASC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC
-  USER_PREFERENCES_DISTINCT_COUNT_COLOR_ASC
-  USER_PREFERENCES_DISTINCT_COUNT_COLOR_DESC
   EMOJIS_COUNT_ASC
   EMOJIS_COUNT_DESC
   EMOJIS_DISTINCT_COUNT_ROW_ID_ASC
@@ -9737,6 +10294,8 @@ enum ProjectColumnOrderBy {
   PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC
   PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC
   PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
+  PROJECTS_DISTINCT_COUNT_COLOR_ASC
+  PROJECTS_DISTINCT_COUNT_COLOR_DESC
   PROJECTS_MIN_COLUMN_INDEX_ASC
   PROJECTS_MIN_COLUMN_INDEX_DESC
   PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
@@ -11318,6 +11877,14 @@ type Mutation {
     input: CreateColumnInput!
   ): CreateColumnPayload
 
+  """Creates a single `ProjectLink`."""
+  createProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectLinkInput!
+  ): CreateProjectLinkPayload
+
   """Creates a single `ProjectColumn`."""
   createProjectColumn(
     """
@@ -11334,6 +11901,14 @@ type Mutation {
     input: CreateProjectLabelInput!
   ): CreateProjectLabelPayload
 
+  """Creates a single `UserPreference`."""
+  createUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserPreferenceInput!
+  ): CreateUserPreferencePayload
+
   """Creates a single `Label`."""
   createLabel(
     """
@@ -11349,14 +11924,6 @@ type Mutation {
     """
     input: CreatePostInput!
   ): CreatePostPayload
-
-  """Creates a single `UserPreference`."""
-  createUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserPreferenceInput!
-  ): CreateUserPreferencePayload
 
   """Creates a single `AgentPersona`."""
   createAgentPersona(
@@ -11414,14 +11981,6 @@ type Mutation {
     input: CreateAgentConfigInput!
   ): CreateAgentConfigPayload
 
-  """Creates a single `Project`."""
-  createProject(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateProjectInput!
-  ): CreateProjectPayload
-
   """Creates a single `Task`."""
   createTask(
     """
@@ -11429,6 +11988,14 @@ type Mutation {
     """
     input: CreateTaskInput!
   ): CreateTaskPayload
+
+  """Creates a single `Project`."""
+  createProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectInput!
+  ): CreateProjectPayload
 
   """Creates a single `AgentActivity`."""
   createAgentActivity(
@@ -11537,6 +12104,24 @@ type Mutation {
   ): UpdateColumnPayload
 
   """
+  Updates a single `ProjectLink` using its globally unique id and a patch.
+  """
+  updateProjectLinkById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLinkByIdInput!
+  ): UpdateProjectLinkPayload
+
+  """Updates a single `ProjectLink` using a unique key and a patch."""
+  updateProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLinkInput!
+  ): UpdateProjectLinkPayload
+
+  """
   Updates a single `ProjectColumn` using its globally unique id and a patch.
   """
   updateProjectColumnById(
@@ -11572,6 +12157,24 @@ type Mutation {
     input: UpdateProjectLabelInput!
   ): UpdateProjectLabelPayload
 
+  """
+  Updates a single `UserPreference` using its globally unique id and a patch.
+  """
+  updateUserPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserPreferenceByIdInput!
+  ): UpdateUserPreferencePayload
+
+  """Updates a single `UserPreference` using a unique key and a patch."""
+  updateUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserPreferenceInput!
+  ): UpdateUserPreferencePayload
+
   """Updates a single `Label` using its globally unique id and a patch."""
   updateLabelById(
     """
@@ -11603,24 +12206,6 @@ type Mutation {
     """
     input: UpdatePostInput!
   ): UpdatePostPayload
-
-  """
-  Updates a single `UserPreference` using its globally unique id and a patch.
-  """
-  updateUserPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceByIdInput!
-  ): UpdateUserPreferencePayload
-
-  """Updates a single `UserPreference` using a unique key and a patch."""
-  updateUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceInput!
-  ): UpdateUserPreferencePayload
 
   """
   Updates a single `AgentPersona` using its globally unique id and a patch.
@@ -11746,22 +12331,6 @@ type Mutation {
     input: UpdateAgentConfigInput!
   ): UpdateAgentConfigPayload
 
-  """Updates a single `Project` using its globally unique id and a patch."""
-  updateProjectById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectByIdInput!
-  ): UpdateProjectPayload
-
-  """Updates a single `Project` using a unique key and a patch."""
-  updateProject(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectInput!
-  ): UpdateProjectPayload
-
   """Updates a single `Task` using its globally unique id and a patch."""
   updateTaskById(
     """
@@ -11777,6 +12346,22 @@ type Mutation {
     """
     input: UpdateTaskInput!
   ): UpdateTaskPayload
+
+  """Updates a single `Project` using its globally unique id and a patch."""
+  updateProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectByIdInput!
+  ): UpdateProjectPayload
+
+  """Updates a single `Project` using a unique key and a patch."""
+  updateProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectInput!
+  ): UpdateProjectPayload
 
   """
   Updates a single `AgentActivity` using its globally unique id and a patch.
@@ -11892,6 +12477,22 @@ type Mutation {
     input: DeleteColumnInput!
   ): DeleteColumnPayload
 
+  """Deletes a single `ProjectLink` using its globally unique id."""
+  deleteProjectLinkById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLinkByIdInput!
+  ): DeleteProjectLinkPayload
+
+  """Deletes a single `ProjectLink` using a unique key."""
+  deleteProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLinkInput!
+  ): DeleteProjectLinkPayload
+
   """Deletes a single `ProjectColumn` using its globally unique id."""
   deleteProjectColumnById(
     """
@@ -11924,6 +12525,22 @@ type Mutation {
     input: DeleteProjectLabelInput!
   ): DeleteProjectLabelPayload
 
+  """Deletes a single `UserPreference` using its globally unique id."""
+  deleteUserPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserPreferenceByIdInput!
+  ): DeleteUserPreferencePayload
+
+  """Deletes a single `UserPreference` using a unique key."""
+  deleteUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserPreferenceInput!
+  ): DeleteUserPreferencePayload
+
   """Deletes a single `Label` using its globally unique id."""
   deleteLabelById(
     """
@@ -11955,22 +12572,6 @@ type Mutation {
     """
     input: DeletePostInput!
   ): DeletePostPayload
-
-  """Deletes a single `UserPreference` using its globally unique id."""
-  deleteUserPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceByIdInput!
-  ): DeleteUserPreferencePayload
-
-  """Deletes a single `UserPreference` using a unique key."""
-  deleteUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceInput!
-  ): DeleteUserPreferencePayload
 
   """Deletes a single `AgentPersona` using its globally unique id."""
   deleteAgentPersonaById(
@@ -12084,22 +12685,6 @@ type Mutation {
     input: DeleteAgentConfigInput!
   ): DeleteAgentConfigPayload
 
-  """Deletes a single `Project` using its globally unique id."""
-  deleteProjectById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectByIdInput!
-  ): DeleteProjectPayload
-
-  """Deletes a single `Project` using a unique key."""
-  deleteProject(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectInput!
-  ): DeleteProjectPayload
-
   """Deletes a single `Task` using its globally unique id."""
   deleteTaskById(
     """
@@ -12115,6 +12700,22 @@ type Mutation {
     """
     input: DeleteTaskInput!
   ): DeleteTaskPayload
+
+  """Deletes a single `Project` using its globally unique id."""
+  deleteProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectByIdInput!
+  ): DeleteProjectPayload
+
+  """Deletes a single `Project` using a unique key."""
+  deleteProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectInput!
+  ): DeleteProjectPayload
 
   """Deletes a single `AgentActivity` using its globally unique id."""
   deleteAgentActivityById(
@@ -12399,6 +13000,52 @@ input ColumnInput {
   icon: String
 }
 
+"""The output of our create `ProjectLink` mutation."""
+type CreateProjectLinkPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLink` that was created by this mutation."""
+  projectLink: ProjectLink
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLink`. May be used by Relay 1."""
+  projectLinkEdge(
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLinkEdge
+}
+
+"""All input for the create `ProjectLink` mutation."""
+input CreateProjectLinkInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectLink` to be created by this mutation."""
+  projectLink: ProjectLinkInput!
+}
+
+"""An input for mutations affecting `ProjectLink`"""
+input ProjectLinkInput {
+  rowId: UUID
+  projectId: UUID!
+  url: String!
+  title: String
+  order: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `ProjectColumn` mutation."""
 type CreateProjectColumnPayload {
   """
@@ -12489,6 +13136,52 @@ input ProjectLabelInput {
   organizationId: String!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `UserPreference` mutation."""
+type CreateUserPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserPreference` that was created by this mutation."""
+  userPreference: UserPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserPreference`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the create `UserPreference` mutation."""
+input CreateUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `UserPreference` to be created by this mutation."""
+  userPreference: UserPreferenceInput!
+}
+
+"""An input for mutations affecting `UserPreference`"""
+input UserPreferenceInput {
+  rowId: UUID
+  userId: UUID!
+  projectId: UUID!
+  hiddenColumnIds: [String]
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
 }
 
 """The output of our create `Label` mutation."""
@@ -12583,53 +13276,6 @@ input PostInput {
   createdAt: Datetime
   updatedAt: Datetime
   parentId: UUID
-}
-
-"""The output of our create `UserPreference` mutation."""
-type CreateUserPreferencePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserPreference` that was created by this mutation."""
-  userPreference: UserPreference
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserPreference`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the create `UserPreference` mutation."""
-input CreateUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `UserPreference` to be created by this mutation."""
-  userPreference: UserPreferenceInput!
-}
-
-"""An input for mutations affecting `UserPreference`"""
-input UserPreferenceInput {
-  rowId: UUID
-  userId: UUID!
-  projectId: UUID!
-  hiddenColumnIds: [String]
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-  color: String
 }
 
 """The output of our create `AgentPersona` mutation."""
@@ -12973,57 +13619,6 @@ input AgentConfigInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `Project` mutation."""
-type CreateProjectPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Project` that was created by this mutation."""
-  project: Project
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Project`. May be used by Relay 1."""
-  projectEdge(
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectEdge
-}
-
-"""All input for the create `Project` mutation."""
-input CreateProjectInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Project` to be created by this mutation."""
-  project: ProjectInput!
-}
-
-"""An input for mutations affecting `Project`"""
-input ProjectInput {
-  rowId: UUID
-  name: String!
-  description: String
-  prefix: String
-  organizationId: String!
-  createdAt: Datetime
-  updatedAt: Datetime
-  projectColumnId: UUID!
-  slug: String!
-  columnIndex: Int
-  isPublic: Boolean
-  nextTaskNumber: Int
-}
-
 """The output of our create `Task` mutation."""
 type CreateTaskPayload {
   """
@@ -13073,6 +13668,58 @@ input TaskInput {
   columnIndex: Int
   projectId: UUID!
   number: Int
+}
+
+"""The output of our create `Project` mutation."""
+type CreateProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was created by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the create `Project` mutation."""
+input CreateProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Project` to be created by this mutation."""
+  project: ProjectInput!
+}
+
+"""An input for mutations affecting `Project`"""
+input ProjectInput {
+  rowId: UUID
+  name: String!
+  description: String
+  prefix: String
+  organizationId: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+  projectColumnId: UUID!
+  slug: String!
+  columnIndex: Int
+  isPublic: Boolean
+  nextTaskNumber: Int
+  color: String
 }
 
 """The output of our create `AgentActivity` mutation."""
@@ -13540,6 +14187,76 @@ input UpdateColumnInput {
   patch: ColumnPatch!
 }
 
+"""The output of our update `ProjectLink` mutation."""
+type UpdateProjectLinkPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLink` that was updated by this mutation."""
+  projectLink: ProjectLink
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLink`. May be used by Relay 1."""
+  projectLinkEdge(
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLinkEdge
+}
+
+"""All input for the `updateProjectLinkById` mutation."""
+input UpdateProjectLinkByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectLink` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ProjectLink` being updated.
+  """
+  patch: ProjectLinkPatch!
+}
+
+"""
+Represents an update to a `ProjectLink`. Fields that are set will be updated.
+"""
+input ProjectLinkPatch {
+  rowId: UUID
+  projectId: UUID
+  url: String
+  title: String
+  order: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateProjectLink` mutation."""
+input UpdateProjectLinkInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ProjectLink` being updated.
+  """
+  patch: ProjectLinkPatch!
+}
+
 """The output of our update `ProjectColumn` mutation."""
 type UpdateProjectColumnPayload {
   """
@@ -13680,6 +14397,76 @@ input UpdateProjectLabelInput {
   patch: ProjectLabelPatch!
 }
 
+"""The output of our update `UserPreference` mutation."""
+type UpdateUserPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserPreference` that was updated by this mutation."""
+  userPreference: UserPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserPreference`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the `updateUserPreferenceById` mutation."""
+input UpdateUserPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `UserPreference` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `UserPreference` being updated.
+  """
+  patch: UserPreferencePatch!
+}
+
+"""
+Represents an update to a `UserPreference`. Fields that are set will be updated.
+"""
+input UserPreferencePatch {
+  rowId: UUID
+  userId: UUID
+  projectId: UUID
+  hiddenColumnIds: [String]
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+}
+
+"""All input for the `updateUserPreference` mutation."""
+input UpdateUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `UserPreference` being updated.
+  """
+  patch: UserPreferencePatch!
+}
+
 """The output of our update `Label` mutation."""
 type UpdateLabelPayload {
   """
@@ -13818,77 +14605,6 @@ input UpdatePostInput {
   An object where the defined keys will be set on the `Post` being updated.
   """
   patch: PostPatch!
-}
-
-"""The output of our update `UserPreference` mutation."""
-type UpdateUserPreferencePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserPreference` that was updated by this mutation."""
-  userPreference: UserPreference
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserPreference`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the `updateUserPreferenceById` mutation."""
-input UpdateUserPreferenceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `UserPreference` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `UserPreference` being updated.
-  """
-  patch: UserPreferencePatch!
-}
-
-"""
-Represents an update to a `UserPreference`. Fields that are set will be updated.
-"""
-input UserPreferencePatch {
-  rowId: UUID
-  userId: UUID
-  projectId: UUID
-  hiddenColumnIds: [String]
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-  color: String
-}
-
-"""All input for the `updateUserPreference` mutation."""
-input UpdateUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `UserPreference` being updated.
-  """
-  patch: UserPreferencePatch!
 }
 
 """The output of our update `AgentPersona` mutation."""
@@ -14400,81 +15116,6 @@ input UpdateAgentConfigInput {
   patch: AgentConfigPatch!
 }
 
-"""The output of our update `Project` mutation."""
-type UpdateProjectPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Project` that was updated by this mutation."""
-  project: Project
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Project`. May be used by Relay 1."""
-  projectEdge(
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectEdge
-}
-
-"""All input for the `updateProjectById` mutation."""
-input UpdateProjectByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Project` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Project` being updated.
-  """
-  patch: ProjectPatch!
-}
-
-"""
-Represents an update to a `Project`. Fields that are set will be updated.
-"""
-input ProjectPatch {
-  rowId: UUID
-  name: String
-  description: String
-  prefix: String
-  organizationId: String
-  createdAt: Datetime
-  updatedAt: Datetime
-  projectColumnId: UUID
-  slug: String
-  columnIndex: Int
-  isPublic: Boolean
-  nextTaskNumber: Int
-}
-
-"""All input for the `updateProject` mutation."""
-input UpdateProjectInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Project` being updated.
-  """
-  patch: ProjectPatch!
-}
-
 """The output of our update `Task` mutation."""
 type UpdateTaskPayload {
   """
@@ -14546,6 +15187,82 @@ input UpdateTaskInput {
   An object where the defined keys will be set on the `Task` being updated.
   """
   patch: TaskPatch!
+}
+
+"""The output of our update `Project` mutation."""
+type UpdateProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was updated by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the `updateProjectById` mutation."""
+input UpdateProjectByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Project` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Project` being updated.
+  """
+  patch: ProjectPatch!
+}
+
+"""
+Represents an update to a `Project`. Fields that are set will be updated.
+"""
+input ProjectPatch {
+  rowId: UUID
+  name: String
+  description: String
+  prefix: String
+  organizationId: String
+  createdAt: Datetime
+  updatedAt: Datetime
+  projectColumnId: UUID
+  slug: String
+  columnIndex: Int
+  isPublic: Boolean
+  nextTaskNumber: Int
+  color: String
+}
+
+"""All input for the `updateProject` mutation."""
+input UpdateProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Project` being updated.
+  """
+  patch: ProjectPatch!
 }
 
 """The output of our update `AgentActivity` mutation."""
@@ -14917,6 +15634,54 @@ input DeleteColumnInput {
   rowId: UUID!
 }
 
+"""The output of our delete `ProjectLink` mutation."""
+type DeleteProjectLinkPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectLink` that was deleted by this mutation."""
+  projectLink: ProjectLink
+  deletedProjectLinkId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectLink`. May be used by Relay 1."""
+  projectLinkEdge(
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectLinkEdge
+}
+
+"""All input for the `deleteProjectLinkById` mutation."""
+input DeleteProjectLinkByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectLink` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteProjectLink` mutation."""
+input DeleteProjectLinkInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `ProjectColumn` mutation."""
 type DeleteProjectColumnPayload {
   """
@@ -15013,6 +15778,54 @@ input DeleteProjectLabelInput {
   rowId: UUID!
 }
 
+"""The output of our delete `UserPreference` mutation."""
+type DeleteUserPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `UserPreference` that was deleted by this mutation."""
+  userPreference: UserPreference
+  deletedUserPreferenceId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `UserPreference`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the `deleteUserPreferenceById` mutation."""
+input DeleteUserPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `UserPreference` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteUserPreference` mutation."""
+input DeleteUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Label` mutation."""
 type DeleteLabelPayload {
   """
@@ -15101,54 +15914,6 @@ input DeletePostByIdInput {
 
 """All input for the `deletePost` mutation."""
 input DeletePostInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `UserPreference` mutation."""
-type DeleteUserPreferencePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `UserPreference` that was deleted by this mutation."""
-  userPreference: UserPreference
-  deletedUserPreferenceId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `UserPreference`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the `deleteUserPreferenceById` mutation."""
-input DeleteUserPreferenceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `UserPreference` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteUserPreference` mutation."""
-input DeleteUserPreferenceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -15493,54 +16258,6 @@ input DeleteAgentConfigInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Project` mutation."""
-type DeleteProjectPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Project` that was deleted by this mutation."""
-  project: Project
-  deletedProjectId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Project`. May be used by Relay 1."""
-  projectEdge(
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectEdge
-}
-
-"""All input for the `deleteProjectById` mutation."""
-input DeleteProjectByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Project` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteProject` mutation."""
-input DeleteProjectInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Task` mutation."""
 type DeleteTaskPayload {
   """
@@ -15581,6 +16298,54 @@ input DeleteTaskByIdInput {
 
 """All input for the `deleteTask` mutation."""
 input DeleteTaskInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Project` mutation."""
+type DeleteProjectPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Project` that was deleted by this mutation."""
+  project: Project
+  deletedProjectId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Project`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the `deleteProjectById` mutation."""
+input DeleteProjectByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Project` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteProject` mutation."""
+input DeleteProjectInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

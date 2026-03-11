@@ -19,17 +19,17 @@ import type { EntitlementsResponse } from "@omnidotdev/providers";
 const APP_ID = "runa";
 
 /** Tier type */
-type Tier = "free" | "basic" | "team" | "enterprise";
+type Tier = "free" | "pro" | "team" | "enterprise";
 
 /** Default limits by feature key and tier */
 const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
-  max_projects: { free: 2, basic: 10, team: -1, enterprise: -1 },
-  max_tasks: { free: 500, basic: 5000, team: -1, enterprise: -1 },
-  max_columns: { free: 5, basic: 10, team: -1, enterprise: -1 },
-  max_labels: { free: 10, basic: 50, team: -1, enterprise: -1 },
-  max_assignees: { free: 1, basic: 3, team: -1, enterprise: -1 },
-  max_members: { free: 3, basic: 10, team: -1, enterprise: -1 },
-  max_admins: { free: 1, basic: 3, team: -1, enterprise: -1 },
+  max_projects: { free: 5, pro: 25, team: -1, enterprise: -1 },
+  max_tasks: { free: 1500, pro: 10000, team: -1, enterprise: -1 },
+  max_columns: { free: 10, pro: 50, team: -1, enterprise: -1 },
+  max_labels: { free: 25, pro: 100, team: -1, enterprise: -1 },
+  max_assignees: { free: 2, pro: 5, team: -1, enterprise: -1 },
+  max_members: { free: 5, pro: 20, team: 50, enterprise: -1 },
+  max_admins: { free: 1, pro: 5, team: -1, enterprise: -1 },
 };
 
 /**
