@@ -22,6 +22,7 @@ import {
   UserPreferencePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import { DefaultColumnsPlugin } from "lib/graphql/plugins/defaults";
 import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
@@ -65,6 +66,8 @@ const graphilePreset: GraphileConfig.Preset = {
     UserPreferencePlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
+    // Default resource seeding plugins
+    DefaultColumnsPlugin,
     // Event emission plugin
     EventEmissionPlugin,
     // Search indexing plugins

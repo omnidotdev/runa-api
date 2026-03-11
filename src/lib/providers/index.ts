@@ -35,7 +35,6 @@ export const authz = createAuthzProvider({
 export const billing = createBillingProvider(
   BILLING_BASE_URL
     ? {
-        provider: "aether",
         baseUrl: BILLING_BASE_URL,
         serviceApiKey: BILLING_SERVICE_API_KEY,
         appId: "runa",
