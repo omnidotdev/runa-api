@@ -41,7 +41,7 @@ interface InstallationEvent {
  * Verify GitHub webhook signature (SHA-256).
  * GitHub sends the signature as "sha256=<hex>".
  */
-const verifyGitHubSignature = (
+export const verifyGitHubSignature = (
   payload: string,
   signature: string,
   secret: string,

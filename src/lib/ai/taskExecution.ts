@@ -27,6 +27,7 @@ import {
   EXECUTION_MAX_ITERATIONS,
   EXECUTION_TIMEOUT_MS,
 } from "./constants";
+import { extractPrInfo } from "./extractPrInfo";
 import { buildTaskExecutionPrompt } from "./prompts/taskExecution";
 import { createOpenRouterModel } from "./provider";
 import { buildExecutionTools } from "./tools/presets/buildExecutionTools";
@@ -294,35 +295,4 @@ async function updateExecutionMetadata(
       updatedAt: new Date().toISOString(),
     })
     .where(eq(taskExecutions.id, executionId));
-}
-
-/**
- * Extract PR URL and number from generateText result tool calls.
- */
-// biome-ignore lint/suspicious/noExplicitAny: Vercel AI SDK tool result generics
-function extractPrInfo(
-  result: any,
-): { prUrl: string; prNumber: number } | null {
-  for (const step of result.steps ?? []) {
-    for (const call of step.toolCalls ?? []) {
-      if (call.toolName === "createPullRequest") {
-        const toolResult = step.toolResults?.find(
-          (r: any) => r.toolCallId === call.toolCallId,
-        );
-
-        if (toolResult?.result) {
-          const res = toolResult.result as {
-            prUrl?: string;
-            prNumber?: number;
-          };
-
-          if (res.prUrl && res.prNumber) {
-            return { prUrl: res.prUrl, prNumber: res.prNumber };
-          }
-        }
-      }
-    }
-  }
-
-  return null;
 }
