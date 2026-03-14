@@ -5,8 +5,8 @@
  * Maintains the same API surface for PostGraphile EXPORTABLE compatibility.
  *
  * Entitlements are queried at the ORGANIZATION level for bundle billing.
- * SECURITY: Uses free tier defaults when Aether is unavailable,
- * preventing users from exceeding free tier limits during outages.
+ * SECURITY: Fail-closed when Aether is unavailable,
+ * throwing EntitlementsUnavailableError to prevent silent degradation.
  */
 
 import { isWithinLimit as checkLimit } from "@omnidotdev/providers";
@@ -20,19 +20,6 @@ const APP_ID = "runa";
 
 /** Tier type */
 type Tier = "free" | "pro" | "team" | "enterprise";
-
-// FALLBACK ONLY — source of truth is Omni API plan_feature table (kind="operational")
-// Keep in sync: run `bun sync:limits` in aether-api after updating API seed data
-/** Default limits by feature key and tier */
-const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
-  max_projects: { free: 5, pro: 25, team: -1, enterprise: -1 },
-  max_tasks: { free: 1500, pro: 10000, team: -1, enterprise: -1 },
-  max_columns: { free: 10, pro: 50, team: -1, enterprise: -1 },
-  max_labels: { free: 25, pro: 100, team: -1, enterprise: -1 },
-  max_assignees: { free: 2, pro: 5, team: -1, enterprise: -1 },
-  max_members: { free: 5, pro: 20, team: 50, enterprise: -1 },
-  max_admins: { free: 1, pro: 5, team: -1, enterprise: -1 },
-};
 
 /**
  * Error thrown when entitlements service is unavailable.
@@ -77,7 +64,11 @@ export async function isWithinLimit(
 
   const entitlements = await getOrganizationEntitlements(entity.organizationId);
 
-  return checkLimit(entitlements, limitKey, currentCount, DEFAULT_LIMITS);
+  if (!entitlements) {
+    throw new EntitlementsUnavailableError("could not fetch entitlements for runa");
+  }
+
+  return checkLimit(entitlements, limitKey, currentCount);
 }
 
 /**
@@ -91,7 +82,11 @@ export async function checkOrganizationLimit(
 ): Promise<boolean> {
   const entitlements = await getOrganizationEntitlements(organizationId);
 
-  return checkLimit(entitlements, limitKey, currentCount, DEFAULT_LIMITS);
+  if (!entitlements) {
+    throw new EntitlementsUnavailableError("could not fetch entitlements for runa");
+  }
+
+  return checkLimit(entitlements, limitKey, currentCount);
 }
 
 /**
