@@ -65,7 +65,9 @@ export async function isWithinLimit(
   const entitlements = await getOrganizationEntitlements(entity.organizationId);
 
   if (!entitlements) {
-    throw new EntitlementsUnavailableError("could not fetch entitlements for runa");
+    throw new EntitlementsUnavailableError(
+      "could not fetch entitlements for runa",
+    );
   }
 
   return checkLimit(entitlements, limitKey, currentCount);
@@ -83,7 +85,9 @@ export async function checkOrganizationLimit(
   const entitlements = await getOrganizationEntitlements(organizationId);
 
   if (!entitlements) {
-    throw new EntitlementsUnavailableError("could not fetch entitlements for runa");
+    throw new EntitlementsUnavailableError(
+      "could not fetch entitlements for runa",
+    );
   }
 
   return checkLimit(entitlements, limitKey, currentCount);
