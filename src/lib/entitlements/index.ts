@@ -5,8 +5,8 @@
  * Maintains the same API surface for PostGraphile EXPORTABLE compatibility.
  *
  * Entitlements are queried at the ORGANIZATION level for bundle billing.
- * SECURITY: Fail-closed when Aether is unavailable,
- * throwing EntitlementsUnavailableError to prevent silent degradation.
+ * When Aether is unavailable or no billing account exists,
+ * defaults to free-tier limits instead of failing.
  */
 
 import { isWithinLimit as checkLimit } from "@omnidotdev/providers";
@@ -17,6 +17,20 @@ import type { EntitlementsResponse } from "@omnidotdev/providers";
 
 /** Runa app ID for entitlements */
 const APP_ID = "runa";
+
+/**
+ * Default free-tier limits applied when no billing account exists.
+ * Prevents hard failures for orgs that haven't been provisioned in Aether.
+ */
+const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
+  max_projects: { free: 5 },
+  max_tasks: { free: 1500 },
+  max_columns: { free: 10 },
+  max_labels: { free: 25 },
+  max_assignees: { free: 2 },
+  max_members: { free: 5 },
+  max_admins: { free: 1 },
+};
 
 /** Tier type */
 type Tier = "free" | "pro" | "team" | "enterprise";
@@ -64,13 +78,7 @@ export async function isWithinLimit(
 
   const entitlements = await getOrganizationEntitlements(entity.organizationId);
 
-  if (!entitlements) {
-    throw new EntitlementsUnavailableError(
-      "could not fetch entitlements for runa",
-    );
-  }
-
-  return checkLimit(entitlements, limitKey, currentCount);
+  return checkLimit(entitlements, limitKey, currentCount, DEFAULT_LIMITS);
 }
 
 /**
@@ -84,13 +92,7 @@ export async function checkOrganizationLimit(
 ): Promise<boolean> {
   const entitlements = await getOrganizationEntitlements(organizationId);
 
-  if (!entitlements) {
-    throw new EntitlementsUnavailableError(
-      "could not fetch entitlements for runa",
-    );
-  }
-
-  return checkLimit(entitlements, limitKey, currentCount);
+  return checkLimit(entitlements, limitKey, currentCount, DEFAULT_LIMITS);
 }
 
 /**
