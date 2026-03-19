@@ -19,15 +19,18 @@ import {
   checkPermission,
   deleteTuples,
   isAuthzEnabled,
+  isTransactionalSyncMode,
   writeTuples,
 } from "lib/authz";
 import graphilePreset from "lib/config/graphile.config";
+import { columns, userPreferences } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
+import { events } from "lib/providers";
 import {
   deleteCommentFromIndex,
   deleteProjectFromIndex,
@@ -153,7 +156,9 @@ const generateGraphqlSchema = async () => {
         deleteTuples,
         isAuthzEnabled,
         writeTuples,
+        isTransactionalSyncMode,
       },
+      "lib/db/schema": { columns, userPreferences },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "./constants": {
         FEATURE_KEYS,
@@ -161,6 +166,7 @@ const generateGraphqlSchema = async () => {
       },
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
+      "lib/providers": { events },
       "lib/search": {
         deleteCommentFromIndex,
         deleteProjectFromIndex,
