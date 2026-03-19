@@ -5,8 +5,8 @@
  * Maintains the same API surface for PostGraphile EXPORTABLE compatibility.
  *
  * Entitlements are queried at the ORGANIZATION level for bundle billing.
- * SECURITY: Uses free tier defaults when Aether is unavailable,
- * preventing users from exceeding free tier limits during outages.
+ * When Aether is unavailable or no billing account exists,
+ * defaults to free-tier limits instead of failing.
  */
 
 import { isWithinLimit as checkLimit } from "@omnidotdev/providers";
@@ -18,19 +18,22 @@ import type { EntitlementsResponse } from "@omnidotdev/providers";
 /** Runa app ID for entitlements */
 const APP_ID = "runa";
 
+/**
+ * Default free-tier limits applied when no billing account exists.
+ * Prevents hard failures for orgs that haven't been provisioned in Aether.
+ */
+const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
+  max_projects: { free: 5 },
+  max_tasks: { free: 1500 },
+  max_columns: { free: 10 },
+  max_labels: { free: 25 },
+  max_assignees: { free: 2 },
+  max_members: { free: 5 },
+  max_admins: { free: 1 },
+};
+
 /** Tier type */
 type Tier = "free" | "pro" | "team" | "enterprise";
-
-/** Default limits by feature key and tier */
-const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
-  max_projects: { free: 5, pro: 25, team: -1, enterprise: -1 },
-  max_tasks: { free: 1500, pro: 10000, team: -1, enterprise: -1 },
-  max_columns: { free: 10, pro: 50, team: -1, enterprise: -1 },
-  max_labels: { free: 25, pro: 100, team: -1, enterprise: -1 },
-  max_assignees: { free: 2, pro: 5, team: -1, enterprise: -1 },
-  max_members: { free: 5, pro: 20, team: 50, enterprise: -1 },
-  max_admins: { free: 1, pro: 5, team: -1, enterprise: -1 },
-};
 
 /**
  * Error thrown when entitlements service is unavailable.

@@ -18,12 +18,12 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { deleteTuples, writeTuples } from "lib/authz";
 import {
-  AUTHZ_API_URL,
-  AUTHZ_ENABLED,
-  AUTHZ_SYNC_MODE,
-} from "lib/config/env.config";
+  deleteTuples,
+  isAuthzEnabled,
+  isTransactionalSyncMode,
+  writeTuples,
+} from "lib/authz";
 
 import type { PgDeleteSingleStep, PgInsertSingleStep } from "@dataplan/pg";
 import type { InsertProject } from "lib/db/schema";
@@ -45,9 +45,8 @@ const syncCreateProject = (): PlanWrapperFn =>
     (
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      AUTHZ_SYNC_MODE,
+      isAuthzEnabled,
+      isTransactionalSyncMode,
       writeTuples,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
@@ -67,8 +66,7 @@ const syncCreateProject = (): PlanWrapperFn =>
           [$projectId, $input, $accessToken],
           async ([projectId, input, accessToken]) => {
             if (!projectId) return;
-            // Check if authz is enabled
-            if (AUTHZ_ENABLED !== "true" || !AUTHZ_API_URL) return;
+            if (!isAuthzEnabled()) return;
 
             const { organizationId } = input as InsertProject;
 
@@ -92,23 +90,20 @@ const syncCreateProject = (): PlanWrapperFn =>
               accessToken ?? undefined,
             );
 
-            // Check if transactional sync mode
-            if (!result.success && AUTHZ_SYNC_MODE === "transactional") {
-              throw new Error(`AuthZ sync failed: ${result.error}`);
+            if (!result.success) {
+              if (isTransactionalSyncMode()) {
+                throw new Error(`AuthZ sync failed: ${result.error}`);
+              }
+              console.warn(
+                `[AuthZ] tuple sync failed (non-transactional): ${result.error}`,
+              );
             }
           },
         );
 
         return $result;
       },
-    [
-      context,
-      sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      AUTHZ_SYNC_MODE,
-      writeTuples,
-    ],
+    [context, sideEffect, isAuthzEnabled, isTransactionalSyncMode, writeTuples],
   );
 
 /**
@@ -124,9 +119,8 @@ const syncDeleteProject = (): PlanWrapperFn =>
     (
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      AUTHZ_SYNC_MODE,
+      isAuthzEnabled,
+      isTransactionalSyncMode,
       deleteTuples,
     ): PlanWrapperFn =>
       (plan, _, _fieldArgs) => {
@@ -148,8 +142,7 @@ const syncDeleteProject = (): PlanWrapperFn =>
           [$projectId, $organizationId, $accessToken],
           async ([projectId, organizationId, accessToken]) => {
             if (!projectId || !organizationId) return;
-            // Check if authz is enabled
-            if (AUTHZ_ENABLED !== "true" || !AUTHZ_API_URL) return;
+            if (!isAuthzEnabled()) return;
 
             // Delete workspace → project link (org→workspace stays for other projects)
             const result = await deleteTuples(
@@ -163,9 +156,13 @@ const syncDeleteProject = (): PlanWrapperFn =>
               accessToken ?? undefined,
             );
 
-            // Check if transactional sync mode
-            if (!result.success && AUTHZ_SYNC_MODE === "transactional") {
-              throw new Error(`AuthZ sync failed: ${result.error}`);
+            if (!result.success) {
+              if (isTransactionalSyncMode()) {
+                throw new Error(`AuthZ sync failed: ${result.error}`);
+              }
+              console.warn(
+                `[AuthZ] tuple sync failed (non-transactional): ${result.error}`,
+              );
             }
           },
         );
@@ -175,9 +172,8 @@ const syncDeleteProject = (): PlanWrapperFn =>
     [
       context,
       sideEffect,
-      AUTHZ_ENABLED,
-      AUTHZ_API_URL,
-      AUTHZ_SYNC_MODE,
+      isAuthzEnabled,
+      isTransactionalSyncMode,
       deleteTuples,
     ],
   );
