@@ -18,8 +18,6 @@ const knipConfig: KnipConfig = {
     "src/lib/db/schema/**",
   ],
   ignoreDependencies: [
-    // GitHub dependency not resolvable by knip
-    "@omnidotdev/providers",
     // OpenTelemetry deps used by instrumentation.ts (loaded via --import)
     "@opentelemetry/auto-instrumentations-node",
     "@opentelemetry/exporter-logs-otlp-http",
@@ -29,8 +27,6 @@ const knipConfig: KnipConfig = {
     "@opentelemetry/sdk-node",
     "@opentelemetry/semantic-conventions",
     "@dataplan/pg",
-    // Conditionally used when SEARCH_ENABLED=true
-    "@omnidotdev/search",
   ],
   tags: ["-knipignore"],
 };
