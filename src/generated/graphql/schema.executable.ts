@@ -110,7 +110,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "63452",
+    oid: "64396",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -171,7 +171,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "63067",
+    oid: "64011",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -241,7 +241,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "62851",
+    oid: "63794",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -322,7 +322,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "63224",
+    oid: "64168",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -413,7 +413,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "62922",
+    oid: "63865",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "63436",
+    oid: "64380",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -596,7 +596,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "62862",
+    oid: "63805",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -690,7 +690,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "63135",
+    oid: "64079",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -789,7 +789,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "63053",
+    oid: "63997",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -887,7 +887,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "62875",
+    oid: "63818",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -979,7 +979,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "63518",
+    oid: "64462",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1071,7 +1071,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "63118",
+    oid: "64062",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1182,7 +1182,7 @@ const spec_agentPersona = {
     }
   },
   extensions: {
-    oid: "63593",
+    oid: "64537",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1316,7 +1316,7 @@ const spec_agentSession = {
     }
   },
   extensions: {
-    oid: "63611",
+    oid: "64555",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1425,7 +1425,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "62937",
+    oid: "63880",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1569,7 +1569,7 @@ const spec_agentConfig = {
     }
   },
   extensions: {
-    oid: "63567",
+    oid: "64511",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1710,7 +1710,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "62903",
+    oid: "63846",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1862,7 +1862,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "62888",
+    oid: "63831",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2032,7 +2032,7 @@ const spec_agentActivity = {
     }
   },
   extensions: {
-    oid: "63544",
+    oid: "64488",
     isTableLike: true,
     pg: {
       serviceName: "main",
