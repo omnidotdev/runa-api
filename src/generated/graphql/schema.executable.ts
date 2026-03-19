@@ -4,10 +4,10 @@ import { LIST_TYPES, PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecuto
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, markSyncAndSafe, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
 import { detectMention, handleMention } from "lib/ai/triggers/mention";
-import { checkPermission, deleteTuples, writeTuples } from "lib/authz";
+import { checkPermission, deleteTuples, isAuthzEnabled, isTransactionalSyncMode, writeTuples } from "lib/authz";
 import { columns, userPreferences } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
-import { emitEvent } from "lib/providers";
+import { events } from "lib/providers";
 import { deleteCommentFromIndex, deleteProjectFromIndex, deleteTaskFromIndex, indexComment, indexProject, indexTask } from "lib/search";
 import { sql } from "pg-sql2";
 const rawNodeIdCodec = {
@@ -110,7 +110,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "59426",
+    oid: "63452",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -171,7 +171,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "59041",
+    oid: "63067",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -241,7 +241,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "58825",
+    oid: "62851",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -322,7 +322,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "59198",
+    oid: "63224",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -413,7 +413,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "58896",
+    oid: "62922",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "59410",
+    oid: "63436",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -596,7 +596,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "58836",
+    oid: "62862",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -690,7 +690,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "59109",
+    oid: "63135",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -789,7 +789,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "59027",
+    oid: "63053",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -887,7 +887,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "58849",
+    oid: "62875",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -979,7 +979,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "59492",
+    oid: "63518",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1071,7 +1071,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "59092",
+    oid: "63118",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1182,7 +1182,7 @@ const spec_agentPersona = {
     }
   },
   extensions: {
-    oid: "59566",
+    oid: "63593",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1316,7 +1316,7 @@ const spec_agentSession = {
     }
   },
   extensions: {
-    oid: "59584",
+    oid: "63611",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1425,7 +1425,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "58911",
+    oid: "62937",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1569,7 +1569,7 @@ const spec_agentConfig = {
     }
   },
   extensions: {
-    oid: "59540",
+    oid: "63567",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1710,7 +1710,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "58877",
+    oid: "62903",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1862,7 +1862,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "58862",
+    oid: "62888",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2032,7 +2032,7 @@ const spec_agentActivity = {
     }
   },
   extensions: {
-    oid: "59517",
+    oid: "63544",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4888,7 +4888,7 @@ const planWrapper7 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.column.created`,
       data: {
         id: record.id,
@@ -4982,7 +4982,7 @@ const planWrapper10 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.label.created`,
       data: {
         id: record.id,
@@ -5092,7 +5092,7 @@ const planWrapper13 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.post.created`,
       data: {
         id: record.id,
@@ -5255,7 +5255,7 @@ const planWrapper18 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.task.created`,
       data: {
         id: record.id,
@@ -5368,7 +5368,7 @@ const planWrapper21 = (plan, _, fieldArgs) => {
     $projectId = $result.getStepForKey("result").get("id");
   sideEffect([$projectId, $input, $accessToken], async ([projectId, input, accessToken]) => {
     if (!projectId) return;
-    return;
+    if (!isAuthzEnabled()) return;
     const {
         organizationId
       } = input,
@@ -5381,7 +5381,10 @@ const planWrapper21 = (plan, _, fieldArgs) => {
         relation: "workspace",
         object: `project:${projectId}`
       }], accessToken ?? void 0);
-    if (!result.success && false) throw Error(`AuthZ sync failed: ${result.error}`);
+    if (!result.success) {
+      if (isTransactionalSyncMode()) throw Error(`AuthZ sync failed: ${result.error}`);
+      console.warn(`[AuthZ] tuple sync failed (non-transactional): ${result.error}`);
+    }
   });
   return $result;
 };
@@ -5493,7 +5496,7 @@ const planWrapper24 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.project.created`,
       data: {
         id: record.id,
@@ -5687,7 +5690,7 @@ const planWrapper29 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.column.updated`,
       data: {
         id: record.id,
@@ -5797,7 +5800,7 @@ const planWrapper32 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.label.updated`,
       data: {
         id: record.id,
@@ -5873,7 +5876,7 @@ const planWrapper34 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.post.updated`,
       data: {
         id: record.id,
@@ -6058,7 +6061,7 @@ const planWrapper39 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.task.updated`,
       data: {
         id: record.id,
@@ -6139,7 +6142,7 @@ const planWrapper42 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.project.updated`,
       data: {
         id: record.id,
@@ -6383,7 +6386,7 @@ const planWrapper50 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.column.deleted`,
       data: {
         id: record.id,
@@ -6485,7 +6488,7 @@ const planWrapper53 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.label.deleted`,
       data: {
         id: record.id,
@@ -6557,7 +6560,7 @@ const planWrapper55 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.post.deleted`,
       data: {
         id: record.id,
@@ -6722,7 +6725,7 @@ const planWrapper60 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.task.deleted`,
       data: {
         id: record.id,
@@ -6811,13 +6814,16 @@ const planWrapper63 = (plan, _, _fieldArgs) => {
     $organizationId = $deleteStep.get("organization_id");
   sideEffect([$projectId, $organizationId, $accessToken], async ([projectId, organizationId, accessToken]) => {
     if (!projectId || !organizationId) return;
-    return;
+    if (!isAuthzEnabled()) return;
     const result = await deleteTuples([{
       user: `workspace:${organizationId}`,
       relation: "workspace",
       object: `project:${projectId}`
     }], accessToken ?? void 0);
-    if (!result.success && false) throw Error(`AuthZ sync failed: ${result.error}`);
+    if (!result.success) {
+      if (isTransactionalSyncMode()) throw Error(`AuthZ sync failed: ${result.error}`);
+      console.warn(`[AuthZ] tuple sync failed (non-transactional): ${result.error}`);
+    }
   });
   return $result;
 };
@@ -6843,7 +6849,7 @@ const planWrapper64 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
-    emitEvent({
+    events.emit({
       type: `runa.project.deleted`,
       data: {
         id: record.id,
