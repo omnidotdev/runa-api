@@ -1,4 +1,4 @@
-CREATE TABLE "agent_activity" (
+CREATE TABLE IF NOT EXISTS "agent_activity" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"organization_id" text NOT NULL,
 	"project_id" uuid NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE "agent_activity" (
 	"created_at" timestamp(6) with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "agent_config" (
+CREATE TABLE IF NOT EXISTS "agent_config" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"organization_id" text NOT NULL,
 	"model" text DEFAULT 'anthropic/claude-haiku-4.5' NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE "agent_config" (
 	CONSTRAINT "agent_config_organizationId_unique" UNIQUE("organization_id")
 );
 --> statement-breakpoint
-CREATE TABLE "agent_persona" (
+CREATE TABLE IF NOT EXISTS "agent_persona" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"organization_id" text NOT NULL,
 	"name" text NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE "agent_persona" (
 	"updated_at" timestamp(6) with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "agent_session" (
+CREATE TABLE IF NOT EXISTS "agent_session" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"organization_id" text NOT NULL,
 	"project_id" uuid,
@@ -58,28 +58,46 @@ CREATE TABLE "agent_session" (
 	"updated_at" timestamp(6) with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "post" ADD COLUMN "parent_id" uuid;--> statement-breakpoint
-ALTER TABLE "agent_activity" ADD CONSTRAINT "agent_activity_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."project"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "agent_activity" ADD CONSTRAINT "agent_activity_session_id_agent_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "public"."agent_session"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "agent_activity" ADD CONSTRAINT "agent_activity_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "agent_session" ADD CONSTRAINT "agent_session_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."project"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "agent_session" ADD CONSTRAINT "agent_session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_activity_id_index" ON "agent_activity" USING btree ("id");--> statement-breakpoint
-CREATE INDEX "agent_activity_organization_id_idx" ON "agent_activity" USING btree ("organization_id");--> statement-breakpoint
-CREATE INDEX "agent_activity_project_id_idx" ON "agent_activity" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "agent_activity_session_id_idx" ON "agent_activity" USING btree ("session_id");--> statement-breakpoint
-CREATE INDEX "agent_activity_user_id_idx" ON "agent_activity" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "agent_activity_tool_name_idx" ON "agent_activity" USING btree ("tool_name");--> statement-breakpoint
-CREATE INDEX "agent_activity_project_created_idx" ON "agent_activity" USING btree ("project_id","created_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_config_id_index" ON "agent_config" USING btree ("id");--> statement-breakpoint
-CREATE INDEX "agent_config_organization_id_idx" ON "agent_config" USING btree ("organization_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_persona_id_index" ON "agent_persona" USING btree ("id");--> statement-breakpoint
-CREATE INDEX "agent_persona_organization_id_idx" ON "agent_persona" USING btree ("organization_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "agent_session_id_index" ON "agent_session" USING btree ("id");--> statement-breakpoint
-CREATE INDEX "agent_session_organization_id_idx" ON "agent_session" USING btree ("organization_id");--> statement-breakpoint
-CREATE INDEX "agent_session_project_id_idx" ON "agent_session" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "agent_session_user_id_idx" ON "agent_session" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "agent_session_user_project_idx" ON "agent_session" USING btree ("user_id","project_id");--> statement-breakpoint
-CREATE INDEX "agent_session_type_idx" ON "agent_session" USING btree ("type");--> statement-breakpoint
-ALTER TABLE "post" ADD CONSTRAINT "post_parent_id_post_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."post"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "post_parent_id_index" ON "post" USING btree ("parent_id");
+ALTER TABLE "post" ADD COLUMN IF NOT EXISTS "parent_id" uuid;--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "agent_activity" ADD CONSTRAINT "agent_activity_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."project"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "agent_activity" ADD CONSTRAINT "agent_activity_session_id_agent_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "public"."agent_session"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "agent_activity" ADD CONSTRAINT "agent_activity_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "agent_session" ADD CONSTRAINT "agent_session_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."project"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "agent_session" ADD CONSTRAINT "agent_session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "agent_activity_id_index" ON "agent_activity" USING btree ("id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_activity_organization_id_idx" ON "agent_activity" USING btree ("organization_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_activity_project_id_idx" ON "agent_activity" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_activity_session_id_idx" ON "agent_activity" USING btree ("session_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_activity_user_id_idx" ON "agent_activity" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_activity_tool_name_idx" ON "agent_activity" USING btree ("tool_name");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_activity_project_created_idx" ON "agent_activity" USING btree ("project_id","created_at");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "agent_config_id_index" ON "agent_config" USING btree ("id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_config_organization_id_idx" ON "agent_config" USING btree ("organization_id");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "agent_persona_id_index" ON "agent_persona" USING btree ("id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_persona_organization_id_idx" ON "agent_persona" USING btree ("organization_id");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "agent_session_id_index" ON "agent_session" USING btree ("id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_session_organization_id_idx" ON "agent_session" USING btree ("organization_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_session_project_id_idx" ON "agent_session" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_session_user_id_idx" ON "agent_session" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_session_user_project_idx" ON "agent_session" USING btree ("user_id","project_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "agent_session_type_idx" ON "agent_session" USING btree ("type");--> statement-breakpoint
+DO $$ BEGIN
+  ALTER TABLE "post" ADD CONSTRAINT "post_parent_id_post_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."post"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "post_parent_id_index" ON "post" USING btree ("parent_id");
