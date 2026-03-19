@@ -32,7 +32,6 @@ export function isAuthzEnabled(): boolean {
 /**
  * Check if transactional sync mode is enabled.
  * When true, mutations should fail if AuthZ tuple sync fails.
- * @knipignore Used by scripts
  */
 export function isTransactionalSyncMode(): boolean {
   return AUTHZ_SYNC_MODE === "transactional";
