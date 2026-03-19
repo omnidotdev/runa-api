@@ -25,6 +25,7 @@ import {
   checkPermission,
   deleteTuples,
   isAuthzEnabled,
+  isTransactionalSyncMode,
   writeTuples,
 } from "lib/authz";
 import graphilePreset from "lib/config/graphile.config";
@@ -35,7 +36,7 @@ import {
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
-import { emitEvent } from "lib/providers";
+import { events } from "lib/providers";
 import {
   deleteCommentFromIndex,
   deleteProjectFromIndex,
@@ -161,16 +162,17 @@ const generateGraphqlSchema = async () => {
         deleteTuples,
         isAuthzEnabled,
         writeTuples,
+        isTransactionalSyncMode,
       },
+      "lib/db/schema": { columns, userPreferences },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
       "./constants": {
         FEATURE_KEYS,
         billingBypassOrgIds,
       },
-      "lib/db/schema": { columns, userPreferences },
-      "lib/providers": { emitEvent },
       "lib/auth/organizations": { getDefaultOrganization },
       "lib/idp/validateOrg": { validateOrgExists },
+      "lib/providers": { events },
       "lib/search": {
         indexComment,
         indexProject,

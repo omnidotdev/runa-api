@@ -2,7 +2,7 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { emitEvent } from "lib/providers";
+import { events } from "lib/providers";
 
 import type { PlanWrapperFn } from "postgraphile/utils";
 
@@ -14,14 +14,14 @@ const emitOnMutate = (
   action: "created" | "updated" | "deleted",
 ): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect, emitEvent, entity, action): PlanWrapperFn =>
+    (context, sideEffect, events, entity, action): PlanWrapperFn =>
       (plan, $record) => {
         const $observer = context().get("observer");
 
         sideEffect([$record, $observer], ([record, observer]) => {
           if (!record?.id) return;
 
-          void emitEvent({
+          void events.emit({
             type: `runa.${entity}.${action}`,
             data: { id: record.id, actorId: observer?.id },
             subject: record.id,
@@ -30,7 +30,7 @@ const emitOnMutate = (
 
         return plan();
       },
-    [context, sideEffect, emitEvent, entity, action],
+    [context, sideEffect, events, entity, action],
   );
 
 /**
