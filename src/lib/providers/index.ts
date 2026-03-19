@@ -40,7 +40,6 @@ export const billing = BILLING_BASE_URL
     })
   : undefined;
 
-/** @knipignore */
 export const events = createEventsProvider(
   VORTEX_API_URL && VORTEX_API_KEY
     ? {
