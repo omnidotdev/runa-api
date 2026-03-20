@@ -1,11 +1,11 @@
 // @ts-nocheck
-import { FEATURE_KEYS, billingBypassOrgIds } from "./constants";
 import { LIST_TYPES, PgBooleanFilter, PgCondition, PgDeleteSingleStep, PgExecutor, PgOrFilter, TYPES, assertPgClassSingleStep, listOfCodec, makeRegistry, pgDeleteSingle, pgInsertSingle, pgSelectFromRecord, pgUpdateSingle, pgWhereConditionSpecListToSQL, recordCodec, sqlValueWithCodec } from "@dataplan/pg";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, markSyncAndSafe, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, isTransactionalSyncMode, writeTuples } from "lib/authz";
 import { columns, userPreferences } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
+import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
 import { events } from "lib/providers";
 import { deleteCommentFromIndex, deleteProjectFromIndex, deleteTaskFromIndex, indexComment, indexProject, indexTask } from "lib/search";
 import { sql } from "pg-sql2";
@@ -109,7 +109,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "64396",
+    oid: "242164",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -170,7 +170,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "64011",
+    oid: "241853",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -240,7 +240,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "63794",
+    oid: "241672",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -321,7 +321,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "64168",
+    oid: "241965",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -412,7 +412,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "63865",
+    oid: "241723",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -501,7 +501,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "63818",
+    oid: "241690",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -592,7 +592,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "64380",
+    oid: "242154",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -684,7 +684,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "63805",
+    oid: "241680",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -695,100 +695,6 @@ const spec_column = {
   executor: executor
 };
 const columnCodec = recordCodec(spec_column);
-const userPreferenceIdentifier = sql.identifier("public", "user_preference");
-const spec_userPreference = {
-  name: "userPreference",
-  identifier: userPreferenceIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    user_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    hidden_column_ids: {
-      codec: LIST_TYPES.text,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    view_mode: {
-      codec: TYPES.varchar,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "64079",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "user_preference"
-    }
-  },
-  executor: executor
-};
-const userPreferenceCodec = recordCodec(spec_userPreference);
 const labelIdentifier = sql.identifier("public", "label");
 const spec_label = {
   name: "label",
@@ -877,7 +783,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "63997",
+    oid: "241843",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -969,7 +875,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "64462",
+    oid: "242218",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1061,7 +967,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "64062",
+    oid: "241882",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1072,6 +978,111 @@ const spec_projectColumn = {
   executor: executor
 };
 const projectColumnCodec = recordCodec(spec_projectColumn);
+const userPreferenceIdentifier = sql.identifier("public", "user_preference");
+const spec_userPreference = {
+  name: "userPreference",
+  identifier: userPreferenceIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    hidden_column_ids: {
+      codec: LIST_TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    view_mode: {
+      codec: TYPES.varchar,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    pinned: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "241893",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "user_preference"
+    }
+  },
+  executor: executor
+};
+const userPreferenceCodec = recordCodec(spec_userPreference);
 const settingsIdentifier = sql.identifier("public", "settings");
 const spec_settings = {
   name: "settings",
@@ -1170,7 +1181,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "63880",
+    oid: "241735",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1181,147 +1192,6 @@ const spec_settings = {
   executor: executor
 };
 const settingsCodec = recordCodec(spec_settings);
-const taskIdentifier = sql.identifier("public", "task");
-const spec_task = {
-  name: "task",
-  identifier: taskIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    content: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    priority: {
-      codec: TYPES.varchar,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    author_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    column_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    due_date: {
-      codec: TYPES.timestamptz,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    column_index: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    number: {
-      codec: TYPES.int,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "63846",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "task"
-    }
-  },
-  executor: executor
-};
-const taskCodec = recordCodec(spec_task);
 const projectIdentifier = sql.identifier("public", "project");
 const spec_project = {
   name: "project",
@@ -1463,7 +1333,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "63831",
+    oid: "241700",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1474,6 +1344,147 @@ const spec_project = {
   executor: executor
 };
 const projectCodec = recordCodec(spec_project);
+const taskIdentifier = sql.identifier("public", "task");
+const spec_task = {
+  name: "task",
+  identifier: taskIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    content: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    priority: {
+      codec: TYPES.varchar,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    author_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    column_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    due_date: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    column_index: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    number: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "241711",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "task"
+    }
+  },
+  executor: executor
+};
+const taskCodec = recordCodec(spec_task);
 const project_project_labelUniques = [{
   attributes: ["project_id", "project_label_id"],
   isPrimary: true
@@ -1690,37 +1701,6 @@ const column_resourceOptionsConfig = {
   },
   uniques: columnUniques
 };
-const user_preferenceUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}, {
-  attributes: ["user_id", "project_id"],
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
-    }
-  }
-}];
-const user_preference_resourceOptionsConfig = {
-  executor: executor,
-  name: "user_preference",
-  identifier: "main.public.user_preference",
-  from: userPreferenceIdentifier,
-  codec: userPreferenceCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "user_preference"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: user_preferenceUniques
-};
 const labelUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -1789,6 +1769,37 @@ const project_column_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: project_columnUniques
+};
+const user_preferenceUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}, {
+  attributes: ["user_id", "project_id"],
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
+    }
+  }
+}];
+const user_preference_resourceOptionsConfig = {
+  executor: executor,
+  name: "user_preference",
+  identifier: "main.public.user_preference",
+  from: userPreferenceIdentifier,
+  codec: userPreferenceCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "user_preference"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: user_preferenceUniques
 };
 const settingsUniques = [{
   attributes: ["id"],
@@ -1883,17 +1894,17 @@ const registryConfig = {
     projectLabel: projectLabelCodec,
     column: columnCodec,
     int4: TYPES.int,
-    userPreference: userPreferenceCodec,
-    textArray: LIST_TYPES.text,
-    varchar: TYPES.varchar,
     label: labelCodec,
     projectLink: projectLinkCodec,
     projectColumn: projectColumnCodec,
+    userPreference: userPreferenceCodec,
+    textArray: LIST_TYPES.text,
+    varchar: TYPES.varchar,
+    bool: TYPES.boolean,
     settings: settingsCodec,
     timestamp: TYPES.timestamp,
-    task: taskCodec,
     project: projectCodec,
-    bool: TYPES.boolean
+    task: taskCodec
   },
   pgResources: {
     __proto__: null,
@@ -1905,10 +1916,10 @@ const registryConfig = {
     post: post_resourceOptionsConfig,
     project_label: project_label_resourceOptionsConfig,
     column: column_resourceOptionsConfig,
-    user_preference: user_preference_resourceOptionsConfig,
     label: label_resourceOptionsConfig,
     project_link: project_link_resourceOptionsConfig,
     project_column: project_column_resourceOptionsConfig,
+    user_preference: user_preference_resourceOptionsConfig,
     settings: {
       executor: executor,
       name: "settings",
@@ -2266,10 +2277,10 @@ const resource_userPgResource = registry.pgResources["user"];
 const resource_postPgResource = registry.pgResources["post"];
 const resource_project_labelPgResource = registry.pgResources["project_label"];
 const resource_columnPgResource = registry.pgResources["column"];
-const resource_user_preferencePgResource = registry.pgResources["user_preference"];
 const resource_labelPgResource = registry.pgResources["label"];
 const resource_project_linkPgResource = registry.pgResources["project_link"];
 const resource_project_columnPgResource = registry.pgResources["project_column"];
+const resource_user_preferencePgResource = registry.pgResources["user_preference"];
 const resource_settingsPgResource = registry.pgResources["settings"];
 const resource_taskPgResource = registry.pgResources["task"];
 const resource_projectPgResource = registry.pgResources["project"];
@@ -2405,17 +2416,6 @@ const nodeFetcher_Column = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Column));
   return nodeIdHandler_Column.get(nodeIdHandler_Column.getSpec($decoded));
 };
-const nodeIdHandler_UserPreference = makeTableNodeIdHandler({
-  typeName: "UserPreference",
-  identifier: "UserPreference",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_user_preferencePgResource,
-  pk: user_preferenceUniques[0].attributes
-});
-const nodeFetcher_UserPreference = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_UserPreference));
-  return nodeIdHandler_UserPreference.get(nodeIdHandler_UserPreference.getSpec($decoded));
-};
 const nodeIdHandler_Label = makeTableNodeIdHandler({
   typeName: "Label",
   identifier: "Label",
@@ -2448,6 +2448,17 @@ const nodeIdHandler_ProjectColumn = makeTableNodeIdHandler({
 const nodeFetcher_ProjectColumn = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ProjectColumn));
   return nodeIdHandler_ProjectColumn.get(nodeIdHandler_ProjectColumn.getSpec($decoded));
+};
+const nodeIdHandler_UserPreference = makeTableNodeIdHandler({
+  typeName: "UserPreference",
+  identifier: "UserPreference",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_user_preferencePgResource,
+  pk: user_preferenceUniques[0].attributes
+});
+const nodeFetcher_UserPreference = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_UserPreference));
+  return nodeIdHandler_UserPreference.get(nodeIdHandler_UserPreference.getSpec($decoded));
 };
 const nodeIdHandler_Setting = makeTableNodeIdHandler({
   typeName: "Setting",
@@ -2555,10 +2566,10 @@ const nodeIdHandlerByTypeName = {
   Post: nodeIdHandler_Post,
   ProjectLabel: nodeIdHandler_ProjectLabel,
   Column: nodeIdHandler_Column,
-  UserPreference: nodeIdHandler_UserPreference,
   Label: nodeIdHandler_Label,
   ProjectLink: nodeIdHandler_ProjectLink,
   ProjectColumn: nodeIdHandler_ProjectColumn,
+  UserPreference: nodeIdHandler_UserPreference,
   Setting: nodeIdHandler_Setting,
   Task: nodeIdHandler_Task,
   Project: nodeIdHandler_Project
@@ -3856,6 +3867,11 @@ const colSpec64 = {
   attributeName: "view_mode",
   attribute: spec_userPreference.attributes.view_mode
 };
+const colSpec65 = {
+  fieldName: "pinned",
+  attributeName: "pinned",
+  attribute: spec_userPreference.attributes.pinned
+};
 const forceTextTypesSensitive8 = [TYPES.citext, TYPES.char, TYPES.bpchar];
 function resolveInputCodec34(c) {
   if (c.arrayOfCodec) {
@@ -3892,182 +3908,182 @@ const resolve108 = (i, v) => sql`${v} > ANY (${i})`;
 const resolve109 = (i, v) => sql`${v} >= ANY (${i})`;
 const resolve110 = (i, v) => sql`${v} < ANY (${i})`;
 const resolve111 = (i, v) => sql`${v} <= ANY (${i})`;
-const colSpec65 = {
+const colSpec66 = {
   fieldName: "taskId",
   attributeName: "task_id",
   attribute: spec_taskLabel.attributes.task_id
 };
-const colSpec66 = {
+const colSpec67 = {
   fieldName: "labelId",
   attributeName: "label_id",
   attribute: spec_taskLabel.attributes.label_id
 };
-const colSpec67 = {
+const colSpec68 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_taskLabel.attributes.created_at
 };
-const colSpec68 = {
+const colSpec69 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_taskLabel.attributes.updated_at
 };
-const colSpec69 = {
+const colSpec70 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_label.attributes.id
 };
-const colSpec70 = {
+const colSpec71 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_label.attributes.name
 };
-const colSpec71 = {
+const colSpec72 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_label.attributes.color
 };
-const colSpec72 = {
+const colSpec73 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_label.attributes.project_id
 };
-const colSpec73 = {
+const colSpec74 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_label.attributes.created_at
 };
-const colSpec74 = {
+const colSpec75 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_label.attributes.updated_at
 };
-const colSpec75 = {
+const colSpec76 = {
   fieldName: "icon",
   attributeName: "icon",
   attribute: spec_label.attributes.icon
 };
-const colSpec76 = {
+const colSpec77 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_label.attributes.organization_id
 };
-const colSpec77 = {
+const colSpec78 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_projectProjectLabel.attributes.project_id
 };
-const colSpec78 = {
+const colSpec79 = {
   fieldName: "projectLabelId",
   attributeName: "project_label_id",
   attribute: spec_projectProjectLabel.attributes.project_label_id
 };
-const colSpec79 = {
+const colSpec80 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectProjectLabel.attributes.created_at
 };
-const colSpec80 = {
+const colSpec81 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_projectLabel.attributes.id
 };
-const colSpec81 = {
+const colSpec82 = {
   fieldName: "name",
   attributeName: "name",
   attribute: spec_projectLabel.attributes.name
 };
-const colSpec82 = {
+const colSpec83 = {
   fieldName: "color",
   attributeName: "color",
   attribute: spec_projectLabel.attributes.color
 };
-const colSpec83 = {
+const colSpec84 = {
   fieldName: "icon",
   attributeName: "icon",
   attribute: spec_projectLabel.attributes.icon
 };
-const colSpec84 = {
+const colSpec85 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_projectLabel.attributes.organization_id
 };
-const colSpec85 = {
+const colSpec86 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectLabel.attributes.created_at
 };
-const colSpec86 = {
+const colSpec87 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_projectLabel.attributes.updated_at
 };
-const colSpec87 = {
+const colSpec88 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_projectLink.attributes.id
 };
-const colSpec88 = {
+const colSpec89 = {
   fieldName: "projectId",
   attributeName: "project_id",
   attribute: spec_projectLink.attributes.project_id
 };
-const colSpec89 = {
+const colSpec90 = {
   fieldName: "url",
   attributeName: "url",
   attribute: spec_projectLink.attributes.url
 };
-const colSpec90 = {
+const colSpec91 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_projectLink.attributes.title
 };
-const colSpec91 = {
+const colSpec92 = {
   fieldName: "order",
   attributeName: "order",
   attribute: spec_projectLink.attributes.order
 };
-const colSpec92 = {
+const colSpec93 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectLink.attributes.created_at
 };
-const colSpec93 = {
+const colSpec94 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_projectLink.attributes.updated_at
 };
-const colSpec94 = {
+const colSpec95 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_projectColumn.attributes.id
 };
-const colSpec95 = {
+const colSpec96 = {
   fieldName: "icon",
   attributeName: "icon",
   attribute: spec_projectColumn.attributes.icon
 };
-const colSpec96 = {
+const colSpec97 = {
   fieldName: "title",
   attributeName: "title",
   attribute: spec_projectColumn.attributes.title
 };
-const colSpec97 = {
+const colSpec98 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_projectColumn.attributes.organization_id
 };
-const colSpec98 = {
+const colSpec99 = {
   fieldName: "index",
   attributeName: "index",
   attribute: spec_projectColumn.attributes.index
 };
-const colSpec99 = {
+const colSpec100 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_projectColumn.attributes.created_at
 };
-const colSpec100 = {
+const colSpec101 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_projectColumn.attributes.updated_at
@@ -4485,47 +4501,47 @@ const relation16 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
 const relation17 = registry.pgRelations["user"]["emojisByTheirUserId"];
 const relation18 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
 const relation19 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
-const colSpec101 = {
+const colSpec102 = {
   fieldName: "rowId",
   attributeName: "id",
   attribute: spec_settings.attributes.id
 };
-const colSpec102 = {
+const colSpec103 = {
   fieldName: "createdAt",
   attributeName: "created_at",
   attribute: spec_settings.attributes.created_at
 };
-const colSpec103 = {
+const colSpec104 = {
   fieldName: "updatedAt",
   attributeName: "updated_at",
   attribute: spec_settings.attributes.updated_at
 };
-const colSpec104 = {
+const colSpec105 = {
   fieldName: "viewMode",
   attributeName: "view_mode",
   attribute: spec_settings.attributes.view_mode
 };
-const colSpec105 = {
+const colSpec106 = {
   fieldName: "billingAccountId",
   attributeName: "billing_account_id",
   attribute: spec_settings.attributes.billing_account_id
 };
-const colSpec106 = {
+const colSpec107 = {
   fieldName: "organizationId",
   attributeName: "organization_id",
   attribute: spec_settings.attributes.organization_id
 };
-const colSpec107 = {
+const colSpec108 = {
   fieldName: "subscriptionId",
   attributeName: "subscription_id",
   attribute: spec_settings.attributes.subscription_id
 };
-const colSpec108 = {
+const colSpec109 = {
   fieldName: "deletedAt",
   attributeName: "deleted_at",
   attribute: spec_settings.attributes.deleted_at
 };
-const colSpec109 = {
+const colSpec110 = {
   fieldName: "deletionReason",
   attributeName: "deletion_reason",
   attribute: spec_settings.attributes.deletion_reason
@@ -4872,31 +4888,14 @@ const planWrapper10 = (plan, $record) => {
   });
   return plan();
 };
-function oldPlan11(_, args) {
-  const $insert = pgInsertSingle(resource_user_preferencePgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper11 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "userPreference"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (input.userId !== observer.id) throw Error("Unauthorized");
-  });
-  return plan();
-};
-function oldPlan13(_, args) {
+function oldPlan12(_, args) {
   const $insert = pgInsertSingle(resource_labelPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper12 = (plan, _, fieldArgs) => {
+const planWrapper11 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "label"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -4933,25 +4932,25 @@ const planWrapper12 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan12(...planParams) {
+function oldPlan11(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan13.apply(this, args);
+        $prev = oldPlan12.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createLabel, but that function did not return a step!
-${String(oldPlan13)}`);
+${String(oldPlan12)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper13 = (plan, $record) => {
+const planWrapper12 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
@@ -4966,14 +4965,14 @@ const planWrapper13 = (plan, $record) => {
   });
   return plan();
 };
-function oldPlan14(_, args) {
+function oldPlan13(_, args) {
   const $insert = pgInsertSingle(resource_project_linkPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper14 = (plan, _, fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "projectLink"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -4989,14 +4988,14 @@ const planWrapper14 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan15(_, args) {
+function oldPlan14(_, args) {
   const $insert = pgInsertSingle(resource_project_columnPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper15 = (plan, _, fieldArgs) => {
+const planWrapper14 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "projectColumn"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5009,6 +5008,23 @@ const planWrapper15 = (plan, _, fieldArgs) => {
       const organizationId = input.organizationId;
       if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
     }
+  });
+  return plan();
+};
+function oldPlan15(_, args) {
+  const $insert = pgInsertSingle(resource_user_preferencePgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper15 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "userPreference"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (input.userId !== observer.id) throw Error("Unauthorized");
   });
   return plan();
 };
@@ -5617,44 +5633,11 @@ const planWrapper31 = (plan, $record) => {
   });
   return plan();
 };
-const specFromArgs_UserPreference = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
-};
-const oldPlan32 = (_$root, args) => {
-  const $update = pgUpdateSingle(resource_user_preferencePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper32 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    {
-      const preference = await db.query.userPreferences.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!preference) throw Error("Not found");
-      if (preference.userId !== observer.id) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
 const specFromArgs_Label = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Label, $nodeId);
 };
-const oldPlan34 = (_$root, args) => {
+const oldPlan33 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5663,7 +5646,7 @@ const oldPlan34 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper33 = (plan, _, fieldArgs) => {
+const planWrapper32 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5694,25 +5677,25 @@ const planWrapper33 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan33(...planParams) {
+function oldPlan32(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan34.apply(this, args);
+        $prev = oldPlan33.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateLabel, but that function did not return a step!
-${String(oldPlan34)}`);
+${String(oldPlan33)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper34 = (plan, $record) => {
+const planWrapper33 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
@@ -5731,7 +5714,7 @@ const specFromArgs_ProjectLink = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectLink, $nodeId);
 };
-const oldPlan35 = (_$root, args) => {
+const oldPlan34 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_project_linkPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5740,7 +5723,7 @@ const oldPlan35 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper35 = (plan, _, fieldArgs) => {
+const planWrapper34 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5770,7 +5753,7 @@ const specFromArgs_ProjectColumn = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
 };
-const oldPlan36 = (_$root, args) => {
+const oldPlan35 = (_$root, args) => {
   const $update = pgUpdateSingle(resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5779,7 +5762,7 @@ const oldPlan36 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper36 = (plan, _, fieldArgs) => {
+const planWrapper35 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5801,6 +5784,39 @@ const planWrapper36 = (plan, _, fieldArgs) => {
       });
       if (!projectColumn) throw Error("Project column not found");
       if (!(await checkPermission(observer.identityProviderId, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const specFromArgs_UserPreference = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
+};
+const oldPlan36 = (_$root, args) => {
+  const $update = pgUpdateSingle(resource_user_preferencePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper36 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    {
+      const preference = await db.query.userPreferences.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!preference) throw Error("Not found");
+      if (preference.userId !== observer.id) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6301,36 +6317,7 @@ const planWrapper52 = (plan, $record) => {
   });
   return plan();
 };
-const oldPlan53 = (_$root, args) => {
-  const $delete = pgDeleteSingle(resource_user_preferencePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper53 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    {
-      const preference = await db.query.userPreferences.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!preference) throw Error("Not found");
-      if (preference.userId !== observer.id) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const oldPlan55 = (_$root, args) => {
+const oldPlan54 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6339,7 +6326,7 @@ const oldPlan55 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper54 = (plan, _, fieldArgs) => {
+const planWrapper53 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6370,25 +6357,25 @@ const planWrapper54 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan54(...planParams) {
+function oldPlan53(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan55.apply(this, args);
+        $prev = oldPlan54.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteLabel, but that function did not return a step!
-${String(oldPlan55)}`);
+${String(oldPlan54)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper54(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper53(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper55 = (plan, $record) => {
+const planWrapper54 = (plan, $record) => {
   const $observer = context().get("observer");
   sideEffect([$record, $observer], ([record, observer]) => {
     if (!record?.id) return;
@@ -6403,7 +6390,7 @@ const planWrapper55 = (plan, $record) => {
   });
   return plan();
 };
-const oldPlan56 = (_$root, args) => {
+const oldPlan55 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_project_linkPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6412,7 +6399,7 @@ const oldPlan56 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper56 = (plan, _, fieldArgs) => {
+const planWrapper55 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6438,7 +6425,7 @@ const planWrapper56 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan57 = (_$root, args) => {
+const oldPlan56 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6447,7 +6434,7 @@ const oldPlan57 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper57 = (plan, _, fieldArgs) => {
+const planWrapper56 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6469,6 +6456,35 @@ const planWrapper57 = (plan, _, fieldArgs) => {
       });
       if (!projectColumn) throw Error("Project column not found");
       if (!(await checkPermission(observer.identityProviderId, "organization", projectColumn.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+const oldPlan57 = (_$root, args) => {
+  const $delete = pgDeleteSingle(resource_user_preferencePgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper57 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    {
+      const preference = await db.query.userPreferences.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!preference) throw Error("Not found");
+      if (preference.userId !== observer.id) throw Error("Unauthorized");
     }
   });
   return plan();
@@ -6799,13 +6815,6 @@ const CreateColumnPayload_columnEdgePlan = ($mutation, fieldArgs) => pgMutationP
 function ColumnInput_indexApply(obj, val, info) {
   obj.set("index", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateUserPreferencePayload_userPreferenceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_user_preferencePgResource, user_preferenceUniques[0].attributes, $mutation, fieldArgs);
-function UserPreferenceInput_hiddenColumnIdsApply(obj, val, info) {
-  obj.set("hidden_column_ids", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function UserPreferenceInput_viewModeApply(obj, val, info) {
-  obj.set("view_mode", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateLabelPayload_labelEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_labelPgResource, labelUniques[0].attributes, $mutation, fieldArgs);
 const CreateProjectLinkPayload_projectLinkEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_project_linkPgResource, project_linkUniques[0].attributes, $mutation, fieldArgs);
 function ProjectLinkInput_urlApply(obj, val, info) {
@@ -6815,6 +6824,16 @@ function ProjectLinkInput_orderApply(obj, val, info) {
   obj.set("order", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateProjectColumnPayload_projectColumnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_project_columnPgResource, project_columnUniques[0].attributes, $mutation, fieldArgs);
+const CreateUserPreferencePayload_userPreferenceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_user_preferencePgResource, user_preferenceUniques[0].attributes, $mutation, fieldArgs);
+function UserPreferenceInput_hiddenColumnIdsApply(obj, val, info) {
+  obj.set("hidden_column_ids", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function UserPreferenceInput_viewModeApply(obj, val, info) {
+  obj.set("view_mode", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function UserPreferenceInput_pinnedApply(obj, val, info) {
+  obj.set("pinned", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateSettingPayload_settingEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_settingsPgResource, settingsUniques[0].attributes, $mutation, fieldArgs);
 function SettingInput_billingAccountIdApply(obj, val, info) {
   obj.set("billing_account_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -6915,12 +6934,6 @@ type Query implements Node {
   """Get a single \`Column\`."""
   column(rowId: UUID!): Column
 
-  """Get a single \`UserPreference\`."""
-  userPreference(rowId: UUID!): UserPreference
-
-  """Get a single \`UserPreference\`."""
-  userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
-
   """Get a single \`Label\`."""
   label(rowId: UUID!): Label
 
@@ -6929,6 +6942,12 @@ type Query implements Node {
 
   """Get a single \`ProjectColumn\`."""
   projectColumn(rowId: UUID!): ProjectColumn
+
+  """Get a single \`UserPreference\`."""
+  userPreference(rowId: UUID!): UserPreference
+
+  """Get a single \`UserPreference\`."""
+  userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
   """Get a single \`Setting\`."""
   setting(rowId: UUID!): Setting
@@ -7000,14 +7019,6 @@ type Query implements Node {
     id: ID!
   ): Column
 
-  """Reads a single \`UserPreference\` using its globally unique \`ID\`."""
-  userPreferenceById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`UserPreference\`.
-    """
-    id: ID!
-  ): UserPreference
-
   """Reads a single \`Label\` using its globally unique \`ID\`."""
   labelById(
     """The globally unique \`ID\` to be used in selecting a single \`Label\`."""
@@ -7029,6 +7040,14 @@ type Query implements Node {
     """
     id: ID!
   ): ProjectColumn
+
+  """Reads a single \`UserPreference\` using its globally unique \`ID\`."""
+  userPreferenceById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`UserPreference\`.
+    """
+    id: ID!
+  ): UserPreference
 
   """Reads a single \`Setting\` using its globally unique \`ID\`."""
   settingById(
@@ -7320,40 +7339,6 @@ type Query implements Node {
     orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
   ): ColumnConnection
 
-  """Reads and enables pagination through a set of \`UserPreference\`."""
-  userPreferences(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserPreferenceCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserPreferenceFilter
-
-    """The method to use when ordering \`UserPreference\`."""
-    orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserPreferenceConnection
-
   """Reads and enables pagination through a set of \`Label\`."""
   labels(
     """Only read the first \`n\` values of the set."""
@@ -7455,6 +7440,40 @@ type Query implements Node {
     """The method to use when ordering \`ProjectColumn\`."""
     orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectColumnConnection
+
+  """Reads and enables pagination through a set of \`UserPreference\`."""
+  userPreferences(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserPreferenceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserPreferenceFilter
+
+    """The method to use when ordering \`UserPreference\`."""
+    orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserPreferenceConnection
 
   """Reads and enables pagination through a set of \`Setting\`."""
   settings(
@@ -9423,6 +9442,9 @@ input UserPreferenceFilter {
   """Filter by the object’s \`viewMode\` field."""
   viewMode: StringFilter
 
+  """Filter by the object’s \`pinned\` field."""
+  pinned: BooleanFilter
+
   """Filter by the object’s \`project\` relation."""
   project: ProjectFilter
 
@@ -9523,6 +9545,7 @@ input UserPreferenceDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   viewMode: BigIntFilter
+  pinned: BigIntFilter
 }
 
 """
@@ -10480,6 +10503,8 @@ enum ProjectOrderBy {
   USER_PREFERENCES_DISTINCT_COUNT_UPDATED_AT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_ASC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC
+  USER_PREFERENCES_DISTINCT_COUNT_PINNED_ASC
+  USER_PREFERENCES_DISTINCT_COUNT_PINNED_DESC
   PROJECT_PROJECT_LABELS_COUNT_ASC
   PROJECT_PROJECT_LABELS_COUNT_DESC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC
@@ -11784,6 +11809,7 @@ type UserPreference implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   viewMode: String!
+  pinned: Boolean!
 
   """Reads a single \`Project\` that is related to this \`UserPreference\`."""
   project: Project
@@ -11831,6 +11857,9 @@ type UserPreferenceDistinctCountAggregates {
 
   """Distinct count of viewMode across the matching connection"""
   viewMode: BigInt
+
+  """Distinct count of pinned across the matching connection"""
+  pinned: BigInt
 }
 
 """Grouping methods for \`UserPreference\` for usage during aggregation."""
@@ -11845,6 +11874,7 @@ enum UserPreferenceGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   VIEW_MODE
+  PINNED
 }
 
 """Conditions for \`UserPreference\` aggregates."""
@@ -11929,6 +11959,9 @@ input UserPreferenceCondition {
 
   """Checks for equality with the object’s \`viewMode\` field."""
   viewMode: String
+
+  """Checks for equality with the object’s \`pinned\` field."""
+  pinned: Boolean
 }
 
 """Methods to use when ordering \`UserPreference\`."""
@@ -11948,6 +11981,8 @@ enum UserPreferenceOrderBy {
   UPDATED_AT_DESC
   VIEW_MODE_ASC
   VIEW_MODE_DESC
+  PINNED_ASC
+  PINNED_DESC
 }
 
 """A connection to a list of \`TaskLabel\` values."""
@@ -13799,6 +13834,8 @@ enum UserOrderBy {
   USER_PREFERENCES_DISTINCT_COUNT_UPDATED_AT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_ASC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC
+  USER_PREFERENCES_DISTINCT_COUNT_PINNED_ASC
+  USER_PREFERENCES_DISTINCT_COUNT_PINNED_DESC
   EMOJIS_COUNT_ASC
   EMOJIS_COUNT_DESC
   EMOJIS_DISTINCT_COUNT_ROW_ID_ASC
@@ -14696,14 +14733,6 @@ type Mutation {
     input: CreateColumnInput!
   ): CreateColumnPayload
 
-  """Creates a single \`UserPreference\`."""
-  createUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserPreferenceInput!
-  ): CreateUserPreferencePayload
-
   """Creates a single \`Label\`."""
   createLabel(
     """
@@ -14727,6 +14756,14 @@ type Mutation {
     """
     input: CreateProjectColumnInput!
   ): CreateProjectColumnPayload
+
+  """Creates a single \`UserPreference\`."""
+  createUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserPreferenceInput!
+  ): CreateUserPreferencePayload
 
   """Creates a single \`Setting\`."""
   createSetting(
@@ -14884,24 +14921,6 @@ type Mutation {
     input: UpdateColumnInput!
   ): UpdateColumnPayload
 
-  """
-  Updates a single \`UserPreference\` using its globally unique id and a patch.
-  """
-  updateUserPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceByIdInput!
-  ): UpdateUserPreferencePayload
-
-  """Updates a single \`UserPreference\` using a unique key and a patch."""
-  updateUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceInput!
-  ): UpdateUserPreferencePayload
-
   """Updates a single \`Label\` using its globally unique id and a patch."""
   updateLabelById(
     """
@@ -14953,6 +14972,24 @@ type Mutation {
     """
     input: UpdateProjectColumnInput!
   ): UpdateProjectColumnPayload
+
+  """
+  Updates a single \`UserPreference\` using its globally unique id and a patch.
+  """
+  updateUserPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserPreferenceByIdInput!
+  ): UpdateUserPreferencePayload
+
+  """Updates a single \`UserPreference\` using a unique key and a patch."""
+  updateUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserPreferenceInput!
+  ): UpdateUserPreferencePayload
 
   """Updates a single \`Setting\` using its globally unique id and a patch."""
   updateSettingById(
@@ -15130,22 +15167,6 @@ type Mutation {
     input: DeleteColumnInput!
   ): DeleteColumnPayload
 
-  """Deletes a single \`UserPreference\` using its globally unique id."""
-  deleteUserPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceByIdInput!
-  ): DeleteUserPreferencePayload
-
-  """Deletes a single \`UserPreference\` using a unique key."""
-  deleteUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceInput!
-  ): DeleteUserPreferencePayload
-
   """Deletes a single \`Label\` using its globally unique id."""
   deleteLabelById(
     """
@@ -15193,6 +15214,22 @@ type Mutation {
     """
     input: DeleteProjectColumnInput!
   ): DeleteProjectColumnPayload
+
+  """Deletes a single \`UserPreference\` using its globally unique id."""
+  deleteUserPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserPreferenceByIdInput!
+  ): DeleteUserPreferencePayload
+
+  """Deletes a single \`UserPreference\` using a unique key."""
+  deleteUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserPreferenceInput!
+  ): DeleteUserPreferencePayload
 
   """Deletes a single \`Setting\` using its globally unique id."""
   deleteSettingById(
@@ -15601,52 +15638,6 @@ input ColumnInput {
   icon: String
 }
 
-"""The output of our create \`UserPreference\` mutation."""
-type CreateUserPreferencePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`UserPreference\` that was created by this mutation."""
-  userPreference: UserPreference
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`UserPreference\`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering \`UserPreference\`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the create \`UserPreference\` mutation."""
-input CreateUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`UserPreference\` to be created by this mutation."""
-  userPreference: UserPreferenceInput!
-}
-
-"""An input for mutations affecting \`UserPreference\`"""
-input UserPreferenceInput {
-  rowId: UUID
-  userId: UUID!
-  projectId: UUID!
-  hiddenColumnIds: [String]
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-}
-
 """The output of our create \`Label\` mutation."""
 type CreateLabelPayload {
   """
@@ -15784,6 +15775,53 @@ input ProjectColumnInput {
   index: Int
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`UserPreference\` mutation."""
+type CreateUserPreferencePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserPreference\` that was created by this mutation."""
+  userPreference: UserPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserPreference\`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering \`UserPreference\`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the create \`UserPreference\` mutation."""
+input CreateUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`UserPreference\` to be created by this mutation."""
+  userPreference: UserPreferenceInput!
+}
+
+"""An input for mutations affecting \`UserPreference\`"""
+input UserPreferenceInput {
+  rowId: UUID
+  userId: UUID!
+  projectId: UUID!
+  hiddenColumnIds: [String]
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+  pinned: Boolean
 }
 
 """The output of our create \`Setting\` mutation."""
@@ -16486,76 +16524,6 @@ input UpdateColumnInput {
   patch: ColumnPatch!
 }
 
-"""The output of our update \`UserPreference\` mutation."""
-type UpdateUserPreferencePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`UserPreference\` that was updated by this mutation."""
-  userPreference: UserPreference
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`UserPreference\`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering \`UserPreference\`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the \`updateUserPreferenceById\` mutation."""
-input UpdateUserPreferenceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`UserPreference\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`UserPreference\` being updated.
-  """
-  patch: UserPreferencePatch!
-}
-
-"""
-Represents an update to a \`UserPreference\`. Fields that are set will be updated.
-"""
-input UserPreferencePatch {
-  rowId: UUID
-  userId: UUID
-  projectId: UUID
-  hiddenColumnIds: [String]
-  createdAt: Datetime
-  updatedAt: Datetime
-  viewMode: String
-}
-
-"""All input for the \`updateUserPreference\` mutation."""
-input UpdateUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`UserPreference\` being updated.
-  """
-  patch: UserPreferencePatch!
-}
-
 """The output of our update \`Label\` mutation."""
 type UpdateLabelPayload {
   """
@@ -16765,6 +16733,77 @@ input UpdateProjectColumnInput {
   An object where the defined keys will be set on the \`ProjectColumn\` being updated.
   """
   patch: ProjectColumnPatch!
+}
+
+"""The output of our update \`UserPreference\` mutation."""
+type UpdateUserPreferencePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserPreference\` that was updated by this mutation."""
+  userPreference: UserPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserPreference\`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering \`UserPreference\`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the \`updateUserPreferenceById\` mutation."""
+input UpdateUserPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`UserPreference\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`UserPreference\` being updated.
+  """
+  patch: UserPreferencePatch!
+}
+
+"""
+Represents an update to a \`UserPreference\`. Fields that are set will be updated.
+"""
+input UserPreferencePatch {
+  rowId: UUID
+  userId: UUID
+  projectId: UUID
+  hiddenColumnIds: [String]
+  createdAt: Datetime
+  updatedAt: Datetime
+  viewMode: String
+  pinned: Boolean
+}
+
+"""All input for the \`updateUserPreference\` mutation."""
+input UpdateUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`UserPreference\` being updated.
+  """
+  patch: UserPreferencePatch!
 }
 
 """The output of our update \`Setting\` mutation."""
@@ -17375,54 +17414,6 @@ input DeleteColumnInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`UserPreference\` mutation."""
-type DeleteUserPreferencePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`UserPreference\` that was deleted by this mutation."""
-  userPreference: UserPreference
-  deletedUserPreferenceId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`UserPreference\`. May be used by Relay 1."""
-  userPreferenceEdge(
-    """The method to use when ordering \`UserPreference\`."""
-    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): UserPreferenceEdge
-}
-
-"""All input for the \`deleteUserPreferenceById\` mutation."""
-input DeleteUserPreferenceByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`UserPreference\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteUserPreference\` mutation."""
-input DeleteUserPreferenceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Label\` mutation."""
 type DeleteLabelPayload {
   """
@@ -17559,6 +17550,54 @@ input DeleteProjectColumnByIdInput {
 
 """All input for the \`deleteProjectColumn\` mutation."""
 input DeleteProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`UserPreference\` mutation."""
+type DeleteUserPreferencePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`UserPreference\` that was deleted by this mutation."""
+  userPreference: UserPreference
+  deletedUserPreferenceId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`UserPreference\`. May be used by Relay 1."""
+  userPreferenceEdge(
+    """The method to use when ordering \`UserPreference\`."""
+    orderBy: [UserPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): UserPreferenceEdge
+}
+
+"""All input for the \`deleteUserPreferenceById\` mutation."""
+input DeleteUserPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`UserPreference\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteUserPreference\` mutation."""
+input DeleteUserPreferenceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18254,17 +18293,17 @@ ${String(oldPlan4)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan12.apply(this, args);
+                $prev = oldPlan11.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createLabel, but that function did not return a step!
-${String(oldPlan12)}`);
+${String(oldPlan11)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18323,17 +18362,17 @@ ${String(oldPlan19)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan15.apply(this, args);
+                $prev = oldPlan14.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProjectColumn, but that function did not return a step!
-${String(oldPlan15)}`);
+${String(oldPlan14)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18358,17 +18397,17 @@ ${String(oldPlan15)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan14.apply(this, args);
+                $prev = oldPlan13.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProjectLink, but that function did not return a step!
-${String(oldPlan14)}`);
+${String(oldPlan13)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18474,17 +18513,17 @@ ${String(oldPlan5)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan15.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createUserPreference, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan15)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18602,17 +18641,17 @@ ${String(oldPlan46)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan54.apply(this, args);
+                $prev = oldPlan53.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteLabel, but that function did not return a step!
-${String(oldPlan54)}`);
+${String(oldPlan53)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper54(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18707,17 +18746,17 @@ ${String(oldPlan61)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan57.apply(this, args);
+                $prev = oldPlan56.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectColumn, but that function did not return a step!
-${String(oldPlan57)}`);
+${String(oldPlan56)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18768,17 +18807,17 @@ ${String(oldPlan57)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan56.apply(this, args);
+                $prev = oldPlan55.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectLink, but that function did not return a step!
-${String(oldPlan56)}`);
+${String(oldPlan55)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -18961,17 +19000,17 @@ ${String(oldPlan47)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan53.apply(this, args);
+                $prev = oldPlan57.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteUserPreference, but that function did not return a step!
-${String(oldPlan53)}`);
+${String(oldPlan57)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper53(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19093,17 +19132,17 @@ ${String(oldPlan25)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
+                $prev = oldPlan32.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateLabel, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan32)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19198,17 +19237,17 @@ ${String(oldPlan40)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan36.apply(this, args);
+                $prev = oldPlan35.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProjectColumn, but that function did not return a step!
-${String(oldPlan36)}`);
+${String(oldPlan35)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19259,17 +19298,17 @@ ${String(oldPlan36)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan35.apply(this, args);
+                $prev = oldPlan34.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProjectLink, but that function did not return a step!
-${String(oldPlan35)}`);
+${String(oldPlan34)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -19444,17 +19483,17 @@ ${String(oldPlan26)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan32.apply(this, args);
+                $prev = oldPlan36.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateUserPreference, but that function did not return a step!
-${String(oldPlan32)}`);
+${String(oldPlan36)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21587,6 +21626,11 @@ ${String(oldPlan32)}`);
       hiddenColumnIds($pgSelectSingle) {
         const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("hidden_column_ids")}`,
           sqlAggregate = spec17.sqlAggregateWrap(sqlAttribute, LIST_TYPES.text);
+        return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
+      },
+      pinned($pgSelectSingle) {
+        const sqlAttribute = sql.fragment`${$pgSelectSingle.getClassStep().alias}.${sql.identifier("pinned")}`,
+          sqlAggregate = spec17.sqlAggregateWrap(sqlAttribute, TYPES.boolean);
         return $pgSelectSingle.select(sqlAggregate, TYPES.bigint);
       },
       projectId: UserPreferenceDistinctCountAggregates_projectIdPlan,
@@ -24476,7 +24520,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec71;
+        condition.extensions.pgFilterAttribute = colSpec72;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -24484,7 +24528,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec73;
+        condition.extensions.pgFilterAttribute = colSpec74;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -24492,7 +24536,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec75;
+        condition.extensions.pgFilterAttribute = colSpec76;
         return condition;
       },
       name(queryBuilder, value) {
@@ -24500,7 +24544,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec70;
+        condition.extensions.pgFilterAttribute = colSpec71;
         return condition;
       },
       not: ProjectFilter_notApply,
@@ -24510,7 +24554,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec76;
+        condition.extensions.pgFilterAttribute = colSpec77;
         return condition;
       },
       project($where, value) {
@@ -24544,7 +24588,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec72;
+        condition.extensions.pgFilterAttribute = colSpec73;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -24552,7 +24596,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec69;
+        condition.extensions.pgFilterAttribute = colSpec70;
         return condition;
       },
       taskLabels($where, value) {
@@ -24584,7 +24628,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec74;
+        condition.extensions.pgFilterAttribute = colSpec75;
         return condition;
       }
     }
@@ -25242,7 +25286,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec99;
+        condition.extensions.pgFilterAttribute = colSpec100;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -25250,7 +25294,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec95;
+        condition.extensions.pgFilterAttribute = colSpec96;
         return condition;
       },
       index(queryBuilder, value) {
@@ -25258,7 +25302,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec98;
+        condition.extensions.pgFilterAttribute = colSpec99;
         return condition;
       },
       not: ProjectFilter_notApply,
@@ -25268,7 +25312,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec97;
+        condition.extensions.pgFilterAttribute = colSpec98;
         return condition;
       },
       projects($where, value) {
@@ -25300,7 +25344,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec94;
+        condition.extensions.pgFilterAttribute = colSpec95;
         return condition;
       },
       title(queryBuilder, value) {
@@ -25308,7 +25352,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec96;
+        condition.extensions.pgFilterAttribute = colSpec97;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -25316,7 +25360,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec100;
+        condition.extensions.pgFilterAttribute = colSpec101;
         return condition;
       }
     }
@@ -26265,7 +26309,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec82;
+        condition.extensions.pgFilterAttribute = colSpec83;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -26273,7 +26317,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec85;
+        condition.extensions.pgFilterAttribute = colSpec86;
         return condition;
       },
       icon(queryBuilder, value) {
@@ -26281,7 +26325,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec83;
+        condition.extensions.pgFilterAttribute = colSpec84;
         return condition;
       },
       name(queryBuilder, value) {
@@ -26289,7 +26333,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec81;
+        condition.extensions.pgFilterAttribute = colSpec82;
         return condition;
       },
       not: ProjectFilter_notApply,
@@ -26299,7 +26343,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec84;
+        condition.extensions.pgFilterAttribute = colSpec85;
         return condition;
       },
       projectProjectLabels($where, value) {
@@ -26331,7 +26375,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec80;
+        condition.extensions.pgFilterAttribute = colSpec81;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -26339,7 +26383,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec86;
+        condition.extensions.pgFilterAttribute = colSpec87;
         return condition;
       }
     }
@@ -26654,7 +26698,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec92;
+        condition.extensions.pgFilterAttribute = colSpec93;
         return condition;
       },
       not: ProjectFilter_notApply,
@@ -26664,7 +26708,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec91;
+        condition.extensions.pgFilterAttribute = colSpec92;
         return condition;
       },
       project($where, value) {
@@ -26685,7 +26729,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec88;
+        condition.extensions.pgFilterAttribute = colSpec89;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -26693,7 +26737,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec87;
+        condition.extensions.pgFilterAttribute = colSpec88;
         return condition;
       },
       title(queryBuilder, value) {
@@ -26701,7 +26745,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec90;
+        condition.extensions.pgFilterAttribute = colSpec91;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -26709,7 +26753,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec93;
+        condition.extensions.pgFilterAttribute = colSpec94;
         return condition;
       },
       url(queryBuilder, value) {
@@ -26717,7 +26761,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec89;
+        condition.extensions.pgFilterAttribute = colSpec90;
         return condition;
       }
     }
@@ -27159,7 +27203,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec79;
+        condition.extensions.pgFilterAttribute = colSpec80;
         return condition;
       },
       not: ProjectFilter_notApply,
@@ -27182,7 +27226,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec77;
+        condition.extensions.pgFilterAttribute = colSpec78;
         return condition;
       },
       projectLabel($where, value) {
@@ -27203,7 +27247,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec78;
+        condition.extensions.pgFilterAttribute = colSpec79;
         return condition;
       }
     }
@@ -27527,7 +27571,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec105;
+        condition.extensions.pgFilterAttribute = colSpec106;
         return condition;
       },
       createdAt(queryBuilder, value) {
@@ -27535,7 +27579,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec102;
+        condition.extensions.pgFilterAttribute = colSpec103;
         return condition;
       },
       deletedAt(queryBuilder, value) {
@@ -27543,7 +27587,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec108;
+        condition.extensions.pgFilterAttribute = colSpec109;
         return condition;
       },
       deletionReason(queryBuilder, value) {
@@ -27551,7 +27595,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec109;
+        condition.extensions.pgFilterAttribute = colSpec110;
         return condition;
       },
       not: ProjectFilter_notApply,
@@ -27561,7 +27605,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec106;
+        condition.extensions.pgFilterAttribute = colSpec107;
         return condition;
       },
       rowId(queryBuilder, value) {
@@ -27569,7 +27613,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec101;
+        condition.extensions.pgFilterAttribute = colSpec102;
         return condition;
       },
       subscriptionId(queryBuilder, value) {
@@ -27577,7 +27621,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec107;
+        condition.extensions.pgFilterAttribute = colSpec108;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -27585,7 +27629,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec103;
+        condition.extensions.pgFilterAttribute = colSpec104;
         return condition;
       },
       viewMode(queryBuilder, value) {
@@ -27593,7 +27637,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec104;
+        condition.extensions.pgFilterAttribute = colSpec105;
         return condition;
       }
     }
@@ -29892,7 +29936,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec67;
+        condition.extensions.pgFilterAttribute = colSpec68;
         return condition;
       },
       label($where, value) {
@@ -29913,7 +29957,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec66;
+        condition.extensions.pgFilterAttribute = colSpec67;
         return condition;
       },
       not: ProjectFilter_notApply,
@@ -29936,7 +29980,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec65;
+        condition.extensions.pgFilterAttribute = colSpec66;
         return condition;
       },
       updatedAt(queryBuilder, value) {
@@ -29944,7 +29988,7 @@ export const inputObjects = {
         if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
         if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
         const condition = new PgCondition(queryBuilder);
-        condition.extensions.pgFilterAttribute = colSpec68;
+        condition.extensions.pgFilterAttribute = colSpec69;
         return condition;
       }
     }
@@ -30897,6 +30941,9 @@ export const inputObjects = {
   UserPreferenceCondition: {
     plans: {
       createdAt: ProjectCondition_createdAtApply,
+      pinned($condition, val) {
+        return applyAttributeCondition("pinned", TYPES.boolean, $condition, val);
+      },
       projectId: TaskCondition_projectIdApply,
       rowId: ProjectCondition_rowIdApply,
       updatedAt: ProjectCondition_updatedAtApply,
@@ -30921,6 +30968,15 @@ export const inputObjects = {
         $col.extensions.pgFilterAttribute = {
           codec: TYPES.bigint,
           expression: spec17.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("hidden_column_ids")}`, spec_userPreference.attributes.hidden_column_ids.codec)
+        };
+        return $col;
+      },
+      pinned($parent, input) {
+        if (input == null) return;
+        const $col = new PgCondition($parent);
+        $col.extensions.pgFilterAttribute = {
+          codec: TYPES.bigint,
+          expression: spec17.sqlAggregateWrap(sql`${$col.alias}.${sql.identifier("pinned")}`, spec_userPreference.attributes.pinned.codec)
         };
         return $col;
       },
@@ -30992,6 +31048,14 @@ export const inputObjects = {
       },
       not: ProjectFilter_notApply,
       or: ProjectFilter_orApply,
+      pinned(queryBuilder, value) {
+        if (value === void 0) return;
+        if (!true && isEmpty(value)) throw Object.assign(Error("Empty objects are forbidden in filter argument input."), {});
+        if (!true && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
+        const condition = new PgCondition(queryBuilder);
+        condition.extensions.pgFilterAttribute = colSpec65;
+        return condition;
+      },
       project($where, value) {
         assertAllowed(value, "object");
         if (value == null) return;
@@ -31226,6 +31290,7 @@ export const inputObjects = {
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       hiddenColumnIds: UserPreferenceInput_hiddenColumnIdsApply,
+      pinned: UserPreferenceInput_pinnedApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: EmojiInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
@@ -31238,6 +31303,7 @@ export const inputObjects = {
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       hiddenColumnIds: UserPreferenceInput_hiddenColumnIdsApply,
+      pinned: UserPreferenceInput_pinnedApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: EmojiInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
@@ -37960,6 +38026,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      USER_PREFERENCES_DISTINCT_COUNT_PINNED_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec17.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("pinned")}`, spec_userPreference.attributes.pinned.codec)}
+from ${resource_user_preferencePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec17.pgTypeCodecModifier?.(spec_userPreference.attributes.pinned.codec) ?? spec_userPreference.attributes.pinned.codec,
+          direction: "ASC"
+        });
+      },
+      USER_PREFERENCES_DISTINCT_COUNT_PINNED_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
+        relation4.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation4.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec17.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("pinned")}`, spec_userPreference.attributes.pinned.codec)}
+from ${resource_user_preferencePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec17.pgTypeCodecModifier?.(spec_userPreference.attributes.pinned.codec) ?? spec_userPreference.attributes.pinned.codec,
+          direction: "DESC"
+        });
+      },
       USER_PREFERENCES_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -41347,6 +41451,44 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           direction: "DESC"
         });
       },
+      USER_PREFERENCES_DISTINCT_COUNT_PINNED_ASC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec17.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("pinned")}`, spec_userPreference.attributes.pinned.codec)}
+from ${resource_user_preferencePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec17.pgTypeCodecModifier?.(spec_userPreference.attributes.pinned.codec) ?? spec_userPreference.attributes.pinned.codec,
+          direction: "ASC"
+        });
+      },
+      USER_PREFERENCES_DISTINCT_COUNT_PINNED_DESC($select) {
+        const foreignTableAlias = $select.alias,
+          conditions = [],
+          tableAlias = sql.identifier(Symbol(resource_user_preferencePgResource.name));
+        relation16.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = relation16.remoteAttributes[i];
+          conditions.push(sql.fragment`${tableAlias}.${sql.identifier(remoteAttribute)} = ${foreignTableAlias}.${sql.identifier(localAttribute)}`);
+        });
+        if (typeof resource_user_preferencePgResource.from === "function") throw Error("Function source unsupported");
+        const fragment = sql`(${sql.indent`
+select ${spec17.sqlAggregateWrap(sql.fragment`${tableAlias}.${sql.identifier("pinned")}`, spec_userPreference.attributes.pinned.codec)}
+from ${resource_user_preferencePgResource.from} ${tableAlias}
+where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
+        $select.orderBy({
+          fragment,
+          codec: spec17.pgTypeCodecModifier?.(spec_userPreference.attributes.pinned.codec) ?? spec_userPreference.attributes.pinned.codec,
+          direction: "DESC"
+        });
+      },
       USER_PREFERENCES_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
         const foreignTableAlias = $select.alias,
           conditions = [],
@@ -41550,6 +41692,12 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
           codec: LIST_TYPES.text
         });
       },
+      PINNED($pgSelect) {
+        $pgSelect.groupBy({
+          fragment: sql.fragment`${$pgSelect.alias}.${sql.identifier("pinned")}`,
+          codec: TYPES.boolean
+        });
+      },
       PROJECT_ID: UserPreferenceGroupBy_PROJECT_IDApply,
       UPDATED_AT: ProjectGroupBy_UPDATED_ATApply,
       UPDATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_UPDATED_AT_TRUNCATED_TO_DAYApply,
@@ -41562,6 +41710,18 @@ where ${sql.join(conditions.map(c => sql.parens(c)), " AND ")}`})`;
     values: {
       CREATED_AT_ASC: ProjectOrderBy_CREATED_AT_ASCApply,
       CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
+      PINNED_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "pinned",
+          direction: "ASC"
+        });
+      },
+      PINNED_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "pinned",
+          direction: "DESC"
+        });
+      },
       PRIMARY_KEY_ASC(queryBuilder) {
         user_preferenceUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({

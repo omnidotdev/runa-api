@@ -1,0 +1,1 @@
+ALTER TABLE "user_preference" ADD COLUMN "pinned" boolean DEFAULT false NOT NULL;

@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   pgTable,
   text,
@@ -28,6 +29,7 @@ export const userPreferences = pgTable(
       .notNull()
       .references(() => projects.id, { onDelete: "cascade" }),
     hiddenColumnIds: text().array().notNull().default([]),
+    pinned: boolean().notNull().default(false),
     viewMode: varchar({ length: 10 }).notNull().default("board"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),

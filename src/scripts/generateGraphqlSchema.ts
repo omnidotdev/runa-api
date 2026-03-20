@@ -158,9 +158,8 @@ const generateGraphqlSchema = async () => {
         writeTuples,
         isTransactionalSyncMode,
       },
-      "lib/db/schema": { columns, userPreferences },
       "lib/entitlements": { isWithinLimit, checkOrganizationLimit },
-      "./constants": {
+      "lib/graphql/plugins/authorization/constants": {
         FEATURE_KEYS,
         billingBypassOrgIds,
       },
@@ -176,6 +175,7 @@ const generateGraphqlSchema = async () => {
         indexTask,
         isSearchEnabled,
       },
+      "lib/db/schema": { columns, userPreferences },
     },
   });
 
@@ -198,6 +198,6 @@ const generateGraphqlSchema = async () => {
 await generateGraphqlSchema()
   .then(() => process.exit(0))
   .catch((err) => {
-    console.error(err);
+    console.error("Schema generation failed:", err.message, err.stack);
     process.exit(1);
   });
