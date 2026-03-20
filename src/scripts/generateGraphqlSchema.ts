@@ -198,6 +198,6 @@ const generateGraphqlSchema = async () => {
 await generateGraphqlSchema()
   .then(() => process.exit(0))
   .catch((err) => {
-    console.error("Schema generation failed:", err.message, err.stack);
+    console.error(err);
     process.exit(1);
   });
