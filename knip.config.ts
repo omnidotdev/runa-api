@@ -27,6 +27,8 @@ const knipConfig: KnipConfig = {
     "@opentelemetry/sdk-node",
     "@opentelemetry/semantic-conventions",
     "@dataplan/pg",
+    // CLI used in dev-only package.json scripts (db:generate, db:migrate, etc.)
+    "drizzle-kit",
   ],
   tags: ["-knipignore"],
 };

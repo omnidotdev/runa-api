@@ -32,9 +32,10 @@ export function isAuthzEnabled(): boolean {
 /**
  * Check if transactional sync mode is enabled.
  * When true, mutations should fail if AuthZ tuple sync fails.
+ * Defaults to transactional to prevent silent tuple loss
  */
 export function isTransactionalSyncMode(): boolean {
-  return AUTHZ_SYNC_MODE === "transactional";
+  return AUTHZ_SYNC_MODE !== "best-effort";
 }
 
 /**

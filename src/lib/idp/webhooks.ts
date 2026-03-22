@@ -14,6 +14,9 @@ import { invalidatePermissionCache } from "lib/authz";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { projectColumns, settings, users } from "lib/db/schema";
+import { checkOrganizationLimit } from "lib/entitlements";
+import { FEATURE_KEYS } from "lib/graphql/plugins/authorization/constants";
+import fetchMemberCounts from "lib/idp/memberCounts";
 
 interface OrganizationCreatedPayload {
   eventType: "organization.created";
@@ -142,15 +145,25 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
         case "organization.deleted":
           await handleOrganizationDeleted(body);
           break;
-        case "member.added":
-          await handleMemberAdded(body);
+        case "member.added": {
+          const result = await handleMemberAdded(body);
+          if (result?.blocked) {
+            set.status = 403;
+            return { error: result.reason };
+          }
           break;
+        }
         case "member.removed":
           await handleMemberRemoved(body);
           break;
-        case "member.role_changed":
-          await handleMemberRoleChanged(body);
+        case "member.role_changed": {
+          const result = await handleMemberRoleChanged(body);
+          if (result?.blocked) {
+            set.status = 403;
+            return { error: result.reason };
+          }
           break;
+        }
         case "user.deleted":
           await handleUserDeleted(body);
           break;
@@ -292,12 +305,41 @@ async function handleOrganizationDeleted(
   }
 }
 
+/** Result from a handler that can block the action */
+interface HandlerResult {
+  blocked: boolean;
+  reason: string;
+}
+
 /**
  * Handle member added event.
- * Invalidates permission cache for the affected user.
+ * Enforces max_members entitlement, then invalidates permission cache.
  */
-async function handleMemberAdded(payload: MemberAddedPayload): Promise<void> {
+async function handleMemberAdded(
+  payload: MemberAddedPayload,
+): Promise<HandlerResult | void> {
   const { organizationId, userId, role } = payload;
+
+  // Enforce max_members limit
+  const counts = await fetchMemberCounts(organizationId);
+
+  if (counts) {
+    const withinLimit = await checkOrganizationLimit(
+      organizationId,
+      FEATURE_KEYS.MAX_MEMBERS,
+      counts.totalMembers,
+    );
+
+    if (!withinLimit) {
+      console.warn(
+        `Member add blocked for org ${organizationId}: max_members exceeded (${counts.totalMembers} members)`,
+      );
+      return {
+        blocked: true,
+        reason: "Organization has reached its member limit",
+      };
+    }
+  }
 
   invalidatePermissionCache(`${userId}:organization:${organizationId}:`);
 
@@ -330,12 +372,40 @@ async function handleMemberRemoved(
 
 /**
  * Handle member role changed event.
- * Invalidates permission cache for the affected user.
+ * Enforces max_admins entitlement when promoting to admin/owner, then invalidates permission cache.
  */
 async function handleMemberRoleChanged(
   payload: MemberRoleChangedPayload,
-): Promise<void> {
+): Promise<HandlerResult | void> {
   const { organizationId, userId, oldRole, newRole } = payload;
+
+  // Enforce max_admins when promoting to admin or owner
+  const isPromotion =
+    (newRole === "admin" || newRole === "owner") &&
+    oldRole !== "admin" &&
+    oldRole !== "owner";
+
+  if (isPromotion) {
+    const counts = await fetchMemberCounts(organizationId);
+
+    if (counts) {
+      const withinLimit = await checkOrganizationLimit(
+        organizationId,
+        FEATURE_KEYS.MAX_ADMINS,
+        counts.totalAdmins,
+      );
+
+      if (!withinLimit) {
+        console.warn(
+          `Role change blocked for org ${organizationId}: max_admins exceeded (${counts.totalAdmins} admins)`,
+        );
+        return {
+          blocked: true,
+          reason: "Organization has reached its admin limit",
+        };
+      }
+    }
+  }
 
   invalidatePermissionCache(`${userId}:`);
 
