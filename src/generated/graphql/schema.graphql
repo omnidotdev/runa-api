@@ -2561,8 +2561,8 @@ input UserPreferenceFilter {
   """Filter by the object’s `viewMode` field."""
   viewMode: StringFilter
 
-  """Filter by the object’s `pinned` field."""
-  pinned: BooleanFilter
+  """Filter by the object’s `pinOrder` field."""
+  pinOrder: IntFilter
 
   """Filter by the object’s `project` relation."""
   project: ProjectFilter
@@ -2652,8 +2652,40 @@ input UserPreferenceAggregatesFilter {
   """
   filter: UserPreferenceFilter
 
+  """Sum aggregate over matching `UserPreference` objects."""
+  sum: UserPreferenceSumAggregateFilter
+
   """Distinct count aggregate over matching `UserPreference` objects."""
   distinctCount: UserPreferenceDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `UserPreference` objects."""
+  min: UserPreferenceMinAggregateFilter
+
+  """Maximum aggregate over matching `UserPreference` objects."""
+  max: UserPreferenceMaxAggregateFilter
+
+  """Mean average aggregate over matching `UserPreference` objects."""
+  average: UserPreferenceAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching `UserPreference` objects.
+  """
+  stddevSample: UserPreferenceStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching `UserPreference` objects.
+  """
+  stddevPopulation: UserPreferenceStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `UserPreference` objects."""
+  varianceSample: UserPreferenceVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching `UserPreference` objects."""
+  variancePopulation: UserPreferenceVariancePopulationAggregateFilter
+}
+
+input UserPreferenceSumAggregateFilter {
+  pinOrder: BigIntFilter
 }
 
 input UserPreferenceDistinctCountAggregateFilter {
@@ -2664,7 +2696,35 @@ input UserPreferenceDistinctCountAggregateFilter {
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
   viewMode: BigIntFilter
-  pinned: BigIntFilter
+  pinOrder: BigIntFilter
+}
+
+input UserPreferenceMinAggregateFilter {
+  pinOrder: IntFilter
+}
+
+input UserPreferenceMaxAggregateFilter {
+  pinOrder: IntFilter
+}
+
+input UserPreferenceAverageAggregateFilter {
+  pinOrder: BigFloatFilter
+}
+
+input UserPreferenceStddevSampleAggregateFilter {
+  pinOrder: BigFloatFilter
+}
+
+input UserPreferenceStddevPopulationAggregateFilter {
+  pinOrder: BigFloatFilter
+}
+
+input UserPreferenceVarianceSampleAggregateFilter {
+  pinOrder: BigFloatFilter
+}
+
+input UserPreferenceVariancePopulationAggregateFilter {
+  pinOrder: BigFloatFilter
 }
 
 """
@@ -3608,6 +3668,8 @@ enum ProjectOrderBy {
   LABELS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
   USER_PREFERENCES_COUNT_ASC
   USER_PREFERENCES_COUNT_DESC
+  USER_PREFERENCES_SUM_PIN_ORDER_ASC
+  USER_PREFERENCES_SUM_PIN_ORDER_DESC
   USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_ASC
   USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_DESC
   USER_PREFERENCES_DISTINCT_COUNT_USER_ID_ASC
@@ -3622,8 +3684,22 @@ enum ProjectOrderBy {
   USER_PREFERENCES_DISTINCT_COUNT_UPDATED_AT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_ASC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC
-  USER_PREFERENCES_DISTINCT_COUNT_PINNED_ASC
-  USER_PREFERENCES_DISTINCT_COUNT_PINNED_DESC
+  USER_PREFERENCES_DISTINCT_COUNT_PIN_ORDER_ASC
+  USER_PREFERENCES_DISTINCT_COUNT_PIN_ORDER_DESC
+  USER_PREFERENCES_MIN_PIN_ORDER_ASC
+  USER_PREFERENCES_MIN_PIN_ORDER_DESC
+  USER_PREFERENCES_MAX_PIN_ORDER_ASC
+  USER_PREFERENCES_MAX_PIN_ORDER_DESC
+  USER_PREFERENCES_AVERAGE_PIN_ORDER_ASC
+  USER_PREFERENCES_AVERAGE_PIN_ORDER_DESC
+  USER_PREFERENCES_STDDEV_SAMPLE_PIN_ORDER_ASC
+  USER_PREFERENCES_STDDEV_SAMPLE_PIN_ORDER_DESC
+  USER_PREFERENCES_STDDEV_POPULATION_PIN_ORDER_ASC
+  USER_PREFERENCES_STDDEV_POPULATION_PIN_ORDER_DESC
+  USER_PREFERENCES_VARIANCE_SAMPLE_PIN_ORDER_ASC
+  USER_PREFERENCES_VARIANCE_SAMPLE_PIN_ORDER_DESC
+  USER_PREFERENCES_VARIANCE_POPULATION_PIN_ORDER_ASC
+  USER_PREFERENCES_VARIANCE_POPULATION_PIN_ORDER_DESC
   PROJECT_PROJECT_LABELS_COUNT_ASC
   PROJECT_PROJECT_LABELS_COUNT_DESC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC
@@ -4928,7 +5004,7 @@ type UserPreference implements Node {
   createdAt: Datetime!
   updatedAt: Datetime!
   viewMode: String!
-  pinned: Boolean!
+  pinOrder: Int
 
   """Reads a single `Project` that is related to this `UserPreference`."""
   project: Project
@@ -4950,9 +5026,54 @@ type UserPreferenceAggregates {
   keys: [String]
 
   """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: UserPreferenceSumAggregates
+
+  """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   distinctCount: UserPreferenceDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: UserPreferenceMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: UserPreferenceMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: UserPreferenceAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: UserPreferenceStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: UserPreferenceStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: UserPreferenceVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: UserPreferenceVariancePopulationAggregates
+}
+
+type UserPreferenceSumAggregates {
+  """Sum of pinOrder across the matching connection"""
+  pinOrder: BigInt!
 }
 
 type UserPreferenceDistinctCountAggregates {
@@ -4977,8 +5098,45 @@ type UserPreferenceDistinctCountAggregates {
   """Distinct count of viewMode across the matching connection"""
   viewMode: BigInt
 
-  """Distinct count of pinned across the matching connection"""
-  pinned: BigInt
+  """Distinct count of pinOrder across the matching connection"""
+  pinOrder: BigInt
+}
+
+type UserPreferenceMinAggregates {
+  """Minimum of pinOrder across the matching connection"""
+  pinOrder: Int
+}
+
+type UserPreferenceMaxAggregates {
+  """Maximum of pinOrder across the matching connection"""
+  pinOrder: Int
+}
+
+type UserPreferenceAverageAggregates {
+  """Mean average of pinOrder across the matching connection"""
+  pinOrder: BigFloat
+}
+
+type UserPreferenceStddevSampleAggregates {
+  """Sample standard deviation of pinOrder across the matching connection"""
+  pinOrder: BigFloat
+}
+
+type UserPreferenceStddevPopulationAggregates {
+  """
+  Population standard deviation of pinOrder across the matching connection
+  """
+  pinOrder: BigFloat
+}
+
+type UserPreferenceVarianceSampleAggregates {
+  """Sample variance of pinOrder across the matching connection"""
+  pinOrder: BigFloat
+}
+
+type UserPreferenceVariancePopulationAggregates {
+  """Population variance of pinOrder across the matching connection"""
+  pinOrder: BigFloat
 }
 
 """Grouping methods for `UserPreference` for usage during aggregation."""
@@ -4993,7 +5151,7 @@ enum UserPreferenceGroupBy {
   UPDATED_AT_TRUNCATED_TO_HOUR
   UPDATED_AT_TRUNCATED_TO_DAY
   VIEW_MODE
-  PINNED
+  PIN_ORDER
 }
 
 """Conditions for `UserPreference` aggregates."""
@@ -5014,46 +5172,55 @@ input UserPreferenceHavingInput {
 input UserPreferenceHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 input UserPreferenceHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 input UserPreferenceHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 input UserPreferenceHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 input UserPreferenceHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 input UserPreferenceHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 input UserPreferenceHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 input UserPreferenceHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 input UserPreferenceHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+  pinOrder: HavingIntFilter
 }
 
 """
@@ -5079,8 +5246,8 @@ input UserPreferenceCondition {
   """Checks for equality with the object’s `viewMode` field."""
   viewMode: String
 
-  """Checks for equality with the object’s `pinned` field."""
-  pinned: Boolean
+  """Checks for equality with the object’s `pinOrder` field."""
+  pinOrder: Int
 }
 
 """Methods to use when ordering `UserPreference`."""
@@ -5100,8 +5267,8 @@ enum UserPreferenceOrderBy {
   UPDATED_AT_DESC
   VIEW_MODE_ASC
   VIEW_MODE_DESC
-  PINNED_ASC
-  PINNED_DESC
+  PIN_ORDER_ASC
+  PIN_ORDER_DESC
 }
 
 """A connection to a list of `TaskLabel` values."""
@@ -6939,6 +7106,8 @@ enum UserOrderBy {
   AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_DESC
   USER_PREFERENCES_COUNT_ASC
   USER_PREFERENCES_COUNT_DESC
+  USER_PREFERENCES_SUM_PIN_ORDER_ASC
+  USER_PREFERENCES_SUM_PIN_ORDER_DESC
   USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_ASC
   USER_PREFERENCES_DISTINCT_COUNT_ROW_ID_DESC
   USER_PREFERENCES_DISTINCT_COUNT_USER_ID_ASC
@@ -6953,8 +7122,22 @@ enum UserOrderBy {
   USER_PREFERENCES_DISTINCT_COUNT_UPDATED_AT_DESC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_ASC
   USER_PREFERENCES_DISTINCT_COUNT_VIEW_MODE_DESC
-  USER_PREFERENCES_DISTINCT_COUNT_PINNED_ASC
-  USER_PREFERENCES_DISTINCT_COUNT_PINNED_DESC
+  USER_PREFERENCES_DISTINCT_COUNT_PIN_ORDER_ASC
+  USER_PREFERENCES_DISTINCT_COUNT_PIN_ORDER_DESC
+  USER_PREFERENCES_MIN_PIN_ORDER_ASC
+  USER_PREFERENCES_MIN_PIN_ORDER_DESC
+  USER_PREFERENCES_MAX_PIN_ORDER_ASC
+  USER_PREFERENCES_MAX_PIN_ORDER_DESC
+  USER_PREFERENCES_AVERAGE_PIN_ORDER_ASC
+  USER_PREFERENCES_AVERAGE_PIN_ORDER_DESC
+  USER_PREFERENCES_STDDEV_SAMPLE_PIN_ORDER_ASC
+  USER_PREFERENCES_STDDEV_SAMPLE_PIN_ORDER_DESC
+  USER_PREFERENCES_STDDEV_POPULATION_PIN_ORDER_ASC
+  USER_PREFERENCES_STDDEV_POPULATION_PIN_ORDER_DESC
+  USER_PREFERENCES_VARIANCE_SAMPLE_PIN_ORDER_ASC
+  USER_PREFERENCES_VARIANCE_SAMPLE_PIN_ORDER_DESC
+  USER_PREFERENCES_VARIANCE_POPULATION_PIN_ORDER_ASC
+  USER_PREFERENCES_VARIANCE_POPULATION_PIN_ORDER_DESC
   EMOJIS_COUNT_ASC
   EMOJIS_COUNT_DESC
   EMOJIS_DISTINCT_COUNT_ROW_ID_ASC
@@ -8940,7 +9123,7 @@ input UserPreferenceInput {
   createdAt: Datetime
   updatedAt: Datetime
   viewMode: String
-  pinned: Boolean
+  pinOrder: Int
 }
 
 """The output of our create `Setting` mutation."""
@@ -9907,7 +10090,7 @@ input UserPreferencePatch {
   createdAt: Datetime
   updatedAt: Datetime
   viewMode: String
-  pinned: Boolean
+  pinOrder: Int
 }
 
 """All input for the `updateUserPreference` mutation."""

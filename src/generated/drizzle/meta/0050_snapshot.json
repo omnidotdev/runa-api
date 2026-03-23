@@ -1,5 +1,5 @@
 {
-  "id": "0c75957f-f031-45cc-9879-d40367b0ecad",
+  "id": "9e8aca21-45f1-46bd-bc99-a17da3220381",
   "prevId": "06b5a891-ac46-4cde-acf6-f436fc389b39",
   "version": "7",
   "dialect": "postgresql",
@@ -1905,12 +1905,11 @@
           "notNull": true,
           "default": "'{}'"
         },
-        "pinned": {
-          "name": "pinned",
-          "type": "boolean",
+        "pin_order": {
+          "name": "pin_order",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "default": false
+          "notNull": false
         },
         "view_mode": {
           "name": "view_mode",
