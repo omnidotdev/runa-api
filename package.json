@@ -13,6 +13,7 @@
     "format": "biome format --write",
     "check": "biome check",
     "knip": "knip-bun",
+    "test": "bun test",
     "db:setup": "bun src/scripts/db/setupDatabase.ts",
     "db:check": "bun --env-file .env.local drizzle-kit check --config src/lib/config/drizzle.config.ts",
     "db:generate": "bun --env-file .env.local drizzle-kit generate --config src/lib/config/drizzle.config.ts",
