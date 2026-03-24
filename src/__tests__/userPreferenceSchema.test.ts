@@ -37,17 +37,19 @@ describe("userPreferences schema", () => {
 
   describe("type inference", () => {
     it("allows pinOrder to be null on select", () => {
-      const row = {} as SelectUserPreference;
-      // pinOrder should be number | null
-      const pinOrder: number | null = row.pinOrder;
-      expect(pinOrder).toBeDefined;
+      // Type-level assertion: pinOrder is number | null
+      type Check = SelectUserPreference extends { pinOrder: number | null }
+        ? true
+        : false;
+      expect(true satisfies Check).toBe(true);
     });
 
     it("allows pinOrder to be omitted on insert", () => {
-      const row = {} as InsertUserPreference;
-      // pinOrder should be optional (number | null | undefined)
-      const pinOrder: number | null | undefined = row.pinOrder;
-      expect(pinOrder).toBeDefined;
+      // Type-level assertion: pinOrder is optional
+      type Check = InsertUserPreference extends { pinOrder?: number | null }
+        ? true
+        : false;
+      expect(true satisfies Check).toBe(true);
     });
   });
 
