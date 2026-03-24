@@ -35,6 +35,12 @@ jobs:
             ghcr.io/omnidotdev/runa-api:latest
             ghcr.io/omnidotdev/runa-api:${{ github.sha }}
 
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
       - name: Type check
         run: bunx tsc --noEmit
 
