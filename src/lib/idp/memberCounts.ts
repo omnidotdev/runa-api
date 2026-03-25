@@ -32,9 +32,7 @@ interface MemberCounts {
  * @param orgId - Organization ID to query
  * @returns Member counts, or null if the IDP is unreachable (fail open)
  */
-async function fetchMemberCounts(
-  orgId: string,
-): Promise<MemberCounts | null> {
+async function fetchMemberCounts(orgId: string): Promise<MemberCounts | null> {
   if (!AUTH_BASE_URL) {
     console.warn("[IDP] AUTH_BASE_URL not configured, failing open");
     return null;

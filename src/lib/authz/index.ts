@@ -54,7 +54,8 @@ export async function checkPermission(
 ): Promise<boolean> {
   if (!isAuthzEnabled()) return true;
 
-  return authz.checkPermission(
+  // Safe: isAuthzEnabled() guarantees authz is defined (AUTHZ_API_URL is set)
+  return authz!.checkPermission(
     userId,
     resourceType,
     resourceId,
@@ -75,11 +76,11 @@ export async function checkPermissionsBatch(
     return checks.map((check) => ({ ...check, allowed: true }));
   }
 
-  if (!authz.checkPermissionsBatch) {
-    // Fallback to individual checks
+  // Safe: isAuthzEnabled() guarantees authz is defined (AUTHZ_API_URL is set)
+  if (!authz!.checkPermissionsBatch) {
     const results: PermissionCheckResult[] = [];
     for (const check of checks) {
-      const allowed = await authz.checkPermission(
+      const allowed = await authz!.checkPermission(
         check.userId,
         check.resourceType,
         check.resourceId,
@@ -91,7 +92,7 @@ export async function checkPermissionsBatch(
     return results;
   }
 
-  return authz.checkPermissionsBatch(checks, requestCache);
+  return authz!.checkPermissionsBatch(checks, requestCache);
 }
 
 /**
@@ -102,9 +103,9 @@ export async function writeTuples(
   accessToken?: string,
 ): Promise<TupleSyncResult> {
   if (!isAuthzEnabled()) return { success: true };
-  if (!authz.writeTuples) return { success: true };
+  if (!authz!.writeTuples) return { success: true };
 
-  return authz.writeTuples(tuples, accessToken);
+  return authz!.writeTuples(tuples, accessToken);
 }
 
 /**
@@ -115,9 +116,9 @@ export async function deleteTuples(
   accessToken?: string,
 ): Promise<TupleSyncResult> {
   if (!isAuthzEnabled()) return { success: true };
-  if (!authz.deleteTuples) return { success: true };
+  if (!authz!.deleteTuples) return { success: true };
 
-  return authz.deleteTuples(tuples, accessToken);
+  return authz!.deleteTuples(tuples, accessToken);
 }
 
 /**
@@ -137,7 +138,7 @@ export function buildPermissionCacheKey(
  * Invalidate cached permissions matching a pattern.
  */
 export function invalidatePermissionCache(pattern: string): void {
-  authz.invalidateCache?.(pattern);
+  authz?.invalidateCache?.(pattern);
 }
 
 /**
@@ -145,5 +146,5 @@ export function invalidatePermissionCache(pattern: string): void {
  * @knipignore Used by scripts
  */
 export function clearPermissionCache(): void {
-  authz.clearCache?.();
+  authz?.clearCache?.();
 }

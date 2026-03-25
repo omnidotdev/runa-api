@@ -16,6 +16,8 @@ const knipConfig: KnipConfig = {
     "src/instrumentation.ts",
     // Drizzle schema exports (relations, Select/Insert types) for ORM use
     "src/lib/db/schema/**",
+    // Test setup preloaded via bunfig.toml
+    "src/__tests__/setup.ts",
   ],
   ignoreDependencies: [
     // OpenTelemetry deps used by instrumentation.ts (loaded via --import)

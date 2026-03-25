@@ -24,23 +24,24 @@ import {
   WARDEN_SERVICE_KEY,
 } from "lib/config/env.config";
 
-export const authz = createAuthzProvider({
-  apiUrl: AUTHZ_API_URL,
-  serviceKey: WARDEN_SERVICE_KEY,
-  vortexUrl: VORTEX_API_URL,
-  vortexWebhookSecret: VORTEX_AUTHZ_WEBHOOK_SECRET,
-  source: "runa",
-});
+export const authz = AUTHZ_API_URL
+  ? createAuthzProvider({
+      apiUrl: AUTHZ_API_URL,
+      serviceKey: WARDEN_SERVICE_KEY,
+      vortexUrl: VORTEX_API_URL,
+      vortexWebhookSecret: VORTEX_AUTHZ_WEBHOOK_SECRET,
+      source: "runa",
+    })
+  : undefined;
 
-export const billing = createBillingProvider(
-  BILLING_BASE_URL
-    ? {
-        baseUrl: BILLING_BASE_URL,
-        serviceApiKey: BILLING_SERVICE_API_KEY,
-        appId: "runa",
-      }
-    : {},
-);
+export const billing = BILLING_BASE_URL
+  ? createBillingProvider({
+      provider: "aether",
+      baseUrl: BILLING_BASE_URL,
+      serviceApiKey: BILLING_SERVICE_API_KEY,
+      appId: "runa",
+    })
+  : undefined;
 
 export const events = createEventsProvider(
   VORTEX_API_URL && VORTEX_API_KEY

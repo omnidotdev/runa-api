@@ -53,6 +53,7 @@ export class EntitlementsUnavailableError extends Error {
 async function getOrganizationEntitlements(
   organizationId: string,
 ): Promise<EntitlementsResponse | null> {
+  if (!billing) return null;
   return billing.getEntitlements("organization", organizationId, APP_ID);
 }
 
@@ -123,8 +124,8 @@ export function invalidateCache(pattern: string): void {
   // Patterns: "organization:orgId:*" or "organization:orgId"
   const parts = pattern.replace(/:\*$/, "").split(":");
   if (parts.length >= 2) {
-    billing.invalidateCache?.(parts[0], parts[1]);
+    billing?.invalidateCache?.(parts[0], parts[1]);
   } else {
-    billing.clearCache?.();
+    billing?.clearCache?.();
   }
 }
