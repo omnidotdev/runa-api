@@ -4,9 +4,9 @@ import { buildPermissionCacheKey } from "lib/authz";
 
 describe("buildPermissionCacheKey", () => {
   it("joins parts with colons", () => {
-    expect(
-      buildPermissionCacheKey("user-1", "project", "proj-1", "edit"),
-    ).toBe("user-1:project:proj-1:edit");
+    expect(buildPermissionCacheKey("user-1", "project", "proj-1", "edit")).toBe(
+      "user-1:project:proj-1:edit",
+    );
   });
 
   it("handles UUIDs", () => {
