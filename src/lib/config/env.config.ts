@@ -33,8 +33,6 @@ export const {
   // Feature flags
   FLAGS_API_HOST,
   FLAGS_CLIENT_KEY,
-  // Self-hosted mode
-  SELF_HOSTED,
   // Build metadata
   BUILD_VERSION,
   // Meilisearch (unified search)
@@ -45,9 +43,24 @@ export const {
 
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
-export const isSelfHosted = SELF_HOSTED === "true";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
 
 /** Whether search indexing is enabled */
 export const isSearchEnabled =
   SEARCH_ENABLED === "true" && !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
+
+// Startup warnings for optional integrations
+if (!BILLING_BASE_URL)
+  console.warn("BILLING_BASE_URL not set — billing disabled");
+if (!AUTHZ_API_URL)
+  console.warn("AUTHZ_API_URL not set — authorization disabled");
+if (!VORTEX_API_URL)
+  console.warn("VORTEX_API_URL not set — event streaming disabled");
+if (!VORTEX_API_KEY)
+  console.warn("VORTEX_API_KEY not set — event streaming auth disabled");
+if (!WARDEN_SERVICE_KEY)
+  console.warn("WARDEN_SERVICE_KEY not set — Warden service auth disabled");
+if (!FLAGS_API_HOST)
+  console.warn("FLAGS_API_HOST not set — feature flags disabled");
+if (!MEILISEARCH_URL)
+  console.warn("MEILISEARCH_URL not set — search disabled");
