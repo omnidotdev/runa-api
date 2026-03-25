@@ -51,16 +51,15 @@ export const isSearchEnabled =
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
-  console.warn("BILLING_BASE_URL not set — billing disabled");
+  console.warn("BILLING_BASE_URL not set - billing disabled");
 if (!AUTHZ_API_URL)
-  console.warn("AUTHZ_API_URL not set — authorization disabled");
+  console.warn("AUTHZ_API_URL not set - authorization disabled");
 if (!VORTEX_API_URL)
-  console.warn("VORTEX_API_URL not set — event streaming disabled");
+  console.warn("VORTEX_API_URL not set - event streaming disabled");
 if (!VORTEX_API_KEY)
-  console.warn("VORTEX_API_KEY not set — event streaming auth disabled");
+  console.warn("VORTEX_API_KEY not set - event streaming auth disabled");
 if (!WARDEN_SERVICE_KEY)
-  console.warn("WARDEN_SERVICE_KEY not set — Warden service auth disabled");
+  console.warn("WARDEN_SERVICE_KEY not set - Warden service auth disabled");
 if (!FLAGS_API_HOST)
-  console.warn("FLAGS_API_HOST not set — feature flags disabled");
-if (!MEILISEARCH_URL)
-  console.warn("MEILISEARCH_URL not set — search disabled");
+  console.warn("FLAGS_API_HOST not set - feature flags disabled");
+if (!MEILISEARCH_URL) console.warn("MEILISEARCH_URL not set - search disabled");
