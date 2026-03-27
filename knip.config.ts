@@ -6,6 +6,8 @@ import type { KnipConfig } from "knip";
  */
 const knipConfig: KnipConfig = {
   ignore: [
+    // ODK config (consumed by external tooling)
+    "odk.config.ts",
     "**/generated/**",
     "src/lib/config/drizzle.config.ts",
     "src/scripts/**",
