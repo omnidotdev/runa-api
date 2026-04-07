@@ -16,7 +16,7 @@ import { deleteTuples, writeTuples } from "lib/authz";
 import {
   AUTHZ_API_URL,
   AUTHZ_ENABLED,
-  WARDEN_SERVICE_KEY,
+  AUTHZ_SERVICE_KEY,
 } from "lib/config/env.config";
 import * as schema from "lib/db/schema";
 
@@ -38,8 +38,8 @@ interface TupleKey {
  * Fetch all Runa-managed tuples from PDP with pagination.
  */
 async function fetchAllTuplesFromPDP(): Promise<TupleKey[]> {
-  if (!AUTHZ_API_URL || !WARDEN_SERVICE_KEY) {
-    throw new Error("AUTHZ_API_URL and WARDEN_SERVICE_KEY required");
+  if (!AUTHZ_API_URL || !AUTHZ_SERVICE_KEY) {
+    throw new Error("AUTHZ_API_URL and AUTHZ_SERVICE_KEY required");
   }
 
   const allTuples: TupleKey[] = [];
@@ -54,7 +54,7 @@ async function fetchAllTuplesFromPDP(): Promise<TupleKey[]> {
     const response = await fetch(
       `${AUTHZ_API_URL}/tuples?${params.toString()}`,
       {
-        headers: { "X-Service-Key": WARDEN_SERVICE_KEY },
+        headers: { "X-Service-Key": AUTHZ_SERVICE_KEY },
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       },
     );
