@@ -1,11 +1,7 @@
 import { Elysia, t } from "elysia";
 
 import { deleteTuples, writeTuples } from "lib/authz";
-import {
-  AUTHZ_API_URL,
-  AUTHZ_ENABLED,
-  AUTHZ_SERVICE_KEY,
-} from "lib/config/env.config";
+import { AUTHZ_API_URL, AUTHZ_SERVICE_KEY } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { projects } from "lib/db/schema";
 
@@ -157,7 +153,7 @@ const authzRoutes = new Elysia({ prefix: "/authz" })
         return { error: "Invalid or missing service key" };
       }
 
-      if (AUTHZ_ENABLED !== "true" || !AUTHZ_API_URL) {
+      if (!AUTHZ_API_URL) {
         set.status = 400;
         return { error: "AuthZ is disabled or not configured" };
       }
@@ -195,7 +191,7 @@ const authzRoutes = new Elysia({ prefix: "/authz" })
         return { error: "Invalid or missing service key" };
       }
 
-      if (AUTHZ_ENABLED !== "true" || !AUTHZ_API_URL) {
+      if (!AUTHZ_API_URL) {
         set.status = 400;
         return { error: "AuthZ is disabled or not configured" };
       }

@@ -5,11 +5,7 @@
  * Maintains the same API surface for PostGraphile EXPORTABLE compatibility.
  */
 
-import {
-  AUTHZ_API_URL,
-  AUTHZ_ENABLED,
-  AUTHZ_SYNC_MODE,
-} from "lib/config/env.config";
+import { AUTHZ_API_URL, AUTHZ_SYNC_MODE } from "lib/config/env.config";
 import { authz } from "lib/providers";
 
 import type {
@@ -26,7 +22,7 @@ export type { TupleSyncResult };
  * Exported as a function (not a value) so graphile-export handles it correctly.
  */
 export function isAuthzEnabled(): boolean {
-  return AUTHZ_ENABLED === "true" && !!AUTHZ_API_URL;
+  return !!AUTHZ_API_URL;
 }
 
 /**

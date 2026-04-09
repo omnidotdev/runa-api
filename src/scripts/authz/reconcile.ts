@@ -13,11 +13,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 
 import { deleteTuples, writeTuples } from "lib/authz";
-import {
-  AUTHZ_API_URL,
-  AUTHZ_ENABLED,
-  AUTHZ_SERVICE_KEY,
-} from "lib/config/env.config";
+import { AUTHZ_API_URL, AUTHZ_SERVICE_KEY } from "lib/config/env.config";
 import * as schema from "lib/db/schema";
 
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -90,8 +86,8 @@ async function reconcile() {
     process.exit(1);
   }
 
-  if (AUTHZ_ENABLED !== "true" || !AUTHZ_API_URL) {
-    console.error("AuthZ is disabled or AUTHZ_API_URL not set");
+  if (!AUTHZ_API_URL) {
+    console.error("AUTHZ_API_URL not set");
     process.exit(1);
   }
 
