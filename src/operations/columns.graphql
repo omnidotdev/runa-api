@@ -1,0 +1,11 @@
+query columns($condition: ColumnCondition) {
+  columns(condition: $condition, orderBy: [INDEX_ASC]) {
+    nodes {
+      rowId
+      title
+      index
+      icon
+      projectId
+    }
+  }
+}

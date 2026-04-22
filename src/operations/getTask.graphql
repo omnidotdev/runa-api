@@ -1,0 +1,53 @@
+query getTask($rowId: UUID!) {
+  task(rowId: $rowId) {
+    rowId
+    number
+    content
+    description
+    priority
+    dueDate
+    createdAt
+    updatedAt
+    columnId
+    projectId
+    column {
+      title
+    }
+    project {
+      name
+      slug
+    }
+    author {
+      name
+      email
+    }
+    assignees {
+      nodes {
+        user {
+          name
+          email
+        }
+      }
+    }
+    posts(orderBy: [CREATED_AT_ASC]) {
+      nodes {
+        rowId
+        title
+        description
+        createdAt
+        author {
+          name
+          email
+        }
+      }
+    }
+    taskLabels {
+      nodes {
+        label {
+          name
+          color
+        }
+      }
+    }
+  }
+}
