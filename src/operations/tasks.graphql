@@ -1,0 +1,41 @@
+query tasks($condition: TaskCondition, $filter: TaskFilter, $first: Int) {
+  tasks(condition: $condition, filter: $filter, first: $first) {
+    nodes {
+      rowId
+      number
+      content
+      description
+      priority
+      dueDate
+      columnId
+      projectId
+      column {
+        title
+      }
+      project {
+        name
+        slug
+      }
+      author {
+        name
+        email
+      }
+      assignees {
+        nodes {
+          user {
+            name
+            email
+          }
+        }
+      }
+      taskLabels {
+        nodes {
+          label {
+            name
+            color
+          }
+        }
+      }
+    }
+  }
+}

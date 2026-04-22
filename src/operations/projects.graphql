@@ -1,0 +1,19 @@
+query projects {
+  projects {
+    nodes {
+      rowId
+      name
+      slug
+      description
+      color
+      columns {
+        nodes {
+          rowId
+          title
+          index
+          icon
+        }
+      }
+    }
+  }
+}

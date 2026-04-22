@@ -1,0 +1,17 @@
+mutation updateTask($input: UpdateTaskInput!) {
+  updateTask(input: $input) {
+    task {
+      rowId
+      number
+      content
+      description
+      priority
+      columnId
+      projectId
+      updatedAt
+      column {
+        title
+      }
+    }
+  }
+}
