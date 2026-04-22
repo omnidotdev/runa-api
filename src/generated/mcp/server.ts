@@ -116,6 +116,90 @@ const updateTaskDocument = `
   }
 `;
 
+const getTaskDocument = `
+  query getTask($rowId: UUID!) {
+    task(rowId: $rowId) {
+      rowId
+      number
+      content
+      description
+      priority
+      dueDate
+      createdAt
+      updatedAt
+      columnId
+      projectId
+      column {
+        title
+      }
+      project {
+        name
+        slug
+      }
+      author {
+        name
+        email
+      }
+      assignees {
+        nodes {
+          user {
+            name
+            email
+          }
+        }
+      }
+      posts(orderBy: $orderBy) {
+        nodes {
+          rowId
+          title
+          description
+          createdAt
+          author {
+            name
+            email
+          }
+        }
+      }
+      taskLabels {
+        nodes {
+          label {
+            name
+            color
+          }
+        }
+      }
+    }
+  }
+`;
+
+const columnsDocument = `
+  query columns($condition: ColumnCondition) {
+    columns(condition: $condition, orderBy: $orderBy) {
+      nodes {
+        rowId
+        title
+        index
+        icon
+        projectId
+      }
+    }
+  }
+`;
+
+const createPostDocument = `
+  mutation createPost($input: CreatePostInput!) {
+    createPost(input: $input) {
+      post {
+        rowId
+        title
+        description
+        taskId
+        createdAt
+      }
+    }
+  }
+`;
+
 const graphql = new GraphQLClient(
   process.env.GRAPHQL_ENDPOINT ?? "http://localhost:4000/graphql"
 );
@@ -179,6 +263,42 @@ function registerTools(server: McpServer) {
       if (params.description !== undefined) set(variables, "input.patch.description", params.description);
       if (params.dueDate !== undefined) set(variables, "input.patch.dueDate", params.dueDate);
       const data = await graphql.request(updateTaskDocument, variables);
+      return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    "get_task",
+    "Get full task detail including comments, labels, and assignees.",
+    { rowId: z.object({  })},
+    async ({ rowId }) => {
+      const data = await graphql.request(getTaskDocument, { rowId });
+      return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    "list_columns",
+    "List kanban columns for a project, ordered by index.",
+    { projectId: z.string().uuid().describe("Project UUID to list columns for")},
+    async (params) => {
+      const variables: Record<string, unknown> = {};
+      if (params.projectId !== undefined) set(variables, "condition.projectId", params.projectId);
+      const data = await graphql.request(columnsDocument, variables);
+      return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    "add_comment",
+    "Add a comment to a task.",
+    { taskId: z.string().uuid().describe("Task UUID to comment on"), description: z.string().describe("Comment body (supports markdown)"), title: z.string().optional().describe("Optional comment title")},
+    async (params) => {
+      const variables: Record<string, unknown> = {};
+      if (params.taskId !== undefined) set(variables, "input.post.taskId", params.taskId);
+      if (params.description !== undefined) set(variables, "input.post.description", params.description);
+      if (params.title !== undefined) set(variables, "input.post.title", params.title);
+      const data = await graphql.request(createPostDocument, variables);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );

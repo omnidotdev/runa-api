@@ -172,6 +172,55 @@ export default {
             },
           ],
         },
+        {
+          operation: "getTask",
+          name: "get_task",
+          description:
+            "Get full task detail including comments, labels, and assignees.",
+        },
+        {
+          operation: "columns",
+          name: "list_columns",
+          description: "List kanban columns for a project, ordered by index.",
+          parameters: [
+            {
+              name: "projectId",
+              type: "string",
+              format: "uuid",
+              required: true,
+              description: "Project UUID to list columns for",
+              mapTo: "condition.projectId",
+            },
+          ],
+        },
+        {
+          operation: "createPost",
+          name: "add_comment",
+          description: "Add a comment to a task.",
+          parameters: [
+            {
+              name: "taskId",
+              type: "string",
+              format: "uuid",
+              required: true,
+              description: "Task UUID to comment on",
+              mapTo: "input.post.taskId",
+            },
+            {
+              name: "description",
+              type: "string",
+              required: true,
+              description: "Comment body (supports markdown)",
+              mapTo: "input.post.description",
+            },
+            {
+              name: "title",
+              type: "string",
+              description: "Optional comment title",
+              mapTo: "input.post.title",
+            },
+          ],
+        },
       ],
     },
   },
