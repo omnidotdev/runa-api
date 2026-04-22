@@ -1,5 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { z } from "zod";
 import { GraphQLClient } from "graphql-request";
 
@@ -116,77 +116,91 @@ const updateTaskDocument = `
   }
 `;
 
-const server = new McpServer({
-  name: "runa-mcp",
-  description: "Runa project management. Create tasks, manage boards, and track work.",
-  version: "1.0.0",
-});
-
 const graphql = new GraphQLClient(
   process.env.GRAPHQL_ENDPOINT ?? "http://localhost:4000/graphql"
 );
 
-server.tool(
-  "list_projects",
-  "List all task boards in the organization with their columns.",
-  {},
-  async () => {
-    const data = await graphql.request(projectsDocument);
-    return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
-  }
-);
+function registerTools(server: McpServer) {
+  server.tool(
+    "list_projects",
+    "List all task boards in the organization with their columns.",
+    {},
+    async () => {
+      const data = await graphql.request(projectsDocument);
+      return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+    }
+  );
 
-server.tool(
-  "list_tasks",
-  "List and filter tasks. Use simple field filters or date range queries.",
-  { projectId: z.string().uuid().optional().describe("Filter by project UUID"), priority: z.enum(["low", "medium", "high", "urgent"]).optional().describe("Filter by priority level"), columnId: z.string().uuid().optional().describe("Filter by column UUID"), authorId: z.string().uuid().optional().describe("Filter by task author UUID"), dueBefore: z.string().datetime().optional().describe("Only return tasks due before this ISO datetime"), dueAfter: z.string().datetime().optional().describe("Only return tasks due after this ISO datetime"), limit: z.number().default(20).optional().describe("Maximum number of tasks to return (1-100)")},
-  async (params) => {
-    const variables: Record<string, unknown> = {};
-    if (params.projectId !== undefined) set(variables, "condition.projectId", params.projectId);
-    if (params.priority !== undefined) set(variables, "condition.priority", params.priority);
-    if (params.columnId !== undefined) set(variables, "condition.columnId", params.columnId);
-    if (params.authorId !== undefined) set(variables, "condition.authorId", params.authorId);
-    if (params.dueBefore !== undefined) set(variables, "filter.dueDate.lessThan", params.dueBefore);
-    if (params.dueAfter !== undefined) set(variables, "filter.dueDate.greaterThan", params.dueAfter);
-    if (params.limit !== undefined) set(variables, "first", params.limit);
-    const data = await graphql.request(tasksDocument, variables);
-    return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
-  }
-);
+  server.tool(
+    "list_tasks",
+    "List and filter tasks. Use simple field filters or date range queries.",
+    { projectId: z.string().uuid().optional().describe("Filter by project UUID"), priority: z.enum(["low", "medium", "high", "urgent"]).optional().describe("Filter by priority level"), columnId: z.string().uuid().optional().describe("Filter by column UUID"), authorId: z.string().uuid().optional().describe("Filter by task author UUID"), dueBefore: z.string().datetime().optional().describe("Only return tasks due before this ISO datetime"), dueAfter: z.string().datetime().optional().describe("Only return tasks due after this ISO datetime"), limit: z.number().default(20).optional().describe("Maximum number of tasks to return (1-100)")},
+    async (params) => {
+      const variables: Record<string, unknown> = {};
+      if (params.projectId !== undefined) set(variables, "condition.projectId", params.projectId);
+      if (params.priority !== undefined) set(variables, "condition.priority", params.priority);
+      if (params.columnId !== undefined) set(variables, "condition.columnId", params.columnId);
+      if (params.authorId !== undefined) set(variables, "condition.authorId", params.authorId);
+      if (params.dueBefore !== undefined) set(variables, "filter.dueDate.lessThan", params.dueBefore);
+      if (params.dueAfter !== undefined) set(variables, "filter.dueDate.greaterThan", params.dueAfter);
+      if (params.limit !== undefined) set(variables, "first", params.limit);
+      const data = await graphql.request(tasksDocument, variables);
+      return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+    }
+  );
 
-server.tool(
-  "create_task",
-  "Create a new task on a project board.",
-  { content: z.string().describe("Task title"), description: z.string().describe("Task description (supports markdown)"), projectId: z.string().uuid().describe("Project UUID to create the task in"), columnId: z.string().uuid().describe("Column UUID to place the task in"), priority: z.enum(["low", "medium", "high", "urgent"]).optional().describe("Task priority level"), dueDate: z.string().datetime().optional().describe("Due date as ISO datetime")},
-  async (params) => {
-    const variables: Record<string, unknown> = {};
-    if (params.content !== undefined) set(variables, "input.task.content", params.content);
-    if (params.description !== undefined) set(variables, "input.task.description", params.description);
-    if (params.projectId !== undefined) set(variables, "input.task.projectId", params.projectId);
-    if (params.columnId !== undefined) set(variables, "input.task.columnId", params.columnId);
-    if (params.priority !== undefined) set(variables, "input.task.priority", params.priority);
-    if (params.dueDate !== undefined) set(variables, "input.task.dueDate", params.dueDate);
-    const data = await graphql.request(createTaskDocument, variables);
-    return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
-  }
-);
+  server.tool(
+    "create_task",
+    "Create a new task on a project board.",
+    { content: z.string().describe("Task title"), description: z.string().describe("Task description (supports markdown)"), projectId: z.string().uuid().describe("Project UUID to create the task in"), columnId: z.string().uuid().describe("Column UUID to place the task in"), priority: z.enum(["low", "medium", "high", "urgent"]).optional().describe("Task priority level"), dueDate: z.string().datetime().optional().describe("Due date as ISO datetime")},
+    async (params) => {
+      const variables: Record<string, unknown> = {};
+      if (params.content !== undefined) set(variables, "input.task.content", params.content);
+      if (params.description !== undefined) set(variables, "input.task.description", params.description);
+      if (params.projectId !== undefined) set(variables, "input.task.projectId", params.projectId);
+      if (params.columnId !== undefined) set(variables, "input.task.columnId", params.columnId);
+      if (params.priority !== undefined) set(variables, "input.task.priority", params.priority);
+      if (params.dueDate !== undefined) set(variables, "input.task.dueDate", params.dueDate);
+      const data = await graphql.request(createTaskDocument, variables);
+      return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+    }
+  );
 
-server.tool(
-  "move_task",
-  "Update a task — move it to a different column, change priority, or edit content.",
-  { rowId: z.string().uuid().describe("UUID of the task to update"), columnId: z.string().uuid().optional().describe("Move task to this column"), priority: z.enum(["low", "medium", "high", "urgent"]).optional().describe("New priority level"), content: z.string().optional().describe("New task title"), description: z.string().optional().describe("New task description"), dueDate: z.string().datetime().optional().describe("New due date as ISO datetime")},
-  async (params) => {
-    const variables: Record<string, unknown> = {};
-    if (params.rowId !== undefined) set(variables, "input.rowId", params.rowId);
-    if (params.columnId !== undefined) set(variables, "input.patch.columnId", params.columnId);
-    if (params.priority !== undefined) set(variables, "input.patch.priority", params.priority);
-    if (params.content !== undefined) set(variables, "input.patch.content", params.content);
-    if (params.description !== undefined) set(variables, "input.patch.description", params.description);
-    if (params.dueDate !== undefined) set(variables, "input.patch.dueDate", params.dueDate);
-    const data = await graphql.request(updateTaskDocument, variables);
-    return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
-  }
-);
+  server.tool(
+    "move_task",
+    "Update a task — move it to a different column, change priority, or edit content.",
+    { rowId: z.string().uuid().describe("UUID of the task to update"), columnId: z.string().uuid().optional().describe("Move task to this column"), priority: z.enum(["low", "medium", "high", "urgent"]).optional().describe("New priority level"), content: z.string().optional().describe("New task title"), description: z.string().optional().describe("New task description"), dueDate: z.string().datetime().optional().describe("New due date as ISO datetime")},
+    async (params) => {
+      const variables: Record<string, unknown> = {};
+      if (params.rowId !== undefined) set(variables, "input.rowId", params.rowId);
+      if (params.columnId !== undefined) set(variables, "input.patch.columnId", params.columnId);
+      if (params.priority !== undefined) set(variables, "input.patch.priority", params.priority);
+      if (params.content !== undefined) set(variables, "input.patch.content", params.content);
+      if (params.description !== undefined) set(variables, "input.patch.description", params.description);
+      if (params.dueDate !== undefined) set(variables, "input.patch.dueDate", params.dueDate);
+      const data = await graphql.request(updateTaskDocument, variables);
+      return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+    }
+  );
 
-const transport = new StdioServerTransport();
-await server.connect(transport);
+}
+
+const app = Bun.serve({
+  port: Number(process.env.MCP_PORT ?? 4001),
+  async fetch(req) {
+    const url = new URL(req.url);
+    if (url.pathname === "/mcp") {
+      const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
+      const server = new McpServer({ name: "runa-mcp", description: "Runa project management. Create tasks, manage boards, and track work.", version: "1.0.0" });
+      registerTools(server);
+      await server.connect(transport);
+      const response = await transport.handleRequest(req);
+      await transport.close();
+      await server.close();
+      return response;
+    }
+    return new Response("Not Found", { status: 404 });
+  },
+});
+
+console.error(`runa-mcp listening on port ${app.port}`);
