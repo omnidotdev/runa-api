@@ -358,6 +358,13 @@
       "when": 1774241154907,
       "tag": "0050_pin_order",
       "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1776952859287,
+      "tag": "0051_plain_scalphunter",
+      "breakpoints": true
     }
   ]
 }

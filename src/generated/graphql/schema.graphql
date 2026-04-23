@@ -62,11 +62,17 @@ type Query implements Node {
   """Get a single `ProjectColumn`."""
   projectColumn(rowId: UUID!): ProjectColumn
 
+  """Get a single `TaskExecution`."""
+  taskExecution(rowId: UUID!): TaskExecution
+
   """Get a single `UserPreference`."""
   userPreference(rowId: UUID!): UserPreference
 
   """Get a single `UserPreference`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
+
+  """Get a single `RepoExecution`."""
+  repoExecution(rowId: UUID!): RepoExecution
 
   """Get a single `Setting`."""
   setting(rowId: UUID!): Setting
@@ -160,6 +166,14 @@ type Query implements Node {
     id: ID!
   ): ProjectColumn
 
+  """Reads a single `TaskExecution` using its globally unique `ID`."""
+  taskExecutionById(
+    """
+    The globally unique `ID` to be used in selecting a single `TaskExecution`.
+    """
+    id: ID!
+  ): TaskExecution
+
   """Reads a single `UserPreference` using its globally unique `ID`."""
   userPreferenceById(
     """
@@ -167,6 +181,14 @@ type Query implements Node {
     """
     id: ID!
   ): UserPreference
+
+  """Reads a single `RepoExecution` using its globally unique `ID`."""
+  repoExecutionById(
+    """
+    The globally unique `ID` to be used in selecting a single `RepoExecution`.
+    """
+    id: ID!
+  ): RepoExecution
 
   """Reads a single `Setting` using its globally unique `ID`."""
   settingById(
@@ -560,6 +582,40 @@ type Query implements Node {
     orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectColumnConnection
 
+  """Reads and enables pagination through a set of `TaskExecution`."""
+  taskExecutions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection
+
   """Reads and enables pagination through a set of `UserPreference`."""
   userPreferences(
     """Only read the first `n` values of the set."""
@@ -593,6 +649,40 @@ type Query implements Node {
     """The method to use when ordering `UserPreference`."""
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
+
+  """Reads and enables pagination through a set of `RepoExecution`."""
+  repoExecutions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RepoExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RepoExecutionFilter
+
+    """The method to use when ordering `RepoExecution`."""
+    orderBy: [RepoExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RepoExecutionConnection
 
   """Reads and enables pagination through a set of `Setting`."""
   settings(
@@ -1954,6 +2044,12 @@ input TaskFilter {
   """Some related `taskLabels` exist."""
   taskLabelsExist: Boolean
 
+  """Filter by the object’s `taskExecutions` relation."""
+  taskExecutions: TaskToManyTaskExecutionFilter
+
+  """Some related `taskExecutions` exist."""
+  taskExecutionsExist: Boolean
+
   """Filter by the object’s `author` relation."""
   author: UserFilter
 
@@ -2915,6 +3011,264 @@ input TaskLabelAggregatesFilter {
 input TaskLabelDistinctCountAggregateFilter {
   taskId: BigIntFilter
   labelId: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+"""
+A filter to be used against many `TaskExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskToManyTaskExecutionFilter {
+  """
+  Every related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskExecutionFilter
+
+  """
+  Some related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskExecutionFilter
+
+  """
+  No related `TaskExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskExecutionFilter
+
+  """Aggregates across related `TaskExecution` match the filter criteria."""
+  aggregates: TaskExecutionAggregatesFilter
+}
+
+"""
+A filter to be used against `TaskExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskExecutionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `taskId` field."""
+  taskId: UUIDFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `errorLog` field."""
+  errorLog: StringFilter
+
+  """Filter by the object’s `startedAt` field."""
+  startedAt: DatetimeFilter
+
+  """Filter by the object’s `completedAt` field."""
+  completedAt: DatetimeFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `repoExecutions` relation."""
+  repoExecutions: TaskExecutionToManyRepoExecutionFilter
+
+  """Some related `repoExecutions` exist."""
+  repoExecutionsExist: Boolean
+
+  """Filter by the object’s `task` relation."""
+  task: TaskFilter
+
+  """Checks for all expressions in this list."""
+  and: [TaskExecutionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TaskExecutionFilter!]
+
+  """Negates the expression."""
+  not: TaskExecutionFilter
+}
+
+"""
+A filter to be used against many `RepoExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskExecutionToManyRepoExecutionFilter {
+  """
+  Every related `RepoExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RepoExecutionFilter
+
+  """
+  Some related `RepoExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RepoExecutionFilter
+
+  """
+  No related `RepoExecution` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RepoExecutionFilter
+
+  """Aggregates across related `RepoExecution` match the filter criteria."""
+  aggregates: RepoExecutionAggregatesFilter
+}
+
+"""
+A filter to be used against `RepoExecution` object types. All fields are combined with a logical ‘and.’
+"""
+input RepoExecutionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `taskExecutionId` field."""
+  taskExecutionId: UUIDFilter
+
+  """Filter by the object’s `repo` field."""
+  repo: StringFilter
+
+  """Filter by the object’s `branch` field."""
+  branch: StringFilter
+
+  """Filter by the object’s `prUrl` field."""
+  prUrl: StringFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `order` field."""
+  order: IntFilter
+
+  """Filter by the object’s `errorLog` field."""
+  errorLog: StringFilter
+
+  """Filter by the object’s `startedAt` field."""
+  startedAt: DatetimeFilter
+
+  """Filter by the object’s `completedAt` field."""
+  completedAt: DatetimeFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `taskExecution` relation."""
+  taskExecution: TaskExecutionFilter
+
+  """Checks for all expressions in this list."""
+  and: [RepoExecutionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [RepoExecutionFilter!]
+
+  """Negates the expression."""
+  not: RepoExecutionFilter
+}
+
+"""
+A filter to be used against aggregates of `RepoExecution` object types.
+"""
+input RepoExecutionAggregatesFilter {
+  """
+  A filter that must pass for the relevant `RepoExecution` object to be included within the aggregate.
+  """
+  filter: RepoExecutionFilter
+
+  """Sum aggregate over matching `RepoExecution` objects."""
+  sum: RepoExecutionSumAggregateFilter
+
+  """Distinct count aggregate over matching `RepoExecution` objects."""
+  distinctCount: RepoExecutionDistinctCountAggregateFilter
+
+  """Minimum aggregate over matching `RepoExecution` objects."""
+  min: RepoExecutionMinAggregateFilter
+
+  """Maximum aggregate over matching `RepoExecution` objects."""
+  max: RepoExecutionMaxAggregateFilter
+
+  """Mean average aggregate over matching `RepoExecution` objects."""
+  average: RepoExecutionAverageAggregateFilter
+
+  """
+  Sample standard deviation aggregate over matching `RepoExecution` objects.
+  """
+  stddevSample: RepoExecutionStddevSampleAggregateFilter
+
+  """
+  Population standard deviation aggregate over matching `RepoExecution` objects.
+  """
+  stddevPopulation: RepoExecutionStddevPopulationAggregateFilter
+
+  """Sample variance aggregate over matching `RepoExecution` objects."""
+  varianceSample: RepoExecutionVarianceSampleAggregateFilter
+
+  """Population variance aggregate over matching `RepoExecution` objects."""
+  variancePopulation: RepoExecutionVariancePopulationAggregateFilter
+}
+
+input RepoExecutionSumAggregateFilter {
+  order: BigIntFilter
+}
+
+input RepoExecutionDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  taskExecutionId: BigIntFilter
+  repo: BigIntFilter
+  branch: BigIntFilter
+  prUrl: BigIntFilter
+  status: BigIntFilter
+  order: BigIntFilter
+  errorLog: BigIntFilter
+  startedAt: BigIntFilter
+  completedAt: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+input RepoExecutionMinAggregateFilter {
+  order: IntFilter
+}
+
+input RepoExecutionMaxAggregateFilter {
+  order: IntFilter
+}
+
+input RepoExecutionAverageAggregateFilter {
+  order: BigFloatFilter
+}
+
+input RepoExecutionStddevSampleAggregateFilter {
+  order: BigFloatFilter
+}
+
+input RepoExecutionStddevPopulationAggregateFilter {
+  order: BigFloatFilter
+}
+
+input RepoExecutionVarianceSampleAggregateFilter {
+  order: BigFloatFilter
+}
+
+input RepoExecutionVariancePopulationAggregateFilter {
+  order: BigFloatFilter
+}
+
+"""
+A filter to be used against aggregates of `TaskExecution` object types.
+"""
+input TaskExecutionAggregatesFilter {
+  """
+  A filter that must pass for the relevant `TaskExecution` object to be included within the aggregate.
+  """
+  filter: TaskExecutionFilter
+
+  """Distinct count aggregate over matching `TaskExecution` objects."""
+  distinctCount: TaskExecutionDistinctCountAggregateFilter
+}
+
+input TaskExecutionDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  taskId: BigIntFilter
+  status: BigIntFilter
+  errorLog: BigIntFilter
+  startedAt: BigIntFilter
+  completedAt: BigIntFilter
   createdAt: BigIntFilter
   updatedAt: BigIntFilter
 }
@@ -3987,6 +4341,40 @@ type Task implements Node {
     """The method to use when ordering `TaskLabel`."""
     orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaskLabelConnection!
+
+  """Reads and enables pagination through a set of `TaskExecution`."""
+  taskExecutions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskExecutionFilter
+
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskExecutionConnection!
 }
 
 type User implements Node {
@@ -4957,6 +5345,24 @@ enum TaskOrderBy {
   TASK_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_ASC
   TASK_LABELS_DISTINCT_COUNT_UPDATED_AT_DESC
+  TASK_EXECUTIONS_COUNT_ASC
+  TASK_EXECUTIONS_COUNT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ROW_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_TASK_ID_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STATUS_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ERROR_LOG_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_ERROR_LOG_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STARTED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_STARTED_AT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_COMPLETED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_COMPLETED_AT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_DESC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASK_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `UserPreference` values."""
@@ -5508,6 +5914,703 @@ input TaskLabelHavingVarianceSampleInput {
 input TaskLabelHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
+}
+
+"""A connection to a list of `TaskExecution` values."""
+type TaskExecutionConnection {
+  """A list of `TaskExecution` objects."""
+  nodes: [TaskExecution!]!
+
+  """
+  A list of edges which contains the `TaskExecution` and cursor to aid in pagination.
+  """
+  edges: [TaskExecutionEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `TaskExecution` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: TaskExecutionAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `TaskExecution` for these aggregates."""
+    groupBy: [TaskExecutionGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: TaskExecutionHavingInput
+  ): [TaskExecutionAggregates!]
+}
+
+type TaskExecution implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  taskId: UUID!
+  status: String!
+  errorLog: String
+  startedAt: Datetime
+  completedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Task` that is related to this `TaskExecution`."""
+  task: Task
+
+  """Reads and enables pagination through a set of `RepoExecution`."""
+  repoExecutions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RepoExecutionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RepoExecutionFilter
+
+    """The method to use when ordering `RepoExecution`."""
+    orderBy: [RepoExecutionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RepoExecutionConnection!
+}
+
+"""A connection to a list of `RepoExecution` values."""
+type RepoExecutionConnection {
+  """A list of `RepoExecution` objects."""
+  nodes: [RepoExecution!]!
+
+  """
+  A list of edges which contains the `RepoExecution` and cursor to aid in pagination.
+  """
+  edges: [RepoExecutionEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `RepoExecution` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: RepoExecutionAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `RepoExecution` for these aggregates."""
+    groupBy: [RepoExecutionGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: RepoExecutionHavingInput
+  ): [RepoExecutionAggregates!]
+}
+
+type RepoExecution implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  taskExecutionId: UUID!
+  repo: String!
+  branch: String
+  prUrl: String
+  status: String!
+  order: Int!
+  errorLog: String
+  startedAt: Datetime
+  completedAt: Datetime
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """
+  Reads a single `TaskExecution` that is related to this `RepoExecution`.
+  """
+  taskExecution: TaskExecution
+}
+
+"""A `RepoExecution` edge in the connection."""
+type RepoExecutionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RepoExecution` at the end of the edge."""
+  node: RepoExecution!
+}
+
+type RepoExecutionAggregates {
+  keys: [String]
+
+  """
+  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  sum: RepoExecutionSumAggregates
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: RepoExecutionDistinctCountAggregates
+
+  """
+  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  min: RepoExecutionMinAggregates
+
+  """
+  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  max: RepoExecutionMaxAggregates
+
+  """
+  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  average: RepoExecutionAverageAggregates
+
+  """
+  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevSample: RepoExecutionStddevSampleAggregates
+
+  """
+  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  stddevPopulation: RepoExecutionStddevPopulationAggregates
+
+  """
+  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  varianceSample: RepoExecutionVarianceSampleAggregates
+
+  """
+  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  variancePopulation: RepoExecutionVariancePopulationAggregates
+}
+
+type RepoExecutionSumAggregates {
+  """Sum of order across the matching connection"""
+  order: BigInt!
+}
+
+type RepoExecutionDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of taskExecutionId across the matching connection"""
+  taskExecutionId: BigInt
+
+  """Distinct count of repo across the matching connection"""
+  repo: BigInt
+
+  """Distinct count of branch across the matching connection"""
+  branch: BigInt
+
+  """Distinct count of prUrl across the matching connection"""
+  prUrl: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of order across the matching connection"""
+  order: BigInt
+
+  """Distinct count of errorLog across the matching connection"""
+  errorLog: BigInt
+
+  """Distinct count of startedAt across the matching connection"""
+  startedAt: BigInt
+
+  """Distinct count of completedAt across the matching connection"""
+  completedAt: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+type RepoExecutionMinAggregates {
+  """Minimum of order across the matching connection"""
+  order: Int
+}
+
+type RepoExecutionMaxAggregates {
+  """Maximum of order across the matching connection"""
+  order: Int
+}
+
+type RepoExecutionAverageAggregates {
+  """Mean average of order across the matching connection"""
+  order: BigFloat
+}
+
+type RepoExecutionStddevSampleAggregates {
+  """Sample standard deviation of order across the matching connection"""
+  order: BigFloat
+}
+
+type RepoExecutionStddevPopulationAggregates {
+  """Population standard deviation of order across the matching connection"""
+  order: BigFloat
+}
+
+type RepoExecutionVarianceSampleAggregates {
+  """Sample variance of order across the matching connection"""
+  order: BigFloat
+}
+
+type RepoExecutionVariancePopulationAggregates {
+  """Population variance of order across the matching connection"""
+  order: BigFloat
+}
+
+"""Grouping methods for `RepoExecution` for usage during aggregation."""
+enum RepoExecutionGroupBy {
+  TASK_EXECUTION_ID
+  REPO
+  BRANCH
+  PR_URL
+  STATUS
+  ORDER
+  ERROR_LOG
+  STARTED_AT
+  STARTED_AT_TRUNCATED_TO_HOUR
+  STARTED_AT_TRUNCATED_TO_DAY
+  COMPLETED_AT
+  COMPLETED_AT_TRUNCATED_TO_HOUR
+  COMPLETED_AT_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `RepoExecution` aggregates."""
+input RepoExecutionHavingInput {
+  AND: [RepoExecutionHavingInput!]
+  OR: [RepoExecutionHavingInput!]
+  sum: RepoExecutionHavingSumInput
+  distinctCount: RepoExecutionHavingDistinctCountInput
+  min: RepoExecutionHavingMinInput
+  max: RepoExecutionHavingMaxInput
+  average: RepoExecutionHavingAverageInput
+  stddevSample: RepoExecutionHavingStddevSampleInput
+  stddevPopulation: RepoExecutionHavingStddevPopulationInput
+  varianceSample: RepoExecutionHavingVarianceSampleInput
+  variancePopulation: RepoExecutionHavingVariancePopulationInput
+}
+
+input RepoExecutionHavingSumInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input RepoExecutionHavingDistinctCountInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input RepoExecutionHavingMinInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input RepoExecutionHavingMaxInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input RepoExecutionHavingAverageInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input RepoExecutionHavingStddevSampleInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input RepoExecutionHavingStddevPopulationInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input RepoExecutionHavingVarianceSampleInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input RepoExecutionHavingVariancePopulationInput {
+  order: HavingIntFilter
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `RepoExecution` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RepoExecutionCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `taskExecutionId` field."""
+  taskExecutionId: UUID
+
+  """Checks for equality with the object’s `repo` field."""
+  repo: String
+
+  """Checks for equality with the object’s `branch` field."""
+  branch: String
+
+  """Checks for equality with the object’s `prUrl` field."""
+  prUrl: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+
+  """Checks for equality with the object’s `order` field."""
+  order: Int
+
+  """Checks for equality with the object’s `errorLog` field."""
+  errorLog: String
+
+  """Checks for equality with the object’s `startedAt` field."""
+  startedAt: Datetime
+
+  """Checks for equality with the object’s `completedAt` field."""
+  completedAt: Datetime
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `RepoExecution`."""
+enum RepoExecutionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  TASK_EXECUTION_ID_ASC
+  TASK_EXECUTION_ID_DESC
+  REPO_ASC
+  REPO_DESC
+  BRANCH_ASC
+  BRANCH_DESC
+  PR_URL_ASC
+  PR_URL_DESC
+  STATUS_ASC
+  STATUS_DESC
+  ORDER_ASC
+  ORDER_DESC
+  ERROR_LOG_ASC
+  ERROR_LOG_DESC
+  STARTED_AT_ASC
+  STARTED_AT_DESC
+  COMPLETED_AT_ASC
+  COMPLETED_AT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+"""A `TaskExecution` edge in the connection."""
+type TaskExecutionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TaskExecution` at the end of the edge."""
+  node: TaskExecution!
+}
+
+type TaskExecutionAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: TaskExecutionDistinctCountAggregates
+}
+
+type TaskExecutionDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of taskId across the matching connection"""
+  taskId: BigInt
+
+  """Distinct count of status across the matching connection"""
+  status: BigInt
+
+  """Distinct count of errorLog across the matching connection"""
+  errorLog: BigInt
+
+  """Distinct count of startedAt across the matching connection"""
+  startedAt: BigInt
+
+  """Distinct count of completedAt across the matching connection"""
+  completedAt: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `TaskExecution` for usage during aggregation."""
+enum TaskExecutionGroupBy {
+  TASK_ID
+  STATUS
+  ERROR_LOG
+  STARTED_AT
+  STARTED_AT_TRUNCATED_TO_HOUR
+  STARTED_AT_TRUNCATED_TO_DAY
+  COMPLETED_AT
+  COMPLETED_AT_TRUNCATED_TO_HOUR
+  COMPLETED_AT_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `TaskExecution` aggregates."""
+input TaskExecutionHavingInput {
+  AND: [TaskExecutionHavingInput!]
+  OR: [TaskExecutionHavingInput!]
+  sum: TaskExecutionHavingSumInput
+  distinctCount: TaskExecutionHavingDistinctCountInput
+  min: TaskExecutionHavingMinInput
+  max: TaskExecutionHavingMaxInput
+  average: TaskExecutionHavingAverageInput
+  stddevSample: TaskExecutionHavingStddevSampleInput
+  stddevPopulation: TaskExecutionHavingStddevPopulationInput
+  varianceSample: TaskExecutionHavingVarianceSampleInput
+  variancePopulation: TaskExecutionHavingVariancePopulationInput
+}
+
+input TaskExecutionHavingSumInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingDistinctCountInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingMinInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingMaxInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingAverageInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingStddevSampleInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingStddevPopulationInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingVarianceSampleInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input TaskExecutionHavingVariancePopulationInput {
+  startedAt: HavingDatetimeFilter
+  completedAt: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `TaskExecution` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TaskExecutionCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `taskId` field."""
+  taskId: UUID
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+
+  """Checks for equality with the object’s `errorLog` field."""
+  errorLog: String
+
+  """Checks for equality with the object’s `startedAt` field."""
+  startedAt: Datetime
+
+  """Checks for equality with the object’s `completedAt` field."""
+  completedAt: Datetime
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `TaskExecution`."""
+enum TaskExecutionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  TASK_ID_ASC
+  TASK_ID_DESC
+  STATUS_ASC
+  STATUS_DESC
+  ERROR_LOG_ASC
+  ERROR_LOG_DESC
+  STARTED_AT_ASC
+  STARTED_AT_DESC
+  COMPLETED_AT_ASC
+  COMPLETED_AT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  REPO_EXECUTIONS_COUNT_ASC
+  REPO_EXECUTIONS_COUNT_DESC
+  REPO_EXECUTIONS_SUM_ORDER_ASC
+  REPO_EXECUTIONS_SUM_ORDER_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_ROW_ID_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_ROW_ID_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_TASK_EXECUTION_ID_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_TASK_EXECUTION_ID_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_REPO_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_REPO_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_BRANCH_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_BRANCH_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_PR_URL_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_PR_URL_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_STATUS_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_STATUS_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_ORDER_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_ORDER_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_ERROR_LOG_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_ERROR_LOG_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_STARTED_AT_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_STARTED_AT_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_COMPLETED_AT_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_COMPLETED_AT_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_CREATED_AT_DESC
+  REPO_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_ASC
+  REPO_EXECUTIONS_DISTINCT_COUNT_UPDATED_AT_DESC
+  REPO_EXECUTIONS_MIN_ORDER_ASC
+  REPO_EXECUTIONS_MIN_ORDER_DESC
+  REPO_EXECUTIONS_MAX_ORDER_ASC
+  REPO_EXECUTIONS_MAX_ORDER_DESC
+  REPO_EXECUTIONS_AVERAGE_ORDER_ASC
+  REPO_EXECUTIONS_AVERAGE_ORDER_DESC
+  REPO_EXECUTIONS_STDDEV_SAMPLE_ORDER_ASC
+  REPO_EXECUTIONS_STDDEV_SAMPLE_ORDER_DESC
+  REPO_EXECUTIONS_STDDEV_POPULATION_ORDER_ASC
+  REPO_EXECUTIONS_STDDEV_POPULATION_ORDER_DESC
+  REPO_EXECUTIONS_VARIANCE_SAMPLE_ORDER_ASC
+  REPO_EXECUTIONS_VARIANCE_SAMPLE_ORDER_DESC
+  REPO_EXECUTIONS_VARIANCE_POPULATION_ORDER_ASC
+  REPO_EXECUTIONS_VARIANCE_POPULATION_ORDER_DESC
 }
 
 """A `Task` edge in the connection."""
@@ -8059,6 +9162,14 @@ type Mutation {
     input: CreateProjectColumnInput!
   ): CreateProjectColumnPayload
 
+  """Creates a single `TaskExecution`."""
+  createTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaskExecutionInput!
+  ): CreateTaskExecutionPayload
+
   """Creates a single `UserPreference`."""
   createUserPreference(
     """
@@ -8066,6 +9177,14 @@ type Mutation {
     """
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
+
+  """Creates a single `RepoExecution`."""
+  createRepoExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRepoExecutionInput!
+  ): CreateRepoExecutionPayload
 
   """Creates a single `Setting`."""
   createSetting(
@@ -8276,6 +9395,24 @@ type Mutation {
   ): UpdateProjectColumnPayload
 
   """
+  Updates a single `TaskExecution` using its globally unique id and a patch.
+  """
+  updateTaskExecutionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskExecutionByIdInput!
+  ): UpdateTaskExecutionPayload
+
+  """Updates a single `TaskExecution` using a unique key and a patch."""
+  updateTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskExecutionInput!
+  ): UpdateTaskExecutionPayload
+
+  """
   Updates a single `UserPreference` using its globally unique id and a patch.
   """
   updateUserPreferenceById(
@@ -8292,6 +9429,24 @@ type Mutation {
     """
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
+
+  """
+  Updates a single `RepoExecution` using its globally unique id and a patch.
+  """
+  updateRepoExecutionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRepoExecutionByIdInput!
+  ): UpdateRepoExecutionPayload
+
+  """Updates a single `RepoExecution` using a unique key and a patch."""
+  updateRepoExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRepoExecutionInput!
+  ): UpdateRepoExecutionPayload
 
   """Updates a single `Setting` using its globally unique id and a patch."""
   updateSettingById(
@@ -8517,6 +9672,22 @@ type Mutation {
     input: DeleteProjectColumnInput!
   ): DeleteProjectColumnPayload
 
+  """Deletes a single `TaskExecution` using its globally unique id."""
+  deleteTaskExecutionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskExecutionByIdInput!
+  ): DeleteTaskExecutionPayload
+
+  """Deletes a single `TaskExecution` using a unique key."""
+  deleteTaskExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskExecutionInput!
+  ): DeleteTaskExecutionPayload
+
   """Deletes a single `UserPreference` using its globally unique id."""
   deleteUserPreferenceById(
     """
@@ -8532,6 +9703,22 @@ type Mutation {
     """
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
+
+  """Deletes a single `RepoExecution` using its globally unique id."""
+  deleteRepoExecutionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRepoExecutionByIdInput!
+  ): DeleteRepoExecutionPayload
+
+  """Deletes a single `RepoExecution` using a unique key."""
+  deleteRepoExecution(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRepoExecutionInput!
+  ): DeleteRepoExecutionPayload
 
   """Deletes a single `Setting` using its globally unique id."""
   deleteSettingById(
@@ -9079,6 +10266,53 @@ input ProjectColumnInput {
   updatedAt: Datetime
 }
 
+"""The output of our create `TaskExecution` mutation."""
+type CreateTaskExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaskExecution` that was created by this mutation."""
+  taskExecution: TaskExecution
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaskExecution`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the create `TaskExecution` mutation."""
+input CreateTaskExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TaskExecution` to be created by this mutation."""
+  taskExecution: TaskExecutionInput!
+}
+
+"""An input for mutations affecting `TaskExecution`"""
+input TaskExecutionInput {
+  rowId: UUID
+  taskId: UUID!
+  status: String
+  errorLog: String
+  startedAt: Datetime
+  completedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `UserPreference` mutation."""
 type CreateUserPreferencePayload {
   """
@@ -9124,6 +10358,57 @@ input UserPreferenceInput {
   updatedAt: Datetime
   viewMode: String
   pinOrder: Int
+}
+
+"""The output of our create `RepoExecution` mutation."""
+type CreateRepoExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RepoExecution` that was created by this mutation."""
+  repoExecution: RepoExecution
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RepoExecution`. May be used by Relay 1."""
+  repoExecutionEdge(
+    """The method to use when ordering `RepoExecution`."""
+    orderBy: [RepoExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RepoExecutionEdge
+}
+
+"""All input for the create `RepoExecution` mutation."""
+input CreateRepoExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RepoExecution` to be created by this mutation."""
+  repoExecution: RepoExecutionInput!
+}
+
+"""An input for mutations affecting `RepoExecution`"""
+input RepoExecutionInput {
+  rowId: UUID
+  taskExecutionId: UUID!
+  repo: String!
+  branch: String
+  prUrl: String
+  status: String
+  order: Int
+  errorLog: String
+  startedAt: Datetime
+  completedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create `Setting` mutation."""
@@ -10037,6 +11322,77 @@ input UpdateProjectColumnInput {
   patch: ProjectColumnPatch!
 }
 
+"""The output of our update `TaskExecution` mutation."""
+type UpdateTaskExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaskExecution` that was updated by this mutation."""
+  taskExecution: TaskExecution
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaskExecution`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the `updateTaskExecutionById` mutation."""
+input UpdateTaskExecutionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TaskExecution` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `TaskExecution` being updated.
+  """
+  patch: TaskExecutionPatch!
+}
+
+"""
+Represents an update to a `TaskExecution`. Fields that are set will be updated.
+"""
+input TaskExecutionPatch {
+  rowId: UUID
+  taskId: UUID
+  status: String
+  errorLog: String
+  startedAt: Datetime
+  completedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateTaskExecution` mutation."""
+input UpdateTaskExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `TaskExecution` being updated.
+  """
+  patch: TaskExecutionPatch!
+}
+
 """The output of our update `UserPreference` mutation."""
 type UpdateUserPreferencePayload {
   """
@@ -10106,6 +11462,81 @@ input UpdateUserPreferenceInput {
   An object where the defined keys will be set on the `UserPreference` being updated.
   """
   patch: UserPreferencePatch!
+}
+
+"""The output of our update `RepoExecution` mutation."""
+type UpdateRepoExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RepoExecution` that was updated by this mutation."""
+  repoExecution: RepoExecution
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RepoExecution`. May be used by Relay 1."""
+  repoExecutionEdge(
+    """The method to use when ordering `RepoExecution`."""
+    orderBy: [RepoExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RepoExecutionEdge
+}
+
+"""All input for the `updateRepoExecutionById` mutation."""
+input UpdateRepoExecutionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RepoExecution` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `RepoExecution` being updated.
+  """
+  patch: RepoExecutionPatch!
+}
+
+"""
+Represents an update to a `RepoExecution`. Fields that are set will be updated.
+"""
+input RepoExecutionPatch {
+  rowId: UUID
+  taskExecutionId: UUID
+  repo: String
+  branch: String
+  prUrl: String
+  status: String
+  order: Int
+  errorLog: String
+  startedAt: Datetime
+  completedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateRepoExecution` mutation."""
+input UpdateRepoExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `RepoExecution` being updated.
+  """
+  patch: RepoExecutionPatch!
 }
 
 """The output of our update `Setting` mutation."""
@@ -10860,6 +12291,54 @@ input DeleteProjectColumnInput {
   rowId: UUID!
 }
 
+"""The output of our delete `TaskExecution` mutation."""
+type DeleteTaskExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaskExecution` that was deleted by this mutation."""
+  taskExecution: TaskExecution
+  deletedTaskExecutionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaskExecution`. May be used by Relay 1."""
+  taskExecutionEdge(
+    """The method to use when ordering `TaskExecution`."""
+    orderBy: [TaskExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaskExecutionEdge
+}
+
+"""All input for the `deleteTaskExecutionById` mutation."""
+input DeleteTaskExecutionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TaskExecution` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteTaskExecution` mutation."""
+input DeleteTaskExecutionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `UserPreference` mutation."""
 type DeleteUserPreferencePayload {
   """
@@ -10900,6 +12379,54 @@ input DeleteUserPreferenceByIdInput {
 
 """All input for the `deleteUserPreference` mutation."""
 input DeleteUserPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `RepoExecution` mutation."""
+type DeleteRepoExecutionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RepoExecution` that was deleted by this mutation."""
+  repoExecution: RepoExecution
+  deletedRepoExecutionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RepoExecution`. May be used by Relay 1."""
+  repoExecutionEdge(
+    """The method to use when ordering `RepoExecution`."""
+    orderBy: [RepoExecutionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RepoExecutionEdge
+}
+
+"""All input for the `deleteRepoExecutionById` mutation."""
+input DeleteRepoExecutionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RepoExecution` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteRepoExecution` mutation."""
+input DeleteRepoExecutionInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

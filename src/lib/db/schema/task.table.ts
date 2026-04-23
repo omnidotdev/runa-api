@@ -16,6 +16,7 @@ import { assignees } from "./assignee.table";
 import { columns } from "./column.table";
 import { posts } from "./post.table";
 import { projects } from "./project.table";
+import { taskExecutions } from "./taskExecution.table";
 import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -65,6 +66,7 @@ export const taskRelations = relations(tasks, ({ one, many }) => ({
   }),
   posts: many(posts),
   assignees: many(assignees),
+  taskExecutions: many(taskExecutions),
 }));
 
 export type InsertTask = InferInsertModel<typeof tasks>;
