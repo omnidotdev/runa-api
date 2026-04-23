@@ -56,15 +56,12 @@ export const repoExecutions = pgTable(
   ],
 );
 
-export const repoExecutionRelations = relations(
-  repoExecutions,
-  ({ one }) => ({
-    taskExecution: one(taskExecutions, {
-      fields: [repoExecutions.taskExecutionId],
-      references: [taskExecutions.id],
-    }),
+export const repoExecutionRelations = relations(repoExecutions, ({ one }) => ({
+  taskExecution: one(taskExecutions, {
+    fields: [repoExecutions.taskExecutionId],
+    references: [taskExecutions.id],
   }),
-);
+}));
 
 export type InsertRepoExecution = InferInsertModel<typeof repoExecutions>;
 export type SelectRepoExecution = InferSelectModel<typeof repoExecutions>;
