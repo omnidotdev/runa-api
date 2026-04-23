@@ -29,6 +29,7 @@
     "authz:detect-drift": "bun run --env-file .env.local src/scripts/authz/detectDrift.ts",
     "authz:reconcile": "bun run --env-file .env.local src/scripts/authz/reconcile.ts",
     "graphql:generate": "GRAPHILE_ENV=development bun run --env-file .env.local src/scripts/generateGraphqlSchema.ts",
+    "mcp": "NODE_ENV=development bun run --watch src/generated/mcp/server.ts",
     "prepare": "husky"
   },
   "dependencies": {

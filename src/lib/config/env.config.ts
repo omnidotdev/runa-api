@@ -18,7 +18,7 @@ export const {
   BILLING_WEBHOOK_SECRET,
   BILLING_SERVICE_API_KEY,
   // AuthZ - feature flag and PDP URL for permission checks
-
+  AUTHZ_ENABLED,
   AUTHZ_API_URL,
   AUTHZ_SYNC_MODE,
   // IDP webhook

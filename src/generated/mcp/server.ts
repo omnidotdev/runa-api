@@ -148,7 +148,7 @@ const getTaskDocument = `
           }
         }
       }
-      posts(orderBy: $orderBy) {
+      posts(orderBy: [CREATED_AT_ASC]) {
         nodes {
           rowId
           title
@@ -174,7 +174,7 @@ const getTaskDocument = `
 
 const columnsDocument = `
   query columns($condition: ColumnCondition) {
-    columns(condition: $condition, orderBy: $orderBy) {
+    columns(condition: $condition, orderBy: [INDEX_ASC]) {
       nodes {
         rowId
         title
@@ -270,9 +270,11 @@ function registerTools(server: McpServer) {
   server.tool(
     "get_task",
     "Get full task detail including comments, labels, and assignees.",
-    { rowId: z.object({  })},
-    async ({ rowId }) => {
-      const data = await graphql.request(getTaskDocument, { rowId });
+    { rowId: z.string().uuid().describe("Task UUID to retrieve")},
+    async (params) => {
+      const variables: Record<string, unknown> = {};
+      if (params.rowId !== undefined) set(variables, "rowId", params.rowId);
+      const data = await graphql.request(getTaskDocument, variables);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );

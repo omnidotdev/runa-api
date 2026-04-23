@@ -21,6 +21,14 @@ local_resource(
 )
 
 local_resource(
+    "mcp-%s" % project_name,
+    serve_cmd="bun mcp",
+    labels=[project_name],
+    env=env_local,
+    resource_deps=["dev-%s" % project_name],
+)
+
+local_resource(
     "studio-%s" % project_name,
     serve_cmd="bun db:studio",
     labels=[project_name],

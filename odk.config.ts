@@ -177,6 +177,16 @@ export default {
           name: "get_task",
           description:
             "Get full task detail including comments, labels, and assignees.",
+          parameters: [
+            {
+              name: "rowId",
+              type: "string",
+              format: "uuid",
+              required: true,
+              description: "Task UUID to retrieve",
+              mapTo: "rowId",
+            },
+          ],
         },
         {
           operation: "columns",
