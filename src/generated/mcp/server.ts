@@ -204,13 +204,19 @@ const graphql = new GraphQLClient(
   process.env.GRAPHQL_ENDPOINT ?? "http://localhost:4000/graphql"
 );
 
-function registerTools(server: McpServer) {
+function registerTools(server: McpServer, req: Request) {
+  const requestHeaders: Record<string, string> = {};
+  for (const name of ["authorization"]) {
+    const value = req.headers.get(name);
+    if (value !== null) requestHeaders[name] = value;
+  }
+
   server.tool(
     "list_projects",
     "List all task boards in the organization with their columns.",
     {},
     async () => {
-      const data = await graphql.request(projectsDocument);
+      const data = await graphql.request(projectsDocument, undefined, requestHeaders);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -228,7 +234,7 @@ function registerTools(server: McpServer) {
       if (params.dueBefore !== undefined) set(variables, "filter.dueDate.lessThan", params.dueBefore);
       if (params.dueAfter !== undefined) set(variables, "filter.dueDate.greaterThan", params.dueAfter);
       if (params.limit !== undefined) set(variables, "first", params.limit);
-      const data = await graphql.request(tasksDocument, variables);
+      const data = await graphql.request(tasksDocument, variables, requestHeaders);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -245,7 +251,7 @@ function registerTools(server: McpServer) {
       if (params.columnId !== undefined) set(variables, "input.task.columnId", params.columnId);
       if (params.priority !== undefined) set(variables, "input.task.priority", params.priority);
       if (params.dueDate !== undefined) set(variables, "input.task.dueDate", params.dueDate);
-      const data = await graphql.request(createTaskDocument, variables);
+      const data = await graphql.request(createTaskDocument, variables, requestHeaders);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -262,7 +268,7 @@ function registerTools(server: McpServer) {
       if (params.content !== undefined) set(variables, "input.patch.content", params.content);
       if (params.description !== undefined) set(variables, "input.patch.description", params.description);
       if (params.dueDate !== undefined) set(variables, "input.patch.dueDate", params.dueDate);
-      const data = await graphql.request(updateTaskDocument, variables);
+      const data = await graphql.request(updateTaskDocument, variables, requestHeaders);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -274,7 +280,7 @@ function registerTools(server: McpServer) {
     async (params) => {
       const variables: Record<string, unknown> = {};
       if (params.rowId !== undefined) set(variables, "rowId", params.rowId);
-      const data = await graphql.request(getTaskDocument, variables);
+      const data = await graphql.request(getTaskDocument, variables, requestHeaders);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -286,7 +292,7 @@ function registerTools(server: McpServer) {
     async (params) => {
       const variables: Record<string, unknown> = {};
       if (params.projectId !== undefined) set(variables, "condition.projectId", params.projectId);
-      const data = await graphql.request(columnsDocument, variables);
+      const data = await graphql.request(columnsDocument, variables, requestHeaders);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -300,7 +306,7 @@ function registerTools(server: McpServer) {
       if (params.taskId !== undefined) set(variables, "input.post.taskId", params.taskId);
       if (params.description !== undefined) set(variables, "input.post.description", params.description);
       if (params.title !== undefined) set(variables, "input.post.title", params.title);
-      const data = await graphql.request(createPostDocument, variables);
+      const data = await graphql.request(createPostDocument, variables, requestHeaders);
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     }
   );
@@ -314,7 +320,7 @@ const app = Bun.serve({
     if (url.pathname === "/mcp") {
       const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
       const server = new McpServer({ name: "runa-mcp", description: "Runa project management. Create tasks, manage boards, and track work.", version: "1.0.0" });
-      registerTools(server);
+      registerTools(server, req);
       await server.connect(transport);
       const response = await transport.handleRequest(req);
       await transport.close();

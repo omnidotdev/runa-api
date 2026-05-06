@@ -8,6 +8,10 @@ export default {
       name: "runa-mcp",
       description:
         "Runa project management. Create tasks, manage boards, and track work.",
+      // Forward the inbound `authorization` header to the underlying GraphQL
+      // request so MCP clients (e.g. the Beacon executor running as Orin) act
+      // with their own bearer token rather than a server-side service account.
+      forwardHeaders: ["authorization"],
       tools: [
         {
           operation: "projects",
