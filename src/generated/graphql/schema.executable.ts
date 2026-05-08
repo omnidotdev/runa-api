@@ -110,7 +110,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "85508",
+    oid: "86986",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -171,7 +171,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "85123",
+    oid: "86601",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -241,7 +241,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "84907",
+    oid: "86384",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -322,7 +322,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "85280",
+    oid: "86758",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -413,7 +413,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "84978",
+    oid: "86455",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -504,7 +504,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "84918",
+    oid: "86395",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -593,7 +593,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "84931",
+    oid: "86408",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -684,7 +684,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "85174",
+    oid: "86652",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -775,7 +775,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "85492",
+    oid: "86970",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -874,7 +874,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "85109",
+    oid: "86587",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -966,7 +966,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "85574",
+    oid: "87052",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1069,7 +1069,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "85191",
+    oid: "86669",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1178,7 +1178,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "84993",
+    oid: "86470",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1318,7 +1318,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "84959",
+    oid: "86436",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1469,7 +1469,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "84944",
+    oid: "86421",
     isTableLike: true,
     pg: {
       serviceName: "main",
