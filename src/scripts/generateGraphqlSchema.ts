@@ -8,6 +8,7 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 
+import { generateNKeysBetween } from "fractional-indexing";
 import { EXPORTABLE, exportSchema } from "graphile-export";
 import { printSchema } from "graphql";
 import { makeSchema } from "postgraphile";
@@ -151,6 +152,7 @@ const generateGraphqlSchema = async () => {
     modules: {
       "graphile-export": { EXPORTABLE },
       "postgraphile/grafast": { context, sideEffect },
+      "fractional-indexing": { generateNKeysBetween },
       "lib/authz": {
         checkPermission,
         deleteTuples,

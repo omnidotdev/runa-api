@@ -11,6 +11,7 @@
  * during project initialization.
  */
 
+import { generateNKeysBetween } from "fractional-indexing";
 import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
@@ -22,11 +23,11 @@ import type { ObjectStep } from "postgraphile/grafast";
 import type { PlanWrapperFn } from "postgraphile/utils";
 
 const DEFAULT_COLUMNS = [
-  { title: "Backlog", index: 0, icon: "emoji:🌑" },
-  { title: "To Do", index: 1, icon: "emoji:🌒" },
-  { title: "In Progress", index: 2, icon: "emoji:🌓" },
-  { title: "Awaiting Review", index: 3, icon: "emoji:🌖" },
-  { title: "Done", index: 4, icon: "emoji:🌕" },
+  { title: "Backlog", icon: "emoji:🌑" },
+  { title: "To Do", icon: "emoji:🌒" },
+  { title: "In Progress", icon: "emoji:🌓" },
+  { title: "Awaiting Review", icon: "emoji:🌖" },
+  { title: "Done", icon: "emoji:🌕" },
 ];
 
 /**
@@ -34,7 +35,13 @@ const DEFAULT_COLUMNS = [
  */
 const createDefaultColumns = (): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect, columns, DEFAULT_COLUMNS): PlanWrapperFn =>
+    (
+      context,
+      sideEffect,
+      columns,
+      DEFAULT_COLUMNS,
+      generateNKeysBetween,
+    ): PlanWrapperFn =>
       (plan) => {
         const $result = plan();
         const $db = context().get("db");
@@ -48,21 +55,25 @@ const createDefaultColumns = (): PlanWrapperFn =>
         sideEffect([$projectId, $db], async ([projectId, db]) => {
           if (!projectId) return;
 
+          const indices = generateNKeysBetween(
+            null,
+            null,
+            DEFAULT_COLUMNS.length,
+          );
+
           await db.insert(columns).values(
-            DEFAULT_COLUMNS.map(
-              (col: { title: string; index: number; icon: string }) => ({
-                title: col.title,
-                index: col.index,
-                icon: col.icon,
-                projectId,
-              }),
-            ),
+            DEFAULT_COLUMNS.map((col, i) => ({
+              title: col.title,
+              index: indices[i]!,
+              icon: col.icon,
+              projectId,
+            })),
           );
         });
 
         return $result;
       },
-    [context, sideEffect, columns, DEFAULT_COLUMNS],
+    [context, sideEffect, columns, DEFAULT_COLUMNS, generateNKeysBetween],
   );
 
 /**

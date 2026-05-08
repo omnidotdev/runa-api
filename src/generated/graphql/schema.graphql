@@ -44,23 +44,23 @@ type Query implements Node {
   """Get a single `User`."""
   userByIdentityProviderId(identityProviderId: UUID!): User
 
+  """Get a single `Column`."""
+  column(rowId: UUID!): Column
+
   """Get a single `Post`."""
   post(rowId: UUID!): Post
 
+  """Get a single `ProjectColumn`."""
+  projectColumn(rowId: UUID!): ProjectColumn
+
   """Get a single `ProjectLabel`."""
   projectLabel(rowId: UUID!): ProjectLabel
-
-  """Get a single `Column`."""
-  column(rowId: UUID!): Column
 
   """Get a single `Label`."""
   label(rowId: UUID!): Label
 
   """Get a single `ProjectLink`."""
   projectLink(rowId: UUID!): ProjectLink
-
-  """Get a single `ProjectColumn`."""
-  projectColumn(rowId: UUID!): ProjectColumn
 
   """Get a single `UserPreference`."""
   userPreference(rowId: UUID!): UserPreference
@@ -118,11 +118,25 @@ type Query implements Node {
     id: ID!
   ): User
 
+  """Reads a single `Column` using its globally unique `ID`."""
+  columnById(
+    """The globally unique `ID` to be used in selecting a single `Column`."""
+    id: ID!
+  ): Column
+
   """Reads a single `Post` using its globally unique `ID`."""
   postById(
     """The globally unique `ID` to be used in selecting a single `Post`."""
     id: ID!
   ): Post
+
+  """Reads a single `ProjectColumn` using its globally unique `ID`."""
+  projectColumnById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectColumn`.
+    """
+    id: ID!
+  ): ProjectColumn
 
   """Reads a single `ProjectLabel` using its globally unique `ID`."""
   projectLabelById(
@@ -131,12 +145,6 @@ type Query implements Node {
     """
     id: ID!
   ): ProjectLabel
-
-  """Reads a single `Column` using its globally unique `ID`."""
-  columnById(
-    """The globally unique `ID` to be used in selecting a single `Column`."""
-    id: ID!
-  ): Column
 
   """Reads a single `Label` using its globally unique `ID`."""
   labelById(
@@ -151,14 +159,6 @@ type Query implements Node {
     """
     id: ID!
   ): ProjectLink
-
-  """Reads a single `ProjectColumn` using its globally unique `ID`."""
-  projectColumnById(
-    """
-    The globally unique `ID` to be used in selecting a single `ProjectColumn`.
-    """
-    id: ID!
-  ): ProjectColumn
 
   """Reads a single `UserPreference` using its globally unique `ID`."""
   userPreferenceById(
@@ -356,6 +356,40 @@ type Query implements Node {
     orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserConnection
 
+  """Reads and enables pagination through a set of `Column`."""
+  columns(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ColumnFilter
+
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ColumnConnection
+
   """Reads and enables pagination through a set of `Post`."""
   posts(
     """Only read the first `n` values of the set."""
@@ -390,6 +424,40 @@ type Query implements Node {
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection
 
+  """Reads and enables pagination through a set of `ProjectColumn`."""
+  projectColumns(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectColumnFilter
+
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectColumnConnection
+
   """Reads and enables pagination through a set of `ProjectLabel`."""
   projectLabels(
     """Only read the first `n` values of the set."""
@@ -423,40 +491,6 @@ type Query implements Node {
     """The method to use when ordering `ProjectLabel`."""
     orderBy: [ProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLabelConnection
-
-  """Reads and enables pagination through a set of `Column`."""
-  columns(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ColumnCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ColumnFilter
-
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ColumnConnection
 
   """Reads and enables pagination through a set of `Label`."""
   labels(
@@ -525,40 +559,6 @@ type Query implements Node {
     """The method to use when ordering `ProjectLink`."""
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection
-
-  """Reads and enables pagination through a set of `ProjectColumn`."""
-  projectColumns(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectColumnCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectColumnFilter
-
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectColumnConnection
 
   """Reads and enables pagination through a set of `UserPreference`."""
   userPreferences(
@@ -759,7 +759,7 @@ type Project implements Node {
   updatedAt: Datetime!
   projectColumnId: UUID!
   slug: String!
-  columnIndex: Int!
+  columnIndex: String!
   isPublic: Boolean!
   nextTaskNumber: Int!
   color: String
@@ -981,7 +981,7 @@ type ProjectColumn implements Node {
   icon: String
   title: String!
   organizationId: String!
-  index: Int!
+  index: String!
   createdAt: Datetime!
   updatedAt: Datetime!
 
@@ -1130,9 +1130,6 @@ type ProjectAggregates {
 }
 
 type ProjectSumAggregates {
-  """Sum of columnIndex across the matching connection"""
-  columnIndex: BigInt!
-
   """Sum of nextTaskNumber across the matching connection"""
   nextTaskNumber: BigInt!
 }
@@ -1186,25 +1183,16 @@ type ProjectDistinctCountAggregates {
 }
 
 type ProjectMinAggregates {
-  """Minimum of columnIndex across the matching connection"""
-  columnIndex: Int
-
   """Minimum of nextTaskNumber across the matching connection"""
   nextTaskNumber: Int
 }
 
 type ProjectMaxAggregates {
-  """Maximum of columnIndex across the matching connection"""
-  columnIndex: Int
-
   """Maximum of nextTaskNumber across the matching connection"""
   nextTaskNumber: Int
 }
 
 type ProjectAverageAggregates {
-  """Mean average of columnIndex across the matching connection"""
-  columnIndex: BigFloat
-
   """Mean average of nextTaskNumber across the matching connection"""
   nextTaskNumber: BigFloat
 }
@@ -1216,11 +1204,6 @@ scalar BigFloat
 
 type ProjectStddevSampleAggregates {
   """
-  Sample standard deviation of columnIndex across the matching connection
-  """
-  columnIndex: BigFloat
-
-  """
   Sample standard deviation of nextTaskNumber across the matching connection
   """
   nextTaskNumber: BigFloat
@@ -1228,28 +1211,17 @@ type ProjectStddevSampleAggregates {
 
 type ProjectStddevPopulationAggregates {
   """
-  Population standard deviation of columnIndex across the matching connection
-  """
-  columnIndex: BigFloat
-
-  """
   Population standard deviation of nextTaskNumber across the matching connection
   """
   nextTaskNumber: BigFloat
 }
 
 type ProjectVarianceSampleAggregates {
-  """Sample variance of columnIndex across the matching connection"""
-  columnIndex: BigFloat
-
   """Sample variance of nextTaskNumber across the matching connection"""
   nextTaskNumber: BigFloat
 }
 
 type ProjectVariancePopulationAggregates {
-  """Population variance of columnIndex across the matching connection"""
-  columnIndex: BigFloat
-
   """Population variance of nextTaskNumber across the matching connection"""
   nextTaskNumber: BigFloat
 }
@@ -1292,7 +1264,6 @@ input ProjectHavingInput {
 input ProjectHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
@@ -1317,56 +1288,48 @@ input HavingIntFilter {
 input ProjectHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
 input ProjectHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   nextTaskNumber: HavingIntFilter
 }
 
@@ -1402,7 +1365,7 @@ input ProjectCondition {
   slug: String
 
   """Checks for equality with the object’s `columnIndex` field."""
-  columnIndex: Int
+  columnIndex: String
 
   """Checks for equality with the object’s `isPublic` field."""
   isPublic: Boolean
@@ -1446,7 +1409,7 @@ input ProjectFilter {
   slug: StringFilter
 
   """Filter by the object’s `columnIndex` field."""
-  columnIndex: IntFilter
+  columnIndex: StringFilter
 
   """Filter by the object’s `isPublic` field."""
   isPublic: BooleanFilter
@@ -1723,48 +1686,6 @@ input DatetimeFilter {
 }
 
 """
-A filter to be used against Int fields. All fields are combined with a logical ‘and.’
-"""
-input IntFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Int
-
-  """Not equal to the specified value."""
-  notEqualTo: Int
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Int
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Int
-
-  """Included in the specified list."""
-  in: [Int!]
-
-  """Not included in the specified list."""
-  notIn: [Int!]
-
-  """Less than the specified value."""
-  lessThan: Int
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Int
-
-  """Greater than the specified value."""
-  greaterThan: Int
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Int
-}
-
-"""
 A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
 """
 input BooleanFilter {
@@ -1804,6 +1725,48 @@ input BooleanFilter {
 
   """Greater than or equal to the specified value."""
   greaterThanOrEqualTo: Boolean
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
 }
 
 """
@@ -1849,7 +1812,7 @@ input ColumnFilter {
   updatedAt: DatetimeFilter
 
   """Filter by the object’s `index` field."""
-  index: IntFilter
+  index: StringFilter
 
   """Filter by the object’s `icon` field."""
   icon: StringFilter
@@ -1928,7 +1891,7 @@ input TaskFilter {
   updatedAt: DatetimeFilter
 
   """Filter by the object’s `columnIndex` field."""
-  columnIndex: IntFilter
+  columnIndex: StringFilter
 
   """Filter by the object’s `projectId` field."""
   projectId: UUIDFilter
@@ -2417,7 +2380,6 @@ input TaskAggregatesFilter {
 }
 
 input TaskSumAggregateFilter {
-  columnIndex: BigIntFilter
   number: BigIntFilter
 }
 
@@ -2437,17 +2399,14 @@ input TaskDistinctCountAggregateFilter {
 }
 
 input TaskMinAggregateFilter {
-  columnIndex: IntFilter
   number: IntFilter
 }
 
 input TaskMaxAggregateFilter {
-  columnIndex: IntFilter
   number: IntFilter
 }
 
 input TaskAverageAggregateFilter {
-  columnIndex: BigFloatFilter
   number: BigFloatFilter
 }
 
@@ -2494,22 +2453,18 @@ input BigFloatFilter {
 }
 
 input TaskStddevSampleAggregateFilter {
-  columnIndex: BigFloatFilter
   number: BigFloatFilter
 }
 
 input TaskStddevPopulationAggregateFilter {
-  columnIndex: BigFloatFilter
   number: BigFloatFilter
 }
 
 input TaskVarianceSampleAggregateFilter {
-  columnIndex: BigFloatFilter
   number: BigFloatFilter
 }
 
 input TaskVariancePopulationAggregateFilter {
-  columnIndex: BigFloatFilter
   number: BigFloatFilter
 }
 
@@ -2926,38 +2881,8 @@ input ColumnAggregatesFilter {
   """
   filter: ColumnFilter
 
-  """Sum aggregate over matching `Column` objects."""
-  sum: ColumnSumAggregateFilter
-
   """Distinct count aggregate over matching `Column` objects."""
   distinctCount: ColumnDistinctCountAggregateFilter
-
-  """Minimum aggregate over matching `Column` objects."""
-  min: ColumnMinAggregateFilter
-
-  """Maximum aggregate over matching `Column` objects."""
-  max: ColumnMaxAggregateFilter
-
-  """Mean average aggregate over matching `Column` objects."""
-  average: ColumnAverageAggregateFilter
-
-  """Sample standard deviation aggregate over matching `Column` objects."""
-  stddevSample: ColumnStddevSampleAggregateFilter
-
-  """
-  Population standard deviation aggregate over matching `Column` objects.
-  """
-  stddevPopulation: ColumnStddevPopulationAggregateFilter
-
-  """Sample variance aggregate over matching `Column` objects."""
-  varianceSample: ColumnVarianceSampleAggregateFilter
-
-  """Population variance aggregate over matching `Column` objects."""
-  variancePopulation: ColumnVariancePopulationAggregateFilter
-}
-
-input ColumnSumAggregateFilter {
-  index: BigIntFilter
 }
 
 input ColumnDistinctCountAggregateFilter {
@@ -2968,34 +2893,6 @@ input ColumnDistinctCountAggregateFilter {
   updatedAt: BigIntFilter
   index: BigIntFilter
   icon: BigIntFilter
-}
-
-input ColumnMinAggregateFilter {
-  index: IntFilter
-}
-
-input ColumnMaxAggregateFilter {
-  index: IntFilter
-}
-
-input ColumnAverageAggregateFilter {
-  index: BigFloatFilter
-}
-
-input ColumnStddevSampleAggregateFilter {
-  index: BigFloatFilter
-}
-
-input ColumnStddevPopulationAggregateFilter {
-  index: BigFloatFilter
-}
-
-input ColumnVarianceSampleAggregateFilter {
-  index: BigFloatFilter
-}
-
-input ColumnVariancePopulationAggregateFilter {
-  index: BigFloatFilter
 }
 
 """
@@ -3387,7 +3284,7 @@ input ProjectColumnFilter {
   organizationId: StringFilter
 
   """Filter by the object’s `index` field."""
-  index: IntFilter
+  index: StringFilter
 
   """Filter by the object’s `createdAt` field."""
   createdAt: DatetimeFilter
@@ -3472,7 +3369,6 @@ input ProjectAggregatesFilter {
 }
 
 input ProjectSumAggregateFilter {
-  columnIndex: BigIntFilter
   nextTaskNumber: BigIntFilter
 }
 
@@ -3493,37 +3389,30 @@ input ProjectDistinctCountAggregateFilter {
 }
 
 input ProjectMinAggregateFilter {
-  columnIndex: IntFilter
   nextTaskNumber: IntFilter
 }
 
 input ProjectMaxAggregateFilter {
-  columnIndex: IntFilter
   nextTaskNumber: IntFilter
 }
 
 input ProjectAverageAggregateFilter {
-  columnIndex: BigFloatFilter
   nextTaskNumber: BigFloatFilter
 }
 
 input ProjectStddevSampleAggregateFilter {
-  columnIndex: BigFloatFilter
   nextTaskNumber: BigFloatFilter
 }
 
 input ProjectStddevPopulationAggregateFilter {
-  columnIndex: BigFloatFilter
   nextTaskNumber: BigFloatFilter
 }
 
 input ProjectVarianceSampleAggregateFilter {
-  columnIndex: BigFloatFilter
   nextTaskNumber: BigFloatFilter
 }
 
 input ProjectVariancePopulationAggregateFilter {
-  columnIndex: BigFloatFilter
   nextTaskNumber: BigFloatFilter
 }
 
@@ -3560,8 +3449,6 @@ enum ProjectOrderBy {
   COLOR_DESC
   COLUMNS_COUNT_ASC
   COLUMNS_COUNT_DESC
-  COLUMNS_SUM_INDEX_ASC
-  COLUMNS_SUM_INDEX_DESC
   COLUMNS_DISTINCT_COUNT_ROW_ID_ASC
   COLUMNS_DISTINCT_COUNT_ROW_ID_DESC
   COLUMNS_DISTINCT_COUNT_TITLE_ASC
@@ -3576,24 +3463,8 @@ enum ProjectOrderBy {
   COLUMNS_DISTINCT_COUNT_INDEX_DESC
   COLUMNS_DISTINCT_COUNT_ICON_ASC
   COLUMNS_DISTINCT_COUNT_ICON_DESC
-  COLUMNS_MIN_INDEX_ASC
-  COLUMNS_MIN_INDEX_DESC
-  COLUMNS_MAX_INDEX_ASC
-  COLUMNS_MAX_INDEX_DESC
-  COLUMNS_AVERAGE_INDEX_ASC
-  COLUMNS_AVERAGE_INDEX_DESC
-  COLUMNS_STDDEV_SAMPLE_INDEX_ASC
-  COLUMNS_STDDEV_SAMPLE_INDEX_DESC
-  COLUMNS_STDDEV_POPULATION_INDEX_ASC
-  COLUMNS_STDDEV_POPULATION_INDEX_DESC
-  COLUMNS_VARIANCE_SAMPLE_INDEX_ASC
-  COLUMNS_VARIANCE_SAMPLE_INDEX_DESC
-  COLUMNS_VARIANCE_POPULATION_INDEX_ASC
-  COLUMNS_VARIANCE_POPULATION_INDEX_DESC
   TASKS_COUNT_ASC
   TASKS_COUNT_DESC
-  TASKS_SUM_COLUMN_INDEX_ASC
-  TASKS_SUM_COLUMN_INDEX_DESC
   TASKS_SUM_NUMBER_ASC
   TASKS_SUM_NUMBER_DESC
   TASKS_DISTINCT_COUNT_ROW_ID_ASC
@@ -3620,32 +3491,18 @@ enum ProjectOrderBy {
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   TASKS_DISTINCT_COUNT_NUMBER_ASC
   TASKS_DISTINCT_COUNT_NUMBER_DESC
-  TASKS_MIN_COLUMN_INDEX_ASC
-  TASKS_MIN_COLUMN_INDEX_DESC
   TASKS_MIN_NUMBER_ASC
   TASKS_MIN_NUMBER_DESC
-  TASKS_MAX_COLUMN_INDEX_ASC
-  TASKS_MAX_COLUMN_INDEX_DESC
   TASKS_MAX_NUMBER_ASC
   TASKS_MAX_NUMBER_DESC
-  TASKS_AVERAGE_COLUMN_INDEX_ASC
-  TASKS_AVERAGE_COLUMN_INDEX_DESC
   TASKS_AVERAGE_NUMBER_ASC
   TASKS_AVERAGE_NUMBER_DESC
-  TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
-  TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
   TASKS_STDDEV_SAMPLE_NUMBER_ASC
   TASKS_STDDEV_SAMPLE_NUMBER_DESC
-  TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC
-  TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC
   TASKS_STDDEV_POPULATION_NUMBER_ASC
   TASKS_STDDEV_POPULATION_NUMBER_DESC
-  TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
-  TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
   TASKS_VARIANCE_SAMPLE_NUMBER_ASC
   TASKS_VARIANCE_SAMPLE_NUMBER_DESC
-  TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
-  TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
   TASKS_VARIANCE_POPULATION_NUMBER_ASC
   TASKS_VARIANCE_POPULATION_NUMBER_DESC
   LABELS_COUNT_ASC
@@ -3785,7 +3642,7 @@ type Column implements Node {
   projectId: UUID!
   createdAt: Datetime!
   updatedAt: Datetime!
-  index: Int!
+  index: String!
   icon: String
 
   """Reads a single `Project` that is related to this `Column`."""
@@ -3873,7 +3730,7 @@ type Task implements Node {
   dueDate: Datetime
   createdAt: Datetime!
   updatedAt: Datetime!
-  columnIndex: Int!
+  columnIndex: String!
   projectId: UUID!
   number: Int
 
@@ -4881,7 +4738,7 @@ input TaskCondition {
   updatedAt: Datetime
 
   """Checks for equality with the object’s `columnIndex` field."""
-  columnIndex: Int
+  columnIndex: String
 
   """Checks for equality with the object’s `projectId` field."""
   projectId: UUID
@@ -5569,9 +5426,6 @@ type TaskAggregates {
 }
 
 type TaskSumAggregates {
-  """Sum of columnIndex across the matching connection"""
-  columnIndex: BigInt!
-
   """Sum of number across the matching connection"""
   number: BigInt!
 }
@@ -5615,61 +5469,36 @@ type TaskDistinctCountAggregates {
 }
 
 type TaskMinAggregates {
-  """Minimum of columnIndex across the matching connection"""
-  columnIndex: Int
-
   """Minimum of number across the matching connection"""
   number: Int
 }
 
 type TaskMaxAggregates {
-  """Maximum of columnIndex across the matching connection"""
-  columnIndex: Int
-
   """Maximum of number across the matching connection"""
   number: Int
 }
 
 type TaskAverageAggregates {
-  """Mean average of columnIndex across the matching connection"""
-  columnIndex: BigFloat
-
   """Mean average of number across the matching connection"""
   number: BigFloat
 }
 
 type TaskStddevSampleAggregates {
-  """
-  Sample standard deviation of columnIndex across the matching connection
-  """
-  columnIndex: BigFloat
-
   """Sample standard deviation of number across the matching connection"""
   number: BigFloat
 }
 
 type TaskStddevPopulationAggregates {
-  """
-  Population standard deviation of columnIndex across the matching connection
-  """
-  columnIndex: BigFloat
-
   """Population standard deviation of number across the matching connection"""
   number: BigFloat
 }
 
 type TaskVarianceSampleAggregates {
-  """Sample variance of columnIndex across the matching connection"""
-  columnIndex: BigFloat
-
   """Sample variance of number across the matching connection"""
   number: BigFloat
 }
 
 type TaskVariancePopulationAggregates {
-  """Population variance of columnIndex across the matching connection"""
-  columnIndex: BigFloat
-
   """Population variance of number across the matching connection"""
   number: BigFloat
 }
@@ -5714,7 +5543,6 @@ input TaskHavingSumInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5722,7 +5550,6 @@ input TaskHavingDistinctCountInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5730,7 +5557,6 @@ input TaskHavingMinInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5738,7 +5564,6 @@ input TaskHavingMaxInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5746,7 +5571,6 @@ input TaskHavingAverageInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5754,7 +5578,6 @@ input TaskHavingStddevSampleInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5762,7 +5585,6 @@ input TaskHavingStddevPopulationInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5770,7 +5592,6 @@ input TaskHavingVarianceSampleInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5778,7 +5599,6 @@ input TaskHavingVariancePopulationInput {
   dueDate: HavingDatetimeFilter
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  columnIndex: HavingIntFilter
   number: HavingIntFilter
 }
 
@@ -5795,54 +5615,9 @@ type ColumnAggregates {
   keys: [String]
 
   """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: ColumnSumAggregates
-
-  """
   Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
   """
   distinctCount: ColumnDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: ColumnMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: ColumnMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: ColumnAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: ColumnStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: ColumnStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: ColumnVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: ColumnVariancePopulationAggregates
-}
-
-type ColumnSumAggregates {
-  """Sum of index across the matching connection"""
-  index: BigInt!
 }
 
 type ColumnDistinctCountAggregates {
@@ -5866,41 +5641,6 @@ type ColumnDistinctCountAggregates {
 
   """Distinct count of icon across the matching connection"""
   icon: BigInt
-}
-
-type ColumnMinAggregates {
-  """Minimum of index across the matching connection"""
-  index: Int
-}
-
-type ColumnMaxAggregates {
-  """Maximum of index across the matching connection"""
-  index: Int
-}
-
-type ColumnAverageAggregates {
-  """Mean average of index across the matching connection"""
-  index: BigFloat
-}
-
-type ColumnStddevSampleAggregates {
-  """Sample standard deviation of index across the matching connection"""
-  index: BigFloat
-}
-
-type ColumnStddevPopulationAggregates {
-  """Population standard deviation of index across the matching connection"""
-  index: BigFloat
-}
-
-type ColumnVarianceSampleAggregates {
-  """Sample variance of index across the matching connection"""
-  index: BigFloat
-}
-
-type ColumnVariancePopulationAggregates {
-  """Population variance of index across the matching connection"""
-  index: BigFloat
 }
 
 """Grouping methods for `Column` for usage during aggregation."""
@@ -5935,55 +5675,46 @@ input ColumnHavingInput {
 input ColumnHavingSumInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 input ColumnHavingDistinctCountInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 input ColumnHavingMinInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 input ColumnHavingMaxInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 input ColumnHavingAverageInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 input ColumnHavingStddevSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 input ColumnHavingStddevPopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 input ColumnHavingVarianceSampleInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 input ColumnHavingVariancePopulationInput {
   createdAt: HavingDatetimeFilter
   updatedAt: HavingDatetimeFilter
-  index: HavingIntFilter
 }
 
 """
@@ -6006,7 +5737,7 @@ input ColumnCondition {
   updatedAt: Datetime
 
   """Checks for equality with the object’s `index` field."""
-  index: Int
+  index: String
 
   """Checks for equality with the object’s `icon` field."""
   icon: String
@@ -6033,8 +5764,6 @@ enum ColumnOrderBy {
   ICON_DESC
   TASKS_COUNT_ASC
   TASKS_COUNT_DESC
-  TASKS_SUM_COLUMN_INDEX_ASC
-  TASKS_SUM_COLUMN_INDEX_DESC
   TASKS_SUM_NUMBER_ASC
   TASKS_SUM_NUMBER_DESC
   TASKS_DISTINCT_COUNT_ROW_ID_ASC
@@ -6061,32 +5790,18 @@ enum ColumnOrderBy {
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   TASKS_DISTINCT_COUNT_NUMBER_ASC
   TASKS_DISTINCT_COUNT_NUMBER_DESC
-  TASKS_MIN_COLUMN_INDEX_ASC
-  TASKS_MIN_COLUMN_INDEX_DESC
   TASKS_MIN_NUMBER_ASC
   TASKS_MIN_NUMBER_DESC
-  TASKS_MAX_COLUMN_INDEX_ASC
-  TASKS_MAX_COLUMN_INDEX_DESC
   TASKS_MAX_NUMBER_ASC
   TASKS_MAX_NUMBER_DESC
-  TASKS_AVERAGE_COLUMN_INDEX_ASC
-  TASKS_AVERAGE_COLUMN_INDEX_DESC
   TASKS_AVERAGE_NUMBER_ASC
   TASKS_AVERAGE_NUMBER_DESC
-  TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
-  TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
   TASKS_STDDEV_SAMPLE_NUMBER_ASC
   TASKS_STDDEV_SAMPLE_NUMBER_DESC
-  TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC
-  TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC
   TASKS_STDDEV_POPULATION_NUMBER_ASC
   TASKS_STDDEV_POPULATION_NUMBER_DESC
-  TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
-  TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
   TASKS_VARIANCE_SAMPLE_NUMBER_ASC
   TASKS_VARIANCE_SAMPLE_NUMBER_DESC
-  TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
-  TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
   TASKS_VARIANCE_POPULATION_NUMBER_ASC
   TASKS_VARIANCE_POPULATION_NUMBER_DESC
 }
@@ -7048,8 +6763,6 @@ enum UserOrderBy {
   AUTHORED_POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
   AUTHORED_TASKS_COUNT_ASC
   AUTHORED_TASKS_COUNT_DESC
-  AUTHORED_TASKS_SUM_COLUMN_INDEX_ASC
-  AUTHORED_TASKS_SUM_COLUMN_INDEX_DESC
   AUTHORED_TASKS_SUM_NUMBER_ASC
   AUTHORED_TASKS_SUM_NUMBER_DESC
   AUTHORED_TASKS_DISTINCT_COUNT_ROW_ID_ASC
@@ -7076,32 +6789,18 @@ enum UserOrderBy {
   AUTHORED_TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_ASC
   AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_DESC
-  AUTHORED_TASKS_MIN_COLUMN_INDEX_ASC
-  AUTHORED_TASKS_MIN_COLUMN_INDEX_DESC
   AUTHORED_TASKS_MIN_NUMBER_ASC
   AUTHORED_TASKS_MIN_NUMBER_DESC
-  AUTHORED_TASKS_MAX_COLUMN_INDEX_ASC
-  AUTHORED_TASKS_MAX_COLUMN_INDEX_DESC
   AUTHORED_TASKS_MAX_NUMBER_ASC
   AUTHORED_TASKS_MAX_NUMBER_DESC
-  AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_ASC
-  AUTHORED_TASKS_AVERAGE_COLUMN_INDEX_DESC
   AUTHORED_TASKS_AVERAGE_NUMBER_ASC
   AUTHORED_TASKS_AVERAGE_NUMBER_DESC
-  AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
-  AUTHORED_TASKS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
   AUTHORED_TASKS_STDDEV_SAMPLE_NUMBER_ASC
   AUTHORED_TASKS_STDDEV_SAMPLE_NUMBER_DESC
-  AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_ASC
-  AUTHORED_TASKS_STDDEV_POPULATION_COLUMN_INDEX_DESC
   AUTHORED_TASKS_STDDEV_POPULATION_NUMBER_ASC
   AUTHORED_TASKS_STDDEV_POPULATION_NUMBER_DESC
-  AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
-  AUTHORED_TASKS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
   AUTHORED_TASKS_VARIANCE_SAMPLE_NUMBER_ASC
   AUTHORED_TASKS_VARIANCE_SAMPLE_NUMBER_DESC
-  AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
-  AUTHORED_TASKS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
   AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_ASC
   AUTHORED_TASKS_VARIANCE_POPULATION_NUMBER_DESC
   USER_PREFERENCES_COUNT_ASC
@@ -7152,6 +6851,246 @@ enum UserOrderBy {
   EMOJIS_DISTINCT_COUNT_CREATED_AT_DESC
   EMOJIS_DISTINCT_COUNT_UPDATED_AT_ASC
   EMOJIS_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
+"""A connection to a list of `ProjectColumn` values."""
+type ProjectColumnConnection {
+  """A list of `ProjectColumn` objects."""
+  nodes: [ProjectColumn!]!
+
+  """
+  A list of edges which contains the `ProjectColumn` and cursor to aid in pagination.
+  """
+  edges: [ProjectColumnEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ProjectColumn` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ProjectColumnAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `ProjectColumn` for these aggregates."""
+    groupBy: [ProjectColumnGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ProjectColumnHavingInput
+  ): [ProjectColumnAggregates!]
+}
+
+"""A `ProjectColumn` edge in the connection."""
+type ProjectColumnEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProjectColumn` at the end of the edge."""
+  node: ProjectColumn!
+}
+
+type ProjectColumnAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ProjectColumnDistinctCountAggregates
+}
+
+type ProjectColumnDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of icon across the matching connection"""
+  icon: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of organizationId across the matching connection"""
+  organizationId: BigInt
+
+  """Distinct count of index across the matching connection"""
+  index: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `ProjectColumn` for usage during aggregation."""
+enum ProjectColumnGroupBy {
+  ICON
+  TITLE
+  ORGANIZATION_ID
+  INDEX
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ProjectColumn` aggregates."""
+input ProjectColumnHavingInput {
+  AND: [ProjectColumnHavingInput!]
+  OR: [ProjectColumnHavingInput!]
+  sum: ProjectColumnHavingSumInput
+  distinctCount: ProjectColumnHavingDistinctCountInput
+  min: ProjectColumnHavingMinInput
+  max: ProjectColumnHavingMaxInput
+  average: ProjectColumnHavingAverageInput
+  stddevSample: ProjectColumnHavingStddevSampleInput
+  stddevPopulation: ProjectColumnHavingStddevPopulationInput
+  varianceSample: ProjectColumnHavingVarianceSampleInput
+  variancePopulation: ProjectColumnHavingVariancePopulationInput
+}
+
+input ProjectColumnHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ProjectColumnHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `ProjectColumn` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ProjectColumnCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `icon` field."""
+  icon: String
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+
+  """Checks for equality with the object’s `index` field."""
+  index: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `ProjectColumn`."""
+enum ProjectColumnOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ICON_ASC
+  ICON_DESC
+  TITLE_ASC
+  TITLE_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+  INDEX_ASC
+  INDEX_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  PROJECTS_COUNT_ASC
+  PROJECTS_COUNT_DESC
+  PROJECTS_SUM_NEXT_TASK_NUMBER_ASC
+  PROJECTS_SUM_NEXT_TASK_NUMBER_DESC
+  PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
+  PROJECTS_DISTINCT_COUNT_NAME_ASC
+  PROJECTS_DISTINCT_COUNT_NAME_DESC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC
+  PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC
+  PROJECTS_DISTINCT_COUNT_PREFIX_ASC
+  PROJECTS_DISTINCT_COUNT_PREFIX_DESC
+  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
+  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_ASC
+  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_DESC
+  PROJECTS_DISTINCT_COUNT_SLUG_ASC
+  PROJECTS_DISTINCT_COUNT_SLUG_DESC
+  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_ASC
+  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC
+  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC
+  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC
+  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC
+  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
+  PROJECTS_DISTINCT_COUNT_COLOR_ASC
+  PROJECTS_DISTINCT_COUNT_COLOR_DESC
+  PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
+  PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
+  PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
+  PROJECTS_MAX_NEXT_TASK_NUMBER_DESC
+  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC
+  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC
+  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC
+  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC
+  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC
+  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC
 }
 
 """A connection to a list of `ProjectLabel` values."""
@@ -7356,351 +7295,6 @@ enum ProjectLabelOrderBy {
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC
   PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC
-}
-
-"""A connection to a list of `ProjectColumn` values."""
-type ProjectColumnConnection {
-  """A list of `ProjectColumn` objects."""
-  nodes: [ProjectColumn!]!
-
-  """
-  A list of edges which contains the `ProjectColumn` and cursor to aid in pagination.
-  """
-  edges: [ProjectColumnEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `ProjectColumn` you could get from the connection."""
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: ProjectColumnAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """The method to use when grouping `ProjectColumn` for these aggregates."""
-    groupBy: [ProjectColumnGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: ProjectColumnHavingInput
-  ): [ProjectColumnAggregates!]
-}
-
-"""A `ProjectColumn` edge in the connection."""
-type ProjectColumnEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `ProjectColumn` at the end of the edge."""
-  node: ProjectColumn!
-}
-
-type ProjectColumnAggregates {
-  keys: [String]
-
-  """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: ProjectColumnSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: ProjectColumnDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: ProjectColumnMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: ProjectColumnMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: ProjectColumnAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: ProjectColumnStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: ProjectColumnStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: ProjectColumnVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: ProjectColumnVariancePopulationAggregates
-}
-
-type ProjectColumnSumAggregates {
-  """Sum of index across the matching connection"""
-  index: BigInt!
-}
-
-type ProjectColumnDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of icon across the matching connection"""
-  icon: BigInt
-
-  """Distinct count of title across the matching connection"""
-  title: BigInt
-
-  """Distinct count of organizationId across the matching connection"""
-  organizationId: BigInt
-
-  """Distinct count of index across the matching connection"""
-  index: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-type ProjectColumnMinAggregates {
-  """Minimum of index across the matching connection"""
-  index: Int
-}
-
-type ProjectColumnMaxAggregates {
-  """Maximum of index across the matching connection"""
-  index: Int
-}
-
-type ProjectColumnAverageAggregates {
-  """Mean average of index across the matching connection"""
-  index: BigFloat
-}
-
-type ProjectColumnStddevSampleAggregates {
-  """Sample standard deviation of index across the matching connection"""
-  index: BigFloat
-}
-
-type ProjectColumnStddevPopulationAggregates {
-  """Population standard deviation of index across the matching connection"""
-  index: BigFloat
-}
-
-type ProjectColumnVarianceSampleAggregates {
-  """Sample variance of index across the matching connection"""
-  index: BigFloat
-}
-
-type ProjectColumnVariancePopulationAggregates {
-  """Population variance of index across the matching connection"""
-  index: BigFloat
-}
-
-"""Grouping methods for `ProjectColumn` for usage during aggregation."""
-enum ProjectColumnGroupBy {
-  ICON
-  TITLE
-  ORGANIZATION_ID
-  INDEX
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `ProjectColumn` aggregates."""
-input ProjectColumnHavingInput {
-  AND: [ProjectColumnHavingInput!]
-  OR: [ProjectColumnHavingInput!]
-  sum: ProjectColumnHavingSumInput
-  distinctCount: ProjectColumnHavingDistinctCountInput
-  min: ProjectColumnHavingMinInput
-  max: ProjectColumnHavingMaxInput
-  average: ProjectColumnHavingAverageInput
-  stddevSample: ProjectColumnHavingStddevSampleInput
-  stddevPopulation: ProjectColumnHavingStddevPopulationInput
-  varianceSample: ProjectColumnHavingVarianceSampleInput
-  variancePopulation: ProjectColumnHavingVariancePopulationInput
-}
-
-input ProjectColumnHavingSumInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectColumnHavingDistinctCountInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectColumnHavingMinInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectColumnHavingMaxInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectColumnHavingAverageInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectColumnHavingStddevSampleInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectColumnHavingStddevPopulationInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectColumnHavingVarianceSampleInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input ProjectColumnHavingVariancePopulationInput {
-  index: HavingIntFilter
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `ProjectColumn` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input ProjectColumnCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `icon` field."""
-  icon: String
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `organizationId` field."""
-  organizationId: String
-
-  """Checks for equality with the object’s `index` field."""
-  index: Int
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `ProjectColumn`."""
-enum ProjectColumnOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  ICON_ASC
-  ICON_DESC
-  TITLE_ASC
-  TITLE_DESC
-  ORGANIZATION_ID_ASC
-  ORGANIZATION_ID_DESC
-  INDEX_ASC
-  INDEX_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-  PROJECTS_COUNT_ASC
-  PROJECTS_COUNT_DESC
-  PROJECTS_SUM_COLUMN_INDEX_ASC
-  PROJECTS_SUM_COLUMN_INDEX_DESC
-  PROJECTS_SUM_NEXT_TASK_NUMBER_ASC
-  PROJECTS_SUM_NEXT_TASK_NUMBER_DESC
-  PROJECTS_DISTINCT_COUNT_ROW_ID_ASC
-  PROJECTS_DISTINCT_COUNT_ROW_ID_DESC
-  PROJECTS_DISTINCT_COUNT_NAME_ASC
-  PROJECTS_DISTINCT_COUNT_NAME_DESC
-  PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC
-  PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC
-  PROJECTS_DISTINCT_COUNT_PREFIX_ASC
-  PROJECTS_DISTINCT_COUNT_PREFIX_DESC
-  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC
-  PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC
-  PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC
-  PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC
-  PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC
-  PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC
-  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_ASC
-  PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_DESC
-  PROJECTS_DISTINCT_COUNT_SLUG_ASC
-  PROJECTS_DISTINCT_COUNT_SLUG_DESC
-  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_ASC
-  PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC
-  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC
-  PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC
-  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC
-  PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
-  PROJECTS_DISTINCT_COUNT_COLOR_ASC
-  PROJECTS_DISTINCT_COUNT_COLOR_DESC
-  PROJECTS_MIN_COLUMN_INDEX_ASC
-  PROJECTS_MIN_COLUMN_INDEX_DESC
-  PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
-  PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
-  PROJECTS_MAX_COLUMN_INDEX_ASC
-  PROJECTS_MAX_COLUMN_INDEX_DESC
-  PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
-  PROJECTS_MAX_NEXT_TASK_NUMBER_DESC
-  PROJECTS_AVERAGE_COLUMN_INDEX_ASC
-  PROJECTS_AVERAGE_COLUMN_INDEX_DESC
-  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_ASC
-  PROJECTS_STDDEV_SAMPLE_COLUMN_INDEX_DESC
-  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_ASC
-  PROJECTS_STDDEV_POPULATION_COLUMN_INDEX_DESC
-  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC
-  PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC
-  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_ASC
-  PROJECTS_VARIANCE_SAMPLE_COLUMN_INDEX_DESC
-  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC
-  PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC
-  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_ASC
-  PROJECTS_VARIANCE_POPULATION_COLUMN_INDEX_DESC
-  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC
-  PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC
 }
 
 """A connection to a list of `Setting` values."""
@@ -8011,6 +7605,14 @@ type Mutation {
     input: CreateUserInput!
   ): CreateUserPayload
 
+  """Creates a single `Column`."""
+  createColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateColumnInput!
+  ): CreateColumnPayload
+
   """Creates a single `Post`."""
   createPost(
     """
@@ -8019,6 +7621,14 @@ type Mutation {
     input: CreatePostInput!
   ): CreatePostPayload
 
+  """Creates a single `ProjectColumn`."""
+  createProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectColumnInput!
+  ): CreateProjectColumnPayload
+
   """Creates a single `ProjectLabel`."""
   createProjectLabel(
     """
@@ -8026,14 +7636,6 @@ type Mutation {
     """
     input: CreateProjectLabelInput!
   ): CreateProjectLabelPayload
-
-  """Creates a single `Column`."""
-  createColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateColumnInput!
-  ): CreateColumnPayload
 
   """Creates a single `Label`."""
   createLabel(
@@ -8050,14 +7652,6 @@ type Mutation {
     """
     input: CreateProjectLinkInput!
   ): CreateProjectLinkPayload
-
-  """Creates a single `ProjectColumn`."""
-  createProjectColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateProjectColumnInput!
-  ): CreateProjectColumnPayload
 
   """Creates a single `UserPreference`."""
   createUserPreference(
@@ -8173,6 +7767,22 @@ type Mutation {
     input: UpdateUserInput!
   ): UpdateUserPayload
 
+  """Updates a single `Column` using its globally unique id and a patch."""
+  updateColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnByIdInput!
+  ): UpdateColumnPayload
+
+  """Updates a single `Column` using a unique key and a patch."""
+  updateColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnInput!
+  ): UpdateColumnPayload
+
   """Updates a single `Post` using its globally unique id and a patch."""
   updatePostById(
     """
@@ -8188,6 +7798,24 @@ type Mutation {
     """
     input: UpdatePostInput!
   ): UpdatePostPayload
+
+  """
+  Updates a single `ProjectColumn` using its globally unique id and a patch.
+  """
+  updateProjectColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectColumnByIdInput!
+  ): UpdateProjectColumnPayload
+
+  """Updates a single `ProjectColumn` using a unique key and a patch."""
+  updateProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectColumnInput!
+  ): UpdateProjectColumnPayload
 
   """
   Updates a single `ProjectLabel` using its globally unique id and a patch.
@@ -8206,22 +7834,6 @@ type Mutation {
     """
     input: UpdateProjectLabelInput!
   ): UpdateProjectLabelPayload
-
-  """Updates a single `Column` using its globally unique id and a patch."""
-  updateColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnByIdInput!
-  ): UpdateColumnPayload
-
-  """Updates a single `Column` using a unique key and a patch."""
-  updateColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnInput!
-  ): UpdateColumnPayload
 
   """Updates a single `Label` using its globally unique id and a patch."""
   updateLabelById(
@@ -8256,24 +7868,6 @@ type Mutation {
     """
     input: UpdateProjectLinkInput!
   ): UpdateProjectLinkPayload
-
-  """
-  Updates a single `ProjectColumn` using its globally unique id and a patch.
-  """
-  updateProjectColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectColumnByIdInput!
-  ): UpdateProjectColumnPayload
-
-  """Updates a single `ProjectColumn` using a unique key and a patch."""
-  updateProjectColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectColumnInput!
-  ): UpdateProjectColumnPayload
 
   """
   Updates a single `UserPreference` using its globally unique id and a patch.
@@ -8421,6 +8015,22 @@ type Mutation {
     input: DeleteUserInput!
   ): DeleteUserPayload
 
+  """Deletes a single `Column` using its globally unique id."""
+  deleteColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnByIdInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single `Column` using a unique key."""
+  deleteColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnInput!
+  ): DeleteColumnPayload
+
   """Deletes a single `Post` using its globally unique id."""
   deletePostById(
     """
@@ -8437,6 +8047,22 @@ type Mutation {
     input: DeletePostInput!
   ): DeletePostPayload
 
+  """Deletes a single `ProjectColumn` using its globally unique id."""
+  deleteProjectColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectColumnByIdInput!
+  ): DeleteProjectColumnPayload
+
+  """Deletes a single `ProjectColumn` using a unique key."""
+  deleteProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectColumnInput!
+  ): DeleteProjectColumnPayload
+
   """Deletes a single `ProjectLabel` using its globally unique id."""
   deleteProjectLabelById(
     """
@@ -8452,22 +8078,6 @@ type Mutation {
     """
     input: DeleteProjectLabelInput!
   ): DeleteProjectLabelPayload
-
-  """Deletes a single `Column` using its globally unique id."""
-  deleteColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnByIdInput!
-  ): DeleteColumnPayload
-
-  """Deletes a single `Column` using a unique key."""
-  deleteColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnInput!
-  ): DeleteColumnPayload
 
   """Deletes a single `Label` using its globally unique id."""
   deleteLabelById(
@@ -8500,22 +8110,6 @@ type Mutation {
     """
     input: DeleteProjectLinkInput!
   ): DeleteProjectLinkPayload
-
-  """Deletes a single `ProjectColumn` using its globally unique id."""
-  deleteProjectColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectColumnByIdInput!
-  ): DeleteProjectColumnPayload
-
-  """Deletes a single `ProjectColumn` using a unique key."""
-  deleteProjectColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectColumnInput!
-  ): DeleteProjectColumnPayload
 
   """Deletes a single `UserPreference` using its globally unique id."""
   deleteUserPreferenceById(
@@ -8802,6 +8396,52 @@ input UserInput {
   email: String!
 }
 
+"""The output of our create `Column` mutation."""
+type CreateColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was created by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the create `Column` mutation."""
+input CreateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Column` to be created by this mutation."""
+  column: ColumnInput!
+}
+
+"""An input for mutations affecting `Column`"""
+input ColumnInput {
+  rowId: UUID
+  title: String!
+  projectId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: String!
+  icon: String
+}
+
 """The output of our create `Post` mutation."""
 type CreatePostPayload {
   """
@@ -8844,6 +8484,52 @@ input PostInput {
   description: String
   authorId: UUID
   taskId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `ProjectColumn` mutation."""
+type CreateProjectColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectColumn` that was created by this mutation."""
+  projectColumn: ProjectColumn
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectColumn`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the create `ProjectColumn` mutation."""
+input CreateProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProjectColumn` to be created by this mutation."""
+  projectColumn: ProjectColumnInput!
+}
+
+"""An input for mutations affecting `ProjectColumn`"""
+input ProjectColumnInput {
+  rowId: UUID
+  icon: String
+  title: String!
+  organizationId: String!
+  index: String!
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -8892,52 +8578,6 @@ input ProjectLabelInput {
   organizationId: String!
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""The output of our create `Column` mutation."""
-type CreateColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was created by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the create `Column` mutation."""
-input CreateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Column` to be created by this mutation."""
-  column: ColumnInput!
-}
-
-"""An input for mutations affecting `Column`"""
-input ColumnInput {
-  rowId: UUID
-  title: String!
-  projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: Int
-  icon: String
 }
 
 """The output of our create `Label` mutation."""
@@ -9029,52 +8669,6 @@ input ProjectLinkInput {
   url: String!
   title: String
   order: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our create `ProjectColumn` mutation."""
-type CreateProjectColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ProjectColumn` that was created by this mutation."""
-  projectColumn: ProjectColumn
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ProjectColumn`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
-}
-
-"""All input for the create `ProjectColumn` mutation."""
-input CreateProjectColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `ProjectColumn` to be created by this mutation."""
-  projectColumn: ProjectColumnInput!
-}
-
-"""An input for mutations affecting `ProjectColumn`"""
-input ProjectColumnInput {
-  rowId: UUID
-  icon: String
-  title: String!
-  organizationId: String!
-  index: Int
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -9220,7 +8814,7 @@ input TaskInput {
   dueDate: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  columnIndex: Int
+  columnIndex: String!
   projectId: UUID!
   number: Int
 }
@@ -9271,7 +8865,7 @@ input ProjectInput {
   updatedAt: Datetime
   projectColumnId: UUID!
   slug: String!
-  columnIndex: Int
+  columnIndex: String!
   isPublic: Boolean
   nextTaskNumber: Int
   color: String
@@ -9618,6 +9212,76 @@ input UpdateUserInput {
   patch: UserPatch!
 }
 
+"""The output of our update `Column` mutation."""
+type UpdateColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was updated by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the `updateColumnById` mutation."""
+input UpdateColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Column` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Column` being updated.
+  """
+  patch: ColumnPatch!
+}
+
+"""
+Represents an update to a `Column`. Fields that are set will be updated.
+"""
+input ColumnPatch {
+  rowId: UUID
+  title: String
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: String
+  icon: String
+}
+
+"""All input for the `updateColumn` mutation."""
+input UpdateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Column` being updated.
+  """
+  patch: ColumnPatch!
+}
+
 """The output of our update `Post` mutation."""
 type UpdatePostPayload {
   """
@@ -9684,6 +9348,76 @@ input UpdatePostInput {
   An object where the defined keys will be set on the `Post` being updated.
   """
   patch: PostPatch!
+}
+
+"""The output of our update `ProjectColumn` mutation."""
+type UpdateProjectColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectColumn` that was updated by this mutation."""
+  projectColumn: ProjectColumn
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectColumn`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the `updateProjectColumnById` mutation."""
+input UpdateProjectColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectColumn` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ProjectColumn` being updated.
+  """
+  patch: ProjectColumnPatch!
+}
+
+"""
+Represents an update to a `ProjectColumn`. Fields that are set will be updated.
+"""
+input ProjectColumnPatch {
+  rowId: UUID
+  icon: String
+  title: String
+  organizationId: String
+  index: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateProjectColumn` mutation."""
+input UpdateProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ProjectColumn` being updated.
+  """
+  patch: ProjectColumnPatch!
 }
 
 """The output of our update `ProjectLabel` mutation."""
@@ -9754,76 +9488,6 @@ input UpdateProjectLabelInput {
   An object where the defined keys will be set on the `ProjectLabel` being updated.
   """
   patch: ProjectLabelPatch!
-}
-
-"""The output of our update `Column` mutation."""
-type UpdateColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was updated by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the `updateColumnById` mutation."""
-input UpdateColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Column` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Column` being updated.
-  """
-  patch: ColumnPatch!
-}
-
-"""
-Represents an update to a `Column`. Fields that are set will be updated.
-"""
-input ColumnPatch {
-  rowId: UUID
-  title: String
-  projectId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: Int
-  icon: String
-}
-
-"""All input for the `updateColumn` mutation."""
-input UpdateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Column` being updated.
-  """
-  patch: ColumnPatch!
 }
 
 """The output of our update `Label` mutation."""
@@ -9965,76 +9629,6 @@ input UpdateProjectLinkInput {
   An object where the defined keys will be set on the `ProjectLink` being updated.
   """
   patch: ProjectLinkPatch!
-}
-
-"""The output of our update `ProjectColumn` mutation."""
-type UpdateProjectColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ProjectColumn` that was updated by this mutation."""
-  projectColumn: ProjectColumn
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ProjectColumn`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
-}
-
-"""All input for the `updateProjectColumnById` mutation."""
-input UpdateProjectColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ProjectColumn` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `ProjectColumn` being updated.
-  """
-  patch: ProjectColumnPatch!
-}
-
-"""
-Represents an update to a `ProjectColumn`. Fields that are set will be updated.
-"""
-input ProjectColumnPatch {
-  rowId: UUID
-  icon: String
-  title: String
-  organizationId: String
-  index: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateProjectColumn` mutation."""
-input UpdateProjectColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `ProjectColumn` being updated.
-  """
-  patch: ProjectColumnPatch!
 }
 
 """The output of our update `UserPreference` mutation."""
@@ -10233,7 +9827,7 @@ input TaskPatch {
   dueDate: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-  columnIndex: Int
+  columnIndex: String
   projectId: UUID
   number: Int
 }
@@ -10308,7 +9902,7 @@ input ProjectPatch {
   updatedAt: Datetime
   projectColumnId: UUID
   slug: String
-  columnIndex: Int
+  columnIndex: String
   isPublic: Boolean
   nextTaskNumber: Int
   color: String
@@ -10572,6 +10166,54 @@ input DeleteUserInput {
   rowId: UUID!
 }
 
+"""The output of our delete `Column` mutation."""
+type DeleteColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was deleted by this mutation."""
+  column: Column
+  deletedColumnId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the `deleteColumnById` mutation."""
+input DeleteColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Column` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteColumn` mutation."""
+input DeleteColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Post` mutation."""
 type DeletePostPayload {
   """
@@ -10620,6 +10262,54 @@ input DeletePostInput {
   rowId: UUID!
 }
 
+"""The output of our delete `ProjectColumn` mutation."""
+type DeleteProjectColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProjectColumn` that was deleted by this mutation."""
+  projectColumn: ProjectColumn
+  deletedProjectColumnId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ProjectColumn`. May be used by Relay 1."""
+  projectColumnEdge(
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectColumnEdge
+}
+
+"""All input for the `deleteProjectColumnById` mutation."""
+input DeleteProjectColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ProjectColumn` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteProjectColumn` mutation."""
+input DeleteProjectColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `ProjectLabel` mutation."""
 type DeleteProjectLabelPayload {
   """
@@ -10660,54 +10350,6 @@ input DeleteProjectLabelByIdInput {
 
 """All input for the `deleteProjectLabel` mutation."""
 input DeleteProjectLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `Column` mutation."""
-type DeleteColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was deleted by this mutation."""
-  column: Column
-  deletedColumnId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the `deleteColumnById` mutation."""
-input DeleteColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Column` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteColumn` mutation."""
-input DeleteColumnInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10804,54 +10446,6 @@ input DeleteProjectLinkByIdInput {
 
 """All input for the `deleteProjectLink` mutation."""
 input DeleteProjectLinkInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `ProjectColumn` mutation."""
-type DeleteProjectColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ProjectColumn` that was deleted by this mutation."""
-  projectColumn: ProjectColumn
-  deletedProjectColumnId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ProjectColumn`. May be used by Relay 1."""
-  projectColumnEdge(
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ProjectColumnEdge
-}
-
-"""All input for the `deleteProjectColumnById` mutation."""
-input DeleteProjectColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ProjectColumn` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteProjectColumn` mutation."""
-input DeleteProjectColumnInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

@@ -9,6 +9,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
+import { generateNKeysBetween } from "fractional-indexing";
 
 import { invalidatePermissionCache } from "lib/authz";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
@@ -189,9 +190,9 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
 
 /** Default project columns provisioned for every new organization. */
 const DEFAULT_PROJECT_COLUMNS = [
-  { emoji: "🗓", title: "Planned", index: 0 },
-  { emoji: "🚧", title: "In Progress", index: 1 },
-  { emoji: "✅", title: "Completed", index: 2 },
+  { emoji: "🗓", title: "Planned" },
+  { emoji: "🚧", title: "In Progress" },
+  { emoji: "✅", title: "Completed" },
 ] as const;
 
 /**
@@ -216,12 +217,18 @@ async function handleOrganizationCreated(
         `Project columns already exist for org ${organizationId}, skipping`,
       );
     } else {
+      const indices = generateNKeysBetween(
+        null,
+        null,
+        DEFAULT_PROJECT_COLUMNS.length,
+      );
+
       await dbPool.insert(projectColumns).values(
-        DEFAULT_PROJECT_COLUMNS.map((col) => ({
+        DEFAULT_PROJECT_COLUMNS.map((col, i) => ({
           organizationId,
           emoji: col.emoji,
           title: col.title,
-          index: col.index,
+          index: indices[i]!,
         })),
       );
 
