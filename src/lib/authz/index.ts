@@ -119,7 +119,6 @@ export async function deleteTuples(
 
 /**
  * Build a cache key for a permission check.
- * @knipignore Used by scripts
  */
 export function buildPermissionCacheKey(
   userId: string,

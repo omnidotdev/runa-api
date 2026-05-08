@@ -38,7 +38,6 @@ type Tier = "free" | "pro" | "team" | "enterprise";
 /**
  * Error thrown when entitlements service is unavailable.
  * Callers should catch this and return appropriate error to user.
- * @knipignore Used by scripts
  */
 export class EntitlementsUnavailableError extends Error {
   constructor(message: string) {
