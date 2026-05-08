@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
   index,
-  integer,
   pgTable,
   text,
   uniqueIndex,
@@ -25,7 +24,7 @@ export const columns = pgTable(
     projectId: uuid()
       .notNull()
       .references(() => projects.id, { onDelete: "cascade" }),
-    index: integer().notNull().default(0),
+    index: text().notNull(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

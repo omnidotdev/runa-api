@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
   index,
-  integer,
   pgTable,
   text,
   uniqueIndex,
@@ -26,7 +25,7 @@ export const projectColumns = pgTable(
     title: text().notNull(),
     // Organization ID from JWT claims - not a FK, just a reference
     organizationId: text().notNull(),
-    index: integer().notNull().default(0),
+    index: text().notNull(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

@@ -42,7 +42,7 @@ export const projects = pgTable(
     projectColumnId: uuid()
       .notNull()
       .references(() => projectColumns.id, { onDelete: "cascade" }),
-    columnIndex: integer().notNull().default(0),
+    columnIndex: text().notNull(),
     // whether the project is publicly accessible (like Trello public boards)
     isPublic: boolean().notNull().default(false),
     // Counter for auto-incrementing task numbers within this project
@@ -55,6 +55,7 @@ export const projects = pgTable(
     uniqueIndex().on(table.id),
     index("project_organization_id_idx").on(table.organizationId),
     index().on(table.projectColumnId),
+    index().on(table.projectColumnId, table.columnIndex),
     unique().on(table.slug, table.organizationId),
   ],
 );
