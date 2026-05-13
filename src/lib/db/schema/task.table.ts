@@ -39,7 +39,7 @@ export const tasks = pgTable(
     columnId: uuid()
       .notNull()
       .references(() => columns.id, { onDelete: "cascade" }),
-    columnIndex: integer().notNull().default(0),
+    columnIndex: text().notNull(),
     dueDate: timestamp({
       precision: 6,
       mode: "string",
