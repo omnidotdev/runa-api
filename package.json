@@ -49,7 +49,7 @@
     "@opentelemetry/exporter-trace-otlp-http": "^0.210.0",
     "@opentelemetry/resources": "^2.4.0",
     "@opentelemetry/sdk-logs": "^0.210.0",
-    "@opentelemetry/sdk-node": "^0.210.0",
+    "@opentelemetry/sdk-node": "^0.217.0",
     "@opentelemetry/semantic-conventions": "^1.39.0",
     "drizzle-orm": "^0.45.1",
     "elysia": "^1.4.21",
