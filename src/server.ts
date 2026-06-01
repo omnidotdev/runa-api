@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
 import { useOpenTelemetry } from "@envelop/opentelemetry";
@@ -32,6 +34,8 @@ import {
 import idpWebhook from "lib/idp/webhooks";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
 import { initializeSearchIndexes, search } from "lib/search";
+
+const commit = (() => { try { return readFileSync("/app/.git-sha", "utf-8").trim(); } catch { return "unknown"; } })();
 
 /** Health check timeout in milliseconds */
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
@@ -200,7 +204,7 @@ async function startServer(): Promise<void> {
       }),
     )
     // Health check endpoints for container orchestration
-    .get("/health", () => ({ status: "ok" }))
+    .get("/health", () => ({ status: "ok", commit }))
     .get("/ready", async ({ set }) => {
       const dbHealthy = await checkDatabaseHealth();
 
