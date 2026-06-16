@@ -12,6 +12,8 @@ import type {
   PermissionCheck,
   PermissionCheckResult,
   TupleSyncResult,
+  WardenRelation,
+  WardenResourceType,
 } from "@omnidotdev/providers";
 
 /** @knipignore Used by scripts */
@@ -40,11 +42,11 @@ export function isTransactionalSyncMode(): boolean {
  *
  * @param accessToken - JWT access token (kept for API compatibility, auth handled by provider config)
  */
-export async function checkPermission(
+export async function checkPermission<T extends WardenResourceType>(
   userId: string,
-  resourceType: string,
+  resourceType: T,
   resourceId: string,
-  permission: string,
+  permission: WardenRelation<T>,
   _accessToken: string,
   requestCache?: Map<string, boolean>,
 ): Promise<boolean> {
