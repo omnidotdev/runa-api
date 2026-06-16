@@ -1,12 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  index,
-  integer,
-  pgTable,
-  text,
-  uniqueIndex,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { projects } from "./project.table";
@@ -25,7 +18,7 @@ export const columns = pgTable(
     projectId: uuid()
       .notNull()
       .references(() => projects.id, { onDelete: "cascade" }),
-    index: integer().notNull().default(0),
+    index: text().notNull(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
