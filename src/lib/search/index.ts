@@ -8,3 +8,4 @@ export {
   indexProject,
   indexTask,
 } from "./indexing";
+export { SEARCH_RECONCILE_INTERVAL_MS, reconcileSearchIndex } from "./reconcile";
