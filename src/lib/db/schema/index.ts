@@ -11,6 +11,7 @@
 // - Fields: entityType, entityId, action, userId, changes (jsonb), createdAt
 
 export * from "./assignee.table";
+export * from "./attachment.table";
 export * from "./column.table";
 export * from "./emoji.table";
 export * from "./label.table";

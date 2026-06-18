@@ -38,6 +38,16 @@ export const {
   // Meilisearch (unified search)
   MEILISEARCH_URL,
   MEILISEARCH_MASTER_KEY,
+  // Object storage for task attachments (S3-compatible: Garage in prod, MinIO self-host)
+  S3_BUCKET,
+  S3_REGION,
+  S3_ENDPOINT,
+  S3_ACCESS_KEY_ID,
+  S3_SECRET_ACCESS_KEY,
+  // Optional CDN/public base URL override for stored objects
+  S3_PUBLIC_BASE_URL,
+  // Public base URL of this API, used to build proxied attachment URLs
+  PUBLIC_API_URL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -46,6 +56,9 @@ export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
 
 /** Whether search indexing is enabled */
 export const isSearchEnabled = !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
+
+/** Whether object storage (attachments) is configured */
+export const isStorageEnabled = !!S3_BUCKET;
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
@@ -61,3 +74,5 @@ if (!AUTHZ_SERVICE_KEY)
 if (!FLAGS_API_HOST)
   console.warn("FLAGS_API_HOST not set, feature flags disabled");
 if (!MEILISEARCH_URL) console.warn("MEILISEARCH_URL not set, search disabled");
+if (!S3_BUCKET)
+  console.warn("S3_BUCKET not set, task attachments disabled (uploads no-op)");

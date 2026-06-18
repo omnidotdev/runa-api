@@ -25,4 +25,7 @@ export const FEATURE_KEYS = {
   MAX_ASSIGNEES: "max_assignees",
   MAX_MEMBERS: "max_members",
   MAX_ADMINS: "max_admins",
+  // Attachment storage limits (per-file and per-org total, in bytes)
+  MAX_ATTACHMENT_BYTES: "max_attachment_bytes",
+  MAX_STORAGE_BYTES: "max_storage_bytes",
 } as const;

@@ -32,10 +32,26 @@ import {
   organizationsPlugin,
 } from "lib/graphql/plugins";
 import idpWebhook from "lib/idp/webhooks";
+import {
+  attachmentDeleteRoutes,
+  attachmentServeRoutes,
+  attachmentUploadRoutes,
+} from "lib/media";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
-import { initializeSearchIndexes, search } from "lib/search";
+import {
+  SEARCH_RECONCILE_INTERVAL_MS,
+  initializeSearchIndexes,
+  reconcileSearchIndex,
+  search,
+} from "lib/search";
 
-const commit = (() => { try { return readFileSync("/app/.git-sha", "utf-8").trim(); } catch { return "unknown"; } })();
+const commit = (() => {
+  try {
+    return readFileSync("/app/.git-sha", "utf-8").trim();
+  } catch {
+    return "unknown";
+  }
+})();
 
 /** Health check timeout in milliseconds */
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
@@ -174,12 +190,15 @@ async function startServer(): Promise<void> {
     .use(
       cors({
         origin: CORS_ALLOWED_ORIGINS!.split(","),
-        methods: ["GET", "POST", "OPTIONS"],
+        methods: ["GET", "POST", "DELETE", "OPTIONS"],
       }),
     )
     .use(authzRoutes)
     .use(entitlementsWebhook)
     .use(idpWebhook)
+    .use(attachmentUploadRoutes)
+    .use(attachmentDeleteRoutes)
+    .use(attachmentServeRoutes)
     .use(
       yoga({
         schema,
@@ -221,11 +240,20 @@ async function startServer(): Promise<void> {
     }))
     .listen(PORT);
 
-  // Initialize search indexes if search is enabled
+  // Initialize search indexes if search is enabled, then reconcile (self-heal)
+  // the index from the database on boot and periodically thereafter so any
+  // documents dropped by best-effort indexing are restored
   if (search) {
-    initializeSearchIndexes().catch((err) => {
-      console.error("[Search] Failed to initialize indexes:", err);
-    });
+    initializeSearchIndexes()
+      .then(() => reconcileSearchIndex())
+      .catch((err) => {
+        console.error("[Search] Failed to initialize/reconcile indexes:", err);
+      });
+    setInterval(() => {
+      reconcileSearchIndex().catch((err) => {
+        console.error("[Search] Periodic reconcile failed:", err);
+      });
+    }, SEARCH_RECONCILE_INTERVAL_MS).unref();
   }
 
   // biome-ignore lint/suspicious/noConsole: root logging

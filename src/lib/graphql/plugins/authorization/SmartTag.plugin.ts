@@ -7,7 +7,13 @@ import { jsonPgSmartTags } from "postgraphile/utils";
 const SmartTagPlugin = jsonPgSmartTags({
   version: 1,
   config: {
-    class: {},
+    class: {
+      // Attachment writes go through REST routes (so storage + DB stay in sync),
+      // so hide the auto-generated insert/update/delete mutations. Reads remain.
+      attachment: {
+        tags: { behavior: "-insert -update -delete" },
+      },
+    },
   },
 });
 
