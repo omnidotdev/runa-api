@@ -28,10 +28,12 @@
     "authz:backfill": "bun run --env-file .env.local src/scripts/authz/backfillProjectTuples.ts",
     "authz:detect-drift": "bun run --env-file .env.local src/scripts/authz/detectDrift.ts",
     "authz:reconcile": "bun run --env-file .env.local src/scripts/authz/reconcile.ts",
+    "search:reconcile": "bun run --env-file .env.local src/scripts/search/reconcile.ts",
     "graphql:generate": "GRAPHILE_ENV=development bun run --env-file .env.local src/scripts/generateGraphqlSchema.ts",
     "prepare": "husky"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1071.0",
     "@elysiajs/cors": "^1.4.1",
     "@elysiajs/graphql-yoga": "^1.4.0",
     "@envelop/generic-auth": "^11.0.0",
@@ -41,7 +43,7 @@
     "@graphile/pg-aggregates": "^0.2.0-rc.1",
     "@graphile/simplify-inflection": "^8.0.0-rc.2",
     "@graphql-yoga/plugin-disable-introspection": "^2.19.0",
-    "@omnidotdev/providers": "github:omnidotdev/providers#1d1c21d",
+    "@omnidotdev/providers": "github:omnidotdev/providers#1c99594",
     "@omnidotdev/search": "github:omnidotdev/search",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.68.0",
@@ -62,6 +64,7 @@
     "pg": "^8.16.3",
     "postgraphile": "^5.0.0-rc.9",
     "postgraphile-plugin-connection-filter": "^3.0.0-rc.1",
+    "sharp": "^0.35.1",
     "unleash-client": "^6.9.0"
   },
   "devDependencies": {

@@ -10,6 +10,7 @@ import {
   createBillingProvider,
   createEventsProvider,
   createFlagProvider,
+  createStorageProvider,
 } from "@omnidotdev/providers";
 
 import {
@@ -19,6 +20,12 @@ import {
   BILLING_SERVICE_API_KEY,
   FLAGS_API_HOST,
   FLAGS_CLIENT_KEY,
+  S3_ACCESS_KEY_ID,
+  S3_BUCKET,
+  S3_ENDPOINT,
+  S3_PUBLIC_BASE_URL,
+  S3_REGION,
+  S3_SECRET_ACCESS_KEY,
   VORTEX_API_KEY,
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
@@ -61,6 +68,36 @@ export const flags = createFlagProvider(
         url: FLAGS_API_HOST,
         apiKey: FLAGS_CLIENT_KEY!,
         appName: "runa-api",
+      }
+    : {},
+);
+
+/**
+ * Object storage for task attachments.
+ *
+ * Uses an S3-compatible backend (Garage in prod via FractalObjectStorage, MinIO
+ * for self-host) when `S3_BUCKET` is configured, otherwise falls back to the
+ * noop provider so the app boots without storage configuration (uploads succeed
+ * but bytes are not persisted).
+ */
+export const storage = createStorageProvider(
+  S3_BUCKET
+    ? {
+        provider: "s3",
+        bucket: S3_BUCKET,
+        region: S3_REGION,
+        endpoint: S3_ENDPOINT,
+        publicBaseUrl: S3_PUBLIC_BASE_URL,
+        // Garage and MinIO require path-style addressing; the default only
+        // enables it for localhost, so virtual-host requests fail to resolve
+        forcePathStyle: true,
+        credentials:
+          S3_ACCESS_KEY_ID && S3_SECRET_ACCESS_KEY
+            ? {
+                accessKeyId: S3_ACCESS_KEY_ID,
+                secretAccessKey: S3_SECRET_ACCESS_KEY,
+              }
+            : undefined,
       }
     : {},
 );
