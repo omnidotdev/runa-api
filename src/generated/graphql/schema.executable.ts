@@ -1648,6 +1648,15 @@ const spec_project = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    image: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   extensions: {
@@ -6405,6 +6414,9 @@ function ProjectInput_isPublicApply(obj, val, info) {
 function ProjectInput_nextTaskNumberApply(obj, val, info) {
   obj.set("next_task_number", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function ProjectInput_imageApply(obj, val, info) {
+  obj.set("image", bakedInputRuntime(info.schema, info.field.type, val));
+}
 export const typeDefs = /* GraphQL */`"""The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -7215,6 +7227,7 @@ type Project implements Node {
   isPublic: Boolean!
   nextTaskNumber: Int!
   color: String
+  image: String
 
   """Reads a single \`ProjectColumn\` that is related to this \`Project\`."""
   projectColumn: ProjectColumn
@@ -7632,6 +7645,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of color across the matching connection"""
   color: BigInt
+
+  """Distinct count of image across the matching connection"""
+  image: BigInt
 }
 
 type ProjectMinAggregates {
@@ -7696,6 +7712,7 @@ enum ProjectGroupBy {
   IS_PUBLIC
   NEXT_TASK_NUMBER
   COLOR
+  IMAGE
 }
 
 """Conditions for \`Project\` aggregates."""
@@ -7827,6 +7844,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s \`color\` field."""
   color: String
+
+  """Checks for equality with the object’s \`image\` field."""
+  image: String
 }
 
 """
@@ -7871,6 +7891,9 @@ input ProjectFilter {
 
   """Filter by the object’s \`color\` field."""
   color: StringFilter
+
+  """Filter by the object’s \`image\` field."""
+  image: StringFilter
 
   """Filter by the object’s \`columns\` relation."""
   columns: ProjectToManyColumnFilter
@@ -10105,6 +10128,7 @@ input ProjectDistinctCountAggregateFilter {
   isPublic: BigIntFilter
   nextTaskNumber: BigIntFilter
   color: BigIntFilter
+  image: BigIntFilter
 }
 
 input ProjectMinAggregateFilter {
@@ -10166,6 +10190,8 @@ enum ProjectOrderBy {
   NEXT_TASK_NUMBER_DESC
   COLOR_ASC
   COLOR_DESC
+  IMAGE_ASC
+  IMAGE_DESC
   COLUMNS_COUNT_ASC
   COLUMNS_COUNT_DESC
   COLUMNS_DISTINCT_COUNT_ROW_ID_ASC
@@ -14610,6 +14636,8 @@ enum ProjectColumnOrderBy {
   PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
   PROJECTS_DISTINCT_COUNT_COLOR_ASC
   PROJECTS_DISTINCT_COUNT_COLOR_DESC
+  PROJECTS_DISTINCT_COUNT_IMAGE_ASC
+  PROJECTS_DISTINCT_COUNT_IMAGE_DESC
   PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
   PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
   PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
@@ -16402,6 +16430,7 @@ input ProjectInput {
   isPublic: Boolean
   nextTaskNumber: Int
   color: String
+  image: String
 }
 
 """The output of our update \`ProjectProjectLabel\` mutation."""
@@ -17439,6 +17468,7 @@ input ProjectPatch {
   isPublic: Boolean
   nextTaskNumber: Int
   color: String
+  image: String
 }
 
 """All input for the \`updateProject\` mutation."""
@@ -21107,6 +21137,9 @@ ${String(oldPlan36)}`);
       columnIndex: ProjectDistinctCountAggregates_columnIndexPlan,
       createdAt: ProjectDistinctCountAggregates_createdAtPlan,
       description: ProjectDistinctCountAggregates_descriptionPlan,
+      image($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "image", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       isPublic($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "is_public", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
@@ -24346,6 +24379,9 @@ export const inputObjects = {
       columnIndex: ProjectCondition_columnIndexApply,
       createdAt: ProjectCondition_createdAtApply,
       description: ProjectCondition_descriptionApply,
+      image($condition, val) {
+        return applyAttributeCondition("image", TYPES.text, $condition, val);
+      },
       isPublic($condition, val) {
         return applyAttributeCondition("is_public", TYPES.boolean, $condition, val);
       },
@@ -24375,6 +24411,9 @@ export const inputObjects = {
       columnIndex: TaskDistinctCountAggregateFilter_columnIndexApply,
       createdAt: AssigneeDistinctCountAggregateFilter_createdAtApply,
       description: PostDistinctCountAggregateFilter_descriptionApply,
+      image($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "image", TYPES.bigint, TYPES.text, $parent, input);
+      },
       isPublic($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "is_public", TYPES.bigint, TYPES.boolean, $parent, input);
       },
@@ -24434,6 +24473,9 @@ export const inputObjects = {
       },
       description(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("description", "description", spec_project.attributes.description, queryBuilder, value);
+      },
+      image(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("image", "image", spec_project.attributes.image, queryBuilder, value);
       },
       isPublic(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("isPublic", "is_public", spec_project.attributes.is_public, queryBuilder, value);
@@ -24728,6 +24770,7 @@ export const inputObjects = {
       columnIndex: TaskInput_columnIndexApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
       description: PostInput_descriptionApply,
+      image: ProjectInput_imageApply,
       isPublic: ProjectInput_isPublicApply,
       name: UserInput_nameApply,
       nextTaskNumber: ProjectInput_nextTaskNumberApply,
@@ -25243,6 +25286,7 @@ export const inputObjects = {
       columnIndex: TaskInput_columnIndexApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
       description: PostInput_descriptionApply,
+      image: ProjectInput_imageApply,
       isPublic: ProjectInput_isPublicApply,
       name: UserInput_nameApply,
       nextTaskNumber: ProjectInput_nextTaskNumberApply,
@@ -28384,6 +28428,12 @@ export const enums = {
       PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "DESC", relation21, resource_projectPgResource, $select);
       },
+      PROJECTS_DISTINCT_COUNT_IMAGE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image, "image", "ASC", relation21, resource_projectPgResource, $select);
+      },
+      PROJECTS_DISTINCT_COUNT_IMAGE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image, "image", "DESC", relation21, resource_projectPgResource, $select);
+      },
       PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "ASC", relation21, resource_projectPgResource, $select);
       },
@@ -28498,6 +28548,9 @@ export const enums = {
       CREATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
       CREATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
       DESCRIPTION: ProjectGroupBy_DESCRIPTIONApply,
+      IMAGE($pgSelect) {
+        applyGroupByAttribute("image", TYPES.text, $pgSelect);
+      },
       IS_PUBLIC($pgSelect) {
         applyGroupByAttribute("is_public", TYPES.boolean, $pgSelect);
       },
@@ -28714,6 +28767,18 @@ export const enums = {
       CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
       DESCRIPTION_ASC: ProjectOrderBy_DESCRIPTION_ASCApply,
       DESCRIPTION_DESC: ProjectOrderBy_DESCRIPTION_DESCApply,
+      IMAGE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "image",
+          direction: "ASC"
+        });
+      },
+      IMAGE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "image",
+          direction: "DESC"
+        });
+      },
       IS_PUBLIC_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "is_public",

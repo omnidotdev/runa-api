@@ -808,6 +808,7 @@ type Project implements Node {
   isPublic: Boolean!
   nextTaskNumber: Int!
   color: String
+  image: String
 
   """Reads a single `ProjectColumn` that is related to this `Project`."""
   projectColumn: ProjectColumn
@@ -1225,6 +1226,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of color across the matching connection"""
   color: BigInt
+
+  """Distinct count of image across the matching connection"""
+  image: BigInt
 }
 
 type ProjectMinAggregates {
@@ -1289,6 +1293,7 @@ enum ProjectGroupBy {
   IS_PUBLIC
   NEXT_TASK_NUMBER
   COLOR
+  IMAGE
 }
 
 """Conditions for `Project` aggregates."""
@@ -1420,6 +1425,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s `color` field."""
   color: String
+
+  """Checks for equality with the object’s `image` field."""
+  image: String
 }
 
 """
@@ -1464,6 +1472,9 @@ input ProjectFilter {
 
   """Filter by the object’s `color` field."""
   color: StringFilter
+
+  """Filter by the object’s `image` field."""
+  image: StringFilter
 
   """Filter by the object’s `columns` relation."""
   columns: ProjectToManyColumnFilter
@@ -3698,6 +3709,7 @@ input ProjectDistinctCountAggregateFilter {
   isPublic: BigIntFilter
   nextTaskNumber: BigIntFilter
   color: BigIntFilter
+  image: BigIntFilter
 }
 
 input ProjectMinAggregateFilter {
@@ -3759,6 +3771,8 @@ enum ProjectOrderBy {
   NEXT_TASK_NUMBER_DESC
   COLOR_ASC
   COLOR_DESC
+  IMAGE_ASC
+  IMAGE_DESC
   COLUMNS_COUNT_ASC
   COLUMNS_COUNT_DESC
   COLUMNS_DISTINCT_COUNT_ROW_ID_ASC
@@ -8203,6 +8217,8 @@ enum ProjectColumnOrderBy {
   PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC
   PROJECTS_DISTINCT_COUNT_COLOR_ASC
   PROJECTS_DISTINCT_COUNT_COLOR_DESC
+  PROJECTS_DISTINCT_COUNT_IMAGE_ASC
+  PROJECTS_DISTINCT_COUNT_IMAGE_DESC
   PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
   PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
   PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
@@ -9995,6 +10011,7 @@ input ProjectInput {
   isPublic: Boolean
   nextTaskNumber: Int
   color: String
+  image: String
 }
 
 """The output of our update `ProjectProjectLabel` mutation."""
@@ -11032,6 +11049,7 @@ input ProjectPatch {
   isPublic: Boolean
   nextTaskNumber: Int
   color: String
+  image: String
 }
 
 """All input for the `updateProject` mutation."""

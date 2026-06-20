@@ -48,6 +48,8 @@ export const projects = pgTable(
     // Counter for auto-incrementing task numbers within this project
     nextTaskNumber: integer("next_task_number").notNull().default(1),
     color: varchar({ length: 24 }),
+    // Avatar image URL (served via the media serve route)
+    image: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
