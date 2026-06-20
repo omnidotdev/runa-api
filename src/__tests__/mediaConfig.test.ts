@@ -70,4 +70,25 @@ describe("mediaConfig", () => {
       );
     });
   });
+
+  // The project-avatar route accepts only images: it validates the upload then
+  // requires the resolved kind to be "image". These assert that gate's inputs.
+  describe("avatar image gate", () => {
+    const isImage = (mimeType: string, size: number): boolean => {
+      const result = validateUpload(mimeType, size);
+      return "kind" in result && result.kind === "image";
+    };
+
+    it("accepts an image", () => {
+      expect(isImage("image/png", 5 * MB)).toBe(true);
+    });
+
+    it("rejects a non-image file (e.g. PDF)", () => {
+      expect(isImage("application/pdf", 1 * MB)).toBe(false);
+    });
+
+    it("rejects a video", () => {
+      expect(isImage("video/mp4", 1 * MB)).toBe(false);
+    });
+  });
 });
