@@ -1,5 +1,8 @@
 import { useGenericAuth } from "@envelop/generic-auth";
-import { verifyAccessToken as verifyJwksToken } from "@omnidotdev/providers";
+import {
+  extractOrgClaims,
+  verifyAccessToken as verifyJwksToken,
+} from "@omnidotdev/providers";
 import {
   AuthenticationError,
   createAuthQueryClient,
@@ -11,6 +14,7 @@ import {
 
 import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/db/schema";
+import { ensureOrganizationProvisioned } from "lib/idp/provisionOrganization";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { UserInfoClaims } from "@omnidotdev/providers";
@@ -150,6 +154,20 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
         },
       })
       .returning();
+
+    // Lazily provision the user's organizations (default project columns +
+    // settings) on first access. Organization creation events are delivered
+    // out-of-band and may never reach this service, so we self-heal here to
+    // guarantee any reachable org is usable. Non-fatal: never blocks auth.
+    try {
+      await Promise.all(
+        extractOrgClaims(claims).map((org) =>
+          ensureOrganizationProvisioned(org.id),
+        ),
+      );
+    } catch (err) {
+      console.error("[Auth] Organization provisioning failed:", err);
+    }
 
     return user;
   } catch (err) {
