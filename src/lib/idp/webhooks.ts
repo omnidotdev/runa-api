@@ -249,7 +249,7 @@ interface HandlerResult {
  */
 async function handleMemberAdded(
   payload: MemberAddedPayload,
-): Promise<HandlerResult | void> {
+): Promise<HandlerResult | undefined> {
   const { organizationId, userId, role } = payload;
 
   // Enforce max_members limit
@@ -308,7 +308,7 @@ async function handleMemberRemoved(
  */
 async function handleMemberRoleChanged(
   payload: MemberRoleChangedPayload,
-): Promise<HandlerResult | void> {
+): Promise<HandlerResult | undefined> {
   const { organizationId, userId, oldRole, newRole } = payload;
 
   // Enforce max_admins when promoting to admin or owner
