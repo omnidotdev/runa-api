@@ -9,15 +9,15 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
-import { generateNKeysBetween } from "fractional-indexing";
 
 import { invalidatePermissionCache } from "lib/authz";
 import { IDP_WEBHOOK_SECRET } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { projectColumns, settings, users } from "lib/db/schema";
+import { settings, users } from "lib/db/schema";
 import { checkOrganizationLimit } from "lib/entitlements";
 import { FEATURE_KEYS } from "lib/graphql/plugins/authorization/constants";
 import fetchMemberCounts from "lib/idp/memberCounts";
+import { ensureOrganizationProvisioned } from "lib/idp/provisionOrganization";
 
 interface OrganizationCreatedPayload {
   eventType: "organization.created";
@@ -188,13 +188,6 @@ const idpWebhook = new Elysia({ prefix: "/webhooks" }).post(
   },
 );
 
-/** Default project columns provisioned for every new organization. */
-const DEFAULT_PROJECT_COLUMNS = [
-  { emoji: "🗓", title: "Planned" },
-  { emoji: "🚧", title: "In Progress" },
-  { emoji: "✅", title: "Completed" },
-] as const;
-
 /**
  * Handle organization created event.
  * Provisions default project columns and settings for the organization.
@@ -202,75 +195,7 @@ const DEFAULT_PROJECT_COLUMNS = [
 async function handleOrganizationCreated(
   payload: OrganizationCreatedPayload,
 ): Promise<void> {
-  const { organizationId, organizationType } = payload;
-
-  // Provision project columns
-  try {
-    const existingColumns = await dbPool.query.projectColumns.findFirst({
-      where: (table, { eq }) => eq(table.organizationId, organizationId),
-      columns: { id: true },
-    });
-
-    if (existingColumns) {
-      // biome-ignore lint/suspicious/noConsole: webhook logging
-      console.log(
-        `Project columns already exist for org ${organizationId}, skipping`,
-      );
-    } else {
-      const indices = generateNKeysBetween(
-        null,
-        null,
-        DEFAULT_PROJECT_COLUMNS.length,
-      );
-
-      await dbPool.insert(projectColumns).values(
-        DEFAULT_PROJECT_COLUMNS.map((col, i) => ({
-          organizationId,
-          emoji: col.emoji,
-          title: col.title,
-          index: indices[i]!,
-        })),
-      );
-
-      // biome-ignore lint/suspicious/noConsole: webhook logging
-      console.log(
-        `Provisioned default project columns for ${organizationType} org ${organizationId}`,
-      );
-    }
-  } catch (err) {
-    console.error(
-      `Failed to provision project columns for org ${organizationId}:`,
-      err,
-    );
-  }
-
-  // Provision settings
-  try {
-    const existingSettings = await dbPool.query.settings.findFirst({
-      where: (table, { eq }) => eq(table.organizationId, organizationId),
-      columns: { id: true },
-    });
-
-    if (existingSettings) {
-      // biome-ignore lint/suspicious/noConsole: webhook logging
-      console.log(`Settings already exist for org ${organizationId}, skipping`);
-    } else {
-      await dbPool.insert(settings).values({
-        organizationId,
-        viewMode: "board",
-      });
-
-      // biome-ignore lint/suspicious/noConsole: webhook logging
-      console.log(
-        `Provisioned default settings for ${organizationType} org ${organizationId}`,
-      );
-    }
-  } catch (err) {
-    console.error(
-      `Failed to provision settings for org ${organizationId}:`,
-      err,
-    );
-  }
+  await ensureOrganizationProvisioned(payload.organizationId);
 }
 
 /**
@@ -324,7 +249,7 @@ interface HandlerResult {
  */
 async function handleMemberAdded(
   payload: MemberAddedPayload,
-): Promise<HandlerResult | void> {
+): Promise<HandlerResult | undefined> {
   const { organizationId, userId, role } = payload;
 
   // Enforce max_members limit
@@ -383,7 +308,7 @@ async function handleMemberRemoved(
  */
 async function handleMemberRoleChanged(
   payload: MemberRoleChangedPayload,
-): Promise<HandlerResult | void> {
+): Promise<HandlerResult | undefined> {
   const { organizationId, userId, oldRole, newRole } = payload;
 
   // Enforce max_admins when promoting to admin or owner
