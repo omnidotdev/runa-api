@@ -28,6 +28,7 @@ import {
 } from "lib/graphql/plugins/defaults";
 import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
+import { ContentModerationPlugin } from "lib/graphql/plugins/moderation";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
 import {
   PostSearchPlugin,
@@ -67,6 +68,8 @@ const graphilePreset: GraphileConfig.Preset = {
     TaskLabelPlugin,
     UserPlugin,
     UserPreferencePlugin,
+    // Content moderation plugin (pre-mutation Say Less screening)
+    ContentModerationPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
     AuthzSyncPlugin,
     // Default resource seeding plugins

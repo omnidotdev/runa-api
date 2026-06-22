@@ -38,6 +38,9 @@ export const {
   // Meilisearch (unified search)
   MEILISEARCH_URL,
   MEILISEARCH_MASTER_KEY,
+  // Content moderation (Say Less). When unset, moderation is a noop (content
+  // always allowed).
+  SAY_LESS_URL,
   // Object storage for task attachments (S3-compatible: Garage in prod, MinIO self-host)
   S3_BUCKET,
   S3_REGION,
@@ -60,6 +63,9 @@ export const isSearchEnabled = !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
 /** Whether object storage (attachments) is configured */
 export const isStorageEnabled = !!S3_BUCKET;
 
+/** Whether content moderation (Say Less) is configured */
+export const isModerationEnabled = !!SAY_LESS_URL;
+
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
   console.warn("BILLING_BASE_URL not set, billing disabled");
@@ -76,3 +82,5 @@ if (!FLAGS_API_HOST)
 if (!MEILISEARCH_URL) console.warn("MEILISEARCH_URL not set, search disabled");
 if (!S3_BUCKET)
   console.warn("S3_BUCKET not set, task attachments disabled (uploads no-op)");
+if (!SAY_LESS_URL)
+  console.warn("SAY_LESS_URL not set, content moderation disabled");
