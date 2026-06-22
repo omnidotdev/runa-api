@@ -41,6 +41,10 @@ export const {
   // Content moderation (Say Less). When unset, moderation is a noop (content
   // always allowed).
   SAY_LESS_URL,
+  // Image moderation (See Less). When unset, image moderation is a noop. URL of
+  // the See Less service plus the API key it authenticates callers with.
+  SEE_LESS_API_URL,
+  SEE_LESS_API_KEY,
   // Object storage for task attachments (S3-compatible: Garage in prod, MinIO self-host)
   S3_BUCKET,
   S3_REGION,
@@ -66,6 +70,9 @@ export const isStorageEnabled = !!S3_BUCKET;
 /** Whether content moderation (Say Less) is configured */
 export const isModerationEnabled = !!SAY_LESS_URL;
 
+/** Whether image moderation (See Less) is configured */
+export const isImageModerationEnabled = !!SEE_LESS_API_URL;
+
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
   console.warn("BILLING_BASE_URL not set, billing disabled");
@@ -84,3 +91,5 @@ if (!S3_BUCKET)
   console.warn("S3_BUCKET not set, task attachments disabled (uploads no-op)");
 if (!SAY_LESS_URL)
   console.warn("SAY_LESS_URL not set, content moderation disabled");
+if (!SEE_LESS_API_URL)
+  console.warn("SEE_LESS_API_URL not set, image moderation disabled");

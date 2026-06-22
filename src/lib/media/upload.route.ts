@@ -23,6 +23,7 @@ import {
   FEATURE_KEYS,
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
+import { moderateImage } from "lib/moderation/image";
 import { events, storage } from "lib/providers";
 import { extensionForMimeType, validateUpload } from "./mediaConfig";
 import { proxiedUrl, resolveSubject } from "./util";
@@ -134,6 +135,17 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
       : undefined;
 
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Screen images through See Less before processing or storing. A hard
+    // "block" verdict rejects the upload; lesser verdicts pass. Fails open
+    if (kind === "image") {
+      const { verdict } = await moderateImage(buffer, file.type);
+      if (verdict === "block") {
+        set.status = 422;
+        return { error: "Image rejected by content moderation" };
+      }
+    }
+
     const hash = createHash("sha256").update(buffer).digest("hex").slice(0, 12);
     const extension = extensionForMimeType(file.type);
     const storageKey = `runa/${task.organizationId}/${taskId}/${hash}.${extension}`;
