@@ -37,6 +37,7 @@ import {
   attachmentServeRoutes,
   attachmentUploadRoutes,
   projectAvatarRoutes,
+  projectBackgroundRoutes,
 } from "lib/media";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
 import {
@@ -201,6 +202,7 @@ async function startServer(): Promise<void> {
     .use(attachmentDeleteRoutes)
     .use(attachmentServeRoutes)
     .use(projectAvatarRoutes)
+    .use(projectBackgroundRoutes)
     .use(
       yoga({
         schema,
