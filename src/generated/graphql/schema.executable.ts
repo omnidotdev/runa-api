@@ -1658,6 +1658,15 @@ const spec_project = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    background: {
+      codec: TYPES.jsonb,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   extensions: {
@@ -2886,6 +2895,7 @@ const Project_updatedAtPlan = $record => {
 const Project_columnIndexPlan = $record => {
   return $record.get("column_index");
 };
+const JSONSerialize = value => value;
 const totalCountConnectionPlan = $connection => $connection.cloneSubplanWithoutPagination("aggregate").singleAsRecord().select(sql`count(*)`, TYPES.bigint, !1);
 function pgAggregatesCloneSubplanWithoutPaginationSingle($connection) {
   return $connection.cloneSubplanWithoutPagination("aggregate").single();
@@ -3900,7 +3910,6 @@ const EmojiOrderBy_POST_ID_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
-const JSONSerialize = value => value;
 function AttachmentDistinctCountAggregates_authorIdPlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "author_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
 }
@@ -6975,6 +6984,9 @@ function ProjectInput_nextTaskNumberApply(obj, val, info) {
 function ProjectInput_imageApply(obj, val, info) {
   obj.set("image", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function ProjectInput_backgroundApply(obj, val, info) {
+  obj.set("background", bakedInputRuntime(info.schema, info.field.type, val));
+}
 export const typeDefs = /* GraphQL */`"""The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -7786,6 +7798,7 @@ type Project implements Node {
   nextTaskNumber: Int!
   color: String
   image: String
+  background: JSON
 
   """Reads a single \`ProjectColumn\` that is related to this \`Project\`."""
   projectColumn: ProjectColumn
@@ -7994,6 +8007,11 @@ type Project implements Node {
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection!
 }
+
+"""
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
 
 type ProjectColumn implements Node {
   """
@@ -8206,6 +8224,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of image across the matching connection"""
   image: BigInt
+
+  """Distinct count of background across the matching connection"""
+  background: BigInt
 }
 
 type ProjectMinAggregates {
@@ -8271,6 +8292,7 @@ enum ProjectGroupBy {
   NEXT_TASK_NUMBER
   COLOR
   IMAGE
+  BACKGROUND
 }
 
 """Conditions for \`Project\` aggregates."""
@@ -10687,6 +10709,7 @@ input ProjectDistinctCountAggregateFilter {
   nextTaskNumber: BigIntFilter
   color: BigIntFilter
   image: BigIntFilter
+  background: BigIntFilter
 }
 
 input ProjectMinAggregateFilter {
@@ -11999,11 +12022,6 @@ type Attachment implements Node {
   """Reads a single \`Task\` that is related to this \`Attachment\`."""
   task: Task
 }
-
-"""
-Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
 
 """A \`Attachment\` edge in the connection."""
 type AttachmentEdge {
@@ -15196,6 +15214,8 @@ enum ProjectColumnOrderBy {
   PROJECTS_DISTINCT_COUNT_COLOR_DESC
   PROJECTS_DISTINCT_COUNT_IMAGE_ASC
   PROJECTS_DISTINCT_COUNT_IMAGE_DESC
+  PROJECTS_DISTINCT_COUNT_BACKGROUND_ASC
+  PROJECTS_DISTINCT_COUNT_BACKGROUND_DESC
   PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
   PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
   PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
@@ -16989,6 +17009,7 @@ input ProjectInput {
   nextTaskNumber: Int
   color: String
   image: String
+  background: JSON
 }
 
 """The output of our update \`ProjectProjectLabel\` mutation."""
@@ -18027,6 +18048,7 @@ input ProjectPatch {
   nextTaskNumber: Int
   color: String
   image: String
+  background: JSON
 }
 
 """All input for the \`updateProject\` mutation."""
@@ -21689,6 +21711,9 @@ ${String(oldPlan42)}`);
   },
   ProjectDistinctCountAggregates: {
     plans: {
+      background($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "background", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       color($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.varchar, "color", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
@@ -24963,6 +24988,9 @@ export const inputObjects = {
   },
   ProjectDistinctCountAggregateFilter: {
     plans: {
+      background($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "background", TYPES.bigint, TYPES.jsonb, $parent, input);
+      },
       color($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "color", TYPES.bigint, TYPES.varchar, $parent, input);
       },
@@ -25324,6 +25352,7 @@ export const inputObjects = {
   ProjectInput: {
     baked: createObjectAndApplyChildren,
     plans: {
+      background: ProjectInput_backgroundApply,
       color: ProjectLabelInput_colorApply,
       columnIndex: TaskInput_columnIndexApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
@@ -25840,6 +25869,7 @@ export const inputObjects = {
   ProjectPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
+      background: ProjectInput_backgroundApply,
       color: ProjectLabelInput_colorApply,
       columnIndex: TaskInput_columnIndexApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
@@ -28962,6 +28992,12 @@ export const enums = {
       PROJECTS_COUNT_DESC($select) {
         pgAggregatesApplyOrderByTotalCount("DESC", relation21, resource_projectPgResource, $select);
       },
+      PROJECTS_DISTINCT_COUNT_BACKGROUND_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.background, "background", "ASC", relation21, resource_projectPgResource, $select);
+      },
+      PROJECTS_DISTINCT_COUNT_BACKGROUND_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.background, "background", "DESC", relation21, resource_projectPgResource, $select);
+      },
       PROJECTS_DISTINCT_COUNT_COLOR_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.color, "color", "ASC", relation21, resource_projectPgResource, $select);
       },
@@ -29098,6 +29134,9 @@ export const enums = {
   },
   ProjectGroupBy: {
     values: {
+      BACKGROUND($pgSelect) {
+        applyGroupByAttribute("background", TYPES.jsonb, $pgSelect);
+      },
       COLOR($pgSelect) {
         applyGroupByAttribute("color", TYPES.varchar, $pgSelect);
       },

@@ -3,6 +3,7 @@ import {
   boolean,
   index,
   integer,
+  jsonb,
   pgTable,
   text,
   unique,
@@ -19,6 +20,24 @@ import { projectLinks } from "./projectLink.table";
 import { tasks } from "./task.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
+/**
+ * Board background. Distinct from `color` (which drives accents: avatars,
+ * labels, drag state). `null` renders the neutral default surface.
+ *
+ * - `solid` / `gradient`: curated preset referenced by a client-resolved token
+ * - `image`: uploaded or gallery image served via the media route
+ */
+export type ProjectBackground =
+  | { kind: "solid"; token: string }
+  | { kind: "gradient"; token: string }
+  | {
+      kind: "image";
+      assetId: string;
+      position?: string;
+      blur?: number;
+      chromeContrast?: "light" | "dark";
+    };
 
 /**
  * Project table.
@@ -48,6 +67,8 @@ export const projects = pgTable(
     // Counter for auto-incrementing task numbers within this project
     nextTaskNumber: integer("next_task_number").notNull().default(1),
     color: varchar({ length: 24 }),
+    // Board background preset or image; null renders the neutral default surface
+    background: jsonb().$type<ProjectBackground>(),
     // Avatar image URL (served via the media serve route)
     image: text(),
     createdAt: generateDefaultDate(),

@@ -809,6 +809,7 @@ type Project implements Node {
   nextTaskNumber: Int!
   color: String
   image: String
+  background: JSON
 
   """Reads a single `ProjectColumn` that is related to this `Project`."""
   projectColumn: ProjectColumn
@@ -1017,6 +1018,11 @@ type Project implements Node {
     orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLinkConnection!
 }
+
+"""
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
 
 type ProjectColumn implements Node {
   """
@@ -1229,6 +1235,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of image across the matching connection"""
   image: BigInt
+
+  """Distinct count of background across the matching connection"""
+  background: BigInt
 }
 
 type ProjectMinAggregates {
@@ -1294,6 +1303,7 @@ enum ProjectGroupBy {
   NEXT_TASK_NUMBER
   COLOR
   IMAGE
+  BACKGROUND
 }
 
 """Conditions for `Project` aggregates."""
@@ -3710,6 +3720,7 @@ input ProjectDistinctCountAggregateFilter {
   nextTaskNumber: BigIntFilter
   color: BigIntFilter
   image: BigIntFilter
+  background: BigIntFilter
 }
 
 input ProjectMinAggregateFilter {
@@ -5022,11 +5033,6 @@ type Attachment implements Node {
   """Reads a single `Task` that is related to this `Attachment`."""
   task: Task
 }
-
-"""
-Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
 
 """A `Attachment` edge in the connection."""
 type AttachmentEdge {
@@ -8219,6 +8225,8 @@ enum ProjectColumnOrderBy {
   PROJECTS_DISTINCT_COUNT_COLOR_DESC
   PROJECTS_DISTINCT_COUNT_IMAGE_ASC
   PROJECTS_DISTINCT_COUNT_IMAGE_DESC
+  PROJECTS_DISTINCT_COUNT_BACKGROUND_ASC
+  PROJECTS_DISTINCT_COUNT_BACKGROUND_DESC
   PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
   PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
   PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
@@ -10012,6 +10020,7 @@ input ProjectInput {
   nextTaskNumber: Int
   color: String
   image: String
+  background: JSON
 }
 
 """The output of our update `ProjectProjectLabel` mutation."""
@@ -11050,6 +11059,7 @@ input ProjectPatch {
   nextTaskNumber: Int
   color: String
   image: String
+  background: JSON
 }
 
 """All input for the `updateProject` mutation."""
