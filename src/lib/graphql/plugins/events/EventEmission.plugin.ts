@@ -2,13 +2,14 @@ import { EXPORTABLE } from "graphile-export";
 import { constant, context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { eventMeta } from "lib/events/enrich";
+import {
+  buildResourceEvent,
+  resourceEventWith,
+} from "lib/events/resourceEvent";
 import { events } from "lib/providers";
 
+import type { OrgVia } from "lib/events/resourceEvent";
 import type { PlanWrapperFn } from "postgraphile/utils";
-
-/** How to reach the owning organization id from a mutated row. */
-type OrgVia = "direct" | "project" | "task";
 
 /**
  * Emit an enriched CloudEvent after a Runa mutation succeeds.
@@ -38,7 +39,8 @@ const emitOnMutate = (
       context,
       sideEffect,
       events,
-      eventMeta,
+      buildResourceEvent,
+      resourceEventWith,
       entity,
       action,
       table,
@@ -71,40 +73,17 @@ const emitOnMutate = (
                 // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
                 where: (fields: any, operators: any) =>
                   operators.eq(fields.id, id),
-                with:
-                  orgVia === "project"
-                    ? { project: { columns: { organizationId: true } } }
-                    : orgVia === "task"
-                      ? {
-                          task: {
-                            with: {
-                              project: { columns: { organizationId: true } },
-                            },
-                          },
-                        }
-                      : undefined,
+                with: resourceEventWith(orgVia),
               });
 
-              const rawName = nameColumn ? row?.[nameColumn] : null;
-              const resourceName = rawName != null ? String(rawName) : null;
-
-              const organizationId: string | undefined =
-                orgVia === "direct"
-                  ? row?.organizationId
-                  : orgVia === "project"
-                    ? row?.project?.organizationId
-                    : row?.task?.project?.organizationId;
-
-              await events.emit({
-                type: `runa.${entity}.${action}`,
-                data: {
+              await events.emit(
+                buildResourceEvent(
+                  { entity, action, nameColumn, orgVia },
                   id,
-                  ...(organizationId ? { organizationId } : {}),
-                  ...eventMeta(observer, entity, resourceName),
-                },
-                ...(organizationId ? { organizationId } : {}),
-                subject: id,
-              });
+                  row,
+                  observer,
+                ),
+              );
             } catch (error) {
               console.error(
                 `[Events] Failed to emit ${entity}.${action}:`,
@@ -121,7 +100,8 @@ const emitOnMutate = (
       context,
       sideEffect,
       events,
-      eventMeta,
+      buildResourceEvent,
+      resourceEventWith,
       entity,
       action,
       table,

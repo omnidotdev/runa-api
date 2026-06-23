@@ -4371,6 +4371,42 @@ const eventMeta = (observer, resourceType, resourceName) => ({
     actorEmail: observer.email
   } : {})
 });
+const buildResourceEvent = (spec, id, row, observer) => {
+  const rawName = spec.nameColumn ? row?.[spec.nameColumn] : null,
+    resourceName = rawName != null ? String(rawName) : null,
+    organizationId = spec.orgVia === "direct" ? row?.organizationId : spec.orgVia === "project" ? row?.project?.organizationId : row?.task?.project?.organizationId;
+  return {
+    type: `runa.${spec.entity}.${spec.action}`,
+    data: {
+      id,
+      ...(organizationId ? {
+        organizationId
+      } : {}),
+      ...eventMeta(observer, spec.entity, resourceName)
+    },
+    ...(organizationId ? {
+      organizationId
+    } : {}),
+    subject: id
+  };
+};
+const resourceEventWith = orgVia => orgVia === "project" ? {
+  project: {
+    columns: {
+      organizationId: !0
+    }
+  }
+} : orgVia === "task" ? {
+  task: {
+    with: {
+      project: {
+        columns: {
+          organizationId: !0
+        }
+      }
+    }
+  }
+} : void 0;
 const planWrapper8 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = constant(void 0),
@@ -4383,34 +4419,17 @@ const planWrapper8 = (plan, _, fieldArgs) => {
       const repo = db.query["columns"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            project: {
-              columns: {
-                organizationId: !0
-              }
-            }
-          }
-        }),
-        rawName = row?.["title"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.project?.organizationId;
-      await events.emit({
-        type: `runa.column.created`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "column", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("project")
       });
+      await events.emit(buildResourceEvent({
+        entity: "column",
+        action: "created",
+        nameColumn: "title",
+        orgVia: "project"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit column.created:`, error);
     }
@@ -4516,38 +4535,17 @@ const planWrapper11 = (plan, _, fieldArgs) => {
       const repo = db.query["posts"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            task: {
-              with: {
-                project: {
-                  columns: {
-                    organizationId: !0
-                  }
-                }
-              }
-            }
-          }
-        }),
-        rawName = row?.["title"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.task?.project?.organizationId;
-      await events.emit({
-        type: `runa.post.created`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "post", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("task")
       });
+      await events.emit(buildResourceEvent({
+        entity: "post",
+        action: "created",
+        nameColumn: "title",
+        orgVia: "task"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit post.created:`, error);
     }
@@ -4692,28 +4690,17 @@ const planWrapper15 = (plan, _, fieldArgs) => {
       const repo = db.query["labels"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: void 0
-        }),
-        rawName = row?.["name"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.organizationId;
-      await events.emit({
-        type: `runa.label.created`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "label", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("direct")
       });
+      await events.emit(buildResourceEvent({
+        entity: "label",
+        action: "created",
+        nameColumn: "name",
+        orgVia: "direct"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit label.created:`, error);
     }
@@ -4868,34 +4855,17 @@ const planWrapper20 = (plan, _, fieldArgs) => {
       const repo = db.query["tasks"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            project: {
-              columns: {
-                organizationId: !0
-              }
-            }
-          }
-        }),
-        rawName = row?.["number"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.project?.organizationId;
-      await events.emit({
-        type: `runa.task.created`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "task", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("project")
       });
+      await events.emit(buildResourceEvent({
+        entity: "task",
+        action: "created",
+        nameColumn: "number",
+        orgVia: "project"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit task.created:`, error);
     }
@@ -5171,28 +5141,17 @@ const planWrapper27 = (plan, _, fieldArgs) => {
       const repo = db.query["projects"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: void 0
-        }),
-        rawName = row?.["name"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.organizationId;
-      await events.emit({
-        type: `runa.project.created`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "project", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("direct")
       });
+      await events.emit(buildResourceEvent({
+        entity: "project",
+        action: "created",
+        nameColumn: "name",
+        orgVia: "direct"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit project.created:`, error);
     }
@@ -5421,34 +5380,17 @@ const planWrapper33 = (plan, _, fieldArgs) => {
       const repo = db.query["columns"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            project: {
-              columns: {
-                organizationId: !0
-              }
-            }
-          }
-        }),
-        rawName = row?.["title"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.project?.organizationId;
-      await events.emit({
-        type: `runa.column.updated`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "column", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("project")
       });
+      await events.emit(buildResourceEvent({
+        entity: "column",
+        action: "updated",
+        nameColumn: "title",
+        orgVia: "project"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit column.updated:`, error);
     }
@@ -5563,38 +5505,17 @@ const planWrapper36 = (plan, _, fieldArgs) => {
       const repo = db.query["posts"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            task: {
-              with: {
-                project: {
-                  columns: {
-                    organizationId: !0
-                  }
-                }
-              }
-            }
-          }
-        }),
-        rawName = row?.["title"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.task?.project?.organizationId;
-      await events.emit({
-        type: `runa.post.updated`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "post", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("task")
       });
+      await events.emit(buildResourceEvent({
+        entity: "post",
+        action: "updated",
+        nameColumn: "title",
+        orgVia: "task"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit post.updated:`, error);
     }
@@ -5736,28 +5657,17 @@ const planWrapper40 = (plan, _, fieldArgs) => {
       const repo = db.query["labels"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: void 0
-        }),
-        rawName = row?.["name"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.organizationId;
-      await events.emit({
-        type: `runa.label.updated`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "label", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("direct")
       });
+      await events.emit(buildResourceEvent({
+        entity: "label",
+        action: "updated",
+        nameColumn: "name",
+        orgVia: "direct"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit label.updated:`, error);
     }
@@ -5945,34 +5855,17 @@ const planWrapper45 = (plan, _, fieldArgs) => {
       const repo = db.query["tasks"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            project: {
-              columns: {
-                organizationId: !0
-              }
-            }
-          }
-        }),
-        rawName = row?.["number"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.project?.organizationId;
-      await events.emit({
-        type: `runa.task.updated`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "task", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("project")
       });
+      await events.emit(buildResourceEvent({
+        entity: "task",
+        action: "updated",
+        nameColumn: "number",
+        orgVia: "project"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit task.updated:`, error);
     }
@@ -6092,28 +5985,17 @@ const planWrapper49 = (plan, _, fieldArgs) => {
       const repo = db.query["projects"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: void 0
-        }),
-        rawName = row?.["name"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.organizationId;
-      await events.emit({
-        type: `runa.project.updated`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "project", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("direct")
       });
+      await events.emit(buildResourceEvent({
+        entity: "project",
+        action: "updated",
+        nameColumn: "name",
+        orgVia: "direct"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit project.updated:`, error);
     }
@@ -6357,34 +6239,17 @@ const planWrapper57 = (plan, _, fieldArgs) => {
       const repo = db.query["columns"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            project: {
-              columns: {
-                organizationId: !0
-              }
-            }
-          }
-        }),
-        rawName = row?.["title"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.project?.organizationId;
-      await events.emit({
-        type: `runa.column.deleted`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "column", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("project")
       });
+      await events.emit(buildResourceEvent({
+        entity: "column",
+        action: "deleted",
+        nameColumn: "title",
+        orgVia: "project"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit column.deleted:`, error);
     }
@@ -6460,38 +6325,17 @@ const planWrapper59 = (plan, _, fieldArgs) => {
       const repo = db.query["posts"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            task: {
-              with: {
-                project: {
-                  columns: {
-                    organizationId: !0
-                  }
-                }
-              }
-            }
-          }
-        }),
-        rawName = row?.["title"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.task?.project?.organizationId;
-      await events.emit({
-        type: `runa.post.deleted`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "post", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("task")
       });
+      await events.emit(buildResourceEvent({
+        entity: "post",
+        action: "deleted",
+        nameColumn: "title",
+        orgVia: "task"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit post.deleted:`, error);
     }
@@ -6629,28 +6473,17 @@ const planWrapper63 = (plan, _, fieldArgs) => {
       const repo = db.query["labels"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: void 0
-        }),
-        rawName = row?.["name"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.organizationId;
-      await events.emit({
-        type: `runa.label.deleted`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "label", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("direct")
       });
+      await events.emit(buildResourceEvent({
+        entity: "label",
+        action: "deleted",
+        nameColumn: "name",
+        orgVia: "direct"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit label.deleted:`, error);
     }
@@ -6787,34 +6620,17 @@ const planWrapper67 = (plan, _, fieldArgs) => {
       const repo = db.query["tasks"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: {
-            project: {
-              columns: {
-                organizationId: !0
-              }
-            }
-          }
-        }),
-        rawName = row?.["number"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.project?.organizationId;
-      await events.emit({
-        type: `runa.task.deleted`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "task", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("project")
       });
+      await events.emit(buildResourceEvent({
+        entity: "task",
+        action: "deleted",
+        nameColumn: "number",
+        orgVia: "project"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit task.deleted:`, error);
     }
@@ -6942,28 +6758,17 @@ const planWrapper71 = (plan, _, fieldArgs) => {
       const repo = db.query["projects"];
       if (!repo) return;
       const row = await repo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: void 0
-        }),
-        rawName = row?.["name"],
-        resourceName = rawName != null ? String(rawName) : null,
-        organizationId = row?.organizationId;
-      await events.emit({
-        type: `runa.project.deleted`,
-        data: {
-          id,
-          ...(organizationId ? {
-            organizationId
-          } : {}),
-          ...eventMeta(observer, "project", resourceName)
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
         },
-        ...(organizationId ? {
-          organizationId
-        } : {}),
-        subject: id
+        with: resourceEventWith("direct")
       });
+      await events.emit(buildResourceEvent({
+        entity: "project",
+        action: "deleted",
+        nameColumn: "name",
+        orgVia: "direct"
+      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit project.deleted:`, error);
     }
