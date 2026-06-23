@@ -1,6 +1,5 @@
+import { eventMeta } from "@omnidotdev/providers/events";
 import { EXPORTABLE } from "graphile-export";
-
-import { eventMeta } from "lib/events/enrich";
 
 import type { SelectUser } from "lib/db/schema";
 
