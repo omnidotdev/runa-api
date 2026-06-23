@@ -14,28 +14,26 @@ import type { PlanWrapperFn } from "postgraphile/utils";
  * flagged result rejects the mutation. The check runs as a pre-`plan()` side
  * effect so a flag aborts the write.
  *
- * `entityKey` is the create input wrapper field (e.g. `task` -> `input.task`);
- * update mutations carry the same fields under `input.patch`. `fields` lists the
- * text columns to screen.
+ * `inputField` is the wrapper field that holds the row on this specific
+ * mutation: create mutations nest it under `input.<entity>` (e.g. `task` ->
+ * `input.task`), update mutations expose the changed columns under
+ * `input.patch`. It must name a field that exists on the mutation's input type:
+ * grafast's `getRaw` throws on an unknown attribute, so probing a missing path
+ * (e.g. `patch` on a create input) aborts the mutation before moderation runs.
+ * `fields` lists the text columns to screen.
  */
-const moderateFields = (entityKey: string, fields: string[]): PlanWrapperFn =>
+const moderateFields = (inputField: string, fields: string[]): PlanWrapperFn =>
   EXPORTABLE(
-    (sideEffect, moderateText, entityKey, fields): PlanWrapperFn =>
+    (sideEffect, moderateText, inputField, fields): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        // Create mutations nest the row under `input.<entityKey>`; update
-        // mutations expose the changed columns under `input.patch`.
-        const $entity = fieldArgs.getRaw(["input", entityKey]);
-        const $patch = fieldArgs.getRaw(["input", "patch"]);
+        const $source = fieldArgs.getRaw(["input", inputField]);
 
-        sideEffect([$entity, $patch], async ([entity, patch]) => {
-          const source = (patch ?? entity) as
-            | Record<string, unknown>
-            | null
-            | undefined;
-          if (!source) return;
+        sideEffect([$source], async ([source]) => {
+          const row = source as Record<string, unknown> | null | undefined;
+          if (!row) return;
 
           for (const field of fields) {
-            const value = source[field];
+            const value = row[field];
             if (typeof value !== "string" || !value) continue;
 
             const { flagged } = await moderateText(value);
@@ -45,7 +43,7 @@ const moderateFields = (entityKey: string, fields: string[]): PlanWrapperFn =>
 
         return plan();
       },
-    [sideEffect, moderateText, entityKey, fields],
+    [sideEffect, moderateText, inputField, fields],
   );
 
 /**
@@ -58,13 +56,13 @@ const moderateFields = (entityKey: string, fields: string[]): PlanWrapperFn =>
 const ContentModerationPlugin = wrapPlans({
   Mutation: {
     createTask: moderateFields("task", ["content", "description"]),
-    updateTask: moderateFields("task", ["content", "description"]),
+    updateTask: moderateFields("patch", ["content", "description"]),
     createPost: moderateFields("post", ["title", "description"]),
-    updatePost: moderateFields("post", ["title", "description"]),
+    updatePost: moderateFields("patch", ["title", "description"]),
     createProject: moderateFields("project", ["description"]),
-    updateProject: moderateFields("project", ["description"]),
+    updateProject: moderateFields("patch", ["description"]),
     createColumn: moderateFields("column", ["title"]),
-    updateColumn: moderateFields("column", ["title"]),
+    updateColumn: moderateFields("patch", ["title"]),
   },
 });
 

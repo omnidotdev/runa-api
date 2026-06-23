@@ -4307,13 +4307,12 @@ ${String(oldPlan8)}`);
 }
 const fields = ["title"];
 const planWrapper7 = (plan, _, fieldArgs) => {
-  const $entity = fieldArgs.getRaw(["input", "column"]),
-    $patch = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$entity, $patch], async ([entity, patch]) => {
-    const source = patch ?? entity;
-    if (!source) return;
+  const $source = fieldArgs.getRaw(["input", "column"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
     for (const field of fields) {
-      const value = source[field];
+      const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const {
         flagged
@@ -4410,13 +4409,12 @@ ${String(oldPlan12)}`);
 }
 const fields2 = ["title", "description"];
 const planWrapper10 = (plan, _, fieldArgs) => {
-  const $entity = fieldArgs.getRaw(["input", "post"]),
-    $patch = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$entity, $patch], async ([entity, patch]) => {
-    const source = patch ?? entity;
-    if (!source) return;
+  const $source = fieldArgs.getRaw(["input", "post"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
     for (const field of fields2) {
-      const value = source[field];
+      const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const {
         flagged
@@ -4703,13 +4701,12 @@ ${String(oldPlan21)}`);
 }
 const fields3 = ["content", "description"];
 const planWrapper19 = (plan, _, fieldArgs) => {
-  const $entity = fieldArgs.getRaw(["input", "task"]),
-    $patch = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$entity, $patch], async ([entity, patch]) => {
-    const source = patch ?? entity;
-    if (!source) return;
+  const $source = fieldArgs.getRaw(["input", "task"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
     for (const field of fields3) {
-      const value = source[field];
+      const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const {
         flagged
@@ -4849,13 +4846,12 @@ ${String(oldPlan28)}`);
 }
 const fields4 = ["description"];
 const planWrapper23 = (plan, _, fieldArgs) => {
-  const $entity = fieldArgs.getRaw(["input", "project"]),
-    $patch = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$entity, $patch], async ([entity, patch]) => {
-    const source = patch ?? entity;
-    if (!source) return;
+  const $source = fieldArgs.getRaw(["input", "project"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
     for (const field of fields4) {
-      const value = source[field];
+      const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const {
         flagged
@@ -5202,13 +5198,12 @@ ${String(oldPlan33)}`);
 }
 const fields5 = ["title"];
 const planWrapper32 = (plan, _, fieldArgs) => {
-  const $entity = fieldArgs.getRaw(["input", "column"]),
-    $patch = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$entity, $patch], async ([entity, patch]) => {
-    const source = patch ?? entity;
-    if (!source) return;
+  const $source = fieldArgs.getRaw(["input", "patch"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
     for (const field of fields5) {
-      const value = source[field];
+      const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const {
         flagged
@@ -5314,13 +5309,12 @@ ${String(oldPlan37)}`);
 }
 const fields6 = ["title", "description"];
 const planWrapper35 = (plan, _, fieldArgs) => {
-  const $entity = fieldArgs.getRaw(["input", "post"]),
-    $patch = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$entity, $patch], async ([entity, patch]) => {
-    const source = patch ?? entity;
-    if (!source) return;
+  const $source = fieldArgs.getRaw(["input", "patch"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
     for (const field of fields6) {
-      const value = source[field];
+      const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const {
         flagged
@@ -5637,13 +5631,12 @@ ${String(oldPlan46)}`);
 }
 const fields7 = ["content", "description"];
 const planWrapper44 = (plan, _, fieldArgs) => {
-  const $entity = fieldArgs.getRaw(["input", "task"]),
-    $patch = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$entity, $patch], async ([entity, patch]) => {
-    const source = patch ?? entity;
-    if (!source) return;
+  const $source = fieldArgs.getRaw(["input", "patch"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
     for (const field of fields7) {
-      const value = source[field];
+      const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const {
         flagged
@@ -5754,13 +5747,12 @@ ${String(oldPlan50)}`);
 }
 const fields8 = ["description"];
 const planWrapper48 = (plan, _, fieldArgs) => {
-  const $entity = fieldArgs.getRaw(["input", "project"]),
-    $patch = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$entity, $patch], async ([entity, patch]) => {
-    const source = patch ?? entity;
-    if (!source) return;
+  const $source = fieldArgs.getRaw(["input", "patch"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
     for (const field of fields8) {
-      const value = source[field];
+      const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const {
         flagged
