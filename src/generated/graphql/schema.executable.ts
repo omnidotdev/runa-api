@@ -4,7 +4,7 @@ import { generateNKeysBetween } from "fractional-indexing";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, markSyncAndSafe, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, isTransactionalSyncMode, writeTuples } from "lib/authz";
-import { columns, userPreferences } from "lib/db/schema";
+import { columns, userPreferences, users } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
 import { moderateText } from "lib/moderation";
@@ -4144,8 +4144,27 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           id: !0
         }
       });
-    if (!user) throw Error("Cannot assign this user - they have not signed in to this application yet. Users must authenticate at least once before they can be assigned to tasks.");
-    assigneeInput.userId = user.id;
+    if (user) {
+      assigneeInput.userId = user.id;
+      return;
+    }
+    await db.insert(users).values({
+      identityProviderId: idpUserId,
+      name: "Pending member",
+      email: `${idpUserId}@users.runa.local`
+    }).onConflictDoNothing();
+    const provisioned = await db.query.users.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.identityProviderId, idpUserId);
+      },
+      columns: {
+        id: !0
+      }
+    });
+    if (!provisioned) throw Error("Cannot assign this user - failed to provision a local record. Please try again.");
+    assigneeInput.userId = provisioned.id;
   });
   return plan();
 };

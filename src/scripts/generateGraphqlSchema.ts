@@ -24,7 +24,7 @@ import {
   writeTuples,
 } from "lib/authz";
 import graphilePreset from "lib/config/graphile.config";
-import { columns, userPreferences } from "lib/db/schema";
+import { columns, userPreferences, users } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
@@ -179,7 +179,7 @@ const generateGraphqlSchema = async () => {
         indexTask,
         isSearchEnabled,
       },
-      "lib/db/schema": { columns, userPreferences },
+      "lib/db/schema": { columns, userPreferences, users },
     },
   });
 

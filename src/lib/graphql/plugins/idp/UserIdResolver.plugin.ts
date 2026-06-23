@@ -13,13 +13,19 @@
  * 3. Mutation executes with correct local user ID
  * 4. Foreign key constraint satisfied
  *
- * If the user hasn't authenticated to this app yet, they won't have a local
- * record and the plugin throws a clear error.
+ * Members who have never signed in to this app have no local `user` row yet.
+ * For assignment we provision a lightweight stub keyed by identityProviderId so
+ * any org member is assignable immediately. The stub is enriched with the real
+ * name/avatar/email on first login (the auth plugin upserts on the same
+ * identityProviderId conflict target). Assignee rendering pulls name/avatar from
+ * the IDP member list, not the local row, so an unenriched stub displays fine.
  */
 
 import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
+
+import { users } from "lib/db/schema";
 
 import type { InsertAssignee } from "lib/db/schema";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -28,11 +34,13 @@ import type { PlanWrapperFn } from "postgraphile/utils";
  * Resolve IDP user ID to local user ID for createAssignee mutation.
  *
  * The input.assignee.userId from frontend is the IDP user ID (identityProviderId).
- * We look up the local user and replace the ID so the FK constraint works.
+ * We look up the local user and replace the ID so the FK constraint works. If no
+ * local row exists yet (member never signed in), we provision a stub keyed by
+ * identityProviderId rather than rejecting the assignment.
  */
 const resolveCreateAssigneeUserId = (): PlanWrapperFn =>
   EXPORTABLE(
-    (context, sideEffect): PlanWrapperFn =>
+    (context, sideEffect, users): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", "assignee"]);
         const $db = context().get("db");
@@ -47,21 +55,49 @@ const resolveCreateAssigneeUserId = (): PlanWrapperFn =>
             columns: { id: true },
           });
 
-          if (!user) {
+          if (user) {
+            // Replace the IDP user ID with the local user ID. This modifies the
+            // input object that will be used by the mutation.
+            assigneeInput.userId = user.id;
+            return;
+          }
+
+          // Member has no local row yet (never signed in). Provision a stub so
+          // the assignment can proceed. Placeholders for the notNull/unique
+          // columns are derived from the IDP id (so they never collide) and get
+          // overwritten with real profile data when the member first logs in,
+          // since the auth plugin upserts on the same identityProviderId target.
+          // `onConflictDoNothing` (no target) keeps this safe against a login
+          // that races in between the lookup and insert.
+          await db
+            .insert(users)
+            .values({
+              identityProviderId: idpUserId,
+              name: "Pending member",
+              email: `${idpUserId}@users.runa.local`,
+            })
+            .onConflictDoNothing();
+
+          // Re-read to obtain the local id (either the stub we just created or a
+          // row a concurrent login wrote).
+          const provisioned = await db.query.users.findFirst({
+            where: (table, { eq }) => eq(table.identityProviderId, idpUserId),
+            columns: { id: true },
+          });
+
+          if (!provisioned) {
             throw new Error(
-              "Cannot assign this user - they have not signed in to this application yet. " +
-                "Users must authenticate at least once before they can be assigned to tasks.",
+              "Cannot assign this user - failed to provision a local record. " +
+                "Please try again.",
             );
           }
 
-          // Replace the IDP user ID with the local user ID
-          // This modifies the input object that will be used by the mutation
-          assigneeInput.userId = user.id;
+          assigneeInput.userId = provisioned.id;
         });
 
         return plan();
       },
-    [context, sideEffect],
+    [context, sideEffect, users],
   );
 
 /**
