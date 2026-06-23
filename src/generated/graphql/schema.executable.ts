@@ -4359,20 +4359,63 @@ ${String(oldPlan7)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper8 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.column.created`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const eventMeta = (observer, resourceType, resourceName) => ({
+  resourceType,
+  ...(resourceName != null ? {
+    resourceName
+  } : {}),
+  ...(observer ? {
+    actorId: observer.id,
+    actorIdpId: observer.identityProviderId,
+    actorName: observer.name,
+    actorEmail: observer.email
+  } : {})
+});
+const planWrapper8 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = constant(void 0),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["columns"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            project: {
+              columns: {
+                organizationId: !0
+              }
+            }
+          }
+        }),
+        rawName = row?.["title"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.project?.organizationId;
+      await events.emit({
+        type: `runa.column.created`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "column", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit column.created:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan12(_, args) {
   const $insert = pgInsertSingle(resource_postPgResource);
@@ -4461,20 +4504,55 @@ ${String(oldPlan11)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper11 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.post.created`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper11 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = constant(void 0),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["posts"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            task: {
+              with: {
+                project: {
+                  columns: {
+                    organizationId: !0
+                  }
+                }
+              }
+            }
+          }
+        }),
+        rawName = row?.["title"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.task?.project?.organizationId;
+      await events.emit({
+        type: `runa.post.created`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "post", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit post.created:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan9(...planParams) {
   const smartPlan = (...overrideParams) => {
@@ -4602,20 +4680,45 @@ ${String(oldPlan15)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper15 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.label.created`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper15 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = constant(void 0),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["labels"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: void 0
+        }),
+        rawName = row?.["name"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.organizationId;
+      await events.emit({
+        type: `runa.label.created`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "label", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit label.created:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan16(_, args) {
   const $insert = pgInsertSingle(resource_project_linkPgResource);
@@ -4753,20 +4856,51 @@ ${String(oldPlan20)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper20 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.task.created`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper20 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = constant(void 0),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["tasks"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            project: {
+              columns: {
+                organizationId: !0
+              }
+            }
+          }
+        }),
+        rawName = row?.["number"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.project?.organizationId;
+      await events.emit({
+        type: `runa.task.created`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "task", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit task.created:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan18(...planParams) {
   const smartPlan = (...overrideParams) => {
@@ -5025,20 +5159,45 @@ ${String(oldPlan24)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper27 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.project.created`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper27 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = constant(void 0),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["projects"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: void 0
+        }),
+        rawName = row?.["name"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.organizationId;
+      await events.emit({
+        type: `runa.project.created`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "project", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit project.created:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan22(...planParams) {
   const smartPlan = (...overrideParams) => {
@@ -5250,20 +5409,51 @@ ${String(oldPlan32)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper33 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.column.updated`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper33 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["columns"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            project: {
+              columns: {
+                organizationId: !0
+              }
+            }
+          }
+        }),
+        rawName = row?.["title"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.project?.organizationId;
+      await events.emit({
+        type: `runa.column.updated`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "column", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit column.updated:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -5361,20 +5551,55 @@ ${String(oldPlan36)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper36 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.post.updated`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper36 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["posts"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            task: {
+              with: {
+                project: {
+                  columns: {
+                    organizationId: !0
+                  }
+                }
+              }
+            }
+          }
+        }),
+        rawName = row?.["title"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.task?.project?.organizationId;
+      await events.emit({
+        type: `runa.post.updated`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "post", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit post.updated:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan34(...planParams) {
   const smartPlan = (...overrideParams) => {
@@ -5499,20 +5724,45 @@ ${String(oldPlan40)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper40 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.label.updated`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper40 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["labels"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: void 0
+        }),
+        rawName = row?.["name"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.organizationId;
+      await events.emit({
+        type: `runa.label.updated`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "label", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit label.updated:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 const specFromArgs_ProjectLink = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -5683,20 +5933,51 @@ ${String(oldPlan45)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper45 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.task.updated`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper45 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["tasks"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            project: {
+              columns: {
+                organizationId: !0
+              }
+            }
+          }
+        }),
+        rawName = row?.["number"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.project?.organizationId;
+      await events.emit({
+        type: `runa.task.updated`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "task", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit task.updated:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan43(...planParams) {
   const smartPlan = (...overrideParams) => {
@@ -5799,20 +6080,45 @@ ${String(oldPlan49)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper49 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.project.updated`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper49 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["projects"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: void 0
+        }),
+        rawName = row?.["name"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.organizationId;
+      await events.emit({
+        type: `runa.project.updated`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "project", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit project.updated:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan47(...planParams) {
   const smartPlan = (...overrideParams) => {
@@ -6039,20 +6345,51 @@ ${String(oldPlan57)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper57 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.column.deleted`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper57 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["columns"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            project: {
+              columns: {
+                organizationId: !0
+              }
+            }
+          }
+        }),
+        rawName = row?.["title"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.project?.organizationId;
+      await events.emit({
+        type: `runa.column.deleted`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "column", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit column.deleted:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 const oldPlan60 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_postPgResource, {
@@ -6111,20 +6448,55 @@ ${String(oldPlan60)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper59 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.post.deleted`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper59 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["posts"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            task: {
+              with: {
+                project: {
+                  columns: {
+                    organizationId: !0
+                  }
+                }
+              }
+            }
+          }
+        }),
+        rawName = row?.["title"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.task?.project?.organizationId;
+      await events.emit({
+        type: `runa.post.deleted`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "post", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit post.deleted:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan58(...planParams) {
   const smartPlan = (...overrideParams) => {
@@ -6245,20 +6617,45 @@ ${String(oldPlan63)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper63 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.label.deleted`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper63 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["labels"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: void 0
+        }),
+        rawName = row?.["name"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.organizationId;
+      await events.emit({
+        type: `runa.label.deleted`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "label", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit label.deleted:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 const oldPlan64 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_project_linkPgResource, {
@@ -6378,20 +6775,51 @@ ${String(oldPlan68)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper67 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.task.deleted`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper67 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["tasks"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: {
+            project: {
+              columns: {
+                organizationId: !0
+              }
+            }
+          }
+        }),
+        rawName = row?.["number"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.project?.organizationId;
+      await events.emit({
+        type: `runa.task.deleted`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "task", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit task.deleted:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan66(...planParams) {
   const smartPlan = (...overrideParams) => {
@@ -6502,20 +6930,45 @@ ${String(oldPlan71)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper71 = (plan, $record) => {
-  const $observer = context().get("observer");
-  sideEffect([$record, $observer], ([record, observer]) => {
-    if (!record?.id) return;
-    events.emit({
-      type: `runa.project.deleted`,
-      data: {
-        id: record.id,
-        actorId: observer?.id
-      },
-      subject: record.id
-    });
+const planWrapper71 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["projects"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: void 0
+        }),
+        rawName = row?.["name"],
+        resourceName = rawName != null ? String(rawName) : null,
+        organizationId = row?.organizationId;
+      await events.emit({
+        type: `runa.project.deleted`,
+        data: {
+          id,
+          ...(organizationId ? {
+            organizationId
+          } : {}),
+          ...eventMeta(observer, "project", resourceName)
+        },
+        ...(organizationId ? {
+          organizationId
+        } : {}),
+        subject: id
+      });
+    } catch (error) {
+      console.error(`[Events] Failed to emit project.deleted:`, error);
+    }
   });
-  return plan();
+  return $result;
 };
 function oldPlan69(...planParams) {
   const smartPlan = (...overrideParams) => {
