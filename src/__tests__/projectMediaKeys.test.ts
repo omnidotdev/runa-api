@@ -1,6 +1,9 @@
 import { describe, expect, it } from "bun:test";
 
-import { dereferencedProjectMediaKeys } from "lib/media/projectMediaKeys";
+import {
+  allProjectMediaKeys,
+  dereferencedProjectMediaKeys,
+} from "lib/media/projectMediaKeys";
 
 const url = (key: string) =>
   `https://api.example.com/api/attachments/file/${encodeURIComponent(key)}`;
@@ -94,5 +97,30 @@ describe("dereferencedProjectMediaKeys", () => {
         { image: null, background: null },
       ),
     ).toEqual([AVATAR, BG]);
+  });
+});
+
+describe("allProjectMediaKeys", () => {
+  it("returns nothing for a project with no media", () => {
+    expect(allProjectMediaKeys({})).toEqual([]);
+    expect(allProjectMediaKeys(null)).toEqual([]);
+  });
+
+  it("returns the image key and image background asset", () => {
+    expect(
+      allProjectMediaKeys({
+        image: url(AVATAR),
+        background: { kind: "image", assetId: BG },
+      }),
+    ).toEqual([AVATAR, BG]);
+  });
+
+  it("ignores preset backgrounds and external images", () => {
+    expect(
+      allProjectMediaKeys({
+        image: "https://gravatar.com/avatar/abc",
+        background: { kind: "gradient", token: "dusk" },
+      }),
+    ).toEqual([]);
   });
 });

@@ -2,7 +2,10 @@ import { EXPORTABLE } from "graphile-export";
 import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { cleanupDereferencedMedia } from "lib/media/cleanupProjectMedia";
+import {
+  cleanupAllProjectMedia,
+  cleanupDereferencedMedia,
+} from "lib/media/cleanupProjectMedia";
 
 import type { ProjectMediaSnapshot } from "lib/media/projectMediaKeys";
 import type { PlanWrapperFn } from "postgraphile/utils";
@@ -68,12 +71,50 @@ const cleanupOnUpdate = (): PlanWrapperFn =>
   );
 
 /**
+ * Delete every object-storage media a project referenced when the whole project
+ * is deleted. Same two-phase shape as the update cleanup: snapshot the media
+ * pre-delete, free it only after the delete commits.
+ */
+const cleanupOnDelete = (): PlanWrapperFn =>
+  EXPORTABLE(
+    (context, sideEffect, cleanupAllProjectMedia): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
+        const $rowId = fieldArgs.getRaw(["input", "rowId"]);
+        const $db = context().get("db");
+
+        const $old = sideEffect([$rowId, $db], async ([rowId, db]) => {
+          if (!rowId) return undefined;
+          return (
+            (await db.query.projects.findFirst({
+              // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
+              where: (fields: any, operators: any) =>
+                operators.eq(fields.id, rowId as string),
+              columns: { image: true, background: true },
+            })) ?? undefined
+          );
+        });
+
+        const $result = plan();
+
+        sideEffect([$result, $old], async ([result, old]) => {
+          if (!result) return;
+          await cleanupAllProjectMedia(old as ProjectMediaSnapshot | undefined);
+        });
+
+        return $result;
+      },
+    [context, sideEffect, cleanupAllProjectMedia],
+  );
+
+/**
  * Media cleanup plugin: removes orphaned object-storage media when a project's
- * image or background is replaced, removed, or switched away from.
+ * image or background is replaced, removed, or switched away from, or when the
+ * whole project is deleted.
  */
 const MediaCleanupPlugin = wrapPlans({
   Mutation: {
     updateProject: cleanupOnUpdate(),
+    deleteProject: cleanupOnDelete(),
   },
 });
 

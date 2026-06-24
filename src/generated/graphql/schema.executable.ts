@@ -7,7 +7,7 @@ import { checkPermission, deleteTuples, isAuthzEnabled, isTransactionalSyncMode,
 import { columns, userPreferences, users } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
-import { cleanupDereferencedMedia } from "lib/media/cleanupProjectMedia";
+import { cleanupAllProjectMedia, cleanupDereferencedMedia } from "lib/media/cleanupProjectMedia";
 import { moderateText } from "lib/moderation";
 import { events } from "lib/providers";
 import { deleteCommentFromIndex, deleteProjectFromIndex, deleteTaskFromIndex, indexComment, indexProject, indexTask } from "lib/search";
@@ -6715,7 +6715,7 @@ const planWrapper69 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan73 = (_$root, args) => {
+const oldPlan74 = (_$root, args) => {
   const $delete = pgDeleteSingle(resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6741,13 +6741,13 @@ const planWrapper70 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan72(...planParams) {
+function oldPlan73(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan73.apply(this, args);
+        $prev = oldPlan74.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan73)}`);
+${String(oldPlan74)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
@@ -6780,13 +6780,13 @@ const planWrapper71 = (plan, _, _fieldArgs) => {
   });
   return $result;
 };
-function oldPlan71(...planParams) {
+function oldPlan72(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan72.apply(this, args);
+        $prev = oldPlan73.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan72)}`);
+${String(oldPlan73)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
@@ -6827,6 +6827,46 @@ const planWrapper72 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
+function oldPlan71(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan72.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
+${String(oldPlan72)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper72(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper73 = (plan, _, fieldArgs) => {
+  const $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $db = context().get("db"),
+    $old = sideEffect([$rowId, $db], async ([rowId, db]) => {
+      if (!rowId) return;
+      return (await db.query.projects.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.id, rowId);
+        },
+        columns: {
+          image: !0,
+          background: !0
+        }
+      })) ?? void 0;
+    }),
+    $result = plan();
+  sideEffect([$result, $old], async ([result, old]) => {
+    if (!result) return;
+    await cleanupAllProjectMedia(old);
+  });
+  return $result;
+};
 function oldPlan70(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
@@ -6840,12 +6880,12 @@ ${String(oldPlan71)}`);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper72(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper73(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper73 = (plan, _, fieldArgs) => {
+const planWrapper74 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([projectId]) => {
@@ -19829,7 +19869,7 @@ ${String(oldPlan70)}`);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper73(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper74(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;

@@ -52,3 +52,23 @@ export const dereferencedProjectMediaKeys = (
 
   return keys;
 };
+
+/**
+ * Every storage key a project references (image + image background). Used when
+ * the whole project is deleted, where all of its media is dereferenced at once.
+ */
+export const allProjectMediaKeys = (
+  old: ProjectMediaSnapshot | null | undefined,
+): string[] => {
+  if (!old) return [];
+
+  const keys: string[] = [];
+
+  const imageKey = old.image ? storageKeyFromUrl(old.image) : null;
+  if (imageKey) keys.push(imageKey);
+
+  const backgroundKey = backgroundAssetId(old.background);
+  if (backgroundKey) keys.push(backgroundKey);
+
+  return keys;
+};
