@@ -29,10 +29,32 @@ export const resolveSubject = async (
   }
 };
 
+/** Path segment that precedes the storage key in a proxied serve URL */
+const PROXY_PATH_PREFIX = "/api/attachments/file/";
+
 /** Build the proxied serving URL for a storage key */
 export const proxiedUrl = (storageKey: string): string => {
   const base = (PUBLIC_API_URL ?? "").replace(/\/$/, "");
-  return `${base}/api/attachments/file/${encodeURIComponent(storageKey)}`;
+  return `${base}${PROXY_PATH_PREFIX}${encodeURIComponent(storageKey)}`;
+};
+
+/**
+ * Recover the storage key from a proxied serve URL (the inverse of
+ * `proxiedUrl`). Returns null for URLs that are not proxied serve URLs (e.g.
+ * external avatars) so callers never act on keys they don't own.
+ */
+export const storageKeyFromUrl = (url: string): string | null => {
+  const index = url.indexOf(PROXY_PATH_PREFIX);
+  if (index === -1) return null;
+
+  const encoded = url.slice(index + PROXY_PATH_PREFIX.length);
+  if (!encoded) return null;
+
+  try {
+    return decodeURIComponent(encoded);
+  } catch {
+    return null;
+  }
 };
 
 /**

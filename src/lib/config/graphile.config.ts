@@ -28,6 +28,7 @@ import {
 } from "lib/graphql/plugins/defaults";
 import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
+import { MediaCleanupPlugin } from "lib/graphql/plugins/media";
 import { ContentModerationPlugin } from "lib/graphql/plugins/moderation";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
 import {
@@ -77,6 +78,8 @@ const graphilePreset: GraphileConfig.Preset = {
     DefaultUserPreferencePlugin,
     // Event emission plugin
     EventEmissionPlugin,
+    // Media cleanup plugin (post-mutation orphaned-object deletion)
+    MediaCleanupPlugin,
     // Search indexing plugins
     ProjectSearchPlugin,
     TaskSearchPlugin,
