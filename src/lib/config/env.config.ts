@@ -30,9 +30,6 @@ export const {
   VORTEX_API_KEY,
   // Service key for AuthZ API (service-to-service auth)
   AUTHZ_SERVICE_KEY,
-  // Feature flags
-  FLAGS_API_HOST,
-  FLAGS_CLIENT_KEY,
   // Build metadata
   BUILD_VERSION,
   // Meilisearch (unified search)
@@ -84,8 +81,6 @@ if (!VORTEX_API_KEY)
   console.warn("VORTEX_API_KEY not set, event streaming auth disabled");
 if (!AUTHZ_SERVICE_KEY)
   console.warn("AUTHZ_SERVICE_KEY not set, AuthZ service auth disabled");
-if (!FLAGS_API_HOST)
-  console.warn("FLAGS_API_HOST not set, feature flags disabled");
 if (!MEILISEARCH_URL) console.warn("MEILISEARCH_URL not set, search disabled");
 if (!S3_BUCKET)
   console.warn("S3_BUCKET not set, task attachments disabled (uploads no-op)");

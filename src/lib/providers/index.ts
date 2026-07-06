@@ -9,7 +9,6 @@ import {
   createAuthzProvider,
   createBillingProvider,
   createEventsProvider,
-  createFlagProvider,
   createStorageProvider,
 } from "@omnidotdev/providers";
 
@@ -18,8 +17,6 @@ import {
   AUTHZ_SERVICE_KEY,
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
-  FLAGS_API_HOST,
-  FLAGS_CLIENT_KEY,
   S3_ACCESS_KEY_ID,
   S3_BUCKET,
   S3_ENDPOINT,
@@ -57,17 +54,6 @@ export const events = createEventsProvider(
         baseUrl: VORTEX_API_URL,
         apiKey: VORTEX_API_KEY,
         source: "omni.runa",
-      }
-    : {},
-);
-
-export const flags = createFlagProvider(
-  FLAGS_API_HOST
-    ? {
-        provider: "unleash",
-        url: FLAGS_API_HOST,
-        apiKey: FLAGS_CLIENT_KEY!,
-        appName: "runa-api",
       }
     : {},
 );
