@@ -22,8 +22,8 @@ const DATABASE_URL = process.env.DATABASE_URL;
 /** Request timeout for PDP calls */
 const REQUEST_TIMEOUT_MS = 10000;
 
-/** Max tuples per page when reading from PDP */
-const PDP_PAGE_SIZE = 200;
+/** Max tuples per page when reading from PDP (OpenFGA caps this at 100) */
+const PDP_PAGE_SIZE = 100;
 
 interface TupleKey {
   user: string;
