@@ -7,6 +7,11 @@
 
 import { AUTHZ_API_URL, AUTHZ_SYNC_MODE } from "lib/config/env.config";
 import { authz } from "lib/providers";
+import {
+  enqueueWardenSync,
+  startWardenSyncPoller,
+  stopWardenSyncPoller,
+} from "./syncQueue";
 
 import type {
   PermissionCheck,
@@ -18,6 +23,11 @@ import type {
 
 /** @knipignore Used by scripts */
 export type { TupleSyncResult };
+
+export { startWardenSyncPoller };
+
+/** @knipignore Re-exported for API completeness; used internally and by scripts */
+export { enqueueWardenSync, stopWardenSyncPoller };
 
 /**
  * Check if AuthZ is enabled and configured.
@@ -103,7 +113,16 @@ export async function writeTuples(
   if (!isAuthzEnabled()) return { success: true };
   if (!authz!.writeTuples) return { success: true };
 
-  return authz!.writeTuples(tuples, accessToken);
+  const result = await authz!.writeTuples(tuples, accessToken);
+
+  // Only enqueue in best-effort mode. In transactional mode the plugin throws
+  // and the mutation rolls back, so a queued retry would orphan a tuple for a
+  // resource that no longer exists
+  if (!result.success && !isTransactionalSyncMode()) {
+    await enqueueWardenSync("write", tuples, result.error);
+  }
+
+  return result;
 }
 
 /**
@@ -116,7 +135,16 @@ export async function deleteTuples(
   if (!isAuthzEnabled()) return { success: true };
   if (!authz!.deleteTuples) return { success: true };
 
-  return authz!.deleteTuples(tuples, accessToken);
+  const result = await authz!.deleteTuples(tuples, accessToken);
+
+  // Only enqueue in best-effort mode. In transactional mode the plugin throws
+  // and the mutation rolls back, so a queued retry would orphan a tuple for a
+  // resource that no longer exists
+  if (!result.success && !isTransactionalSyncMode()) {
+    await enqueueWardenSync("delete", tuples, result.error);
+  }
+
+  return result;
 }
 
 /**

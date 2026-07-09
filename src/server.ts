@@ -11,6 +11,7 @@ import { rateLimit } from "elysia-rate-limit";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
+import { startWardenSyncPoller } from "lib/authz";
 import { startStructuralReconciler } from "lib/authz/reconcile";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
@@ -265,6 +266,10 @@ async function startServer(): Promise<void> {
   // periodically, so any project/workspace tuple dropped by best-effort sync
   // is restored (a missing tuple silently locks members out of a board)
   startStructuralReconciler();
+
+  // Start the durable Warden sync-queue poller so failed authz tuple
+  // writes/deletes are retried with backoff (no-ops when authz is disabled)
+  startWardenSyncPoller();
 
   // biome-ignore lint/suspicious/noConsole: root logging
   console.log(
