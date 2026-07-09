@@ -11,6 +11,7 @@ import { rateLimit } from "elysia-rate-limit";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
+import { startStructuralReconciler } from "lib/authz/reconcile";
 import authzRoutes from "lib/authz/routes";
 import appConfig from "lib/config/app.config";
 import {
@@ -259,6 +260,11 @@ async function startServer(): Promise<void> {
       });
     }, SEARCH_RECONCILE_INTERVAL_MS).unref();
   }
+
+  // Reconcile structural authorization tuples from the database on boot and
+  // periodically, so any project/workspace tuple dropped by best-effort sync
+  // is restored (a missing tuple silently locks members out of a board)
+  startStructuralReconciler();
 
   // biome-ignore lint/suspicious/noConsole: root logging
   console.log(

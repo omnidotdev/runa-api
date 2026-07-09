@@ -19,7 +19,8 @@ import * as schema from "lib/db/schema";
 const DATABASE_URL = process.env.DATABASE_URL;
 const BATCH_SIZE = 100;
 const REQUEST_TIMEOUT_MS = 10000;
-const PDP_PAGE_SIZE = 200;
+// OpenFGA caps ReadRequest pageSize at 100; higher values 500
+const PDP_PAGE_SIZE = 100;
 
 const deleteOrphans = process.argv.includes("--delete-orphans");
 const dryRun = process.argv.includes("--dry-run");
