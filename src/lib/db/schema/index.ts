@@ -26,3 +26,4 @@ export * from "./task.table";
 export * from "./taskLabel.table";
 export * from "./user.table";
 export * from "./userPreference.table";
+export * from "./wardenSyncQueue.table";
