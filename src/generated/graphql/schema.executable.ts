@@ -4334,6 +4334,7 @@ ${String(oldPlan8)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
+const shouldBlock = result => result.matchedTerms.length > 0 || result.score >= 0.9;
 const fields = ["title"];
 const planWrapper7 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "column"]);
@@ -4343,10 +4344,12 @@ const planWrapper7 = (plan, _, fieldArgs) => {
     for (const field of fields) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
-      const {
-        flagged
-      } = await moderateText(value);
-      if (flagged) throw Error("content flagged by moderation");
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
     }
   });
   return plan();
@@ -4507,10 +4510,12 @@ const planWrapper10 = (plan, _, fieldArgs) => {
     for (const field of fields2) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
-      const {
-        flagged
-      } = await moderateText(value);
-      if (flagged) throw Error("content flagged by moderation");
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
     }
   });
   return plan();
@@ -4827,10 +4832,12 @@ const planWrapper19 = (plan, _, fieldArgs) => {
     for (const field of fields3) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
-      const {
-        flagged
-      } = await moderateText(value);
-      if (flagged) throw Error("content flagged by moderation");
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
     }
   });
   return plan();
@@ -4986,10 +4993,12 @@ const planWrapper23 = (plan, _, fieldArgs) => {
     for (const field of fields4) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
-      const {
-        flagged
-      } = await moderateText(value);
-      if (flagged) throw Error("content flagged by moderation");
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
     }
   });
   return plan();
@@ -5352,10 +5361,12 @@ const planWrapper32 = (plan, _, fieldArgs) => {
     for (const field of fields5) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
-      const {
-        flagged
-      } = await moderateText(value);
-      if (flagged) throw Error("content flagged by moderation");
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
     }
   });
   return plan();
@@ -5477,10 +5488,12 @@ const planWrapper35 = (plan, _, fieldArgs) => {
     for (const field of fields6) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
-      const {
-        flagged
-      } = await moderateText(value);
-      if (flagged) throw Error("content flagged by moderation");
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
     }
   });
   return plan();
@@ -5827,10 +5840,12 @@ const planWrapper44 = (plan, _, fieldArgs) => {
     for (const field of fields7) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
-      const {
-        flagged
-      } = await moderateText(value);
-      if (flagged) throw Error("content flagged by moderation");
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
     }
   });
   return plan();
@@ -5957,10 +5972,12 @@ const planWrapper48 = (plan, _, fieldArgs) => {
     for (const field of fields8) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
-      const {
-        flagged
-      } = await moderateText(value);
-      if (flagged) throw Error("content flagged by moderation");
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
     }
   });
   return plan();

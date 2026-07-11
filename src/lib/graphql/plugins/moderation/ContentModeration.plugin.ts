@@ -1,18 +1,33 @@
 import { EXPORTABLE } from "graphile-export";
+import { GraphQLError } from "graphql";
 import { sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
-import { moderateText } from "lib/moderation";
+import { moderateText, shouldBlock } from "lib/moderation";
 
 import type { PlanWrapperFn } from "postgraphile/utils";
+
+/**
+ * Extension code carried on a moderation rejection so the client can show a
+ * clear, content-specific message instead of a generic retry. Mirrors the
+ * `UNAUTHENTICATED` code convention the app already keys off.
+ */
+const CONTENT_MODERATED_CODE = "CONTENT_MODERATED";
+
+/** User-facing rejection message; no provider or infra detail leaks. */
+const CONTENT_MODERATED_MESSAGE =
+  "This content was flagged as inappropriate language. Please edit it and try again.";
 
 /**
  * Moderate user-authored text before a mutation persists it.
  *
  * Mirrors the Backfeed pattern: the text is checked against Say Less (via
- * `moderateText`, which is a fail-open noop when `SAY_LESS_URL` is unset) and a
- * flagged result rejects the mutation. The check runs as a pre-`plan()` side
- * effect so a flag aborts the write.
+ * `moderateText`, which is a fail-open noop when `SAY_LESS_URL` is unset) and
+ * `shouldBlock` decides whether the result warrants rejecting the mutation
+ * (explicit wordlist hits always, ML-only flags only at high confidence, so the
+ * classifier's noisy mid band does not block benign text). The check runs as a
+ * pre-`plan()` side effect so a block aborts the write, surfaced to the client
+ * as a `CONTENT_MODERATED` error.
  *
  * `inputField` is the wrapper field that holds the row on this specific
  * mutation: create mutations nest it under `input.<entity>` (e.g. `task` ->
@@ -24,7 +39,16 @@ import type { PlanWrapperFn } from "postgraphile/utils";
  */
 const moderateFields = (inputField: string, fields: string[]): PlanWrapperFn =>
   EXPORTABLE(
-    (sideEffect, moderateText, inputField, fields): PlanWrapperFn =>
+    (
+      sideEffect,
+      moderateText,
+      shouldBlock,
+      GraphQLError,
+      CONTENT_MODERATED_CODE,
+      CONTENT_MODERATED_MESSAGE,
+      inputField,
+      fields,
+    ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $source = fieldArgs.getRaw(["input", inputField]);
 
@@ -36,14 +60,27 @@ const moderateFields = (inputField: string, fields: string[]): PlanWrapperFn =>
             const value = row[field];
             if (typeof value !== "string" || !value) continue;
 
-            const { flagged } = await moderateText(value);
-            if (flagged) throw new Error("content flagged by moderation");
+            const result = await moderateText(value);
+            if (shouldBlock(result)) {
+              throw new GraphQLError(CONTENT_MODERATED_MESSAGE, {
+                extensions: { code: CONTENT_MODERATED_CODE },
+              });
+            }
           }
         });
 
         return plan();
       },
-    [sideEffect, moderateText, inputField, fields],
+    [
+      sideEffect,
+      moderateText,
+      shouldBlock,
+      GraphQLError,
+      CONTENT_MODERATED_CODE,
+      CONTENT_MODERATED_MESSAGE,
+      inputField,
+      fields,
+    ],
   );
 
 /**
