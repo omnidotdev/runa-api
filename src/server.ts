@@ -41,7 +41,6 @@ import {
   projectAvatarRoutes,
   projectBackgroundRoutes,
 } from "lib/media";
-import { maintenanceMiddleware } from "lib/middleware/maintenance";
 import {
   SEARCH_RECONCILE_INTERVAL_MS,
   initializeSearchIndexes,
@@ -190,7 +189,6 @@ async function startServer(): Promise<void> {
         duration: 60_000,
       }),
     )
-    .use(maintenanceMiddleware)
     .use(
       cors({
         origin: CORS_ALLOWED_ORIGINS!.split(","),
