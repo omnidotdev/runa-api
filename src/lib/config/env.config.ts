@@ -55,6 +55,12 @@ export const {
   S3_PUBLIC_BASE_URL,
   // Public base URL of this API, used to build proxied attachment URLs
   PUBLIC_API_URL,
+  // Public origin of the web app, used to build task deep-links in emails
+  APP_BASE_URL,
+  // Transactional email (Herald). When unset, notification emails are a noop
+  HERALD_API_URL,
+  HERALD_API_KEY,
+  HERALD_FROM_EMAIL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -72,6 +78,13 @@ export const isModerationEnabled = !!SAY_LESS_URL;
 
 /** Whether image moderation (See Less) is configured */
 export const isImageModerationEnabled = !!SEE_LESS_API_URL;
+
+/** Whether transactional email (Herald) is configured */
+export const isNotificationsEnabled = !!(
+  HERALD_API_URL &&
+  HERALD_API_KEY &&
+  HERALD_FROM_EMAIL
+);
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
@@ -93,3 +106,9 @@ if (!SAY_LESS_URL)
   console.warn("SAY_LESS_URL not set, content moderation disabled");
 if (!SEE_LESS_API_URL)
   console.warn("SEE_LESS_API_URL not set, image moderation disabled");
+if (!isNotificationsEnabled)
+  console.warn(
+    "HERALD_API_URL/HERALD_API_KEY/HERALD_FROM_EMAIL not set, notification emails disabled (noop)",
+  );
+if (!APP_BASE_URL)
+  console.warn("APP_BASE_URL not set, task links in emails will be omitted");
