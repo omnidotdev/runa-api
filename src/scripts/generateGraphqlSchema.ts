@@ -36,7 +36,8 @@ import {
   cleanupDereferencedMedia,
 } from "lib/media/cleanupProjectMedia";
 import { moderateText } from "lib/moderation";
-import { events } from "lib/providers";
+import { resolveAssignmentEmail } from "lib/notifications/assignmentEmail";
+import { events, notifications } from "lib/providers";
 import {
   deleteCommentFromIndex,
   deleteProjectFromIndex,
@@ -177,7 +178,8 @@ const generateGraphqlSchema = async () => {
         cleanupDereferencedMedia,
       },
       "lib/moderation": { moderateText },
-      "lib/providers": { events },
+      "lib/notifications/assignmentEmail": { resolveAssignmentEmail },
+      "lib/providers": { events, notifications },
       "lib/search": {
         deleteCommentFromIndex,
         deleteProjectFromIndex,

@@ -10,6 +10,7 @@ import {
   createBillingProvider,
   createEventsProvider,
   createFlagProvider,
+  createNotificationProvider,
   createStorageProvider,
 } from "@omnidotdev/providers";
 
@@ -20,6 +21,9 @@ import {
   BILLING_SERVICE_API_KEY,
   FLAGS_API_HOST,
   FLAGS_CLIENT_KEY,
+  HERALD_API_KEY,
+  HERALD_API_URL,
+  HERALD_FROM_EMAIL,
   S3_ACCESS_KEY_ID,
   S3_BUCKET,
   S3_ENDPOINT,
@@ -57,6 +61,26 @@ export const events = createEventsProvider(
         baseUrl: VORTEX_API_URL,
         apiKey: VORTEX_API_KEY,
         source: "omni.runa",
+      }
+    : {},
+);
+
+/**
+ * Transactional email for notifications.
+ *
+ * Uses Herald (the Omni org-mail product) when `HERALD_API_URL`/`HERALD_API_KEY`/
+ * `HERALD_FROM_EMAIL` are configured, otherwise falls back to the noop provider
+ * so the app boots without email configuration (sends succeed as no-ops). The
+ * provider returns `{ success: false }` instead of throwing, so a failed send
+ * never crashes a request handler.
+ */
+export const notifications = createNotificationProvider(
+  HERALD_API_URL && HERALD_API_KEY && HERALD_FROM_EMAIL
+    ? {
+        provider: "herald",
+        apiUrl: HERALD_API_URL,
+        apiKey: HERALD_API_KEY,
+        defaultFrom: HERALD_FROM_EMAIL,
       }
     : {},
 );

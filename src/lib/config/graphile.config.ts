@@ -9,6 +9,7 @@ import {
   ColumnPlugin,
   EmojiPlugin,
   LabelPlugin,
+  NotificationPreferencePlugin,
   PostPlugin,
   PrimaryKeyMutationsOnlyPlugin,
   ProjectColumnPlugin,
@@ -30,6 +31,7 @@ import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
 import { MediaCleanupPlugin } from "lib/graphql/plugins/media";
 import { ContentModerationPlugin } from "lib/graphql/plugins/moderation";
+import { AssignmentNotificationPlugin } from "lib/graphql/plugins/notifications";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
 import {
   PostSearchPlugin,
@@ -69,6 +71,7 @@ const graphilePreset: GraphileConfig.Preset = {
     TaskLabelPlugin,
     UserPlugin,
     UserPreferencePlugin,
+    NotificationPreferencePlugin,
     // Content moderation plugin (pre-mutation Say Less screening)
     ContentModerationPlugin,
     // AuthZ sync plugin (post-mutation sync to PDP)
@@ -78,6 +81,8 @@ const graphilePreset: GraphileConfig.Preset = {
     DefaultUserPreferencePlugin,
     // Event emission plugin
     EventEmissionPlugin,
+    // Assignment notification plugin (post-mutation email + event)
+    AssignmentNotificationPlugin,
     // Media cleanup plugin (post-mutation orphaned-object deletion)
     MediaCleanupPlugin,
     // Search indexing plugins
