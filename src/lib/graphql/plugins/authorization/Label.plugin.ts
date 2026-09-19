@@ -118,7 +118,22 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 );
                 if (!allowed) throw new Error("Unauthorized");
 
-                // TODO: Add tier limit check for org-scoped labels
+                // Org-scoped labels count against the same per-tier limit,
+                // scoped to the organization's own shared labels
+                const orgLabels = await db.query.labels.findMany({
+                  where: (table, { eq }) =>
+                    eq(table.organizationId, organizationId),
+                  columns: { id: true },
+                });
+
+                const withinLimit = await isWithinLimit(
+                  { organizationId },
+                  FEATURE_KEYS.MAX_LABELS,
+                  orgLabels.length,
+                  billingBypassOrgIds,
+                );
+                if (!withinLimit)
+                  throw new Error("Maximum number of labels reached");
               } else {
                 throw new Error(
                   "Label must have either projectId or organizationId",
