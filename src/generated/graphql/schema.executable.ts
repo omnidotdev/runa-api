@@ -113,7 +113,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "972004",
+    oid: "998120",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -174,7 +174,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "971619",
+    oid: "997735",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -244,7 +244,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "971403",
+    oid: "997519",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +317,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "972218",
+    oid: "998334",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -398,7 +398,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "971776",
+    oid: "997892",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -489,7 +489,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "971474",
+    oid: "997590",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -580,7 +580,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "971414",
+    oid: "997530",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -669,7 +669,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "971427",
+    oid: "997543",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -760,7 +760,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "971670",
+    oid: "997786",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -851,7 +851,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "971988",
+    oid: "998104",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -950,7 +950,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "971605",
+    oid: "997721",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1042,7 +1042,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "972070",
+    oid: "998186",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1145,7 +1145,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "971687",
+    oid: "997803",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1248,7 +1248,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "972198",
+    oid: "998314",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1357,7 +1357,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "971489",
+    oid: "997605",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1497,7 +1497,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "971455",
+    oid: "997571",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1675,7 +1675,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "972157",
+    oid: "998273",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1848,7 +1848,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "971440",
+    oid: "997556",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3143,7 +3143,6 @@ function findTypeNameMatch(specifier) {
     const value = specifier[typeSpec.codec.name];
     if (value != null && typeSpec.match(value)) return typeName;
   }
-  console.warn(`Could not find a type that matched the specifier '${inspect(specifier)}'`);
   return null;
 }
 const ProjectProjectLabel_projectIdPlan = $record => {
@@ -5088,6 +5087,19 @@ const planWrapper16 = (plan, _, fieldArgs) => {
         }, FEATURE_KEYS.MAX_LABELS, project.labels.length, billingBypassOrgIds))) throw Error("Maximum number of labels reached");
       } else if (organizationId) {
         if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+        const orgLabels = await db.query.labels.findMany({
+          where(table, {
+            eq
+          }) {
+            return eq(table.organizationId, organizationId);
+          },
+          columns: {
+            id: !0
+          }
+        });
+        if (!(await isWithinLimit({
+          organizationId
+        }, FEATURE_KEYS.MAX_LABELS, orgLabels.length, billingBypassOrgIds))) throw Error("Maximum number of labels reached");
       } else throw Error("Label must have either projectId or organizationId");
     }
   });
