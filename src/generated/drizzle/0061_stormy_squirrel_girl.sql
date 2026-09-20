@@ -1,0 +1,1 @@
+ALTER TABLE "label" ADD CONSTRAINT "label_scope_exactly_one" CHECK (num_nonnulls("label"."project_id", "label"."organization_id") = 1);

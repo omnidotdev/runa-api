@@ -1,5 +1,12 @@
-import { relations } from "drizzle-orm";
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import {
+  check,
+  index,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { projects } from "./project.table";
@@ -10,7 +17,8 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
  * Label table.
  *
  * Labels can be scoped to either an organization (shared across all projects)
- * or a specific project. Exactly one of organizationId or projectId must be set.
+ * or a specific project. Exactly one of organizationId or projectId must be set,
+ * enforced both at the application layer and by a DB CHECK constraint.
  */
 export const labels = pgTable(
   "label",
@@ -19,13 +27,18 @@ export const labels = pgTable(
     name: text().notNull(),
     color: text().notNull(),
     icon: text(),
-    // Exactly one of these must be set (enforced at application layer)
+    // Exactly one of these must be set (enforced by the label_scope_exactly_one
+    // CHECK constraint below and at the application layer)
     projectId: uuid().references(() => projects.id, { onDelete: "cascade" }),
     organizationId: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
   (table) => [
+    check(
+      "label_scope_exactly_one",
+      sql`num_nonnulls(${table.projectId}, ${table.organizationId}) = 1`,
+    ),
     uniqueIndex().on(table.id),
     index().on(table.projectId),
     index().on(table.organizationId),
