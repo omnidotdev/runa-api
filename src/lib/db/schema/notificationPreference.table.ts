@@ -1,4 +1,4 @@
-import { boolean, pgTable, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { users } from "./user.table";
@@ -21,6 +21,9 @@ export const notificationPreferences = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     // email the user when they are assigned to a task
     emailTaskAssigned: boolean().notNull().default(true),
+    // cadence for assignment emails: "immediate" (default) or "digest" (batched
+    // into one grouped email per window). App-level validation, not a pgEnum
+    taskAssignedCadence: text().notNull().default("immediate"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

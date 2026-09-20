@@ -96,3 +96,57 @@ export const resolveAssignmentEmail = ({
 
   return params;
 };
+
+/** A single assignment's data for the digest queue, or null when it is skipped. */
+interface AssignmentDigestItem {
+  to: string;
+  taskTitle: string;
+  taskDisplayKey: string;
+  projectName: string;
+  taskUrl: string | null;
+  manageUrl: string | null;
+}
+
+/**
+ * Digest counterpart of resolveAssignmentEmail: applies the SAME skip rules
+ * (self-assignment, opt-out, missing data) but returns the structured line data
+ * to enqueue for a batched digest instead of a ready-to-send single email
+ */
+export const resolveAssignmentDigestItem = ({
+  assignee,
+  assigner,
+  task,
+  project,
+  preference,
+  workspaceSlug,
+  appBaseUrl,
+}: ResolveAssignmentEmailInput): AssignmentDigestItem | null => {
+  if (!assignee?.email || !task || !project) return null;
+  if (assigner && assigner.id === assignee.id) return null;
+  if (preference && !preference.emailTaskAssigned) return null;
+
+  const taskDisplayKey =
+    task.number != null
+      ? buildTaskKeySegment(project.prefix, task.number)
+      : (project.prefix ?? "");
+
+  const taskUrl =
+    task.number != null
+      ? buildTaskLink({
+          appBaseUrl,
+          workspaceSlug,
+          projectSlug: project.slug,
+          prefix: project.prefix,
+          number: task.number,
+        })
+      : null;
+
+  return {
+    to: assignee.email,
+    taskTitle: task.content,
+    taskDisplayKey,
+    projectName: project.name,
+    taskUrl,
+    manageUrl: buildManageNotificationsLink({ appBaseUrl, workspaceSlug }),
+  };
+};

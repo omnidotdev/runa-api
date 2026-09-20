@@ -15,6 +15,7 @@ export * from "./attachment.table";
 export * from "./column.table";
 export * from "./emoji.table";
 export * from "./label.table";
+export * from "./notificationDigestQueue.table";
 export * from "./notificationPreference.table";
 export * from "./post.table";
 export * from "./project.table";

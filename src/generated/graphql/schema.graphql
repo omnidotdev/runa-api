@@ -1386,6 +1386,12 @@ input UserFilter {
   """A related `notificationPreference` exists."""
   notificationPreferenceExists: Boolean
 
+  """Filter by the object’s `notificationDigestQueues` relation."""
+  notificationDigestQueues: UserToManyNotificationDigestQueueFilter
+
+  """Some related `notificationDigestQueues` exist."""
+  notificationDigestQueuesExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [UserFilter!]
 
@@ -2290,6 +2296,9 @@ input NotificationPreferenceFilter {
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s `taskAssignedCadence` field."""
+  taskAssignedCadence: StringFilter
+
   """Filter by the object’s `user` relation."""
   user: UserFilter
 
@@ -2301,6 +2310,83 @@ input NotificationPreferenceFilter {
 
   """Negates the expression."""
   not: NotificationPreferenceFilter
+}
+
+"""
+A filter to be used against many `NotificationDigestQueue` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyNotificationDigestQueueFilter {
+  """
+  Every related `NotificationDigestQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: NotificationDigestQueueFilter
+
+  """
+  Some related `NotificationDigestQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: NotificationDigestQueueFilter
+
+  """
+  No related `NotificationDigestQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: NotificationDigestQueueFilter
+
+  """
+  Aggregates across related `NotificationDigestQueue` match the filter criteria.
+  """
+  aggregates: NotificationDigestQueueAggregatesFilter
+}
+
+"""
+A filter to be used against `NotificationDigestQueue` object types. All fields are combined with a logical ‘and.’
+"""
+input NotificationDigestQueueFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `userId` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s `sendAfter` field."""
+  sendAfter: DatetimeFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `user` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [NotificationDigestQueueFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [NotificationDigestQueueFilter!]
+
+  """Negates the expression."""
+  not: NotificationDigestQueueFilter
+}
+
+"""
+A filter to be used against aggregates of `NotificationDigestQueue` object types.
+"""
+input NotificationDigestQueueAggregatesFilter {
+  """
+  A filter that must pass for the relevant `NotificationDigestQueue` object to be included within the aggregate.
+  """
+  filter: NotificationDigestQueueFilter
+
+  """
+  Distinct count aggregate over matching `NotificationDigestQueue` objects.
+  """
+  distinctCount: NotificationDigestQueueDistinctCountAggregateFilter
+}
+
+input NotificationDigestQueueDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  userId: BigIntFilter
+  payload: BigIntFilter
+  sendAfter: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -3726,6 +3812,42 @@ type User implements Node {
   Reads a single `NotificationPreference` that is related to this `User`.
   """
   notificationPreference: NotificationPreference
+
+  """
+  Reads and enables pagination through a set of `NotificationDigestQueue`.
+  """
+  notificationDigestQueues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: NotificationDigestQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: NotificationDigestQueueFilter
+
+    """The method to use when ordering `NotificationDigestQueue`."""
+    orderBy: [NotificationDigestQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueConnection!
 }
 
 """A connection to a list of `Assignee` values."""
@@ -5495,11 +5617,208 @@ type NotificationPreference implements Node {
   emailTaskAssigned: Boolean!
   createdAt: Datetime!
   updatedAt: Datetime!
+  taskAssignedCadence: String!
 
   """
   Reads a single `User` that is related to this `NotificationPreference`.
   """
   user: User
+}
+
+"""A connection to a list of `NotificationDigestQueue` values."""
+type NotificationDigestQueueConnection {
+  """A list of `NotificationDigestQueue` objects."""
+  nodes: [NotificationDigestQueue!]!
+
+  """
+  A list of edges which contains the `NotificationDigestQueue` and cursor to aid in pagination.
+  """
+  edges: [NotificationDigestQueueEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `NotificationDigestQueue` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: NotificationDigestQueueAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping `NotificationDigestQueue` for these aggregates.
+    """
+    groupBy: [NotificationDigestQueueGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: NotificationDigestQueueHavingInput
+  ): [NotificationDigestQueueAggregates!]
+}
+
+type NotificationDigestQueue implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  userId: UUID!
+  payload: JSON!
+  sendAfter: Datetime!
+  createdAt: Datetime!
+
+  """
+  Reads a single `User` that is related to this `NotificationDigestQueue`.
+  """
+  user: User
+}
+
+"""A `NotificationDigestQueue` edge in the connection."""
+type NotificationDigestQueueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `NotificationDigestQueue` at the end of the edge."""
+  node: NotificationDigestQueue!
+}
+
+type NotificationDigestQueueAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: NotificationDigestQueueDistinctCountAggregates
+}
+
+type NotificationDigestQueueDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of payload across the matching connection"""
+  payload: BigInt
+
+  """Distinct count of sendAfter across the matching connection"""
+  sendAfter: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""
+Grouping methods for `NotificationDigestQueue` for usage during aggregation.
+"""
+enum NotificationDigestQueueGroupBy {
+  USER_ID
+  PAYLOAD
+  SEND_AFTER
+  SEND_AFTER_TRUNCATED_TO_HOUR
+  SEND_AFTER_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `NotificationDigestQueue` aggregates."""
+input NotificationDigestQueueHavingInput {
+  AND: [NotificationDigestQueueHavingInput!]
+  OR: [NotificationDigestQueueHavingInput!]
+  sum: NotificationDigestQueueHavingSumInput
+  distinctCount: NotificationDigestQueueHavingDistinctCountInput
+  min: NotificationDigestQueueHavingMinInput
+  max: NotificationDigestQueueHavingMaxInput
+  average: NotificationDigestQueueHavingAverageInput
+  stddevSample: NotificationDigestQueueHavingStddevSampleInput
+  stddevPopulation: NotificationDigestQueueHavingStddevPopulationInput
+  varianceSample: NotificationDigestQueueHavingVarianceSampleInput
+  variancePopulation: NotificationDigestQueueHavingVariancePopulationInput
+}
+
+input NotificationDigestQueueHavingSumInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingDistinctCountInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingMinInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingMaxInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingAverageInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingStddevSampleInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingStddevPopulationInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingVarianceSampleInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingVariancePopulationInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `NotificationDigestQueue` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input NotificationDigestQueueCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s `sendAfter` field."""
+  sendAfter: Datetime
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering `NotificationDigestQueue`."""
+enum NotificationDigestQueueOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  SEND_AFTER_ASC
+  SEND_AFTER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
 }
 
 """A connection to a list of `TaskLabel` values."""
@@ -6931,189 +7250,6 @@ type Setting implements Node {
   deletionReason: String
 }
 
-"""A connection to a list of `NotificationPreference` values."""
-type NotificationPreferenceConnection {
-  """A list of `NotificationPreference` objects."""
-  nodes: [NotificationPreference!]!
-
-  """
-  A list of edges which contains the `NotificationPreference` and cursor to aid in pagination.
-  """
-  edges: [NotificationPreferenceEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `NotificationPreference` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: NotificationPreferenceAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping `NotificationPreference` for these aggregates.
-    """
-    groupBy: [NotificationPreferenceGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: NotificationPreferenceHavingInput
-  ): [NotificationPreferenceAggregates!]
-}
-
-"""A `NotificationPreference` edge in the connection."""
-type NotificationPreferenceEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `NotificationPreference` at the end of the edge."""
-  node: NotificationPreference!
-}
-
-type NotificationPreferenceAggregates {
-  keys: [String]
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: NotificationPreferenceDistinctCountAggregates
-}
-
-type NotificationPreferenceDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of userId across the matching connection"""
-  userId: BigInt
-
-  """Distinct count of emailTaskAssigned across the matching connection"""
-  emailTaskAssigned: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-"""
-Grouping methods for `NotificationPreference` for usage during aggregation.
-"""
-enum NotificationPreferenceGroupBy {
-  EMAIL_TASK_ASSIGNED
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `NotificationPreference` aggregates."""
-input NotificationPreferenceHavingInput {
-  AND: [NotificationPreferenceHavingInput!]
-  OR: [NotificationPreferenceHavingInput!]
-  sum: NotificationPreferenceHavingSumInput
-  distinctCount: NotificationPreferenceHavingDistinctCountInput
-  min: NotificationPreferenceHavingMinInput
-  max: NotificationPreferenceHavingMaxInput
-  average: NotificationPreferenceHavingAverageInput
-  stddevSample: NotificationPreferenceHavingStddevSampleInput
-  stddevPopulation: NotificationPreferenceHavingStddevPopulationInput
-  varianceSample: NotificationPreferenceHavingVarianceSampleInput
-  variancePopulation: NotificationPreferenceHavingVariancePopulationInput
-}
-
-input NotificationPreferenceHavingSumInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingDistinctCountInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingMinInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingMaxInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingAverageInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingStddevSampleInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingStddevPopulationInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingVarianceSampleInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingVariancePopulationInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `NotificationPreference` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input NotificationPreferenceCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `userId` field."""
-  userId: UUID
-
-  """Checks for equality with the object’s `emailTaskAssigned` field."""
-  emailTaskAssigned: Boolean
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering `NotificationPreference`."""
-enum NotificationPreferenceOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  USER_ID_ASC
-  USER_ID_DESC
-  EMAIL_TASK_ASSIGNED_ASC
-  EMAIL_TASK_ASSIGNED_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
 """A connection to a list of `User` values."""
 type UserConnection {
   """A list of `User` objects."""
@@ -7505,6 +7641,210 @@ enum UserOrderBy {
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_WIDTH_DESC
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_ASC
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_DESC
+  NOTIFICATION_DIGEST_QUEUES_COUNT_ASC
+  NOTIFICATION_DIGEST_QUEUES_COUNT_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_DESC
+}
+
+"""A connection to a list of `NotificationPreference` values."""
+type NotificationPreferenceConnection {
+  """A list of `NotificationPreference` objects."""
+  nodes: [NotificationPreference!]!
+
+  """
+  A list of edges which contains the `NotificationPreference` and cursor to aid in pagination.
+  """
+  edges: [NotificationPreferenceEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `NotificationPreference` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: NotificationPreferenceAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping `NotificationPreference` for these aggregates.
+    """
+    groupBy: [NotificationPreferenceGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: NotificationPreferenceHavingInput
+  ): [NotificationPreferenceAggregates!]
+}
+
+"""A `NotificationPreference` edge in the connection."""
+type NotificationPreferenceEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `NotificationPreference` at the end of the edge."""
+  node: NotificationPreference!
+}
+
+type NotificationPreferenceAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: NotificationPreferenceDistinctCountAggregates
+}
+
+type NotificationPreferenceDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of emailTaskAssigned across the matching connection"""
+  emailTaskAssigned: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+
+  """Distinct count of taskAssignedCadence across the matching connection"""
+  taskAssignedCadence: BigInt
+}
+
+"""
+Grouping methods for `NotificationPreference` for usage during aggregation.
+"""
+enum NotificationPreferenceGroupBy {
+  EMAIL_TASK_ASSIGNED
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  TASK_ASSIGNED_CADENCE
+}
+
+"""Conditions for `NotificationPreference` aggregates."""
+input NotificationPreferenceHavingInput {
+  AND: [NotificationPreferenceHavingInput!]
+  OR: [NotificationPreferenceHavingInput!]
+  sum: NotificationPreferenceHavingSumInput
+  distinctCount: NotificationPreferenceHavingDistinctCountInput
+  min: NotificationPreferenceHavingMinInput
+  max: NotificationPreferenceHavingMaxInput
+  average: NotificationPreferenceHavingAverageInput
+  stddevSample: NotificationPreferenceHavingStddevSampleInput
+  stddevPopulation: NotificationPreferenceHavingStddevPopulationInput
+  varianceSample: NotificationPreferenceHavingVarianceSampleInput
+  variancePopulation: NotificationPreferenceHavingVariancePopulationInput
+}
+
+input NotificationPreferenceHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `NotificationPreference` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input NotificationPreferenceCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s `emailTaskAssigned` field."""
+  emailTaskAssigned: Boolean
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s `taskAssignedCadence` field."""
+  taskAssignedCadence: String
+}
+
+"""Methods to use when ordering `NotificationPreference`."""
+enum NotificationPreferenceOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  EMAIL_TASK_ASSIGNED_ASC
+  EMAIL_TASK_ASSIGNED_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  TASK_ASSIGNED_CADENCE_ASC
+  TASK_ASSIGNED_CADENCE_DESC
 }
 
 """A connection to a list of `ProjectColumn` values."""
@@ -8715,48 +9055,48 @@ input AssigneeInput {
   deletedAt: Datetime
 }
 
-"""The output of our create `NotificationPreference` mutation."""
-type CreateNotificationPreferencePayload {
+"""The output of our create `NotificationDigestQueue` mutation."""
+type CreateNotificationDigestQueuePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `NotificationPreference` that was created by this mutation."""
-  notificationPreference: NotificationPreference
+  """The `NotificationDigestQueue` that was created by this mutation."""
+  notificationDigestQueue: NotificationDigestQueue
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `NotificationPreference`. May be used by Relay 1."""
-  notificationPreferenceEdge(
-    """The method to use when ordering `NotificationPreference`."""
-    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceEdge
+  """An edge for our `NotificationDigestQueue`. May be used by Relay 1."""
+  notificationDigestQueueEdge(
+    """The method to use when ordering `NotificationDigestQueue`."""
+    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueEdge
 }
 
-"""All input for the create `NotificationPreference` mutation."""
-input CreateNotificationPreferenceInput {
+"""All input for the create `NotificationDigestQueue` mutation."""
+input CreateNotificationDigestQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The `NotificationPreference` to be created by this mutation."""
-  notificationPreference: NotificationPreferenceInput!
+  """The `NotificationDigestQueue` to be created by this mutation."""
+  notificationDigestQueue: NotificationDigestQueueInput!
 }
 
-"""An input for mutations affecting `NotificationPreference`"""
-input NotificationPreferenceInput {
+"""An input for mutations affecting `NotificationDigestQueue`"""
+input NotificationDigestQueueInput {
   rowId: UUID
   userId: UUID!
-  emailTaskAssigned: Boolean
+  payload: JSON!
+  sendAfter: Datetime
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
 """The output of our create `Emoji` mutation."""
@@ -8848,6 +9188,51 @@ input UserInput {
   createdAt: Datetime
   updatedAt: Datetime
   email: String!
+}
+
+"""The output of our create `NotificationPreference` mutation."""
+type CreateNotificationPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `NotificationPreference` that was created by this mutation."""
+  notificationPreference: NotificationPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `NotificationPreference`. May be used by Relay 1."""
+  notificationPreferenceEdge(
+    """The method to use when ordering `NotificationPreference`."""
+    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceEdge
+}
+
+"""All input for the create `NotificationPreference` mutation."""
+input CreateNotificationPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `NotificationPreference` to be created by this mutation."""
+  notificationPreference: NotificationPreferenceInput!
+}
+
+"""An input for mutations affecting `NotificationPreference`"""
+input NotificationPreferenceInput {
+  rowId: UUID
+  userId: UUID!
+  emailTaskAssigned: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  taskAssignedCadence: String
 }
 
 """The output of our create `Column` mutation."""
@@ -9578,31 +9963,31 @@ input UpdateAssigneeInput {
   patch: AssigneePatch!
 }
 
-"""The output of our update `NotificationPreference` mutation."""
-type UpdateNotificationPreferencePayload {
+"""The output of our update `NotificationDigestQueue` mutation."""
+type UpdateNotificationDigestQueuePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `NotificationPreference` that was updated by this mutation."""
-  notificationPreference: NotificationPreference
+  """The `NotificationDigestQueue` that was updated by this mutation."""
+  notificationDigestQueue: NotificationDigestQueue
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `NotificationPreference`. May be used by Relay 1."""
-  notificationPreferenceEdge(
-    """The method to use when ordering `NotificationPreference`."""
-    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceEdge
+  """An edge for our `NotificationDigestQueue`. May be used by Relay 1."""
+  notificationDigestQueueEdge(
+    """The method to use when ordering `NotificationDigestQueue`."""
+    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueEdge
 }
 
-"""All input for the `updateNotificationPreferenceById` mutation."""
-input UpdateNotificationPreferenceByIdInput {
+"""All input for the `updateNotificationDigestQueueById` mutation."""
+input UpdateNotificationDigestQueueByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -9610,29 +9995,29 @@ input UpdateNotificationPreferenceByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `NotificationPreference` to be updated.
+  The globally unique `ID` which will identify a single `NotificationDigestQueue` to be updated.
   """
   id: ID!
 
   """
-  An object where the defined keys will be set on the `NotificationPreference` being updated.
+  An object where the defined keys will be set on the `NotificationDigestQueue` being updated.
   """
-  patch: NotificationPreferencePatch!
+  patch: NotificationDigestQueuePatch!
 }
 
 """
-Represents an update to a `NotificationPreference`. Fields that are set will be updated.
+Represents an update to a `NotificationDigestQueue`. Fields that are set will be updated.
 """
-input NotificationPreferencePatch {
+input NotificationDigestQueuePatch {
   rowId: UUID
   userId: UUID
-  emailTaskAssigned: Boolean
+  payload: JSON
+  sendAfter: Datetime
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
-"""All input for the `updateNotificationPreference` mutation."""
-input UpdateNotificationPreferenceInput {
+"""All input for the `updateNotificationDigestQueue` mutation."""
+input UpdateNotificationDigestQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -9641,9 +10026,9 @@ input UpdateNotificationPreferenceInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the `NotificationPreference` being updated.
+  An object where the defined keys will be set on the `NotificationDigestQueue` being updated.
   """
-  patch: NotificationPreferencePatch!
+  patch: NotificationDigestQueuePatch!
 }
 
 """The output of our update `Emoji` mutation."""
@@ -9781,6 +10166,75 @@ input UpdateUserInput {
   An object where the defined keys will be set on the `User` being updated.
   """
   patch: UserPatch!
+}
+
+"""The output of our update `NotificationPreference` mutation."""
+type UpdateNotificationPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `NotificationPreference` that was updated by this mutation."""
+  notificationPreference: NotificationPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `NotificationPreference`. May be used by Relay 1."""
+  notificationPreferenceEdge(
+    """The method to use when ordering `NotificationPreference`."""
+    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceEdge
+}
+
+"""All input for the `updateNotificationPreferenceById` mutation."""
+input UpdateNotificationPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `NotificationPreference` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `NotificationPreference` being updated.
+  """
+  patch: NotificationPreferencePatch!
+}
+
+"""
+Represents an update to a `NotificationPreference`. Fields that are set will be updated.
+"""
+input NotificationPreferencePatch {
+  rowId: UUID
+  userId: UUID
+  emailTaskAssigned: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  taskAssignedCadence: String
+}
+
+"""All input for the `updateNotificationPreference` mutation."""
+input UpdateNotificationPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `NotificationPreference` being updated.
+  """
+  patch: NotificationPreferencePatch!
 }
 
 """The output of our update `Column` mutation."""
@@ -10714,32 +11168,32 @@ input DeleteAssigneeInput {
   userId: UUID!
 }
 
-"""The output of our delete `NotificationPreference` mutation."""
-type DeleteNotificationPreferencePayload {
+"""The output of our delete `NotificationDigestQueue` mutation."""
+type DeleteNotificationDigestQueuePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `NotificationPreference` that was deleted by this mutation."""
-  notificationPreference: NotificationPreference
-  deletedNotificationPreferenceId: ID
+  """The `NotificationDigestQueue` that was deleted by this mutation."""
+  notificationDigestQueue: NotificationDigestQueue
+  deletedNotificationDigestQueueId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `NotificationPreference`. May be used by Relay 1."""
-  notificationPreferenceEdge(
-    """The method to use when ordering `NotificationPreference`."""
-    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceEdge
+  """An edge for our `NotificationDigestQueue`. May be used by Relay 1."""
+  notificationDigestQueueEdge(
+    """The method to use when ordering `NotificationDigestQueue`."""
+    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueEdge
 }
 
-"""All input for the `deleteNotificationPreferenceById` mutation."""
-input DeleteNotificationPreferenceByIdInput {
+"""All input for the `deleteNotificationDigestQueueById` mutation."""
+input DeleteNotificationDigestQueueByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10747,13 +11201,13 @@ input DeleteNotificationPreferenceByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `NotificationPreference` to be deleted.
+  The globally unique `ID` which will identify a single `NotificationDigestQueue` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the `deleteNotificationPreference` mutation."""
-input DeleteNotificationPreferenceInput {
+"""All input for the `deleteNotificationDigestQueue` mutation."""
+input DeleteNotificationDigestQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -10850,6 +11304,54 @@ input DeleteUserByIdInput {
 
 """All input for the `deleteUser` mutation."""
 input DeleteUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `NotificationPreference` mutation."""
+type DeleteNotificationPreferencePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `NotificationPreference` that was deleted by this mutation."""
+  notificationPreference: NotificationPreference
+  deletedNotificationPreferenceId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `NotificationPreference`. May be used by Relay 1."""
+  notificationPreferenceEdge(
+    """The method to use when ordering `NotificationPreference`."""
+    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceEdge
+}
+
+"""All input for the `deleteNotificationPreferenceById` mutation."""
+input DeleteNotificationPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `NotificationPreference` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteNotificationPreference` mutation."""
+input DeleteNotificationPreferenceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11428,11 +11930,8 @@ type Query implements Node {
   """Get a single `Assignee`."""
   assigneeByTaskIdAndUserId(taskId: UUID!, userId: UUID!): Assignee
 
-  """Get a single `NotificationPreference`."""
-  notificationPreference(rowId: UUID!): NotificationPreference
-
-  """Get a single `NotificationPreference`."""
-  notificationPreferenceByUserId(userId: UUID!): NotificationPreference
+  """Get a single `NotificationDigestQueue`."""
+  notificationDigestQueue(rowId: UUID!): NotificationDigestQueue
 
   """Get a single `Emoji`."""
   emoji(rowId: UUID!): Emoji
@@ -11445,6 +11944,12 @@ type Query implements Node {
 
   """Get a single `User`."""
   userByIdentityProviderId(identityProviderId: UUID!): User
+
+  """Get a single `NotificationPreference`."""
+  notificationPreference(rowId: UUID!): NotificationPreference
+
+  """Get a single `NotificationPreference`."""
+  notificationPreferenceByUserId(userId: UUID!): NotificationPreference
 
   """Get a single `Column`."""
   column(rowId: UUID!): Column
@@ -11515,14 +12020,14 @@ type Query implements Node {
   ): Assignee
 
   """
-  Reads a single `NotificationPreference` using its globally unique `ID`.
+  Reads a single `NotificationDigestQueue` using its globally unique `ID`.
   """
-  notificationPreferenceById(
+  notificationDigestQueueById(
     """
-    The globally unique `ID` to be used in selecting a single `NotificationPreference`.
+    The globally unique `ID` to be used in selecting a single `NotificationDigestQueue`.
     """
     id: ID!
-  ): NotificationPreference
+  ): NotificationDigestQueue
 
   """Reads a single `Emoji` using its globally unique `ID`."""
   emojiById(
@@ -11535,6 +12040,16 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `User`."""
     id: ID!
   ): User
+
+  """
+  Reads a single `NotificationPreference` using its globally unique `ID`.
+  """
+  notificationPreferenceById(
+    """
+    The globally unique `ID` to be used in selecting a single `NotificationPreference`.
+    """
+    id: ID!
+  ): NotificationPreference
 
   """Reads a single `Column` using its globally unique `ID`."""
   columnById(
@@ -11723,9 +12238,9 @@ type Query implements Node {
   ): AssigneeConnection
 
   """
-  Reads and enables pagination through a set of `NotificationPreference`.
+  Reads and enables pagination through a set of `NotificationDigestQueue`.
   """
-  notificationPreferences(
+  notificationDigestQueues(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -11747,16 +12262,16 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: NotificationPreferenceCondition
+    condition: NotificationDigestQueueCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: NotificationPreferenceFilter
+    filter: NotificationDigestQueueFilter
 
-    """The method to use when ordering `NotificationPreference`."""
-    orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceConnection
+    """The method to use when ordering `NotificationDigestQueue`."""
+    orderBy: [NotificationDigestQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueConnection
 
   """Reads and enables pagination through a set of `Emoji`."""
   emojis(
@@ -11825,6 +12340,42 @@ type Query implements Node {
     """The method to use when ordering `User`."""
     orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserConnection
+
+  """
+  Reads and enables pagination through a set of `NotificationPreference`.
+  """
+  notificationPreferences(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: NotificationPreferenceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: NotificationPreferenceFilter
+
+    """The method to use when ordering `NotificationPreference`."""
+    orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceConnection
 
   """Reads and enables pagination through a set of `Column`."""
   columns(
@@ -12269,13 +12820,13 @@ type Mutation {
     input: CreateAssigneeInput!
   ): CreateAssigneePayload
 
-  """Creates a single `NotificationPreference`."""
-  createNotificationPreference(
+  """Creates a single `NotificationDigestQueue`."""
+  createNotificationDigestQueue(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateNotificationPreferenceInput!
-  ): CreateNotificationPreferencePayload
+    input: CreateNotificationDigestQueueInput!
+  ): CreateNotificationDigestQueuePayload
 
   """Creates a single `Emoji`."""
   createEmoji(
@@ -12292,6 +12843,14 @@ type Mutation {
     """
     input: CreateUserInput!
   ): CreateUserPayload
+
+  """Creates a single `NotificationPreference`."""
+  createNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateNotificationPreferenceInput!
+  ): CreateNotificationPreferencePayload
 
   """Creates a single `Column`."""
   createColumn(
@@ -12432,24 +12991,24 @@ type Mutation {
   ): UpdateAssigneePayload
 
   """
-  Updates a single `NotificationPreference` using its globally unique id and a patch.
+  Updates a single `NotificationDigestQueue` using its globally unique id and a patch.
   """
-  updateNotificationPreferenceById(
+  updateNotificationDigestQueueById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateNotificationPreferenceByIdInput!
-  ): UpdateNotificationPreferencePayload
+    input: UpdateNotificationDigestQueueByIdInput!
+  ): UpdateNotificationDigestQueuePayload
 
   """
-  Updates a single `NotificationPreference` using a unique key and a patch.
+  Updates a single `NotificationDigestQueue` using a unique key and a patch.
   """
-  updateNotificationPreference(
+  updateNotificationDigestQueue(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateNotificationPreferenceInput!
-  ): UpdateNotificationPreferencePayload
+    input: UpdateNotificationDigestQueueInput!
+  ): UpdateNotificationDigestQueuePayload
 
   """Updates a single `Emoji` using its globally unique id and a patch."""
   updateEmojiById(
@@ -12482,6 +13041,26 @@ type Mutation {
     """
     input: UpdateUserInput!
   ): UpdateUserPayload
+
+  """
+  Updates a single `NotificationPreference` using its globally unique id and a patch.
+  """
+  updateNotificationPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateNotificationPreferenceByIdInput!
+  ): UpdateNotificationPreferencePayload
+
+  """
+  Updates a single `NotificationPreference` using a unique key and a patch.
+  """
+  updateNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateNotificationPreferenceInput!
+  ): UpdateNotificationPreferencePayload
 
   """Updates a single `Column` using its globally unique id and a patch."""
   updateColumnById(
@@ -12718,22 +13297,22 @@ type Mutation {
   ): DeleteAssigneePayload
 
   """
-  Deletes a single `NotificationPreference` using its globally unique id.
+  Deletes a single `NotificationDigestQueue` using its globally unique id.
   """
-  deleteNotificationPreferenceById(
+  deleteNotificationDigestQueueById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteNotificationPreferenceByIdInput!
-  ): DeleteNotificationPreferencePayload
+    input: DeleteNotificationDigestQueueByIdInput!
+  ): DeleteNotificationDigestQueuePayload
 
-  """Deletes a single `NotificationPreference` using a unique key."""
-  deleteNotificationPreference(
+  """Deletes a single `NotificationDigestQueue` using a unique key."""
+  deleteNotificationDigestQueue(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteNotificationPreferenceInput!
-  ): DeleteNotificationPreferencePayload
+    input: DeleteNotificationDigestQueueInput!
+  ): DeleteNotificationDigestQueuePayload
 
   """Deletes a single `Emoji` using its globally unique id."""
   deleteEmojiById(
@@ -12766,6 +13345,24 @@ type Mutation {
     """
     input: DeleteUserInput!
   ): DeleteUserPayload
+
+  """
+  Deletes a single `NotificationPreference` using its globally unique id.
+  """
+  deleteNotificationPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteNotificationPreferenceByIdInput!
+  ): DeleteNotificationPreferencePayload
+
+  """Deletes a single `NotificationPreference` using a unique key."""
+  deleteNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteNotificationPreferenceInput!
+  ): DeleteNotificationPreferencePayload
 
   """Deletes a single `Column` using its globally unique id."""
   deleteColumnById(

@@ -10,7 +10,8 @@ import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
 import { cleanupAllProjectMedia, cleanupDereferencedMedia } from "lib/media/cleanupProjectMedia";
 import { moderateText } from "lib/moderation";
-import { resolveAssignmentEmail } from "lib/notifications/assignmentEmail";
+import { resolveAssignmentDigestItem, resolveAssignmentEmail } from "lib/notifications/assignmentEmail";
+import { enqueueAssignmentDigest } from "lib/notifications/digestQueue";
 import { events, notifications } from "lib/providers";
 import { deleteCommentFromIndex, deleteProjectFromIndex, deleteTaskFromIndex, indexComment, indexProject, indexTask } from "lib/search";
 import { moveTask } from "lib/tasks/moveTask";
@@ -253,10 +254,10 @@ const spec_assignee = {
   executor: executor
 };
 const assigneeCodec = recordCodec(spec_assignee);
-const notificationPreferenceIdentifier = sql.identifier("public", "notification_preference");
-const spec_notificationPreference = {
-  name: "notificationPreference",
-  identifier: notificationPreferenceIdentifier,
+const notificationDigestQueueIdentifier = sql.identifier("public", "notification_digest_queue");
+const spec_notificationDigestQueue = {
+  name: "notificationDigestQueue",
+  identifier: notificationDigestQueueIdentifier,
   attributes: {
     __proto__: null,
     id: {
@@ -280,8 +281,18 @@ const spec_notificationPreference = {
         canUpdate: true
       }
     },
-    email_task_assigned: {
-      codec: TYPES.boolean,
+    payload: {
+      codec: TYPES.jsonb,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    send_after: {
+      codec: TYPES.timestamptz,
       notNull: true,
       hasDefault: true,
       extensions: {
@@ -301,31 +312,20 @@ const spec_notificationPreference = {
         canInsert: true,
         canUpdate: true
       }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
     }
   },
   extensions: {
-    oid: "999188",
+    oid: "999212",
     isTableLike: true,
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "notification_preference"
+      name: "notification_digest_queue"
     }
   },
   executor: executor
 };
-const notificationPreferenceCodec = recordCodec(spec_notificationPreference);
+const notificationDigestQueueCodec = recordCodec(spec_notificationDigestQueue);
 const emojiIdentifier = sql.identifier("public", "emoji");
 const spec_emoji = {
   name: "emoji",
@@ -498,6 +498,90 @@ const spec_user = {
   executor: executor
 };
 const userCodec = recordCodec(spec_user);
+const notificationPreferenceIdentifier = sql.identifier("public", "notification_preference");
+const spec_notificationPreference = {
+  name: "notificationPreference",
+  identifier: notificationPreferenceIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    email_task_assigned: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    task_assigned_cadence: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "999188",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "notification_preference"
+    }
+  },
+  executor: executor
+};
+const notificationPreferenceCodec = recordCodec(spec_notificationPreference);
 const columnIdentifier = sql.identifier("public", "column");
 const spec_column = {
   name: "column",
@@ -1942,36 +2026,28 @@ const assignee_resourceOptionsConfig = {
   },
   uniques: assigneeUniques
 };
-const notification_preferenceUniques = [{
+const notification_digest_queueUniques = [{
   attributes: ["id"],
   isPrimary: true
-}, {
-  attributes: ["user_id"],
-  extensions: {
-    tags: {
-      __proto__: null,
-      behavior: ["-update", "-delete"]
-    }
-  }
 }];
-const notification_preference_resourceOptionsConfig = {
+const notification_digest_queue_resourceOptionsConfig = {
   executor: executor,
-  name: "notification_preference",
-  identifier: "main.public.notification_preference",
-  from: notificationPreferenceIdentifier,
-  codec: notificationPreferenceCodec,
+  name: "notification_digest_queue",
+  identifier: "main.public.notification_digest_queue",
+  from: notificationDigestQueueIdentifier,
+  codec: notificationDigestQueueCodec,
   extensions: {
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "notification_preference"
+      name: "notification_digest_queue"
     },
     canSelect: true,
     canInsert: true,
     canUpdate: true,
     canDelete: true
   },
-  uniques: notification_preferenceUniques
+  uniques: notification_digest_queueUniques
 };
 const emojiUniques = [{
   attributes: ["id"],
@@ -2034,6 +2110,37 @@ const user_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: userUniques
+};
+const notification_preferenceUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}, {
+  attributes: ["user_id"],
+  extensions: {
+    tags: {
+      __proto__: null,
+      behavior: ["-update", "-delete"]
+    }
+  }
+}];
+const notification_preference_resourceOptionsConfig = {
+  executor: executor,
+  name: "notification_preference",
+  identifier: "main.public.notification_preference",
+  from: notificationPreferenceIdentifier,
+  codec: notificationPreferenceCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "notification_preference"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: notification_preferenceUniques
 };
 const columnUniques = [{
   attributes: ["id"],
@@ -2320,11 +2427,13 @@ const registryConfig = {
     timestamptz: TYPES.timestamptz,
     taskLabel: taskLabelCodec,
     assignee: assigneeCodec,
-    notificationPreference: notificationPreferenceCodec,
-    bool: TYPES.boolean,
+    notificationDigestQueue: notificationDigestQueueCodec,
+    jsonb: TYPES.jsonb,
     emoji: emojiCodec,
     text: TYPES.text,
     user: userCodec,
+    notificationPreference: notificationPreferenceCodec,
+    bool: TYPES.boolean,
     column: columnCodec,
     post: postCodec,
     projectColumn: projectColumnCodec,
@@ -2336,7 +2445,6 @@ const registryConfig = {
     textArray: LIST_TYPES.text,
     varchar: TYPES.varchar,
     wardenSyncQueue: wardenSyncQueueCodec,
-    jsonb: TYPES.jsonb,
     settings: settingsCodec,
     timestamp: TYPES.timestamp,
     task: taskCodec,
@@ -2348,9 +2456,10 @@ const registryConfig = {
     project_project_label: project_project_label_resourceOptionsConfig,
     task_label: task_label_resourceOptionsConfig,
     assignee: assignee_resourceOptionsConfig,
-    notification_preference: notification_preference_resourceOptionsConfig,
+    notification_digest_queue: notification_digest_queue_resourceOptionsConfig,
     emoji: emoji_resourceOptionsConfig,
     user: user_resourceOptionsConfig,
+    notification_preference: notification_preference_resourceOptionsConfig,
     column: column_resourceOptionsConfig,
     post: post_resourceOptionsConfig,
     project_column: project_column_resourceOptionsConfig,
@@ -2492,6 +2601,16 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["label_id"],
         isReferencee: true
+      }
+    },
+    notificationDigestQueue: {
+      __proto__: null,
+      userByMyUserId: {
+        localCodec: notificationDigestQueueCodec,
+        remoteResourceOptions: user_resourceOptionsConfig,
+        localAttributes: ["user_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
       }
     },
     notificationPreference: {
@@ -2754,6 +2873,13 @@ const registryConfig = {
         remoteAttributes: ["user_id"],
         isUnique: true,
         isReferencee: true
+      },
+      notificationDigestQueuesByTheirUserId: {
+        localCodec: userCodec,
+        remoteResourceOptions: notification_digest_queue_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["user_id"],
+        isReferencee: true
       }
     },
     userPreference: {
@@ -2800,13 +2926,13 @@ const nodeIdHandler_Assignee = makeTableNodeIdHandler({
   resource: spec_resource_assigneePgResource,
   pk: assigneeUniques[0].attributes
 });
-const spec_resource_notification_preferencePgResource = registry.pgResources["notification_preference"];
-const nodeIdHandler_NotificationPreference = makeTableNodeIdHandler({
-  typeName: "NotificationPreference",
-  identifier: "NotificationPreference",
+const spec_resource_notification_digest_queuePgResource = registry.pgResources["notification_digest_queue"];
+const nodeIdHandler_NotificationDigestQueue = makeTableNodeIdHandler({
+  typeName: "NotificationDigestQueue",
+  identifier: "NotificationDigestQueue",
   nodeIdCodec: base64JSONNodeIdCodec,
-  resource: spec_resource_notification_preferencePgResource,
-  pk: notification_preferenceUniques[0].attributes
+  resource: spec_resource_notification_digest_queuePgResource,
+  pk: notification_digest_queueUniques[0].attributes
 });
 const spec_resource_emojiPgResource = registry.pgResources["emoji"];
 const nodeIdHandler_Emoji = makeTableNodeIdHandler({
@@ -2823,6 +2949,14 @@ const nodeIdHandler_User = makeTableNodeIdHandler({
   nodeIdCodec: base64JSONNodeIdCodec,
   resource: spec_resource_userPgResource,
   pk: userUniques[0].attributes
+});
+const spec_resource_notification_preferencePgResource = registry.pgResources["notification_preference"];
+const nodeIdHandler_NotificationPreference = makeTableNodeIdHandler({
+  typeName: "NotificationPreference",
+  identifier: "NotificationPreference",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: spec_resource_notification_preferencePgResource,
+  pk: notification_preferenceUniques[0].attributes
 });
 const spec_resource_columnPgResource = registry.pgResources["column"];
 const nodeIdHandler_Column = makeTableNodeIdHandler({
@@ -2944,9 +3078,10 @@ const nodeIdHandlerByTypeName = {
   ProjectProjectLabel: nodeIdHandler_ProjectProjectLabel,
   TaskLabel: nodeIdHandler_TaskLabel,
   Assignee: nodeIdHandler_Assignee,
-  NotificationPreference: nodeIdHandler_NotificationPreference,
+  NotificationDigestQueue: nodeIdHandler_NotificationDigestQueue,
   Emoji: nodeIdHandler_Emoji,
   User: nodeIdHandler_User,
+  NotificationPreference: nodeIdHandler_NotificationPreference,
   Column: nodeIdHandler_Column,
   Post: nodeIdHandler_Post,
   ProjectColumn: nodeIdHandler_ProjectColumn,
@@ -4219,6 +4354,12 @@ const UserPreferenceOrderBy_VIEW_MODE_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+function NotificationDigestQueueDistinctCountAggregates_payloadPlan($pgSelectSingle) {
+  return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "payload", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+}
+function NotificationDigestQueueGroupBy_PAYLOADApply($pgSelect) {
+  applyGroupByAttribute("payload", TYPES.jsonb, $pgSelect);
+}
 function ColumnDistinctCountAggregates_indexPlan($pgSelectSingle) {
   return pgAggregatesPlanAggregateAttribute(TYPES.text, "index", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
 }
@@ -4272,8 +4413,9 @@ const relation17 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
 const relation18 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
 const relation19 = registry.pgRelations["user"]["emojisByTheirUserId"];
 const relation20 = registry.pgRelations["user"]["attachmentsByTheirAuthorId"];
-const relation21 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
-const relation22 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
+const relation21 = registry.pgRelations["user"]["notificationDigestQueuesByTheirUserId"];
+const relation22 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
+const relation23 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
 function getClientMutationIdForCreatePlan($mutation) {
   return $mutation.getStepForKey("result").getMeta("clientMutationId");
 }
@@ -4334,12 +4476,15 @@ function AssigneeInput_userIdApply(obj, val, info) {
 function AssigneeInput_deletedAtApply(obj, val, info) {
   obj.set("deleted_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateNotificationPreferencePayload_notificationPreferenceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_notification_preferencePgResource, notification_preferenceUniques[0].attributes, $mutation, fieldArgs);
-function NotificationPreferenceInput_rowIdApply(obj, val, info) {
+const CreateNotificationDigestQueuePayload_notificationDigestQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_notification_digest_queuePgResource, notification_digest_queueUniques[0].attributes, $mutation, fieldArgs);
+function NotificationDigestQueueInput_rowIdApply(obj, val, info) {
   obj.set("id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function NotificationPreferenceInput_emailTaskAssignedApply(obj, val, info) {
-  obj.set("email_task_assigned", bakedInputRuntime(info.schema, info.field.type, val));
+function NotificationDigestQueueInput_payloadApply(obj, val, info) {
+  obj.set("payload", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function NotificationDigestQueueInput_sendAfterApply(obj, val, info) {
+  obj.set("send_after", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateEmojiPayload_emojiEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_emojiPgResource, emojiUniques[0].attributes, $mutation, fieldArgs);
 function EmojiInput_emojiApply(obj, val, info) {
@@ -4360,6 +4505,13 @@ function UserInput_avatarUrlApply(obj, val, info) {
 }
 function UserInput_emailApply(obj, val, info) {
   obj.set("email", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateNotificationPreferencePayload_notificationPreferenceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_notification_preferencePgResource, notification_preferenceUniques[0].attributes, $mutation, fieldArgs);
+function NotificationPreferenceInput_emailTaskAssignedApply(obj, val, info) {
+  obj.set("email_task_assigned", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function NotificationPreferenceInput_taskAssignedCadenceApply(obj, val, info) {
+  obj.set("task_assigned_cadence", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateColumnPayload_columnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_columnPgResource, columnUniques[0].attributes, $mutation, fieldArgs);
 function ColumnInput_titleApply(obj, val, info) {
@@ -4407,9 +4559,6 @@ function UserPreferenceInput_pinOrderApply(obj, val, info) {
 const CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_warden_sync_queuePgResource, warden_sync_queueUniques[0].attributes, $mutation, fieldArgs);
 function WardenSyncQueueInput_operationApply(obj, val, info) {
   obj.set("operation", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function WardenSyncQueueInput_payloadApply(obj, val, info) {
-  obj.set("payload", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function WardenSyncQueueInput_attemptsApply(obj, val, info) {
   obj.set("attempts", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4515,9 +4664,9 @@ const nodeFetcher_Assignee = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Assignee));
   return nodeIdHandler_Assignee.get(nodeIdHandler_Assignee.getSpec($decoded));
 };
-const nodeFetcher_NotificationPreference = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NotificationPreference));
-  return nodeIdHandler_NotificationPreference.get(nodeIdHandler_NotificationPreference.getSpec($decoded));
+const nodeFetcher_NotificationDigestQueue = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NotificationDigestQueue));
+  return nodeIdHandler_NotificationDigestQueue.get(nodeIdHandler_NotificationDigestQueue.getSpec($decoded));
 };
 const nodeFetcher_Emoji = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Emoji));
@@ -4526,6 +4675,10 @@ const nodeFetcher_Emoji = $nodeId => {
 const nodeFetcher_User = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_User));
   return nodeIdHandler_User.get(nodeIdHandler_User.getSpec($decoded));
+};
+const nodeFetcher_NotificationPreference = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NotificationPreference));
+  return nodeIdHandler_NotificationPreference.get(nodeIdHandler_NotificationPreference.getSpec($decoded));
 };
 const nodeFetcher_Column = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Column));
@@ -4812,10 +4965,11 @@ const planWrapper4 = (plan, _, fieldArgs) => {
               return eq(table.userId, userId);
             },
             columns: {
-              emailTaskAssigned: !0
+              emailTaskAssigned: !0,
+              taskAssignedCadence: !0
             }
           }),
-          email = resolveAssignmentEmail({
+          resolveInput = {
             assignee: assignee ?? null,
             assigner: observer ? {
               id: observer.id,
@@ -4834,8 +4988,14 @@ const planWrapper4 = (plan, _, fieldArgs) => {
             preference: preference ?? null,
             workspaceSlug,
             appBaseUrl: process.env.APP_BASE_URL
-          });
-        if (email) await notifications.sendEmail(email);
+          };
+        if (preference?.taskAssignedCadence === "digest") {
+          const item = resolveAssignmentDigestItem(resolveInput);
+          if (item) await enqueueAssignmentDigest(userId, item);
+        } else {
+          const email = resolveAssignmentEmail(resolveInput);
+          if (email) await notifications.sendEmail(email);
+        }
       } catch (error) {
         console.error("[Notifications] Failed to send assignment email:", error);
       }
@@ -4858,30 +5018,13 @@ const planWrapper4 = (plan, _, fieldArgs) => {
   return $result;
 };
 function oldPlan5(_, args) {
-  const $insert = pgInsertSingle(spec_resource_notification_preferencePgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper5 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "notificationPreference"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (input.userId !== observer.id) throw Error("Unauthorized");
-  });
-  return plan();
-};
-function oldPlan6(_, args) {
   const $insert = pgInsertSingle(spec_resource_emojiPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper6 = (plan, _, fieldArgs) => {
+const planWrapper5 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "emoji"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -4912,19 +5055,36 @@ const planWrapper6 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan7(_, args) {
+function oldPlan6(_, args) {
   const $insert = pgInsertSingle(spec_resource_userPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper7 = (plan, _, fieldArgs) => {
+const planWrapper6 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "user"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
     if (!observer) throw Error("Unauthorized");
     throw Error("Unauthorized");
+  });
+  return plan();
+};
+function oldPlan7(_, args) {
+  const $insert = pgInsertSingle(spec_resource_notification_preferencePgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper7 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "notificationPreference"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (input.userId !== observer.id) throw Error("Unauthorized");
   });
   return plan();
 };
@@ -5858,44 +6018,15 @@ const specFromArgs_Assignee = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Assignee, $nodeId);
 };
-const specFromArgs_NotificationPreference = args => {
+const specFromArgs_NotificationDigestQueue = args => {
   const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_NotificationPreference, $nodeId);
-};
-const oldPlan31 = (_$root, args) => {
-  const $update = pgUpdateSingle(spec_resource_notification_preferencePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper31 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    {
-      const preference = await db.query.notificationPreferences.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!preference) throw Error("Not found");
-      if (preference.userId !== observer.id) throw Error("Unauthorized");
-    }
-  });
-  return plan();
+  return specFromNodeId(nodeIdHandler_NotificationDigestQueue, $nodeId);
 };
 const specFromArgs_Emoji = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
 };
-const oldPlan32 = (_$root, args) => {
+const oldPlan31 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_emojiPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -5904,7 +6035,7 @@ const oldPlan32 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper32 = (plan, _, fieldArgs) => {
+const planWrapper31 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5942,8 +6073,30 @@ const specFromArgs_User = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan33 = (_$root, args) => {
+const oldPlan32 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_userPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper32 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (input !== observer.id) throw Error("Unauthorized");
+  });
+  return plan();
+};
+const specFromArgs_NotificationPreference = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_NotificationPreference, $nodeId);
+};
+const oldPlan33 = (_$root, args) => {
+  const $update = pgUpdateSingle(spec_resource_notification_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
   args.apply($update);
@@ -5953,10 +6106,21 @@ const oldPlan33 = (_$root, args) => {
 };
 const planWrapper33 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer");
-  sideEffect([$input, $observer], async ([input, observer]) => {
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
-    if (input !== observer.id) throw Error("Unauthorized");
+    {
+      const preference = await db.query.notificationPreferences.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!preference) throw Error("Not found");
+      if (preference.userId !== observer.id) throw Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -6878,35 +7042,6 @@ ${String(oldPlan57)}`);
   return $newPlan;
 }
 const oldPlan58 = (_$root, args) => {
-  const $delete = pgDeleteSingle(spec_resource_notification_preferencePgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper58 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
-    if (!observer) throw Error("Unauthorized");
-    {
-      const preference = await db.query.notificationPreferences.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        }
-      });
-      if (!preference) throw Error("Not found");
-      if (preference.userId !== observer.id) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-const oldPlan59 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_emojiPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6915,7 +7050,7 @@ const oldPlan59 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper59 = (plan, _, fieldArgs) => {
+const planWrapper58 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6949,8 +7084,26 @@ const planWrapper59 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan60 = (_$root, args) => {
+const oldPlan59 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_userPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper59 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer");
+  sideEffect([$input, $observer], async ([input, observer]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (input !== observer.id) throw Error("Unauthorized");
+  });
+  return plan();
+};
+const oldPlan60 = (_$root, args) => {
+  const $delete = pgDeleteSingle(spec_resource_notification_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
   args.apply($delete);
@@ -6960,10 +7113,21 @@ const oldPlan60 = (_$root, args) => {
 };
 const planWrapper60 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer");
-  sideEffect([$input, $observer], async ([input, observer]) => {
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$input, $observer, $db], async ([input, observer, db]) => {
     if (!observer) throw Error("Unauthorized");
-    if (input !== observer.id) throw Error("Unauthorized");
+    {
+      const preference = await db.query.notificationPreferences.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        }
+      });
+      if (!preference) throw Error("Not found");
+      if (preference.userId !== observer.id) throw Error("Unauthorized");
+    }
   });
   return plan();
 };
@@ -9048,6 +9212,12 @@ input UserFilter {
   """A related \`notificationPreference\` exists."""
   notificationPreferenceExists: Boolean
 
+  """Filter by the object’s \`notificationDigestQueues\` relation."""
+  notificationDigestQueues: UserToManyNotificationDigestQueueFilter
+
+  """Some related \`notificationDigestQueues\` exist."""
+  notificationDigestQueuesExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [UserFilter!]
 
@@ -9952,6 +10122,9 @@ input NotificationPreferenceFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
+  """Filter by the object’s \`taskAssignedCadence\` field."""
+  taskAssignedCadence: StringFilter
+
   """Filter by the object’s \`user\` relation."""
   user: UserFilter
 
@@ -9963,6 +10136,83 @@ input NotificationPreferenceFilter {
 
   """Negates the expression."""
   not: NotificationPreferenceFilter
+}
+
+"""
+A filter to be used against many \`NotificationDigestQueue\` object types. All fields are combined with a logical ‘and.’
+"""
+input UserToManyNotificationDigestQueueFilter {
+  """
+  Every related \`NotificationDigestQueue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: NotificationDigestQueueFilter
+
+  """
+  Some related \`NotificationDigestQueue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: NotificationDigestQueueFilter
+
+  """
+  No related \`NotificationDigestQueue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: NotificationDigestQueueFilter
+
+  """
+  Aggregates across related \`NotificationDigestQueue\` match the filter criteria.
+  """
+  aggregates: NotificationDigestQueueAggregatesFilter
+}
+
+"""
+A filter to be used against \`NotificationDigestQueue\` object types. All fields are combined with a logical ‘and.’
+"""
+input NotificationDigestQueueFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`userId\` field."""
+  userId: UUIDFilter
+
+  """Filter by the object’s \`sendAfter\` field."""
+  sendAfter: DatetimeFilter
+
+  """Filter by the object’s \`createdAt\` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s \`user\` relation."""
+  user: UserFilter
+
+  """Checks for all expressions in this list."""
+  and: [NotificationDigestQueueFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [NotificationDigestQueueFilter!]
+
+  """Negates the expression."""
+  not: NotificationDigestQueueFilter
+}
+
+"""
+A filter to be used against aggregates of \`NotificationDigestQueue\` object types.
+"""
+input NotificationDigestQueueAggregatesFilter {
+  """
+  A filter that must pass for the relevant \`NotificationDigestQueue\` object to be included within the aggregate.
+  """
+  filter: NotificationDigestQueueFilter
+
+  """
+  Distinct count aggregate over matching \`NotificationDigestQueue\` objects.
+  """
+  distinctCount: NotificationDigestQueueDistinctCountAggregateFilter
+}
+
+input NotificationDigestQueueDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  userId: BigIntFilter
+  payload: BigIntFilter
+  sendAfter: BigIntFilter
+  createdAt: BigIntFilter
 }
 
 """
@@ -11388,6 +11638,42 @@ type User implements Node {
   Reads a single \`NotificationPreference\` that is related to this \`User\`.
   """
   notificationPreference: NotificationPreference
+
+  """
+  Reads and enables pagination through a set of \`NotificationDigestQueue\`.
+  """
+  notificationDigestQueues(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: NotificationDigestQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: NotificationDigestQueueFilter
+
+    """The method to use when ordering \`NotificationDigestQueue\`."""
+    orderBy: [NotificationDigestQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueConnection!
 }
 
 """A connection to a list of \`Assignee\` values."""
@@ -13157,11 +13443,208 @@ type NotificationPreference implements Node {
   emailTaskAssigned: Boolean!
   createdAt: Datetime!
   updatedAt: Datetime!
+  taskAssignedCadence: String!
 
   """
   Reads a single \`User\` that is related to this \`NotificationPreference\`.
   """
   user: User
+}
+
+"""A connection to a list of \`NotificationDigestQueue\` values."""
+type NotificationDigestQueueConnection {
+  """A list of \`NotificationDigestQueue\` objects."""
+  nodes: [NotificationDigestQueue!]!
+
+  """
+  A list of edges which contains the \`NotificationDigestQueue\` and cursor to aid in pagination.
+  """
+  edges: [NotificationDigestQueueEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`NotificationDigestQueue\` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: NotificationDigestQueueAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping \`NotificationDigestQueue\` for these aggregates.
+    """
+    groupBy: [NotificationDigestQueueGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: NotificationDigestQueueHavingInput
+  ): [NotificationDigestQueueAggregates!]
+}
+
+type NotificationDigestQueue implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  userId: UUID!
+  payload: JSON!
+  sendAfter: Datetime!
+  createdAt: Datetime!
+
+  """
+  Reads a single \`User\` that is related to this \`NotificationDigestQueue\`.
+  """
+  user: User
+}
+
+"""A \`NotificationDigestQueue\` edge in the connection."""
+type NotificationDigestQueueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`NotificationDigestQueue\` at the end of the edge."""
+  node: NotificationDigestQueue!
+}
+
+type NotificationDigestQueueAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: NotificationDigestQueueDistinctCountAggregates
+}
+
+type NotificationDigestQueueDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of payload across the matching connection"""
+  payload: BigInt
+
+  """Distinct count of sendAfter across the matching connection"""
+  sendAfter: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+}
+
+"""
+Grouping methods for \`NotificationDigestQueue\` for usage during aggregation.
+"""
+enum NotificationDigestQueueGroupBy {
+  USER_ID
+  PAYLOAD
+  SEND_AFTER
+  SEND_AFTER_TRUNCATED_TO_HOUR
+  SEND_AFTER_TRUNCATED_TO_DAY
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for \`NotificationDigestQueue\` aggregates."""
+input NotificationDigestQueueHavingInput {
+  AND: [NotificationDigestQueueHavingInput!]
+  OR: [NotificationDigestQueueHavingInput!]
+  sum: NotificationDigestQueueHavingSumInput
+  distinctCount: NotificationDigestQueueHavingDistinctCountInput
+  min: NotificationDigestQueueHavingMinInput
+  max: NotificationDigestQueueHavingMaxInput
+  average: NotificationDigestQueueHavingAverageInput
+  stddevSample: NotificationDigestQueueHavingStddevSampleInput
+  stddevPopulation: NotificationDigestQueueHavingStddevPopulationInput
+  varianceSample: NotificationDigestQueueHavingVarianceSampleInput
+  variancePopulation: NotificationDigestQueueHavingVariancePopulationInput
+}
+
+input NotificationDigestQueueHavingSumInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingDistinctCountInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingMinInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingMaxInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingAverageInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingStddevSampleInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingStddevPopulationInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingVarianceSampleInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+input NotificationDigestQueueHavingVariancePopulationInput {
+  sendAfter: HavingDatetimeFilter
+  createdAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`NotificationDigestQueue\` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input NotificationDigestQueueCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`userId\` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s \`sendAfter\` field."""
+  sendAfter: Datetime
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+}
+
+"""Methods to use when ordering \`NotificationDigestQueue\`."""
+enum NotificationDigestQueueOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  SEND_AFTER_ASC
+  SEND_AFTER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
 }
 
 """A connection to a list of \`TaskLabel\` values."""
@@ -14593,189 +15076,6 @@ type Setting implements Node {
   deletionReason: String
 }
 
-"""A connection to a list of \`NotificationPreference\` values."""
-type NotificationPreferenceConnection {
-  """A list of \`NotificationPreference\` objects."""
-  nodes: [NotificationPreference!]!
-
-  """
-  A list of edges which contains the \`NotificationPreference\` and cursor to aid in pagination.
-  """
-  edges: [NotificationPreferenceEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* \`NotificationPreference\` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: NotificationPreferenceAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping \`NotificationPreference\` for these aggregates.
-    """
-    groupBy: [NotificationPreferenceGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: NotificationPreferenceHavingInput
-  ): [NotificationPreferenceAggregates!]
-}
-
-"""A \`NotificationPreference\` edge in the connection."""
-type NotificationPreferenceEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The \`NotificationPreference\` at the end of the edge."""
-  node: NotificationPreference!
-}
-
-type NotificationPreferenceAggregates {
-  keys: [String]
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: NotificationPreferenceDistinctCountAggregates
-}
-
-type NotificationPreferenceDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of userId across the matching connection"""
-  userId: BigInt
-
-  """Distinct count of emailTaskAssigned across the matching connection"""
-  emailTaskAssigned: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-
-  """Distinct count of updatedAt across the matching connection"""
-  updatedAt: BigInt
-}
-
-"""
-Grouping methods for \`NotificationPreference\` for usage during aggregation.
-"""
-enum NotificationPreferenceGroupBy {
-  EMAIL_TASK_ASSIGNED
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-  UPDATED_AT
-  UPDATED_AT_TRUNCATED_TO_HOUR
-  UPDATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for \`NotificationPreference\` aggregates."""
-input NotificationPreferenceHavingInput {
-  AND: [NotificationPreferenceHavingInput!]
-  OR: [NotificationPreferenceHavingInput!]
-  sum: NotificationPreferenceHavingSumInput
-  distinctCount: NotificationPreferenceHavingDistinctCountInput
-  min: NotificationPreferenceHavingMinInput
-  max: NotificationPreferenceHavingMaxInput
-  average: NotificationPreferenceHavingAverageInput
-  stddevSample: NotificationPreferenceHavingStddevSampleInput
-  stddevPopulation: NotificationPreferenceHavingStddevPopulationInput
-  varianceSample: NotificationPreferenceHavingVarianceSampleInput
-  variancePopulation: NotificationPreferenceHavingVariancePopulationInput
-}
-
-input NotificationPreferenceHavingSumInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingDistinctCountInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingMinInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingMaxInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingAverageInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingStddevSampleInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingStddevPopulationInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingVarianceSampleInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-input NotificationPreferenceHavingVariancePopulationInput {
-  createdAt: HavingDatetimeFilter
-  updatedAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against \`NotificationPreference\` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input NotificationPreferenceCondition {
-  """Checks for equality with the object’s \`rowId\` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s \`userId\` field."""
-  userId: UUID
-
-  """Checks for equality with the object’s \`emailTaskAssigned\` field."""
-  emailTaskAssigned: Boolean
-
-  """Checks for equality with the object’s \`createdAt\` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s \`updatedAt\` field."""
-  updatedAt: Datetime
-}
-
-"""Methods to use when ordering \`NotificationPreference\`."""
-enum NotificationPreferenceOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  USER_ID_ASC
-  USER_ID_DESC
-  EMAIL_TASK_ASSIGNED_ASC
-  EMAIL_TASK_ASSIGNED_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
 """A connection to a list of \`User\` values."""
 type UserConnection {
   """A list of \`User\` objects."""
@@ -15167,6 +15467,210 @@ enum UserOrderBy {
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_WIDTH_DESC
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_ASC
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_DESC
+  NOTIFICATION_DIGEST_QUEUES_COUNT_ASC
+  NOTIFICATION_DIGEST_QUEUES_COUNT_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_DESC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_ASC
+  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_DESC
+}
+
+"""A connection to a list of \`NotificationPreference\` values."""
+type NotificationPreferenceConnection {
+  """A list of \`NotificationPreference\` objects."""
+  nodes: [NotificationPreference!]!
+
+  """
+  A list of edges which contains the \`NotificationPreference\` and cursor to aid in pagination.
+  """
+  edges: [NotificationPreferenceEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`NotificationPreference\` you could get from the connection.
+  """
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: NotificationPreferenceAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """
+    The method to use when grouping \`NotificationPreference\` for these aggregates.
+    """
+    groupBy: [NotificationPreferenceGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: NotificationPreferenceHavingInput
+  ): [NotificationPreferenceAggregates!]
+}
+
+"""A \`NotificationPreference\` edge in the connection."""
+type NotificationPreferenceEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`NotificationPreference\` at the end of the edge."""
+  node: NotificationPreference!
+}
+
+type NotificationPreferenceAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: NotificationPreferenceDistinctCountAggregates
+}
+
+type NotificationPreferenceDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of userId across the matching connection"""
+  userId: BigInt
+
+  """Distinct count of emailTaskAssigned across the matching connection"""
+  emailTaskAssigned: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+
+  """Distinct count of taskAssignedCadence across the matching connection"""
+  taskAssignedCadence: BigInt
+}
+
+"""
+Grouping methods for \`NotificationPreference\` for usage during aggregation.
+"""
+enum NotificationPreferenceGroupBy {
+  EMAIL_TASK_ASSIGNED
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+  TASK_ASSIGNED_CADENCE
+}
+
+"""Conditions for \`NotificationPreference\` aggregates."""
+input NotificationPreferenceHavingInput {
+  AND: [NotificationPreferenceHavingInput!]
+  OR: [NotificationPreferenceHavingInput!]
+  sum: NotificationPreferenceHavingSumInput
+  distinctCount: NotificationPreferenceHavingDistinctCountInput
+  min: NotificationPreferenceHavingMinInput
+  max: NotificationPreferenceHavingMaxInput
+  average: NotificationPreferenceHavingAverageInput
+  stddevSample: NotificationPreferenceHavingStddevSampleInput
+  stddevPopulation: NotificationPreferenceHavingStddevPopulationInput
+  varianceSample: NotificationPreferenceHavingVarianceSampleInput
+  variancePopulation: NotificationPreferenceHavingVariancePopulationInput
+}
+
+input NotificationPreferenceHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input NotificationPreferenceHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against \`NotificationPreference\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input NotificationPreferenceCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`userId\` field."""
+  userId: UUID
+
+  """Checks for equality with the object’s \`emailTaskAssigned\` field."""
+  emailTaskAssigned: Boolean
+
+  """Checks for equality with the object’s \`createdAt\` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s \`updatedAt\` field."""
+  updatedAt: Datetime
+
+  """Checks for equality with the object’s \`taskAssignedCadence\` field."""
+  taskAssignedCadence: String
+}
+
+"""Methods to use when ordering \`NotificationPreference\`."""
+enum NotificationPreferenceOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+  EMAIL_TASK_ASSIGNED_ASC
+  EMAIL_TASK_ASSIGNED_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  TASK_ASSIGNED_CADENCE_ASC
+  TASK_ASSIGNED_CADENCE_DESC
 }
 
 """A connection to a list of \`ProjectColumn\` values."""
@@ -16377,48 +16881,48 @@ input AssigneeInput {
   deletedAt: Datetime
 }
 
-"""The output of our create \`NotificationPreference\` mutation."""
-type CreateNotificationPreferencePayload {
+"""The output of our create \`NotificationDigestQueue\` mutation."""
+type CreateNotificationDigestQueuePayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`NotificationPreference\` that was created by this mutation."""
-  notificationPreference: NotificationPreference
+  """The \`NotificationDigestQueue\` that was created by this mutation."""
+  notificationDigestQueue: NotificationDigestQueue
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`NotificationPreference\`. May be used by Relay 1."""
-  notificationPreferenceEdge(
-    """The method to use when ordering \`NotificationPreference\`."""
-    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceEdge
+  """An edge for our \`NotificationDigestQueue\`. May be used by Relay 1."""
+  notificationDigestQueueEdge(
+    """The method to use when ordering \`NotificationDigestQueue\`."""
+    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueEdge
 }
 
-"""All input for the create \`NotificationPreference\` mutation."""
-input CreateNotificationPreferenceInput {
+"""All input for the create \`NotificationDigestQueue\` mutation."""
+input CreateNotificationDigestQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The \`NotificationPreference\` to be created by this mutation."""
-  notificationPreference: NotificationPreferenceInput!
+  """The \`NotificationDigestQueue\` to be created by this mutation."""
+  notificationDigestQueue: NotificationDigestQueueInput!
 }
 
-"""An input for mutations affecting \`NotificationPreference\`"""
-input NotificationPreferenceInput {
+"""An input for mutations affecting \`NotificationDigestQueue\`"""
+input NotificationDigestQueueInput {
   rowId: UUID
   userId: UUID!
-  emailTaskAssigned: Boolean
+  payload: JSON!
+  sendAfter: Datetime
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
 """The output of our create \`Emoji\` mutation."""
@@ -16510,6 +17014,51 @@ input UserInput {
   createdAt: Datetime
   updatedAt: Datetime
   email: String!
+}
+
+"""The output of our create \`NotificationPreference\` mutation."""
+type CreateNotificationPreferencePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`NotificationPreference\` that was created by this mutation."""
+  notificationPreference: NotificationPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`NotificationPreference\`. May be used by Relay 1."""
+  notificationPreferenceEdge(
+    """The method to use when ordering \`NotificationPreference\`."""
+    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceEdge
+}
+
+"""All input for the create \`NotificationPreference\` mutation."""
+input CreateNotificationPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`NotificationPreference\` to be created by this mutation."""
+  notificationPreference: NotificationPreferenceInput!
+}
+
+"""An input for mutations affecting \`NotificationPreference\`"""
+input NotificationPreferenceInput {
+  rowId: UUID
+  userId: UUID!
+  emailTaskAssigned: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  taskAssignedCadence: String
 }
 
 """The output of our create \`Column\` mutation."""
@@ -17240,31 +17789,31 @@ input UpdateAssigneeInput {
   patch: AssigneePatch!
 }
 
-"""The output of our update \`NotificationPreference\` mutation."""
-type UpdateNotificationPreferencePayload {
+"""The output of our update \`NotificationDigestQueue\` mutation."""
+type UpdateNotificationDigestQueuePayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`NotificationPreference\` that was updated by this mutation."""
-  notificationPreference: NotificationPreference
+  """The \`NotificationDigestQueue\` that was updated by this mutation."""
+  notificationDigestQueue: NotificationDigestQueue
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`NotificationPreference\`. May be used by Relay 1."""
-  notificationPreferenceEdge(
-    """The method to use when ordering \`NotificationPreference\`."""
-    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceEdge
+  """An edge for our \`NotificationDigestQueue\`. May be used by Relay 1."""
+  notificationDigestQueueEdge(
+    """The method to use when ordering \`NotificationDigestQueue\`."""
+    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueEdge
 }
 
-"""All input for the \`updateNotificationPreferenceById\` mutation."""
-input UpdateNotificationPreferenceByIdInput {
+"""All input for the \`updateNotificationDigestQueueById\` mutation."""
+input UpdateNotificationDigestQueueByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -17272,29 +17821,29 @@ input UpdateNotificationPreferenceByIdInput {
   clientMutationId: String
 
   """
-  The globally unique \`ID\` which will identify a single \`NotificationPreference\` to be updated.
+  The globally unique \`ID\` which will identify a single \`NotificationDigestQueue\` to be updated.
   """
   id: ID!
 
   """
-  An object where the defined keys will be set on the \`NotificationPreference\` being updated.
+  An object where the defined keys will be set on the \`NotificationDigestQueue\` being updated.
   """
-  patch: NotificationPreferencePatch!
+  patch: NotificationDigestQueuePatch!
 }
 
 """
-Represents an update to a \`NotificationPreference\`. Fields that are set will be updated.
+Represents an update to a \`NotificationDigestQueue\`. Fields that are set will be updated.
 """
-input NotificationPreferencePatch {
+input NotificationDigestQueuePatch {
   rowId: UUID
   userId: UUID
-  emailTaskAssigned: Boolean
+  payload: JSON
+  sendAfter: Datetime
   createdAt: Datetime
-  updatedAt: Datetime
 }
 
-"""All input for the \`updateNotificationPreference\` mutation."""
-input UpdateNotificationPreferenceInput {
+"""All input for the \`updateNotificationDigestQueue\` mutation."""
+input UpdateNotificationDigestQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -17303,9 +17852,9 @@ input UpdateNotificationPreferenceInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the \`NotificationPreference\` being updated.
+  An object where the defined keys will be set on the \`NotificationDigestQueue\` being updated.
   """
-  patch: NotificationPreferencePatch!
+  patch: NotificationDigestQueuePatch!
 }
 
 """The output of our update \`Emoji\` mutation."""
@@ -17443,6 +17992,75 @@ input UpdateUserInput {
   An object where the defined keys will be set on the \`User\` being updated.
   """
   patch: UserPatch!
+}
+
+"""The output of our update \`NotificationPreference\` mutation."""
+type UpdateNotificationPreferencePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`NotificationPreference\` that was updated by this mutation."""
+  notificationPreference: NotificationPreference
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`NotificationPreference\`. May be used by Relay 1."""
+  notificationPreferenceEdge(
+    """The method to use when ordering \`NotificationPreference\`."""
+    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceEdge
+}
+
+"""All input for the \`updateNotificationPreferenceById\` mutation."""
+input UpdateNotificationPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`NotificationPreference\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`NotificationPreference\` being updated.
+  """
+  patch: NotificationPreferencePatch!
+}
+
+"""
+Represents an update to a \`NotificationPreference\`. Fields that are set will be updated.
+"""
+input NotificationPreferencePatch {
+  rowId: UUID
+  userId: UUID
+  emailTaskAssigned: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  taskAssignedCadence: String
+}
+
+"""All input for the \`updateNotificationPreference\` mutation."""
+input UpdateNotificationPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`NotificationPreference\` being updated.
+  """
+  patch: NotificationPreferencePatch!
 }
 
 """The output of our update \`Column\` mutation."""
@@ -18376,32 +18994,32 @@ input DeleteAssigneeInput {
   userId: UUID!
 }
 
-"""The output of our delete \`NotificationPreference\` mutation."""
-type DeleteNotificationPreferencePayload {
+"""The output of our delete \`NotificationDigestQueue\` mutation."""
+type DeleteNotificationDigestQueuePayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`NotificationPreference\` that was deleted by this mutation."""
-  notificationPreference: NotificationPreference
-  deletedNotificationPreferenceId: ID
+  """The \`NotificationDigestQueue\` that was deleted by this mutation."""
+  notificationDigestQueue: NotificationDigestQueue
+  deletedNotificationDigestQueueId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`NotificationPreference\`. May be used by Relay 1."""
-  notificationPreferenceEdge(
-    """The method to use when ordering \`NotificationPreference\`."""
-    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceEdge
+  """An edge for our \`NotificationDigestQueue\`. May be used by Relay 1."""
+  notificationDigestQueueEdge(
+    """The method to use when ordering \`NotificationDigestQueue\`."""
+    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueEdge
 }
 
-"""All input for the \`deleteNotificationPreferenceById\` mutation."""
-input DeleteNotificationPreferenceByIdInput {
+"""All input for the \`deleteNotificationDigestQueueById\` mutation."""
+input DeleteNotificationDigestQueueByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18409,13 +19027,13 @@ input DeleteNotificationPreferenceByIdInput {
   clientMutationId: String
 
   """
-  The globally unique \`ID\` which will identify a single \`NotificationPreference\` to be deleted.
+  The globally unique \`ID\` which will identify a single \`NotificationDigestQueue\` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the \`deleteNotificationPreference\` mutation."""
-input DeleteNotificationPreferenceInput {
+"""All input for the \`deleteNotificationDigestQueue\` mutation."""
+input DeleteNotificationDigestQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -18512,6 +19130,54 @@ input DeleteUserByIdInput {
 
 """All input for the \`deleteUser\` mutation."""
 input DeleteUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`NotificationPreference\` mutation."""
+type DeleteNotificationPreferencePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`NotificationPreference\` that was deleted by this mutation."""
+  notificationPreference: NotificationPreference
+  deletedNotificationPreferenceId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`NotificationPreference\`. May be used by Relay 1."""
+  notificationPreferenceEdge(
+    """The method to use when ordering \`NotificationPreference\`."""
+    orderBy: [NotificationPreferenceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceEdge
+}
+
+"""All input for the \`deleteNotificationPreferenceById\` mutation."""
+input DeleteNotificationPreferenceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`NotificationPreference\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteNotificationPreference\` mutation."""
+input DeleteNotificationPreferenceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -19090,11 +19756,8 @@ type Query implements Node {
   """Get a single \`Assignee\`."""
   assigneeByTaskIdAndUserId(taskId: UUID!, userId: UUID!): Assignee
 
-  """Get a single \`NotificationPreference\`."""
-  notificationPreference(rowId: UUID!): NotificationPreference
-
-  """Get a single \`NotificationPreference\`."""
-  notificationPreferenceByUserId(userId: UUID!): NotificationPreference
+  """Get a single \`NotificationDigestQueue\`."""
+  notificationDigestQueue(rowId: UUID!): NotificationDigestQueue
 
   """Get a single \`Emoji\`."""
   emoji(rowId: UUID!): Emoji
@@ -19107,6 +19770,12 @@ type Query implements Node {
 
   """Get a single \`User\`."""
   userByIdentityProviderId(identityProviderId: UUID!): User
+
+  """Get a single \`NotificationPreference\`."""
+  notificationPreference(rowId: UUID!): NotificationPreference
+
+  """Get a single \`NotificationPreference\`."""
+  notificationPreferenceByUserId(userId: UUID!): NotificationPreference
 
   """Get a single \`Column\`."""
   column(rowId: UUID!): Column
@@ -19177,14 +19846,14 @@ type Query implements Node {
   ): Assignee
 
   """
-  Reads a single \`NotificationPreference\` using its globally unique \`ID\`.
+  Reads a single \`NotificationDigestQueue\` using its globally unique \`ID\`.
   """
-  notificationPreferenceById(
+  notificationDigestQueueById(
     """
-    The globally unique \`ID\` to be used in selecting a single \`NotificationPreference\`.
+    The globally unique \`ID\` to be used in selecting a single \`NotificationDigestQueue\`.
     """
     id: ID!
-  ): NotificationPreference
+  ): NotificationDigestQueue
 
   """Reads a single \`Emoji\` using its globally unique \`ID\`."""
   emojiById(
@@ -19197,6 +19866,16 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`User\`."""
     id: ID!
   ): User
+
+  """
+  Reads a single \`NotificationPreference\` using its globally unique \`ID\`.
+  """
+  notificationPreferenceById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`NotificationPreference\`.
+    """
+    id: ID!
+  ): NotificationPreference
 
   """Reads a single \`Column\` using its globally unique \`ID\`."""
   columnById(
@@ -19385,9 +20064,9 @@ type Query implements Node {
   ): AssigneeConnection
 
   """
-  Reads and enables pagination through a set of \`NotificationPreference\`.
+  Reads and enables pagination through a set of \`NotificationDigestQueue\`.
   """
-  notificationPreferences(
+  notificationDigestQueues(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -19409,16 +20088,16 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: NotificationPreferenceCondition
+    condition: NotificationDigestQueueCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: NotificationPreferenceFilter
+    filter: NotificationDigestQueueFilter
 
-    """The method to use when ordering \`NotificationPreference\`."""
-    orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceConnection
+    """The method to use when ordering \`NotificationDigestQueue\`."""
+    orderBy: [NotificationDigestQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NotificationDigestQueueConnection
 
   """Reads and enables pagination through a set of \`Emoji\`."""
   emojis(
@@ -19487,6 +20166,42 @@ type Query implements Node {
     """The method to use when ordering \`User\`."""
     orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserConnection
+
+  """
+  Reads and enables pagination through a set of \`NotificationPreference\`.
+  """
+  notificationPreferences(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: NotificationPreferenceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: NotificationPreferenceFilter
+
+    """The method to use when ordering \`NotificationPreference\`."""
+    orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceConnection
 
   """Reads and enables pagination through a set of \`Column\`."""
   columns(
@@ -19931,13 +20646,13 @@ type Mutation {
     input: CreateAssigneeInput!
   ): CreateAssigneePayload
 
-  """Creates a single \`NotificationPreference\`."""
-  createNotificationPreference(
+  """Creates a single \`NotificationDigestQueue\`."""
+  createNotificationDigestQueue(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateNotificationPreferenceInput!
-  ): CreateNotificationPreferencePayload
+    input: CreateNotificationDigestQueueInput!
+  ): CreateNotificationDigestQueuePayload
 
   """Creates a single \`Emoji\`."""
   createEmoji(
@@ -19954,6 +20669,14 @@ type Mutation {
     """
     input: CreateUserInput!
   ): CreateUserPayload
+
+  """Creates a single \`NotificationPreference\`."""
+  createNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateNotificationPreferenceInput!
+  ): CreateNotificationPreferencePayload
 
   """Creates a single \`Column\`."""
   createColumn(
@@ -20094,24 +20817,24 @@ type Mutation {
   ): UpdateAssigneePayload
 
   """
-  Updates a single \`NotificationPreference\` using its globally unique id and a patch.
+  Updates a single \`NotificationDigestQueue\` using its globally unique id and a patch.
   """
-  updateNotificationPreferenceById(
+  updateNotificationDigestQueueById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateNotificationPreferenceByIdInput!
-  ): UpdateNotificationPreferencePayload
+    input: UpdateNotificationDigestQueueByIdInput!
+  ): UpdateNotificationDigestQueuePayload
 
   """
-  Updates a single \`NotificationPreference\` using a unique key and a patch.
+  Updates a single \`NotificationDigestQueue\` using a unique key and a patch.
   """
-  updateNotificationPreference(
+  updateNotificationDigestQueue(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateNotificationPreferenceInput!
-  ): UpdateNotificationPreferencePayload
+    input: UpdateNotificationDigestQueueInput!
+  ): UpdateNotificationDigestQueuePayload
 
   """Updates a single \`Emoji\` using its globally unique id and a patch."""
   updateEmojiById(
@@ -20144,6 +20867,26 @@ type Mutation {
     """
     input: UpdateUserInput!
   ): UpdateUserPayload
+
+  """
+  Updates a single \`NotificationPreference\` using its globally unique id and a patch.
+  """
+  updateNotificationPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateNotificationPreferenceByIdInput!
+  ): UpdateNotificationPreferencePayload
+
+  """
+  Updates a single \`NotificationPreference\` using a unique key and a patch.
+  """
+  updateNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateNotificationPreferenceInput!
+  ): UpdateNotificationPreferencePayload
 
   """Updates a single \`Column\` using its globally unique id and a patch."""
   updateColumnById(
@@ -20380,22 +21123,22 @@ type Mutation {
   ): DeleteAssigneePayload
 
   """
-  Deletes a single \`NotificationPreference\` using its globally unique id.
+  Deletes a single \`NotificationDigestQueue\` using its globally unique id.
   """
-  deleteNotificationPreferenceById(
+  deleteNotificationDigestQueueById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteNotificationPreferenceByIdInput!
-  ): DeleteNotificationPreferencePayload
+    input: DeleteNotificationDigestQueueByIdInput!
+  ): DeleteNotificationDigestQueuePayload
 
-  """Deletes a single \`NotificationPreference\` using a unique key."""
-  deleteNotificationPreference(
+  """Deletes a single \`NotificationDigestQueue\` using a unique key."""
+  deleteNotificationDigestQueue(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteNotificationPreferenceInput!
-  ): DeleteNotificationPreferencePayload
+    input: DeleteNotificationDigestQueueInput!
+  ): DeleteNotificationDigestQueuePayload
 
   """Deletes a single \`Emoji\` using its globally unique id."""
   deleteEmojiById(
@@ -20428,6 +21171,24 @@ type Mutation {
     """
     input: DeleteUserInput!
   ): DeleteUserPayload
+
+  """
+  Deletes a single \`NotificationPreference\` using its globally unique id.
+  """
+  deleteNotificationPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteNotificationPreferenceByIdInput!
+  ): DeleteNotificationPreferencePayload
+
+  """Deletes a single \`NotificationPreference\` using a unique key."""
+  deleteNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteNotificationPreferenceInput!
+  ): DeleteNotificationPreferencePayload
 
   """Deletes a single \`Column\` using its globally unique id."""
   deleteColumnById(
@@ -20785,6 +21546,32 @@ export const objects = {
       },
       node(_$root, fieldArgs) {
         return fieldArgs.getRaw("id");
+      },
+      notificationDigestQueue(_$root, {
+        $rowId
+      }) {
+        return spec_resource_notification_digest_queuePgResource.get({
+          id: $rowId
+        });
+      },
+      notificationDigestQueueById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_NotificationDigestQueue($nodeId);
+      },
+      notificationDigestQueues: {
+        plan() {
+          return connection(spec_resource_notification_digest_queuePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Project_columnsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       },
       notificationPreference(_$root, {
         $rowId
@@ -21246,17 +22033,17 @@ ${String(oldPlan8)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan6.apply(this, args);
+                $prev = oldPlan5.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createEmoji, but that function did not return a step!
-${String(oldPlan6)}`);
+${String(oldPlan5)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21288,21 +22075,33 @@ ${String(oldPlan16)}`);
           input: applyInputToInsert
         }
       },
+      createNotificationDigestQueue: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(spec_resource_notification_digest_queuePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createNotificationPreference: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan5.apply(this, args);
+                $prev = oldPlan7.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createNotificationPreference, but that function did not return a step!
-${String(oldPlan5)}`);
+${String(oldPlan7)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21489,17 +22288,17 @@ ${String(oldPlan)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan7.apply(this, args);
+                $prev = oldPlan6.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createUser, but that function did not return a step!
-${String(oldPlan7)}`);
+${String(oldPlan6)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21617,17 +22416,17 @@ ${String(oldPlan61)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan59.apply(this, args);
+                $prev = oldPlan58.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteEmoji, but that function did not return a step!
-${String(oldPlan59)}`);
+${String(oldPlan58)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper58(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -21683,21 +22482,47 @@ ${String(oldPlan67)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteNotificationDigestQueue: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(spec_resource_notification_digest_queuePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteNotificationDigestQueueById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(spec_resource_notification_digest_queuePgResource, specFromArgs_NotificationDigestQueue(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteNotificationPreference: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan58.apply(this, args);
+                $prev = oldPlan60.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteNotificationPreference, but that function did not return a step!
-${String(oldPlan58)}`);
+${String(oldPlan60)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper58(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper60(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22011,17 +22836,17 @@ ${String(oldPlan55)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan60.apply(this, args);
+                $prev = oldPlan59.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteUser, but that function did not return a step!
-${String(oldPlan60)}`);
+${String(oldPlan59)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper60(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22187,17 +23012,17 @@ ${String(oldPlan34)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan32.apply(this, args);
+                $prev = oldPlan31.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateEmoji, but that function did not return a step!
-${String(oldPlan32)}`);
+${String(oldPlan31)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22253,21 +23078,47 @@ ${String(oldPlan42)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      updateNotificationDigestQueue: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(spec_resource_notification_digest_queuePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateNotificationDigestQueueById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(spec_resource_notification_digest_queuePgResource, specFromArgs_NotificationDigestQueue(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateNotificationPreference: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan31.apply(this, args);
+                $prev = oldPlan33.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateNotificationPreference, but that function did not return a step!
-${String(oldPlan31)}`);
+${String(oldPlan33)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22573,17 +23424,17 @@ ${String(oldPlan46)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
+                $prev = oldPlan32.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateUser, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan32)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23027,6 +23878,15 @@ ${String(oldPlan45)}`);
       query: queryPlan
     }
   },
+  CreateNotificationDigestQueuePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      notificationDigestQueue: planCreatePayloadResult,
+      notificationDigestQueueEdge: CreateNotificationDigestQueuePayload_notificationDigestQueueEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateNotificationPreferencePayload: {
     assertStep: assertStep,
     plans: {
@@ -23197,6 +24057,20 @@ ${String(oldPlan45)}`);
       },
       label: planCreatePayloadResult,
       labelEdge: CreateLabelPayload_labelEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeleteNotificationDigestQueuePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedNotificationDigestQueueId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_NotificationDigestQueue.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      notificationDigestQueue: planCreatePayloadResult,
+      notificationDigestQueueEdge: CreateNotificationDigestQueuePayload_notificationDigestQueueEdgePlan,
       query: queryPlan
     }
   },
@@ -23526,6 +24400,59 @@ ${String(oldPlan45)}`);
       }
     }
   },
+  NotificationDigestQueue: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt: ProjectProjectLabel_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_NotificationDigestQueue.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_NotificationDigestQueue.codec.name].encode);
+      },
+      rowId: Project_rowIdPlan,
+      sendAfter($record) {
+        return $record.get("send_after");
+      },
+      user: Assignee_userPlan,
+      userId: Assignee_userIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of notification_digest_queueUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return spec_resource_notification_digest_queuePgResource.get(spec);
+    }
+  },
+  NotificationDigestQueueAggregates: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      distinctCount: pgAggregatesPlanAggregates,
+      keys: ProjectAggregates_keysPlan
+    }
+  },
+  NotificationDigestQueueConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      aggregates: pgAggregatesCloneSubplanWithoutPaginationSingle,
+      groupedAggregates: {
+        plan: pgAggregateCloneSubplanWithoutPaginationAsAggregate,
+        args: {
+          groupBy: pgAggregatesApplyGroupedAggregate,
+          having: pgAggregatesApplyConditionsToGroupedAggregates
+        }
+      },
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  NotificationDigestQueueDistinctCountAggregates: {
+    plans: {
+      createdAt: ProjectDistinctCountAggregates_createdAtPlan,
+      payload: NotificationDigestQueueDistinctCountAggregates_payloadPlan,
+      rowId: ProjectDistinctCountAggregates_rowIdPlan,
+      sendAfter($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.timestamptz, "send_after", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      userId: AssigneeDistinctCountAggregates_userIdPlan
+    }
+  },
   NotificationPreference: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -23538,6 +24465,9 @@ ${String(oldPlan45)}`);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_NotificationPreference.codec.name].encode);
       },
       rowId: Project_rowIdPlan,
+      taskAssignedCadence($record) {
+        return $record.get("task_assigned_cadence");
+      },
       updatedAt: Project_updatedAtPlan,
       user: Assignee_userPlan,
       userId: Assignee_userIdPlan
@@ -23576,6 +24506,9 @@ ${String(oldPlan45)}`);
         return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "email_task_assigned", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       rowId: ProjectDistinctCountAggregates_rowIdPlan,
+      taskAssignedCadence($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "task_assigned_cadence", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       updatedAt: ProjectDistinctCountAggregates_updatedAtPlan,
       userId: AssigneeDistinctCountAggregates_userIdPlan
     }
@@ -24618,6 +25551,15 @@ ${String(oldPlan45)}`);
       query: queryPlan
     }
   },
+  UpdateNotificationDigestQueuePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      notificationDigestQueue: planCreatePayloadResult,
+      notificationDigestQueueEdge: CreateNotificationDigestQueuePayload_notificationDigestQueueEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateNotificationPreferencePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -24838,6 +25780,24 @@ ${String(oldPlan45)}`);
       },
       identityProviderId($record) {
         return $record.get("identity_provider_id");
+      },
+      notificationDigestQueues: {
+        plan($record) {
+          const $records = spec_resource_notification_digest_queuePgResource.find({
+            user_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Project_columnsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       },
       notificationPreference($record) {
         return spec_resource_notification_preferencePgResource.get({
@@ -25120,9 +26080,7 @@ ${String(oldPlan45)}`);
       operation($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.text, "operation", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
-      payload($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "payload", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
+      payload: NotificationDigestQueueDistinctCountAggregates_payloadPlan,
       rowId: ProjectDistinctCountAggregates_rowIdPlan
     }
   },
@@ -26102,7 +27060,7 @@ export const inputObjects = {
       icon: ColumnInput_iconApply,
       index: ColumnInput_indexApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
@@ -26114,7 +27072,7 @@ export const inputObjects = {
       icon: ColumnInput_iconApply,
       index: ColumnInput_indexApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
@@ -26149,6 +27107,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       label: applyCreateFields
+    }
+  },
+  CreateNotificationDigestQueueInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      notificationDigestQueue: applyCreateFields
     }
   },
   CreateNotificationPreferenceInput: {
@@ -26280,6 +27244,16 @@ export const inputObjects = {
     }
   },
   DeleteLabelInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteNotificationDigestQueueByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteNotificationDigestQueueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -26586,7 +27560,7 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       emoji: EmojiInput_emojiApply,
       postId: EmojiInput_postIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       userId: AssigneeInput_userIdApply
     }
@@ -26597,7 +27571,7 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       emoji: EmojiInput_emojiApply,
       postId: EmojiInput_postIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       userId: AssigneeInput_userIdApply
     }
@@ -26868,7 +27842,7 @@ export const inputObjects = {
       name: UserInput_nameApply,
       organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -26881,7 +27855,7 @@ export const inputObjects = {
       name: UserInput_nameApply,
       organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -26893,6 +27867,182 @@ export const inputObjects = {
       some: ProjectToManyColumnFilter_someApply
     }
   },
+  NotificationDigestQueueAggregatesFilter: {
+    plans: {
+      distinctCount: AssigneeAggregatesFilter_distinctCountApply,
+      filter: filterApply
+    }
+  },
+  NotificationDigestQueueCondition: {
+    plans: {
+      createdAt: ProjectCondition_createdAtApply,
+      rowId: ProjectCondition_rowIdApply,
+      sendAfter($condition, val) {
+        return applyAttributeCondition("send_after", TYPES.timestamptz, $condition, val);
+      },
+      userId: AssigneeCondition_userIdApply
+    }
+  },
+  NotificationDigestQueueDistinctCountAggregateFilter: {
+    plans: {
+      createdAt: AssigneeDistinctCountAggregateFilter_createdAtApply,
+      payload($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "payload", TYPES.bigint, TYPES.jsonb, $parent, input);
+      },
+      rowId: EmojiDistinctCountAggregateFilter_rowIdApply,
+      sendAfter($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "send_after", TYPES.bigint, TYPES.timestamptz, $parent, input);
+      },
+      userId: AssigneeDistinctCountAggregateFilter_userIdApply
+    }
+  },
+  NotificationDigestQueueFilter: {
+    plans: {
+      and: ProjectFilter_andApply,
+      createdAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_notificationDigestQueue.attributes.created_at, queryBuilder, value);
+      },
+      not: ProjectFilter_notApply,
+      or: ProjectFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_notificationDigestQueue.attributes.id, queryBuilder, value);
+      },
+      sendAfter(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("sendAfter", "send_after", spec_notificationDigestQueue.attributes.send_after, queryBuilder, value);
+      },
+      user($where, value) {
+        return pgConnectionFilterApplySingleRelation(spec_resource_userPgResource, userIdentifier, registryConfig.pgRelations.notificationDigestQueue.userByMyUserId.localAttributes, registryConfig.pgRelations.notificationDigestQueue.userByMyUserId.remoteAttributes, $where, value);
+      },
+      userId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("userId", "user_id", spec_notificationDigestQueue.attributes.user_id, queryBuilder, value);
+      }
+    }
+  },
+  NotificationDigestQueueHavingAverageInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueHavingDistinctCountInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueHavingInput: {
+    plans: {
+      AND: pgAggregatesApplyAnd,
+      average: pgAggregatesPlanAggregatesField,
+      distinctCount: pgAggregatesPlanAggregatesField,
+      max: pgAggregatesPlanAggregatesField,
+      min: pgAggregatesPlanAggregatesField,
+      OR: ProjectHavingInput_ORApply,
+      stddevPopulation: pgAggregatesPlanAggregatesField,
+      stddevSample: pgAggregatesPlanAggregatesField,
+      sum: pgAggregatesPlanAggregatesField,
+      variancePopulation: pgAggregatesPlanAggregatesField,
+      varianceSample: pgAggregatesPlanAggregatesField
+    }
+  },
+  NotificationDigestQueueHavingMaxInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueHavingMinInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueHavingStddevPopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueHavingStddevSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueHavingSumInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueHavingVariancePopulationInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueHavingVarianceSampleInput: {
+    plans: {
+      createdAt($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
+      },
+      sendAfter($having) {
+        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
+      }
+    }
+  },
+  NotificationDigestQueueInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: ProjectProjectLabelInput_createdAtApply,
+      payload: NotificationDigestQueueInput_payloadApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
+      sendAfter: NotificationDigestQueueInput_sendAfterApply,
+      userId: AssigneeInput_userIdApply
+    }
+  },
+  NotificationDigestQueuePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: ProjectProjectLabelInput_createdAtApply,
+      payload: NotificationDigestQueueInput_payloadApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
+      sendAfter: NotificationDigestQueueInput_sendAfterApply,
+      userId: AssigneeInput_userIdApply
+    }
+  },
   NotificationPreferenceCondition: {
     plans: {
       createdAt: ProjectCondition_createdAtApply,
@@ -26900,6 +28050,9 @@ export const inputObjects = {
         return applyAttributeCondition("email_task_assigned", TYPES.boolean, $condition, val);
       },
       rowId: ProjectCondition_rowIdApply,
+      taskAssignedCadence($condition, val) {
+        return applyAttributeCondition("task_assigned_cadence", TYPES.text, $condition, val);
+      },
       updatedAt: ProjectCondition_updatedAtApply,
       userId: AssigneeCondition_userIdApply
     }
@@ -26917,6 +28070,9 @@ export const inputObjects = {
       or: ProjectFilter_orApply,
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_notificationPreference.attributes.id, queryBuilder, value);
+      },
+      taskAssignedCadence(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("taskAssignedCadence", "task_assigned_cadence", spec_notificationPreference.attributes.task_assigned_cadence, queryBuilder, value);
       },
       updatedAt(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("updatedAt", "updated_at", spec_notificationPreference.attributes.updated_at, queryBuilder, value);
@@ -27039,7 +28195,8 @@ export const inputObjects = {
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       emailTaskAssigned: NotificationPreferenceInput_emailTaskAssignedApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
+      taskAssignedCadence: NotificationPreferenceInput_taskAssignedCadenceApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       userId: AssigneeInput_userIdApply
     }
@@ -27049,7 +28206,8 @@ export const inputObjects = {
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       emailTaskAssigned: NotificationPreferenceInput_emailTaskAssignedApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
+      taskAssignedCadence: NotificationPreferenceInput_taskAssignedCadenceApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       userId: AssigneeInput_userIdApply
     }
@@ -27278,7 +28436,7 @@ export const inputObjects = {
       authorId: PostInput_authorIdApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
       description: PostInput_descriptionApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       taskId: TaskLabelInput_taskIdApply,
       title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
@@ -27290,7 +28448,7 @@ export const inputObjects = {
       authorId: PostInput_authorIdApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
       description: PostInput_descriptionApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       taskId: TaskLabelInput_taskIdApply,
       title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
@@ -27508,7 +28666,7 @@ export const inputObjects = {
       icon: ColumnInput_iconApply,
       index: ColumnInput_indexApply,
       organizationId: ProjectColumnInput_organizationIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
@@ -27520,7 +28678,7 @@ export const inputObjects = {
       icon: ColumnInput_iconApply,
       index: ColumnInput_indexApply,
       organizationId: ProjectColumnInput_organizationIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
@@ -27943,7 +29101,7 @@ export const inputObjects = {
       organizationId: ProjectColumnInput_organizationIdApply,
       prefix: ProjectInput_prefixApply,
       projectColumnId: ProjectInput_projectColumnIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       slug: ProjectInput_slugApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
@@ -28124,7 +29282,7 @@ export const inputObjects = {
       icon: ColumnInput_iconApply,
       name: UserInput_nameApply,
       organizationId: ProjectColumnInput_organizationIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -28136,7 +29294,7 @@ export const inputObjects = {
       icon: ColumnInput_iconApply,
       name: UserInput_nameApply,
       organizationId: ProjectColumnInput_organizationIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -28364,7 +29522,7 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       order: ProjectLinkInput_orderApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       url: ProjectLinkInput_urlApply
@@ -28390,7 +29548,7 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       order: ProjectLinkInput_orderApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       title: ColumnInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       url: ProjectLinkInput_urlApply
@@ -28460,7 +29618,7 @@ export const inputObjects = {
       organizationId: ProjectColumnInput_organizationIdApply,
       prefix: ProjectInput_prefixApply,
       projectColumnId: ProjectInput_projectColumnIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       slug: ProjectInput_slugApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
@@ -28883,7 +30041,7 @@ export const inputObjects = {
       deletedAt: AssigneeInput_deletedAtApply,
       deletionReason: SettingInput_deletionReasonApply,
       organizationId: ProjectColumnInput_organizationIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       subscriptionId: SettingInput_subscriptionIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       viewMode: UserPreferenceInput_viewModeApply
@@ -28897,7 +30055,7 @@ export const inputObjects = {
       deletedAt: AssigneeInput_deletedAtApply,
       deletionReason: SettingInput_deletionReasonApply,
       organizationId: ProjectColumnInput_organizationIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       subscriptionId: SettingInput_subscriptionIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       viewMode: UserPreferenceInput_viewModeApply
@@ -29432,7 +30590,7 @@ export const inputObjects = {
       number: TaskInput_numberApply,
       priority: TaskInput_priorityApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -29637,7 +30795,7 @@ export const inputObjects = {
       number: TaskInput_numberApply,
       priority: TaskInput_priorityApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -29751,6 +30909,18 @@ export const inputObjects = {
     }
   },
   UpdateLabelInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateNotificationDigestQueueByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateNotificationDigestQueueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -30068,6 +31238,30 @@ export const inputObjects = {
         return pgConnectionFilterApplyAttribute("name", "name", spec_user.attributes.name, queryBuilder, value);
       },
       not: ProjectFilter_notApply,
+      notificationDigestQueues($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: notificationDigestQueueIdentifier,
+          alias: spec_resource_notification_digest_queuePgResource.name,
+          localAttributes: registryConfig.pgRelations.user.notificationDigestQueuesByTheirUserId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.user.notificationDigestQueuesByTheirUserId.remoteAttributes
+        };
+        return $rel;
+      },
+      notificationDigestQueuesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: notificationDigestQueueIdentifier,
+          alias: spec_resource_notification_digest_queuePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.user.notificationDigestQueuesByTheirUserId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.user.notificationDigestQueuesByTheirUserId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       notificationPreference($where, value) {
         assertAllowed(value, "object");
         const $subQuery = $where.existsPlan({
@@ -30239,7 +31433,7 @@ export const inputObjects = {
       email: UserInput_emailApply,
       identityProviderId: UserInput_identityProviderIdApply,
       name: UserInput_nameApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -30251,7 +31445,7 @@ export const inputObjects = {
       email: UserInput_emailApply,
       identityProviderId: UserInput_identityProviderIdApply,
       name: UserInput_nameApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -30483,7 +31677,7 @@ export const inputObjects = {
       hiddenColumnIds: UserPreferenceInput_hiddenColumnIdsApply,
       pinOrder: UserPreferenceInput_pinOrderApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       userId: AssigneeInput_userIdApply,
       viewMode: UserPreferenceInput_viewModeApply
@@ -30510,7 +31704,7 @@ export const inputObjects = {
       hiddenColumnIds: UserPreferenceInput_hiddenColumnIdsApply,
       pinOrder: UserPreferenceInput_pinOrderApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
-      rowId: NotificationPreferenceInput_rowIdApply,
+      rowId: NotificationDigestQueueInput_rowIdApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       userId: AssigneeInput_userIdApply,
       viewMode: UserPreferenceInput_viewModeApply
@@ -30568,6 +31762,14 @@ export const inputObjects = {
     }
   },
   UserToManyEmojiFilter: {
+    plans: {
+      aggregates: ProjectToManyColumnFilter_aggregatesApply,
+      every: ProjectToManyColumnFilter_everyApply,
+      none: ProjectToManyColumnFilter_noneApply,
+      some: ProjectToManyColumnFilter_someApply
+    }
+  },
+  UserToManyNotificationDigestQueueFilter: {
     plans: {
       aggregates: ProjectToManyColumnFilter_aggregatesApply,
       every: ProjectToManyColumnFilter_everyApply,
@@ -30831,8 +32033,8 @@ export const inputObjects = {
       maxAttempts: WardenSyncQueueInput_maxAttemptsApply,
       nextRetryAt: WardenSyncQueueInput_nextRetryAtApply,
       operation: WardenSyncQueueInput_operationApply,
-      payload: WardenSyncQueueInput_payloadApply,
-      rowId: NotificationPreferenceInput_rowIdApply
+      payload: NotificationDigestQueueInput_payloadApply,
+      rowId: NotificationDigestQueueInput_rowIdApply
     }
   },
   WardenSyncQueuePatch: {
@@ -30844,8 +32046,8 @@ export const inputObjects = {
       maxAttempts: WardenSyncQueueInput_maxAttemptsApply,
       nextRetryAt: WardenSyncQueueInput_nextRetryAtApply,
       operation: WardenSyncQueueInput_operationApply,
-      payload: WardenSyncQueueInput_payloadApply,
-      rowId: NotificationPreferenceInput_rowIdApply
+      payload: NotificationDigestQueueInput_payloadApply,
+      rowId: NotificationDigestQueueInput_rowIdApply
     }
   }
 };
@@ -31462,6 +32664,64 @@ export const enums = {
       UPDATED_AT_DESC: ProjectOrderBy_UPDATED_AT_DESCApply
     }
   },
+  NotificationDigestQueueGroupBy: {
+    values: {
+      CREATED_AT: ProjectGroupBy_CREATED_ATApply,
+      CREATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
+      CREATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
+      PAYLOAD: NotificationDigestQueueGroupBy_PAYLOADApply,
+      SEND_AFTER($pgSelect) {
+        applyGroupByAttribute("send_after", TYPES.timestamptz, $pgSelect);
+      },
+      SEND_AFTER_TRUNCATED_TO_DAY(qb) {
+        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_day, "send_after", TYPES.timestamptz, qb);
+      },
+      SEND_AFTER_TRUNCATED_TO_HOUR(qb) {
+        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_hour, "send_after", TYPES.timestamptz, qb);
+      },
+      USER_ID: AssigneeGroupBy_USER_IDApply
+    }
+  },
+  NotificationDigestQueueOrderBy: {
+    values: {
+      CREATED_AT_ASC: ProjectOrderBy_CREATED_AT_ASCApply,
+      CREATED_AT_DESC: ProjectOrderBy_CREATED_AT_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        notification_digest_queueUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        notification_digest_queueUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
+      SEND_AFTER_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "send_after",
+          direction: "ASC"
+        });
+      },
+      SEND_AFTER_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "send_after",
+          direction: "DESC"
+        });
+      },
+      USER_ID_ASC: AssigneeOrderBy_USER_ID_ASCApply,
+      USER_ID_DESC: AssigneeOrderBy_USER_ID_DESCApply
+    }
+  },
   NotificationPreferenceGroupBy: {
     values: {
       CREATED_AT: ProjectGroupBy_CREATED_ATApply,
@@ -31469,6 +32729,9 @@ export const enums = {
       CREATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
       EMAIL_TASK_ASSIGNED($pgSelect) {
         applyGroupByAttribute("email_task_assigned", TYPES.boolean, $pgSelect);
+      },
+      TASK_ASSIGNED_CADENCE($pgSelect) {
+        applyGroupByAttribute("task_assigned_cadence", TYPES.text, $pgSelect);
       },
       UPDATED_AT: ProjectGroupBy_UPDATED_ATApply,
       UPDATED_AT_TRUNCATED_TO_DAY: ProjectGroupBy_UPDATED_AT_TRUNCATED_TO_DAYApply,
@@ -31511,6 +32774,18 @@ export const enums = {
       },
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
+      TASK_ASSIGNED_CADENCE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "task_assigned_cadence",
+          direction: "ASC"
+        });
+      },
+      TASK_ASSIGNED_CADENCE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "task_assigned_cadence",
+          direction: "DESC"
+        });
+      },
       UPDATED_AT_ASC: ProjectOrderBy_UPDATED_AT_ASCApply,
       UPDATED_AT_DESC: ProjectOrderBy_UPDATED_AT_DESCApply,
       USER_ID_ASC: UserPreferenceOrderBy_USER_ID_ASCApply,
@@ -31898,148 +33173,148 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       PROJECTS_AVERAGE_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_AVERAGE_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_average, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_BACKGROUND_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.background, "background", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.background, "background", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_BACKGROUND_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.background, "background", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.background, "background", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_COLOR_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.color, "color", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.color, "color", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_COLOR_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.color, "color", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.color, "color", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.column_index, "column_index", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.column_index, "column_index", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_COLUMN_INDEX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.column_index, "column_index", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.column_index, "column_index", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.created_at, "created_at", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.created_at, "created_at", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.created_at, "created_at", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.created_at, "created_at", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_DESCRIPTION_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_DESCRIPTION_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.description, "description", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_IMAGE_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image, "image", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image, "image", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_IMAGE_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image, "image", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image, "image", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_IS_PUBLIC_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_NAME_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.name, "name", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.name, "name", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_NAME_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.name, "name", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.name, "name", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.organization_id, "organization_id", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.organization_id, "organization_id", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.organization_id, "organization_id", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.organization_id, "organization_id", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_PREFIX_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.prefix, "prefix", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.prefix, "prefix", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_PREFIX_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.prefix, "prefix", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.prefix, "prefix", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.project_column_id, "project_column_id", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.project_column_id, "project_column_id", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_PROJECT_COLUMN_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.project_column_id, "project_column_id", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.project_column_id, "project_column_id", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.id, "id", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.id, "id", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.id, "id", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.id, "id", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_SLUG_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.slug, "slug", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.slug, "slug", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_SLUG_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.slug, "slug", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.slug, "slug", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_UPDATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.updated_at, "updated_at", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.updated_at, "updated_at", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_DISTINCT_COUNT_UPDATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.updated_at, "updated_at", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.updated_at, "updated_at", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_MAX_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_MAX_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_max, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_MIN_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_MIN_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_min, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_POPULATION_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevPopulation, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_STDDEV_SAMPLE_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_stddevSample, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_SUM_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_SUM_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_sum, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_POPULATION_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_variancePopulation, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.next_task_number, "next_task_number", "ASC", relation22, spec_resource_projectPgResource, $select);
       },
       PROJECTS_VARIANCE_SAMPLE_NEXT_TASK_NUMBER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation21, spec_resource_projectPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_varianceSample, spec_project.attributes.next_task_number, "next_task_number", "DESC", relation22, spec_resource_projectPgResource, $select);
       },
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
@@ -32132,28 +33407,28 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       PROJECT_PROJECT_LABELS_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation22, spec_resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("ASC", relation23, spec_resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation22, spec_resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByTotalCount("DESC", relation23, spec_resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.created_at, "created_at", "ASC", relation22, spec_resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.created_at, "created_at", "ASC", relation23, spec_resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.created_at, "created_at", "DESC", relation22, spec_resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.created_at, "created_at", "DESC", relation23, spec_resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_id, "project_id", "ASC", relation22, spec_resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_id, "project_id", "ASC", relation23, spec_resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_id, "project_id", "DESC", relation22, spec_resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_id, "project_id", "DESC", relation23, spec_resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_label_id, "project_label_id", "ASC", relation22, spec_resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_label_id, "project_label_id", "ASC", relation23, spec_resource_project_project_labelPgResource, $select);
       },
       PROJECT_PROJECT_LABELS_DISTINCT_COUNT_PROJECT_LABEL_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_label_id, "project_label_id", "DESC", relation22, spec_resource_project_project_labelPgResource, $select);
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_projectProjectLabel.attributes.project_label_id, "project_label_id", "DESC", relation23, spec_resource_project_project_labelPgResource, $select);
       },
       ROW_ID_ASC: ProjectOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: ProjectOrderBy_ROW_ID_DESCApply,
@@ -34048,6 +35323,42 @@ export const enums = {
       },
       NAME_ASC: ProjectOrderBy_NAME_ASCApply,
       NAME_DESC: ProjectOrderBy_NAME_DESCApply,
+      NOTIFICATION_DIGEST_QUEUES_COUNT_ASC($select) {
+        pgAggregatesApplyOrderByTotalCount("ASC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_COUNT_DESC($select) {
+        pgAggregatesApplyOrderByTotalCount("DESC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.created_at, "created_at", "ASC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.created_at, "created_at", "DESC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.payload, "payload", "ASC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.payload, "payload", "DESC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.id, "id", "ASC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.id, "id", "DESC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.send_after, "send_after", "ASC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.send_after, "send_after", "DESC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.user_id, "user_id", "ASC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
+      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.user_id, "user_id", "DESC", relation21, spec_resource_notification_digest_queuePgResource, $select);
+      },
       PRIMARY_KEY_ASC(queryBuilder) {
         userUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
@@ -34265,9 +35576,7 @@ export const enums = {
       OPERATION($pgSelect) {
         applyGroupByAttribute("operation", TYPES.text, $pgSelect);
       },
-      PAYLOAD($pgSelect) {
-        applyGroupByAttribute("payload", TYPES.jsonb, $pgSelect);
-      }
+      PAYLOAD: NotificationDigestQueueGroupBy_PAYLOADApply
     }
   },
   WardenSyncQueueOrderBy: {

@@ -42,6 +42,7 @@ import {
   projectBackgroundRoutes,
 } from "lib/media";
 import { maintenanceMiddleware } from "lib/middleware/maintenance";
+import { startDigestPoller } from "lib/notifications/digestQueue";
 import {
   SEARCH_RECONCILE_INTERVAL_MS,
   initializeSearchIndexes,
@@ -270,6 +271,10 @@ async function startServer(): Promise<void> {
   // Start the durable Warden sync-queue poller so failed authz tuple
   // writes/deletes are retried with backoff (no-ops when authz is disabled)
   startWardenSyncPoller();
+
+  // Start the assignment-email digest poller (sends grouped emails for users
+  // whose cadence is "digest"; no-ops when there is nothing due)
+  startDigestPoller();
 
   // biome-ignore lint/suspicious/noConsole: root logging
   console.log(

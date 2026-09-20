@@ -37,7 +37,11 @@ import {
   cleanupDereferencedMedia,
 } from "lib/media/cleanupProjectMedia";
 import { moderateText } from "lib/moderation";
-import { resolveAssignmentEmail } from "lib/notifications/assignmentEmail";
+import {
+  resolveAssignmentDigestItem,
+  resolveAssignmentEmail,
+} from "lib/notifications/assignmentEmail";
+import { enqueueAssignmentDigest } from "lib/notifications/digestQueue";
 import { events, notifications } from "lib/providers";
 import {
   deleteCommentFromIndex,
@@ -182,7 +186,11 @@ const generateGraphqlSchema = async () => {
         cleanupDereferencedMedia,
       },
       "lib/moderation": { moderateText },
-      "lib/notifications/assignmentEmail": { resolveAssignmentEmail },
+      "lib/notifications/assignmentEmail": {
+        resolveAssignmentEmail,
+        resolveAssignmentDigestItem,
+      },
+      "lib/notifications/digestQueue": { enqueueAssignmentDigest },
       "lib/providers": { events, notifications },
       "lib/search": {
         deleteCommentFromIndex,

@@ -3,7 +3,11 @@ import { context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import { buildResourceEvent } from "lib/events/resourceEvent";
-import { resolveAssignmentEmail } from "lib/notifications/assignmentEmail";
+import {
+  resolveAssignmentDigestItem,
+  resolveAssignmentEmail,
+} from "lib/notifications/assignmentEmail";
+import { enqueueAssignmentDigest } from "lib/notifications/digestQueue";
 import { events, notifications } from "lib/providers";
 
 import type { InsertAssignee } from "lib/db/schema";
@@ -33,6 +37,8 @@ const notifyOnAssign = (): PlanWrapperFn =>
       sideEffect,
       buildResourceEvent,
       resolveAssignmentEmail,
+      resolveAssignmentDigestItem,
+      enqueueAssignmentDigest,
       events,
       notifications,
     ): PlanWrapperFn =>
@@ -74,10 +80,13 @@ const notifyOnAssign = (): PlanWrapperFn =>
                 const preference =
                   await db.query.notificationPreferences.findFirst({
                     where: (table, { eq }) => eq(table.userId, userId),
-                    columns: { emailTaskAssigned: true },
+                    columns: {
+                      emailTaskAssigned: true,
+                      taskAssignedCadence: true,
+                    },
                   });
 
-                const email = resolveAssignmentEmail({
+                const resolveInput = {
                   assignee: assignee ?? null,
                   assigner: observer
                     ? { id: observer.id, name: observer.name }
@@ -92,9 +101,17 @@ const notifyOnAssign = (): PlanWrapperFn =>
                   preference: preference ?? null,
                   workspaceSlug,
                   appBaseUrl: process.env.APP_BASE_URL,
-                });
+                };
 
-                if (email) await notifications.sendEmail(email);
+                if (preference?.taskAssignedCadence === "digest") {
+                  // batch into the recipient's next digest window
+                  const item = resolveAssignmentDigestItem(resolveInput);
+                  if (item) await enqueueAssignmentDigest(userId, item);
+                } else {
+                  // default: send immediately
+                  const email = resolveAssignmentEmail(resolveInput);
+                  if (email) await notifications.sendEmail(email);
+                }
               } catch (error) {
                 console.error(
                   "[Notifications] Failed to send assignment email:",
@@ -139,6 +156,8 @@ const notifyOnAssign = (): PlanWrapperFn =>
       sideEffect,
       buildResourceEvent,
       resolveAssignmentEmail,
+      resolveAssignmentDigestItem,
+      enqueueAssignmentDigest,
       events,
       notifications,
     ],
