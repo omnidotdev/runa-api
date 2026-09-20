@@ -38,6 +38,7 @@ import {
   ProjectSearchPlugin,
   TaskSearchPlugin,
 } from "lib/graphql/plugins/search";
+import MoveTaskPlugin from "lib/graphql/plugins/tasks/MoveTask.plugin";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
 /**
@@ -69,6 +70,8 @@ const graphilePreset: GraphileConfig.Preset = {
     SmartTagPlugin,
     TaskPlugin,
     TaskLabelPlugin,
+    // Custom moveTask mutation (cross-project move with number reassignment)
+    MoveTaskPlugin,
     UserPlugin,
     UserPreferencePlugin,
     NotificationPreferencePlugin,

@@ -12,7 +12,7 @@ import { generateNKeysBetween } from "fractional-indexing";
 import { EXPORTABLE, exportSchema } from "graphile-export";
 import { printSchema } from "graphql";
 import { makeSchema } from "postgraphile";
-import { context, sideEffect } from "postgraphile/grafast";
+import { context, lambda, sideEffect } from "postgraphile/grafast";
 import { replaceInFile } from "replace-in-file";
 
 import { getDefaultOrganization } from "lib/auth/organizations";
@@ -24,6 +24,7 @@ import {
   writeTuples,
 } from "lib/authz";
 import graphilePreset from "lib/config/graphile.config";
+import { pgPool } from "lib/db/db";
 import { columns, userPreferences, users } from "lib/db/schema";
 import { checkOrganizationLimit, isWithinLimit } from "lib/entitlements";
 import {
@@ -47,6 +48,7 @@ import {
   indexTask,
   isSearchEnabled,
 } from "lib/search";
+import { moveTask } from "lib/tasks/moveTask";
 
 const SRC_DIR = `${__dirname}/..`;
 const CACHE_DIR = `${__dirname}/../../.cache`;
@@ -157,8 +159,10 @@ const generateGraphqlSchema = async () => {
     mode: "typeDefs",
     modules: {
       "graphile-export": { EXPORTABLE },
-      "postgraphile/grafast": { context, sideEffect },
+      "postgraphile/grafast": { context, lambda, sideEffect },
       "fractional-indexing": { generateNKeysBetween },
+      "lib/db/db": { pgPool },
+      "lib/tasks/moveTask": { moveTask },
       "lib/authz": {
         checkPermission,
         deleteTuples,

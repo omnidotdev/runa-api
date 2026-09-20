@@ -1,850 +1,3 @@
-"""The root query type which gives access points into the data universe."""
-type Query implements Node {
-  """
-  Exposes the root query type nested one level down. This is helpful for Relay 1
-  which can only query top level fields if they are in a particular form.
-  """
-  query: Query!
-
-  """
-  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
-  """
-  id: ID!
-
-  """Fetches an object given its globally unique `ID`."""
-  node(
-    """The globally unique `ID`."""
-    id: ID!
-  ): Node
-
-  """Get a single `ProjectProjectLabel`."""
-  projectProjectLabel(projectId: UUID!, projectLabelId: UUID!): ProjectProjectLabel
-
-  """Get a single `TaskLabel`."""
-  taskLabel(taskId: UUID!, labelId: UUID!): TaskLabel
-
-  """Get a single `TaskLabel`."""
-  taskLabelByTaskIdAndLabelId(taskId: UUID!, labelId: UUID!): TaskLabel
-
-  """Get a single `Assignee`."""
-  assignee(taskId: UUID!, userId: UUID!): Assignee
-
-  """Get a single `Assignee`."""
-  assigneeByTaskIdAndUserId(taskId: UUID!, userId: UUID!): Assignee
-
-  """Get a single `NotificationPreference`."""
-  notificationPreference(rowId: UUID!): NotificationPreference
-
-  """Get a single `NotificationPreference`."""
-  notificationPreferenceByUserId(userId: UUID!): NotificationPreference
-
-  """Get a single `Emoji`."""
-  emoji(rowId: UUID!): Emoji
-
-  """Get a single `User`."""
-  user(rowId: UUID!): User
-
-  """Get a single `User`."""
-  userByEmail(email: String!): User
-
-  """Get a single `User`."""
-  userByIdentityProviderId(identityProviderId: UUID!): User
-
-  """Get a single `Column`."""
-  column(rowId: UUID!): Column
-
-  """Get a single `Post`."""
-  post(rowId: UUID!): Post
-
-  """Get a single `ProjectColumn`."""
-  projectColumn(rowId: UUID!): ProjectColumn
-
-  """Get a single `ProjectLabel`."""
-  projectLabel(rowId: UUID!): ProjectLabel
-
-  """Get a single `Label`."""
-  label(rowId: UUID!): Label
-
-  """Get a single `ProjectLink`."""
-  projectLink(rowId: UUID!): ProjectLink
-
-  """Get a single `UserPreference`."""
-  userPreference(rowId: UUID!): UserPreference
-
-  """Get a single `UserPreference`."""
-  userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
-
-  """Get a single `WardenSyncQueue`."""
-  wardenSyncQueue(rowId: UUID!): WardenSyncQueue
-
-  """Get a single `Setting`."""
-  setting(rowId: UUID!): Setting
-
-  """Get a single `Setting`."""
-  settingByOrganizationId(organizationId: String!): Setting
-
-  """Get a single `Task`."""
-  task(rowId: UUID!): Task
-
-  """Get a single `Task`."""
-  taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
-
-  """Get a single `Attachment`."""
-  attachment(rowId: UUID!): Attachment
-
-  """Get a single `Project`."""
-  project(rowId: UUID!): Project
-
-  """Get a single `Project`."""
-  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
-
-  """Reads a single `ProjectProjectLabel` using its globally unique `ID`."""
-  projectProjectLabelById(
-    """
-    The globally unique `ID` to be used in selecting a single `ProjectProjectLabel`.
-    """
-    id: ID!
-  ): ProjectProjectLabel
-
-  """Reads a single `TaskLabel` using its globally unique `ID`."""
-  taskLabelById(
-    """The globally unique `ID` to be used in selecting a single `TaskLabel`."""
-    id: ID!
-  ): TaskLabel
-
-  """Reads a single `Assignee` using its globally unique `ID`."""
-  assigneeById(
-    """The globally unique `ID` to be used in selecting a single `Assignee`."""
-    id: ID!
-  ): Assignee
-
-  """
-  Reads a single `NotificationPreference` using its globally unique `ID`.
-  """
-  notificationPreferenceById(
-    """
-    The globally unique `ID` to be used in selecting a single `NotificationPreference`.
-    """
-    id: ID!
-  ): NotificationPreference
-
-  """Reads a single `Emoji` using its globally unique `ID`."""
-  emojiById(
-    """The globally unique `ID` to be used in selecting a single `Emoji`."""
-    id: ID!
-  ): Emoji
-
-  """Reads a single `User` using its globally unique `ID`."""
-  userById(
-    """The globally unique `ID` to be used in selecting a single `User`."""
-    id: ID!
-  ): User
-
-  """Reads a single `Column` using its globally unique `ID`."""
-  columnById(
-    """The globally unique `ID` to be used in selecting a single `Column`."""
-    id: ID!
-  ): Column
-
-  """Reads a single `Post` using its globally unique `ID`."""
-  postById(
-    """The globally unique `ID` to be used in selecting a single `Post`."""
-    id: ID!
-  ): Post
-
-  """Reads a single `ProjectColumn` using its globally unique `ID`."""
-  projectColumnById(
-    """
-    The globally unique `ID` to be used in selecting a single `ProjectColumn`.
-    """
-    id: ID!
-  ): ProjectColumn
-
-  """Reads a single `ProjectLabel` using its globally unique `ID`."""
-  projectLabelById(
-    """
-    The globally unique `ID` to be used in selecting a single `ProjectLabel`.
-    """
-    id: ID!
-  ): ProjectLabel
-
-  """Reads a single `Label` using its globally unique `ID`."""
-  labelById(
-    """The globally unique `ID` to be used in selecting a single `Label`."""
-    id: ID!
-  ): Label
-
-  """Reads a single `ProjectLink` using its globally unique `ID`."""
-  projectLinkById(
-    """
-    The globally unique `ID` to be used in selecting a single `ProjectLink`.
-    """
-    id: ID!
-  ): ProjectLink
-
-  """Reads a single `UserPreference` using its globally unique `ID`."""
-  userPreferenceById(
-    """
-    The globally unique `ID` to be used in selecting a single `UserPreference`.
-    """
-    id: ID!
-  ): UserPreference
-
-  """Reads a single `WardenSyncQueue` using its globally unique `ID`."""
-  wardenSyncQueueById(
-    """
-    The globally unique `ID` to be used in selecting a single `WardenSyncQueue`.
-    """
-    id: ID!
-  ): WardenSyncQueue
-
-  """Reads a single `Setting` using its globally unique `ID`."""
-  settingById(
-    """The globally unique `ID` to be used in selecting a single `Setting`."""
-    id: ID!
-  ): Setting
-
-  """Reads a single `Task` using its globally unique `ID`."""
-  taskById(
-    """The globally unique `ID` to be used in selecting a single `Task`."""
-    id: ID!
-  ): Task
-
-  """Reads a single `Attachment` using its globally unique `ID`."""
-  attachmentById(
-    """
-    The globally unique `ID` to be used in selecting a single `Attachment`.
-    """
-    id: ID!
-  ): Attachment
-
-  """Reads a single `Project` using its globally unique `ID`."""
-  projectById(
-    """The globally unique `ID` to be used in selecting a single `Project`."""
-    id: ID!
-  ): Project
-
-  """Reads and enables pagination through a set of `ProjectProjectLabel`."""
-  projectProjectLabels(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectProjectLabelCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectProjectLabelFilter
-
-    """The method to use when ordering `ProjectProjectLabel`."""
-    orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectProjectLabelConnection
-
-  """Reads and enables pagination through a set of `TaskLabel`."""
-  taskLabels(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaskLabelCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaskLabelFilter
-
-    """The method to use when ordering `TaskLabel`."""
-    orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaskLabelConnection
-
-  """Reads and enables pagination through a set of `Assignee`."""
-  assignees(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AssigneeCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AssigneeFilter
-
-    """The method to use when ordering `Assignee`."""
-    orderBy: [AssigneeOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AssigneeConnection
-
-  """
-  Reads and enables pagination through a set of `NotificationPreference`.
-  """
-  notificationPreferences(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: NotificationPreferenceCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: NotificationPreferenceFilter
-
-    """The method to use when ordering `NotificationPreference`."""
-    orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NotificationPreferenceConnection
-
-  """Reads and enables pagination through a set of `Emoji`."""
-  emojis(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EmojiCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EmojiFilter
-
-    """The method to use when ordering `Emoji`."""
-    orderBy: [EmojiOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EmojiConnection
-
-  """Reads and enables pagination through a set of `User`."""
-  users(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserFilter
-
-    """The method to use when ordering `User`."""
-    orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserConnection
-
-  """Reads and enables pagination through a set of `Column`."""
-  columns(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ColumnCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ColumnFilter
-
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ColumnConnection
-
-  """Reads and enables pagination through a set of `Post`."""
-  posts(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PostCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: PostFilter
-
-    """The method to use when ordering `Post`."""
-    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PostConnection
-
-  """Reads and enables pagination through a set of `ProjectColumn`."""
-  projectColumns(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectColumnCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectColumnFilter
-
-    """The method to use when ordering `ProjectColumn`."""
-    orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectColumnConnection
-
-  """Reads and enables pagination through a set of `ProjectLabel`."""
-  projectLabels(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectLabelCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectLabelFilter
-
-    """The method to use when ordering `ProjectLabel`."""
-    orderBy: [ProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectLabelConnection
-
-  """Reads and enables pagination through a set of `Label`."""
-  labels(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LabelCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: LabelFilter
-
-    """The method to use when ordering `Label`."""
-    orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LabelConnection
-
-  """Reads and enables pagination through a set of `ProjectLink`."""
-  projectLinks(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectLinkCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectLinkFilter
-
-    """The method to use when ordering `ProjectLink`."""
-    orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectLinkConnection
-
-  """Reads and enables pagination through a set of `UserPreference`."""
-  userPreferences(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: UserPreferenceCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: UserPreferenceFilter
-
-    """The method to use when ordering `UserPreference`."""
-    orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UserPreferenceConnection
-
-  """Reads and enables pagination through a set of `WardenSyncQueue`."""
-  wardenSyncQueues(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: WardenSyncQueueCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: WardenSyncQueueFilter
-
-    """The method to use when ordering `WardenSyncQueue`."""
-    orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueConnection
-
-  """Reads and enables pagination through a set of `Setting`."""
-  settings(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SettingCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: SettingFilter
-
-    """The method to use when ordering `Setting`."""
-    orderBy: [SettingOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SettingConnection
-
-  """Reads and enables pagination through a set of `Task`."""
-  tasks(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaskCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaskFilter
-
-    """The method to use when ordering `Task`."""
-    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaskConnection
-
-  """Reads and enables pagination through a set of `Attachment`."""
-  attachments(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AttachmentCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AttachmentFilter
-
-    """The method to use when ordering `Attachment`."""
-    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AttachmentConnection
-
-  """Reads and enables pagination through a set of `Project`."""
-  projects(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ProjectCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ProjectFilter
-
-    """The method to use when ordering `Project`."""
-    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ProjectConnection
-
-  """
-  Returns the currently authenticated user (observer).
-  Returns null if not authenticated.
-  """
-  observer: Observer
-}
-
 """An object with a globally unique `ID`."""
 interface Node {
   """
@@ -9433,709 +8586,6 @@ enum SettingOrderBy {
   DELETION_REASON_DESC
 }
 
-"""
-The root mutation type which contains root level fields which mutate data.
-"""
-type Mutation {
-  """Creates a single `ProjectProjectLabel`."""
-  createProjectProjectLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateProjectProjectLabelInput!
-  ): CreateProjectProjectLabelPayload
-
-  """Creates a single `TaskLabel`."""
-  createTaskLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTaskLabelInput!
-  ): CreateTaskLabelPayload
-
-  """Creates a single `Assignee`."""
-  createAssignee(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAssigneeInput!
-  ): CreateAssigneePayload
-
-  """Creates a single `NotificationPreference`."""
-  createNotificationPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateNotificationPreferenceInput!
-  ): CreateNotificationPreferencePayload
-
-  """Creates a single `Emoji`."""
-  createEmoji(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateEmojiInput!
-  ): CreateEmojiPayload
-
-  """Creates a single `User`."""
-  createUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserInput!
-  ): CreateUserPayload
-
-  """Creates a single `Column`."""
-  createColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateColumnInput!
-  ): CreateColumnPayload
-
-  """Creates a single `Post`."""
-  createPost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePostInput!
-  ): CreatePostPayload
-
-  """Creates a single `ProjectColumn`."""
-  createProjectColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateProjectColumnInput!
-  ): CreateProjectColumnPayload
-
-  """Creates a single `ProjectLabel`."""
-  createProjectLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateProjectLabelInput!
-  ): CreateProjectLabelPayload
-
-  """Creates a single `Label`."""
-  createLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateLabelInput!
-  ): CreateLabelPayload
-
-  """Creates a single `ProjectLink`."""
-  createProjectLink(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateProjectLinkInput!
-  ): CreateProjectLinkPayload
-
-  """Creates a single `UserPreference`."""
-  createUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateUserPreferenceInput!
-  ): CreateUserPreferencePayload
-
-  """Creates a single `WardenSyncQueue`."""
-  createWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateWardenSyncQueueInput!
-  ): CreateWardenSyncQueuePayload
-
-  """Creates a single `Setting`."""
-  createSetting(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateSettingInput!
-  ): CreateSettingPayload
-
-  """Creates a single `Task`."""
-  createTask(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTaskInput!
-  ): CreateTaskPayload
-
-  """Creates a single `Project`."""
-  createProject(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateProjectInput!
-  ): CreateProjectPayload
-
-  """
-  Updates a single `ProjectProjectLabel` using its globally unique id and a patch.
-  """
-  updateProjectProjectLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectProjectLabelByIdInput!
-  ): UpdateProjectProjectLabelPayload
-
-  """Updates a single `ProjectProjectLabel` using a unique key and a patch."""
-  updateProjectProjectLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectProjectLabelInput!
-  ): UpdateProjectProjectLabelPayload
-
-  """Updates a single `TaskLabel` using its globally unique id and a patch."""
-  updateTaskLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaskLabelByIdInput!
-  ): UpdateTaskLabelPayload
-
-  """Updates a single `TaskLabel` using a unique key and a patch."""
-  updateTaskLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaskLabelInput!
-  ): UpdateTaskLabelPayload
-
-  """Updates a single `Assignee` using its globally unique id and a patch."""
-  updateAssigneeById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAssigneeByIdInput!
-  ): UpdateAssigneePayload
-
-  """Updates a single `Assignee` using a unique key and a patch."""
-  updateAssignee(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAssigneeInput!
-  ): UpdateAssigneePayload
-
-  """
-  Updates a single `NotificationPreference` using its globally unique id and a patch.
-  """
-  updateNotificationPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNotificationPreferenceByIdInput!
-  ): UpdateNotificationPreferencePayload
-
-  """
-  Updates a single `NotificationPreference` using a unique key and a patch.
-  """
-  updateNotificationPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNotificationPreferenceInput!
-  ): UpdateNotificationPreferencePayload
-
-  """Updates a single `Emoji` using its globally unique id and a patch."""
-  updateEmojiById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEmojiByIdInput!
-  ): UpdateEmojiPayload
-
-  """Updates a single `Emoji` using a unique key and a patch."""
-  updateEmoji(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEmojiInput!
-  ): UpdateEmojiPayload
-
-  """Updates a single `User` using its globally unique id and a patch."""
-  updateUserById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserByIdInput!
-  ): UpdateUserPayload
-
-  """Updates a single `User` using a unique key and a patch."""
-  updateUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserInput!
-  ): UpdateUserPayload
-
-  """Updates a single `Column` using its globally unique id and a patch."""
-  updateColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnByIdInput!
-  ): UpdateColumnPayload
-
-  """Updates a single `Column` using a unique key and a patch."""
-  updateColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnInput!
-  ): UpdateColumnPayload
-
-  """Updates a single `Post` using its globally unique id and a patch."""
-  updatePostById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostByIdInput!
-  ): UpdatePostPayload
-
-  """Updates a single `Post` using a unique key and a patch."""
-  updatePost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePostInput!
-  ): UpdatePostPayload
-
-  """
-  Updates a single `ProjectColumn` using its globally unique id and a patch.
-  """
-  updateProjectColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectColumnByIdInput!
-  ): UpdateProjectColumnPayload
-
-  """Updates a single `ProjectColumn` using a unique key and a patch."""
-  updateProjectColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectColumnInput!
-  ): UpdateProjectColumnPayload
-
-  """
-  Updates a single `ProjectLabel` using its globally unique id and a patch.
-  """
-  updateProjectLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectLabelByIdInput!
-  ): UpdateProjectLabelPayload
-
-  """Updates a single `ProjectLabel` using a unique key and a patch."""
-  updateProjectLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectLabelInput!
-  ): UpdateProjectLabelPayload
-
-  """Updates a single `Label` using its globally unique id and a patch."""
-  updateLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLabelByIdInput!
-  ): UpdateLabelPayload
-
-  """Updates a single `Label` using a unique key and a patch."""
-  updateLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLabelInput!
-  ): UpdateLabelPayload
-
-  """
-  Updates a single `ProjectLink` using its globally unique id and a patch.
-  """
-  updateProjectLinkById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectLinkByIdInput!
-  ): UpdateProjectLinkPayload
-
-  """Updates a single `ProjectLink` using a unique key and a patch."""
-  updateProjectLink(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectLinkInput!
-  ): UpdateProjectLinkPayload
-
-  """
-  Updates a single `UserPreference` using its globally unique id and a patch.
-  """
-  updateUserPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceByIdInput!
-  ): UpdateUserPreferencePayload
-
-  """Updates a single `UserPreference` using a unique key and a patch."""
-  updateUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserPreferenceInput!
-  ): UpdateUserPreferencePayload
-
-  """
-  Updates a single `WardenSyncQueue` using its globally unique id and a patch.
-  """
-  updateWardenSyncQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWardenSyncQueueByIdInput!
-  ): UpdateWardenSyncQueuePayload
-
-  """Updates a single `WardenSyncQueue` using a unique key and a patch."""
-  updateWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWardenSyncQueueInput!
-  ): UpdateWardenSyncQueuePayload
-
-  """Updates a single `Setting` using its globally unique id and a patch."""
-  updateSettingById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSettingByIdInput!
-  ): UpdateSettingPayload
-
-  """Updates a single `Setting` using a unique key and a patch."""
-  updateSetting(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSettingInput!
-  ): UpdateSettingPayload
-
-  """Updates a single `Task` using its globally unique id and a patch."""
-  updateTaskById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaskByIdInput!
-  ): UpdateTaskPayload
-
-  """Updates a single `Task` using a unique key and a patch."""
-  updateTask(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaskInput!
-  ): UpdateTaskPayload
-
-  """Updates a single `Project` using its globally unique id and a patch."""
-  updateProjectById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectByIdInput!
-  ): UpdateProjectPayload
-
-  """Updates a single `Project` using a unique key and a patch."""
-  updateProject(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateProjectInput!
-  ): UpdateProjectPayload
-
-  """Deletes a single `ProjectProjectLabel` using its globally unique id."""
-  deleteProjectProjectLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectProjectLabelByIdInput!
-  ): DeleteProjectProjectLabelPayload
-
-  """Deletes a single `ProjectProjectLabel` using a unique key."""
-  deleteProjectProjectLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectProjectLabelInput!
-  ): DeleteProjectProjectLabelPayload
-
-  """Deletes a single `TaskLabel` using its globally unique id."""
-  deleteTaskLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaskLabelByIdInput!
-  ): DeleteTaskLabelPayload
-
-  """Deletes a single `TaskLabel` using a unique key."""
-  deleteTaskLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaskLabelInput!
-  ): DeleteTaskLabelPayload
-
-  """Deletes a single `Assignee` using its globally unique id."""
-  deleteAssigneeById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAssigneeByIdInput!
-  ): DeleteAssigneePayload
-
-  """Deletes a single `Assignee` using a unique key."""
-  deleteAssignee(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAssigneeInput!
-  ): DeleteAssigneePayload
-
-  """
-  Deletes a single `NotificationPreference` using its globally unique id.
-  """
-  deleteNotificationPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNotificationPreferenceByIdInput!
-  ): DeleteNotificationPreferencePayload
-
-  """Deletes a single `NotificationPreference` using a unique key."""
-  deleteNotificationPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNotificationPreferenceInput!
-  ): DeleteNotificationPreferencePayload
-
-  """Deletes a single `Emoji` using its globally unique id."""
-  deleteEmojiById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteEmojiByIdInput!
-  ): DeleteEmojiPayload
-
-  """Deletes a single `Emoji` using a unique key."""
-  deleteEmoji(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteEmojiInput!
-  ): DeleteEmojiPayload
-
-  """Deletes a single `User` using its globally unique id."""
-  deleteUserById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserByIdInput!
-  ): DeleteUserPayload
-
-  """Deletes a single `User` using a unique key."""
-  deleteUser(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserInput!
-  ): DeleteUserPayload
-
-  """Deletes a single `Column` using its globally unique id."""
-  deleteColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnByIdInput!
-  ): DeleteColumnPayload
-
-  """Deletes a single `Column` using a unique key."""
-  deleteColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnInput!
-  ): DeleteColumnPayload
-
-  """Deletes a single `Post` using its globally unique id."""
-  deletePostById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostByIdInput!
-  ): DeletePostPayload
-
-  """Deletes a single `Post` using a unique key."""
-  deletePost(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePostInput!
-  ): DeletePostPayload
-
-  """Deletes a single `ProjectColumn` using its globally unique id."""
-  deleteProjectColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectColumnByIdInput!
-  ): DeleteProjectColumnPayload
-
-  """Deletes a single `ProjectColumn` using a unique key."""
-  deleteProjectColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectColumnInput!
-  ): DeleteProjectColumnPayload
-
-  """Deletes a single `ProjectLabel` using its globally unique id."""
-  deleteProjectLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectLabelByIdInput!
-  ): DeleteProjectLabelPayload
-
-  """Deletes a single `ProjectLabel` using a unique key."""
-  deleteProjectLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectLabelInput!
-  ): DeleteProjectLabelPayload
-
-  """Deletes a single `Label` using its globally unique id."""
-  deleteLabelById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLabelByIdInput!
-  ): DeleteLabelPayload
-
-  """Deletes a single `Label` using a unique key."""
-  deleteLabel(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLabelInput!
-  ): DeleteLabelPayload
-
-  """Deletes a single `ProjectLink` using its globally unique id."""
-  deleteProjectLinkById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectLinkByIdInput!
-  ): DeleteProjectLinkPayload
-
-  """Deletes a single `ProjectLink` using a unique key."""
-  deleteProjectLink(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectLinkInput!
-  ): DeleteProjectLinkPayload
-
-  """Deletes a single `UserPreference` using its globally unique id."""
-  deleteUserPreferenceById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceByIdInput!
-  ): DeleteUserPreferencePayload
-
-  """Deletes a single `UserPreference` using a unique key."""
-  deleteUserPreference(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserPreferenceInput!
-  ): DeleteUserPreferencePayload
-
-  """Deletes a single `WardenSyncQueue` using its globally unique id."""
-  deleteWardenSyncQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWardenSyncQueueByIdInput!
-  ): DeleteWardenSyncQueuePayload
-
-  """Deletes a single `WardenSyncQueue` using a unique key."""
-  deleteWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWardenSyncQueueInput!
-  ): DeleteWardenSyncQueuePayload
-
-  """Deletes a single `Setting` using its globally unique id."""
-  deleteSettingById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSettingByIdInput!
-  ): DeleteSettingPayload
-
-  """Deletes a single `Setting` using a unique key."""
-  deleteSetting(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSettingInput!
-  ): DeleteSettingPayload
-
-  """Deletes a single `Task` using its globally unique id."""
-  deleteTaskById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaskByIdInput!
-  ): DeleteTaskPayload
-
-  """Deletes a single `Task` using a unique key."""
-  deleteTask(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaskInput!
-  ): DeleteTaskPayload
-
-  """Deletes a single `Project` using its globally unique id."""
-  deleteProjectById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectByIdInput!
-  ): DeleteProjectPayload
-
-  """Deletes a single `Project` using a unique key."""
-  deleteProject(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteProjectInput!
-  ): DeleteProjectPayload
-}
-
 """The output of our create `ProjectProjectLabel` mutation."""
 type CreateProjectProjectLabelPayload {
   """
@@ -12942,4 +11392,1597 @@ type Observer {
   identityProviderId: UUID!
   name: String!
   email: String!
+}
+
+"""The root query type which gives access points into the data universe."""
+type Query implements Node {
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+
+  """
+  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
+  """
+  id: ID!
+
+  """Fetches an object given its globally unique `ID`."""
+  node(
+    """The globally unique `ID`."""
+    id: ID!
+  ): Node
+
+  """Get a single `ProjectProjectLabel`."""
+  projectProjectLabel(projectId: UUID!, projectLabelId: UUID!): ProjectProjectLabel
+
+  """Get a single `TaskLabel`."""
+  taskLabel(taskId: UUID!, labelId: UUID!): TaskLabel
+
+  """Get a single `TaskLabel`."""
+  taskLabelByTaskIdAndLabelId(taskId: UUID!, labelId: UUID!): TaskLabel
+
+  """Get a single `Assignee`."""
+  assignee(taskId: UUID!, userId: UUID!): Assignee
+
+  """Get a single `Assignee`."""
+  assigneeByTaskIdAndUserId(taskId: UUID!, userId: UUID!): Assignee
+
+  """Get a single `NotificationPreference`."""
+  notificationPreference(rowId: UUID!): NotificationPreference
+
+  """Get a single `NotificationPreference`."""
+  notificationPreferenceByUserId(userId: UUID!): NotificationPreference
+
+  """Get a single `Emoji`."""
+  emoji(rowId: UUID!): Emoji
+
+  """Get a single `User`."""
+  user(rowId: UUID!): User
+
+  """Get a single `User`."""
+  userByEmail(email: String!): User
+
+  """Get a single `User`."""
+  userByIdentityProviderId(identityProviderId: UUID!): User
+
+  """Get a single `Column`."""
+  column(rowId: UUID!): Column
+
+  """Get a single `Post`."""
+  post(rowId: UUID!): Post
+
+  """Get a single `ProjectColumn`."""
+  projectColumn(rowId: UUID!): ProjectColumn
+
+  """Get a single `ProjectLabel`."""
+  projectLabel(rowId: UUID!): ProjectLabel
+
+  """Get a single `Label`."""
+  label(rowId: UUID!): Label
+
+  """Get a single `ProjectLink`."""
+  projectLink(rowId: UUID!): ProjectLink
+
+  """Get a single `UserPreference`."""
+  userPreference(rowId: UUID!): UserPreference
+
+  """Get a single `UserPreference`."""
+  userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
+
+  """Get a single `WardenSyncQueue`."""
+  wardenSyncQueue(rowId: UUID!): WardenSyncQueue
+
+  """Get a single `Setting`."""
+  setting(rowId: UUID!): Setting
+
+  """Get a single `Setting`."""
+  settingByOrganizationId(organizationId: String!): Setting
+
+  """Get a single `Task`."""
+  task(rowId: UUID!): Task
+
+  """Get a single `Task`."""
+  taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
+
+  """Get a single `Attachment`."""
+  attachment(rowId: UUID!): Attachment
+
+  """Get a single `Project`."""
+  project(rowId: UUID!): Project
+
+  """Get a single `Project`."""
+  projectBySlugAndOrganizationId(slug: String!, organizationId: String!): Project
+
+  """Reads a single `ProjectProjectLabel` using its globally unique `ID`."""
+  projectProjectLabelById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectProjectLabel`.
+    """
+    id: ID!
+  ): ProjectProjectLabel
+
+  """Reads a single `TaskLabel` using its globally unique `ID`."""
+  taskLabelById(
+    """The globally unique `ID` to be used in selecting a single `TaskLabel`."""
+    id: ID!
+  ): TaskLabel
+
+  """Reads a single `Assignee` using its globally unique `ID`."""
+  assigneeById(
+    """The globally unique `ID` to be used in selecting a single `Assignee`."""
+    id: ID!
+  ): Assignee
+
+  """
+  Reads a single `NotificationPreference` using its globally unique `ID`.
+  """
+  notificationPreferenceById(
+    """
+    The globally unique `ID` to be used in selecting a single `NotificationPreference`.
+    """
+    id: ID!
+  ): NotificationPreference
+
+  """Reads a single `Emoji` using its globally unique `ID`."""
+  emojiById(
+    """The globally unique `ID` to be used in selecting a single `Emoji`."""
+    id: ID!
+  ): Emoji
+
+  """Reads a single `User` using its globally unique `ID`."""
+  userById(
+    """The globally unique `ID` to be used in selecting a single `User`."""
+    id: ID!
+  ): User
+
+  """Reads a single `Column` using its globally unique `ID`."""
+  columnById(
+    """The globally unique `ID` to be used in selecting a single `Column`."""
+    id: ID!
+  ): Column
+
+  """Reads a single `Post` using its globally unique `ID`."""
+  postById(
+    """The globally unique `ID` to be used in selecting a single `Post`."""
+    id: ID!
+  ): Post
+
+  """Reads a single `ProjectColumn` using its globally unique `ID`."""
+  projectColumnById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectColumn`.
+    """
+    id: ID!
+  ): ProjectColumn
+
+  """Reads a single `ProjectLabel` using its globally unique `ID`."""
+  projectLabelById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectLabel`.
+    """
+    id: ID!
+  ): ProjectLabel
+
+  """Reads a single `Label` using its globally unique `ID`."""
+  labelById(
+    """The globally unique `ID` to be used in selecting a single `Label`."""
+    id: ID!
+  ): Label
+
+  """Reads a single `ProjectLink` using its globally unique `ID`."""
+  projectLinkById(
+    """
+    The globally unique `ID` to be used in selecting a single `ProjectLink`.
+    """
+    id: ID!
+  ): ProjectLink
+
+  """Reads a single `UserPreference` using its globally unique `ID`."""
+  userPreferenceById(
+    """
+    The globally unique `ID` to be used in selecting a single `UserPreference`.
+    """
+    id: ID!
+  ): UserPreference
+
+  """Reads a single `WardenSyncQueue` using its globally unique `ID`."""
+  wardenSyncQueueById(
+    """
+    The globally unique `ID` to be used in selecting a single `WardenSyncQueue`.
+    """
+    id: ID!
+  ): WardenSyncQueue
+
+  """Reads a single `Setting` using its globally unique `ID`."""
+  settingById(
+    """The globally unique `ID` to be used in selecting a single `Setting`."""
+    id: ID!
+  ): Setting
+
+  """Reads a single `Task` using its globally unique `ID`."""
+  taskById(
+    """The globally unique `ID` to be used in selecting a single `Task`."""
+    id: ID!
+  ): Task
+
+  """Reads a single `Attachment` using its globally unique `ID`."""
+  attachmentById(
+    """
+    The globally unique `ID` to be used in selecting a single `Attachment`.
+    """
+    id: ID!
+  ): Attachment
+
+  """Reads a single `Project` using its globally unique `ID`."""
+  projectById(
+    """The globally unique `ID` to be used in selecting a single `Project`."""
+    id: ID!
+  ): Project
+
+  """Reads and enables pagination through a set of `ProjectProjectLabel`."""
+  projectProjectLabels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectProjectLabelFilter
+
+    """The method to use when ordering `ProjectProjectLabel`."""
+    orderBy: [ProjectProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectProjectLabelConnection
+
+  """Reads and enables pagination through a set of `TaskLabel`."""
+  taskLabels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskLabelFilter
+
+    """The method to use when ordering `TaskLabel`."""
+    orderBy: [TaskLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskLabelConnection
+
+  """Reads and enables pagination through a set of `Assignee`."""
+  assignees(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AssigneeCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AssigneeFilter
+
+    """The method to use when ordering `Assignee`."""
+    orderBy: [AssigneeOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AssigneeConnection
+
+  """
+  Reads and enables pagination through a set of `NotificationPreference`.
+  """
+  notificationPreferences(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: NotificationPreferenceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: NotificationPreferenceFilter
+
+    """The method to use when ordering `NotificationPreference`."""
+    orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NotificationPreferenceConnection
+
+  """Reads and enables pagination through a set of `Emoji`."""
+  emojis(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EmojiCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EmojiFilter
+
+    """The method to use when ordering `Emoji`."""
+    orderBy: [EmojiOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EmojiConnection
+
+  """Reads and enables pagination through a set of `User`."""
+  users(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserFilter
+
+    """The method to use when ordering `User`."""
+    orderBy: [UserOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserConnection
+
+  """Reads and enables pagination through a set of `Column`."""
+  columns(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ColumnFilter
+
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ColumnConnection
+
+  """Reads and enables pagination through a set of `Post`."""
+  posts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PostFilter
+
+    """The method to use when ordering `Post`."""
+    orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostConnection
+
+  """Reads and enables pagination through a set of `ProjectColumn`."""
+  projectColumns(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectColumnFilter
+
+    """The method to use when ordering `ProjectColumn`."""
+    orderBy: [ProjectColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectColumnConnection
+
+  """Reads and enables pagination through a set of `ProjectLabel`."""
+  projectLabels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectLabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectLabelFilter
+
+    """The method to use when ordering `ProjectLabel`."""
+    orderBy: [ProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectLabelConnection
+
+  """Reads and enables pagination through a set of `Label`."""
+  labels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LabelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LabelFilter
+
+    """The method to use when ordering `Label`."""
+    orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LabelConnection
+
+  """Reads and enables pagination through a set of `ProjectLink`."""
+  projectLinks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectLinkCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectLinkFilter
+
+    """The method to use when ordering `ProjectLink`."""
+    orderBy: [ProjectLinkOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectLinkConnection
+
+  """Reads and enables pagination through a set of `UserPreference`."""
+  userPreferences(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: UserPreferenceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: UserPreferenceFilter
+
+    """The method to use when ordering `UserPreference`."""
+    orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UserPreferenceConnection
+
+  """Reads and enables pagination through a set of `WardenSyncQueue`."""
+  wardenSyncQueues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: WardenSyncQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: WardenSyncQueueFilter
+
+    """The method to use when ordering `WardenSyncQueue`."""
+    orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): WardenSyncQueueConnection
+
+  """Reads and enables pagination through a set of `Setting`."""
+  settings(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SettingCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SettingFilter
+
+    """The method to use when ordering `Setting`."""
+    orderBy: [SettingOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SettingConnection
+
+  """Reads and enables pagination through a set of `Task`."""
+  tasks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskFilter
+
+    """The method to use when ordering `Task`."""
+    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskConnection
+
+  """Reads and enables pagination through a set of `Attachment`."""
+  attachments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttachmentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AttachmentFilter
+
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentConnection
+
+  """Reads and enables pagination through a set of `Project`."""
+  projects(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectFilter
+
+    """The method to use when ordering `Project`."""
+    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectConnection
+
+  """
+  Returns the currently authenticated user (observer).
+  Returns null if not authenticated.
+  """
+  observer: Observer
+}
+
+"""
+The root mutation type which contains root level fields which mutate data.
+"""
+type Mutation {
+  """Creates a single `ProjectProjectLabel`."""
+  createProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectProjectLabelInput!
+  ): CreateProjectProjectLabelPayload
+
+  """Creates a single `TaskLabel`."""
+  createTaskLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaskLabelInput!
+  ): CreateTaskLabelPayload
+
+  """Creates a single `Assignee`."""
+  createAssignee(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAssigneeInput!
+  ): CreateAssigneePayload
+
+  """Creates a single `NotificationPreference`."""
+  createNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateNotificationPreferenceInput!
+  ): CreateNotificationPreferencePayload
+
+  """Creates a single `Emoji`."""
+  createEmoji(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEmojiInput!
+  ): CreateEmojiPayload
+
+  """Creates a single `User`."""
+  createUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserInput!
+  ): CreateUserPayload
+
+  """Creates a single `Column`."""
+  createColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateColumnInput!
+  ): CreateColumnPayload
+
+  """Creates a single `Post`."""
+  createPost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePostInput!
+  ): CreatePostPayload
+
+  """Creates a single `ProjectColumn`."""
+  createProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectColumnInput!
+  ): CreateProjectColumnPayload
+
+  """Creates a single `ProjectLabel`."""
+  createProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectLabelInput!
+  ): CreateProjectLabelPayload
+
+  """Creates a single `Label`."""
+  createLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLabelInput!
+  ): CreateLabelPayload
+
+  """Creates a single `ProjectLink`."""
+  createProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectLinkInput!
+  ): CreateProjectLinkPayload
+
+  """Creates a single `UserPreference`."""
+  createUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateUserPreferenceInput!
+  ): CreateUserPreferencePayload
+
+  """Creates a single `WardenSyncQueue`."""
+  createWardenSyncQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateWardenSyncQueueInput!
+  ): CreateWardenSyncQueuePayload
+
+  """Creates a single `Setting`."""
+  createSetting(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSettingInput!
+  ): CreateSettingPayload
+
+  """Creates a single `Task`."""
+  createTask(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaskInput!
+  ): CreateTaskPayload
+
+  """Creates a single `Project`."""
+  createProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectInput!
+  ): CreateProjectPayload
+
+  """
+  Updates a single `ProjectProjectLabel` using its globally unique id and a patch.
+  """
+  updateProjectProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectProjectLabelByIdInput!
+  ): UpdateProjectProjectLabelPayload
+
+  """Updates a single `ProjectProjectLabel` using a unique key and a patch."""
+  updateProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectProjectLabelInput!
+  ): UpdateProjectProjectLabelPayload
+
+  """Updates a single `TaskLabel` using its globally unique id and a patch."""
+  updateTaskLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskLabelByIdInput!
+  ): UpdateTaskLabelPayload
+
+  """Updates a single `TaskLabel` using a unique key and a patch."""
+  updateTaskLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskLabelInput!
+  ): UpdateTaskLabelPayload
+
+  """Updates a single `Assignee` using its globally unique id and a patch."""
+  updateAssigneeById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAssigneeByIdInput!
+  ): UpdateAssigneePayload
+
+  """Updates a single `Assignee` using a unique key and a patch."""
+  updateAssignee(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAssigneeInput!
+  ): UpdateAssigneePayload
+
+  """
+  Updates a single `NotificationPreference` using its globally unique id and a patch.
+  """
+  updateNotificationPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateNotificationPreferenceByIdInput!
+  ): UpdateNotificationPreferencePayload
+
+  """
+  Updates a single `NotificationPreference` using a unique key and a patch.
+  """
+  updateNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateNotificationPreferenceInput!
+  ): UpdateNotificationPreferencePayload
+
+  """Updates a single `Emoji` using its globally unique id and a patch."""
+  updateEmojiById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEmojiByIdInput!
+  ): UpdateEmojiPayload
+
+  """Updates a single `Emoji` using a unique key and a patch."""
+  updateEmoji(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEmojiInput!
+  ): UpdateEmojiPayload
+
+  """Updates a single `User` using its globally unique id and a patch."""
+  updateUserById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserByIdInput!
+  ): UpdateUserPayload
+
+  """Updates a single `User` using a unique key and a patch."""
+  updateUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserInput!
+  ): UpdateUserPayload
+
+  """Updates a single `Column` using its globally unique id and a patch."""
+  updateColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnByIdInput!
+  ): UpdateColumnPayload
+
+  """Updates a single `Column` using a unique key and a patch."""
+  updateColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnInput!
+  ): UpdateColumnPayload
+
+  """Updates a single `Post` using its globally unique id and a patch."""
+  updatePostById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostByIdInput!
+  ): UpdatePostPayload
+
+  """Updates a single `Post` using a unique key and a patch."""
+  updatePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePostInput!
+  ): UpdatePostPayload
+
+  """
+  Updates a single `ProjectColumn` using its globally unique id and a patch.
+  """
+  updateProjectColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectColumnByIdInput!
+  ): UpdateProjectColumnPayload
+
+  """Updates a single `ProjectColumn` using a unique key and a patch."""
+  updateProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectColumnInput!
+  ): UpdateProjectColumnPayload
+
+  """
+  Updates a single `ProjectLabel` using its globally unique id and a patch.
+  """
+  updateProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLabelByIdInput!
+  ): UpdateProjectLabelPayload
+
+  """Updates a single `ProjectLabel` using a unique key and a patch."""
+  updateProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLabelInput!
+  ): UpdateProjectLabelPayload
+
+  """Updates a single `Label` using its globally unique id and a patch."""
+  updateLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLabelByIdInput!
+  ): UpdateLabelPayload
+
+  """Updates a single `Label` using a unique key and a patch."""
+  updateLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLabelInput!
+  ): UpdateLabelPayload
+
+  """
+  Updates a single `ProjectLink` using its globally unique id and a patch.
+  """
+  updateProjectLinkById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLinkByIdInput!
+  ): UpdateProjectLinkPayload
+
+  """Updates a single `ProjectLink` using a unique key and a patch."""
+  updateProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectLinkInput!
+  ): UpdateProjectLinkPayload
+
+  """
+  Updates a single `UserPreference` using its globally unique id and a patch.
+  """
+  updateUserPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserPreferenceByIdInput!
+  ): UpdateUserPreferencePayload
+
+  """Updates a single `UserPreference` using a unique key and a patch."""
+  updateUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateUserPreferenceInput!
+  ): UpdateUserPreferencePayload
+
+  """
+  Updates a single `WardenSyncQueue` using its globally unique id and a patch.
+  """
+  updateWardenSyncQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateWardenSyncQueueByIdInput!
+  ): UpdateWardenSyncQueuePayload
+
+  """Updates a single `WardenSyncQueue` using a unique key and a patch."""
+  updateWardenSyncQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateWardenSyncQueueInput!
+  ): UpdateWardenSyncQueuePayload
+
+  """Updates a single `Setting` using its globally unique id and a patch."""
+  updateSettingById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSettingByIdInput!
+  ): UpdateSettingPayload
+
+  """Updates a single `Setting` using a unique key and a patch."""
+  updateSetting(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSettingInput!
+  ): UpdateSettingPayload
+
+  """Updates a single `Task` using its globally unique id and a patch."""
+  updateTaskById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskByIdInput!
+  ): UpdateTaskPayload
+
+  """Updates a single `Task` using a unique key and a patch."""
+  updateTask(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaskInput!
+  ): UpdateTaskPayload
+
+  """Updates a single `Project` using its globally unique id and a patch."""
+  updateProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectByIdInput!
+  ): UpdateProjectPayload
+
+  """Updates a single `Project` using a unique key and a patch."""
+  updateProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectInput!
+  ): UpdateProjectPayload
+
+  """Deletes a single `ProjectProjectLabel` using its globally unique id."""
+  deleteProjectProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectProjectLabelByIdInput!
+  ): DeleteProjectProjectLabelPayload
+
+  """Deletes a single `ProjectProjectLabel` using a unique key."""
+  deleteProjectProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectProjectLabelInput!
+  ): DeleteProjectProjectLabelPayload
+
+  """Deletes a single `TaskLabel` using its globally unique id."""
+  deleteTaskLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskLabelByIdInput!
+  ): DeleteTaskLabelPayload
+
+  """Deletes a single `TaskLabel` using a unique key."""
+  deleteTaskLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskLabelInput!
+  ): DeleteTaskLabelPayload
+
+  """Deletes a single `Assignee` using its globally unique id."""
+  deleteAssigneeById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAssigneeByIdInput!
+  ): DeleteAssigneePayload
+
+  """Deletes a single `Assignee` using a unique key."""
+  deleteAssignee(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAssigneeInput!
+  ): DeleteAssigneePayload
+
+  """
+  Deletes a single `NotificationPreference` using its globally unique id.
+  """
+  deleteNotificationPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteNotificationPreferenceByIdInput!
+  ): DeleteNotificationPreferencePayload
+
+  """Deletes a single `NotificationPreference` using a unique key."""
+  deleteNotificationPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteNotificationPreferenceInput!
+  ): DeleteNotificationPreferencePayload
+
+  """Deletes a single `Emoji` using its globally unique id."""
+  deleteEmojiById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEmojiByIdInput!
+  ): DeleteEmojiPayload
+
+  """Deletes a single `Emoji` using a unique key."""
+  deleteEmoji(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEmojiInput!
+  ): DeleteEmojiPayload
+
+  """Deletes a single `User` using its globally unique id."""
+  deleteUserById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserByIdInput!
+  ): DeleteUserPayload
+
+  """Deletes a single `User` using a unique key."""
+  deleteUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserInput!
+  ): DeleteUserPayload
+
+  """Deletes a single `Column` using its globally unique id."""
+  deleteColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnByIdInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single `Column` using a unique key."""
+  deleteColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single `Post` using its globally unique id."""
+  deletePostById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostByIdInput!
+  ): DeletePostPayload
+
+  """Deletes a single `Post` using a unique key."""
+  deletePost(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePostInput!
+  ): DeletePostPayload
+
+  """Deletes a single `ProjectColumn` using its globally unique id."""
+  deleteProjectColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectColumnByIdInput!
+  ): DeleteProjectColumnPayload
+
+  """Deletes a single `ProjectColumn` using a unique key."""
+  deleteProjectColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectColumnInput!
+  ): DeleteProjectColumnPayload
+
+  """Deletes a single `ProjectLabel` using its globally unique id."""
+  deleteProjectLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLabelByIdInput!
+  ): DeleteProjectLabelPayload
+
+  """Deletes a single `ProjectLabel` using a unique key."""
+  deleteProjectLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLabelInput!
+  ): DeleteProjectLabelPayload
+
+  """Deletes a single `Label` using its globally unique id."""
+  deleteLabelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLabelByIdInput!
+  ): DeleteLabelPayload
+
+  """Deletes a single `Label` using a unique key."""
+  deleteLabel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLabelInput!
+  ): DeleteLabelPayload
+
+  """Deletes a single `ProjectLink` using its globally unique id."""
+  deleteProjectLinkById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLinkByIdInput!
+  ): DeleteProjectLinkPayload
+
+  """Deletes a single `ProjectLink` using a unique key."""
+  deleteProjectLink(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectLinkInput!
+  ): DeleteProjectLinkPayload
+
+  """Deletes a single `UserPreference` using its globally unique id."""
+  deleteUserPreferenceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserPreferenceByIdInput!
+  ): DeleteUserPreferencePayload
+
+  """Deletes a single `UserPreference` using a unique key."""
+  deleteUserPreference(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteUserPreferenceInput!
+  ): DeleteUserPreferencePayload
+
+  """Deletes a single `WardenSyncQueue` using its globally unique id."""
+  deleteWardenSyncQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteWardenSyncQueueByIdInput!
+  ): DeleteWardenSyncQueuePayload
+
+  """Deletes a single `WardenSyncQueue` using a unique key."""
+  deleteWardenSyncQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteWardenSyncQueueInput!
+  ): DeleteWardenSyncQueuePayload
+
+  """Deletes a single `Setting` using its globally unique id."""
+  deleteSettingById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSettingByIdInput!
+  ): DeleteSettingPayload
+
+  """Deletes a single `Setting` using a unique key."""
+  deleteSetting(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSettingInput!
+  ): DeleteSettingPayload
+
+  """Deletes a single `Task` using its globally unique id."""
+  deleteTaskById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskByIdInput!
+  ): DeleteTaskPayload
+
+  """Deletes a single `Task` using a unique key."""
+  deleteTask(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaskInput!
+  ): DeleteTaskPayload
+
+  """Deletes a single `Project` using its globally unique id."""
+  deleteProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectByIdInput!
+  ): DeleteProjectPayload
+
+  """Deletes a single `Project` using a unique key."""
+  deleteProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectInput!
+  ): DeleteProjectPayload
+
+  """
+  Move a task to a column in another project within the same workspace.
+  Requires editor permission on both the source and destination project.
+  """
+  moveTask(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: MoveTaskInput!
+  ): MoveTaskPayload
+}
+
+"""
+Input for moving a task to a column in another project (same workspace).
+"""
+input MoveTaskInput {
+  """The task to move."""
+  taskId: UUID!
+
+  """The destination project."""
+  projectId: UUID!
+
+  """A column belonging to the destination project."""
+  columnId: UUID!
+}
+
+"""Result of a moveTask mutation."""
+type MoveTaskPayload {
+  """The moved task's id."""
+  taskId: UUID
+
+  """The task's newly assigned number in the destination project."""
+  number: Int
+
+  """The destination project id."""
+  projectId: UUID
+
+  """The destination column id."""
+  columnId: UUID
+
+  """The task's new fractional index within the destination column."""
+  columnIndex: String
 }
