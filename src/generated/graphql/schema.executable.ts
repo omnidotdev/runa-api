@@ -5201,12 +5201,13 @@ function oldPlan23(_, args) {
 }
 const planWrapper20 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "task"]),
+    $patch = constant(null),
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
     $authzCache = context().get("authzCache"),
     $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
+  sideEffect([$input, $patch, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, patch, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
     if (!accessToken) throw Error("Unauthorized");
     {
@@ -6255,12 +6256,13 @@ const oldPlan49 = (_$root, args) => {
 };
 const planWrapper46 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $patch = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
     $authzCache = context().get("authzCache"),
     $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
+  sideEffect([$input, $patch, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, patch, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
     if (!accessToken) throw Error("Unauthorized");
     {
@@ -6276,6 +6278,31 @@ const planWrapper46 = (plan, _, fieldArgs) => {
       });
       if (!task) throw Error("Task not found");
       if (!(await checkPermission(observer.identityProviderId, "project", task.projectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
+      const targetProjectId = patch?.projectId;
+      if (targetProjectId && targetProjectId !== task.projectId) {
+        if (!(await checkPermission(observer.identityProviderId, "project", targetProjectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
+        const [sourceProject, targetProject] = await Promise.all([db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, task.projectId);
+          },
+          columns: {
+            organizationId: !0
+          }
+        }), db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, targetProjectId);
+          },
+          columns: {
+            organizationId: !0
+          }
+        })]);
+        if (!targetProject) throw Error("Project not found");
+        if (sourceProject?.organizationId !== targetProject.organizationId) throw Error("Cannot move a task to a different workspace");
+      }
     }
   });
   return plan();
@@ -7130,12 +7157,13 @@ const oldPlan73 = (_$root, args) => {
 };
 const planWrapper71 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $patch = constant(null),
     $observer = context().get("observer"),
     $db = context().get("db"),
     $withPgClient = context().get("withPgClient"),
     $authzCache = context().get("authzCache"),
     $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, observer, db, withPgClient, authzCache, accessToken]) => {
+  sideEffect([$input, $patch, $observer, $db, $withPgClient, $authzCache, $accessToken], async ([input, patch, observer, db, withPgClient, authzCache, accessToken]) => {
     if (!observer) throw Error("Unauthorized");
     if (!accessToken) throw Error("Unauthorized");
     {
@@ -7151,6 +7179,31 @@ const planWrapper71 = (plan, _, fieldArgs) => {
       });
       if (!task) throw Error("Task not found");
       if (!(await checkPermission(observer.identityProviderId, "project", task.projectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
+      const targetProjectId = patch?.projectId;
+      if (targetProjectId && targetProjectId !== task.projectId) {
+        if (!(await checkPermission(observer.identityProviderId, "project", targetProjectId, "editor", accessToken, authzCache))) throw Error("Unauthorized");
+        const [sourceProject, targetProject] = await Promise.all([db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, task.projectId);
+          },
+          columns: {
+            organizationId: !0
+          }
+        }), db.query.projects.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, targetProjectId);
+          },
+          columns: {
+            organizationId: !0
+          }
+        })]);
+        if (!targetProject) throw Error("Project not found");
+        if (sourceProject?.organizationId !== targetProject.organizationId) throw Error("Cannot move a task to a different workspace");
+      }
     }
   });
   return plan();

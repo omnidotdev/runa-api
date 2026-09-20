@@ -1,5 +1,5 @@
 import { EXPORTABLE } from "graphile-export";
-import { context, sideEffect } from "postgraphile/grafast";
+import { constant, context, sideEffect } from "postgraphile/grafast";
 import { wrapPlans } from "postgraphile/utils";
 
 import { checkPermission } from "lib/authz";
@@ -23,6 +23,7 @@ import type { MutationScope } from "./types";
 const validatePermissions = (propName: string, scope: MutationScope) =>
   EXPORTABLE(
     (
+      constant,
       context,
       sideEffect,
       checkPermission,
@@ -34,6 +35,12 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $input = fieldArgs.getRaw(["input", propName]);
+        // Only updateTask carries a `patch`; reading it for other mutations
+        // would throw (getRaw on a missing input field), so gate on scope
+        const $patch =
+          scope === "update"
+            ? fieldArgs.getRaw(["input", "patch"])
+            : constant(null);
         const $observer = context().get("observer");
         const $db = context().get("db");
         const $withPgClient = context().get("withPgClient");
@@ -41,9 +48,18 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         const $accessToken = context().get("accessToken");
 
         sideEffect(
-          [$input, $observer, $db, $withPgClient, $authzCache, $accessToken],
+          [
+            $input,
+            $patch,
+            $observer,
+            $db,
+            $withPgClient,
+            $authzCache,
+            $accessToken,
+          ],
           async ([
             input,
+            patch,
             observer,
             db,
             withPgClient,
@@ -109,6 +125,42 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
                 authzCache,
               );
               if (!allowed) throw new Error("Unauthorized");
+
+              // Moving a task to another project (changing projectId) also
+              // requires editor on the TARGET project, and only within the same
+              // workspace (cross-org moves are rejected)
+              const targetProjectId = (patch as { projectId?: string } | null)
+                ?.projectId;
+              if (targetProjectId && targetProjectId !== task.projectId) {
+                const allowedTarget = await checkPermission(
+                  observer.identityProviderId,
+                  "project",
+                  targetProjectId,
+                  "editor",
+                  accessToken,
+                  authzCache,
+                );
+                if (!allowedTarget) throw new Error("Unauthorized");
+
+                const [sourceProject, targetProject] = await Promise.all([
+                  db.query.projects.findFirst({
+                    where: (table, { eq }) => eq(table.id, task.projectId),
+                    columns: { organizationId: true },
+                  }),
+                  db.query.projects.findFirst({
+                    where: (table, { eq }) => eq(table.id, targetProjectId),
+                    columns: { organizationId: true },
+                  }),
+                ]);
+                if (!targetProject) throw new Error("Project not found");
+                if (
+                  sourceProject?.organizationId !== targetProject.organizationId
+                ) {
+                  throw new Error(
+                    "Cannot move a task to a different workspace",
+                  );
+                }
+              }
             }
           },
         );
@@ -116,6 +168,7 @@ const validatePermissions = (propName: string, scope: MutationScope) =>
         return plan();
       },
     [
+      constant,
       context,
       sideEffect,
       checkPermission,
