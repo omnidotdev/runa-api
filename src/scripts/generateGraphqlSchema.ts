@@ -32,6 +32,7 @@ import {
   billingBypassOrgIds,
 } from "lib/graphql/plugins/authorization/constants";
 import { validateOrgExists } from "lib/idp/validateOrg";
+import { getOrCreateUnfurl } from "lib/links/unfurl";
 import {
   cleanupAllProjectMedia,
   cleanupDereferencedMedia,
@@ -169,6 +170,7 @@ const generateGraphqlSchema = async () => {
       "lib/db/db": { pgPool },
       "lib/tasks/moveTask": { moveTask },
       "lib/tasks/convertChecklistItemToTask": { convertChecklistItemToTask },
+      "lib/links/unfurl": { getOrCreateUnfurl },
       "lib/authz": {
         checkPermission,
         deleteTuples,

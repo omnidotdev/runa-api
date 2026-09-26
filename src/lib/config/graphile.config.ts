@@ -31,6 +31,7 @@ import {
 } from "lib/graphql/plugins/defaults";
 import { EventEmissionPlugin } from "lib/graphql/plugins/events";
 import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
+import LinkPreviewPlugin from "lib/graphql/plugins/links/LinkPreview.plugin";
 import { MediaCleanupPlugin } from "lib/graphql/plugins/media";
 import { ContentModerationPlugin } from "lib/graphql/plugins/moderation";
 import { AssignmentNotificationPlugin } from "lib/graphql/plugins/notifications";
@@ -79,6 +80,8 @@ const graphilePreset: GraphileConfig.Preset = {
     MoveTaskPlugin,
     // Custom convertChecklistItemToTask mutation (promote a checklist item)
     ConvertChecklistItemToTaskPlugin,
+    // Custom linkPreview query (server-side OpenGraph/favicon unfurl)
+    LinkPreviewPlugin,
     UserPlugin,
     UserPreferencePlugin,
     NotificationPreferencePlugin,

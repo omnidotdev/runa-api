@@ -8072,6 +8072,24 @@ type Setting implements Node {
   deletionReason: String
 }
 
+type LinkUnfurl implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  url: String!
+  urlHash: String!
+  status: String!
+  title: String
+  description: String
+  imageUrl: String
+  faviconDataUri: String
+  fetchedAt: Datetime!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+}
+
 """A connection to a list of `User` values."""
 type UserConnection {
   """A list of `User` objects."""
@@ -13080,6 +13098,33 @@ type MoveTaskPayload {
   columnIndex: String
 }
 
+"""Input for converting a checklist item into a standalone task."""
+input ConvertChecklistItemToTaskInput {
+  """The checklist item to convert."""
+  checklistItemId: UUID!
+}
+
+"""Result of a convertChecklistItemToTask mutation."""
+type ConvertChecklistItemToTaskPayload {
+  """The new task's id."""
+  taskId: UUID
+
+  """The new task's assigned number within its project."""
+  number: Int
+
+  """The project the new task was created in."""
+  projectId: UUID
+
+  """The column the new task was placed in (the project's first column)."""
+  columnId: UUID
+
+  """The new task's fractional index within its column."""
+  columnIndex: String
+
+  """The origin task the checklist item belonged to."""
+  sourceTaskId: UUID
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -13312,6 +13357,14 @@ type Query implements Node {
     """
     id: ID!
   ): WardenSyncQueue
+
+  """Reads a single `LinkUnfurl` using its globally unique `ID`."""
+  linkUnfurlById(
+    """
+    The globally unique `ID` to be used in selecting a single `LinkUnfurl`.
+    """
+    id: ID!
+  ): LinkUnfurl
 
   """Reads a single `Setting` using its globally unique `ID`."""
   settingById(
@@ -14062,6 +14115,11 @@ type Query implements Node {
   Returns null if not authenticated.
   """
   observer: Observer
+
+  """
+  Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.
+  """
+  linkPreview(url: String!): LinkPreview
 }
 
 """
@@ -14918,29 +14976,23 @@ type Mutation {
   ): ConvertChecklistItemToTaskPayload
 }
 
-"""Input for converting a checklist item into a standalone task."""
-input ConvertChecklistItemToTaskInput {
-  """The checklist item to convert."""
-  checklistItemId: UUID!
-}
+"""Cached link preview metadata for a URL."""
+type LinkPreview {
+  """The requested URL."""
+  url: String
 
-"""Result of a convertChecklistItemToTask mutation."""
-type ConvertChecklistItemToTaskPayload {
-  """The new task's id."""
-  taskId: UUID
+  """Either ok, or error for a cached failure."""
+  status: String
 
-  """The new task's assigned number within its project."""
-  number: Int
+  """Page title (OpenGraph or document title), if any."""
+  title: String
 
-  """The project the new task was created in."""
-  projectId: UUID
+  """Page description (OpenGraph), if any."""
+  description: String
 
-  """The column the new task was placed in (the project's first column)."""
-  columnId: UUID
+  """OpenGraph image URL, if any."""
+  imageUrl: String
 
-  """The new task's fractional index within its column."""
-  columnIndex: String
-
-  """The origin task the checklist item belonged to."""
-  sourceTaskId: UUID
+  """Favicon as a size-capped data URI, if fetched."""
+  faviconDataUri: String
 }

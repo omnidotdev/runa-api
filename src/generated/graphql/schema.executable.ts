@@ -8,6 +8,7 @@ import { pgPool } from "lib/db/db";
 import { columns, userPreferences, users } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
 import { FEATURE_KEYS, billingBypassOrgIds } from "lib/graphql/plugins/authorization/constants";
+import { getOrCreateUnfurl } from "lib/links/unfurl";
 import { cleanupAllProjectMedia, cleanupDereferencedMedia } from "lib/media/cleanupProjectMedia";
 import { moderateText } from "lib/moderation";
 import { resolveAssignmentDigestItem, resolveAssignmentEmail } from "lib/notifications/assignmentEmail";
@@ -1517,6 +1518,138 @@ const spec_wardenSyncQueue = {
   executor: executor
 };
 const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
+const linkUnfurlIdentifier = sql.identifier("public", "link_unfurl");
+const linkUnfurlCodec = recordCodec({
+  name: "linkUnfurl",
+  identifier: linkUnfurlIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    url: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    url_hash: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    title: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    image_url: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    favicon_data_uri: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    fetched_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "1005746",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "link_unfurl"
+    },
+    tags: {
+      __proto__: null,
+      behavior: "-insert -update -delete -connection -list -single"
+    }
+  },
+  executor: executor
+});
 const settingsIdentifier = sql.identifier("public", "settings");
 const spec_settings = {
   name: "settings",
@@ -2546,6 +2679,10 @@ const warden_sync_queueUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
+const link_unfurlUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
 const settingsUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2678,6 +2815,7 @@ const registryConfig = {
     textArray: LIST_TYPES.text,
     varchar: TYPES.varchar,
     wardenSyncQueue: wardenSyncQueueCodec,
+    linkUnfurl: linkUnfurlCodec,
     settings: settingsCodec,
     timestamp: TYPES.timestamp,
     attachment: attachmentCodec,
@@ -2720,6 +2858,28 @@ const registryConfig = {
         canDelete: true
       },
       uniques: warden_sync_queueUniques
+    },
+    link_unfurl: {
+      executor: executor,
+      name: "link_unfurl",
+      identifier: "main.public.link_unfurl",
+      from: linkUnfurlIdentifier,
+      codec: linkUnfurlCodec,
+      extensions: {
+        pg: {
+          serviceName: "main",
+          schemaName: "public",
+          name: "link_unfurl"
+        },
+        tags: {
+          behavior: "-insert -update -delete -connection -list -single"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        canDelete: true
+      },
+      uniques: link_unfurlUniques
     },
     settings: {
       executor: executor,
@@ -3321,6 +3481,14 @@ const nodeIdHandler_WardenSyncQueue = makeTableNodeIdHandler({
   resource: spec_resource_warden_sync_queuePgResource,
   pk: warden_sync_queueUniques[0].attributes
 });
+const spec_resource_link_unfurlPgResource = registry.pgResources["link_unfurl"];
+const nodeIdHandler_LinkUnfurl = makeTableNodeIdHandler({
+  typeName: "LinkUnfurl",
+  identifier: "LinkUnfurl",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: spec_resource_link_unfurlPgResource,
+  pk: link_unfurlUniques[0].attributes
+});
 const spec_resource_settingsPgResource = registry.pgResources["settings"];
 const nodeIdHandler_Setting = makeTableNodeIdHandler({
   typeName: "Setting",
@@ -3391,6 +3559,7 @@ const nodeIdHandlerByTypeName = {
   ProjectLink: nodeIdHandler_ProjectLink,
   UserPreference: nodeIdHandler_UserPreference,
   WardenSyncQueue: nodeIdHandler_WardenSyncQueue,
+  LinkUnfurl: nodeIdHandler_LinkUnfurl,
   Setting: nodeIdHandler_Setting,
   Attachment: nodeIdHandler_Attachment,
   Task: nodeIdHandler_Task,
@@ -5065,6 +5234,10 @@ const nodeFetcher_UserPreference = $nodeId => {
 const nodeFetcher_WardenSyncQueue = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_WardenSyncQueue));
   return nodeIdHandler_WardenSyncQueue.get(nodeIdHandler_WardenSyncQueue.getSpec($decoded));
+};
+const nodeFetcher_LinkUnfurl = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_LinkUnfurl));
+  return nodeIdHandler_LinkUnfurl.get(nodeIdHandler_LinkUnfurl.getSpec($decoded));
 };
 const nodeFetcher_Setting = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Setting));
@@ -16508,6 +16681,24 @@ type Setting implements Node {
   deletionReason: String
 }
 
+type LinkUnfurl implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  url: String!
+  urlHash: String!
+  status: String!
+  title: String
+  description: String
+  imageUrl: String
+  faviconDataUri: String
+  fetchedAt: Datetime!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+}
+
 """A connection to a list of \`User\` values."""
 type UserConnection {
   """A list of \`User\` objects."""
@@ -21516,6 +21707,33 @@ type MoveTaskPayload {
   columnIndex: String
 }
 
+"""Input for converting a checklist item into a standalone task."""
+input ConvertChecklistItemToTaskInput {
+  """The checklist item to convert."""
+  checklistItemId: UUID!
+}
+
+"""Result of a convertChecklistItemToTask mutation."""
+type ConvertChecklistItemToTaskPayload {
+  """The new task's id."""
+  taskId: UUID
+
+  """The new task's assigned number within its project."""
+  number: Int
+
+  """The project the new task was created in."""
+  projectId: UUID
+
+  """The column the new task was placed in (the project's first column)."""
+  columnId: UUID
+
+  """The new task's fractional index within its column."""
+  columnIndex: String
+
+  """The origin task the checklist item belonged to."""
+  sourceTaskId: UUID
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -21748,6 +21966,14 @@ type Query implements Node {
     """
     id: ID!
   ): WardenSyncQueue
+
+  """Reads a single \`LinkUnfurl\` using its globally unique \`ID\`."""
+  linkUnfurlById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`LinkUnfurl\`.
+    """
+    id: ID!
+  ): LinkUnfurl
 
   """Reads a single \`Setting\` using its globally unique \`ID\`."""
   settingById(
@@ -22498,6 +22724,11 @@ type Query implements Node {
   Returns null if not authenticated.
   """
   observer: Observer
+
+  """
+  Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.
+  """
+  linkPreview(url: String!): LinkPreview
 }
 
 """
@@ -23354,31 +23585,25 @@ type Mutation {
   ): ConvertChecklistItemToTaskPayload
 }
 
-"""Input for converting a checklist item into a standalone task."""
-input ConvertChecklistItemToTaskInput {
-  """The checklist item to convert."""
-  checklistItemId: UUID!
-}
+"""Cached link preview metadata for a URL."""
+type LinkPreview {
+  """The requested URL."""
+  url: String
 
-"""Result of a convertChecklistItemToTask mutation."""
-type ConvertChecklistItemToTaskPayload {
-  """The new task's id."""
-  taskId: UUID
+  """Either ok, or error for a cached failure."""
+  status: String
 
-  """The new task's assigned number within its project."""
-  number: Int
+  """Page title (OpenGraph or document title), if any."""
+  title: String
 
-  """The project the new task was created in."""
-  projectId: UUID
+  """Page description (OpenGraph), if any."""
+  description: String
 
-  """The column the new task was placed in (the project's first column)."""
-  columnId: UUID
+  """OpenGraph image URL, if any."""
+  imageUrl: String
 
-  """The new task's fractional index within its column."""
-  columnIndex: String
-
-  """The origin task the checklist item belonged to."""
-  sourceTaskId: UUID
+  """Favicon as a size-capped data URI, if fetched."""
+  faviconDataUri: String
 }`;
 export const objects = {
   Query: {
@@ -23566,6 +23791,18 @@ export const objects = {
           filter: Project_columnsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
+      },
+      linkPreview(_$root, fieldArgs) {
+        const $url = fieldArgs.getRaw("url"),
+          $observer = context().get("observer");
+        return lambda([$observer, $url], async ([observer, url]) => {
+          if (!observer) throw Error("Unauthorized");
+          return getOrCreateUnfurl(pgPool, url);
+        }, !1);
+      },
+      linkUnfurlById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_LinkUnfurl($nodeId);
       },
       node(_$root, fieldArgs) {
         return fieldArgs.getRaw("id");
@@ -26797,6 +27034,57 @@ ${String(oldPlan49)}`);
       projectId: UserPreferenceDistinctCountAggregates_projectIdPlan,
       rowId: ProjectDistinctCountAggregates_rowIdPlan,
       updatedAt: ProjectDistinctCountAggregates_updatedAtPlan
+    }
+  },
+  LinkPreview: {
+    plans: {
+      description($result) {
+        return lambda($result, r => r?.["description"] ?? null);
+      },
+      faviconDataUri($result) {
+        return lambda($result, r => r?.["faviconDataUri"] ?? null);
+      },
+      imageUrl($result) {
+        return lambda($result, r => r?.["imageUrl"] ?? null);
+      },
+      status($result) {
+        return lambda($result, r => r?.["status"] ?? null);
+      },
+      title($result) {
+        return lambda($result, r => r?.["title"] ?? null);
+      },
+      url($result) {
+        return lambda($result, r => r?.["url"] ?? null);
+      }
+    }
+  },
+  LinkUnfurl: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt: ProjectProjectLabel_createdAtPlan,
+      faviconDataUri($record) {
+        return $record.get("favicon_data_uri");
+      },
+      fetchedAt($record) {
+        return $record.get("fetched_at");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_LinkUnfurl.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_LinkUnfurl.codec.name].encode);
+      },
+      imageUrl($record) {
+        return $record.get("image_url");
+      },
+      rowId: Project_rowIdPlan,
+      updatedAt: Project_updatedAtPlan,
+      urlHash($record) {
+        return $record.get("url_hash");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of link_unfurlUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return spec_resource_link_unfurlPgResource.get(spec);
     }
   },
   MoveTaskPayload: {

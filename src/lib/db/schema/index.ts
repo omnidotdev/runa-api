@@ -17,6 +17,7 @@ export * from "./checklistItem.table";
 export * from "./column.table";
 export * from "./emoji.table";
 export * from "./label.table";
+export * from "./linkUnfurl.table";
 export * from "./notificationDigestQueue.table";
 export * from "./notificationPreference.table";
 export * from "./post.table";

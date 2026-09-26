@@ -13,6 +13,13 @@ const SmartTagPlugin = jsonPgSmartTags({
       attachment: {
         tags: { behavior: "-insert -update -delete" },
       },
+      // Internal per-URL preview cache. Clients read it only through the custom
+      // `linkPreview(url)` query, so hide all auto-generated CRUD + read surface.
+      link_unfurl: {
+        tags: {
+          behavior: "-insert -update -delete -connection -list -single",
+        },
+      },
     },
   },
 });
