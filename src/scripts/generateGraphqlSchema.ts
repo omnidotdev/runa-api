@@ -52,6 +52,7 @@ import {
   indexTask,
   isSearchEnabled,
 } from "lib/search";
+import { convertChecklistItemToTask } from "lib/tasks/convertChecklistItemToTask";
 import { moveTask } from "lib/tasks/moveTask";
 
 const SRC_DIR = `${__dirname}/..`;
@@ -167,6 +168,7 @@ const generateGraphqlSchema = async () => {
       "fractional-indexing": { generateNKeysBetween },
       "lib/db/db": { pgPool },
       "lib/tasks/moveTask": { moveTask },
+      "lib/tasks/convertChecklistItemToTask": { convertChecklistItemToTask },
       "lib/authz": {
         checkPermission,
         deleteTuples,

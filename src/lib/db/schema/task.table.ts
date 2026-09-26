@@ -13,12 +13,14 @@ import {
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { assignees } from "./assignee.table";
+import { checklists } from "./checklist.table";
 import { columns } from "./column.table";
 import { posts } from "./post.table";
 import { projects } from "./project.table";
 import { users } from "./user.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
 /**
  * Task table.
@@ -45,6 +47,10 @@ export const tasks = pgTable(
       mode: "string",
       withTimezone: true,
     }),
+    // Origin task when this task was created by converting a checklist item
+    sourceTaskId: uuid().references((): AnyPgColumn => tasks.id, {
+      onDelete: "set null",
+    }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
@@ -54,6 +60,7 @@ export const tasks = pgTable(
     index().on(table.projectId),
     index().on(table.columnId),
     index().on(table.columnId, table.columnIndex),
+    index().on(table.sourceTaskId),
     unique("task_project_number_unique").on(table.projectId, table.number),
   ],
 );
@@ -63,8 +70,13 @@ export const taskRelations = relations(tasks, ({ one, many }) => ({
     fields: [tasks.projectId],
     references: [projects.id],
   }),
+  sourceTask: one(tasks, {
+    fields: [tasks.sourceTaskId],
+    references: [tasks.id],
+  }),
   posts: many(posts),
   assignees: many(assignees),
+  checklists: many(checklists),
 }));
 
 export type InsertTask = InferInsertModel<typeof tasks>;

@@ -12,6 +12,8 @@
 
 export * from "./assignee.table";
 export * from "./attachment.table";
+export * from "./checklist.table";
+export * from "./checklistItem.table";
 export * from "./column.table";
 export * from "./emoji.table";
 export * from "./label.table";

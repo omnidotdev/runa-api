@@ -1215,6 +1215,9 @@ input TaskFilter {
   """Filter by the object’s `number` field."""
   number: IntFilter
 
+  """Filter by the object’s `sourceTaskId` field."""
+  sourceTaskId: UUIDFilter
+
   """Filter by the object’s `assignees` relation."""
   assignees: TaskToManyAssigneeFilter
 
@@ -1226,6 +1229,12 @@ input TaskFilter {
 
   """Some related `posts` exist."""
   postsExist: Boolean
+
+  """Filter by the object’s `tasksBySourceTaskId` relation."""
+  tasksBySourceTaskId: TaskToManyTaskFilter
+
+  """Some related `tasksBySourceTaskId` exist."""
+  tasksBySourceTaskIdExist: Boolean
 
   """Filter by the object’s `taskLabels` relation."""
   taskLabels: TaskToManyTaskLabelFilter
@@ -1239,6 +1248,12 @@ input TaskFilter {
   """Some related `attachments` exist."""
   attachmentsExist: Boolean
 
+  """Filter by the object’s `checklists` relation."""
+  checklists: TaskToManyChecklistFilter
+
+  """Some related `checklists` exist."""
+  checklistsExist: Boolean
+
   """Filter by the object’s `author` relation."""
   author: UserFilter
 
@@ -1250,6 +1265,12 @@ input TaskFilter {
 
   """Filter by the object’s `project` relation."""
   project: ProjectFilter
+
+  """Filter by the object’s `sourceTask` relation."""
+  sourceTask: TaskFilter
+
+  """A related `sourceTask` exists."""
+  sourceTaskExists: Boolean
 
   """Checks for all expressions in this list."""
   and: [TaskFilter!]
@@ -1987,6 +2008,7 @@ input TaskDistinctCountAggregateFilter {
   columnIndex: BigIntFilter
   projectId: BigIntFilter
   number: BigIntFilter
+  sourceTaskId: BigIntFilter
 }
 
 input TaskMinAggregateFilter {
@@ -2413,6 +2435,29 @@ input TaskToManyPostFilter {
 }
 
 """
+A filter to be used against many `Task` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskToManyTaskFilter {
+  """
+  Every related `Task` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaskFilter
+
+  """
+  Some related `Task` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaskFilter
+
+  """
+  No related `Task` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaskFilter
+
+  """Aggregates across related `Task` match the filter criteria."""
+  aggregates: TaskAggregatesFilter
+}
+
+"""
 A filter to be used against many `TaskLabel` object types. All fields are combined with a logical ‘and.’
 """
 input TaskToManyTaskLabelFilter {
@@ -2579,6 +2624,174 @@ input TaskToManyAttachmentFilter {
 
   """Aggregates across related `Attachment` match the filter criteria."""
   aggregates: AttachmentAggregatesFilter
+}
+
+"""
+A filter to be used against many `Checklist` object types. All fields are combined with a logical ‘and.’
+"""
+input TaskToManyChecklistFilter {
+  """
+  Every related `Checklist` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ChecklistFilter
+
+  """
+  Some related `Checklist` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ChecklistFilter
+
+  """
+  No related `Checklist` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ChecklistFilter
+
+  """Aggregates across related `Checklist` match the filter criteria."""
+  aggregates: ChecklistAggregatesFilter
+}
+
+"""
+A filter to be used against `Checklist` object types. All fields are combined with a logical ‘and.’
+"""
+input ChecklistFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `taskId` field."""
+  taskId: UUIDFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `index` field."""
+  index: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `checklistItems` relation."""
+  checklistItems: ChecklistToManyChecklistItemFilter
+
+  """Some related `checklistItems` exist."""
+  checklistItemsExist: Boolean
+
+  """Filter by the object’s `task` relation."""
+  task: TaskFilter
+
+  """Checks for all expressions in this list."""
+  and: [ChecklistFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ChecklistFilter!]
+
+  """Negates the expression."""
+  not: ChecklistFilter
+}
+
+"""
+A filter to be used against many `ChecklistItem` object types. All fields are combined with a logical ‘and.’
+"""
+input ChecklistToManyChecklistItemFilter {
+  """
+  Every related `ChecklistItem` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ChecklistItemFilter
+
+  """
+  Some related `ChecklistItem` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ChecklistItemFilter
+
+  """
+  No related `ChecklistItem` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ChecklistItemFilter
+
+  """Aggregates across related `ChecklistItem` match the filter criteria."""
+  aggregates: ChecklistItemAggregatesFilter
+}
+
+"""
+A filter to be used against `ChecklistItem` object types. All fields are combined with a logical ‘and.’
+"""
+input ChecklistItemFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `checklistId` field."""
+  checklistId: UUIDFilter
+
+  """Filter by the object’s `content` field."""
+  content: StringFilter
+
+  """Filter by the object’s `isDone` field."""
+  isDone: BooleanFilter
+
+  """Filter by the object’s `index` field."""
+  index: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+
+  """Filter by the object’s `checklist` relation."""
+  checklist: ChecklistFilter
+
+  """Checks for all expressions in this list."""
+  and: [ChecklistItemFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ChecklistItemFilter!]
+
+  """Negates the expression."""
+  not: ChecklistItemFilter
+}
+
+"""
+A filter to be used against aggregates of `ChecklistItem` object types.
+"""
+input ChecklistItemAggregatesFilter {
+  """
+  A filter that must pass for the relevant `ChecklistItem` object to be included within the aggregate.
+  """
+  filter: ChecklistItemFilter
+
+  """Distinct count aggregate over matching `ChecklistItem` objects."""
+  distinctCount: ChecklistItemDistinctCountAggregateFilter
+}
+
+input ChecklistItemDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  checklistId: BigIntFilter
+  content: BigIntFilter
+  isDone: BigIntFilter
+  index: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
+}
+
+"""A filter to be used against aggregates of `Checklist` object types."""
+input ChecklistAggregatesFilter {
+  """
+  A filter that must pass for the relevant `Checklist` object to be included within the aggregate.
+  """
+  filter: ChecklistFilter
+
+  """Distinct count aggregate over matching `Checklist` objects."""
+  distinctCount: ChecklistDistinctCountAggregateFilter
+}
+
+input ChecklistDistinctCountAggregateFilter {
+  rowId: BigIntFilter
+  taskId: BigIntFilter
+  title: BigIntFilter
+  index: BigIntFilter
+  createdAt: BigIntFilter
+  updatedAt: BigIntFilter
 }
 
 """A filter to be used against aggregates of `Column` object types."""
@@ -3202,6 +3415,8 @@ enum ProjectOrderBy {
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   TASKS_DISTINCT_COUNT_NUMBER_ASC
   TASKS_DISTINCT_COUNT_NUMBER_DESC
+  TASKS_DISTINCT_COUNT_SOURCE_TASK_ID_ASC
+  TASKS_DISTINCT_COUNT_SOURCE_TASK_ID_DESC
   TASKS_MIN_NUMBER_ASC
   TASKS_MIN_NUMBER_DESC
   TASKS_MAX_NUMBER_ASC
@@ -3444,6 +3659,7 @@ type Task implements Node {
   columnIndex: String!
   projectId: UUID!
   number: Int
+  sourceTaskId: UUID
 
   """Reads a single `User` that is related to this `Task`."""
   author: User
@@ -3453,6 +3669,9 @@ type Task implements Node {
 
   """Reads a single `Project` that is related to this `Task`."""
   project: Project
+
+  """Reads a single `Task` that is related to this `Task`."""
+  sourceTask: Task
 
   """Reads and enables pagination through a set of `Assignee`."""
   assignees(
@@ -3522,6 +3741,40 @@ type Task implements Node {
     orderBy: [PostOrderBy!] = [PRIMARY_KEY_ASC]
   ): PostConnection!
 
+  """Reads and enables pagination through a set of `Task`."""
+  tasksBySourceTaskId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskFilter
+
+    """The method to use when ordering `Task`."""
+    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskConnection!
+
   """Reads and enables pagination through a set of `TaskLabel`."""
   taskLabels(
     """Only read the first `n` values of the set."""
@@ -3589,6 +3842,40 @@ type Task implements Node {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection!
+
+  """Reads and enables pagination through a set of `Checklist`."""
+  checklists(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChecklistCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChecklistFilter
+
+    """The method to use when ordering `Checklist`."""
+    orderBy: [ChecklistOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChecklistConnection!
 }
 
 type User implements Node {
@@ -5142,6 +5429,9 @@ input TaskCondition {
 
   """Checks for equality with the object’s `number` field."""
   number: Int
+
+  """Checks for equality with the object’s `sourceTaskId` field."""
+  sourceTaskId: UUID
 }
 
 """Methods to use when ordering `Task`."""
@@ -5173,6 +5463,8 @@ enum TaskOrderBy {
   PROJECT_ID_DESC
   NUMBER_ASC
   NUMBER_DESC
+  SOURCE_TASK_ID_ASC
+  SOURCE_TASK_ID_DESC
   ASSIGNEES_COUNT_ASC
   ASSIGNEES_COUNT_DESC
   ASSIGNEES_DISTINCT_COUNT_USER_ID_ASC
@@ -5201,6 +5493,50 @@ enum TaskOrderBy {
   POSTS_DISTINCT_COUNT_CREATED_AT_DESC
   POSTS_DISTINCT_COUNT_UPDATED_AT_ASC
   POSTS_DISTINCT_COUNT_UPDATED_AT_DESC
+  TASKS_BY_SOURCE_TASK_ID_COUNT_ASC
+  TASKS_BY_SOURCE_TASK_ID_COUNT_DESC
+  TASKS_BY_SOURCE_TASK_ID_SUM_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_SUM_NUMBER_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_ROW_ID_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_ROW_ID_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_CONTENT_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_CONTENT_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_DESCRIPTION_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_DESCRIPTION_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_PRIORITY_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_PRIORITY_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_AUTHOR_ID_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_AUTHOR_ID_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_COLUMN_ID_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_COLUMN_ID_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_DUE_DATE_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_DUE_DATE_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_CREATED_AT_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_CREATED_AT_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_UPDATED_AT_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_UPDATED_AT_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_COLUMN_INDEX_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_COLUMN_INDEX_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_PROJECT_ID_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_PROJECT_ID_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_NUMBER_DESC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_SOURCE_TASK_ID_ASC
+  TASKS_BY_SOURCE_TASK_ID_DISTINCT_COUNT_SOURCE_TASK_ID_DESC
+  TASKS_BY_SOURCE_TASK_ID_MIN_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_MIN_NUMBER_DESC
+  TASKS_BY_SOURCE_TASK_ID_MAX_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_MAX_NUMBER_DESC
+  TASKS_BY_SOURCE_TASK_ID_AVERAGE_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_AVERAGE_NUMBER_DESC
+  TASKS_BY_SOURCE_TASK_ID_STDDEV_SAMPLE_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_STDDEV_SAMPLE_NUMBER_DESC
+  TASKS_BY_SOURCE_TASK_ID_STDDEV_POPULATION_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_STDDEV_POPULATION_NUMBER_DESC
+  TASKS_BY_SOURCE_TASK_ID_VARIANCE_SAMPLE_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_VARIANCE_SAMPLE_NUMBER_DESC
+  TASKS_BY_SOURCE_TASK_ID_VARIANCE_POPULATION_NUMBER_ASC
+  TASKS_BY_SOURCE_TASK_ID_VARIANCE_POPULATION_NUMBER_DESC
   TASK_LABELS_COUNT_ASC
   TASK_LABELS_COUNT_DESC
   TASK_LABELS_DISTINCT_COUNT_TASK_ID_ASC
@@ -5293,6 +5629,20 @@ enum TaskOrderBy {
   ATTACHMENTS_VARIANCE_POPULATION_WIDTH_DESC
   ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_ASC
   ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_DESC
+  CHECKLISTS_COUNT_ASC
+  CHECKLISTS_COUNT_DESC
+  CHECKLISTS_DISTINCT_COUNT_ROW_ID_ASC
+  CHECKLISTS_DISTINCT_COUNT_ROW_ID_DESC
+  CHECKLISTS_DISTINCT_COUNT_TASK_ID_ASC
+  CHECKLISTS_DISTINCT_COUNT_TASK_ID_DESC
+  CHECKLISTS_DISTINCT_COUNT_TITLE_ASC
+  CHECKLISTS_DISTINCT_COUNT_TITLE_DESC
+  CHECKLISTS_DISTINCT_COUNT_INDEX_ASC
+  CHECKLISTS_DISTINCT_COUNT_INDEX_DESC
+  CHECKLISTS_DISTINCT_COUNT_CREATED_AT_ASC
+  CHECKLISTS_DISTINCT_COUNT_CREATED_AT_DESC
+  CHECKLISTS_DISTINCT_COUNT_UPDATED_AT_ASC
+  CHECKLISTS_DISTINCT_COUNT_UPDATED_AT_DESC
 }
 
 """A connection to a list of `UserPreference` values."""
@@ -6060,6 +6410,472 @@ input TaskLabelHavingVariancePopulationInput {
   updatedAt: HavingDatetimeFilter
 }
 
+"""A connection to a list of `Checklist` values."""
+type ChecklistConnection {
+  """A list of `Checklist` objects."""
+  nodes: [Checklist!]!
+
+  """
+  A list of edges which contains the `Checklist` and cursor to aid in pagination.
+  """
+  edges: [ChecklistEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Checklist` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ChecklistAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `Checklist` for these aggregates."""
+    groupBy: [ChecklistGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ChecklistHavingInput
+  ): [ChecklistAggregates!]
+}
+
+type Checklist implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  taskId: UUID!
+  title: String!
+  index: String!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Task` that is related to this `Checklist`."""
+  task: Task
+
+  """Reads and enables pagination through a set of `ChecklistItem`."""
+  checklistItems(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChecklistItemCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChecklistItemFilter
+
+    """The method to use when ordering `ChecklistItem`."""
+    orderBy: [ChecklistItemOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChecklistItemConnection!
+}
+
+"""A connection to a list of `ChecklistItem` values."""
+type ChecklistItemConnection {
+  """A list of `ChecklistItem` objects."""
+  nodes: [ChecklistItem!]!
+
+  """
+  A list of edges which contains the `ChecklistItem` and cursor to aid in pagination.
+  """
+  edges: [ChecklistItemEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ChecklistItem` you could get from the connection."""
+  totalCount: Int!
+
+  """
+  Aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  aggregates: ChecklistItemAggregates
+
+  """
+  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  groupedAggregates(
+    """The method to use when grouping `ChecklistItem` for these aggregates."""
+    groupBy: [ChecklistItemGroupBy!]!
+
+    """Conditions on the grouped aggregates."""
+    having: ChecklistItemHavingInput
+  ): [ChecklistItemAggregates!]
+}
+
+type ChecklistItem implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  checklistId: UUID!
+  content: String!
+  isDone: Boolean!
+  index: String!
+  createdAt: Datetime!
+  updatedAt: Datetime!
+
+  """Reads a single `Checklist` that is related to this `ChecklistItem`."""
+  checklist: Checklist
+}
+
+"""A `ChecklistItem` edge in the connection."""
+type ChecklistItemEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ChecklistItem` at the end of the edge."""
+  node: ChecklistItem!
+}
+
+type ChecklistItemAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ChecklistItemDistinctCountAggregates
+}
+
+type ChecklistItemDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of checklistId across the matching connection"""
+  checklistId: BigInt
+
+  """Distinct count of content across the matching connection"""
+  content: BigInt
+
+  """Distinct count of isDone across the matching connection"""
+  isDone: BigInt
+
+  """Distinct count of index across the matching connection"""
+  index: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `ChecklistItem` for usage during aggregation."""
+enum ChecklistItemGroupBy {
+  CHECKLIST_ID
+  CONTENT
+  IS_DONE
+  INDEX
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `ChecklistItem` aggregates."""
+input ChecklistItemHavingInput {
+  AND: [ChecklistItemHavingInput!]
+  OR: [ChecklistItemHavingInput!]
+  sum: ChecklistItemHavingSumInput
+  distinctCount: ChecklistItemHavingDistinctCountInput
+  min: ChecklistItemHavingMinInput
+  max: ChecklistItemHavingMaxInput
+  average: ChecklistItemHavingAverageInput
+  stddevSample: ChecklistItemHavingStddevSampleInput
+  stddevPopulation: ChecklistItemHavingStddevPopulationInput
+  varianceSample: ChecklistItemHavingVarianceSampleInput
+  variancePopulation: ChecklistItemHavingVariancePopulationInput
+}
+
+input ChecklistItemHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistItemHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistItemHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistItemHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistItemHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistItemHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistItemHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistItemHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistItemHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `ChecklistItem` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ChecklistItemCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `checklistId` field."""
+  checklistId: UUID
+
+  """Checks for equality with the object’s `content` field."""
+  content: String
+
+  """Checks for equality with the object’s `isDone` field."""
+  isDone: Boolean
+
+  """Checks for equality with the object’s `index` field."""
+  index: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `ChecklistItem`."""
+enum ChecklistItemOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  CHECKLIST_ID_ASC
+  CHECKLIST_ID_DESC
+  CONTENT_ASC
+  CONTENT_DESC
+  IS_DONE_ASC
+  IS_DONE_DESC
+  INDEX_ASC
+  INDEX_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+"""A `Checklist` edge in the connection."""
+type ChecklistEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Checklist` at the end of the edge."""
+  node: Checklist!
+}
+
+type ChecklistAggregates {
+  keys: [String]
+
+  """
+  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
+  """
+  distinctCount: ChecklistDistinctCountAggregates
+}
+
+type ChecklistDistinctCountAggregates {
+  """Distinct count of rowId across the matching connection"""
+  rowId: BigInt
+
+  """Distinct count of taskId across the matching connection"""
+  taskId: BigInt
+
+  """Distinct count of title across the matching connection"""
+  title: BigInt
+
+  """Distinct count of index across the matching connection"""
+  index: BigInt
+
+  """Distinct count of createdAt across the matching connection"""
+  createdAt: BigInt
+
+  """Distinct count of updatedAt across the matching connection"""
+  updatedAt: BigInt
+}
+
+"""Grouping methods for `Checklist` for usage during aggregation."""
+enum ChecklistGroupBy {
+  TASK_ID
+  TITLE
+  INDEX
+  CREATED_AT
+  CREATED_AT_TRUNCATED_TO_HOUR
+  CREATED_AT_TRUNCATED_TO_DAY
+  UPDATED_AT
+  UPDATED_AT_TRUNCATED_TO_HOUR
+  UPDATED_AT_TRUNCATED_TO_DAY
+}
+
+"""Conditions for `Checklist` aggregates."""
+input ChecklistHavingInput {
+  AND: [ChecklistHavingInput!]
+  OR: [ChecklistHavingInput!]
+  sum: ChecklistHavingSumInput
+  distinctCount: ChecklistHavingDistinctCountInput
+  min: ChecklistHavingMinInput
+  max: ChecklistHavingMaxInput
+  average: ChecklistHavingAverageInput
+  stddevSample: ChecklistHavingStddevSampleInput
+  stddevPopulation: ChecklistHavingStddevPopulationInput
+  varianceSample: ChecklistHavingVarianceSampleInput
+  variancePopulation: ChecklistHavingVariancePopulationInput
+}
+
+input ChecklistHavingSumInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistHavingDistinctCountInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistHavingMinInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistHavingMaxInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistHavingAverageInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistHavingStddevSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistHavingStddevPopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistHavingVarianceSampleInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+input ChecklistHavingVariancePopulationInput {
+  createdAt: HavingDatetimeFilter
+  updatedAt: HavingDatetimeFilter
+}
+
+"""
+A condition to be used against `Checklist` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input ChecklistCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `taskId` field."""
+  taskId: UUID
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `index` field."""
+  index: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `Checklist`."""
+enum ChecklistOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  TASK_ID_ASC
+  TASK_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  INDEX_ASC
+  INDEX_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  CHECKLIST_ITEMS_COUNT_ASC
+  CHECKLIST_ITEMS_COUNT_DESC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_ROW_ID_ASC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_ROW_ID_DESC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_CHECKLIST_ID_ASC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_CHECKLIST_ID_DESC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_CONTENT_ASC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_CONTENT_DESC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_IS_DONE_ASC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_IS_DONE_DESC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_INDEX_ASC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_INDEX_DESC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_CREATED_AT_ASC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_CREATED_AT_DESC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_UPDATED_AT_ASC
+  CHECKLIST_ITEMS_DISTINCT_COUNT_UPDATED_AT_DESC
+}
+
 """A `Task` edge in the connection."""
 type TaskEdge {
   """A cursor for use in pagination."""
@@ -6159,6 +6975,9 @@ type TaskDistinctCountAggregates {
 
   """Distinct count of number across the matching connection"""
   number: BigInt
+
+  """Distinct count of sourceTaskId across the matching connection"""
+  sourceTaskId: BigInt
 }
 
 type TaskMinAggregates {
@@ -6215,6 +7034,7 @@ enum TaskGroupBy {
   COLUMN_INDEX
   PROJECT_ID
   NUMBER
+  SOURCE_TASK_ID
 }
 
 """Conditions for `Task` aggregates."""
@@ -6483,6 +7303,8 @@ enum ColumnOrderBy {
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   TASKS_DISTINCT_COUNT_NUMBER_ASC
   TASKS_DISTINCT_COUNT_NUMBER_DESC
+  TASKS_DISTINCT_COUNT_SOURCE_TASK_ID_ASC
+  TASKS_DISTINCT_COUNT_SOURCE_TASK_ID_DESC
   TASKS_MIN_NUMBER_ASC
   TASKS_MIN_NUMBER_DESC
   TASKS_MAX_NUMBER_ASC
@@ -7497,6 +8319,8 @@ enum UserOrderBy {
   AUTHORED_TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_ASC
   AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_SOURCE_TASK_ID_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_SOURCE_TASK_ID_DESC
   AUTHORED_TASKS_MIN_NUMBER_ASC
   AUTHORED_TASKS_MIN_NUMBER_DESC
   AUTHORED_TASKS_MAX_NUMBER_ASC
@@ -9055,6 +9879,51 @@ input AssigneeInput {
   deletedAt: Datetime
 }
 
+"""The output of our create `Checklist` mutation."""
+type CreateChecklistPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Checklist` that was created by this mutation."""
+  checklist: Checklist
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Checklist`. May be used by Relay 1."""
+  checklistEdge(
+    """The method to use when ordering `Checklist`."""
+    orderBy: [ChecklistOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ChecklistEdge
+}
+
+"""All input for the create `Checklist` mutation."""
+input CreateChecklistInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Checklist` to be created by this mutation."""
+  checklist: ChecklistInput!
+}
+
+"""An input for mutations affecting `Checklist`"""
+input ChecklistInput {
+  rowId: UUID
+  taskId: UUID!
+  title: String!
+  index: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `NotificationDigestQueue` mutation."""
 type CreateNotificationDigestQueuePayload {
   """
@@ -9233,6 +10102,52 @@ input NotificationPreferenceInput {
   createdAt: Datetime
   updatedAt: Datetime
   taskAssignedCadence: String
+}
+
+"""The output of our create `ChecklistItem` mutation."""
+type CreateChecklistItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ChecklistItem` that was created by this mutation."""
+  checklistItem: ChecklistItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ChecklistItem`. May be used by Relay 1."""
+  checklistItemEdge(
+    """The method to use when ordering `ChecklistItem`."""
+    orderBy: [ChecklistItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ChecklistItemEdge
+}
+
+"""All input for the create `ChecklistItem` mutation."""
+input CreateChecklistItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ChecklistItem` to be created by this mutation."""
+  checklistItem: ChecklistItemInput!
+}
+
+"""An input for mutations affecting `ChecklistItem`"""
+input ChecklistItemInput {
+  rowId: UUID
+  checklistId: UUID!
+  content: String!
+  isDone: Boolean
+  index: String!
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create `Column` mutation."""
@@ -9703,6 +10618,7 @@ input TaskInput {
   columnIndex: String!
   projectId: UUID!
   number: Int
+  sourceTaskId: UUID
 }
 
 """The output of our create `Project` mutation."""
@@ -9961,6 +10877,75 @@ input UpdateAssigneeInput {
   An object where the defined keys will be set on the `Assignee` being updated.
   """
   patch: AssigneePatch!
+}
+
+"""The output of our update `Checklist` mutation."""
+type UpdateChecklistPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Checklist` that was updated by this mutation."""
+  checklist: Checklist
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Checklist`. May be used by Relay 1."""
+  checklistEdge(
+    """The method to use when ordering `Checklist`."""
+    orderBy: [ChecklistOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ChecklistEdge
+}
+
+"""All input for the `updateChecklistById` mutation."""
+input UpdateChecklistByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Checklist` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Checklist` being updated.
+  """
+  patch: ChecklistPatch!
+}
+
+"""
+Represents an update to a `Checklist`. Fields that are set will be updated.
+"""
+input ChecklistPatch {
+  rowId: UUID
+  taskId: UUID
+  title: String
+  index: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateChecklist` mutation."""
+input UpdateChecklistInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Checklist` being updated.
+  """
+  patch: ChecklistPatch!
 }
 
 """The output of our update `NotificationDigestQueue` mutation."""
@@ -10235,6 +11220,76 @@ input UpdateNotificationPreferenceInput {
   An object where the defined keys will be set on the `NotificationPreference` being updated.
   """
   patch: NotificationPreferencePatch!
+}
+
+"""The output of our update `ChecklistItem` mutation."""
+type UpdateChecklistItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ChecklistItem` that was updated by this mutation."""
+  checklistItem: ChecklistItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ChecklistItem`. May be used by Relay 1."""
+  checklistItemEdge(
+    """The method to use when ordering `ChecklistItem`."""
+    orderBy: [ChecklistItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ChecklistItemEdge
+}
+
+"""All input for the `updateChecklistItemById` mutation."""
+input UpdateChecklistItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ChecklistItem` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ChecklistItem` being updated.
+  """
+  patch: ChecklistItemPatch!
+}
+
+"""
+Represents an update to a `ChecklistItem`. Fields that are set will be updated.
+"""
+input ChecklistItemPatch {
+  rowId: UUID
+  checklistId: UUID
+  content: String
+  isDone: Boolean
+  index: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateChecklistItem` mutation."""
+input UpdateChecklistItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ChecklistItem` being updated.
+  """
+  patch: ChecklistItemPatch!
 }
 
 """The output of our update `Column` mutation."""
@@ -10926,6 +11981,7 @@ input TaskPatch {
   columnIndex: String
   projectId: UUID
   number: Int
+  sourceTaskId: UUID
 }
 
 """All input for the `updateTask` mutation."""
@@ -11168,6 +12224,54 @@ input DeleteAssigneeInput {
   userId: UUID!
 }
 
+"""The output of our delete `Checklist` mutation."""
+type DeleteChecklistPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Checklist` that was deleted by this mutation."""
+  checklist: Checklist
+  deletedChecklistId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Checklist`. May be used by Relay 1."""
+  checklistEdge(
+    """The method to use when ordering `Checklist`."""
+    orderBy: [ChecklistOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ChecklistEdge
+}
+
+"""All input for the `deleteChecklistById` mutation."""
+input DeleteChecklistByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Checklist` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteChecklist` mutation."""
+input DeleteChecklistInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `NotificationDigestQueue` mutation."""
 type DeleteNotificationDigestQueuePayload {
   """
@@ -11352,6 +12456,54 @@ input DeleteNotificationPreferenceByIdInput {
 
 """All input for the `deleteNotificationPreference` mutation."""
 input DeleteNotificationPreferenceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ChecklistItem` mutation."""
+type DeleteChecklistItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ChecklistItem` that was deleted by this mutation."""
+  checklistItem: ChecklistItem
+  deletedChecklistItemId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ChecklistItem`. May be used by Relay 1."""
+  checklistItemEdge(
+    """The method to use when ordering `ChecklistItem`."""
+    orderBy: [ChecklistItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ChecklistItemEdge
+}
+
+"""All input for the `deleteChecklistItemById` mutation."""
+input DeleteChecklistItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ChecklistItem` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteChecklistItem` mutation."""
+input DeleteChecklistItemInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11896,6 +13048,38 @@ type Observer {
   email: String!
 }
 
+"""
+Input for moving a task to a column in another project (same workspace).
+"""
+input MoveTaskInput {
+  """The task to move."""
+  taskId: UUID!
+
+  """The destination project."""
+  projectId: UUID!
+
+  """A column belonging to the destination project."""
+  columnId: UUID!
+}
+
+"""Result of a moveTask mutation."""
+type MoveTaskPayload {
+  """The moved task's id."""
+  taskId: UUID
+
+  """The task's newly assigned number in the destination project."""
+  number: Int
+
+  """The destination project id."""
+  projectId: UUID
+
+  """The destination column id."""
+  columnId: UUID
+
+  """The task's new fractional index within the destination column."""
+  columnIndex: String
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -11930,6 +13114,9 @@ type Query implements Node {
   """Get a single `Assignee`."""
   assigneeByTaskIdAndUserId(taskId: UUID!, userId: UUID!): Assignee
 
+  """Get a single `Checklist`."""
+  checklist(rowId: UUID!): Checklist
+
   """Get a single `NotificationDigestQueue`."""
   notificationDigestQueue(rowId: UUID!): NotificationDigestQueue
 
@@ -11950,6 +13137,9 @@ type Query implements Node {
 
   """Get a single `NotificationPreference`."""
   notificationPreferenceByUserId(userId: UUID!): NotificationPreference
+
+  """Get a single `ChecklistItem`."""
+  checklistItem(rowId: UUID!): ChecklistItem
 
   """Get a single `Column`."""
   column(rowId: UUID!): Column
@@ -11984,14 +13174,14 @@ type Query implements Node {
   """Get a single `Setting`."""
   settingByOrganizationId(organizationId: String!): Setting
 
+  """Get a single `Attachment`."""
+  attachment(rowId: UUID!): Attachment
+
   """Get a single `Task`."""
   task(rowId: UUID!): Task
 
   """Get a single `Task`."""
   taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
-
-  """Get a single `Attachment`."""
-  attachment(rowId: UUID!): Attachment
 
   """Get a single `Project`."""
   project(rowId: UUID!): Project
@@ -12018,6 +13208,12 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Assignee`."""
     id: ID!
   ): Assignee
+
+  """Reads a single `Checklist` using its globally unique `ID`."""
+  checklistById(
+    """The globally unique `ID` to be used in selecting a single `Checklist`."""
+    id: ID!
+  ): Checklist
 
   """
   Reads a single `NotificationDigestQueue` using its globally unique `ID`.
@@ -12050,6 +13246,14 @@ type Query implements Node {
     """
     id: ID!
   ): NotificationPreference
+
+  """Reads a single `ChecklistItem` using its globally unique `ID`."""
+  checklistItemById(
+    """
+    The globally unique `ID` to be used in selecting a single `ChecklistItem`.
+    """
+    id: ID!
+  ): ChecklistItem
 
   """Reads a single `Column` using its globally unique `ID`."""
   columnById(
@@ -12115,12 +13319,6 @@ type Query implements Node {
     id: ID!
   ): Setting
 
-  """Reads a single `Task` using its globally unique `ID`."""
-  taskById(
-    """The globally unique `ID` to be used in selecting a single `Task`."""
-    id: ID!
-  ): Task
-
   """Reads a single `Attachment` using its globally unique `ID`."""
   attachmentById(
     """
@@ -12128,6 +13326,12 @@ type Query implements Node {
     """
     id: ID!
   ): Attachment
+
+  """Reads a single `Task` using its globally unique `ID`."""
+  taskById(
+    """The globally unique `ID` to be used in selecting a single `Task`."""
+    id: ID!
+  ): Task
 
   """Reads a single `Project` using its globally unique `ID`."""
   projectById(
@@ -12236,6 +13440,40 @@ type Query implements Node {
     """The method to use when ordering `Assignee`."""
     orderBy: [AssigneeOrderBy!] = [PRIMARY_KEY_ASC]
   ): AssigneeConnection
+
+  """Reads and enables pagination through a set of `Checklist`."""
+  checklists(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChecklistCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChecklistFilter
+
+    """The method to use when ordering `Checklist`."""
+    orderBy: [ChecklistOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChecklistConnection
 
   """
   Reads and enables pagination through a set of `NotificationDigestQueue`.
@@ -12376,6 +13614,40 @@ type Query implements Node {
     """The method to use when ordering `NotificationPreference`."""
     orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): NotificationPreferenceConnection
+
+  """Reads and enables pagination through a set of `ChecklistItem`."""
+  checklistItems(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChecklistItemCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChecklistItemFilter
+
+    """The method to use when ordering `ChecklistItem`."""
+    orderBy: [ChecklistItemOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChecklistItemConnection
 
   """Reads and enables pagination through a set of `Column`."""
   columns(
@@ -12683,40 +13955,6 @@ type Query implements Node {
     orderBy: [SettingOrderBy!] = [PRIMARY_KEY_ASC]
   ): SettingConnection
 
-  """Reads and enables pagination through a set of `Task`."""
-  tasks(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaskCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaskFilter
-
-    """The method to use when ordering `Task`."""
-    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaskConnection
-
   """Reads and enables pagination through a set of `Attachment`."""
   attachments(
     """Only read the first `n` values of the set."""
@@ -12750,6 +13988,40 @@ type Query implements Node {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection
+
+  """Reads and enables pagination through a set of `Task`."""
+  tasks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskFilter
+
+    """The method to use when ordering `Task`."""
+    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskConnection
 
   """Reads and enables pagination through a set of `Project`."""
   projects(
@@ -12820,6 +14092,14 @@ type Mutation {
     input: CreateAssigneeInput!
   ): CreateAssigneePayload
 
+  """Creates a single `Checklist`."""
+  createChecklist(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateChecklistInput!
+  ): CreateChecklistPayload
+
   """Creates a single `NotificationDigestQueue`."""
   createNotificationDigestQueue(
     """
@@ -12851,6 +14131,14 @@ type Mutation {
     """
     input: CreateNotificationPreferenceInput!
   ): CreateNotificationPreferencePayload
+
+  """Creates a single `ChecklistItem`."""
+  createChecklistItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateChecklistItemInput!
+  ): CreateChecklistItemPayload
 
   """Creates a single `Column`."""
   createColumn(
@@ -12990,6 +14278,22 @@ type Mutation {
     input: UpdateAssigneeInput!
   ): UpdateAssigneePayload
 
+  """Updates a single `Checklist` using its globally unique id and a patch."""
+  updateChecklistById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateChecklistByIdInput!
+  ): UpdateChecklistPayload
+
+  """Updates a single `Checklist` using a unique key and a patch."""
+  updateChecklist(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateChecklistInput!
+  ): UpdateChecklistPayload
+
   """
   Updates a single `NotificationDigestQueue` using its globally unique id and a patch.
   """
@@ -13061,6 +14365,24 @@ type Mutation {
     """
     input: UpdateNotificationPreferenceInput!
   ): UpdateNotificationPreferencePayload
+
+  """
+  Updates a single `ChecklistItem` using its globally unique id and a patch.
+  """
+  updateChecklistItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateChecklistItemByIdInput!
+  ): UpdateChecklistItemPayload
+
+  """Updates a single `ChecklistItem` using a unique key and a patch."""
+  updateChecklistItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateChecklistItemInput!
+  ): UpdateChecklistItemPayload
 
   """Updates a single `Column` using its globally unique id and a patch."""
   updateColumnById(
@@ -13296,6 +14618,22 @@ type Mutation {
     input: DeleteAssigneeInput!
   ): DeleteAssigneePayload
 
+  """Deletes a single `Checklist` using its globally unique id."""
+  deleteChecklistById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteChecklistByIdInput!
+  ): DeleteChecklistPayload
+
+  """Deletes a single `Checklist` using a unique key."""
+  deleteChecklist(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteChecklistInput!
+  ): DeleteChecklistPayload
+
   """
   Deletes a single `NotificationDigestQueue` using its globally unique id.
   """
@@ -13363,6 +14701,22 @@ type Mutation {
     """
     input: DeleteNotificationPreferenceInput!
   ): DeleteNotificationPreferencePayload
+
+  """Deletes a single `ChecklistItem` using its globally unique id."""
+  deleteChecklistItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteChecklistItemByIdInput!
+  ): DeleteChecklistItemPayload
+
+  """Deletes a single `ChecklistItem` using a unique key."""
+  deleteChecklistItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteChecklistItemInput!
+  ): DeleteChecklistItemPayload
 
   """Deletes a single `Column` using its globally unique id."""
   deleteColumnById(
@@ -13550,36 +14904,43 @@ type Mutation {
     """
     input: MoveTaskInput!
   ): MoveTaskPayload
+
+  """
+  Convert a checklist item into a standalone task in the origin task's
+  project. The item is removed and the new task links back via sourceTaskId.
+  Requires editor permission on the project.
+  """
+  convertChecklistItemToTask(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: ConvertChecklistItemToTaskInput!
+  ): ConvertChecklistItemToTaskPayload
 }
 
-"""
-Input for moving a task to a column in another project (same workspace).
-"""
-input MoveTaskInput {
-  """The task to move."""
-  taskId: UUID!
-
-  """The destination project."""
-  projectId: UUID!
-
-  """A column belonging to the destination project."""
-  columnId: UUID!
+"""Input for converting a checklist item into a standalone task."""
+input ConvertChecklistItemToTaskInput {
+  """The checklist item to convert."""
+  checklistItemId: UUID!
 }
 
-"""Result of a moveTask mutation."""
-type MoveTaskPayload {
-  """The moved task's id."""
+"""Result of a convertChecklistItemToTask mutation."""
+type ConvertChecklistItemToTaskPayload {
+  """The new task's id."""
   taskId: UUID
 
-  """The task's newly assigned number in the destination project."""
+  """The new task's assigned number within its project."""
   number: Int
 
-  """The destination project id."""
+  """The project the new task was created in."""
   projectId: UUID
 
-  """The destination column id."""
+  """The column the new task was placed in (the project's first column)."""
   columnId: UUID
 
-  """The task's new fractional index within the destination column."""
+  """The new task's fractional index within its column."""
   columnIndex: String
+
+  """The origin task the checklist item belonged to."""
+  sourceTaskId: UUID
 }

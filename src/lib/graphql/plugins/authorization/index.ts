@@ -1,4 +1,6 @@
 export { default as AssigneePlugin } from "./Assignee.plugin";
+export { default as ChecklistPlugin } from "./Checklist.plugin";
+export { default as ChecklistItemPlugin } from "./ChecklistItem.plugin";
 export { default as ColumnPlugin } from "./Column.plugin";
 export { default as EmojiPlugin } from "./Emoji.plugin";
 export { default as LabelPlugin } from "./Label.plugin";
