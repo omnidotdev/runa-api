@@ -19,6 +19,8 @@ interface TaskActivityEntry {
   action: string;
   actorName: string | null;
   summary: string;
+  /** Field-level detail (e.g. "moved this task to Done"), when the event carries it. */
+  detail: string | null;
   occurredAt: string;
   relativeTime: string;
 }
@@ -32,6 +34,7 @@ const RESOURCE_ACTIVITY_QUERY = `
       createdAt
       humanReadable
       relativeTime
+      metadata
     }
   }
 `;
@@ -43,7 +46,18 @@ interface ChronicleEvent {
   createdAt: string;
   humanReadable: string;
   relativeTime: string;
+  metadata: { changes?: Array<{ field?: string; label?: string }> } | null;
 }
+
+/** Join a task-update event's field changes into one detail phrase, or null. */
+const detailFromMetadata = (
+  metadata: ChronicleEvent["metadata"],
+): string | null => {
+  const labels = (metadata?.changes ?? [])
+    .map((change) => change?.label)
+    .filter((label): label is string => Boolean(label));
+  return labels.length ? labels.join(", ") : null;
+};
 
 interface FetchTaskActivityArgs {
   /** The request's own resolved organization id (never client-supplied). */
@@ -103,6 +117,7 @@ export const fetchTaskActivity = async ({
     action: event.action,
     actorName: event.actor?.name ?? null,
     summary: event.humanReadable,
+    detail: detailFromMetadata(event.metadata),
     occurredAt: event.createdAt,
     relativeTime: event.relativeTime,
   }));

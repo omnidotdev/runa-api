@@ -42,6 +42,8 @@ const TaskActivityPlugin = makeExtendSchemaPlugin(() => ({
       actorName: String
       "Human-readable summary, e.g. \\"Alice updated task 'MRKT-3'\\"."
       summary: String
+      "Field-level detail for updates, e.g. \\"moved this task to Done\\"."
+      detail: String
       "ISO timestamp the event occurred."
       occurredAt: String
       "Relative time for display, e.g. \\"2 hours ago\\"."
@@ -62,6 +64,7 @@ const TaskActivityPlugin = makeExtendSchemaPlugin(() => ({
       action: entryField("action"),
       actorName: entryField("actorName"),
       summary: entryField("summary"),
+      detail: entryField("detail"),
       occurredAt: entryField("occurredAt"),
       relativeTime: entryField("relativeTime"),
     },

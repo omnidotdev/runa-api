@@ -33,6 +33,14 @@ export const resourceEventWith = (orgVia: OrgVia) =>
  * stays unit-testable. `organizationId` is set both top-level (Vortex tenancy)
  * and in `data` (consumer convenience), and omitted entirely when unresolved.
  */
+/** A single human-readable field change for an activity feed, e.g. "moved to Done". */
+export interface ResourceChange {
+  /** The changed field key, used to coalesce consecutive edits of the same field. */
+  field: string;
+  /** The rendered phrase, e.g. "set priority to High". */
+  label: string;
+}
+
 export const buildResourceEvent = EXPORTABLE(
   (eventMeta) =>
     (
@@ -41,6 +49,7 @@ export const buildResourceEvent = EXPORTABLE(
       // biome-ignore lint/suspicious/noExplicitAny: row shape varies per entity
       row: any,
       observer: SelectUser | null,
+      changes?: ResourceChange[],
     ) => {
       const rawName = spec.nameColumn ? row?.[spec.nameColumn] : null;
       const resourceName = rawName != null ? String(rawName) : null;
@@ -57,6 +66,7 @@ export const buildResourceEvent = EXPORTABLE(
         data: {
           id,
           ...(organizationId ? { organizationId } : {}),
+          ...(changes && changes.length ? { changes } : {}),
           ...eventMeta(observer, spec.entity, resourceName),
         },
         ...(organizationId ? { organizationId } : {}),

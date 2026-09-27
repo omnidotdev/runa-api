@@ -5075,7 +5075,7 @@ const eventMeta = (observer, resourceType, resourceName) => ({
     actorEmail: observer.email
   } : {})
 });
-const buildResourceEvent = (spec, id, row, observer) => {
+const buildResourceEvent = (spec, id, row, observer, changes) => {
   const rawName = spec.nameColumn ? row?.[spec.nameColumn] : null,
     resourceName = rawName != null ? String(rawName) : null,
     organizationId = spec.orgVia === "direct" ? row?.organizationId : spec.orgVia === "project" ? row?.project?.organizationId : row?.task?.project?.organizationId;
@@ -5085,6 +5085,9 @@ const buildResourceEvent = (spec, id, row, observer) => {
       id,
       ...(organizationId ? {
         organizationId
+      } : {}),
+      ...(changes && changes.length ? {
+        changes
       } : {}),
       ...eventMeta(observer, spec.entity, resourceName)
     },
@@ -6902,31 +6905,73 @@ ${String(oldPlan48)}`);
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
+const PRIORITY_LABELS = {
+  low: "Low",
+  medium: "Medium",
+  high: "High"
+};
+const buildTaskChanges = (patch, columnTitle) => {
+  if (!patch) return [];
+  const changes = [];
+  if ("columnId" in patch) changes.push({
+    field: "status",
+    label: columnTitle ? `moved this task to ${columnTitle}` : "moved this task"
+  });
+  if ("priority" in patch) {
+    const priority = String(patch.priority ?? "");
+    changes.push({
+      field: "priority",
+      label: `set priority to ${PRIORITY_LABELS[priority] ?? priority}`
+    });
+  }
+  if ("dueDate" in patch) changes.push({
+    field: "dueDate",
+    label: patch.dueDate ? `set the due date to ${String(patch.dueDate).slice(0, 10)}` : "cleared the due date"
+  });
+  if ("content" in patch) changes.push({
+    field: "content",
+    label: "renamed this task"
+  });
+  if ("description" in patch) changes.push({
+    field: "description",
+    label: "edited the description"
+  });
+  return changes;
+};
 const planWrapper48 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $patch = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $patch, $observer, $db], async ([result, rowId, patch, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
-      const repo = db.query["tasks"];
-      if (!repo) return;
-      const row = await repo.findFirst({
+      const row = await db.query.tasks.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("project")
+        }),
+        patchObj = patch ?? {};
+      let columnTitle = null;
+      if ("columnId" in patchObj && patchObj.columnId) columnTitle = (await db.query.columns.findFirst({
         where(fields, operators) {
-          return operators.eq(fields.id, id);
+          return operators.eq(fields.id, patchObj.columnId);
         },
-        with: resourceEventWith("project")
-      });
+        columns: {
+          title: !0
+        }
+      }))?.title ?? null;
       await events.emit(buildResourceEvent({
         entity: "task",
         action: "updated",
         nameColumn: "number",
         orgVia: "project"
-      }, id, row, observer));
+      }, id, row, observer, buildTaskChanges(patchObj, columnTitle)));
     } catch (error) {
-      console.error(`[Events] Failed to emit task.updated:`, error);
+      console.error("[Events] Failed to emit task.updated:", error);
     }
   });
   return $result;
@@ -21657,6 +21702,9 @@ type TaskActivityEntry {
   """Human-readable summary, e.g. "Alice updated task 'MRKT-3'"."""
   summary: String
 
+  """Field-level detail for updates, e.g. "moved this task to Done"."""
+  detail: String
+
   """ISO timestamp the event occurred."""
   occurredAt: String
 
@@ -25689,6 +25737,9 @@ ${String(oldPlan45)}`);
       },
       actorName($entry) {
         return lambda($entry, e => e?.["actorName"] ?? null);
+      },
+      detail($entry) {
+        return lambda($entry, e => e?.["detail"] ?? null);
       },
       id($entry) {
         return lambda($entry, e => e?.["id"] ?? null);

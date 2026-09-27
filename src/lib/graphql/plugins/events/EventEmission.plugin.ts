@@ -6,6 +6,7 @@ import {
   buildResourceEvent,
   resourceEventWith,
 } from "lib/events/resourceEvent";
+import { buildTaskChanges } from "lib/events/taskChanges";
 import { events } from "lib/providers";
 
 import type { OrgVia } from "lib/events/resourceEvent";
@@ -111,6 +112,89 @@ const emitOnMutate = (
   );
 
 /**
+ * Emit a task update event enriched with the specific fields that changed, so the
+ * activity feed can render "moved this task to Done" / "set priority to High"
+ * rather than a useless "updated". Reads the mutation `patch` for the changed
+ * fields and resolves a columnId change into the destination column's title
+ */
+const emitTaskUpdated = (): PlanWrapperFn =>
+  EXPORTABLE(
+    (
+      context,
+      sideEffect,
+      events,
+      buildResourceEvent,
+      resourceEventWith,
+      buildTaskChanges,
+    ): PlanWrapperFn =>
+      (plan, _, fieldArgs) => {
+        const $result = plan();
+        const $rowId = fieldArgs.getRaw(["input", "rowId"]);
+        const $patch = fieldArgs.getRaw(["input", "patch"]);
+        const $observer = context().get("observer");
+        const $db = context().get("db");
+
+        sideEffect(
+          [$result, $rowId, $patch, $observer, $db],
+          async ([result, rowId, patch, observer, db]) => {
+            const id =
+              (result as { id?: string } | null)?.id ??
+              (rowId as string | undefined);
+            if (!id) return;
+
+            try {
+              const row = await db.query.tasks.findFirst({
+                // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
+                where: (fields: any, operators: any) =>
+                  operators.eq(fields.id, id),
+                with: resourceEventWith("project"),
+              });
+
+              const patchObj = (patch ?? {}) as Record<string, unknown>;
+              let columnTitle: string | null = null;
+              if ("columnId" in patchObj && patchObj.columnId) {
+                const column = await db.query.columns.findFirst({
+                  // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
+                  where: (fields: any, operators: any) =>
+                    operators.eq(fields.id, patchObj.columnId),
+                  columns: { title: true },
+                });
+                columnTitle = column?.title ?? null;
+              }
+
+              await events.emit(
+                buildResourceEvent(
+                  {
+                    entity: "task",
+                    action: "updated",
+                    nameColumn: "number",
+                    orgVia: "project",
+                  },
+                  id,
+                  row,
+                  observer,
+                  buildTaskChanges(patchObj, columnTitle),
+                ),
+              );
+            } catch (error) {
+              console.error("[Events] Failed to emit task.updated:", error);
+            }
+          },
+        );
+
+        return $result;
+      },
+    [
+      context,
+      sideEffect,
+      events,
+      buildResourceEvent,
+      resourceEventWith,
+      buildTaskChanges,
+    ],
+  );
+
+/**
  * Event emission plugin for Runa mutations.
  *
  * Emits enriched CloudEvents to Vortex for task, project, label, column, and
@@ -120,7 +204,7 @@ const emitOnMutate = (
 const EventEmissionPlugin = wrapPlans({
   Mutation: {
     createTask: emitOnMutate("task", "created", "tasks", "number", "project"),
-    updateTask: emitOnMutate("task", "updated", "tasks", "number", "project"),
+    updateTask: emitTaskUpdated(),
     deleteTask: emitOnMutate("task", "deleted", "tasks", "number", "project"),
     createProject: emitOnMutate(
       "project",

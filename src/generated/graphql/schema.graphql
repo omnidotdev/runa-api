@@ -13656,6 +13656,9 @@ type TaskActivityEntry {
   """Human-readable summary, e.g. "Alice updated task 'MRKT-3'"."""
   summary: String
 
+  """Field-level detail for updates, e.g. "moved this task to Done"."""
+  detail: String
+
   """ISO timestamp the event occurred."""
   occurredAt: String
 
