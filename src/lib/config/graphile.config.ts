@@ -6,8 +6,6 @@ import { PostGraphileConnectionFilterPreset } from "postgraphile-plugin-connecti
 
 import {
   AssigneePlugin,
-  ChecklistItemPlugin,
-  ChecklistPlugin,
   ColumnPlugin,
   EmojiPlugin,
   LabelPlugin,
@@ -41,7 +39,6 @@ import {
   ProjectSearchPlugin,
   TaskSearchPlugin,
 } from "lib/graphql/plugins/search";
-import ConvertChecklistItemToTaskPlugin from "lib/graphql/plugins/tasks/ConvertChecklistItemToTask.plugin";
 import MoveTaskPlugin from "lib/graphql/plugins/tasks/MoveTask.plugin";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
@@ -62,8 +59,6 @@ const graphilePreset: GraphileConfig.Preset = {
     UserIdResolverPlugin,
     // Authorization plugins (pre-mutation validation)
     AssigneePlugin,
-    ChecklistPlugin,
-    ChecklistItemPlugin,
     ColumnPlugin,
     EmojiPlugin,
     LabelPlugin,
@@ -78,8 +73,6 @@ const graphilePreset: GraphileConfig.Preset = {
     TaskLabelPlugin,
     // Custom moveTask mutation (cross-project move with number reassignment)
     MoveTaskPlugin,
-    // Custom convertChecklistItemToTask mutation (promote a checklist item)
-    ConvertChecklistItemToTaskPlugin,
     // Custom linkPreview query (server-side OpenGraph/favicon unfurl)
     LinkPreviewPlugin,
     UserPlugin,
