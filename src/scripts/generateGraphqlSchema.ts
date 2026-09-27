@@ -23,6 +23,7 @@ import {
   isTransactionalSyncMode,
   writeTuples,
 } from "lib/authz";
+import { fetchTaskActivity } from "lib/chronicle/taskActivity";
 import graphilePreset from "lib/config/graphile.config";
 import { pgPool } from "lib/db/db";
 import { columns, userPreferences, users } from "lib/db/schema";
@@ -168,6 +169,7 @@ const generateGraphqlSchema = async () => {
       "fractional-indexing": { generateNKeysBetween },
       "lib/db/db": { pgPool },
       "lib/tasks/moveTask": { moveTask },
+      "lib/chronicle/taskActivity": { fetchTaskActivity },
       "lib/links/unfurl": { getOrCreateUnfurl },
       "lib/authz": {
         checkPermission,

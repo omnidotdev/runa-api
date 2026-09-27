@@ -61,6 +61,8 @@ export const {
   HERALD_API_URL,
   HERALD_API_KEY,
   HERALD_FROM_EMAIL,
+  // Audit/activity feed (Chronicle). When unset, the task activity feed is empty.
+  CHRONICLE_API_URL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -85,6 +87,9 @@ export const isNotificationsEnabled = !!(
   HERALD_API_KEY &&
   HERALD_FROM_EMAIL
 );
+
+/** Whether the audit/activity feed (Chronicle) is configured */
+export const isAuditEnabled = !!CHRONICLE_API_URL;
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
@@ -112,3 +117,5 @@ if (!isNotificationsEnabled)
   );
 if (!APP_BASE_URL)
   console.warn("APP_BASE_URL not set, task links in emails will be omitted");
+if (!CHRONICLE_API_URL)
+  console.warn("CHRONICLE_API_URL not set, task activity feed disabled");

@@ -40,6 +40,7 @@ import {
   TaskSearchPlugin,
 } from "lib/graphql/plugins/search";
 import MoveTaskPlugin from "lib/graphql/plugins/tasks/MoveTask.plugin";
+import TaskActivityPlugin from "lib/graphql/plugins/tasks/TaskActivity.plugin";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
 /**
@@ -75,6 +76,8 @@ const graphilePreset: GraphileConfig.Preset = {
     MoveTaskPlugin,
     // Custom linkPreview query (server-side OpenGraph/favicon unfurl)
     LinkPreviewPlugin,
+    // Custom taskActivity query (per-task audit feed from Chronicle)
+    TaskActivityPlugin,
     UserPlugin,
     UserPreferencePlugin,
     NotificationPreferencePlugin,

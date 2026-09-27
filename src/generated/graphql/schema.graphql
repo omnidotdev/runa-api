@@ -11946,6 +11946,27 @@ type MoveTaskPayload {
   columnIndex: String
 }
 
+"""Cached link preview metadata for a URL."""
+type LinkPreview {
+  """The requested URL."""
+  url: String
+
+  """Either ok, or error for a cached failure."""
+  status: String
+
+  """Page title (OpenGraph or document title), if any."""
+  title: String
+
+  """Page description (OpenGraph), if any."""
+  description: String
+
+  """OpenGraph image URL, if any."""
+  imageUrl: String
+
+  """Favicon as a size-capped data URI, if fetched."""
+  faviconDataUri: String
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -12853,6 +12874,12 @@ type Query implements Node {
   Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.
   """
   linkPreview(url: String!): LinkPreview
+
+  """
+  Audit/activity trail for a task (most recent first). Requires Member
+  permission on the task's project. Empty when Chronicle is not configured.
+  """
+  taskActivity(taskId: UUID!): [TaskActivityEntry!]
 }
 
 """
@@ -13615,23 +13642,23 @@ type Mutation {
   ): MoveTaskPayload
 }
 
-"""Cached link preview metadata for a URL."""
-type LinkPreview {
-  """The requested URL."""
-  url: String
+"""A single audit/activity entry for a task, sourced from Chronicle."""
+type TaskActivityEntry {
+  """Chronicle event id."""
+  id: String
 
-  """Either ok, or error for a cached failure."""
-  status: String
+  """Machine action, e.g. task.updated."""
+  action: String
 
-  """Page title (OpenGraph or document title), if any."""
-  title: String
+  """Display name of who performed the action, if known."""
+  actorName: String
 
-  """Page description (OpenGraph), if any."""
-  description: String
+  """Human-readable summary, e.g. "Alice updated task 'MRKT-3'"."""
+  summary: String
 
-  """OpenGraph image URL, if any."""
-  imageUrl: String
+  """ISO timestamp the event occurred."""
+  occurredAt: String
 
-  """Favicon as a size-capped data URI, if fetched."""
-  faviconDataUri: String
+  """Relative time for display, e.g. "2 hours ago"."""
+  relativeTime: String
 }

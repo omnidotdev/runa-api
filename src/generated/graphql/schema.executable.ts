@@ -4,6 +4,7 @@ import { generateNKeysBetween } from "fractional-indexing";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, markSyncAndSafe, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, isTransactionalSyncMode, writeTuples } from "lib/authz";
+import { fetchTaskActivity } from "lib/chronicle/taskActivity";
 import { pgPool } from "lib/db/db";
 import { columns, userPreferences, users } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
@@ -19946,6 +19947,27 @@ type MoveTaskPayload {
   columnIndex: String
 }
 
+"""Cached link preview metadata for a URL."""
+type LinkPreview {
+  """The requested URL."""
+  url: String
+
+  """Either ok, or error for a cached failure."""
+  status: String
+
+  """Page title (OpenGraph or document title), if any."""
+  title: String
+
+  """Page description (OpenGraph), if any."""
+  description: String
+
+  """OpenGraph image URL, if any."""
+  imageUrl: String
+
+  """Favicon as a size-capped data URI, if fetched."""
+  faviconDataUri: String
+}
+
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -20853,6 +20875,12 @@ type Query implements Node {
   Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.
   """
   linkPreview(url: String!): LinkPreview
+
+  """
+  Audit/activity trail for a task (most recent first). Requires Member
+  permission on the task's project. Empty when Chronicle is not configured.
+  """
+  taskActivity(taskId: UUID!): [TaskActivityEntry!]
 }
 
 """
@@ -21615,25 +21643,25 @@ type Mutation {
   ): MoveTaskPayload
 }
 
-"""Cached link preview metadata for a URL."""
-type LinkPreview {
-  """The requested URL."""
-  url: String
+"""A single audit/activity entry for a task, sourced from Chronicle."""
+type TaskActivityEntry {
+  """Chronicle event id."""
+  id: String
 
-  """Either ok, or error for a cached failure."""
-  status: String
+  """Machine action, e.g. task.updated."""
+  action: String
 
-  """Page title (OpenGraph or document title), if any."""
-  title: String
+  """Display name of who performed the action, if known."""
+  actorName: String
 
-  """Page description (OpenGraph), if any."""
-  description: String
+  """Human-readable summary, e.g. "Alice updated task 'MRKT-3'"."""
+  summary: String
 
-  """OpenGraph image URL, if any."""
-  imageUrl: String
+  """ISO timestamp the event occurred."""
+  occurredAt: String
 
-  """Favicon as a size-capped data URI, if fetched."""
-  faviconDataUri: String
+  """Relative time for display, e.g. "2 hours ago"."""
+  relativeTime: String
 }`;
 export const objects = {
   Query: {
@@ -22065,6 +22093,24 @@ export const objects = {
         return spec_resource_taskPgResource.get({
           id: $rowId
         });
+      },
+      taskActivity(_$root, fieldArgs) {
+        const $taskId = fieldArgs.getRaw("taskId"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $taskId], async ([observer, accessToken, authzCache, taskId]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          const row = (await pgPool.query(`SELECT p.id AS project_id, p.organization_id
+                   FROM task t JOIN project p ON p.id = t.project_id
+                   WHERE t.id = $1`, [taskId])).rows[0];
+          if (!row) throw Error("Task not found");
+          if (!(await checkPermission(observer.identityProviderId, "project", row.project_id, "member", accessToken, authzCache))) throw Error("Unauthorized");
+          return fetchTaskActivity({
+            organizationId: row.organization_id,
+            taskId
+          });
+        }, !1);
       },
       taskById(_$parent, args) {
         const $nodeId = args.getRaw("id");
@@ -25634,6 +25680,28 @@ ${String(oldPlan45)}`);
       const spec = Object.create(null);
       for (const pkCol of taskUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
       return spec_resource_taskPgResource.get(spec);
+    }
+  },
+  TaskActivityEntry: {
+    plans: {
+      action($entry) {
+        return lambda($entry, e => e?.["action"] ?? null);
+      },
+      actorName($entry) {
+        return lambda($entry, e => e?.["actorName"] ?? null);
+      },
+      id($entry) {
+        return lambda($entry, e => e?.["id"] ?? null);
+      },
+      occurredAt($entry) {
+        return lambda($entry, e => e?.["occurredAt"] ?? null);
+      },
+      relativeTime($entry) {
+        return lambda($entry, e => e?.["relativeTime"] ?? null);
+      },
+      summary($entry) {
+        return lambda($entry, e => e?.["summary"] ?? null);
+      }
     }
   },
   TaskAggregates: {
