@@ -16,11 +16,14 @@ import { generateNKeysBetween } from "fractional-indexing";
 import { dbPool } from "lib/db/db";
 import { projectColumns, settings } from "lib/db/schema";
 
+// Moon-phase icons matching the board's default task columns (see
+// DefaultColumns.plugin). Icons use the `emoji:` provider prefix required by the
+// client icon parser (a bare emoji renders nothing).
 /** Default project columns provisioned for every organization. */
 const DEFAULT_PROJECT_COLUMNS = [
-  { icon: "🗓", title: "Planned" },
-  { icon: "🚧", title: "In Progress" },
-  { icon: "✅", title: "Completed" },
+  { icon: "emoji:🌒", title: "Planned" },
+  { icon: "emoji:🌓", title: "In Progress" },
+  { icon: "emoji:🌕", title: "Completed" },
 ] as const;
 
 /**
