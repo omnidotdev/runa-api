@@ -4919,7 +4919,7 @@ const allFields2 = [{
 function applyInputToInsert(_, $object) {
   return $object;
 }
-function oldPlan(_, args) {
+function oldPlan2(_, args) {
   const $insert = pgInsertSingle(spec_resource_task_labelPgResource);
   args.apply($insert);
   return object({
@@ -4951,14 +4951,132 @@ const planWrapper = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan4(_, args) {
+function oldPlan(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan2.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.createTaskLabel, but that function did not return a step!
+${String(oldPlan2)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const eventMeta = (observer, resourceType, resourceName) => ({
+  resourceType,
+  ...(resourceName != null ? {
+    resourceName
+  } : {}),
+  ...(observer ? {
+    actorId: observer.id,
+    actorIdpId: observer.identityProviderId,
+    actorName: observer.name,
+    actorEmail: observer.email
+  } : {})
+});
+const buildResourceEvent = (spec, id, row, observer, changes) => {
+  const rawName = spec.nameColumn ? row?.[spec.nameColumn] : null,
+    resourceName = rawName != null ? String(rawName) : null,
+    organizationId = spec.orgVia === "direct" ? row?.organizationId : spec.orgVia === "project" ? row?.project?.organizationId : row?.task?.project?.organizationId;
+  return {
+    type: `runa.${spec.entity}.${spec.action}`,
+    data: {
+      id,
+      ...(organizationId ? {
+        organizationId
+      } : {}),
+      ...(changes && changes.length ? {
+        changes
+      } : {}),
+      ...eventMeta(observer, spec.entity, resourceName)
+    },
+    ...(organizationId ? {
+      organizationId
+    } : {}),
+    subject: id
+  };
+};
+const resourceEventWith = orgVia => orgVia === "project" ? {
+  project: {
+    columns: {
+      organizationId: !0
+    }
+  }
+} : orgVia === "task" ? {
+  task: {
+    with: {
+      project: {
+        columns: {
+          organizationId: !0
+        }
+      }
+    }
+  }
+} : void 0;
+const buildAssocChange = (entity, action, name) => {
+  if (!name) return [];
+  if (entity === "assignee") return [{
+    field: "assignees",
+    label: action === "created" ? `assigned ${name}` : `unassigned ${name}`
+  }];
+  return [{
+    field: "labels",
+    label: action === "created" ? `added the ${name} label` : `removed the ${name} label`
+  }];
+};
+const taskIdPath = ["input", "taskLabel", "taskId"];
+const assocIdPath = ["input", "taskLabel", "labelId"];
+const planWrapper2 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $taskId = fieldArgs.getRaw(taskIdPath),
+    $assocId = fieldArgs.getRaw(assocIdPath),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $taskId, $assocId, $observer, $db], async ([, taskId, assocId, observer, db]) => {
+    if (!taskId) return;
+    try {
+      const row = await db.query.tasks.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, taskId);
+          },
+          with: resourceEventWith("project")
+        }),
+        assocRepo = db.query["labels"],
+        name = (assocId && assocRepo ? await assocRepo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, assocId);
+          },
+          columns: {
+            name: !0
+          }
+        }) : null)?.name ?? null;
+      await events.emit(buildResourceEvent({
+        entity: "task_label",
+        action: "created",
+        nameColumn: null,
+        orgVia: "project"
+      }, taskId, row, observer, buildAssocChange("task_label", "created", name)));
+    } catch (error) {
+      console.error(`[Events] Failed to emit task_label.created:`, error);
+    }
+  });
+  return $result;
+};
+function oldPlan6(_, args) {
   const $insert = pgInsertSingle(spec_resource_assigneePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper2 = (plan, _, fieldArgs) => {
+const planWrapper3 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "assignee"]),
     $db = context().get("db");
   sideEffect([$input, $db], async ([input, db]) => {
@@ -4998,25 +5116,25 @@ const planWrapper2 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan3(...planParams) {
+function oldPlan5(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan4.apply(this, args);
+        $prev = oldPlan6.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createAssignee, but that function did not return a step!
-${String(oldPlan4)}`);
+${String(oldPlan6)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper2(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper3(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper3 = (plan, _, fieldArgs) => {
+const planWrapper4 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "assignee"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5045,59 +5163,81 @@ const planWrapper3 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan2(...planParams) {
+function oldPlan4(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan3.apply(this, args);
+        $prev = oldPlan5.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createAssignee, but that function did not return a step!
-${String(oldPlan3)}`);
+${String(oldPlan5)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper3(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper4(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const eventMeta = (observer, resourceType, resourceName) => ({
-  resourceType,
-  ...(resourceName != null ? {
-    resourceName
-  } : {}),
-  ...(observer ? {
-    actorId: observer.id,
-    actorIdpId: observer.identityProviderId,
-    actorName: observer.name,
-    actorEmail: observer.email
-  } : {})
-});
-const buildResourceEvent = (spec, id, row, observer, changes) => {
-  const rawName = spec.nameColumn ? row?.[spec.nameColumn] : null,
-    resourceName = rawName != null ? String(rawName) : null,
-    organizationId = spec.orgVia === "direct" ? row?.organizationId : spec.orgVia === "project" ? row?.project?.organizationId : row?.task?.project?.organizationId;
-  return {
-    type: `runa.${spec.entity}.${spec.action}`,
-    data: {
-      id,
-      ...(organizationId ? {
-        organizationId
-      } : {}),
-      ...(changes && changes.length ? {
-        changes
-      } : {}),
-      ...eventMeta(observer, spec.entity, resourceName)
-    },
-    ...(organizationId ? {
-      organizationId
-    } : {}),
-    subject: id
-  };
+const taskIdPath2 = ["input", "assignee", "taskId"];
+const assocIdPath2 = ["input", "assignee", "userId"];
+const planWrapper5 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $taskId = fieldArgs.getRaw(taskIdPath2),
+    $assocId = fieldArgs.getRaw(assocIdPath2),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $taskId, $assocId, $observer, $db], async ([, taskId, assocId, observer, db]) => {
+    if (!taskId) return;
+    try {
+      const row = await db.query.tasks.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, taskId);
+          },
+          with: resourceEventWith("project")
+        }),
+        assocRepo = db.query["users"],
+        name = (assocId && assocRepo ? await assocRepo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, assocId);
+          },
+          columns: {
+            name: !0
+          }
+        }) : null)?.name ?? null;
+      await events.emit(buildResourceEvent({
+        entity: "assignee",
+        action: "created",
+        nameColumn: null,
+        orgVia: "project"
+      }, taskId, row, observer, buildAssocChange("assignee", "created", name)));
+    } catch (error) {
+      console.error(`[Events] Failed to emit assignee.created:`, error);
+    }
+  });
+  return $result;
 };
-const planWrapper4 = (plan, _, fieldArgs) => {
+function oldPlan3(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan4.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.createAssignee, but that function did not return a step!
+${String(oldPlan4)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper6 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "assignee"]),
     $observer = context().get("observer"),
@@ -5195,14 +5335,14 @@ const planWrapper4 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan5(_, args) {
+function oldPlan7(_, args) {
   const $insert = pgInsertSingle(spec_resource_emojiPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper5 = (plan, _, fieldArgs) => {
+const planWrapper7 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "emoji"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5233,14 +5373,14 @@ const planWrapper5 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan6(_, args) {
+function oldPlan8(_, args) {
   const $insert = pgInsertSingle(spec_resource_userPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper6 = (plan, _, fieldArgs) => {
+const planWrapper8 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "user"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -5249,14 +5389,14 @@ const planWrapper6 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan7(_, args) {
+function oldPlan9(_, args) {
   const $insert = pgInsertSingle(spec_resource_notification_preferencePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper7 = (plan, _, fieldArgs) => {
+const planWrapper9 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "notificationPreference"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5266,14 +5406,14 @@ const planWrapper7 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan10(_, args) {
+function oldPlan12(_, args) {
   const $insert = pgInsertSingle(spec_resource_columnPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper8 = (plan, _, fieldArgs) => {
+const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "column"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5303,27 +5443,27 @@ const planWrapper8 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan9(...planParams) {
+function oldPlan11(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan10.apply(this, args);
+        $prev = oldPlan12.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan10)}`);
+${String(oldPlan12)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper8(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const shouldBlock = result => result.matchedTerms.length > 0 || result.score >= 0.9;
 const fields = ["title"];
-const planWrapper9 = (plan, _, fieldArgs) => {
+const planWrapper11 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "column"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -5341,42 +5481,25 @@ const planWrapper9 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan8(...planParams) {
+function oldPlan10(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan9.apply(this, args);
+        $prev = oldPlan11.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan9)}`);
+${String(oldPlan11)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const resourceEventWith = orgVia => orgVia === "project" ? {
-  project: {
-    columns: {
-      organizationId: !0
-    }
-  }
-} : orgVia === "task" ? {
-  task: {
-    with: {
-      project: {
-        columns: {
-          organizationId: !0
-        }
-      }
-    }
-  }
-} : void 0;
-const planWrapper10 = (plan, _, fieldArgs) => {
+const planWrapper12 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = constant(void 0),
     $observer = context().get("observer"),
@@ -5405,14 +5528,14 @@ const planWrapper10 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan14(_, args) {
+function oldPlan16(_, args) {
   const $insert = pgInsertSingle(spec_resource_postPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper11 = (plan, _, fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "post"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5439,26 +5562,26 @@ const planWrapper11 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan13(...planParams) {
+function oldPlan15(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan14.apply(this, args);
+        $prev = oldPlan16.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan14)}`);
+${String(oldPlan16)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields2 = ["title", "description"];
-const planWrapper12 = (plan, _, fieldArgs) => {
+const planWrapper14 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "post"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -5476,25 +5599,25 @@ const planWrapper12 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan12(...planParams) {
+function oldPlan14(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan13.apply(this, args);
+        $prev = oldPlan15.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan13)}`);
+${String(oldPlan15)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper13 = (plan, _, fieldArgs) => {
+const planWrapper15 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = constant(void 0),
     $observer = context().get("observer"),
@@ -5503,45 +5626,45 @@ const planWrapper13 = (plan, _, fieldArgs) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
-      const repo = db.query["posts"];
-      if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("task")
-      });
+      const post = await db.query.posts.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("task")
+        }),
+        taskId = post?.taskId;
+      if (!taskId) return;
       await events.emit(buildResourceEvent({
         entity: "post",
         action: "created",
-        nameColumn: "title",
+        nameColumn: null,
         orgVia: "task"
-      }, id, row, observer));
+      }, taskId, post, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit post.created:`, error);
     }
   });
   return $result;
 };
-function oldPlan11(...planParams) {
+function oldPlan13(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan12.apply(this, args);
+        $prev = oldPlan14.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan12)}`);
+${String(oldPlan14)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper14 = (plan, $record) => {
+const planWrapper16 = (plan, $record) => {
   if (!false) return plan();
   const $db = context().get("db");
   sideEffect([$record, $db], async ([record, db]) => {
@@ -5564,14 +5687,14 @@ const planWrapper14 = (plan, $record) => {
   });
   return plan();
 };
-function oldPlan15(_, args) {
+function oldPlan17(_, args) {
   const $insert = pgInsertSingle(spec_resource_project_columnPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper15 = (plan, _, fieldArgs) => {
+const planWrapper17 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "projectColumn"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5587,14 +5710,14 @@ const planWrapper15 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan17(_, args) {
+function oldPlan19(_, args) {
   const $insert = pgInsertSingle(spec_resource_labelPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper16 = (plan, _, fieldArgs) => {
+const planWrapper18 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "label"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5644,25 +5767,25 @@ const planWrapper16 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan16(...planParams) {
+function oldPlan18(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan17.apply(this, args);
+        $prev = oldPlan19.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createLabel, but that function did not return a step!
-${String(oldPlan17)}`);
+${String(oldPlan19)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper17 = (plan, _, fieldArgs) => {
+const planWrapper19 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = constant(void 0),
     $observer = context().get("observer"),
@@ -5691,14 +5814,14 @@ const planWrapper17 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan18(_, args) {
+function oldPlan20(_, args) {
   const $insert = pgInsertSingle(spec_resource_project_linkPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper18 = (plan, _, fieldArgs) => {
+const planWrapper20 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "projectLink"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5714,14 +5837,14 @@ const planWrapper18 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan19(_, args) {
+function oldPlan21(_, args) {
   const $insert = pgInsertSingle(spec_resource_user_preferencePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper19 = (plan, _, fieldArgs) => {
+const planWrapper21 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "userPreference"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -5731,14 +5854,14 @@ const planWrapper19 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan23(_, args) {
+function oldPlan25(_, args) {
   const $insert = pgInsertSingle(spec_resource_taskPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper20 = (plan, _, fieldArgs) => {
+const planWrapper22 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "task"]),
     $patch = constant(null),
     $observer = context().get("observer"),
@@ -5775,26 +5898,26 @@ const planWrapper20 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan22(...planParams) {
+function oldPlan24(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan23.apply(this, args);
+        $prev = oldPlan25.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan23)}`);
+${String(oldPlan25)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields3 = ["content", "description"];
-const planWrapper21 = (plan, _, fieldArgs) => {
+const planWrapper23 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "task"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -5812,25 +5935,25 @@ const planWrapper21 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan21(...planParams) {
+function oldPlan23(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan22.apply(this, args);
+        $prev = oldPlan24.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan22)}`);
+${String(oldPlan24)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper22 = (plan, _, fieldArgs) => {
+const planWrapper24 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = constant(void 0),
     $observer = context().get("observer"),
@@ -5859,25 +5982,25 @@ const planWrapper22 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan20(...planParams) {
+function oldPlan22(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan21.apply(this, args);
+        $prev = oldPlan23.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan21)}`);
+${String(oldPlan23)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper23 = (plan, $record) => {
+const planWrapper25 = (plan, $record) => {
   if (!false) return plan();
   const $db = context().get("db");
   sideEffect([$record, $db], async ([record, db]) => {
@@ -5896,14 +6019,14 @@ const planWrapper23 = (plan, $record) => {
   });
   return plan();
 };
-function oldPlan30(_, args) {
+function oldPlan32(_, args) {
   const $insert = pgInsertSingle(spec_resource_projectPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper24 = (plan, _, fieldArgs) => {
+const planWrapper26 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "project"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5936,26 +6059,26 @@ const planWrapper24 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan29(...planParams) {
+function oldPlan31(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan30.apply(this, args);
+        $prev = oldPlan32.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan30)}`);
+${String(oldPlan32)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields4 = ["description"];
-const planWrapper25 = (plan, _, fieldArgs) => {
+const planWrapper27 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "project"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -5973,25 +6096,25 @@ const planWrapper25 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan28(...planParams) {
+function oldPlan30(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan29.apply(this, args);
+        $prev = oldPlan31.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan29)}`);
+${String(oldPlan31)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper26 = (plan, _, fieldArgs) => {
+const planWrapper28 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $input = fieldArgs.getRaw(["input", "project"]),
     $accessToken = context().get("accessToken"),
@@ -6018,20 +6141,20 @@ const planWrapper26 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan27(...planParams) {
+function oldPlan29(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan28.apply(this, args);
+        $prev = oldPlan30.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan28)}`);
+${String(oldPlan30)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -6052,7 +6175,7 @@ const DEFAULT_COLUMNS = [{
   title: "Done",
   icon: "emoji:\uD83C\uDF15"
 }];
-const planWrapper27 = plan => {
+const planWrapper29 = plan => {
   const $result = plan(),
     $db = context().get("db"),
     $projectId = $result.getStepForKey("result").get("id");
@@ -6068,25 +6191,25 @@ const planWrapper27 = plan => {
   });
   return $result;
 };
-function oldPlan26(...planParams) {
+function oldPlan28(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan27.apply(this, args);
+        $prev = oldPlan29.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan27)}`);
+${String(oldPlan29)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper28 = plan => {
+const planWrapper30 = plan => {
   const $result = plan(),
     $db = context().get("db"),
     $observer = context().get("observer"),
@@ -6100,25 +6223,25 @@ const planWrapper28 = plan => {
   });
   return $result;
 };
-function oldPlan25(...planParams) {
+function oldPlan27(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan26.apply(this, args);
+        $prev = oldPlan28.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan26)}`);
+${String(oldPlan28)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper29 = (plan, _, fieldArgs) => {
+const planWrapper31 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = constant(void 0),
     $observer = context().get("observer"),
@@ -6147,25 +6270,25 @@ const planWrapper29 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan24(...planParams) {
+function oldPlan26(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan25.apply(this, args);
+        $prev = oldPlan27.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan25)}`);
+${String(oldPlan27)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper30 = (plan, $record) => {
+const planWrapper32 = (plan, $record) => {
   if (!false) return plan();
   const $db = context().get("db");
   sideEffect([$record, $db], async ([record, db]) => {
@@ -6204,7 +6327,7 @@ const specFromArgs_Emoji = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
 };
-const oldPlan31 = (_$root, args) => {
+const oldPlan33 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_emojiPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6213,7 +6336,7 @@ const oldPlan31 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper31 = (plan, _, fieldArgs) => {
+const planWrapper33 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6251,7 +6374,7 @@ const specFromArgs_User = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan32 = (_$root, args) => {
+const oldPlan34 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6260,7 +6383,7 @@ const oldPlan32 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper32 = (plan, _, fieldArgs) => {
+const planWrapper34 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -6273,7 +6396,7 @@ const specFromArgs_NotificationPreference = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_NotificationPreference, $nodeId);
 };
-const oldPlan33 = (_$root, args) => {
+const oldPlan35 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_notification_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6282,7 +6405,7 @@ const oldPlan33 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper33 = (plan, _, fieldArgs) => {
+const planWrapper35 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -6306,7 +6429,7 @@ const specFromArgs_Column = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Column, $nodeId);
 };
-const oldPlan36 = (_$root, args) => {
+const oldPlan38 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6315,7 +6438,7 @@ const oldPlan36 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper34 = (plan, _, fieldArgs) => {
+const planWrapper36 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6341,26 +6464,26 @@ const planWrapper34 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan35(...planParams) {
+function oldPlan37(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan36.apply(this, args);
+        $prev = oldPlan38.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan36)}`);
+${String(oldPlan38)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields5 = ["title"];
-const planWrapper35 = (plan, _, fieldArgs) => {
+const planWrapper37 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -6378,25 +6501,25 @@ const planWrapper35 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan34(...planParams) {
+function oldPlan36(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan35.apply(this, args);
+        $prev = oldPlan37.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan35)}`);
+${String(oldPlan37)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper36 = (plan, _, fieldArgs) => {
+const planWrapper38 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -6429,7 +6552,7 @@ const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan40 = (_$root, args) => {
+const oldPlan42 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6438,7 +6561,7 @@ const oldPlan40 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper37 = (plan, _, fieldArgs) => {
+const planWrapper39 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6468,26 +6591,26 @@ const planWrapper37 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan39(...planParams) {
+function oldPlan41(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan40.apply(this, args);
+        $prev = oldPlan42.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan40)}`);
+${String(oldPlan42)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields6 = ["title", "description"];
-const planWrapper38 = (plan, _, fieldArgs) => {
+const planWrapper40 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -6505,25 +6628,25 @@ const planWrapper38 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan38(...planParams) {
+function oldPlan40(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan39.apply(this, args);
+        $prev = oldPlan41.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan39)}`);
+${String(oldPlan41)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper39 = (plan, _, fieldArgs) => {
+const planWrapper41 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -6532,40 +6655,40 @@ const planWrapper39 = (plan, _, fieldArgs) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
-      const repo = db.query["posts"];
-      if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("task")
-      });
+      const post = await db.query.posts.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("task")
+        }),
+        taskId = post?.taskId;
+      if (!taskId) return;
       await events.emit(buildResourceEvent({
         entity: "post",
         action: "updated",
-        nameColumn: "title",
+        nameColumn: null,
         orgVia: "task"
-      }, id, row, observer));
+      }, taskId, post, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit post.updated:`, error);
     }
   });
   return $result;
 };
-function oldPlan37(...planParams) {
+function oldPlan39(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan38.apply(this, args);
+        $prev = oldPlan40.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan38)}`);
+${String(oldPlan40)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -6574,7 +6697,7 @@ const specFromArgs_ProjectColumn = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
 };
-const oldPlan41 = (_$root, args) => {
+const oldPlan43 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6583,7 +6706,7 @@ const oldPlan41 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper41 = (plan, _, fieldArgs) => {
+const planWrapper43 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6617,7 +6740,7 @@ const specFromArgs_Label = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Label, $nodeId);
 };
-const oldPlan43 = (_$root, args) => {
+const oldPlan45 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6626,7 +6749,7 @@ const oldPlan43 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper42 = (plan, _, fieldArgs) => {
+const planWrapper44 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6657,25 +6780,25 @@ const planWrapper42 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan42(...planParams) {
+function oldPlan44(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan43.apply(this, args);
+        $prev = oldPlan45.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateLabel, but that function did not return a step!
-${String(oldPlan43)}`);
+${String(oldPlan45)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper42(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper44(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper43 = (plan, _, fieldArgs) => {
+const planWrapper45 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -6708,7 +6831,7 @@ const specFromArgs_ProjectLink = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectLink, $nodeId);
 };
-const oldPlan44 = (_$root, args) => {
+const oldPlan46 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_project_linkPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6717,7 +6840,7 @@ const oldPlan44 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper44 = (plan, _, fieldArgs) => {
+const planWrapper46 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6747,7 +6870,7 @@ const specFromArgs_UserPreference = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
 };
-const oldPlan45 = (_$root, args) => {
+const oldPlan47 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6756,7 +6879,7 @@ const oldPlan45 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper45 = (plan, _, fieldArgs) => {
+const planWrapper47 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -6788,7 +6911,7 @@ const specFromArgs_Task = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Task, $nodeId);
 };
-const oldPlan49 = (_$root, args) => {
+const oldPlan51 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -6797,7 +6920,7 @@ const oldPlan49 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper46 = (plan, _, fieldArgs) => {
+const planWrapper48 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
@@ -6850,26 +6973,26 @@ const planWrapper46 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan48(...planParams) {
+function oldPlan50(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan49.apply(this, args);
+        $prev = oldPlan51.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan49)}`);
+${String(oldPlan51)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper46(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper48(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields7 = ["content", "description"];
-const planWrapper47 = (plan, _, fieldArgs) => {
+const planWrapper49 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -6887,20 +7010,20 @@ const planWrapper47 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan47(...planParams) {
+function oldPlan49(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan48.apply(this, args);
+        $prev = oldPlan50.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan48)}`);
+${String(oldPlan50)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper47(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper49(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -6938,7 +7061,7 @@ const buildTaskChanges = (patch, columnTitle) => {
   });
   return changes;
 };
-const planWrapper48 = (plan, _, fieldArgs) => {
+const planWrapper50 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
@@ -6976,20 +7099,20 @@ const planWrapper48 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan46(...planParams) {
+function oldPlan48(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan47.apply(this, args);
+        $prev = oldPlan49.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan47)}`);
+${String(oldPlan49)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper48(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper50(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -6998,7 +7121,7 @@ const specFromArgs_Project = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
 };
-const oldPlan54 = (_$root, args) => {
+const oldPlan56 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7007,7 +7130,7 @@ const oldPlan54 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper50 = (plan, _, fieldArgs) => {
+const planWrapper52 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7024,26 +7147,26 @@ const planWrapper50 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan53(...planParams) {
+function oldPlan55(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan54.apply(this, args);
+        $prev = oldPlan56.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan54)}`);
+${String(oldPlan56)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper50(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper52(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields8 = ["description"];
-const planWrapper51 = (plan, _, fieldArgs) => {
+const planWrapper53 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -7061,25 +7184,25 @@ const planWrapper51 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan52(...planParams) {
+function oldPlan54(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan53.apply(this, args);
+        $prev = oldPlan55.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan53)}`);
+${String(oldPlan55)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper51(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper53(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper52 = (plan, _, fieldArgs) => {
+const planWrapper54 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -7108,25 +7231,25 @@ const planWrapper52 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan51(...planParams) {
+function oldPlan53(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan52.apply(this, args);
+        $prev = oldPlan54.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan52)}`);
+${String(oldPlan54)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper52(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper54(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper53 = (plan, _, fieldArgs) => {
+const planWrapper55 = (plan, _, fieldArgs) => {
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
     $db = context().get("db"),
@@ -7150,25 +7273,25 @@ const planWrapper53 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan50(...planParams) {
+function oldPlan52(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan51.apply(this, args);
+        $prev = oldPlan53.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan51)}`);
+${String(oldPlan53)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper53(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const oldPlan55 = (_$root, args) => {
+const oldPlan58 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_task_labelPgResource, {
     task_id: args.getRaw(['input', "taskId"]),
     label_id: args.getRaw(['input', "labelId"])
@@ -7178,7 +7301,7 @@ const oldPlan55 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper55 = (plan, _, fieldArgs) => {
+const planWrapper57 = (plan, _, fieldArgs) => {
   const $taskId = fieldArgs.getRaw(["input", "taskId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7202,7 +7325,63 @@ const planWrapper55 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan57 = (_$root, args) => {
+function oldPlan57(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan58.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.deleteTaskLabel, but that function did not return a step!
+${String(oldPlan58)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const taskIdPath3 = ["input", "taskId"];
+const assocIdPath3 = ["input", "labelId"];
+const planWrapper58 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $taskId = fieldArgs.getRaw(taskIdPath3),
+    $assocId = fieldArgs.getRaw(assocIdPath3),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $taskId, $assocId, $observer, $db], async ([, taskId, assocId, observer, db]) => {
+    if (!taskId) return;
+    try {
+      const row = await db.query.tasks.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, taskId);
+          },
+          with: resourceEventWith("project")
+        }),
+        assocRepo = db.query["labels"],
+        name = (assocId && assocRepo ? await assocRepo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, assocId);
+          },
+          columns: {
+            name: !0
+          }
+        }) : null)?.name ?? null;
+      await events.emit(buildResourceEvent({
+        entity: "task_label",
+        action: "deleted",
+        nameColumn: null,
+        orgVia: "project"
+      }, taskId, row, observer, buildAssocChange("task_label", "deleted", name)));
+    } catch (error) {
+      console.error(`[Events] Failed to emit task_label.deleted:`, error);
+    }
+  });
+  return $result;
+};
+const oldPlan61 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_assigneePgResource, {
     task_id: args.getRaw(['input', "taskId"]),
     user_id: args.getRaw(['input', "userId"])
@@ -7212,7 +7391,7 @@ const oldPlan57 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper56 = (plan, _, fieldArgs) => {
+const planWrapper59 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input"]),
     $db = context().get("db");
   sideEffect([$input, $db], async ([input, db]) => {
@@ -7243,25 +7422,81 @@ const planWrapper56 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan56(...planParams) {
+function oldPlan60(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan57.apply(this, args);
+        $prev = oldPlan61.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteAssignee, but that function did not return a step!
-${String(oldPlan57)}`);
+${String(oldPlan61)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const oldPlan58 = (_$root, args) => {
+function oldPlan59(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan60.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.deleteAssignee, but that function did not return a step!
+${String(oldPlan60)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const taskIdPath4 = ["input", "taskId"];
+const assocIdPath4 = ["input", "userId"];
+const planWrapper61 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $taskId = fieldArgs.getRaw(taskIdPath4),
+    $assocId = fieldArgs.getRaw(assocIdPath4),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $taskId, $assocId, $observer, $db], async ([, taskId, assocId, observer, db]) => {
+    if (!taskId) return;
+    try {
+      const row = await db.query.tasks.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, taskId);
+          },
+          with: resourceEventWith("project")
+        }),
+        assocRepo = db.query["users"],
+        name = (assocId && assocRepo ? await assocRepo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, assocId);
+          },
+          columns: {
+            name: !0
+          }
+        }) : null)?.name ?? null;
+      await events.emit(buildResourceEvent({
+        entity: "assignee",
+        action: "deleted",
+        nameColumn: null,
+        orgVia: "project"
+      }, taskId, row, observer, buildAssocChange("assignee", "deleted", name)));
+    } catch (error) {
+      console.error(`[Events] Failed to emit assignee.deleted:`, error);
+    }
+  });
+  return $result;
+};
+const oldPlan62 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_emojiPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7270,7 +7505,7 @@ const oldPlan58 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper58 = (plan, _, fieldArgs) => {
+const planWrapper62 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7304,7 +7539,7 @@ const planWrapper58 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan59 = (_$root, args) => {
+const oldPlan63 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7313,7 +7548,7 @@ const oldPlan59 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper59 = (plan, _, fieldArgs) => {
+const planWrapper63 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -7322,7 +7557,7 @@ const planWrapper59 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan60 = (_$root, args) => {
+const oldPlan64 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_notification_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7331,7 +7566,7 @@ const oldPlan60 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper60 = (plan, _, fieldArgs) => {
+const planWrapper64 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -7351,7 +7586,7 @@ const planWrapper60 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan62 = (_$root, args) => {
+const oldPlan66 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7360,7 +7595,7 @@ const oldPlan62 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper61 = (plan, _, fieldArgs) => {
+const planWrapper65 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7386,25 +7621,25 @@ const planWrapper61 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan61(...planParams) {
+function oldPlan65(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan62.apply(this, args);
+        $prev = oldPlan66.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteColumn, but that function did not return a step!
-${String(oldPlan62)}`);
+${String(oldPlan66)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper61(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper65(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper62 = (plan, _, fieldArgs) => {
+const planWrapper66 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -7433,7 +7668,7 @@ const planWrapper62 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan65 = (_$root, args) => {
+const oldPlan69 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7442,7 +7677,7 @@ const oldPlan65 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper63 = (plan, _, fieldArgs) => {
+const planWrapper67 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7472,25 +7707,25 @@ const planWrapper63 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan64(...planParams) {
+function oldPlan68(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan65.apply(this, args);
+        $prev = oldPlan69.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan65)}`);
+${String(oldPlan69)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper63(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper67(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper64 = (plan, _, fieldArgs) => {
+const planWrapper68 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -7499,45 +7734,45 @@ const planWrapper64 = (plan, _, fieldArgs) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
-      const repo = db.query["posts"];
-      if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("task")
-      });
+      const post = await db.query.posts.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("task")
+        }),
+        taskId = post?.taskId;
+      if (!taskId) return;
       await events.emit(buildResourceEvent({
         entity: "post",
         action: "deleted",
-        nameColumn: "title",
+        nameColumn: null,
         orgVia: "task"
-      }, id, row, observer));
+      }, taskId, post, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit post.deleted:`, error);
     }
   });
   return $result;
 };
-function oldPlan63(...planParams) {
+function oldPlan67(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan64.apply(this, args);
+        $prev = oldPlan68.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan64)}`);
+${String(oldPlan68)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper64(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper68(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper65 = (plan, _, fieldArgs) => {
+const planWrapper69 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([postId]) => {
@@ -7545,7 +7780,7 @@ const planWrapper65 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan66 = (_$root, args) => {
+const oldPlan70 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7554,7 +7789,7 @@ const oldPlan66 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper66 = (plan, _, fieldArgs) => {
+const planWrapper70 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7580,7 +7815,7 @@ const planWrapper66 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan68 = (_$root, args) => {
+const oldPlan72 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7589,7 +7824,7 @@ const oldPlan68 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper67 = (plan, _, fieldArgs) => {
+const planWrapper71 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7620,25 +7855,25 @@ const planWrapper67 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan67(...planParams) {
+function oldPlan71(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan68.apply(this, args);
+        $prev = oldPlan72.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteLabel, but that function did not return a step!
-${String(oldPlan68)}`);
+${String(oldPlan72)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper67(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper71(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper68 = (plan, _, fieldArgs) => {
+const planWrapper72 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -7667,7 +7902,7 @@ const planWrapper68 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan69 = (_$root, args) => {
+const oldPlan73 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_project_linkPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7676,7 +7911,7 @@ const oldPlan69 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper69 = (plan, _, fieldArgs) => {
+const planWrapper73 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7702,7 +7937,7 @@ const planWrapper69 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan70 = (_$root, args) => {
+const oldPlan74 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7711,7 +7946,7 @@ const oldPlan70 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper70 = (plan, _, fieldArgs) => {
+const planWrapper74 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -7731,7 +7966,7 @@ const planWrapper70 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan73 = (_$root, args) => {
+const oldPlan77 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7740,7 +7975,7 @@ const oldPlan73 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper71 = (plan, _, fieldArgs) => {
+const planWrapper75 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $patch = constant(null),
     $observer = context().get("observer"),
@@ -7793,25 +8028,25 @@ const planWrapper71 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan72(...planParams) {
+function oldPlan76(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan73.apply(this, args);
+        $prev = oldPlan77.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteTask, but that function did not return a step!
-${String(oldPlan73)}`);
+${String(oldPlan77)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper71(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper75(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper72 = (plan, _, fieldArgs) => {
+const planWrapper76 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -7840,25 +8075,25 @@ const planWrapper72 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan71(...planParams) {
+function oldPlan75(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan72.apply(this, args);
+        $prev = oldPlan76.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteTask, but that function did not return a step!
-${String(oldPlan72)}`);
+${String(oldPlan76)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper72(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper76(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper73 = (plan, _, fieldArgs) => {
+const planWrapper77 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([taskId]) => {
@@ -7866,7 +8101,7 @@ const planWrapper73 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan78 = (_$root, args) => {
+const oldPlan82 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7875,7 +8110,7 @@ const oldPlan78 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper74 = (plan, _, fieldArgs) => {
+const planWrapper78 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7892,25 +8127,25 @@ const planWrapper74 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan77(...planParams) {
+function oldPlan81(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan78.apply(this, args);
+        $prev = oldPlan82.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan78)}`);
+${String(oldPlan82)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper74(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper78(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper75 = (plan, _, _fieldArgs) => {
+const planWrapper79 = (plan, _, _fieldArgs) => {
   const $result = plan(),
     $accessToken = context().get("accessToken"),
     $deleteStep = $result.getStepForKey("result"),
@@ -7931,25 +8166,25 @@ const planWrapper75 = (plan, _, _fieldArgs) => {
   });
   return $result;
 };
-function oldPlan76(...planParams) {
+function oldPlan80(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan77.apply(this, args);
+        $prev = oldPlan81.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan77)}`);
+${String(oldPlan81)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper75(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper79(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper76 = (plan, _, fieldArgs) => {
+const planWrapper80 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -7978,25 +8213,25 @@ const planWrapper76 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan75(...planParams) {
+function oldPlan79(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan76.apply(this, args);
+        $prev = oldPlan80.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan76)}`);
+${String(oldPlan80)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper76(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper80(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper77 = (plan, _, fieldArgs) => {
+const planWrapper81 = (plan, _, fieldArgs) => {
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db"),
     $old = sideEffect([$rowId, $db], async ([rowId, db]) => {
@@ -8018,25 +8253,25 @@ const planWrapper77 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan74(...planParams) {
+function oldPlan78(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan75.apply(this, args);
+        $prev = oldPlan79.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan75)}`);
+${String(oldPlan79)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper77(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper81(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper78 = (plan, _, fieldArgs) => {
+const planWrapper82 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([projectId]) => {
@@ -22319,17 +22554,17 @@ export const objects = {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan2.apply(this, args);
+                $prev = oldPlan3.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createAssignee, but that function did not return a step!
-${String(oldPlan2)}`);
+${String(oldPlan3)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper4(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22342,17 +22577,17 @@ ${String(oldPlan2)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan8.apply(this, args);
+                $prev = oldPlan10.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan8)}`);
+${String(oldPlan10)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22365,17 +22600,17 @@ ${String(oldPlan8)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan5.apply(this, args);
+                $prev = oldPlan7.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createEmoji, but that function did not return a step!
-${String(oldPlan5)}`);
+${String(oldPlan7)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22388,17 +22623,17 @@ ${String(oldPlan5)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan16.apply(this, args);
+                $prev = oldPlan18.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createLabel, but that function did not return a step!
-${String(oldPlan16)}`);
+${String(oldPlan18)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22423,17 +22658,17 @@ ${String(oldPlan16)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan7.apply(this, args);
+                $prev = oldPlan9.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createNotificationPreference, but that function did not return a step!
-${String(oldPlan7)}`);
+${String(oldPlan9)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22446,17 +22681,17 @@ ${String(oldPlan7)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan13.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan13)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22469,17 +22704,17 @@ ${String(oldPlan11)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan24.apply(this, args);
+                $prev = oldPlan26.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan24)}`);
+${String(oldPlan26)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22492,17 +22727,17 @@ ${String(oldPlan24)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan15.apply(this, args);
+                $prev = oldPlan17.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProjectColumn, but that function did not return a step!
-${String(oldPlan15)}`);
+${String(oldPlan17)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22527,17 +22762,17 @@ ${String(oldPlan15)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan18.apply(this, args);
+                $prev = oldPlan20.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProjectLink, but that function did not return a step!
-${String(oldPlan18)}`);
+${String(oldPlan20)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22574,17 +22809,17 @@ ${String(oldPlan18)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan20.apply(this, args);
+                $prev = oldPlan22.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan20)}`);
+${String(oldPlan22)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22607,7 +22842,7 @@ ${String(oldPlan)}`);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper2(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22620,17 +22855,17 @@ ${String(oldPlan)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan6.apply(this, args);
+                $prev = oldPlan8.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createUser, but that function did not return a step!
-${String(oldPlan6)}`);
+${String(oldPlan8)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper8(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22643,17 +22878,17 @@ ${String(oldPlan6)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan19.apply(this, args);
+                $prev = oldPlan21.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createUserPreference, but that function did not return a step!
-${String(oldPlan19)}`);
+${String(oldPlan21)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22678,17 +22913,17 @@ ${String(oldPlan19)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan56.apply(this, args);
+                $prev = oldPlan59.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteAssignee, but that function did not return a step!
-${String(oldPlan56)}`);
+${String(oldPlan59)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper61(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22713,17 +22948,17 @@ ${String(oldPlan56)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan61.apply(this, args);
+                $prev = oldPlan65.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteColumn, but that function did not return a step!
-${String(oldPlan61)}`);
+${String(oldPlan65)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper62(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper66(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22748,17 +22983,17 @@ ${String(oldPlan61)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan58.apply(this, args);
+                $prev = oldPlan62.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteEmoji, but that function did not return a step!
-${String(oldPlan58)}`);
+${String(oldPlan62)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper58(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper62(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22783,17 +23018,17 @@ ${String(oldPlan58)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan67.apply(this, args);
+                $prev = oldPlan71.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteLabel, but that function did not return a step!
-${String(oldPlan67)}`);
+${String(oldPlan71)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper68(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper72(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22844,17 +23079,17 @@ ${String(oldPlan67)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan60.apply(this, args);
+                $prev = oldPlan64.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteNotificationPreference, but that function did not return a step!
-${String(oldPlan60)}`);
+${String(oldPlan64)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper60(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper64(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22879,17 +23114,17 @@ ${String(oldPlan60)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan63.apply(this, args);
+                $prev = oldPlan67.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan63)}`);
+${String(oldPlan67)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper65(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper69(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22914,17 +23149,17 @@ ${String(oldPlan63)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan74.apply(this, args);
+                $prev = oldPlan78.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan74)}`);
+${String(oldPlan78)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper78(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper82(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -22949,17 +23184,17 @@ ${String(oldPlan74)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan66.apply(this, args);
+                $prev = oldPlan70.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectColumn, but that function did not return a step!
-${String(oldPlan66)}`);
+${String(oldPlan70)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper66(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper70(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23010,17 +23245,17 @@ ${String(oldPlan66)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan69.apply(this, args);
+                $prev = oldPlan73.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectLink, but that function did not return a step!
-${String(oldPlan69)}`);
+${String(oldPlan73)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper69(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper73(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23098,17 +23333,17 @@ ${String(oldPlan69)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan71.apply(this, args);
+                $prev = oldPlan75.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteTask, but that function did not return a step!
-${String(oldPlan71)}`);
+${String(oldPlan75)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper73(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper77(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23133,17 +23368,17 @@ ${String(oldPlan71)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan55.apply(this, args);
+                $prev = oldPlan57.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteTaskLabel, but that function did not return a step!
-${String(oldPlan55)}`);
+${String(oldPlan57)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper58(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23168,17 +23403,17 @@ ${String(oldPlan55)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan59.apply(this, args);
+                $prev = oldPlan63.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteUser, but that function did not return a step!
-${String(oldPlan59)}`);
+${String(oldPlan63)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper63(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23203,17 +23438,17 @@ ${String(oldPlan59)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan70.apply(this, args);
+                $prev = oldPlan74.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteUserPreference, but that function did not return a step!
-${String(oldPlan70)}`);
+${String(oldPlan74)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper70(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper74(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23309,17 +23544,17 @@ ${String(oldPlan70)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan34.apply(this, args);
+                $prev = oldPlan36.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan34)}`);
+${String(oldPlan36)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23344,17 +23579,17 @@ ${String(oldPlan34)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan31.apply(this, args);
+                $prev = oldPlan33.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateEmoji, but that function did not return a step!
-${String(oldPlan31)}`);
+${String(oldPlan33)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23379,17 +23614,17 @@ ${String(oldPlan31)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan42.apply(this, args);
+                $prev = oldPlan44.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateLabel, but that function did not return a step!
-${String(oldPlan42)}`);
+${String(oldPlan44)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper45(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23440,17 +23675,17 @@ ${String(oldPlan42)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
+                $prev = oldPlan35.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateNotificationPreference, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan35)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper33(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23475,17 +23710,17 @@ ${String(oldPlan33)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan37.apply(this, args);
+                $prev = oldPlan39.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan37)}`);
+${String(oldPlan39)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23510,17 +23745,17 @@ ${String(oldPlan37)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan50.apply(this, args);
+                $prev = oldPlan52.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan50)}`);
+${String(oldPlan52)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23545,17 +23780,17 @@ ${String(oldPlan50)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan41.apply(this, args);
+                $prev = oldPlan43.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProjectColumn, but that function did not return a step!
-${String(oldPlan41)}`);
+${String(oldPlan43)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23606,17 +23841,17 @@ ${String(oldPlan41)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan44.apply(this, args);
+                $prev = oldPlan46.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProjectLink, but that function did not return a step!
-${String(oldPlan44)}`);
+${String(oldPlan46)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper44(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper46(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23694,17 +23929,17 @@ ${String(oldPlan44)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan46.apply(this, args);
+                $prev = oldPlan48.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan46)}`);
+${String(oldPlan48)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23756,17 +23991,17 @@ ${String(oldPlan46)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan32.apply(this, args);
+                $prev = oldPlan34.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateUser, but that function did not return a step!
-${String(oldPlan32)}`);
+${String(oldPlan34)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper34(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23791,17 +24026,17 @@ ${String(oldPlan32)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan45.apply(this, args);
+                $prev = oldPlan47.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateUserPreference, but that function did not return a step!
-${String(oldPlan45)}`);
+${String(oldPlan47)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper45(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper47(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
