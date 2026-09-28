@@ -22384,14 +22384,19 @@ export const objects = {
           $authzCache = context().get("authzCache");
         return lambda([$observer, $accessToken, $authzCache, $taskId], async ([observer, accessToken, authzCache, taskId]) => {
           if (!observer || !accessToken) throw Error("Unauthorized");
-          const row = (await pgPool.query(`SELECT p.id AS project_id, p.organization_id
-                   FROM task t JOIN project p ON p.id = t.project_id
+          const row = (await pgPool.query(`SELECT p.id AS project_id, p.organization_id,
+                          t.created_at, u.name AS author_name
+                   FROM task t
+                   JOIN project p ON p.id = t.project_id
+                   LEFT JOIN "user" u ON u.id = t.author_id
                    WHERE t.id = $1`, [taskId])).rows[0];
           if (!row) throw Error("Task not found");
           if (!(await checkPermission(observer.identityProviderId, "project", row.project_id, "member", accessToken, authzCache))) throw Error("Unauthorized");
           return fetchTaskActivity({
             organizationId: row.organization_id,
-            taskId
+            taskId,
+            createdAt: row.created_at ? new Date(row.created_at).toISOString() : null,
+            authorName: row.author_name
           });
         }, !1);
       },

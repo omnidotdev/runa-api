@@ -84,13 +84,21 @@ const TaskActivityPlugin = makeExtendSchemaPlugin(() => ({
                 if (!observer || !accessToken) throw new Error("Unauthorized");
 
                 const res = await pgPool.query(
-                  `SELECT p.id AS project_id, p.organization_id
-                   FROM task t JOIN project p ON p.id = t.project_id
+                  `SELECT p.id AS project_id, p.organization_id,
+                          t.created_at, u.name AS author_name
+                   FROM task t
+                   JOIN project p ON p.id = t.project_id
+                   LEFT JOIN "user" u ON u.id = t.author_id
                    WHERE t.id = $1`,
                   [taskId],
                 );
                 const row = res.rows[0] as
-                  | { project_id: string; organization_id: string }
+                  | {
+                      project_id: string;
+                      organization_id: string;
+                      created_at: string | Date | null;
+                      author_name: string | null;
+                    }
                   | undefined;
                 if (!row) throw new Error("Task not found");
 
@@ -107,6 +115,10 @@ const TaskActivityPlugin = makeExtendSchemaPlugin(() => ({
                 return fetchTaskActivity({
                   organizationId: row.organization_id,
                   taskId,
+                  createdAt: row.created_at
+                    ? new Date(row.created_at).toISOString()
+                    : null,
+                  authorName: row.author_name,
                 });
               },
               false,

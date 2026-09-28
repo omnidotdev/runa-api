@@ -12,9 +12,10 @@
  */
 
 import { CHRONICLE_API_URL } from "lib/config/env.config";
+import { buildCreationEntry, withCreationBaseline } from "./creationBaseline";
 
 /** A flattened activity entry for a task. */
-interface TaskActivityEntry {
+export interface TaskActivityEntry {
   id: string;
   action: string;
   actorName: string | null;
@@ -65,22 +66,37 @@ interface FetchTaskActivityArgs {
   /** The task's row id (used as Chronicle's resourceId). */
   taskId: string;
   limit?: number;
+  /** The task's own creation time, to anchor the feed with a "created" entry. */
+  createdAt?: string | null;
+  /** Display name of the task's author, for the creation anchor. */
+  authorName?: string | null;
   /** Injectable for tests; defaults to the global fetch. */
   fetchImpl?: typeof fetch;
 }
 
 /**
- * Fetch and flatten a task's activity from Chronicle, most recent first. Returns
- * an empty list when Chronicle is unconfigured (graceful degradation). Throws a
- * generic, user-safe error on transport/GraphQL failure; detail is logged only
+ * Fetch and flatten a task's activity from Chronicle, most recent first, always
+ * anchored by a synthesized "created this task" entry (built from the task's own
+ * row) so the feed is never empty for a real task and pre-instrumentation tasks
+ * still show their origin. Returns just that anchor when Chronicle is
+ * unconfigured (graceful degradation). Throws a generic, user-safe error on
+ * transport/GraphQL failure; detail is logged only
  */
 export const fetchTaskActivity = async ({
   organizationId,
   taskId,
   limit = 50,
+  createdAt,
+  authorName,
   fetchImpl = fetch,
 }: FetchTaskActivityArgs): Promise<TaskActivityEntry[]> => {
-  if (!CHRONICLE_API_URL) return [];
+  const baseline = buildCreationEntry({
+    taskId,
+    createdAt: createdAt ?? null,
+    authorName: authorName ?? null,
+  });
+
+  if (!CHRONICLE_API_URL) return withCreationBaseline([], baseline);
 
   let events: ChronicleEvent[];
   try {
@@ -112,7 +128,7 @@ export const fetchTaskActivity = async ({
     throw new Error("Activity is temporarily unavailable");
   }
 
-  return events.map((event) => ({
+  const entries: TaskActivityEntry[] = events.map((event) => ({
     id: event.id,
     action: event.action,
     actorName: event.actor?.name ?? null,
@@ -121,4 +137,6 @@ export const fetchTaskActivity = async ({
     occurredAt: event.createdAt,
     relativeTime: event.relativeTime,
   }));
+
+  return withCreationBaseline(entries, baseline);
 };
