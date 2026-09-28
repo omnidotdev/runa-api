@@ -19,6 +19,7 @@ import { protectRoutes } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { attachments, projects, tasks, users } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
+import { buildResourceEvent } from "lib/events/resourceEvent";
 import {
   FEATURE_KEYS,
   billingBypassOrgIds,
@@ -127,10 +128,11 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
     }
 
     // Resolve the local uploader record (nullable: file survives user deletion)
+    // Full row (not just id) so the emitted event can carry the actor's name for
+    // the activity feed via `eventMeta`
     const author = sub
       ? await dbPool.query.users.findFirst({
           where: eq(users.identityProviderId, sub),
-          columns: { id: true },
         })
       : undefined;
 
@@ -219,22 +221,29 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
       })
       .returning();
 
-    void events
-      .emit({
-        type: "runa.attachment.created",
-        data: {
-          id: record.id,
-          taskId,
-          organizationId: task.organizationId,
-          kind,
-          fileSize: file.size,
-          actorId: author?.id,
-        },
-        subject: record.id,
-      })
-      .catch((error: unknown) => {
-        console.warn("[Attachments] Event emit failed:", error);
-      });
+    // Task-scoped so it lands in the task's activity feed ("added <file>"). Skip
+    // comment-inline drops (postId set): those are covered by the comment event,
+    // so surfacing them again would double up the timeline.
+    if (postId == null) {
+      void events
+        .emit(
+          buildResourceEvent(
+            {
+              entity: "attachment",
+              action: "created",
+              nameColumn: "filename",
+              orgVia: "direct",
+            },
+            taskId,
+            record,
+            author ?? null,
+            [{ field: "attachments", label: `added ${record.filename}` }],
+          ),
+        )
+        .catch((error: unknown) => {
+          console.warn("[Attachments] Event emit failed:", error);
+        });
+    }
 
     set.status = 201;
     return record;
