@@ -7,9 +7,11 @@ import { isPrivateIp, parseHttpUrl } from "./ssrf";
 const TIMEOUT_MS = 5000;
 const MAX_HTML_BYTES = 1_000_000;
 const MAX_FAVICON_BYTES = 50_000;
-const MAX_REDIRECTS = 3;
-// Re-fetch a cached unfurl after this long
+const MAX_REDIRECTS = 6;
+// Re-fetch a cached unfurl after this long (short for failures, so a transient
+// error or a site fix is retried soon rather than stuck for a week)
 const TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const ERROR_TTL_MS = 60 * 60 * 1000;
 
 const USER_AGENT = "RunaLinkPreview/1.0 (+https://runa.omni.dev)";
 
@@ -130,37 +132,59 @@ const fetchFaviconDataUri = async (href: string): Promise<string | null> => {
   }
 };
 
-/** Fetch and parse a URL into preview metadata (throws on SSRF/network error). */
+/**
+ * Fetch preview metadata for a URL. The page fetch is best-effort: auth-walled or
+ * redirect-heavy pages (e.g. a Google Doc, which bounces through sign-in) fail to
+ * yield title/description, but we still fetch the site's `/favicon.ico` from the
+ * ORIGINAL origin so the link at least carries its icon. Never throws
+ */
 const fetchUnfurl = async (rawUrl: string): Promise<UnfurlResult> => {
-  const { url, body, contentType } = await safeFetch(
-    rawUrl,
-    "text/html,application/xhtml+xml",
-    MAX_HTML_BYTES,
-  );
+  const parsed = parseHttpUrl(rawUrl);
+  const origin = parsed ? parsed.origin : null;
 
-  if (!contentType.includes("text/html")) {
-    return {
-      url: rawUrl,
-      status: "ok",
-      title: null,
-      description: null,
-      imageUrl: null,
-      faviconDataUri: null,
-    };
+  let title: string | null = null;
+  let description: string | null = null;
+  let imageUrl: string | null = null;
+  let declaredFavicon: string | null = null;
+  let sameHostDeclared = false;
+
+  try {
+    const { url, body, contentType } = await safeFetch(
+      rawUrl,
+      "text/html,application/xhtml+xml",
+      MAX_HTML_BYTES,
+    );
+    if (contentType.includes("text/html")) {
+      const meta = parseMetadata(
+        new TextDecoder().decode(body),
+        url.toString(),
+      );
+      title = meta.title;
+      description = meta.description;
+      imageUrl = meta.imageUrl;
+      declaredFavicon = meta.faviconHref;
+      // Only trust the declared favicon if the page didn't redirect to another
+      // host (otherwise it's the sign-in page's icon, not the link's site)
+      sameHostDeclared = url.hostname === parsed?.hostname;
+    }
+  } catch {
+    // page unreachable/auth-walled - fall through to the origin favicon
   }
 
-  const html = new TextDecoder().decode(body);
-  const meta = parseMetadata(html, url.toString());
-  const faviconDataUri = meta.faviconHref
-    ? await fetchFaviconDataUri(meta.faviconHref)
+  // Prefer a same-host declared favicon; otherwise the original site's /favicon.ico
+  const faviconTarget =
+    (sameHostDeclared && declaredFavicon) ||
+    (origin ? `${origin}/favicon.ico` : null);
+  const faviconDataUri = faviconTarget
+    ? await fetchFaviconDataUri(faviconTarget)
     : null;
 
   return {
     url: rawUrl,
-    status: "ok",
-    title: meta.title,
-    description: meta.description,
-    imageUrl: meta.imageUrl,
+    status: title || faviconDataUri ? "ok" : "error",
+    title,
+    description,
+    imageUrl,
     faviconDataUri,
   };
 };
@@ -199,7 +223,8 @@ export const getOrCreateUnfurl = async (
   const existing = cached.rows[0];
   if (existing) {
     const fetchedAt = new Date(existing.fetched_at as string).getTime();
-    if (Date.now() - fetchedAt < TTL_MS) return rowToResult(existing);
+    const ttl = existing.status === "error" ? ERROR_TTL_MS : TTL_MS;
+    if (Date.now() - fetchedAt < ttl) return rowToResult(existing);
   }
 
   let result: UnfurlResult;
