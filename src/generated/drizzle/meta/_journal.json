@@ -470,6 +470,13 @@
       "when": 1790477593761,
       "tag": "0066_glamorous_stardust",
       "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1791913166276,
+      "tag": "0067_milky_avengers",
+      "breakpoints": true
     }
   ]
 }

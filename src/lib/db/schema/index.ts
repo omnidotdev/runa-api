@@ -30,3 +30,5 @@ export * from "./taskLabel.table";
 export * from "./user.table";
 export * from "./userPreference.table";
 export * from "./wardenSyncQueue.table";
+export * from "./webhookDelivery.table";
+export * from "./webhookEndpoint.table";

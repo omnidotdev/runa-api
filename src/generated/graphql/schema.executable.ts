@@ -114,7 +114,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "360148",
+    oid: "1015578",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -175,7 +175,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "300631",
+    oid: "1015193",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -245,7 +245,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "300414",
+    oid: "1014976",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +317,7 @@ const spec_notificationDigestQueue = {
     }
   },
   extensions: {
-    oid: "1005659",
+    oid: "1015814",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -398,7 +398,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "300788",
+    oid: "1015350",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -489,7 +489,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "300485",
+    oid: "1015047",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -573,7 +573,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "1005637",
+    oid: "1015792",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -664,7 +664,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "300425",
+    oid: "1014987",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -753,7 +753,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "300438",
+    oid: "1015000",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -844,7 +844,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "300682",
+    oid: "1015244",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -935,7 +935,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "360132",
+    oid: "1015562",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1034,7 +1034,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "300617",
+    oid: "1015179",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1126,7 +1126,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "486262",
+    oid: "1015644",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1229,7 +1229,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "300699",
+    oid: "1015261",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1240,6 +1240,121 @@ const spec_userPreference = {
   executor: executor
 };
 const userPreferenceCodec = recordCodec(spec_userPreference);
+const webhookEndpointIdentifier = sql.identifier("public", "webhook_endpoint");
+const webhookEndpointCodec = recordCodec({
+  name: "webhookEndpoint",
+  identifier: webhookEndpointIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    url: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    secret: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    event_types: {
+      codec: LIST_TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    enabled: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_by: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "1015943",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "webhook_endpoint"
+    },
+    tags: {
+      __proto__: null,
+      behavior: "-*"
+    }
+  },
+  executor: executor
+});
 const wardenSyncQueueIdentifier = sql.identifier("public", "warden_sync_queue");
 const spec_wardenSyncQueue = {
   name: "wardenSyncQueue",
@@ -1332,7 +1447,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "1005617",
+    oid: "1015772",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1461,7 +1576,7 @@ const linkUnfurlCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1005746",
+    oid: "1015901",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1471,6 +1586,141 @@ const linkUnfurlCodec = recordCodec({
     tags: {
       __proto__: null,
       behavior: "-insert -update -delete -connection -list -single"
+    }
+  },
+  executor: executor
+});
+const webhookDeliveryIdentifier = sql.identifier("public", "webhook_delivery");
+const webhookDeliveryCodec = recordCodec({
+  name: "webhookDelivery",
+  identifier: webhookDeliveryIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    endpoint_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    event_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    event_type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    payload: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    attempts: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    max_attempts: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    last_error: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    next_retry_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    delivered_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "1015922",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "webhook_delivery"
+    },
+    tags: {
+      __proto__: null,
+      behavior: "-*"
     }
   },
   executor: executor
@@ -1573,7 +1823,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "300500",
+    oid: "1015062",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1713,7 +1963,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "300466",
+    oid: "1015028",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1891,7 +2141,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "746026",
+    oid: "1015731",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2064,7 +2314,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "300451",
+    oid: "1015013",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2582,8 +2832,10 @@ const registryConfig = {
     userPreference: userPreferenceCodec,
     textArray: LIST_TYPES.text,
     varchar: TYPES.varchar,
+    webhookEndpoint: webhookEndpointCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     linkUnfurl: linkUnfurlCodec,
+    webhookDelivery: webhookDeliveryCodec,
     settings: settingsCodec,
     timestamp: TYPES.timestamp,
     task: taskCodec,
@@ -2606,6 +2858,31 @@ const registryConfig = {
     label: label_resourceOptionsConfig,
     project_link: project_link_resourceOptionsConfig,
     user_preference: user_preference_resourceOptionsConfig,
+    webhook_endpoint: {
+      executor: executor,
+      name: "webhook_endpoint",
+      identifier: "main.public.webhook_endpoint",
+      from: webhookEndpointIdentifier,
+      codec: webhookEndpointCodec,
+      extensions: {
+        pg: {
+          serviceName: "main",
+          schemaName: "public",
+          name: "webhook_endpoint"
+        },
+        tags: {
+          behavior: "-*"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        canDelete: true
+      },
+      uniques: [{
+        attributes: ["id"],
+        isPrimary: true
+      }]
+    },
     warden_sync_queue: {
       executor: executor,
       name: "warden_sync_queue",
@@ -2646,6 +2923,31 @@ const registryConfig = {
         canDelete: true
       },
       uniques: link_unfurlUniques
+    },
+    webhook_delivery: {
+      executor: executor,
+      name: "webhook_delivery",
+      identifier: "main.public.webhook_delivery",
+      from: webhookDeliveryIdentifier,
+      codec: webhookDeliveryCodec,
+      extensions: {
+        pg: {
+          serviceName: "main",
+          schemaName: "public",
+          name: "webhook_delivery"
+        },
+        tags: {
+          behavior: "-*"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        canDelete: true
+      },
+      uniques: [{
+        attributes: ["id"],
+        isPrimary: true
+      }]
     },
     settings: {
       executor: executor,

@@ -20,6 +20,23 @@ const SmartTagPlugin = jsonPgSmartTags({
           behavior: "-insert -update -delete -connection -list -single",
         },
       },
+      // Webhook endpoints hold a signing secret and must be gated by workspace
+      // admin; until the dedicated, authorized management mutations land they
+      // are fully hidden so auto-CRUD never exposes the secret or allows an
+      // ungated write. Rows are created directly by the backend for now.
+      webhook_endpoint: {
+        tags: {
+          // `-*` removes the whole type incl. Node, so it is not reachable even
+          // via the global `node(id)` field (which would otherwise leak secret)
+          behavior: "-*",
+        },
+      },
+      // Internal delivery queue; never part of the public API surface.
+      webhook_delivery: {
+        tags: {
+          behavior: "-*",
+        },
+      },
     },
   },
 });

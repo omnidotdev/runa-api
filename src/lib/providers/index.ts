@@ -34,6 +34,9 @@ import {
   VORTEX_API_URL,
   VORTEX_AUTHZ_WEBHOOK_SECRET,
 } from "lib/config/env.config";
+import { enqueueWebhookDelivery } from "lib/webhooks/delivery";
+
+import type { EmittableEvent } from "lib/webhooks/delivery";
 
 export const authz = AUTHZ_API_URL
   ? createAuthzProvider({
@@ -54,7 +57,7 @@ export const billing = BILLING_BASE_URL
     })
   : undefined;
 
-export const events = createEventsProvider(
+const baseEvents = createEventsProvider(
   VORTEX_API_URL && VORTEX_API_KEY
     ? {
         provider: "http",
@@ -64,6 +67,18 @@ export const events = createEventsProvider(
       }
     : {},
 );
+
+// Every domain event goes to Vortex (server-to-server) AND fans out to any
+// webhook endpoints a workspace registered (the outbound half of the plugin
+// system). The webhook enqueue never throws into the emit path.
+const baseEmit = baseEvents.emit.bind(baseEvents);
+baseEvents.emit = async (event) => {
+  const result = await baseEmit(event);
+  await enqueueWebhookDelivery(event as EmittableEvent);
+  return result;
+};
+
+export const events = baseEvents;
 
 /**
  * Transactional email for notifications.

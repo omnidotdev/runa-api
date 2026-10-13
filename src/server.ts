@@ -49,6 +49,7 @@ import {
   reconcileSearchIndex,
   search,
 } from "lib/search";
+import { startWebhookDeliveryPoller } from "lib/webhooks/delivery";
 
 const commit = (() => {
   try {
@@ -275,6 +276,10 @@ async function startServer(): Promise<void> {
   // Start the assignment-email digest poller (sends grouped emails for users
   // whose cadence is "digest"; no-ops when there is nothing due)
   startDigestPoller();
+
+  // Start the outbound webhook delivery poller (fans domain events out to
+  // workspace-registered endpoints; no-ops when there is nothing due)
+  startWebhookDeliveryPoller();
 
   // biome-ignore lint/suspicious/noConsole: root logging
   console.log(
