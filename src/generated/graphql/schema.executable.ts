@@ -17,6 +17,7 @@ import { enqueueAssignmentDigest } from "lib/notifications/digestQueue";
 import { events, notifications } from "lib/providers";
 import { deleteCommentFromIndex, deleteProjectFromIndex, deleteTaskFromIndex, indexComment, indexProject, indexTask } from "lib/search";
 import { moveTask } from "lib/tasks/moveTask";
+import { createWebhookEndpoint, deleteWebhookEndpoint, rotateWebhookEndpointSecret, setWebhookEndpointEnabled, webhookEndpointOrganizationId } from "lib/webhooks/endpoints";
 import { sql } from "pg-sql2";
 const rawNodeIdCodec = {
   name: "raw",
@@ -114,7 +115,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "1015578",
+    oid: "1016582",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -175,7 +176,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "1015193",
+    oid: "1016197",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -245,7 +246,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "1014976",
+    oid: "1015980",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -317,7 +318,7 @@ const spec_notificationDigestQueue = {
     }
   },
   extensions: {
-    oid: "1015814",
+    oid: "1016818",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -398,7 +399,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "1015350",
+    oid: "1016354",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -489,7 +490,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "1015047",
+    oid: "1016051",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -573,7 +574,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "1015792",
+    oid: "1016796",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -664,7 +665,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "1014987",
+    oid: "1015991",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -753,7 +754,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "1015000",
+    oid: "1016004",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -844,7 +845,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "1015244",
+    oid: "1016248",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -935,7 +936,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "1015562",
+    oid: "1016566",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1034,7 +1035,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "1015179",
+    oid: "1016183",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1126,7 +1127,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "1015644",
+    oid: "1016648",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1229,7 +1230,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "1015261",
+    oid: "1016265",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1341,7 +1342,7 @@ const webhookEndpointCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1015943",
+    oid: "1016947",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1447,7 +1448,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "1015772",
+    oid: "1016776",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1576,7 +1577,7 @@ const linkUnfurlCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1015901",
+    oid: "1016905",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1711,7 +1712,7 @@ const webhookDeliveryCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1015922",
+    oid: "1016926",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1823,7 +1824,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "1015062",
+    oid: "1016066",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1963,7 +1964,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "1015028",
+    oid: "1016032",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2141,7 +2142,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "1015731",
+    oid: "1016735",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2314,7 +2315,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "1015013",
+    oid: "1016017",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5096,6 +5097,10 @@ function ProjectInput_imageApply(obj, val, info) {
 function ProjectInput_backgroundApply(obj, val, info) {
   obj.set("background", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const MoveTaskPayload_taskId_plan = $row => lambda($row, r => r?.["id"] ?? null);
+const WebhookEndpointInfo_url_plan = $row => lambda($row, r => r?.["url"] ?? null);
+const WebhookEndpointInfo_enabled_plan = $row => lambda($row, r => r?.["enabled"] ?? null);
+const CreateWebhookEndpointPayload_secret_plan = $row => lambda($row, r => r?.["secret"] ?? null);
 const Query_taskLabelPlan = (_$root, {
   $taskId,
   $labelId
@@ -20529,6 +20534,60 @@ type MoveTaskPayload {
   columnIndex: String
 }
 
+"""A webhook endpoint, without its signing secret."""
+type WebhookEndpointInfo {
+  id: UUID
+  url: String
+  eventTypes: [String!]
+  enabled: Boolean
+  createdAt: String
+}
+
+"""
+Create result. The secret is shown only here and on rotate; store it now.
+"""
+type CreateWebhookEndpointPayload {
+  id: UUID
+  url: String
+  enabled: Boolean
+  secret: String
+}
+
+"""Rotate result. The new secret is shown only here."""
+type RotateWebhookEndpointSecretPayload {
+  id: UUID
+  secret: String
+}
+
+type DeleteWebhookEndpointPayload {
+  id: UUID
+  deleted: Boolean
+}
+
+input CreateWebhookEndpointInput {
+  """Owning workspace (organization id)."""
+  organizationId: String!
+
+  """Destination URL (must be a public http(s) host)."""
+  url: String!
+
+  """Optional event-type whitelist; omit for all events."""
+  eventTypes: [String!]
+}
+
+input RotateWebhookEndpointSecretInput {
+  id: UUID!
+}
+
+input SetWebhookEndpointEnabledInput {
+  id: UUID!
+  enabled: Boolean!
+}
+
+input DeleteWebhookEndpointInput {
+  id: UUID!
+}
+
 """Cached link preview metadata for a URL."""
 type LinkPreview {
   """The requested URL."""
@@ -22223,6 +22282,40 @@ type Mutation {
     """
     input: MoveTaskInput!
   ): MoveTaskPayload
+
+  """
+  Register a webhook endpoint for a workspace (requires workspace admin).
+  """
+  createWebhookEndpoint(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateWebhookEndpointInput!
+  ): CreateWebhookEndpointPayload
+
+  """Rotate an endpoint's signing secret (requires workspace admin)."""
+  rotateWebhookEndpointSecret(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: RotateWebhookEndpointSecretInput!
+  ): RotateWebhookEndpointSecretPayload
+
+  """Enable or disable an endpoint (requires workspace admin)."""
+  setWebhookEndpointEnabled(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: SetWebhookEndpointEnabledInput!
+  ): WebhookEndpointInfo
+
+  """Delete an endpoint (requires workspace admin)."""
+  deleteWebhookEndpoint(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteWebhookEndpointInput!
+  ): DeleteWebhookEndpointPayload
 }
 
 """A single audit/activity entry for a task, sourced from Chronicle."""
@@ -23216,6 +23309,31 @@ ${String(oldPlan21)}`);
           input: applyInputToInsert
         }
       },
+      createWebhookEndpoint(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $input], async ([observer, accessToken, authzCache, input]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          if (!(await checkPermission(observer.identityProviderId, "organization", input.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          const {
+            endpoint,
+            secret
+          } = await createWebhookEndpoint({
+            organizationId: input.organizationId,
+            url: input.url,
+            eventTypes: input.eventTypes ?? null,
+            createdBy: observer.identityProviderId
+          });
+          return {
+            id: endpoint.id,
+            url: endpoint.url,
+            enabled: endpoint.enabled,
+            secret
+          };
+        }, !1);
+      },
       deleteAssignee: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -23802,6 +23920,23 @@ ${String(oldPlan74)}`);
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteWebhookEndpoint(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $input], async ([observer, accessToken, authzCache, input]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          const organizationId = await webhookEndpointOrganizationId(input.id);
+          if (!organizationId) throw Error("Not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          const deleted = await deleteWebhookEndpoint(input.id, organizationId);
+          return {
+            id: input.id,
+            deleted
+          };
+        }, !1);
+      },
       moveTask(_$root, fieldArgs) {
         const $input = fieldArgs.getRaw("input"),
           $observer = context().get("observer"),
@@ -23818,6 +23953,36 @@ ${String(oldPlan74)}`);
             targetProjectId: input.projectId,
             targetColumnId: input.columnId
           });
+        }, !1);
+      },
+      rotateWebhookEndpointSecret(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $input], async ([observer, accessToken, authzCache, input]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          const organizationId = await webhookEndpointOrganizationId(input.id);
+          if (!organizationId) throw Error("Not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          const secret = await rotateWebhookEndpointSecret(input.id, organizationId);
+          return {
+            id: input.id,
+            secret
+          };
+        }, !1);
+      },
+      setWebhookEndpointEnabled(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $input], async ([observer, accessToken, authzCache, input]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          const organizationId = await webhookEndpointOrganizationId(input.id);
+          if (!organizationId) throw Error("Not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          return setWebhookEndpointEnabled(input.id, organizationId, input.enabled);
         }, !1);
       },
       updateAssignee: {
@@ -24878,6 +25043,14 @@ ${String(oldPlan47)}`);
       wardenSyncQueueEdge: CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan
     }
   },
+  CreateWebhookEndpointPayload: {
+    plans: {
+      enabled: WebhookEndpointInfo_enabled_plan,
+      id: MoveTaskPayload_taskId_plan,
+      secret: CreateWebhookEndpointPayload_secret_plan,
+      url: WebhookEndpointInfo_url_plan
+    }
+  },
   DeleteAssigneePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -25130,6 +25303,14 @@ ${String(oldPlan47)}`);
       wardenSyncQueueEdge: CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan
     }
   },
+  DeleteWebhookEndpointPayload: {
+    plans: {
+      deleted($row) {
+        return lambda($row, r => r?.["deleted"] ?? null);
+      },
+      id: MoveTaskPayload_taskId_plan
+    }
+  },
   Emoji: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -25320,9 +25501,7 @@ ${String(oldPlan47)}`);
       projectId($row) {
         return lambda($row, r => r?.["projectId"] ?? null);
       },
-      taskId($row) {
-        return lambda($row, r => r?.["id"] ?? null);
-      }
+      taskId: MoveTaskPayload_taskId_plan
     }
   },
   NotificationDigestQueue: {
@@ -26094,6 +26273,12 @@ ${String(oldPlan47)}`);
       nextTaskNumber($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.int, "next_task_number", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
       }
+    }
+  },
+  RotateWebhookEndpointSecretPayload: {
+    plans: {
+      id: MoveTaskPayload_taskId_plan,
+      secret: CreateWebhookEndpointPayload_secret_plan
     }
   },
   Setting: {
@@ -27102,6 +27287,19 @@ ${String(oldPlan47)}`);
       maxAttempts($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
       }
+    }
+  },
+  WebhookEndpointInfo: {
+    plans: {
+      createdAt($row) {
+        return lambda($row, r => r?.["createdAt"] ?? null);
+      },
+      enabled: WebhookEndpointInfo_enabled_plan,
+      eventTypes($row) {
+        return lambda($row, r => r?.["eventTypes"] ?? null);
+      },
+      id: MoveTaskPayload_taskId_plan,
+      url: WebhookEndpointInfo_url_plan
     }
   }
 };

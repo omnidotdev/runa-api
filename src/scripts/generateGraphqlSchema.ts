@@ -55,6 +55,13 @@ import {
   isSearchEnabled,
 } from "lib/search";
 import { moveTask } from "lib/tasks/moveTask";
+import {
+  createWebhookEndpoint,
+  deleteWebhookEndpoint,
+  rotateWebhookEndpointSecret,
+  setWebhookEndpointEnabled,
+  webhookEndpointOrganizationId,
+} from "lib/webhooks/endpoints";
 
 const SRC_DIR = `${__dirname}/..`;
 const CACHE_DIR = `${__dirname}/../../.cache`;
@@ -169,6 +176,13 @@ const generateGraphqlSchema = async () => {
       "fractional-indexing": { generateNKeysBetween },
       "lib/db/db": { pgPool },
       "lib/tasks/moveTask": { moveTask },
+      "lib/webhooks/endpoints": {
+        createWebhookEndpoint,
+        rotateWebhookEndpointSecret,
+        setWebhookEndpointEnabled,
+        deleteWebhookEndpoint,
+        webhookEndpointOrganizationId,
+      },
       "lib/chronicle/taskActivity": { fetchTaskActivity },
       "lib/links/unfurl": { getOrCreateUnfurl },
       "lib/authz": {

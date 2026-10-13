@@ -11946,6 +11946,60 @@ type MoveTaskPayload {
   columnIndex: String
 }
 
+"""A webhook endpoint, without its signing secret."""
+type WebhookEndpointInfo {
+  id: UUID
+  url: String
+  eventTypes: [String!]
+  enabled: Boolean
+  createdAt: String
+}
+
+"""
+Create result. The secret is shown only here and on rotate; store it now.
+"""
+type CreateWebhookEndpointPayload {
+  id: UUID
+  url: String
+  enabled: Boolean
+  secret: String
+}
+
+"""Rotate result. The new secret is shown only here."""
+type RotateWebhookEndpointSecretPayload {
+  id: UUID
+  secret: String
+}
+
+type DeleteWebhookEndpointPayload {
+  id: UUID
+  deleted: Boolean
+}
+
+input CreateWebhookEndpointInput {
+  """Owning workspace (organization id)."""
+  organizationId: String!
+
+  """Destination URL (must be a public http(s) host)."""
+  url: String!
+
+  """Optional event-type whitelist; omit for all events."""
+  eventTypes: [String!]
+}
+
+input RotateWebhookEndpointSecretInput {
+  id: UUID!
+}
+
+input SetWebhookEndpointEnabledInput {
+  id: UUID!
+  enabled: Boolean!
+}
+
+input DeleteWebhookEndpointInput {
+  id: UUID!
+}
+
 """Cached link preview metadata for a URL."""
 type LinkPreview {
   """The requested URL."""
@@ -13640,6 +13694,40 @@ type Mutation {
     """
     input: MoveTaskInput!
   ): MoveTaskPayload
+
+  """
+  Register a webhook endpoint for a workspace (requires workspace admin).
+  """
+  createWebhookEndpoint(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateWebhookEndpointInput!
+  ): CreateWebhookEndpointPayload
+
+  """Rotate an endpoint's signing secret (requires workspace admin)."""
+  rotateWebhookEndpointSecret(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: RotateWebhookEndpointSecretInput!
+  ): RotateWebhookEndpointSecretPayload
+
+  """Enable or disable an endpoint (requires workspace admin)."""
+  setWebhookEndpointEnabled(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: SetWebhookEndpointEnabledInput!
+  ): WebhookEndpointInfo
+
+  """Delete an endpoint (requires workspace admin)."""
+  deleteWebhookEndpoint(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteWebhookEndpointInput!
+  ): DeleteWebhookEndpointPayload
 }
 
 """A single audit/activity entry for a task, sourced from Chronicle."""
