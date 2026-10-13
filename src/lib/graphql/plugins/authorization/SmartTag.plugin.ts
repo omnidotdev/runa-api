@@ -8,6 +8,11 @@ const SmartTagPlugin = jsonPgSmartTags({
   version: 1,
   config: {
     class: {
+      // API tokens store a token hash and are managed only through the
+      // authorized createApiToken/revokeApiToken mutations; hide all auto-CRUD.
+      api_token: {
+        tags: { behavior: "-*" },
+      },
       // Attachment writes go through REST routes (so storage + DB stay in sync),
       // so hide the auto-generated insert/update/delete mutations. Reads remain.
       attachment: {

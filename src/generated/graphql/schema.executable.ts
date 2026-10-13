@@ -17,6 +17,7 @@ import { enqueueAssignmentDigest } from "lib/notifications/digestQueue";
 import { events, notifications } from "lib/providers";
 import { deleteCommentFromIndex, deleteProjectFromIndex, deleteTaskFromIndex, indexComment, indexProject, indexTask } from "lib/search";
 import { moveTask } from "lib/tasks/moveTask";
+import { apiTokenOrganizationId, createApiToken, revokeApiToken } from "lib/tokens/apiTokens";
 import { createWebhookEndpoint, deleteWebhookEndpoint, rotateWebhookEndpointSecret, setWebhookEndpointEnabled, webhookEndpointOrganizationId } from "lib/webhooks/endpoints";
 import { sql } from "pg-sql2";
 const rawNodeIdCodec = {
@@ -115,7 +116,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "1016582",
+    oid: "1018564",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -176,7 +177,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "1016197",
+    oid: "1018179",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -246,7 +247,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "1015980",
+    oid: "1017963",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -318,7 +319,7 @@ const spec_notificationDigestQueue = {
     }
   },
   extensions: {
-    oid: "1016818",
+    oid: "1018800",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -399,7 +400,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "1016354",
+    oid: "1018336",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -490,7 +491,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "1016051",
+    oid: "1018034",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -574,7 +575,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "1016796",
+    oid: "1018778",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -665,7 +666,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "1015991",
+    oid: "1017974",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -754,7 +755,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "1016004",
+    oid: "1017987",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -845,7 +846,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "1016248",
+    oid: "1018230",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -936,7 +937,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "1016566",
+    oid: "1018548",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1035,7 +1036,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "1016183",
+    oid: "1018165",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1127,7 +1128,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "1016648",
+    oid: "1018630",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1230,7 +1231,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "1016265",
+    oid: "1018247",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1241,6 +1242,118 @@ const spec_userPreference = {
   executor: executor
 };
 const userPreferenceCodec = recordCodec(spec_userPreference);
+const apiTokenIdentifier = sql.identifier("public", "api_token");
+const apiTokenCodec = recordCodec({
+  name: "apiToken",
+  identifier: apiTokenIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    token_hash: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    scopes: {
+      codec: LIST_TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_by: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    last_used_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    revoked_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "1018951",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "api_token"
+    },
+    tags: {
+      __proto__: null,
+      behavior: "-*"
+    }
+  },
+  executor: executor
+});
 const webhookEndpointIdentifier = sql.identifier("public", "webhook_endpoint");
 const webhookEndpointCodec = recordCodec({
   name: "webhookEndpoint",
@@ -1342,7 +1455,7 @@ const webhookEndpointCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1016947",
+    oid: "1018929",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1448,7 +1561,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "1016776",
+    oid: "1018758",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1577,7 +1690,7 @@ const linkUnfurlCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1016905",
+    oid: "1018887",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1712,7 +1825,7 @@ const webhookDeliveryCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1016926",
+    oid: "1018908",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1824,7 +1937,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "1016066",
+    oid: "1018049",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1964,7 +2077,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "1016032",
+    oid: "1018015",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2142,7 +2255,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "1016735",
+    oid: "1018717",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2315,7 +2428,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "1016017",
+    oid: "1018000",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2833,6 +2946,7 @@ const registryConfig = {
     userPreference: userPreferenceCodec,
     textArray: LIST_TYPES.text,
     varchar: TYPES.varchar,
+    apiToken: apiTokenCodec,
     webhookEndpoint: webhookEndpointCodec,
     wardenSyncQueue: wardenSyncQueueCodec,
     linkUnfurl: linkUnfurlCodec,
@@ -2859,6 +2973,31 @@ const registryConfig = {
     label: label_resourceOptionsConfig,
     project_link: project_link_resourceOptionsConfig,
     user_preference: user_preference_resourceOptionsConfig,
+    api_token: {
+      executor: executor,
+      name: "api_token",
+      identifier: "main.public.api_token",
+      from: apiTokenIdentifier,
+      codec: apiTokenCodec,
+      extensions: {
+        pg: {
+          serviceName: "main",
+          schemaName: "public",
+          name: "api_token"
+        },
+        tags: {
+          behavior: "-*"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        canDelete: true
+      },
+      uniques: [{
+        attributes: ["id"],
+        isPrimary: true
+      }]
+    },
     webhook_endpoint: {
       executor: executor,
       name: "webhook_endpoint",
@@ -20588,6 +20727,35 @@ input DeleteWebhookEndpointInput {
   id: UUID!
 }
 
+"""Create result. The token plaintext is shown only here; store it now."""
+type CreateApiTokenPayload {
+  id: UUID
+  name: String
+
+  """The token plaintext (runa_...). Never retrievable again."""
+  token: String
+}
+
+type RevokeApiTokenPayload {
+  id: UUID
+  revoked: Boolean
+}
+
+input CreateApiTokenInput {
+  """Owning workspace (organization id)."""
+  organizationId: String!
+
+  """Human label for the token."""
+  name: String!
+
+  """Granted scopes (e.g. ["task:read"])."""
+  scopes: [String!]!
+}
+
+input RevokeApiTokenInput {
+  id: UUID!
+}
+
 """Cached link preview metadata for a URL."""
 type LinkPreview {
   """The requested URL."""
@@ -22316,6 +22484,22 @@ type Mutation {
     """
     input: DeleteWebhookEndpointInput!
   ): DeleteWebhookEndpointPayload
+
+  """Issue a scoped API token for a workspace (requires workspace admin)."""
+  createApiToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateApiTokenInput!
+  ): CreateApiTokenPayload
+
+  """Revoke an API token (requires workspace admin)."""
+  revokeApiToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: RevokeApiTokenInput!
+  ): RevokeApiTokenPayload
 }
 
 """A single audit/activity entry for a task, sourced from Chronicle."""
@@ -22950,6 +23134,30 @@ export const objects = {
   Mutation: {
     assertStep: __ValueStep,
     plans: {
+      createApiToken(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $input], async ([observer, accessToken, authzCache, input]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          if (!(await checkPermission(observer.identityProviderId, "organization", input.organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          const {
+            token,
+            secret
+          } = await createApiToken({
+            organizationId: input.organizationId,
+            name: input.name,
+            scopes: input.scopes,
+            createdBy: observer.identityProviderId
+          });
+          return {
+            id: token.id,
+            name: token.name,
+            token: secret
+          };
+        }, !1);
+      },
       createAssignee: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
@@ -23955,6 +24163,23 @@ ${String(oldPlan74)}`);
           });
         }, !1);
       },
+      revokeApiToken(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $input], async ([observer, accessToken, authzCache, input]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          const organizationId = await apiTokenOrganizationId(input.id);
+          if (!organizationId) throw Error("Not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          const revoked = await revokeApiToken(input.id, organizationId);
+          return {
+            id: input.id,
+            revoked
+          };
+        }, !1);
+      },
       rotateWebhookEndpointSecret(_$root, fieldArgs) {
         const $input = fieldArgs.getRaw("input"),
           $observer = context().get("observer"),
@@ -24879,6 +25104,17 @@ ${String(oldPlan47)}`);
       rowId: ProjectDistinctCountAggregates_rowIdPlan,
       title: PostDistinctCountAggregates_titlePlan,
       updatedAt: ProjectDistinctCountAggregates_updatedAtPlan
+    }
+  },
+  CreateApiTokenPayload: {
+    plans: {
+      id: MoveTaskPayload_taskId_plan,
+      name($row) {
+        return lambda($row, r => r?.["name"] ?? null);
+      },
+      token($row) {
+        return lambda($row, r => r?.["token"] ?? null);
+      }
     }
   },
   CreateAssigneePayload: {
@@ -26272,6 +26508,14 @@ ${String(oldPlan47)}`);
     plans: {
       nextTaskNumber($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.int, "next_task_number", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
+      }
+    }
+  },
+  RevokeApiTokenPayload: {
+    plans: {
+      id: MoveTaskPayload_taskId_plan,
+      revoked($row) {
+        return lambda($row, r => r?.["revoked"] ?? null);
       }
     }
   },

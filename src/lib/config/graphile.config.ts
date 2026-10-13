@@ -41,6 +41,7 @@ import {
 } from "lib/graphql/plugins/search";
 import MoveTaskPlugin from "lib/graphql/plugins/tasks/MoveTask.plugin";
 import TaskActivityPlugin from "lib/graphql/plugins/tasks/TaskActivity.plugin";
+import ApiTokenPlugin from "lib/graphql/plugins/tokens/ApiToken.plugin";
 import WebhookEndpointPlugin from "lib/graphql/plugins/webhooks/WebhookEndpoint.plugin";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
@@ -77,6 +78,8 @@ const graphilePreset: GraphileConfig.Preset = {
     MoveTaskPlugin,
     // Custom webhook-endpoint management mutations (admin-gated; secret shown once)
     WebhookEndpointPlugin,
+    // Custom API-token management mutations (admin-gated; plaintext shown once)
+    ApiTokenPlugin,
     // Custom linkPreview query (server-side OpenGraph/favicon unfurl)
     LinkPreviewPlugin,
     // Custom taskActivity query (per-task audit feed from Chronicle)

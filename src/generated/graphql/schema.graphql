@@ -12000,6 +12000,35 @@ input DeleteWebhookEndpointInput {
   id: UUID!
 }
 
+"""Create result. The token plaintext is shown only here; store it now."""
+type CreateApiTokenPayload {
+  id: UUID
+  name: String
+
+  """The token plaintext (runa_...). Never retrievable again."""
+  token: String
+}
+
+type RevokeApiTokenPayload {
+  id: UUID
+  revoked: Boolean
+}
+
+input CreateApiTokenInput {
+  """Owning workspace (organization id)."""
+  organizationId: String!
+
+  """Human label for the token."""
+  name: String!
+
+  """Granted scopes (e.g. ["task:read"])."""
+  scopes: [String!]!
+}
+
+input RevokeApiTokenInput {
+  id: UUID!
+}
+
 """Cached link preview metadata for a URL."""
 type LinkPreview {
   """The requested URL."""
@@ -13728,6 +13757,22 @@ type Mutation {
     """
     input: DeleteWebhookEndpointInput!
   ): DeleteWebhookEndpointPayload
+
+  """Issue a scoped API token for a workspace (requires workspace admin)."""
+  createApiToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateApiTokenInput!
+  ): CreateApiTokenPayload
+
+  """Revoke an API token (requires workspace admin)."""
+  revokeApiToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: RevokeApiTokenInput!
+  ): RevokeApiTokenPayload
 }
 
 """A single audit/activity entry for a task, sourced from Chronicle."""

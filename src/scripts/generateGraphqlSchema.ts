@@ -56,6 +56,11 @@ import {
 } from "lib/search";
 import { moveTask } from "lib/tasks/moveTask";
 import {
+  apiTokenOrganizationId,
+  createApiToken,
+  revokeApiToken,
+} from "lib/tokens/apiTokens";
+import {
   createWebhookEndpoint,
   deleteWebhookEndpoint,
   rotateWebhookEndpointSecret,
@@ -176,6 +181,11 @@ const generateGraphqlSchema = async () => {
       "fractional-indexing": { generateNKeysBetween },
       "lib/db/db": { pgPool },
       "lib/tasks/moveTask": { moveTask },
+      "lib/tokens/apiTokens": {
+        createApiToken,
+        revokeApiToken,
+        apiTokenOrganizationId,
+      },
       "lib/webhooks/endpoints": {
         createWebhookEndpoint,
         rotateWebhookEndpointSecret,

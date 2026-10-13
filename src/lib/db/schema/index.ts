@@ -10,6 +10,7 @@
 // - Track: role changes, organization access, task deletions
 // - Fields: entityType, entityId, action, userId, changes (jsonb), createdAt
 
+export * from "./apiToken.table";
 export * from "./assignee.table";
 export * from "./attachment.table";
 export * from "./column.table";
