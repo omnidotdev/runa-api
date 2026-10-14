@@ -17,8 +17,8 @@ import { enqueueAssignmentDigest } from "lib/notifications/digestQueue";
 import { events, notifications } from "lib/providers";
 import { deleteCommentFromIndex, deleteProjectFromIndex, deleteTaskFromIndex, indexComment, indexProject, indexTask } from "lib/search";
 import { moveTask } from "lib/tasks/moveTask";
-import { apiTokenOrganizationId, createApiToken, revokeApiToken } from "lib/tokens/apiTokens";
-import { createWebhookEndpoint, deleteWebhookEndpoint, rotateWebhookEndpointSecret, setWebhookEndpointEnabled, webhookEndpointOrganizationId } from "lib/webhooks/endpoints";
+import { apiTokenOrganizationId, createApiToken, listApiTokens, revokeApiToken } from "lib/tokens/apiTokens";
+import { createWebhookEndpoint, deleteWebhookEndpoint, listWebhookEndpoints, rotateWebhookEndpointSecret, setWebhookEndpointEnabled, webhookEndpointOrganizationId } from "lib/webhooks/endpoints";
 import { sql } from "pg-sql2";
 const rawNodeIdCodec = {
   name: "raw",
@@ -116,7 +116,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "1018564",
+    oid: "1019586",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -177,7 +177,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "1018179",
+    oid: "1019201",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -247,7 +247,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "1017963",
+    oid: "1018984",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -319,7 +319,7 @@ const spec_notificationDigestQueue = {
     }
   },
   extensions: {
-    oid: "1018800",
+    oid: "1019822",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +400,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "1018336",
+    oid: "1019358",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -491,7 +491,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "1018034",
+    oid: "1019055",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -575,7 +575,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "1018778",
+    oid: "1019800",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -666,7 +666,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "1017974",
+    oid: "1018995",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -755,7 +755,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "1017987",
+    oid: "1019008",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -846,7 +846,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "1018230",
+    oid: "1019252",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -937,7 +937,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "1018548",
+    oid: "1019570",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1036,7 +1036,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "1018165",
+    oid: "1019187",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1128,7 +1128,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "1018630",
+    oid: "1019652",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1231,7 +1231,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "1018247",
+    oid: "1019269",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1340,7 +1340,7 @@ const apiTokenCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1018951",
+    oid: "1019973",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1455,7 +1455,7 @@ const webhookEndpointCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1018929",
+    oid: "1019951",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1561,7 +1561,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "1018758",
+    oid: "1019780",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1690,7 +1690,7 @@ const linkUnfurlCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1018887",
+    oid: "1019909",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1825,7 +1825,7 @@ const webhookDeliveryCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1018908",
+    oid: "1019930",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1937,7 +1937,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "1018049",
+    oid: "1019070",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2077,7 +2077,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "1018015",
+    oid: "1019036",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2255,7 +2255,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "1018717",
+    oid: "1019739",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2428,7 +2428,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "1018000",
+    oid: "1019021",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5239,7 +5239,10 @@ function ProjectInput_backgroundApply(obj, val, info) {
 const MoveTaskPayload_taskId_plan = $row => lambda($row, r => r?.["id"] ?? null);
 const WebhookEndpointInfo_url_plan = $row => lambda($row, r => r?.["url"] ?? null);
 const WebhookEndpointInfo_enabled_plan = $row => lambda($row, r => r?.["enabled"] ?? null);
+const WebhookEndpointInfo_createdAt_plan = $row => lambda($row, r => r?.["createdAt"] ?? null);
 const CreateWebhookEndpointPayload_secret_plan = $row => lambda($row, r => r?.["secret"] ?? null);
+const CreateApiTokenPayload_name_plan = $row => lambda($row, r => r?.["name"] ?? null);
+const RevokeApiTokenPayload_revoked_plan = $row => lambda($row, r => r?.["revoked"] ?? null);
 const Query_taskLabelPlan = (_$root, {
   $taskId,
   $labelId
@@ -20741,6 +20744,16 @@ type RevokeApiTokenPayload {
   revoked: Boolean
 }
 
+"""A token's metadata, without the secret."""
+type ApiTokenInfo {
+  id: UUID
+  name: String
+  scopes: [String!]
+  createdAt: String
+  lastUsedAt: String
+  revoked: Boolean
+}
+
 input CreateApiTokenInput {
   """Owning workspace (organization id)."""
   organizationId: String!
@@ -21681,6 +21694,14 @@ type Query implements Node {
   observer: Observer
 
   """
+  List a workspace's webhook endpoints (requires workspace admin). Secret-less.
+  """
+  webhookEndpoints(organizationId: String!): [WebhookEndpointInfo!]
+
+  """List a workspace's API tokens (requires workspace admin). Secret-less."""
+  apiTokens(organizationId: String!): [ApiTokenInfo!]
+
+  """
   Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.
   """
   linkPreview(url: String!): LinkPreview
@@ -22531,6 +22552,17 @@ export const objects = {
       return !0;
     },
     plans: {
+      apiTokens(_$root, fieldArgs) {
+        const $organizationId = fieldArgs.getRaw("organizationId"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $organizationId], async ([observer, accessToken, authzCache, organizationId]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          return listApiTokens(organizationId);
+        }, !1);
+      },
       assignee: Query_assigneePlan,
       assigneeById(_$parent, args) {
         const $nodeId = args.getRaw("id");
@@ -23128,6 +23160,17 @@ export const objects = {
           filter: Project_columnsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
+      },
+      webhookEndpoints(_$root, fieldArgs) {
+        const $organizationId = fieldArgs.getRaw("organizationId"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $organizationId], async ([observer, accessToken, authzCache, organizationId]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          return listWebhookEndpoints(organizationId);
+        }, !1);
       }
     }
   },
@@ -24782,6 +24825,20 @@ ${String(oldPlan47)}`);
       }
     }
   },
+  ApiTokenInfo: {
+    plans: {
+      createdAt: WebhookEndpointInfo_createdAt_plan,
+      id: MoveTaskPayload_taskId_plan,
+      lastUsedAt($row) {
+        return lambda($row, r => r?.["lastUsedAt"] ?? null);
+      },
+      name: CreateApiTokenPayload_name_plan,
+      revoked: RevokeApiTokenPayload_revoked_plan,
+      scopes($row) {
+        return lambda($row, r => r?.["scopes"] ?? null);
+      }
+    }
+  },
   Assignee: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -25109,9 +25166,7 @@ ${String(oldPlan47)}`);
   CreateApiTokenPayload: {
     plans: {
       id: MoveTaskPayload_taskId_plan,
-      name($row) {
-        return lambda($row, r => r?.["name"] ?? null);
-      },
+      name: CreateApiTokenPayload_name_plan,
       token($row) {
         return lambda($row, r => r?.["token"] ?? null);
       }
@@ -26514,9 +26569,7 @@ ${String(oldPlan47)}`);
   RevokeApiTokenPayload: {
     plans: {
       id: MoveTaskPayload_taskId_plan,
-      revoked($row) {
-        return lambda($row, r => r?.["revoked"] ?? null);
-      }
+      revoked: RevokeApiTokenPayload_revoked_plan
     }
   },
   RotateWebhookEndpointSecretPayload: {
@@ -27535,9 +27588,7 @@ ${String(oldPlan47)}`);
   },
   WebhookEndpointInfo: {
     plans: {
-      createdAt($row) {
-        return lambda($row, r => r?.["createdAt"] ?? null);
-      },
+      createdAt: WebhookEndpointInfo_createdAt_plan,
       enabled: WebhookEndpointInfo_enabled_plan,
       eventTypes($row) {
         return lambda($row, r => r?.["eventTypes"] ?? null);

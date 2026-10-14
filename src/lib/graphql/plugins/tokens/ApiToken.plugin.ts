@@ -6,6 +6,7 @@ import { checkPermission } from "lib/authz";
 import {
   apiTokenOrganizationId,
   createApiToken,
+  listApiTokens,
   revokeApiToken,
 } from "lib/tokens/apiTokens";
 
@@ -14,8 +15,8 @@ import {
  * from auto-CRUD (SmartTag `-*`) because it holds token hashes; these mutations
  * are the only surface. Each requires workspace `admin` (checked against the
  * token's owning organization), the plaintext is generated server-side and
- * returned ONLY on create, and the service scopes every write to that org. A
- * listing query is deferred to the management UI slice.
+ * returned ONLY on create, and the service scopes every write to that org. A secret-less
+ * listing query (apiTokens) is also exposed.
  */
 
 /** Reads one property off a returned plain-object result (or null). */
@@ -46,6 +47,16 @@ const ApiTokenPlugin = makeExtendSchemaPlugin(() => ({
       revoked: Boolean
     }
 
+    "A token's metadata, without the secret."
+    type ApiTokenInfo {
+      id: UUID
+      name: String
+      scopes: [String!]
+      createdAt: String
+      lastUsedAt: String
+      revoked: Boolean
+    }
+
     input CreateApiTokenInput {
       "Owning workspace (organization id)."
       organizationId: String!
@@ -65,6 +76,11 @@ const ApiTokenPlugin = makeExtendSchemaPlugin(() => ({
       "Revoke an API token (requires workspace admin)."
       revokeApiToken(input: RevokeApiTokenInput!): RevokeApiTokenPayload
     }
+
+    extend type Query {
+      "List a workspace's API tokens (requires workspace admin). Secret-less."
+      apiTokens(organizationId: String!): [ApiTokenInfo!]
+    }
   `,
   plans: {
     CreateApiTokenPayload: {
@@ -75,6 +91,50 @@ const ApiTokenPlugin = makeExtendSchemaPlugin(() => ({
     RevokeApiTokenPayload: {
       id: rowField("id"),
       revoked: rowField("revoked"),
+    },
+    ApiTokenInfo: {
+      id: rowField("id"),
+      name: rowField("name"),
+      scopes: rowField("scopes"),
+      createdAt: rowField("createdAt"),
+      lastUsedAt: rowField("lastUsedAt"),
+      revoked: rowField("revoked"),
+    },
+    Query: {
+      apiTokens: EXPORTABLE(
+        (context, lambda, checkPermission, listApiTokens) =>
+          // biome-ignore lint/suspicious/noExplicitAny: grafast plan signature
+          (_$root: any, fieldArgs: any) => {
+            const $organizationId = fieldArgs.getRaw("organizationId");
+            const $observer = context().get("observer");
+            const $accessToken = context().get("accessToken");
+            const $authzCache = context().get("authzCache");
+            return lambda(
+              [$observer, $accessToken, $authzCache, $organizationId],
+              // biome-ignore lint/suspicious/noExplicitAny: grafast lambda values
+              async ([
+                observer,
+                accessToken,
+                authzCache,
+                organizationId,
+              ]: any) => {
+                if (!observer || !accessToken) throw new Error("Unauthorized");
+                const ok = await checkPermission(
+                  observer.identityProviderId,
+                  "organization",
+                  organizationId,
+                  "admin",
+                  accessToken,
+                  authzCache,
+                );
+                if (!ok) throw new Error("Unauthorized");
+                return listApiTokens(organizationId);
+              },
+              false,
+            );
+          },
+        [context, lambda, checkPermission, listApiTokens],
+      ),
     },
     Mutation: {
       createApiToken: EXPORTABLE(

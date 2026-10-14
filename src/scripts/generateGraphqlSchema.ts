@@ -58,11 +58,13 @@ import { moveTask } from "lib/tasks/moveTask";
 import {
   apiTokenOrganizationId,
   createApiToken,
+  listApiTokens,
   revokeApiToken,
 } from "lib/tokens/apiTokens";
 import {
   createWebhookEndpoint,
   deleteWebhookEndpoint,
+  listWebhookEndpoints,
   rotateWebhookEndpointSecret,
   setWebhookEndpointEnabled,
   webhookEndpointOrganizationId,
@@ -185,6 +187,7 @@ const generateGraphqlSchema = async () => {
         createApiToken,
         revokeApiToken,
         apiTokenOrganizationId,
+        listApiTokens,
       },
       "lib/webhooks/endpoints": {
         createWebhookEndpoint,
@@ -192,6 +195,7 @@ const generateGraphqlSchema = async () => {
         setWebhookEndpointEnabled,
         deleteWebhookEndpoint,
         webhookEndpointOrganizationId,
+        listWebhookEndpoints,
       },
       "lib/chronicle/taskActivity": { fetchTaskActivity },
       "lib/links/unfurl": { getOrCreateUnfurl },

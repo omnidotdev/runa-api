@@ -12014,6 +12014,16 @@ type RevokeApiTokenPayload {
   revoked: Boolean
 }
 
+"""A token's metadata, without the secret."""
+type ApiTokenInfo {
+  id: UUID
+  name: String
+  scopes: [String!]
+  createdAt: String
+  lastUsedAt: String
+  revoked: Boolean
+}
+
 input CreateApiTokenInput {
   """Owning workspace (organization id)."""
   organizationId: String!
@@ -12952,6 +12962,14 @@ type Query implements Node {
   Returns null if not authenticated.
   """
   observer: Observer
+
+  """
+  List a workspace's webhook endpoints (requires workspace admin). Secret-less.
+  """
+  webhookEndpoints(organizationId: String!): [WebhookEndpointInfo!]
+
+  """List a workspace's API tokens (requires workspace admin). Secret-less."""
+  apiTokens(organizationId: String!): [ApiTokenInfo!]
 
   """
   Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.

@@ -6,6 +6,7 @@ import { checkPermission } from "lib/authz";
 import {
   createWebhookEndpoint,
   deleteWebhookEndpoint,
+  listWebhookEndpoints,
   rotateWebhookEndpointSecret,
   setWebhookEndpointEnabled,
   webhookEndpointOrganizationId,
@@ -17,8 +18,7 @@ import {
  * mutations are the only way to manage it. Each requires workspace `admin`
  * (checked against the endpoint's owning organization), the secret is generated
  * server-side and returned ONLY on create and rotate, and the service layer
- * scopes every write to that organization. A listing query is intentionally
- * deferred to the management UI slice.
+ * scopes every write to that organization. A secret-less listing query (webhookEndpoints) is also exposed.
  */
 
 /** Reads one property off a returned plain-object result (or null). */
@@ -104,6 +104,11 @@ const WebhookEndpointPlugin = makeExtendSchemaPlugin(() => ({
         input: DeleteWebhookEndpointInput!
       ): DeleteWebhookEndpointPayload
     }
+
+    extend type Query {
+      "List a workspace's webhook endpoints (requires workspace admin). Secret-less."
+      webhookEndpoints(organizationId: String!): [WebhookEndpointInfo!]
+    }
   `,
   plans: {
     CreateWebhookEndpointPayload: {
@@ -126,6 +131,42 @@ const WebhookEndpointPlugin = makeExtendSchemaPlugin(() => ({
     DeleteWebhookEndpointPayload: {
       id: rowField("id"),
       deleted: rowField("deleted"),
+    },
+    Query: {
+      webhookEndpoints: EXPORTABLE(
+        (context, lambda, checkPermission, listWebhookEndpoints) =>
+          // biome-ignore lint/suspicious/noExplicitAny: grafast plan signature
+          (_$root: any, fieldArgs: any) => {
+            const $organizationId = fieldArgs.getRaw("organizationId");
+            const $observer = context().get("observer");
+            const $accessToken = context().get("accessToken");
+            const $authzCache = context().get("authzCache");
+            return lambda(
+              [$observer, $accessToken, $authzCache, $organizationId],
+              // biome-ignore lint/suspicious/noExplicitAny: grafast lambda values
+              async ([
+                observer,
+                accessToken,
+                authzCache,
+                organizationId,
+              ]: any) => {
+                if (!observer || !accessToken) throw new Error("Unauthorized");
+                const ok = await checkPermission(
+                  observer.identityProviderId,
+                  "organization",
+                  organizationId,
+                  "admin",
+                  accessToken,
+                  authzCache,
+                );
+                if (!ok) throw new Error("Unauthorized");
+                return listWebhookEndpoints(organizationId);
+              },
+              false,
+            );
+          },
+        [context, lambda, checkPermission, listWebhookEndpoints],
+      ),
     },
     Mutation: {
       createWebhookEndpoint: EXPORTABLE(
