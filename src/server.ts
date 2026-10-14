@@ -14,6 +14,7 @@ import { useGrafast } from "grafast/envelop";
 import { startWardenSyncPoller } from "lib/authz";
 import { startStructuralReconciler } from "lib/authz/reconcile";
 import authzRoutes from "lib/authz/routes";
+import calendarFeedRoutes from "lib/calendar/feed.route";
 import appConfig from "lib/config/app.config";
 import {
   AUTHZ_API_URL,
@@ -202,6 +203,7 @@ async function startServer(): Promise<void> {
     .use(authzRoutes)
     .use(entitlementsWebhook)
     .use(idpWebhook)
+    .use(calendarFeedRoutes)
     .use(attachmentUploadRoutes)
     .use(attachmentDeleteRoutes)
     .use(attachmentServeRoutes)

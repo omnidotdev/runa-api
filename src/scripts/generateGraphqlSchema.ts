@@ -23,6 +23,7 @@ import {
   isTransactionalSyncMode,
   writeTuples,
 } from "lib/authz";
+import { calendarFeedUrl, projectOrganizationId } from "lib/calendar/feed";
 import { fetchTaskActivity } from "lib/chronicle/taskActivity";
 import graphilePreset from "lib/config/graphile.config";
 import { pgPool } from "lib/db/db";
@@ -61,6 +62,11 @@ import {
   listApiTokens,
   revokeApiToken,
 } from "lib/tokens/apiTokens";
+import {
+  createCalendarFeedToken,
+  getCalendarFeedToken,
+  revokeCalendarFeedToken,
+} from "lib/tokens/calendarFeedTokens";
 import {
   createWebhookEndpoint,
   deleteWebhookEndpoint,
@@ -188,6 +194,15 @@ const generateGraphqlSchema = async () => {
         revokeApiToken,
         apiTokenOrganizationId,
         listApiTokens,
+      },
+      "lib/tokens/calendarFeedTokens": {
+        createCalendarFeedToken,
+        revokeCalendarFeedToken,
+        getCalendarFeedToken,
+      },
+      "lib/calendar/feed": {
+        calendarFeedUrl,
+        projectOrganizationId,
       },
       "lib/webhooks/endpoints": {
         createWebhookEndpoint,

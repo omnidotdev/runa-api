@@ -12039,6 +12039,37 @@ input RevokeApiTokenInput {
   id: UUID!
 }
 
+"""A project's calendar feed status, without the secret feed URL."""
+type CalendarFeedStatus {
+  projectId: UUID
+
+  """Whether a live feed URL currently exists for the project."""
+  enabled: Boolean
+  createdAt: String
+  lastUsedAt: String
+}
+
+"""
+Create result. The feed URL contains the secret and is shown only here.
+"""
+type CreateCalendarFeedTokenPayload {
+  projectId: UUID
+  url: String
+}
+
+type RevokeCalendarFeedTokenPayload {
+  projectId: UUID
+  revoked: Boolean
+}
+
+input CreateCalendarFeedTokenInput {
+  projectId: UUID!
+}
+
+input RevokeCalendarFeedTokenInput {
+  projectId: UUID!
+}
+
 """Cached link preview metadata for a URL."""
 type LinkPreview {
   """The requested URL."""
@@ -12972,6 +13003,11 @@ type Query implements Node {
   apiTokens(organizationId: String!): [ApiTokenInfo!]
 
   """
+  A project's calendar feed status (requires workspace admin). Secret-less.
+  """
+  calendarFeed(projectId: UUID!): CalendarFeedStatus
+
+  """
   Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.
   """
   linkPreview(url: String!): LinkPreview
@@ -13791,6 +13827,24 @@ type Mutation {
     """
     input: RevokeApiTokenInput!
   ): RevokeApiTokenPayload
+
+  """
+  Create or regenerate a project's calendar feed URL (requires workspace admin). Returns the URL once.
+  """
+  createCalendarFeedToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCalendarFeedTokenInput!
+  ): CreateCalendarFeedTokenPayload
+
+  """Revoke a project's calendar feed URL (requires workspace admin)."""
+  revokeCalendarFeedToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: RevokeCalendarFeedTokenInput!
+  ): RevokeCalendarFeedTokenPayload
 }
 
 """A single audit/activity entry for a task, sourced from Chronicle."""

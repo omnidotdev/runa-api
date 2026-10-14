@@ -23,6 +23,7 @@ import {
   UserPreferencePlugin,
 } from "lib/graphql/plugins/authorization";
 import { AuthzSyncPlugin } from "lib/graphql/plugins/authz";
+import CalendarFeedPlugin from "lib/graphql/plugins/calendar/CalendarFeed.plugin";
 import {
   DefaultColumnsPlugin,
   DefaultUserPreferencePlugin,
@@ -80,6 +81,8 @@ const graphilePreset: GraphileConfig.Preset = {
     WebhookEndpointPlugin,
     // Custom API-token management mutations (admin-gated; plaintext shown once)
     ApiTokenPlugin,
+    // Custom calendar-feed management mutations (admin-gated; feed URL shown once)
+    CalendarFeedPlugin,
     // Custom linkPreview query (server-side OpenGraph/favicon unfurl)
     LinkPreviewPlugin,
     // Custom taskActivity query (per-task audit feed from Chronicle)

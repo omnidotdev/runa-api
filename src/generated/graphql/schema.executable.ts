@@ -4,6 +4,7 @@ import { generateNKeysBetween } from "fractional-indexing";
 import { ConnectionStep, EdgeStep, ExecutableStep, Modifier, ObjectStep, __ValueStep, access, assertStep, bakedInputRuntime, connection, constant, context, createObjectAndApplyChildren, first, get as get2, inhibitOnNull, inspect, isStep, lambda, list, makeDecodeNodeId, makeGrafastSchema, markSyncAndSafe, object, rootValue, sideEffect, specFromNodeId } from "grafast";
 import { GraphQLError, Kind } from "graphql";
 import { checkPermission, deleteTuples, isAuthzEnabled, isTransactionalSyncMode, writeTuples } from "lib/authz";
+import { calendarFeedUrl, projectOrganizationId } from "lib/calendar/feed";
 import { fetchTaskActivity } from "lib/chronicle/taskActivity";
 import { pgPool } from "lib/db/db";
 import { columns, userPreferences, users } from "lib/db/schema";
@@ -18,6 +19,7 @@ import { events, notifications } from "lib/providers";
 import { deleteCommentFromIndex, deleteProjectFromIndex, deleteTaskFromIndex, indexComment, indexProject, indexTask } from "lib/search";
 import { moveTask } from "lib/tasks/moveTask";
 import { apiTokenOrganizationId, createApiToken, listApiTokens, revokeApiToken } from "lib/tokens/apiTokens";
+import { createCalendarFeedToken, getCalendarFeedToken, revokeCalendarFeedToken } from "lib/tokens/calendarFeedTokens";
 import { createWebhookEndpoint, deleteWebhookEndpoint, listWebhookEndpoints, rotateWebhookEndpointSecret, setWebhookEndpointEnabled, webhookEndpointOrganizationId } from "lib/webhooks/endpoints";
 import { sql } from "pg-sql2";
 const rawNodeIdCodec = {
@@ -116,7 +118,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "1019586",
+    oid: "1021630",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -177,7 +179,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "1019201",
+    oid: "1021245",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -247,7 +249,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "1018984",
+    oid: "1021028",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -319,7 +321,7 @@ const spec_notificationDigestQueue = {
     }
   },
   extensions: {
-    oid: "1019822",
+    oid: "1021866",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -400,7 +402,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "1019358",
+    oid: "1021402",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -491,7 +493,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "1019055",
+    oid: "1021099",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -575,7 +577,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "1019800",
+    oid: "1021844",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -666,7 +668,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "1018995",
+    oid: "1021039",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -755,7 +757,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "1019008",
+    oid: "1021052",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -846,7 +848,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "1019252",
+    oid: "1021296",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -937,7 +939,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "1019570",
+    oid: "1021614",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -948,6 +950,108 @@ const spec_projectLabel = {
   executor: executor
 };
 const projectLabelCodec = recordCodec(spec_projectLabel);
+const calendarFeedTokenIdentifier = sql.identifier("public", "calendar_feed_token");
+const calendarFeedTokenCodec = recordCodec({
+  name: "calendarFeedToken",
+  identifier: calendarFeedTokenIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    token_hash: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_by: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    last_used_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    revoked_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "1022035",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "calendar_feed_token"
+    },
+    tags: {
+      __proto__: null,
+      behavior: "-*"
+    }
+  },
+  executor: executor
+});
 const labelIdentifier = sql.identifier("public", "label");
 const spec_label = {
   name: "label",
@@ -1036,7 +1140,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "1019187",
+    oid: "1021231",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1128,7 +1232,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "1019652",
+    oid: "1021696",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1231,7 +1335,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "1019269",
+    oid: "1021313",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1340,7 +1444,7 @@ const apiTokenCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1019973",
+    oid: "1022017",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1455,7 +1559,7 @@ const webhookEndpointCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1019951",
+    oid: "1021995",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1561,7 +1665,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "1019780",
+    oid: "1021824",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1690,7 +1794,7 @@ const linkUnfurlCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1019909",
+    oid: "1021953",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1825,7 +1929,7 @@ const webhookDeliveryCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1019930",
+    oid: "1021974",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1937,7 +2041,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "1019070",
+    oid: "1021114",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2077,7 +2181,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "1019036",
+    oid: "1021080",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2255,7 +2359,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "1019739",
+    oid: "1021783",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2428,7 +2532,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "1019021",
+    oid: "1021065",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2732,6 +2836,31 @@ const project_label_resourceOptionsConfig = {
   },
   uniques: project_labelUniques
 };
+const calendar_feed_token_resourceOptionsConfig = {
+  executor: executor,
+  name: "calendar_feed_token",
+  identifier: "main.public.calendar_feed_token",
+  from: calendarFeedTokenIdentifier,
+  codec: calendarFeedTokenCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "calendar_feed_token"
+    },
+    tags: {
+      behavior: "-*"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: [{
+    attributes: ["id"],
+    isPrimary: true
+  }]
+};
 const labelUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2940,6 +3069,7 @@ const registryConfig = {
     post: postCodec,
     projectColumn: projectColumnCodec,
     projectLabel: projectLabelCodec,
+    calendarFeedToken: calendarFeedTokenCodec,
     label: labelCodec,
     projectLink: projectLinkCodec,
     int4: TYPES.int,
@@ -2970,6 +3100,7 @@ const registryConfig = {
     post: post_resourceOptionsConfig,
     project_column: project_column_resourceOptionsConfig,
     project_label: project_label_resourceOptionsConfig,
+    calendar_feed_token: calendar_feed_token_resourceOptionsConfig,
     label: label_resourceOptionsConfig,
     project_link: project_link_resourceOptionsConfig,
     user_preference: user_preference_resourceOptionsConfig,
@@ -3155,6 +3286,16 @@ const registryConfig = {
         isUnique: true
       }
     },
+    calendarFeedToken: {
+      __proto__: null,
+      projectByMyProjectId: {
+        localCodec: calendarFeedTokenCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["project_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     column: {
       __proto__: null,
       projectByMyProjectId: {
@@ -3304,6 +3445,13 @@ const registryConfig = {
       projectLinksByTheirProjectId: {
         localCodec: projectCodec,
         remoteResourceOptions: project_link_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isReferencee: true
+      },
+      calendarFeedTokensByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: calendar_feed_token_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["project_id"],
         isReferencee: true
@@ -5237,12 +5385,14 @@ function ProjectInput_backgroundApply(obj, val, info) {
   obj.set("background", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const MoveTaskPayload_taskId_plan = $row => lambda($row, r => r?.["id"] ?? null);
+const MoveTaskPayload_projectId_plan = $row => lambda($row, r => r?.["projectId"] ?? null);
 const WebhookEndpointInfo_url_plan = $row => lambda($row, r => r?.["url"] ?? null);
 const WebhookEndpointInfo_enabled_plan = $row => lambda($row, r => r?.["enabled"] ?? null);
 const WebhookEndpointInfo_createdAt_plan = $row => lambda($row, r => r?.["createdAt"] ?? null);
 const CreateWebhookEndpointPayload_secret_plan = $row => lambda($row, r => r?.["secret"] ?? null);
 const CreateApiTokenPayload_name_plan = $row => lambda($row, r => r?.["name"] ?? null);
 const RevokeApiTokenPayload_revoked_plan = $row => lambda($row, r => r?.["revoked"] ?? null);
+const ApiTokenInfo_lastUsedAt_plan = $row => lambda($row, r => r?.["lastUsedAt"] ?? null);
 const Query_taskLabelPlan = (_$root, {
   $taskId,
   $labelId
@@ -20769,6 +20919,37 @@ input RevokeApiTokenInput {
   id: UUID!
 }
 
+"""A project's calendar feed status, without the secret feed URL."""
+type CalendarFeedStatus {
+  projectId: UUID
+
+  """Whether a live feed URL currently exists for the project."""
+  enabled: Boolean
+  createdAt: String
+  lastUsedAt: String
+}
+
+"""
+Create result. The feed URL contains the secret and is shown only here.
+"""
+type CreateCalendarFeedTokenPayload {
+  projectId: UUID
+  url: String
+}
+
+type RevokeCalendarFeedTokenPayload {
+  projectId: UUID
+  revoked: Boolean
+}
+
+input CreateCalendarFeedTokenInput {
+  projectId: UUID!
+}
+
+input RevokeCalendarFeedTokenInput {
+  projectId: UUID!
+}
+
 """Cached link preview metadata for a URL."""
 type LinkPreview {
   """The requested URL."""
@@ -21702,6 +21883,11 @@ type Query implements Node {
   apiTokens(organizationId: String!): [ApiTokenInfo!]
 
   """
+  A project's calendar feed status (requires workspace admin). Secret-less.
+  """
+  calendarFeed(projectId: UUID!): CalendarFeedStatus
+
+  """
   Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.
   """
   linkPreview(url: String!): LinkPreview
@@ -22521,6 +22707,24 @@ type Mutation {
     """
     input: RevokeApiTokenInput!
   ): RevokeApiTokenPayload
+
+  """
+  Create or regenerate a project's calendar feed URL (requires workspace admin). Returns the URL once.
+  """
+  createCalendarFeedToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCalendarFeedTokenInput!
+  ): CreateCalendarFeedTokenPayload
+
+  """Revoke a project's calendar feed URL (requires workspace admin)."""
+  revokeCalendarFeedToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: RevokeCalendarFeedTokenInput!
+  ): RevokeCalendarFeedTokenPayload
 }
 
 """A single audit/activity entry for a task, sourced from Chronicle."""
@@ -22609,6 +22813,25 @@ export const objects = {
           filter: Project_columnsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
+      },
+      calendarFeed(_$root, fieldArgs) {
+        const $projectId = fieldArgs.getRaw("projectId"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $projectId], async ([observer, accessToken, authzCache, projectId]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          const organizationId = await projectOrganizationId(projectId);
+          if (!organizationId) throw Error("Not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          const token = await getCalendarFeedToken(projectId, organizationId);
+          return {
+            projectId,
+            enabled: token !== null,
+            createdAt: token?.createdAt ?? null,
+            lastUsedAt: token?.lastUsedAt ?? null
+          };
+        }, !1);
       },
       column(_$root, {
         $rowId
@@ -23223,6 +23446,29 @@ ${String(oldPlan3)}`);
         args: {
           input: applyInputToInsert
         }
+      },
+      createCalendarFeedToken(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $input], async ([observer, accessToken, authzCache, input]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          const organizationId = await projectOrganizationId(input.projectId);
+          if (!organizationId) throw Error("Not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          const {
+            secret
+          } = await createCalendarFeedToken({
+            organizationId,
+            projectId: input.projectId,
+            createdBy: observer.identityProviderId
+          });
+          return {
+            projectId: input.projectId,
+            url: calendarFeedUrl(secret)
+          };
+        }, !1);
       },
       createColumn: {
         plan(...planParams) {
@@ -24223,6 +24469,23 @@ ${String(oldPlan74)}`);
           };
         }, !1);
       },
+      revokeCalendarFeedToken(_$root, fieldArgs) {
+        const $input = fieldArgs.getRaw("input"),
+          $observer = context().get("observer"),
+          $accessToken = context().get("accessToken"),
+          $authzCache = context().get("authzCache");
+        return lambda([$observer, $accessToken, $authzCache, $input], async ([observer, accessToken, authzCache, input]) => {
+          if (!observer || !accessToken) throw Error("Unauthorized");
+          const organizationId = await projectOrganizationId(input.projectId);
+          if (!organizationId) throw Error("Not found");
+          if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+          const revoked = await revokeCalendarFeedToken(input.projectId, organizationId);
+          return {
+            projectId: input.projectId,
+            revoked
+          };
+        }, !1);
+      },
       rotateWebhookEndpointSecret(_$root, fieldArgs) {
         const $input = fieldArgs.getRaw("input"),
           $observer = context().get("observer"),
@@ -24829,9 +25092,7 @@ ${String(oldPlan47)}`);
     plans: {
       createdAt: WebhookEndpointInfo_createdAt_plan,
       id: MoveTaskPayload_taskId_plan,
-      lastUsedAt($row) {
-        return lambda($row, r => r?.["lastUsedAt"] ?? null);
-      },
+      lastUsedAt: ApiTokenInfo_lastUsedAt_plan,
       name: CreateApiTokenPayload_name_plan,
       revoked: RevokeApiTokenPayload_revoked_plan,
       scopes($row) {
@@ -25094,6 +25355,14 @@ ${String(oldPlan47)}`);
       }
     }
   },
+  CalendarFeedStatus: {
+    plans: {
+      createdAt: WebhookEndpointInfo_createdAt_plan,
+      enabled: WebhookEndpointInfo_enabled_plan,
+      lastUsedAt: ApiTokenInfo_lastUsedAt_plan,
+      projectId: MoveTaskPayload_projectId_plan
+    }
+  },
   Column: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -25179,6 +25448,12 @@ ${String(oldPlan47)}`);
       assigneeEdge: CreateAssigneePayload_assigneeEdgePlan,
       clientMutationId: getClientMutationIdForCreatePlan,
       query: queryPlan
+    }
+  },
+  CreateCalendarFeedTokenPayload: {
+    plans: {
+      projectId: MoveTaskPayload_projectId_plan,
+      url: WebhookEndpointInfo_url_plan
     }
   },
   CreateColumnPayload: {
@@ -25789,9 +26064,7 @@ ${String(oldPlan47)}`);
       number($row) {
         return lambda($row, r => r?.["number"] ?? null);
       },
-      projectId($row) {
-        return lambda($row, r => r?.["projectId"] ?? null);
-      },
+      projectId: MoveTaskPayload_projectId_plan,
       taskId: MoveTaskPayload_taskId_plan
     }
   },
@@ -26569,6 +26842,12 @@ ${String(oldPlan47)}`);
   RevokeApiTokenPayload: {
     plans: {
       id: MoveTaskPayload_taskId_plan,
+      revoked: RevokeApiTokenPayload_revoked_plan
+    }
+  },
+  RevokeCalendarFeedTokenPayload: {
+    plans: {
+      projectId: MoveTaskPayload_projectId_plan,
       revoked: RevokeApiTokenPayload_revoked_plan
     }
   },

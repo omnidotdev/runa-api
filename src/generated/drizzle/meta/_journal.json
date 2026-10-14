@@ -484,6 +484,13 @@
       "when": 1791923974914,
       "tag": "0068_motionless_rhino",
       "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1792005527258,
+      "tag": "0069_good_rumiko_fujikawa",
+      "breakpoints": true
     }
   ]
 }

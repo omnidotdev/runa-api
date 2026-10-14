@@ -13,6 +13,13 @@ const SmartTagPlugin = jsonPgSmartTags({
       api_token: {
         tags: { behavior: "-*" },
       },
+      // Calendar feed tokens are a capability credential embedded in a feed URL;
+      // they are managed only through the authorized createCalendarFeedToken /
+      // revokeCalendarFeedToken mutations and resolved by the public feed route,
+      // so hide all auto-CRUD (incl. Node) so the hash is never reachable.
+      calendar_feed_token: {
+        tags: { behavior: "-*" },
+      },
       // Attachment writes go through REST routes (so storage + DB stay in sync),
       // so hide the auto-generated insert/update/delete mutations. Reads remain.
       attachment: {
