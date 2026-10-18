@@ -118,7 +118,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "1024774",
+    oid: "360148",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -179,7 +179,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "1024389",
+    oid: "300631",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -249,7 +249,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "1024172",
+    oid: "300414",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -321,7 +321,7 @@ const spec_notificationDigestQueue = {
     }
   },
   extensions: {
-    oid: "1025010",
+    oid: "1005659",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -402,7 +402,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "1024546",
+    oid: "300788",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -493,7 +493,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "1024243",
+    oid: "300485",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -577,7 +577,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "1024988",
+    oid: "1005637",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -668,7 +668,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "1024183",
+    oid: "300425",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -757,7 +757,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "1024196",
+    oid: "300438",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -848,7 +848,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "1024440",
+    oid: "300682",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -939,7 +939,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "1024758",
+    oid: "360132",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1038,7 +1038,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "1024375",
+    oid: "300617",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1130,7 +1130,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "1024840",
+    oid: "486262",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1233,7 +1233,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "1024457",
+    oid: "300699",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1342,7 +1342,7 @@ const apiTokenCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1025161",
+    oid: "1025302",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1452,7 +1452,7 @@ const calendarFeedTokenCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1025179",
+    oid: "1025320",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1567,7 +1567,7 @@ const webhookEndpointCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1025139",
+    oid: "1025280",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1673,7 +1673,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "1024968",
+    oid: "1005617",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1802,7 +1802,7 @@ const linkUnfurlCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1025097",
+    oid: "1005746",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1937,7 +1937,7 @@ const webhookDeliveryCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1025118",
+    oid: "1025259",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2049,7 +2049,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "1024258",
+    oid: "300500",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2227,7 +2227,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "1024927",
+    oid: "746026",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2382,7 +2382,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "1024224",
+    oid: "300466",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2551,7 +2551,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "1024209",
+    oid: "300451",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5683,15 +5683,24 @@ const planWrapper2 = (plan, _, fieldArgs) => {
           },
           with: resourceEventWith("project")
         }),
-        assocRepo = db.query["labels"],
-        name = (assocId && assocRepo ? await assocRepo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, assocId);
-          },
-          columns: {
-            name: !0
-          }
-        }) : null)?.name ?? null;
+        assocRepo = db.query["labels"];
+      let assoc = assocId && assocRepo ? await assocRepo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.id, assocId);
+        },
+        columns: {
+          name: !0
+        }
+      }) : null;
+      if (!assoc && assocId && assocRepo && false) assoc = await assocRepo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.identityProviderId, assocId);
+        },
+        columns: {
+          name: !0
+        }
+      });
+      const name = assoc?.name ?? null;
       await events.emit(buildResourceEvent({
         entity: "task_label",
         action: "created",
@@ -5833,15 +5842,24 @@ const planWrapper5 = (plan, _, fieldArgs) => {
           },
           with: resourceEventWith("project")
         }),
-        assocRepo = db.query["users"],
-        name = (assocId && assocRepo ? await assocRepo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, assocId);
-          },
-          columns: {
-            name: !0
-          }
-        }) : null)?.name ?? null;
+        assocRepo = db.query["users"];
+      let assoc = assocId && assocRepo ? await assocRepo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.id, assocId);
+        },
+        columns: {
+          name: !0
+        }
+      }) : null;
+      if (!assoc && assocId && assocRepo) assoc = await assocRepo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.identityProviderId, assocId);
+        },
+        columns: {
+          name: !0
+        }
+      });
+      const name = assoc?.name ?? null;
       await events.emit(buildResourceEvent({
         entity: "assignee",
         action: "created",
@@ -7995,15 +8013,24 @@ const planWrapper58 = (plan, _, fieldArgs) => {
           },
           with: resourceEventWith("project")
         }),
-        assocRepo = db.query["labels"],
-        name = (assocId && assocRepo ? await assocRepo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, assocId);
-          },
-          columns: {
-            name: !0
-          }
-        }) : null)?.name ?? null;
+        assocRepo = db.query["labels"];
+      let assoc = assocId && assocRepo ? await assocRepo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.id, assocId);
+        },
+        columns: {
+          name: !0
+        }
+      }) : null;
+      if (!assoc && assocId && assocRepo && false) assoc = await assocRepo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.identityProviderId, assocId);
+        },
+        columns: {
+          name: !0
+        }
+      });
+      const name = assoc?.name ?? null;
       await events.emit(buildResourceEvent({
         entity: "task_label",
         action: "deleted",
@@ -8110,15 +8137,24 @@ const planWrapper61 = (plan, _, fieldArgs) => {
           },
           with: resourceEventWith("project")
         }),
-        assocRepo = db.query["users"],
-        name = (assocId && assocRepo ? await assocRepo.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, assocId);
-          },
-          columns: {
-            name: !0
-          }
-        }) : null)?.name ?? null;
+        assocRepo = db.query["users"];
+      let assoc = assocId && assocRepo ? await assocRepo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.id, assocId);
+        },
+        columns: {
+          name: !0
+        }
+      }) : null;
+      if (!assoc && assocId && assocRepo) assoc = await assocRepo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.identityProviderId, assocId);
+        },
+        columns: {
+          name: !0
+        }
+      });
+      const name = assoc?.name ?? null;
       await events.emit(buildResourceEvent({
         entity: "assignee",
         action: "deleted",

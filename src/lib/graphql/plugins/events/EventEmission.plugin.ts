@@ -248,7 +248,7 @@ const emitTaskAssoc = (
 
               // biome-ignore lint/suspicious/noExplicitAny: relational lookup keyed by table name
               const assocRepo = (db as any).query[assocTable];
-              const assoc =
+              let assoc =
                 assocId && assocRepo
                   ? await assocRepo.findFirst({
                       // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
@@ -257,6 +257,19 @@ const emitTaskAssoc = (
                       columns: { name: true },
                     })
                   : null;
+              // An assignee id arrives in the IDP namespace (the frontend sends
+              // identityProviderId; the UserIdResolver rewrites the mutation
+              // input, but this event reads the raw arg), so when the local-id
+              // lookup misses, resolve the name by identityProviderId. Labels
+              // carry a local id and never need this fallback
+              if (!assoc && assocId && assocRepo && assocTable === "users") {
+                assoc = await assocRepo.findFirst({
+                  // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
+                  where: (fields: any, operators: any) =>
+                    operators.eq(fields.identityProviderId, assocId),
+                  columns: { name: true },
+                });
+              }
               const name = (assoc?.name as string | undefined) ?? null;
 
               await events.emit(
