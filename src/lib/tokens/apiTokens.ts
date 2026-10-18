@@ -13,6 +13,7 @@ import { and, eq, isNull } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import { apiToken } from "lib/db/schema";
+import { invalidScopes } from "lib/tokens/scopes";
 
 import type { SelectApiToken } from "lib/db/schema";
 
@@ -55,6 +56,12 @@ export const createApiToken = async (params: {
   scopes: string[];
   createdBy: string;
 }): Promise<{ token: ApiTokenInfo; secret: string }> => {
+  // reject unknown scopes so a token never stores an unenforceable grant
+  const invalid = invalidScopes(params.scopes);
+  if (invalid.length > 0) {
+    throw new Error(`Unknown scope(s): ${invalid.join(", ")}`);
+  }
+
   const secret = `${TOKEN_PREFIX}${randomBytes(32).toString("base64url")}`;
   const [row] = await dbPool
     .insert(apiToken)
