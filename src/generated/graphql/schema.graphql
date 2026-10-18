@@ -1215,6 +1215,9 @@ input TaskFilter {
   """Filter by the object’s `number` field."""
   number: IntFilter
 
+  """Filter by the object’s `dueHasTime` field."""
+  dueHasTime: BooleanFilter
+
   """Filter by the object’s `assignees` relation."""
   assignees: TaskToManyAssigneeFilter
 
@@ -1987,6 +1990,7 @@ input TaskDistinctCountAggregateFilter {
   columnIndex: BigIntFilter
   projectId: BigIntFilter
   number: BigIntFilter
+  dueHasTime: BigIntFilter
 }
 
 input TaskMinAggregateFilter {
@@ -3202,6 +3206,8 @@ enum ProjectOrderBy {
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   TASKS_DISTINCT_COUNT_NUMBER_ASC
   TASKS_DISTINCT_COUNT_NUMBER_DESC
+  TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC
+  TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC
   TASKS_MIN_NUMBER_ASC
   TASKS_MIN_NUMBER_DESC
   TASKS_MAX_NUMBER_ASC
@@ -3444,6 +3450,7 @@ type Task implements Node {
   columnIndex: String!
   projectId: UUID!
   number: Int
+  dueHasTime: Boolean!
 
   """Reads a single `User` that is related to this `Task`."""
   author: User
@@ -5142,6 +5149,9 @@ input TaskCondition {
 
   """Checks for equality with the object’s `number` field."""
   number: Int
+
+  """Checks for equality with the object’s `dueHasTime` field."""
+  dueHasTime: Boolean
 }
 
 """Methods to use when ordering `Task`."""
@@ -5173,6 +5183,8 @@ enum TaskOrderBy {
   PROJECT_ID_DESC
   NUMBER_ASC
   NUMBER_DESC
+  DUE_HAS_TIME_ASC
+  DUE_HAS_TIME_DESC
   ASSIGNEES_COUNT_ASC
   ASSIGNEES_COUNT_DESC
   ASSIGNEES_DISTINCT_COUNT_USER_ID_ASC
@@ -6159,6 +6171,9 @@ type TaskDistinctCountAggregates {
 
   """Distinct count of number across the matching connection"""
   number: BigInt
+
+  """Distinct count of dueHasTime across the matching connection"""
+  dueHasTime: BigInt
 }
 
 type TaskMinAggregates {
@@ -6215,6 +6230,7 @@ enum TaskGroupBy {
   COLUMN_INDEX
   PROJECT_ID
   NUMBER
+  DUE_HAS_TIME
 }
 
 """Conditions for `Task` aggregates."""
@@ -6483,6 +6499,8 @@ enum ColumnOrderBy {
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   TASKS_DISTINCT_COUNT_NUMBER_ASC
   TASKS_DISTINCT_COUNT_NUMBER_DESC
+  TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC
+  TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC
   TASKS_MIN_NUMBER_ASC
   TASKS_MIN_NUMBER_DESC
   TASKS_MAX_NUMBER_ASC
@@ -7515,6 +7533,8 @@ enum UserOrderBy {
   AUTHORED_TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_ASC
   AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC
   AUTHORED_TASKS_MIN_NUMBER_ASC
   AUTHORED_TASKS_MIN_NUMBER_DESC
   AUTHORED_TASKS_MAX_NUMBER_ASC
@@ -9721,6 +9741,7 @@ input TaskInput {
   columnIndex: String!
   projectId: UUID!
   number: Int
+  dueHasTime: Boolean
 }
 
 """The output of our create `Project` mutation."""
@@ -10944,6 +10965,7 @@ input TaskPatch {
   columnIndex: String
   projectId: UUID
   number: Int
+  dueHasTime: Boolean
 }
 
 """All input for the `updateTask` mutation."""
@@ -12202,14 +12224,14 @@ type Query implements Node {
   """Get a single `Setting`."""
   settingByOrganizationId(organizationId: String!): Setting
 
+  """Get a single `Attachment`."""
+  attachment(rowId: UUID!): Attachment
+
   """Get a single `Task`."""
   task(rowId: UUID!): Task
 
   """Get a single `Task`."""
   taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
-
-  """Get a single `Attachment`."""
-  attachment(rowId: UUID!): Attachment
 
   """Get a single `Project`."""
   project(rowId: UUID!): Project
@@ -12341,12 +12363,6 @@ type Query implements Node {
     id: ID!
   ): Setting
 
-  """Reads a single `Task` using its globally unique `ID`."""
-  taskById(
-    """The globally unique `ID` to be used in selecting a single `Task`."""
-    id: ID!
-  ): Task
-
   """Reads a single `Attachment` using its globally unique `ID`."""
   attachmentById(
     """
@@ -12354,6 +12370,12 @@ type Query implements Node {
     """
     id: ID!
   ): Attachment
+
+  """Reads a single `Task` using its globally unique `ID`."""
+  taskById(
+    """The globally unique `ID` to be used in selecting a single `Task`."""
+    id: ID!
+  ): Task
 
   """Reads a single `Project` using its globally unique `ID`."""
   projectById(
@@ -12909,40 +12931,6 @@ type Query implements Node {
     orderBy: [SettingOrderBy!] = [PRIMARY_KEY_ASC]
   ): SettingConnection
 
-  """Reads and enables pagination through a set of `Task`."""
-  tasks(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaskCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaskFilter
-
-    """The method to use when ordering `Task`."""
-    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaskConnection
-
   """Reads and enables pagination through a set of `Attachment`."""
   attachments(
     """Only read the first `n` values of the set."""
@@ -12976,6 +12964,40 @@ type Query implements Node {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection
+
+  """Reads and enables pagination through a set of `Task`."""
+  tasks(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskFilter
+
+    """The method to use when ordering `Task`."""
+    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskConnection
 
   """Reads and enables pagination through a set of `Project`."""
   projects(

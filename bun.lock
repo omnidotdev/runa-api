@@ -15,7 +15,7 @@
         "@graphile/pg-aggregates": "^0.2.0-rc.1",
         "@graphile/simplify-inflection": "^8.0.0-rc.2",
         "@graphql-yoga/plugin-disable-introspection": "^2.19.0",
-        "@omnidotdev/cadence": "github:omnidotdev/cadence#9352906",
+        "@omnidotdev/cadence": "github:omnidotdev/cadence#7d23f05",
         "@omnidotdev/providers": "github:omnidotdev/providers#6dea671",
         "@omnidotdev/search": "github:omnidotdev/search",
         "@opentelemetry/api": "^1.9.0",
@@ -381,7 +381,7 @@
 
     "@npmcli/redact": ["@npmcli/redact@4.0.0", "", {}, "sha512-gOBg5YHMfZy+TfHArfVogwgfBeQnKbbGo3pSUyK/gSI0AVu+pEiDVcKlQb0D8Mg1LNRZILZ6XG8I5dJ4KuAd9Q=="],
 
-    "@omnidotdev/cadence": ["@omnidotdev/cadence@github:omnidotdev/cadence#9352906", { "dependencies": { "@internationalized/date": "^3.10.1" } }, "omnidotdev-cadence-9352906", "sha512-pH+1qGDRtoMF8d0/MfzrkIROiKgkAdGZpX+eDgJfUzI8QeHEOjX0/Wx0qjyMu5cLgvPMw1qZV4iZsMWf6bgnUA=="],
+    "@omnidotdev/cadence": ["@omnidotdev/cadence@github:omnidotdev/cadence#7d23f05", { "dependencies": { "@internationalized/date": "^3.10.1" } }, "omnidotdev-cadence-7d23f05", "sha512-yGYiPkK5KCq4gsb2oQZyXN07ifopKtB92hFbKOeskosoOs/I4ryRk5GaNLTPZPuiB7++EaLZ2QCa3j8n8uDfXQ=="],
 
     "@omnidotdev/providers": ["@omnidotdev/providers@github:omnidotdev/providers#6dea671", { "dependencies": { "ajv": "^8.18.0", "jose": "^6.1.3" }, "peerDependencies": { "@aws-sdk/client-s3": ">=3.0.0", "@aws-sdk/s3-request-presigner": ">=3.0.0", "@envelop/types": ">=5.0.0", "@escape.tech/graphql-armor": ">=3.0.0", "@iggy.rs/sdk": ">=1.0.0", "@openfeature/server-sdk": ">=1.0.0", "@tanstack/query-core": ">=5.0.0", "ajv": ">=8.0.0", "graphile-export": ">=1.0.0-rc.0", "postgraphile": ">=5.0.0-rc.0", "react": ">=19.0.0", "unleash-client": ">=6.0.0" }, "optionalPeers": ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner", "@envelop/types", "@escape.tech/graphql-armor", "@iggy.rs/sdk", "@openfeature/server-sdk", "@tanstack/query-core", "ajv", "graphile-export", "postgraphile", "react", "unleash-client"] }, "omnidotdev-providers-6dea671", "sha512-6CvdSNWeePstsjImg2LafjJyQsnuvGAwKCdZYMndunfX25AhyWRxVLet/6H0TxEpLs3bsp71gVfIiNEs8pzw9g=="],
 

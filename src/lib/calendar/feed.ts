@@ -23,6 +23,34 @@ import type { IcsEvent } from "@omnidotdev/cadence/ics";
 /** UID domain used for VEVENT uids; any stable domain satisfies RFC 5545. */
 const UID_DOMAIN = "runa.omni.dev";
 
+/** Columns every feed query selects for a task. */
+const TASK_FEED_COLUMNS = {
+  id: tasks.id,
+  content: tasks.content,
+  dueDate: tasks.dueDate,
+  dueHasTime: tasks.dueHasTime,
+};
+
+/**
+ * A task row -> an ICS event: all-day on its UTC day, or a timed event (passing
+ * the stored instant as `start`) when the task carries a time-of-day. dueDate
+ * is non-null here (feed queries filter it).
+ */
+const toIcsEvent = (row: {
+  id: string;
+  content: string;
+  dueDate: string | null;
+  dueHasTime: boolean;
+}): IcsEvent => {
+  const dueDate = row.dueDate as string;
+  return {
+    uid: row.id,
+    title: row.content,
+    day: new Date(dueDate).toISOString().slice(0, 10),
+    ...(row.dueHasTime ? { start: dueDate } : {}),
+  };
+};
+
 /** The project's owning organization, or null if the project does not exist. */
 export const projectOrganizationId = async (
   projectId: string,
@@ -53,22 +81,11 @@ export const buildProjectCalendarFeed = async (
   if (!project) return null;
 
   const rows = await dbPool
-    .select({
-      id: tasks.id,
-      content: tasks.content,
-      dueDate: tasks.dueDate,
-    })
+    .select(TASK_FEED_COLUMNS)
     .from(tasks)
     .where(and(eq(tasks.projectId, projectId), isNotNull(tasks.dueDate)));
 
-  const events: IcsEvent[] = rows.map((row) => ({
-    uid: row.id,
-    title: row.content,
-    // dueDate is non-null here (filtered above); bucket on its UTC day
-    day: new Date(row.dueDate as string).toISOString().slice(0, 10),
-  }));
-
-  return buildIcsCalendar(events, {
+  return buildIcsCalendar(rows.map(toIcsEvent), {
     calendarName: project.name,
     uidDomain: UID_DOMAIN,
   });
@@ -84,7 +101,7 @@ export const buildUserCalendarFeed = async (
   userId: string,
 ): Promise<string> => {
   const rows = await dbPool
-    .select({ id: tasks.id, content: tasks.content, dueDate: tasks.dueDate })
+    .select(TASK_FEED_COLUMNS)
     .from(tasks)
     .innerJoin(projects, eq(tasks.projectId, projects.id))
     .innerJoin(assignees, eq(assignees.taskId, tasks.id))
@@ -96,13 +113,7 @@ export const buildUserCalendarFeed = async (
       ),
     );
 
-  const events: IcsEvent[] = rows.map((row) => ({
-    uid: row.id,
-    title: row.content,
-    day: new Date(row.dueDate as string).toISOString().slice(0, 10),
-  }));
-
-  return buildIcsCalendar(events, {
+  return buildIcsCalendar(rows.map(toIcsEvent), {
     calendarName: "My Runa tasks",
     uidDomain: UID_DOMAIN,
   });

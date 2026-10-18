@@ -76,6 +76,15 @@ beforeAll(async () => {
         columnIndex: "a1",
         dueDate: null,
       },
+      {
+        content: "Standup",
+        description: "",
+        projectId,
+        columnId: col!.id,
+        columnIndex: "a2",
+        dueDate: "2026-10-16T14:30:00+00:00",
+        dueHasTime: true,
+      },
     ])
     .returning({ id: tasks.id, content: tasks.content });
 
@@ -115,6 +124,16 @@ describe("buildProjectCalendarFeed", () => {
     expect(doc).toContain("20261014");
     // undated task excluded
     expect(doc).not.toContain("Someday maybe");
+  });
+
+  test("emits a timed VEVENT for a task with a time-of-day", async () => {
+    const doc = (await buildProjectCalendarFeed(projectId)) as string;
+    // the all-day task stays an all-day VEVENT
+    expect(doc).toContain("DTSTART;VALUE=DATE:20261014");
+    // the timed task emits a UTC timed DTSTART/DTEND
+    expect(doc).toContain("Standup");
+    expect(doc).toContain("DTSTART:20261016T143000Z");
+    expect(doc).toContain("DTEND:20261016T153000Z");
   });
 
   test("returns null for a project that does not exist", async () => {

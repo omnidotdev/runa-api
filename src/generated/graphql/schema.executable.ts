@@ -118,7 +118,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "1022674",
+    oid: "1024774",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -179,7 +179,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "1022289",
+    oid: "1024389",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -249,7 +249,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "1022072",
+    oid: "1024172",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -321,7 +321,7 @@ const spec_notificationDigestQueue = {
     }
   },
   extensions: {
-    oid: "1022910",
+    oid: "1025010",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -402,7 +402,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "1022446",
+    oid: "1024546",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -493,7 +493,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "1022143",
+    oid: "1024243",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -577,7 +577,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "1022888",
+    oid: "1024988",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -668,7 +668,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "1022083",
+    oid: "1024183",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -757,7 +757,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "1022096",
+    oid: "1024196",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -848,7 +848,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "1022340",
+    oid: "1024440",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -939,7 +939,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "1022658",
+    oid: "1024758",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1038,7 +1038,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "1022275",
+    oid: "1024375",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1130,7 +1130,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "1022740",
+    oid: "1024840",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1233,7 +1233,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "1022357",
+    oid: "1024457",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1342,7 +1342,7 @@ const apiTokenCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1023061",
+    oid: "1025161",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1452,7 +1452,7 @@ const calendarFeedTokenCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1023079",
+    oid: "1025179",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1567,7 +1567,7 @@ const webhookEndpointCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1023039",
+    oid: "1025139",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1673,7 +1673,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "1022868",
+    oid: "1024968",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1802,7 +1802,7 @@ const linkUnfurlCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1022997",
+    oid: "1025097",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1937,7 +1937,7 @@ const webhookDeliveryCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "1023018",
+    oid: "1025118",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2049,7 +2049,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "1022158",
+    oid: "1024258",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2060,146 +2060,6 @@ const spec_settings = {
   executor: executor
 };
 const settingsCodec = recordCodec(spec_settings);
-const taskIdentifier = sql.identifier("public", "task");
-const spec_task = {
-  name: "task",
-  identifier: taskIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    content: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    priority: {
-      codec: TYPES.varchar,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    author_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    column_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    due_date: {
-      codec: TYPES.timestamptz,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    column_index: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    number: {
-      codec: TYPES.int,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "1022124",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "task"
-    }
-  },
-  executor: executor
-};
-const taskCodec = recordCodec(spec_task);
 const attachmentIdentifier = sql.identifier("public", "attachment");
 const spec_attachment = {
   name: "attachment",
@@ -2367,7 +2227,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "1022827",
+    oid: "1024927",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2382,6 +2242,157 @@ const spec_attachment = {
   executor: executor
 };
 const attachmentCodec = recordCodec(spec_attachment);
+const taskIdentifier = sql.identifier("public", "task");
+const spec_task = {
+  name: "task",
+  identifier: taskIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    content: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    priority: {
+      codec: TYPES.varchar,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    author_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    column_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    due_date: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    column_index: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    number: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    due_has_time: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "1024224",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "task"
+    }
+  },
+  executor: executor
+};
+const taskCodec = recordCodec(spec_task);
 const projectIdentifier = sql.identifier("public", "project");
 const spec_project = {
   name: "project",
@@ -2540,7 +2551,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "1022109",
+    oid: "1024209",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2966,6 +2977,32 @@ const settingsUniques = [{
     }
   }
 }];
+const attachmentUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const attachment_resourceOptionsConfig = {
+  executor: executor,
+  name: "attachment",
+  identifier: "main.public.attachment",
+  from: attachmentIdentifier,
+  codec: attachmentCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "attachment"
+    },
+    tags: {
+      behavior: "-insert -update -delete"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: attachmentUniques
+};
 const taskUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2996,32 +3033,6 @@ const task_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: taskUniques
-};
-const attachmentUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const attachment_resourceOptionsConfig = {
-  executor: executor,
-  name: "attachment",
-  identifier: "main.public.attachment",
-  from: attachmentIdentifier,
-  codec: attachmentCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "attachment"
-    },
-    tags: {
-      behavior: "-insert -update -delete"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: attachmentUniques
 };
 const projectUniques = [{
   attributes: ["id"],
@@ -3091,8 +3102,8 @@ const registryConfig = {
     webhookDelivery: webhookDeliveryCodec,
     settings: settingsCodec,
     timestamp: TYPES.timestamp,
-    task: taskCodec,
     attachment: attachmentCodec,
+    task: taskCodec,
     project: projectCodec
   },
   pgResources: {
@@ -3247,8 +3258,8 @@ const registryConfig = {
       },
       uniques: settingsUniques
     },
-    task: task_resourceOptionsConfig,
     attachment: attachment_resourceOptionsConfig,
+    task: task_resourceOptionsConfig,
     project: project_resourceOptionsConfig
   },
   pgRelations: {
@@ -3811,14 +3822,6 @@ const nodeIdHandler_Setting = makeTableNodeIdHandler({
   resource: spec_resource_settingsPgResource,
   pk: settingsUniques[0].attributes
 });
-const spec_resource_taskPgResource = registry.pgResources["task"];
-const nodeIdHandler_Task = makeTableNodeIdHandler({
-  typeName: "Task",
-  identifier: "Task",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: spec_resource_taskPgResource,
-  pk: taskUniques[0].attributes
-});
 const spec_resource_attachmentPgResource = registry.pgResources["attachment"];
 const nodeIdHandler_Attachment = makeTableNodeIdHandler({
   typeName: "Attachment",
@@ -3826,6 +3829,14 @@ const nodeIdHandler_Attachment = makeTableNodeIdHandler({
   nodeIdCodec: base64JSONNodeIdCodec,
   resource: spec_resource_attachmentPgResource,
   pk: attachmentUniques[0].attributes
+});
+const spec_resource_taskPgResource = registry.pgResources["task"];
+const nodeIdHandler_Task = makeTableNodeIdHandler({
+  typeName: "Task",
+  identifier: "Task",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: spec_resource_taskPgResource,
+  pk: taskUniques[0].attributes
 });
 const spec_resource_projectPgResource = registry.pgResources["project"];
 const nodeIdHandler_Project = makeTableNodeIdHandler({
@@ -3873,8 +3884,8 @@ const nodeIdHandlerByTypeName = {
   WardenSyncQueue: nodeIdHandler_WardenSyncQueue,
   LinkUnfurl: nodeIdHandler_LinkUnfurl,
   Setting: nodeIdHandler_Setting,
-  Task: nodeIdHandler_Task,
   Attachment: nodeIdHandler_Attachment,
+  Task: nodeIdHandler_Task,
   Project: nodeIdHandler_Project
 };
 const decodeNodeId = makeDecodeNodeId(Object.values(nodeIdHandlerByTypeName));
@@ -5384,6 +5395,9 @@ function TaskInput_columnIndexApply(obj, val, info) {
 function TaskInput_numberApply(obj, val, info) {
   obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function TaskInput_dueHasTimeApply(obj, val, info) {
+  obj.set("due_has_time", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateProjectPayload_projectEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
 function ProjectInput_prefixApply(obj, val, info) {
   obj.set("prefix", bakedInputRuntime(info.schema, info.field.type, val));
@@ -5512,13 +5526,13 @@ const nodeFetcher_Setting = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Setting));
   return nodeIdHandler_Setting.get(nodeIdHandler_Setting.getSpec($decoded));
 };
-const nodeFetcher_Task = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Task));
-  return nodeIdHandler_Task.get(nodeIdHandler_Task.getSpec($decoded));
-};
 const nodeFetcher_Attachment = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Attachment));
   return nodeIdHandler_Attachment.get(nodeIdHandler_Attachment.getSpec($decoded));
+};
+const nodeFetcher_Task = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Task));
+  return nodeIdHandler_Task.get(nodeIdHandler_Task.getSpec($decoded));
 };
 const nodeFetcher_Project = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Project));
@@ -10117,6 +10131,9 @@ input TaskFilter {
   """Filter by the object’s \`number\` field."""
   number: IntFilter
 
+  """Filter by the object’s \`dueHasTime\` field."""
+  dueHasTime: BooleanFilter
+
   """Filter by the object’s \`assignees\` relation."""
   assignees: TaskToManyAssigneeFilter
 
@@ -10889,6 +10906,7 @@ input TaskDistinctCountAggregateFilter {
   columnIndex: BigIntFilter
   projectId: BigIntFilter
   number: BigIntFilter
+  dueHasTime: BigIntFilter
 }
 
 input TaskMinAggregateFilter {
@@ -12104,6 +12122,8 @@ enum ProjectOrderBy {
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   TASKS_DISTINCT_COUNT_NUMBER_ASC
   TASKS_DISTINCT_COUNT_NUMBER_DESC
+  TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC
+  TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC
   TASKS_MIN_NUMBER_ASC
   TASKS_MIN_NUMBER_DESC
   TASKS_MAX_NUMBER_ASC
@@ -12346,6 +12366,7 @@ type Task implements Node {
   columnIndex: String!
   projectId: UUID!
   number: Int
+  dueHasTime: Boolean!
 
   """Reads a single \`User\` that is related to this \`Task\`."""
   author: User
@@ -14044,6 +14065,9 @@ input TaskCondition {
 
   """Checks for equality with the object’s \`number\` field."""
   number: Int
+
+  """Checks for equality with the object’s \`dueHasTime\` field."""
+  dueHasTime: Boolean
 }
 
 """Methods to use when ordering \`Task\`."""
@@ -14075,6 +14099,8 @@ enum TaskOrderBy {
   PROJECT_ID_DESC
   NUMBER_ASC
   NUMBER_DESC
+  DUE_HAS_TIME_ASC
+  DUE_HAS_TIME_DESC
   ASSIGNEES_COUNT_ASC
   ASSIGNEES_COUNT_DESC
   ASSIGNEES_DISTINCT_COUNT_USER_ID_ASC
@@ -15061,6 +15087,9 @@ type TaskDistinctCountAggregates {
 
   """Distinct count of number across the matching connection"""
   number: BigInt
+
+  """Distinct count of dueHasTime across the matching connection"""
+  dueHasTime: BigInt
 }
 
 type TaskMinAggregates {
@@ -15117,6 +15146,7 @@ enum TaskGroupBy {
   COLUMN_INDEX
   PROJECT_ID
   NUMBER
+  DUE_HAS_TIME
 }
 
 """Conditions for \`Task\` aggregates."""
@@ -15385,6 +15415,8 @@ enum ColumnOrderBy {
   TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   TASKS_DISTINCT_COUNT_NUMBER_ASC
   TASKS_DISTINCT_COUNT_NUMBER_DESC
+  TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC
+  TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC
   TASKS_MIN_NUMBER_ASC
   TASKS_MIN_NUMBER_DESC
   TASKS_MAX_NUMBER_ASC
@@ -16417,6 +16449,8 @@ enum UserOrderBy {
   AUTHORED_TASKS_DISTINCT_COUNT_PROJECT_ID_DESC
   AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_ASC
   AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_DESC
+  AUTHORED_TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC
+  AUTHORED_TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC
   AUTHORED_TASKS_MIN_NUMBER_ASC
   AUTHORED_TASKS_MIN_NUMBER_DESC
   AUTHORED_TASKS_MAX_NUMBER_ASC
@@ -18623,6 +18657,7 @@ input TaskInput {
   columnIndex: String!
   projectId: UUID!
   number: Int
+  dueHasTime: Boolean
 }
 
 """The output of our create \`Project\` mutation."""
@@ -19846,6 +19881,7 @@ input TaskPatch {
   columnIndex: String
   projectId: UUID
   number: Int
+  dueHasTime: Boolean
 }
 
 """All input for the \`updateTask\` mutation."""
@@ -21104,14 +21140,14 @@ type Query implements Node {
   """Get a single \`Setting\`."""
   settingByOrganizationId(organizationId: String!): Setting
 
+  """Get a single \`Attachment\`."""
+  attachment(rowId: UUID!): Attachment
+
   """Get a single \`Task\`."""
   task(rowId: UUID!): Task
 
   """Get a single \`Task\`."""
   taskByProjectIdAndNumber(projectId: UUID!, number: Int!): Task
-
-  """Get a single \`Attachment\`."""
-  attachment(rowId: UUID!): Attachment
 
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
@@ -21243,12 +21279,6 @@ type Query implements Node {
     id: ID!
   ): Setting
 
-  """Reads a single \`Task\` using its globally unique \`ID\`."""
-  taskById(
-    """The globally unique \`ID\` to be used in selecting a single \`Task\`."""
-    id: ID!
-  ): Task
-
   """Reads a single \`Attachment\` using its globally unique \`ID\`."""
   attachmentById(
     """
@@ -21256,6 +21286,12 @@ type Query implements Node {
     """
     id: ID!
   ): Attachment
+
+  """Reads a single \`Task\` using its globally unique \`ID\`."""
+  taskById(
+    """The globally unique \`ID\` to be used in selecting a single \`Task\`."""
+    id: ID!
+  ): Task
 
   """Reads a single \`Project\` using its globally unique \`ID\`."""
   projectById(
@@ -21811,40 +21847,6 @@ type Query implements Node {
     orderBy: [SettingOrderBy!] = [PRIMARY_KEY_ASC]
   ): SettingConnection
 
-  """Reads and enables pagination through a set of \`Task\`."""
-  tasks(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaskCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaskFilter
-
-    """The method to use when ordering \`Task\`."""
-    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaskConnection
-
   """Reads and enables pagination through a set of \`Attachment\`."""
   attachments(
     """Only read the first \`n\` values of the set."""
@@ -21878,6 +21880,40 @@ type Query implements Node {
     """The method to use when ordering \`Attachment\`."""
     orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentConnection
+
+  """Reads and enables pagination through a set of \`Task\`."""
+  tasks(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaskCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaskFilter
+
+    """The method to use when ordering \`Task\`."""
+    orderBy: [TaskOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaskConnection
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -22998,7 +23034,8 @@ export const objects = {
           $observer = context().get("observer"),
           $accessToken = context().get("accessToken"),
           $authzCache = context().get("authzCache");
-        return lambda([$observer, $accessToken, $authzCache, $organizationId], async ([observer, accessToken, authzCache, organizationId]) => {
+        return lambda([$observer, $accessToken, $authzCache, $organizationId], async values => {
+          const [observer, accessToken, authzCache, organizationId] = values;
           if (!observer || !accessToken) throw Error("Unauthorized");
           if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "member", accessToken, authzCache))) throw Error("Unauthorized");
           const token = await getUserCalendarFeedToken(observer.id, organizationId);
@@ -27114,6 +27151,9 @@ ${String(oldPlan47)}`);
       dueDate($record) {
         return $record.get("due_date");
       },
+      dueHasTime($record) {
+        return $record.get("due_has_time");
+      },
       id($parent) {
         const specifier = nodeIdHandler_Task.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Task.codec.name].encode);
@@ -27240,6 +27280,9 @@ ${String(oldPlan47)}`);
       description: ProjectDistinctCountAggregates_descriptionPlan,
       dueDate($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.timestamptz, "due_date", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      dueHasTime($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "due_has_time", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       number($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.int, "number", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
@@ -32084,6 +32127,9 @@ export const inputObjects = {
       dueDate($condition, val) {
         return applyAttributeCondition("due_date", TYPES.timestamptz, $condition, val);
       },
+      dueHasTime($condition, val) {
+        return applyAttributeCondition("due_has_time", TYPES.boolean, $condition, val);
+      },
       number($condition, val) {
         return applyAttributeCondition("number", TYPES.int, $condition, val);
       },
@@ -32109,6 +32155,9 @@ export const inputObjects = {
       description: PostDistinctCountAggregateFilter_descriptionApply,
       dueDate($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "due_date", TYPES.bigint, TYPES.timestamptz, $parent, input);
+      },
+      dueHasTime($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "due_has_time", TYPES.bigint, TYPES.boolean, $parent, input);
       },
       number($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "number", TYPES.bigint, TYPES.int, $parent, input);
@@ -32201,6 +32250,9 @@ export const inputObjects = {
       },
       dueDate(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("dueDate", "due_date", spec_task.attributes.due_date, queryBuilder, value);
+      },
+      dueHasTime(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("dueHasTime", "due_has_time", spec_task.attributes.due_has_time, queryBuilder, value);
       },
       not: ProjectFilter_notApply,
       number(queryBuilder, value) {
@@ -32441,6 +32493,7 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       description: PostInput_descriptionApply,
       dueDate: TaskInput_dueDateApply,
+      dueHasTime: TaskInput_dueHasTimeApply,
       number: TaskInput_numberApply,
       priority: TaskInput_priorityApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
@@ -32646,6 +32699,7 @@ export const inputObjects = {
       createdAt: ProjectProjectLabelInput_createdAtApply,
       description: PostInput_descriptionApply,
       dueDate: TaskInput_dueDateApply,
+      dueHasTime: TaskInput_dueHasTimeApply,
       number: TaskInput_numberApply,
       priority: TaskInput_priorityApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
@@ -34298,6 +34352,12 @@ export const enums = {
       TASKS_DISTINCT_COUNT_DUE_DATE_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "DESC", relation13, spec_resource_taskPgResource, $select);
       },
+      TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_has_time, "due_has_time", "ASC", relation13, spec_resource_taskPgResource, $select);
+      },
+      TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_has_time, "due_has_time", "DESC", relation13, spec_resource_taskPgResource, $select);
+      },
       TASKS_DISTINCT_COUNT_NUMBER_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "ASC", relation13, spec_resource_taskPgResource, $select);
       },
@@ -35736,6 +35796,12 @@ export const enums = {
       TASKS_DISTINCT_COUNT_DUE_DATE_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "DESC", relation2, spec_resource_taskPgResource, $select);
       },
+      TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_has_time, "due_has_time", "ASC", relation2, spec_resource_taskPgResource, $select);
+      },
+      TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_has_time, "due_has_time", "DESC", relation2, spec_resource_taskPgResource, $select);
+      },
       TASKS_DISTINCT_COUNT_NUMBER_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "ASC", relation2, spec_resource_taskPgResource, $select);
       },
@@ -36096,6 +36162,9 @@ export const enums = {
       },
       DUE_DATE_TRUNCATED_TO_HOUR(qb) {
         applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_hour, "due_date", TYPES.timestamptz, qb);
+      },
+      DUE_HAS_TIME($pgSelect) {
+        applyGroupByAttribute("due_has_time", TYPES.boolean, $pgSelect);
       },
       NUMBER($pgSelect) {
         applyGroupByAttribute("number", TYPES.int, $pgSelect);
@@ -36488,6 +36557,18 @@ export const enums = {
       DUE_DATE_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "due_date",
+          direction: "DESC"
+        });
+      },
+      DUE_HAS_TIME_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "due_has_time",
+          direction: "ASC"
+        });
+      },
+      DUE_HAS_TIME_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "due_has_time",
           direction: "DESC"
         });
       },
@@ -37018,6 +37099,12 @@ export const enums = {
       },
       AUTHORED_TASKS_DISTINCT_COUNT_DUE_DATE_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_date, "due_date", "DESC", relation17, spec_resource_taskPgResource, $select);
+      },
+      AUTHORED_TASKS_DISTINCT_COUNT_DUE_HAS_TIME_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_has_time, "due_has_time", "ASC", relation17, spec_resource_taskPgResource, $select);
+      },
+      AUTHORED_TASKS_DISTINCT_COUNT_DUE_HAS_TIME_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.due_has_time, "due_has_time", "DESC", relation17, spec_resource_taskPgResource, $select);
       },
       AUTHORED_TASKS_DISTINCT_COUNT_NUMBER_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_task.attributes.number, "number", "ASC", relation17, spec_resource_taskPgResource, $select);

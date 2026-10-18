@@ -1,0 +1,1 @@
+ALTER TABLE "task" ADD COLUMN "due_has_time" boolean DEFAULT false NOT NULL;

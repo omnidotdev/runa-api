@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   index,
   integer,
   pgTable,
@@ -45,6 +46,10 @@ export const tasks = pgTable(
       mode: "string",
       withTimezone: true,
     }),
+    // whether dueDate carries a time-of-day (vs an all-day date stored at the
+    // picker's local start-of-day). The server can't infer this from the stored
+    // instant (no viewer tz), so it is persisted for the calendar feed
+    dueHasTime: boolean("due_has_time").notNull().default(false),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },
