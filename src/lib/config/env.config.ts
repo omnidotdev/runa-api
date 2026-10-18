@@ -12,6 +12,7 @@ export const {
   GRAPHQL_MAX_COMPLEXITY_COST,
   CORS_ALLOWED_ORIGINS,
   PROTECT_ROUTES,
+  ACCEPT_API_TOKENS,
   AUTH_DEBUG,
   BILLING_BYPASS_ORG_IDS,
   BILLING_BASE_URL,
@@ -68,6 +69,14 @@ export const {
 export const isDevEnv = NODE_ENV === "development";
 export const isProdEnv = NODE_ENV === "production";
 export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
+
+/**
+ * Whether the GraphQL API accepts scoped workspace API tokens (`runa_...`) as a
+ * bearer credential, in addition to Gatekeeper user sessions. Default OFF: the
+ * token-acceptance path is dark-launched and inert until this is set, so it can
+ * be enabled only after an end-to-end smoke test against the live authed stack.
+ */
+export const acceptApiTokens = ACCEPT_API_TOKENS === "true";
 
 /** Whether search indexing is enabled */
 export const isSearchEnabled = !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;

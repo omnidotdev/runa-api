@@ -11,6 +11,7 @@ import {
   isIntrospectionQuery,
   validateClaims,
 } from "@omnidotdev/providers/graphql";
+import { eq } from "drizzle-orm";
 
 import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
 import { users } from "lib/db/schema";
@@ -48,6 +49,19 @@ async function verifyAccessToken(token: string): Promise<UserInfoClaims> {
  */
 const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
   try {
+    // API-token principal (ACCEPT_API_TOKENS on + a valid `runa_` token,
+    // resolved in createGraphqlContext): the request acts as the token's
+    // creator. Load that user directly, bypassing the Gatekeeper userinfo path
+    // (a token is not an OIDC session). Per-operation scopes are then enforced
+    // by the scope-gate plugin; Warden still bounds access to this user.
+    if (ctx.apiTokenPrincipal) {
+      const [tokenUser] = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(users.identityProviderId, ctx.apiTokenPrincipal.createdBy));
+      return tokenUser ?? null;
+    }
+
     const accessToken = extractBearerToken(
       ctx.request.headers.get("authorization"),
     );

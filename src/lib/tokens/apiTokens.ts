@@ -42,7 +42,7 @@ const toInfo = (row: SelectApiToken): ApiTokenInfo => ({
 });
 
 /** A resolved principal: what a valid bearer token authorizes. */
-interface ResolvedApiToken {
+export interface ResolvedApiToken {
   tokenId: string;
   organizationId: string;
   scopes: string[];

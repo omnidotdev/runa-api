@@ -34,6 +34,7 @@ import {
   authenticationPlugin,
   organizationsPlugin,
 } from "lib/graphql/plugins";
+import tokenScopeGatePlugin from "lib/graphql/plugins/tokenScopeGate.plugin";
 import idpWebhook from "lib/idp/webhooks";
 import {
   attachmentDeleteRoutes,
@@ -218,6 +219,9 @@ async function startServer(): Promise<void> {
           ...armorPlugin,
           authenticationPlugin,
           organizationsPlugin,
+          // per-operation scope enforcement for API-token requests (no-op for
+          // session requests; inert unless ACCEPT_API_TOKENS enables the token path)
+          tokenScopeGatePlugin,
           // disable GraphQL schema introspection in production to mitigate reverse engineering
           isProdEnv && useDisableIntrospection(),
           isProdEnv &&
