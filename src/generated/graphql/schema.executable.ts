@@ -588,97 +588,6 @@ const spec_notificationPreference = {
   executor: executor
 };
 const notificationPreferenceCodec = recordCodec(spec_notificationPreference);
-const columnIdentifier = sql.identifier("public", "column");
-const spec_column = {
-  name: "column",
-  identifier: columnIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    title: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    project_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    index: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    icon: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    }
-  },
-  extensions: {
-    oid: "300425",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "column"
-    }
-  },
-  executor: executor
-};
-const columnCodec = recordCodec(spec_column);
 const postIdentifier = sql.identifier("public", "post");
 const spec_post = {
   name: "post",
@@ -950,6 +859,108 @@ const spec_projectLabel = {
   executor: executor
 };
 const projectLabelCodec = recordCodec(spec_projectLabel);
+const columnIdentifier = sql.identifier("public", "column");
+const spec_column = {
+  name: "column",
+  identifier: columnIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    title: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    index: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    icon: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    is_done: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "300425",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "column"
+    }
+  },
+  executor: executor
+};
+const columnCodec = recordCodec(spec_column);
 const labelIdentifier = sql.identifier("public", "label");
 const spec_label = {
   name: "label",
@@ -2763,29 +2774,6 @@ const notification_preference_resourceOptionsConfig = {
   },
   uniques: notification_preferenceUniques
 };
-const columnUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const column_resourceOptionsConfig = {
-  executor: executor,
-  name: "column",
-  identifier: "main.public.column",
-  from: columnIdentifier,
-  codec: columnCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "column"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: columnUniques
-};
 const postUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2854,6 +2842,29 @@ const project_label_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: project_labelUniques
+};
+const columnUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const column_resourceOptionsConfig = {
+  executor: executor,
+  name: "column",
+  identifier: "main.public.column",
+  from: columnIdentifier,
+  codec: columnCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "column"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: columnUniques
 };
 const labelUniques = [{
   attributes: ["id"],
@@ -3084,10 +3095,10 @@ const registryConfig = {
     user: userCodec,
     notificationPreference: notificationPreferenceCodec,
     bool: TYPES.boolean,
-    column: columnCodec,
     post: postCodec,
     projectColumn: projectColumnCodec,
     projectLabel: projectLabelCodec,
+    column: columnCodec,
     label: labelCodec,
     projectLink: projectLinkCodec,
     int4: TYPES.int,
@@ -3115,10 +3126,10 @@ const registryConfig = {
     emoji: emoji_resourceOptionsConfig,
     user: user_resourceOptionsConfig,
     notification_preference: notification_preference_resourceOptionsConfig,
-    column: column_resourceOptionsConfig,
     post: post_resourceOptionsConfig,
     project_column: project_column_resourceOptionsConfig,
     project_label: project_label_resourceOptionsConfig,
+    column: column_resourceOptionsConfig,
     label: label_resourceOptionsConfig,
     project_link: project_link_resourceOptionsConfig,
     user_preference: user_preference_resourceOptionsConfig,
@@ -3742,14 +3753,6 @@ const nodeIdHandler_NotificationPreference = makeTableNodeIdHandler({
   resource: spec_resource_notification_preferencePgResource,
   pk: notification_preferenceUniques[0].attributes
 });
-const spec_resource_columnPgResource = registry.pgResources["column"];
-const nodeIdHandler_Column = makeTableNodeIdHandler({
-  typeName: "Column",
-  identifier: "Column",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: spec_resource_columnPgResource,
-  pk: columnUniques[0].attributes
-});
 const spec_resource_postPgResource = registry.pgResources["post"];
 const nodeIdHandler_Post = makeTableNodeIdHandler({
   typeName: "Post",
@@ -3773,6 +3776,14 @@ const nodeIdHandler_ProjectLabel = makeTableNodeIdHandler({
   nodeIdCodec: base64JSONNodeIdCodec,
   resource: spec_resource_project_labelPgResource,
   pk: project_labelUniques[0].attributes
+});
+const spec_resource_columnPgResource = registry.pgResources["column"];
+const nodeIdHandler_Column = makeTableNodeIdHandler({
+  typeName: "Column",
+  identifier: "Column",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: spec_resource_columnPgResource,
+  pk: columnUniques[0].attributes
 });
 const spec_resource_labelPgResource = registry.pgResources["label"];
 const nodeIdHandler_Label = makeTableNodeIdHandler({
@@ -3874,10 +3885,10 @@ const nodeIdHandlerByTypeName = {
   Emoji: nodeIdHandler_Emoji,
   User: nodeIdHandler_User,
   NotificationPreference: nodeIdHandler_NotificationPreference,
-  Column: nodeIdHandler_Column,
   Post: nodeIdHandler_Post,
   ProjectColumn: nodeIdHandler_ProjectColumn,
   ProjectLabel: nodeIdHandler_ProjectLabel,
+  Column: nodeIdHandler_Column,
   Label: nodeIdHandler_Label,
   ProjectLink: nodeIdHandler_ProjectLink,
   UserPreference: nodeIdHandler_UserPreference,
@@ -5307,17 +5318,10 @@ function NotificationPreferenceInput_emailTaskAssignedApply(obj, val, info) {
 function NotificationPreferenceInput_taskAssignedCadenceApply(obj, val, info) {
   obj.set("task_assigned_cadence", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateColumnPayload_columnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_columnPgResource, columnUniques[0].attributes, $mutation, fieldArgs);
-function ColumnInput_titleApply(obj, val, info) {
+const CreatePostPayload_postEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_postPgResource, postUniques[0].attributes, $mutation, fieldArgs);
+function PostInput_titleApply(obj, val, info) {
   obj.set("title", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function ColumnInput_indexApply(obj, val, info) {
-  obj.set("index", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function ColumnInput_iconApply(obj, val, info) {
-  obj.set("icon", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreatePostPayload_postEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_postPgResource, postUniques[0].attributes, $mutation, fieldArgs);
 function PostInput_descriptionApply(obj, val, info) {
   obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -5325,12 +5329,22 @@ function PostInput_authorIdApply(obj, val, info) {
   obj.set("author_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateProjectColumnPayload_projectColumnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_project_columnPgResource, project_columnUniques[0].attributes, $mutation, fieldArgs);
+function ProjectColumnInput_iconApply(obj, val, info) {
+  obj.set("icon", bakedInputRuntime(info.schema, info.field.type, val));
+}
 function ProjectColumnInput_organizationIdApply(obj, val, info) {
   obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ProjectColumnInput_indexApply(obj, val, info) {
+  obj.set("index", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateProjectLabelPayload_projectLabelEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_project_labelPgResource, project_labelUniques[0].attributes, $mutation, fieldArgs);
 function ProjectLabelInput_colorApply(obj, val, info) {
   obj.set("color", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateColumnPayload_columnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_columnPgResource, columnUniques[0].attributes, $mutation, fieldArgs);
+function ColumnInput_isDoneApply(obj, val, info) {
+  obj.set("is_done", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateLabelPayload_labelEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_labelPgResource, labelUniques[0].attributes, $mutation, fieldArgs);
 const CreateProjectLinkPayload_projectLinkEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_project_linkPgResource, project_linkUniques[0].attributes, $mutation, fieldArgs);
@@ -5486,10 +5500,6 @@ const nodeFetcher_NotificationPreference = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NotificationPreference));
   return nodeIdHandler_NotificationPreference.get(nodeIdHandler_NotificationPreference.getSpec($decoded));
 };
-const nodeFetcher_Column = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Column));
-  return nodeIdHandler_Column.get(nodeIdHandler_Column.getSpec($decoded));
-};
 const nodeFetcher_Post = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Post));
   return nodeIdHandler_Post.get(nodeIdHandler_Post.getSpec($decoded));
@@ -5501,6 +5511,10 @@ const nodeFetcher_ProjectColumn = $nodeId => {
 const nodeFetcher_ProjectLabel = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ProjectLabel));
   return nodeIdHandler_ProjectLabel.get(nodeIdHandler_ProjectLabel.getSpec($decoded));
+};
+const nodeFetcher_Column = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Column));
+  return nodeIdHandler_Column.get(nodeIdHandler_Column.getSpec($decoded));
 };
 const nodeFetcher_Label = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Label));
@@ -6059,14 +6073,197 @@ const planWrapper9 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan12(_, args) {
-  const $insert = pgInsertSingle(spec_resource_columnPgResource);
+function oldPlan13(_, args) {
+  const $insert = pgInsertSingle(spec_resource_postPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
 const planWrapper10 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "post"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const taskId = input.taskId,
+        task = await db.query.tasks.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, taskId);
+          },
+          columns: {
+            projectId: !0
+          }
+        });
+      if (!task) throw Error("Task not found");
+      if (!(await checkPermission(observer.identityProviderId, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+function oldPlan12(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan13.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
+${String(oldPlan13)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const shouldBlock = result => result.matchedTerms.length > 0 || result.score >= 0.9;
+const fields = ["title", "description"];
+const planWrapper11 = (plan, _, fieldArgs) => {
+  const $source = fieldArgs.getRaw(["input", "post"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
+    for (const field of fields) {
+      const value = row[field];
+      if (typeof value !== "string" || !value) continue;
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
+    }
+  });
+  return plan();
+};
+function oldPlan11(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan12.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
+${String(oldPlan12)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper12 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = constant(void 0),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const post = await db.query.posts.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("task")
+        }),
+        taskId = post?.taskId;
+      if (!taskId) return;
+      await events.emit(buildResourceEvent({
+        entity: "post",
+        action: "created",
+        nameColumn: null,
+        orgVia: "task"
+      }, taskId, post, observer));
+    } catch (error) {
+      console.error(`[Events] Failed to emit post.created:`, error);
+    }
+  });
+  return $result;
+};
+function oldPlan10(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan11.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
+${String(oldPlan11)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper13 = (plan, $record) => {
+  if (!false) return plan();
+  const $db = context().get("db");
+  sideEffect([$record, $db], async ([record, db]) => {
+    if (!record?.id) return;
+    const post = await db.query.posts.findFirst({
+      where(table, {
+        eq
+      }) {
+        return eq(table.id, record.id);
+      },
+      with: {
+        task: {
+          with: {
+            project: !0
+          }
+        }
+      }
+    });
+    if (post?.task?.project) await indexComment(post, post.task.project.organizationId);
+  });
+  return plan();
+};
+function oldPlan14(_, args) {
+  const $insert = pgInsertSingle(spec_resource_project_columnPgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper14 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "projectColumn"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const organizationId = input.organizationId;
+      if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+function oldPlan17(_, args) {
+  const $insert = pgInsertSingle(spec_resource_columnPgResource);
+  args.apply($insert);
+  return object({
+    result: $insert
+  });
+}
+const planWrapper15 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "column"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6096,32 +6293,31 @@ const planWrapper10 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan11(...planParams) {
+function oldPlan16(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan12.apply(this, args);
+        $prev = oldPlan17.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan12)}`);
+${String(oldPlan17)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const shouldBlock = result => result.matchedTerms.length > 0 || result.score >= 0.9;
-const fields = ["title"];
-const planWrapper11 = (plan, _, fieldArgs) => {
+const fields2 = ["title"];
+const planWrapper16 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "column"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
     if (!row) return;
-    for (const field of fields) {
+    for (const field of fields2) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const result = await moderateText(value);
@@ -6134,25 +6330,25 @@ const planWrapper11 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan10(...planParams) {
+function oldPlan15(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan11.apply(this, args);
+        $prev = oldPlan16.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan16)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper12 = (plan, _, fieldArgs) => {
+const planWrapper17 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = constant(void 0),
     $observer = context().get("observer"),
@@ -6180,188 +6376,6 @@ const planWrapper12 = (plan, _, fieldArgs) => {
     }
   });
   return $result;
-};
-function oldPlan16(_, args) {
-  const $insert = pgInsertSingle(spec_resource_postPgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper13 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "post"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const taskId = input.taskId,
-        task = await db.query.tasks.findFirst({
-          where(table, {
-            eq
-          }) {
-            return eq(table.id, taskId);
-          },
-          columns: {
-            projectId: !0
-          }
-        });
-      if (!task) throw Error("Task not found");
-      if (!(await checkPermission(observer.identityProviderId, "project", task.projectId, "member", accessToken, authzCache))) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-function oldPlan15(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan16.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan16)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const fields2 = ["title", "description"];
-const planWrapper14 = (plan, _, fieldArgs) => {
-  const $source = fieldArgs.getRaw(["input", "post"]);
-  sideEffect([$source], async ([source]) => {
-    const row = source;
-    if (!row) return;
-    for (const field of fields2) {
-      const value = row[field];
-      if (typeof value !== "string" || !value) continue;
-      const result = await moderateText(value);
-      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
-        extensions: {
-          code: "CONTENT_MODERATED"
-        }
-      });
-    }
-  });
-  return plan();
-};
-function oldPlan14(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan15.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan15)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper15 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $rowId = constant(void 0),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
-    const id = result?.id ?? rowId;
-    if (!id) return;
-    try {
-      const post = await db.query.posts.findFirst({
-          where(fields, operators) {
-            return operators.eq(fields.id, id);
-          },
-          with: resourceEventWith("task")
-        }),
-        taskId = post?.taskId;
-      if (!taskId) return;
-      await events.emit(buildResourceEvent({
-        entity: "post",
-        action: "created",
-        nameColumn: null,
-        orgVia: "task"
-      }, taskId, post, observer));
-    } catch (error) {
-      console.error(`[Events] Failed to emit post.created:`, error);
-    }
-  });
-  return $result;
-};
-function oldPlan13(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan14.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan14)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper16 = (plan, $record) => {
-  if (!false) return plan();
-  const $db = context().get("db");
-  sideEffect([$record, $db], async ([record, db]) => {
-    if (!record?.id) return;
-    const post = await db.query.posts.findFirst({
-      where(table, {
-        eq
-      }) {
-        return eq(table.id, record.id);
-      },
-      with: {
-        task: {
-          with: {
-            project: !0
-          }
-        }
-      }
-    });
-    if (post?.task?.project) await indexComment(post, post.task.project.organizationId);
-  });
-  return plan();
-};
-function oldPlan17(_, args) {
-  const $insert = pgInsertSingle(spec_resource_project_columnPgResource);
-  args.apply($insert);
-  return object({
-    result: $insert
-  });
-}
-const planWrapper17 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "projectColumn"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const organizationId = input.organizationId;
-      if (!(await checkPermission(observer.identityProviderId, "organization", organizationId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    }
-  });
-  return plan();
 };
 function oldPlan19(_, args) {
   const $insert = pgInsertSingle(spec_resource_labelPgResource);
@@ -7078,134 +7092,11 @@ const planWrapper35 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_Column = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Column, $nodeId);
-};
-const oldPlan38 = (_$root, args) => {
-  const $update = pgUpdateSingle(spec_resource_columnPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($update);
-  return object({
-    result: $update
-  });
-};
-const planWrapper36 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const column = await db.query.columns.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          projectId: !0
-        }
-      });
-      if (!column) throw Error("Column not found");
-      if (!(await checkPermission(observer.identityProviderId, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-function oldPlan37(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan38.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan38)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const fields5 = ["title"];
-const planWrapper37 = (plan, _, fieldArgs) => {
-  const $source = fieldArgs.getRaw(["input", "patch"]);
-  sideEffect([$source], async ([source]) => {
-    const row = source;
-    if (!row) return;
-    for (const field of fields5) {
-      const value = row[field];
-      if (typeof value !== "string" || !value) continue;
-      const result = await moderateText(value);
-      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
-        extensions: {
-          code: "CONTENT_MODERATED"
-        }
-      });
-    }
-  });
-  return plan();
-};
-function oldPlan36(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan37.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan37)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper38 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $rowId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
-    const id = result?.id ?? rowId;
-    if (!id) return;
-    try {
-      const repo = db.query["columns"];
-      if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("project")
-      });
-      await events.emit(buildResourceEvent({
-        entity: "column",
-        action: "updated",
-        nameColumn: "title",
-        orgVia: "project"
-      }, id, row, observer));
-    } catch (error) {
-      console.error(`[Events] Failed to emit column.updated:`, error);
-    }
-  });
-  return $result;
-};
 const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan42 = (_$root, args) => {
+const oldPlan39 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7214,7 +7105,7 @@ const oldPlan42 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper39 = (plan, _, fieldArgs) => {
+const planWrapper36 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7244,31 +7135,31 @@ const planWrapper39 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan41(...planParams) {
+function oldPlan38(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan42.apply(this, args);
+        $prev = oldPlan39.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan42)}`);
+${String(oldPlan39)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const fields6 = ["title", "description"];
-const planWrapper40 = (plan, _, fieldArgs) => {
+const fields5 = ["title", "description"];
+const planWrapper37 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
     if (!row) return;
-    for (const field of fields6) {
+    for (const field of fields5) {
       const value = row[field];
       if (typeof value !== "string" || !value) continue;
       const result = await moderateText(value);
@@ -7281,25 +7172,25 @@ const planWrapper40 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan40(...planParams) {
+function oldPlan37(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan41.apply(this, args);
+        $prev = oldPlan38.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan41)}`);
+${String(oldPlan38)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper41 = (plan, _, fieldArgs) => {
+const planWrapper38 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -7328,20 +7219,20 @@ const planWrapper41 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan39(...planParams) {
+function oldPlan36(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan40.apply(this, args);
+        $prev = oldPlan37.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan40)}`);
+${String(oldPlan37)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -7350,7 +7241,7 @@ const specFromArgs_ProjectColumn = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
 };
-const oldPlan43 = (_$root, args) => {
+const oldPlan40 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7359,7 +7250,7 @@ const oldPlan43 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper43 = (plan, _, fieldArgs) => {
+const planWrapper40 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7388,6 +7279,129 @@ const planWrapper43 = (plan, _, fieldArgs) => {
 const specFromArgs_ProjectLabel = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectLabel, $nodeId);
+};
+const specFromArgs_Column = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Column, $nodeId);
+};
+const oldPlan43 = (_$root, args) => {
+  const $update = pgUpdateSingle(spec_resource_columnPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($update);
+  return object({
+    result: $update
+  });
+};
+const planWrapper41 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const column = await db.query.columns.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          projectId: !0
+        }
+      });
+      if (!column) throw Error("Column not found");
+      if (!(await checkPermission(observer.identityProviderId, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+function oldPlan42(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan43.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
+${String(oldPlan43)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const fields6 = ["title"];
+const planWrapper42 = (plan, _, fieldArgs) => {
+  const $source = fieldArgs.getRaw(["input", "patch"]);
+  sideEffect([$source], async ([source]) => {
+    const row = source;
+    if (!row) return;
+    for (const field of fields6) {
+      const value = row[field];
+      if (typeof value !== "string" || !value) continue;
+      const result = await moderateText(value);
+      if (shouldBlock(result)) throw new GraphQLError("This content was flagged as inappropriate language. Please edit it and try again.", {
+        extensions: {
+          code: "CONTENT_MODERATED"
+        }
+      });
+    }
+  });
+  return plan();
+};
+function oldPlan41(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan42.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
+${String(oldPlan42)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper42(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper43 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["columns"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
+        },
+        with: resourceEventWith("project")
+      });
+      await events.emit(buildResourceEvent({
+        entity: "column",
+        action: "updated",
+        nameColumn: "title",
+        orgVia: "project"
+      }, id, row, observer));
+    } catch (error) {
+      console.error(`[Events] Failed to emit column.updated:`, error);
+    }
+  });
+  return $result;
 };
 const specFromArgs_Label = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -8257,89 +8271,7 @@ const planWrapper64 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan66 = (_$root, args) => {
-  const $delete = pgDeleteSingle(spec_resource_columnPgResource, {
-    id: args.getRaw(['input', "rowId"])
-  });
-  args.apply($delete);
-  return object({
-    result: $delete
-  });
-};
-const planWrapper65 = (plan, _, fieldArgs) => {
-  const $input = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db"),
-    $authzCache = context().get("authzCache"),
-    $accessToken = context().get("accessToken");
-  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
-    if (!observer) throw Error("Unauthorized");
-    if (!accessToken) throw Error("Unauthorized");
-    {
-      const column = await db.query.columns.findFirst({
-        where(table, {
-          eq
-        }) {
-          return eq(table.id, input);
-        },
-        columns: {
-          projectId: !0
-        }
-      });
-      if (!column) throw Error("Column not found");
-      if (!(await checkPermission(observer.identityProviderId, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
-    }
-  });
-  return plan();
-};
-function oldPlan65(...planParams) {
-  const smartPlan = (...overrideParams) => {
-      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan66.apply(this, args);
-      if (!($prev instanceof ExecutableStep)) {
-        console.error(`Wrapped a plan function at Mutation.deleteColumn, but that function did not return a step!
-${String(oldPlan66)}`);
-        throw Error("Wrapped a plan function, but that function did not return a step!");
-      }
-      args[1].autoApply($prev);
-      return $prev;
-    },
-    [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper65(smartPlan, $source, fieldArgs, info);
-  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-  return $newPlan;
-}
-const planWrapper66 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $rowId = fieldArgs.getRaw(["input", "rowId"]),
-    $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
-    const id = result?.id ?? rowId;
-    if (!id) return;
-    try {
-      const repo = db.query["columns"];
-      if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("project")
-      });
-      await events.emit(buildResourceEvent({
-        entity: "column",
-        action: "deleted",
-        nameColumn: "title",
-        orgVia: "project"
-      }, id, row, observer));
-    } catch (error) {
-      console.error(`[Events] Failed to emit column.deleted:`, error);
-    }
-  });
-  return $result;
-};
-const oldPlan69 = (_$root, args) => {
+const oldPlan67 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8348,7 +8280,7 @@ const oldPlan69 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper67 = (plan, _, fieldArgs) => {
+const planWrapper65 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8378,25 +8310,25 @@ const planWrapper67 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan68(...planParams) {
+function oldPlan66(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan69.apply(this, args);
+        $prev = oldPlan67.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan69)}`);
+${String(oldPlan67)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper67(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper65(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper68 = (plan, _, fieldArgs) => {
+const planWrapper66 = (plan, _, fieldArgs) => {
   const $result = plan(),
     $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
@@ -8425,25 +8357,25 @@ const planWrapper68 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan67(...planParams) {
+function oldPlan65(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan68.apply(this, args);
+        $prev = oldPlan66.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan68)}`);
+${String(oldPlan66)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper68(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper66(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper69 = (plan, _, fieldArgs) => {
+const planWrapper67 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([postId]) => {
@@ -8451,7 +8383,7 @@ const planWrapper69 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan70 = (_$root, args) => {
+const oldPlan68 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8460,7 +8392,7 @@ const oldPlan70 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper70 = (plan, _, fieldArgs) => {
+const planWrapper68 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8485,6 +8417,88 @@ const planWrapper70 = (plan, _, fieldArgs) => {
     }
   });
   return plan();
+};
+const oldPlan70 = (_$root, args) => {
+  const $delete = pgDeleteSingle(spec_resource_columnPgResource, {
+    id: args.getRaw(['input', "rowId"])
+  });
+  args.apply($delete);
+  return object({
+    result: $delete
+  });
+};
+const planWrapper69 = (plan, _, fieldArgs) => {
+  const $input = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db"),
+    $authzCache = context().get("authzCache"),
+    $accessToken = context().get("accessToken");
+  sideEffect([$input, $observer, $db, $authzCache, $accessToken], async ([input, observer, db, authzCache, accessToken]) => {
+    if (!observer) throw Error("Unauthorized");
+    if (!accessToken) throw Error("Unauthorized");
+    {
+      const column = await db.query.columns.findFirst({
+        where(table, {
+          eq
+        }) {
+          return eq(table.id, input);
+        },
+        columns: {
+          projectId: !0
+        }
+      });
+      if (!column) throw Error("Column not found");
+      if (!(await checkPermission(observer.identityProviderId, "project", column.projectId, "admin", accessToken, authzCache))) throw Error("Unauthorized");
+    }
+  });
+  return plan();
+};
+function oldPlan69(...planParams) {
+  const smartPlan = (...overrideParams) => {
+      const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+        $prev = oldPlan70.apply(this, args);
+      if (!($prev instanceof ExecutableStep)) {
+        console.error(`Wrapped a plan function at Mutation.deleteColumn, but that function did not return a step!
+${String(oldPlan70)}`);
+        throw Error("Wrapped a plan function, but that function did not return a step!");
+      }
+      args[1].autoApply($prev);
+      return $prev;
+    },
+    [$source, fieldArgs, info] = planParams,
+    $newPlan = planWrapper69(smartPlan, $source, fieldArgs, info);
+  if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+  if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+  return $newPlan;
+}
+const planWrapper70 = (plan, _, fieldArgs) => {
+  const $result = plan(),
+    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+    $observer = context().get("observer"),
+    $db = context().get("db");
+  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+    const id = result?.id ?? rowId;
+    if (!id) return;
+    try {
+      const repo = db.query["columns"];
+      if (!repo) return;
+      const row = await repo.findFirst({
+        where(fields, operators) {
+          return operators.eq(fields.id, id);
+        },
+        with: resourceEventWith("project")
+      });
+      await events.emit(buildResourceEvent({
+        entity: "column",
+        action: "deleted",
+        nameColumn: "title",
+        orgVia: "project"
+      }, id, row, observer));
+    } catch (error) {
+      console.error(`[Events] Failed to emit column.deleted:`, error);
+    }
+  });
+  return $result;
 };
 const oldPlan72 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_labelPgResource, {
@@ -10085,6 +10099,9 @@ input ColumnFilter {
   """Filter by the object’s \`icon\` field."""
   icon: StringFilter
 
+  """Filter by the object’s \`isDone\` field."""
+  isDone: BooleanFilter
+
   """Filter by the object’s \`tasks\` relation."""
   tasks: ColumnToManyTaskFilter
 
@@ -11556,6 +11573,7 @@ input ColumnDistinctCountAggregateFilter {
   updatedAt: BigIntFilter
   index: BigIntFilter
   icon: BigIntFilter
+  isDone: BigIntFilter
 }
 
 """
@@ -12130,6 +12148,8 @@ enum ProjectOrderBy {
   COLUMNS_DISTINCT_COUNT_INDEX_DESC
   COLUMNS_DISTINCT_COUNT_ICON_ASC
   COLUMNS_DISTINCT_COUNT_ICON_DESC
+  COLUMNS_DISTINCT_COUNT_IS_DONE_ASC
+  COLUMNS_DISTINCT_COUNT_IS_DONE_DESC
   TASKS_COUNT_ASC
   TASKS_COUNT_DESC
   TASKS_SUM_NUMBER_ASC
@@ -12313,6 +12333,7 @@ type Column implements Node {
   updatedAt: Datetime!
   index: String!
   icon: String
+  isDone: Boolean!
 
   """Reads a single \`Project\` that is related to this \`Column\`."""
   project: Project
@@ -15302,6 +15323,9 @@ type ColumnDistinctCountAggregates {
 
   """Distinct count of icon across the matching connection"""
   icon: BigInt
+
+  """Distinct count of isDone across the matching connection"""
+  isDone: BigInt
 }
 
 """Grouping methods for \`Column\` for usage during aggregation."""
@@ -15316,6 +15340,7 @@ enum ColumnGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
   INDEX
   ICON
+  IS_DONE
 }
 
 """Conditions for \`Column\` aggregates."""
@@ -15402,6 +15427,9 @@ input ColumnCondition {
 
   """Checks for equality with the object’s \`icon\` field."""
   icon: String
+
+  """Checks for equality with the object’s \`isDone\` field."""
+  isDone: Boolean
 }
 
 """Methods to use when ordering \`Column\`."""
@@ -15423,6 +15451,8 @@ enum ColumnOrderBy {
   INDEX_DESC
   ICON_ASC
   ICON_DESC
+  IS_DONE_ASC
+  IS_DONE_DESC
   TASKS_COUNT_ASC
   TASKS_COUNT_DESC
   TASKS_SUM_NUMBER_ASC
@@ -18225,52 +18255,6 @@ input NotificationPreferenceInput {
   taskAssignedCadence: String
 }
 
-"""The output of our create \`Column\` mutation."""
-type CreateColumnPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Column\` that was created by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Column\`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering \`Column\`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the create \`Column\` mutation."""
-input CreateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Column\` to be created by this mutation."""
-  column: ColumnInput!
-}
-
-"""An input for mutations affecting \`Column\`"""
-input ColumnInput {
-  rowId: UUID
-  title: String!
-  projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: String!
-  icon: String
-}
-
 """The output of our create \`Post\` mutation."""
 type CreatePostPayload {
   """
@@ -18407,6 +18391,53 @@ input ProjectLabelInput {
   organizationId: String!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`Column\` mutation."""
+type CreateColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Column\` that was created by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Column\`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering \`Column\`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the create \`Column\` mutation."""
+input CreateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Column\` to be created by this mutation."""
+  column: ColumnInput!
+}
+
+"""An input for mutations affecting \`Column\`"""
+input ColumnInput {
+  rowId: UUID
+  title: String!
+  projectId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: String!
+  icon: String
+  isDone: Boolean
 }
 
 """The output of our create \`Label\` mutation."""
@@ -19228,76 +19259,6 @@ input UpdateNotificationPreferenceInput {
   patch: NotificationPreferencePatch!
 }
 
-"""The output of our update \`Column\` mutation."""
-type UpdateColumnPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Column\` that was updated by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Column\`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering \`Column\`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the \`updateColumnById\` mutation."""
-input UpdateColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Column\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Column\` being updated.
-  """
-  patch: ColumnPatch!
-}
-
-"""
-Represents an update to a \`Column\`. Fields that are set will be updated.
-"""
-input ColumnPatch {
-  rowId: UUID
-  title: String
-  projectId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: String
-  icon: String
-}
-
-"""All input for the \`updateColumn\` mutation."""
-input UpdateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Column\` being updated.
-  """
-  patch: ColumnPatch!
-}
-
 """The output of our update \`Post\` mutation."""
 type UpdatePostPayload {
   """
@@ -19504,6 +19465,77 @@ input UpdateProjectLabelInput {
   An object where the defined keys will be set on the \`ProjectLabel\` being updated.
   """
   patch: ProjectLabelPatch!
+}
+
+"""The output of our update \`Column\` mutation."""
+type UpdateColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Column\` that was updated by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Column\`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering \`Column\`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the \`updateColumnById\` mutation."""
+input UpdateColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Column\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Column\` being updated.
+  """
+  patch: ColumnPatch!
+}
+
+"""
+Represents an update to a \`Column\`. Fields that are set will be updated.
+"""
+input ColumnPatch {
+  rowId: UUID
+  title: String
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: String
+  icon: String
+  isDone: Boolean
+}
+
+"""All input for the \`updateColumn\` mutation."""
+input UpdateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Column\` being updated.
+  """
+  patch: ColumnPatch!
 }
 
 """The output of our update \`Label\` mutation."""
@@ -20352,54 +20384,6 @@ input DeleteNotificationPreferenceInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Column\` mutation."""
-type DeleteColumnPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Column\` that was deleted by this mutation."""
-  column: Column
-  deletedColumnId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Column\`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering \`Column\`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the \`deleteColumnById\` mutation."""
-input DeleteColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Column\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteColumn\` mutation."""
-input DeleteColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Post\` mutation."""
 type DeletePostPayload {
   """
@@ -20536,6 +20520,54 @@ input DeleteProjectLabelByIdInput {
 
 """All input for the \`deleteProjectLabel\` mutation."""
 input DeleteProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Column\` mutation."""
+type DeleteColumnPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Column\` that was deleted by this mutation."""
+  column: Column
+  deletedColumnId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Column\`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering \`Column\`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the \`deleteColumnById\` mutation."""
+input DeleteColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Column\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteColumn\` mutation."""
+input DeleteColumnInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -21143,9 +21175,6 @@ type Query implements Node {
   """Get a single \`NotificationPreference\`."""
   notificationPreferenceByUserId(userId: UUID!): NotificationPreference
 
-  """Get a single \`Column\`."""
-  column(rowId: UUID!): Column
-
   """Get a single \`Post\`."""
   post(rowId: UUID!): Post
 
@@ -21154,6 +21183,9 @@ type Query implements Node {
 
   """Get a single \`ProjectLabel\`."""
   projectLabel(rowId: UUID!): ProjectLabel
+
+  """Get a single \`Column\`."""
+  column(rowId: UUID!): Column
 
   """Get a single \`Label\`."""
   label(rowId: UUID!): Label
@@ -21243,12 +21275,6 @@ type Query implements Node {
     id: ID!
   ): NotificationPreference
 
-  """Reads a single \`Column\` using its globally unique \`ID\`."""
-  columnById(
-    """The globally unique \`ID\` to be used in selecting a single \`Column\`."""
-    id: ID!
-  ): Column
-
   """Reads a single \`Post\` using its globally unique \`ID\`."""
   postById(
     """The globally unique \`ID\` to be used in selecting a single \`Post\`."""
@@ -21270,6 +21296,12 @@ type Query implements Node {
     """
     id: ID!
   ): ProjectLabel
+
+  """Reads a single \`Column\` using its globally unique \`ID\`."""
+  columnById(
+    """The globally unique \`ID\` to be used in selecting a single \`Column\`."""
+    id: ID!
+  ): Column
 
   """Reads a single \`Label\` using its globally unique \`ID\`."""
   labelById(
@@ -21577,40 +21609,6 @@ type Query implements Node {
     orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): NotificationPreferenceConnection
 
-  """Reads and enables pagination through a set of \`Column\`."""
-  columns(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ColumnCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ColumnFilter
-
-    """The method to use when ordering \`Column\`."""
-    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ColumnConnection
-
   """Reads and enables pagination through a set of \`Post\`."""
   posts(
     """Only read the first \`n\` values of the set."""
@@ -21712,6 +21710,40 @@ type Query implements Node {
     """The method to use when ordering \`ProjectLabel\`."""
     orderBy: [ProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLabelConnection
+
+  """Reads and enables pagination through a set of \`Column\`."""
+  columns(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ColumnFilter
+
+    """The method to use when ordering \`Column\`."""
+    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ColumnConnection
 
   """Reads and enables pagination through a set of \`Label\`."""
   labels(
@@ -22079,14 +22111,6 @@ type Mutation {
     input: CreateNotificationPreferenceInput!
   ): CreateNotificationPreferencePayload
 
-  """Creates a single \`Column\`."""
-  createColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateColumnInput!
-  ): CreateColumnPayload
-
   """Creates a single \`Post\`."""
   createPost(
     """
@@ -22110,6 +22134,14 @@ type Mutation {
     """
     input: CreateProjectLabelInput!
   ): CreateProjectLabelPayload
+
+  """Creates a single \`Column\`."""
+  createColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateColumnInput!
+  ): CreateColumnPayload
 
   """Creates a single \`Label\`."""
   createLabel(
@@ -22289,22 +22321,6 @@ type Mutation {
     input: UpdateNotificationPreferenceInput!
   ): UpdateNotificationPreferencePayload
 
-  """Updates a single \`Column\` using its globally unique id and a patch."""
-  updateColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnByIdInput!
-  ): UpdateColumnPayload
-
-  """Updates a single \`Column\` using a unique key and a patch."""
-  updateColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnInput!
-  ): UpdateColumnPayload
-
   """Updates a single \`Post\` using its globally unique id and a patch."""
   updatePostById(
     """
@@ -22356,6 +22372,22 @@ type Mutation {
     """
     input: UpdateProjectLabelInput!
   ): UpdateProjectLabelPayload
+
+  """Updates a single \`Column\` using its globally unique id and a patch."""
+  updateColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnByIdInput!
+  ): UpdateColumnPayload
+
+  """Updates a single \`Column\` using a unique key and a patch."""
+  updateColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnInput!
+  ): UpdateColumnPayload
 
   """Updates a single \`Label\` using its globally unique id and a patch."""
   updateLabelById(
@@ -22591,22 +22623,6 @@ type Mutation {
     input: DeleteNotificationPreferenceInput!
   ): DeleteNotificationPreferencePayload
 
-  """Deletes a single \`Column\` using its globally unique id."""
-  deleteColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnByIdInput!
-  ): DeleteColumnPayload
-
-  """Deletes a single \`Column\` using a unique key."""
-  deleteColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnInput!
-  ): DeleteColumnPayload
-
   """Deletes a single \`Post\` using its globally unique id."""
   deletePostById(
     """
@@ -22654,6 +22670,22 @@ type Mutation {
     """
     input: DeleteProjectLabelInput!
   ): DeleteProjectLabelPayload
+
+  """Deletes a single \`Column\` using its globally unique id."""
+  deleteColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnByIdInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single \`Column\` using a unique key."""
+  deleteColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnInput!
+  ): DeleteColumnPayload
 
   """Deletes a single \`Label\` using its globally unique id."""
   deleteLabelById(
@@ -23629,17 +23661,17 @@ ${String(oldPlan3)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan10.apply(this, args);
+                $prev = oldPlan15.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan10)}`);
+${String(oldPlan15)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23753,17 +23785,17 @@ ${String(oldPlan9)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan13.apply(this, args);
+                $prev = oldPlan10.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan13)}`);
+${String(oldPlan10)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -23799,17 +23831,17 @@ ${String(oldPlan26)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan17.apply(this, args);
+                $prev = oldPlan14.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProjectColumn, but that function did not return a step!
-${String(oldPlan17)}`);
+${String(oldPlan14)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24045,17 +24077,17 @@ ${String(oldPlan59)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan65.apply(this, args);
+                $prev = oldPlan69.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteColumn, but that function did not return a step!
-${String(oldPlan65)}`);
+${String(oldPlan69)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper66(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper70(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24211,17 +24243,17 @@ ${String(oldPlan64)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan67.apply(this, args);
+                $prev = oldPlan65.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan67)}`);
+${String(oldPlan65)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper69(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper67(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24281,17 +24313,17 @@ ${String(oldPlan78)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan70.apply(this, args);
+                $prev = oldPlan68.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectColumn, but that function did not return a step!
-${String(oldPlan70)}`);
+${String(oldPlan68)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper70(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper68(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24735,17 +24767,17 @@ ${String(oldPlan74)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan36.apply(this, args);
+                $prev = oldPlan41.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan36)}`);
+${String(oldPlan41)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24901,17 +24933,17 @@ ${String(oldPlan35)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan39.apply(this, args);
+                $prev = oldPlan36.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan39)}`);
+${String(oldPlan36)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24971,17 +25003,17 @@ ${String(oldPlan52)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan43.apply(this, args);
+                $prev = oldPlan40.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProjectColumn, but that function did not return a step!
-${String(oldPlan43)}`);
+${String(oldPlan40)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25559,6 +25591,9 @@ ${String(oldPlan47)}`);
         const specifier = nodeIdHandler_Column.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Column.codec.name].encode);
       },
+      isDone($record) {
+        return $record.get("is_done");
+      },
       project: ProjectProjectLabel_projectPlan,
       projectId: ProjectProjectLabel_projectIdPlan,
       rowId: Project_rowIdPlan,
@@ -25614,6 +25649,9 @@ ${String(oldPlan47)}`);
       createdAt: ProjectDistinctCountAggregates_createdAtPlan,
       icon: ColumnDistinctCountAggregates_iconPlan,
       index: ColumnDistinctCountAggregates_indexPlan,
+      isDone($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "is_done", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
       projectId: UserPreferenceDistinctCountAggregates_projectIdPlan,
       rowId: ProjectDistinctCountAggregates_rowIdPlan,
       title: PostDistinctCountAggregates_titlePlan,
@@ -28807,6 +28845,9 @@ export const inputObjects = {
       createdAt: ProjectCondition_createdAtApply,
       icon: ColumnCondition_iconApply,
       index: ColumnCondition_indexApply,
+      isDone($condition, val) {
+        return applyAttributeCondition("is_done", TYPES.boolean, $condition, val);
+      },
       projectId: TaskCondition_projectIdApply,
       rowId: ProjectCondition_rowIdApply,
       title: PostCondition_titleApply,
@@ -28819,6 +28860,9 @@ export const inputObjects = {
       icon: ColumnDistinctCountAggregateFilter_iconApply,
       index($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "index", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      isDone($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "is_done", TYPES.bigint, TYPES.boolean, $parent, input);
       },
       projectId: TaskDistinctCountAggregateFilter_projectIdApply,
       rowId: EmojiDistinctCountAggregateFilter_rowIdApply,
@@ -28837,6 +28881,9 @@ export const inputObjects = {
       },
       index(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("index", "index", spec_column.attributes.index, queryBuilder, value);
+      },
+      isDone(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("isDone", "is_done", spec_column.attributes.is_done, queryBuilder, value);
       },
       not: ProjectFilter_notApply,
       or: ProjectFilter_orApply,
@@ -28990,11 +29037,12 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ColumnInput_iconApply,
-      index: ColumnInput_indexApply,
+      icon: ProjectColumnInput_iconApply,
+      index: ProjectColumnInput_indexApply,
+      isDone: ColumnInput_isDoneApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
-      title: ColumnInput_titleApply,
+      title: PostInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -29002,11 +29050,12 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ColumnInput_iconApply,
-      index: ColumnInput_indexApply,
+      icon: ProjectColumnInput_iconApply,
+      index: ProjectColumnInput_indexApply,
+      isDone: ColumnInput_isDoneApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
-      title: ColumnInput_titleApply,
+      title: PostInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -29771,7 +29820,7 @@ export const inputObjects = {
     plans: {
       color: ProjectLabelInput_colorApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ColumnInput_iconApply,
+      icon: ProjectColumnInput_iconApply,
       name: UserInput_nameApply,
       organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
@@ -29784,7 +29833,7 @@ export const inputObjects = {
     plans: {
       color: ProjectLabelInput_colorApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ColumnInput_iconApply,
+      icon: ProjectColumnInput_iconApply,
       name: UserInput_nameApply,
       organizationId: ProjectColumnInput_organizationIdApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
@@ -30371,7 +30420,7 @@ export const inputObjects = {
       description: PostInput_descriptionApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
       taskId: TaskLabelInput_taskIdApply,
-      title: ColumnInput_titleApply,
+      title: PostInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -30383,7 +30432,7 @@ export const inputObjects = {
       description: PostInput_descriptionApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
       taskId: TaskLabelInput_taskIdApply,
-      title: ColumnInput_titleApply,
+      title: PostInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -30596,11 +30645,11 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ColumnInput_iconApply,
-      index: ColumnInput_indexApply,
+      icon: ProjectColumnInput_iconApply,
+      index: ProjectColumnInput_indexApply,
       organizationId: ProjectColumnInput_organizationIdApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
-      title: ColumnInput_titleApply,
+      title: PostInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -30608,11 +30657,11 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ColumnInput_iconApply,
-      index: ColumnInput_indexApply,
+      icon: ProjectColumnInput_iconApply,
+      index: ProjectColumnInput_indexApply,
       organizationId: ProjectColumnInput_organizationIdApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
-      title: ColumnInput_titleApply,
+      title: PostInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply
     }
   },
@@ -31212,7 +31261,7 @@ export const inputObjects = {
     plans: {
       color: ProjectLabelInput_colorApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ColumnInput_iconApply,
+      icon: ProjectColumnInput_iconApply,
       name: UserInput_nameApply,
       organizationId: ProjectColumnInput_organizationIdApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
@@ -31224,7 +31273,7 @@ export const inputObjects = {
     plans: {
       color: ProjectLabelInput_colorApply,
       createdAt: ProjectProjectLabelInput_createdAtApply,
-      icon: ColumnInput_iconApply,
+      icon: ProjectColumnInput_iconApply,
       name: UserInput_nameApply,
       organizationId: ProjectColumnInput_organizationIdApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
@@ -31456,7 +31505,7 @@ export const inputObjects = {
       order: ProjectLinkInput_orderApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
-      title: ColumnInput_titleApply,
+      title: PostInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       url: ProjectLinkInput_urlApply
     }
@@ -31482,7 +31531,7 @@ export const inputObjects = {
       order: ProjectLinkInput_orderApply,
       projectId: ProjectProjectLabelInput_projectIdApply,
       rowId: NotificationDigestQueueInput_rowIdApply,
-      title: ColumnInput_titleApply,
+      title: PostInput_titleApply,
       updatedAt: TaskLabelInput_updatedAtApply,
       url: ProjectLinkInput_urlApply
     }
@@ -34297,6 +34346,9 @@ export const enums = {
       CREATED_AT_TRUNCATED_TO_HOUR: ProjectGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
       ICON: ColumnGroupBy_ICONApply,
       INDEX: ColumnGroupBy_INDEXApply,
+      IS_DONE($pgSelect) {
+        applyGroupByAttribute("is_done", TYPES.boolean, $pgSelect);
+      },
       PROJECT_ID: UserPreferenceGroupBy_PROJECT_IDApply,
       TITLE: PostGroupBy_TITLEApply,
       UPDATED_AT: ProjectGroupBy_UPDATED_ATApply,
@@ -34312,6 +34364,18 @@ export const enums = {
       ICON_DESC: ColumnOrderBy_ICON_DESCApply,
       INDEX_ASC: ColumnOrderBy_INDEX_ASCApply,
       INDEX_DESC: ColumnOrderBy_INDEX_DESCApply,
+      IS_DONE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "is_done",
+          direction: "ASC"
+        });
+      },
+      IS_DONE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "is_done",
+          direction: "DESC"
+        });
+      },
       PRIMARY_KEY_ASC(queryBuilder) {
         columnUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
@@ -35477,6 +35541,12 @@ export const enums = {
       },
       COLUMNS_DISTINCT_COUNT_INDEX_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_column.attributes.index, "index", "DESC", relation, spec_resource_columnPgResource, $select);
+      },
+      COLUMNS_DISTINCT_COUNT_IS_DONE_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_column.attributes.is_done, "is_done", "ASC", relation, spec_resource_columnPgResource, $select);
+      },
+      COLUMNS_DISTINCT_COUNT_IS_DONE_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_column.attributes.is_done, "is_done", "DESC", relation, spec_resource_columnPgResource, $select);
       },
       COLUMNS_DISTINCT_COUNT_PROJECT_ID_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_column.attributes.project_id, "project_id", "ASC", relation, spec_resource_columnPgResource, $select);

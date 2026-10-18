@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  index,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { projects } from "./project.table";
@@ -15,6 +22,9 @@ export const columns = pgTable(
     id: generateDefaultId(),
     icon: text(),
     title: text().notNull(),
+    // Marks the column whose tasks count as done (one per project by
+    // convention). Drives the calendar/board done + overdue indicators
+    isDone: boolean().notNull().default(false),
     projectId: uuid()
       .notNull()
       .references(() => projects.id, { onDelete: "cascade" }),

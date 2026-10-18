@@ -1133,6 +1133,9 @@ input ColumnFilter {
   """Filter by the object’s `icon` field."""
   icon: StringFilter
 
+  """Filter by the object’s `isDone` field."""
+  isDone: BooleanFilter
+
   """Filter by the object’s `tasks` relation."""
   tasks: ColumnToManyTaskFilter
 
@@ -2604,6 +2607,7 @@ input ColumnDistinctCountAggregateFilter {
   updatedAt: BigIntFilter
   index: BigIntFilter
   icon: BigIntFilter
+  isDone: BigIntFilter
 }
 
 """
@@ -3178,6 +3182,8 @@ enum ProjectOrderBy {
   COLUMNS_DISTINCT_COUNT_INDEX_DESC
   COLUMNS_DISTINCT_COUNT_ICON_ASC
   COLUMNS_DISTINCT_COUNT_ICON_DESC
+  COLUMNS_DISTINCT_COUNT_IS_DONE_ASC
+  COLUMNS_DISTINCT_COUNT_IS_DONE_DESC
   TASKS_COUNT_ASC
   TASKS_COUNT_DESC
   TASKS_SUM_NUMBER_ASC
@@ -3361,6 +3367,7 @@ type Column implements Node {
   updatedAt: Datetime!
   index: String!
   icon: String
+  isDone: Boolean!
 
   """Reads a single `Project` that is related to this `Column`."""
   project: Project
@@ -6350,6 +6357,9 @@ type ColumnDistinctCountAggregates {
 
   """Distinct count of icon across the matching connection"""
   icon: BigInt
+
+  """Distinct count of isDone across the matching connection"""
+  isDone: BigInt
 }
 
 """Grouping methods for `Column` for usage during aggregation."""
@@ -6364,6 +6374,7 @@ enum ColumnGroupBy {
   UPDATED_AT_TRUNCATED_TO_DAY
   INDEX
   ICON
+  IS_DONE
 }
 
 """Conditions for `Column` aggregates."""
@@ -6450,6 +6461,9 @@ input ColumnCondition {
 
   """Checks for equality with the object’s `icon` field."""
   icon: String
+
+  """Checks for equality with the object’s `isDone` field."""
+  isDone: Boolean
 }
 
 """Methods to use when ordering `Column`."""
@@ -6471,6 +6485,8 @@ enum ColumnOrderBy {
   INDEX_DESC
   ICON_ASC
   ICON_DESC
+  IS_DONE_ASC
+  IS_DONE_DESC
   TASKS_COUNT_ASC
   TASKS_COUNT_DESC
   TASKS_SUM_NUMBER_ASC
@@ -9273,52 +9289,6 @@ input NotificationPreferenceInput {
   taskAssignedCadence: String
 }
 
-"""The output of our create `Column` mutation."""
-type CreateColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was created by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the create `Column` mutation."""
-input CreateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Column` to be created by this mutation."""
-  column: ColumnInput!
-}
-
-"""An input for mutations affecting `Column`"""
-input ColumnInput {
-  rowId: UUID
-  title: String!
-  projectId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: String!
-  icon: String
-}
-
 """The output of our create `Post` mutation."""
 type CreatePostPayload {
   """
@@ -9455,6 +9425,53 @@ input ProjectLabelInput {
   organizationId: String!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `Column` mutation."""
+type CreateColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was created by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the create `Column` mutation."""
+input CreateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Column` to be created by this mutation."""
+  column: ColumnInput!
+}
+
+"""An input for mutations affecting `Column`"""
+input ColumnInput {
+  rowId: UUID
+  title: String!
+  projectId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: String!
+  icon: String
+  isDone: Boolean
 }
 
 """The output of our create `Label` mutation."""
@@ -10276,76 +10293,6 @@ input UpdateNotificationPreferenceInput {
   patch: NotificationPreferencePatch!
 }
 
-"""The output of our update `Column` mutation."""
-type UpdateColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was updated by this mutation."""
-  column: Column
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the `updateColumnById` mutation."""
-input UpdateColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Column` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Column` being updated.
-  """
-  patch: ColumnPatch!
-}
-
-"""
-Represents an update to a `Column`. Fields that are set will be updated.
-"""
-input ColumnPatch {
-  rowId: UUID
-  title: String
-  projectId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-  index: String
-  icon: String
-}
-
-"""All input for the `updateColumn` mutation."""
-input UpdateColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Column` being updated.
-  """
-  patch: ColumnPatch!
-}
-
 """The output of our update `Post` mutation."""
 type UpdatePostPayload {
   """
@@ -10552,6 +10499,77 @@ input UpdateProjectLabelInput {
   An object where the defined keys will be set on the `ProjectLabel` being updated.
   """
   patch: ProjectLabelPatch!
+}
+
+"""The output of our update `Column` mutation."""
+type UpdateColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was updated by this mutation."""
+  column: Column
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the `updateColumnById` mutation."""
+input UpdateColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Column` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Column` being updated.
+  """
+  patch: ColumnPatch!
+}
+
+"""
+Represents an update to a `Column`. Fields that are set will be updated.
+"""
+input ColumnPatch {
+  rowId: UUID
+  title: String
+  projectId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  index: String
+  icon: String
+  isDone: Boolean
+}
+
+"""All input for the `updateColumn` mutation."""
+input UpdateColumnInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Column` being updated.
+  """
+  patch: ColumnPatch!
 }
 
 """The output of our update `Label` mutation."""
@@ -11400,54 +11418,6 @@ input DeleteNotificationPreferenceInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Column` mutation."""
-type DeleteColumnPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Column` that was deleted by this mutation."""
-  column: Column
-  deletedColumnId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Column`. May be used by Relay 1."""
-  columnEdge(
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ColumnEdge
-}
-
-"""All input for the `deleteColumnById` mutation."""
-input DeleteColumnByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Column` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteColumn` mutation."""
-input DeleteColumnInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Post` mutation."""
 type DeletePostPayload {
   """
@@ -11584,6 +11554,54 @@ input DeleteProjectLabelByIdInput {
 
 """All input for the `deleteProjectLabel` mutation."""
 input DeleteProjectLabelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Column` mutation."""
+type DeleteColumnPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Column` that was deleted by this mutation."""
+  column: Column
+  deletedColumnId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Column`. May be used by Relay 1."""
+  columnEdge(
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ColumnEdge
+}
+
+"""All input for the `deleteColumnById` mutation."""
+input DeleteColumnByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Column` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteColumn` mutation."""
+input DeleteColumnInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -12191,9 +12209,6 @@ type Query implements Node {
   """Get a single `NotificationPreference`."""
   notificationPreferenceByUserId(userId: UUID!): NotificationPreference
 
-  """Get a single `Column`."""
-  column(rowId: UUID!): Column
-
   """Get a single `Post`."""
   post(rowId: UUID!): Post
 
@@ -12202,6 +12217,9 @@ type Query implements Node {
 
   """Get a single `ProjectLabel`."""
   projectLabel(rowId: UUID!): ProjectLabel
+
+  """Get a single `Column`."""
+  column(rowId: UUID!): Column
 
   """Get a single `Label`."""
   label(rowId: UUID!): Label
@@ -12291,12 +12309,6 @@ type Query implements Node {
     id: ID!
   ): NotificationPreference
 
-  """Reads a single `Column` using its globally unique `ID`."""
-  columnById(
-    """The globally unique `ID` to be used in selecting a single `Column`."""
-    id: ID!
-  ): Column
-
   """Reads a single `Post` using its globally unique `ID`."""
   postById(
     """The globally unique `ID` to be used in selecting a single `Post`."""
@@ -12318,6 +12330,12 @@ type Query implements Node {
     """
     id: ID!
   ): ProjectLabel
+
+  """Reads a single `Column` using its globally unique `ID`."""
+  columnById(
+    """The globally unique `ID` to be used in selecting a single `Column`."""
+    id: ID!
+  ): Column
 
   """Reads a single `Label` using its globally unique `ID`."""
   labelById(
@@ -12625,40 +12643,6 @@ type Query implements Node {
     orderBy: [NotificationPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): NotificationPreferenceConnection
 
-  """Reads and enables pagination through a set of `Column`."""
-  columns(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ColumnCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ColumnFilter
-
-    """The method to use when ordering `Column`."""
-    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ColumnConnection
-
   """Reads and enables pagination through a set of `Post`."""
   posts(
     """Only read the first `n` values of the set."""
@@ -12760,6 +12744,40 @@ type Query implements Node {
     """The method to use when ordering `ProjectLabel`."""
     orderBy: [ProjectLabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectLabelConnection
+
+  """Reads and enables pagination through a set of `Column`."""
+  columns(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ColumnCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ColumnFilter
+
+    """The method to use when ordering `Column`."""
+    orderBy: [ColumnOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ColumnConnection
 
   """Reads and enables pagination through a set of `Label`."""
   labels(
@@ -13127,14 +13145,6 @@ type Mutation {
     input: CreateNotificationPreferenceInput!
   ): CreateNotificationPreferencePayload
 
-  """Creates a single `Column`."""
-  createColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateColumnInput!
-  ): CreateColumnPayload
-
   """Creates a single `Post`."""
   createPost(
     """
@@ -13158,6 +13168,14 @@ type Mutation {
     """
     input: CreateProjectLabelInput!
   ): CreateProjectLabelPayload
+
+  """Creates a single `Column`."""
+  createColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateColumnInput!
+  ): CreateColumnPayload
 
   """Creates a single `Label`."""
   createLabel(
@@ -13337,22 +13355,6 @@ type Mutation {
     input: UpdateNotificationPreferenceInput!
   ): UpdateNotificationPreferencePayload
 
-  """Updates a single `Column` using its globally unique id and a patch."""
-  updateColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnByIdInput!
-  ): UpdateColumnPayload
-
-  """Updates a single `Column` using a unique key and a patch."""
-  updateColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateColumnInput!
-  ): UpdateColumnPayload
-
   """Updates a single `Post` using its globally unique id and a patch."""
   updatePostById(
     """
@@ -13404,6 +13406,22 @@ type Mutation {
     """
     input: UpdateProjectLabelInput!
   ): UpdateProjectLabelPayload
+
+  """Updates a single `Column` using its globally unique id and a patch."""
+  updateColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnByIdInput!
+  ): UpdateColumnPayload
+
+  """Updates a single `Column` using a unique key and a patch."""
+  updateColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateColumnInput!
+  ): UpdateColumnPayload
 
   """Updates a single `Label` using its globally unique id and a patch."""
   updateLabelById(
@@ -13639,22 +13657,6 @@ type Mutation {
     input: DeleteNotificationPreferenceInput!
   ): DeleteNotificationPreferencePayload
 
-  """Deletes a single `Column` using its globally unique id."""
-  deleteColumnById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnByIdInput!
-  ): DeleteColumnPayload
-
-  """Deletes a single `Column` using a unique key."""
-  deleteColumn(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteColumnInput!
-  ): DeleteColumnPayload
-
   """Deletes a single `Post` using its globally unique id."""
   deletePostById(
     """
@@ -13702,6 +13704,22 @@ type Mutation {
     """
     input: DeleteProjectLabelInput!
   ): DeleteProjectLabelPayload
+
+  """Deletes a single `Column` using its globally unique id."""
+  deleteColumnById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnByIdInput!
+  ): DeleteColumnPayload
+
+  """Deletes a single `Column` using a unique key."""
+  deleteColumn(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteColumnInput!
+  ): DeleteColumnPayload
 
   """Deletes a single `Label` using its globally unique id."""
   deleteLabelById(

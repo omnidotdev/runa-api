@@ -505,6 +505,13 @@
       "when": 1792346512042,
       "tag": "0071_fine_warbird",
       "breakpoints": true
+    },
+    {
+      "idx": 72,
+      "version": "7",
+      "when": 1792364567698,
+      "tag": "0072_loud_scarlet_witch",
+      "breakpoints": true
     }
   ]
 }
