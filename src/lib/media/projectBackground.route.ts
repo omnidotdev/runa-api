@@ -119,7 +119,7 @@ const projectBackgroundRoutes = new Elysia({ prefix: "/api/projects" }).post(
     );
     if (!withinStorageLimit) {
       set.status = 413;
-      return { error: "Organization has reached its storage limit" };
+      return { error: "Workspace has reached its storage limit" };
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());

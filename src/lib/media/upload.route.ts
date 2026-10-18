@@ -124,7 +124,7 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
     );
     if (!withinStorageLimit) {
       set.status = 413;
-      return { error: "Organization has reached its storage limit" };
+      return { error: "Workspace has reached its storage limit" };
     }
 
     // Resolve the local uploader record (nullable: file survives user deletion)
