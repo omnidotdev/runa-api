@@ -24,10 +24,11 @@ const TOKEN_PREFIX = "runa_cal_";
 const hashToken = (plaintext: string): string =>
   createHash("sha256").update(plaintext).digest("hex");
 
-/** Secret-less view of a project's live feed token (safe to return). */
+/** Secret-less view of a live feed token (safe to return). */
 interface CalendarFeedTokenInfo {
   id: string;
-  projectId: string;
+  projectId: string | null;
+  userId: string | null;
   createdAt: string;
   lastUsedAt: string | null;
 }
@@ -35,15 +36,19 @@ interface CalendarFeedTokenInfo {
 const toInfo = (row: SelectCalendarFeedToken): CalendarFeedTokenInfo => ({
   id: row.id,
   projectId: row.projectId,
+  userId: row.userId,
   createdAt: row.createdAt,
   lastUsedAt: row.lastUsedAt,
 });
 
-/** The project a resolved feed token grants read-only access to. */
+/** What a resolved feed token grants read-only access to: one of project/user. */
 interface ResolvedCalendarFeedToken {
   tokenId: string;
   organizationId: string;
-  projectId: string;
+  /** Set for a project feed; null for a user feed. */
+  projectId: string | null;
+  /** Set for a user feed; null for a project feed. */
+  userId: string | null;
 }
 
 /** Revoke any live token for a project. Returns how many were revoked. */
@@ -145,5 +150,76 @@ export const resolveCalendarFeedToken = async (
     tokenId: row.id,
     organizationId: row.organizationId,
     projectId: row.projectId,
+    userId: row.userId,
   };
+};
+
+/** Revoke any live token for a user. Returns how many were revoked. */
+const revokeLiveForUser = async (
+  userId: string,
+  organizationId: string,
+): Promise<number> => {
+  const rows = await dbPool
+    .update(calendarFeedToken)
+    .set({ revokedAt: new Date().toISOString() })
+    .where(
+      and(
+        eq(calendarFeedToken.userId, userId),
+        eq(calendarFeedToken.organizationId, organizationId),
+        isNull(calendarFeedToken.revokedAt),
+      ),
+    )
+    .returning({ id: calendarFeedToken.id });
+  return rows.length;
+};
+
+/**
+ * Create (or regenerate) a user's personal feed token for a workspace; stores
+ * only its hash and returns the plaintext once. Revokes any existing live token
+ * first, so each (user, workspace) has a single active feed URL.
+ */
+export const createUserCalendarFeedToken = async (params: {
+  organizationId: string;
+  userId: string;
+  createdBy: string;
+}): Promise<{ token: CalendarFeedTokenInfo; secret: string }> => {
+  await revokeLiveForUser(params.userId, params.organizationId);
+  const secret = `${TOKEN_PREFIX}${randomBytes(32).toString("base64url")}`;
+  const [row] = await dbPool
+    .insert(calendarFeedToken)
+    .values({
+      organizationId: params.organizationId,
+      userId: params.userId,
+      tokenHash: hashToken(secret),
+      createdBy: params.createdBy,
+    })
+    .returning();
+  return { token: toInfo(row!), secret };
+};
+
+/** Revoke a user's live feed token for a workspace. */
+export const revokeUserCalendarFeedToken = async (
+  userId: string,
+  organizationId: string,
+): Promise<boolean> => {
+  const revoked = await revokeLiveForUser(userId, organizationId);
+  return revoked > 0;
+};
+
+/** The user's live feed token for a workspace (secret-less), or null. */
+export const getUserCalendarFeedToken = async (
+  userId: string,
+  organizationId: string,
+): Promise<CalendarFeedTokenInfo | null> => {
+  const [row] = await dbPool
+    .select()
+    .from(calendarFeedToken)
+    .where(
+      and(
+        eq(calendarFeedToken.userId, userId),
+        eq(calendarFeedToken.organizationId, organizationId),
+        isNull(calendarFeedToken.revokedAt),
+      ),
+    );
+  return row ? toInfo(row) : null;
 };

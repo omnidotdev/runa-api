@@ -491,6 +491,13 @@
       "when": 1792005527258,
       "tag": "0069_good_rumiko_fujikawa",
       "breakpoints": true
+    },
+    {
+      "idx": 70,
+      "version": "7",
+      "when": 1792290150783,
+      "tag": "0070_robust_boomer",
+      "breakpoints": true
     }
   ]
 }

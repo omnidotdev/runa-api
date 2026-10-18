@@ -17,7 +17,7 @@
 import { Elysia } from "elysia";
 
 import { resolveCalendarFeedToken } from "lib/tokens/calendarFeedTokens";
-import { buildProjectCalendarFeed } from "./feed";
+import { buildProjectCalendarFeed, buildUserCalendarFeed } from "./feed";
 
 const NOT_FOUND = "Not found";
 
@@ -34,7 +34,12 @@ const calendarFeedRoutes = new Elysia({ prefix: "/calendar" }).get(
       return NOT_FOUND;
     }
 
-    const ics = await buildProjectCalendarFeed(resolved.projectId);
+    // a token is scoped to exactly one of a project or a user
+    const ics = resolved.userId
+      ? await buildUserCalendarFeed(resolved.organizationId, resolved.userId)
+      : resolved.projectId
+        ? await buildProjectCalendarFeed(resolved.projectId)
+        : null;
     if (ics === null) {
       set.status = 404;
       return NOT_FOUND;

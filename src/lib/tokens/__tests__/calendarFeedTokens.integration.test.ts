@@ -6,20 +6,44 @@
  */
 
 import { afterAll, beforeEach, describe, expect, test } from "bun:test";
+import { randomUUID } from "node:crypto";
 
 import { dbPool } from "lib/db/db";
-import { calendarFeedToken, projectColumns, projects } from "lib/db/schema";
+import {
+  calendarFeedToken,
+  projectColumns,
+  projects,
+  users,
+} from "lib/db/schema";
 import {
   createCalendarFeedToken,
+  createUserCalendarFeedToken,
   getCalendarFeedToken,
+  getUserCalendarFeedToken,
   resolveCalendarFeedToken,
   revokeCalendarFeedToken,
+  revokeUserCalendarFeedToken,
 } from "lib/tokens/calendarFeedTokens";
 
 const ORG = "org-a";
 const OTHER_ORG = "org-b";
 
 let projectId: string;
+let userId: string;
+
+/** Seed a user and return its row id. */
+const seedUser = async (): Promise<string> => {
+  const suffix = Math.random().toString(36).slice(2);
+  const [user] = await dbPool
+    .insert(users)
+    .values({
+      identityProviderId: randomUUID(),
+      name: "Cal User",
+      email: `cal-${suffix}@example.com`,
+    })
+    .returning({ id: users.id });
+  return user!.id;
+};
 
 /** Seed a project (and its required column) and return the project id. */
 const seedProject = async (organizationId: string): Promise<string> => {
@@ -44,13 +68,16 @@ beforeEach(async () => {
   await dbPool.delete(calendarFeedToken);
   await dbPool.delete(projects);
   await dbPool.delete(projectColumns);
+  await dbPool.delete(users);
   projectId = await seedProject(ORG);
+  userId = await seedUser();
 });
 
 afterAll(async () => {
   await dbPool.delete(calendarFeedToken);
   await dbPool.delete(projects);
   await dbPool.delete(projectColumns);
+  await dbPool.delete(users);
 });
 
 describe("createCalendarFeedToken", () => {
@@ -132,5 +159,53 @@ describe("revokeCalendarFeedToken", () => {
     // a different org cannot revoke this project's token
     expect(await revokeCalendarFeedToken(projectId, OTHER_ORG)).toBe(false);
     expect(await resolveCalendarFeedToken(secret)).not.toBeNull();
+  });
+});
+
+describe("user calendar feed tokens", () => {
+  test("create returns a runa_cal_ secret once and resolves to the user", async () => {
+    const { token, secret } = await createUserCalendarFeedToken({
+      organizationId: ORG,
+      userId,
+      createdBy: "idp-user",
+    });
+    expect(secret.startsWith("runa_cal_")).toBe(true);
+    expect(token).not.toHaveProperty("secret");
+
+    const resolved = await resolveCalendarFeedToken(secret);
+    expect(resolved?.userId).toBe(userId);
+    expect(resolved?.projectId).toBeNull();
+    expect(resolved?.organizationId).toBe(ORG);
+  });
+
+  test("regenerating revokes the prior user token", async () => {
+    const first = await createUserCalendarFeedToken({
+      organizationId: ORG,
+      userId,
+      createdBy: "idp-user",
+    });
+    const second = await createUserCalendarFeedToken({
+      organizationId: ORG,
+      userId,
+      createdBy: "idp-user",
+    });
+    expect(await resolveCalendarFeedToken(first.secret)).toBeNull();
+    expect(await resolveCalendarFeedToken(second.secret)).not.toBeNull();
+    expect((await getUserCalendarFeedToken(userId, ORG))?.id).toBe(
+      second.token.id,
+    );
+  });
+
+  test("revoke + org scoping", async () => {
+    const { secret } = await createUserCalendarFeedToken({
+      organizationId: ORG,
+      userId,
+      createdBy: "idp-user",
+    });
+    // a different org cannot revoke this user's token
+    expect(await revokeUserCalendarFeedToken(userId, OTHER_ORG)).toBe(false);
+    expect(await revokeUserCalendarFeedToken(userId, ORG)).toBe(true);
+    expect(await resolveCalendarFeedToken(secret)).toBeNull();
+    expect(await getUserCalendarFeedToken(userId, ORG)).toBeNull();
   });
 });

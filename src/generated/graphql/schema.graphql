@@ -12070,6 +12070,29 @@ input RevokeCalendarFeedTokenInput {
   projectId: UUID!
 }
 
+"""Your personal calendar feed status, without the secret feed URL."""
+type MyCalendarFeedStatus {
+  """Whether a live personal feed URL currently exists in this workspace."""
+  enabled: Boolean
+  createdAt: String
+  lastUsedAt: String
+}
+
+"""
+Create result. The feed URL contains the secret and is shown only here.
+"""
+type CreateMyCalendarFeedTokenPayload {
+  url: String
+}
+
+type RevokeMyCalendarFeedTokenPayload {
+  revoked: Boolean
+}
+
+input MyCalendarFeedInput {
+  organizationId: String!
+}
+
 """Cached link preview metadata for a URL."""
 type LinkPreview {
   """The requested URL."""
@@ -13007,6 +13030,9 @@ type Query implements Node {
   """
   calendarFeed(projectId: UUID!): CalendarFeedStatus
 
+  """Your own calendar feed status for a workspace. Secret-less."""
+  myCalendarFeed(organizationId: String!): MyCalendarFeedStatus
+
   """
   Fetch (and cache) OpenGraph/favicon preview metadata for an http(s) URL.
   """
@@ -13845,6 +13871,24 @@ type Mutation {
     """
     input: RevokeCalendarFeedTokenInput!
   ): RevokeCalendarFeedTokenPayload
+
+  """
+  Create or regenerate your own cross-project calendar feed URL. Returns the URL once.
+  """
+  createMyCalendarFeedToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: MyCalendarFeedInput!
+  ): CreateMyCalendarFeedTokenPayload
+
+  """Revoke your own calendar feed URL for a workspace."""
+  revokeMyCalendarFeedToken(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: MyCalendarFeedInput!
+  ): RevokeMyCalendarFeedTokenPayload
 }
 
 """A single audit/activity entry for a task, sourced from Chronicle."""

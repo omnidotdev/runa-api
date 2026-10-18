@@ -6,8 +6,11 @@ import { checkPermission } from "lib/authz";
 import { calendarFeedUrl, projectOrganizationId } from "lib/calendar/feed";
 import {
   createCalendarFeedToken,
+  createUserCalendarFeedToken,
   getCalendarFeedToken,
+  getUserCalendarFeedToken,
   revokeCalendarFeedToken,
+  revokeUserCalendarFeedToken,
 } from "lib/tokens/calendarFeedTokens";
 
 /**
@@ -62,6 +65,27 @@ const CalendarFeedPlugin = makeExtendSchemaPlugin(() => ({
       projectId: UUID!
     }
 
+    "Your personal calendar feed status, without the secret feed URL."
+    type MyCalendarFeedStatus {
+      "Whether a live personal feed URL currently exists in this workspace."
+      enabled: Boolean
+      createdAt: String
+      lastUsedAt: String
+    }
+
+    "Create result. The feed URL contains the secret and is shown only here."
+    type CreateMyCalendarFeedTokenPayload {
+      url: String
+    }
+
+    type RevokeMyCalendarFeedTokenPayload {
+      revoked: Boolean
+    }
+
+    input MyCalendarFeedInput {
+      organizationId: String!
+    }
+
     extend type Mutation {
       "Create or regenerate a project's calendar feed URL (requires workspace admin). Returns the URL once."
       createCalendarFeedToken(
@@ -71,11 +95,21 @@ const CalendarFeedPlugin = makeExtendSchemaPlugin(() => ({
       revokeCalendarFeedToken(
         input: RevokeCalendarFeedTokenInput!
       ): RevokeCalendarFeedTokenPayload
+      "Create or regenerate your own cross-project calendar feed URL. Returns the URL once."
+      createMyCalendarFeedToken(
+        input: MyCalendarFeedInput!
+      ): CreateMyCalendarFeedTokenPayload
+      "Revoke your own calendar feed URL for a workspace."
+      revokeMyCalendarFeedToken(
+        input: MyCalendarFeedInput!
+      ): RevokeMyCalendarFeedTokenPayload
     }
 
     extend type Query {
       "A project's calendar feed status (requires workspace admin). Secret-less."
       calendarFeed(projectId: UUID!): CalendarFeedStatus
+      "Your own calendar feed status for a workspace. Secret-less."
+      myCalendarFeed(organizationId: String!): MyCalendarFeedStatus
     }
   `,
   plans: {
@@ -89,6 +123,17 @@ const CalendarFeedPlugin = makeExtendSchemaPlugin(() => ({
     },
     CalendarFeedStatus: {
       projectId: rowField("projectId"),
+      enabled: rowField("enabled"),
+      createdAt: rowField("createdAt"),
+      lastUsedAt: rowField("lastUsedAt"),
+    },
+    CreateMyCalendarFeedTokenPayload: {
+      url: rowField("url"),
+    },
+    RevokeMyCalendarFeedTokenPayload: {
+      revoked: rowField("revoked"),
+    },
+    MyCalendarFeedStatus: {
       enabled: rowField("enabled"),
       createdAt: rowField("createdAt"),
       lastUsedAt: rowField("lastUsedAt"),
@@ -145,6 +190,45 @@ const CalendarFeedPlugin = makeExtendSchemaPlugin(() => ({
           projectOrganizationId,
           getCalendarFeedToken,
         ],
+      ),
+      myCalendarFeed: EXPORTABLE(
+        (context, lambda, checkPermission, getUserCalendarFeedToken) =>
+          // biome-ignore lint/suspicious/noExplicitAny: grafast plan signature
+          (_$root: any, fieldArgs: any) => {
+            const $organizationId = fieldArgs.getRaw("organizationId");
+            const $observer = context().get("observer");
+            const $accessToken = context().get("accessToken");
+            const $authzCache = context().get("authzCache");
+            return lambda(
+              [$observer, $accessToken, $authzCache, $organizationId],
+              // biome-ignore lint/suspicious/noExplicitAny: grafast lambda values
+              async (values: any) => {
+                const [observer, accessToken, authzCache, organizationId] =
+                  values;
+                if (!observer || !accessToken) throw new Error("Unauthorized");
+                const ok = await checkPermission(
+                  observer.identityProviderId,
+                  "organization",
+                  organizationId,
+                  "member",
+                  accessToken,
+                  authzCache,
+                );
+                if (!ok) throw new Error("Unauthorized");
+                const token = await getUserCalendarFeedToken(
+                  observer.id,
+                  organizationId,
+                );
+                return {
+                  enabled: token !== null,
+                  createdAt: token?.createdAt ?? null,
+                  lastUsedAt: token?.lastUsedAt ?? null,
+                };
+              },
+              false,
+            );
+          },
+        [context, lambda, checkPermission, getUserCalendarFeedToken],
       ),
     },
     Mutation: {
@@ -251,6 +335,85 @@ const CalendarFeedPlugin = makeExtendSchemaPlugin(() => ({
           projectOrganizationId,
           revokeCalendarFeedToken,
         ],
+      ),
+      createMyCalendarFeedToken: EXPORTABLE(
+        (
+          context,
+          lambda,
+          checkPermission,
+          createUserCalendarFeedToken,
+          calendarFeedUrl,
+        ) =>
+          // biome-ignore lint/suspicious/noExplicitAny: grafast plan signature
+          (_$root: any, fieldArgs: any) => {
+            const $input = fieldArgs.getRaw("input");
+            const $observer = context().get("observer");
+            const $accessToken = context().get("accessToken");
+            const $authzCache = context().get("authzCache");
+            return lambda(
+              [$observer, $accessToken, $authzCache, $input],
+              // biome-ignore lint/suspicious/noExplicitAny: grafast lambda values
+              async ([observer, accessToken, authzCache, input]: any) => {
+                if (!observer || !accessToken) throw new Error("Unauthorized");
+                const ok = await checkPermission(
+                  observer.identityProviderId,
+                  "organization",
+                  input.organizationId,
+                  "member",
+                  accessToken,
+                  authzCache,
+                );
+                if (!ok) throw new Error("Unauthorized");
+                const { secret } = await createUserCalendarFeedToken({
+                  organizationId: input.organizationId,
+                  userId: observer.id,
+                  createdBy: observer.identityProviderId,
+                });
+                return { url: calendarFeedUrl(secret) };
+              },
+              false,
+            );
+          },
+        [
+          context,
+          lambda,
+          checkPermission,
+          createUserCalendarFeedToken,
+          calendarFeedUrl,
+        ],
+      ),
+      revokeMyCalendarFeedToken: EXPORTABLE(
+        (context, lambda, checkPermission, revokeUserCalendarFeedToken) =>
+          // biome-ignore lint/suspicious/noExplicitAny: grafast plan signature
+          (_$root: any, fieldArgs: any) => {
+            const $input = fieldArgs.getRaw("input");
+            const $observer = context().get("observer");
+            const $accessToken = context().get("accessToken");
+            const $authzCache = context().get("authzCache");
+            return lambda(
+              [$observer, $accessToken, $authzCache, $input],
+              // biome-ignore lint/suspicious/noExplicitAny: grafast lambda values
+              async ([observer, accessToken, authzCache, input]: any) => {
+                if (!observer || !accessToken) throw new Error("Unauthorized");
+                const ok = await checkPermission(
+                  observer.identityProviderId,
+                  "organization",
+                  input.organizationId,
+                  "member",
+                  accessToken,
+                  authzCache,
+                );
+                if (!ok) throw new Error("Unauthorized");
+                const revoked = await revokeUserCalendarFeedToken(
+                  observer.id,
+                  input.organizationId,
+                );
+                return { revoked };
+              },
+              false,
+            );
+          },
+        [context, lambda, checkPermission, revokeUserCalendarFeedToken],
       ),
     },
   },

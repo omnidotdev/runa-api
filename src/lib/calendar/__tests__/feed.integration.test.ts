@@ -5,24 +5,36 @@
  */
 
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+import { randomUUID } from "node:crypto";
 
 import {
   buildProjectCalendarFeed,
+  buildUserCalendarFeed,
   calendarFeedUrl,
   projectOrganizationId,
 } from "lib/calendar/feed";
 import { dbPool } from "lib/db/db";
-import { columns, projectColumns, projects, tasks } from "lib/db/schema";
+import {
+  assignees,
+  columns,
+  projectColumns,
+  projects,
+  tasks,
+  users,
+} from "lib/db/schema";
 
 const ORG = "org-cal-feed";
 
 let projectId: string;
+let userId: string;
 
 beforeAll(async () => {
+  await dbPool.delete(assignees);
   await dbPool.delete(tasks);
   await dbPool.delete(columns);
   await dbPool.delete(projects);
   await dbPool.delete(projectColumns);
+  await dbPool.delete(users);
 
   const [pc] = await dbPool
     .insert(projectColumns)
@@ -45,31 +57,50 @@ beforeAll(async () => {
     .values({ title: "Todo", projectId, index: "a0" })
     .returning({ id: columns.id });
 
-  await dbPool.insert(tasks).values([
-    {
-      content: "Ship the thing",
-      description: "",
-      projectId,
-      columnId: col!.id,
-      columnIndex: "a0",
-      dueDate: "2026-10-14T00:00:00+00:00",
-    },
-    {
-      content: "Someday maybe",
-      description: "",
-      projectId,
-      columnId: col!.id,
-      columnIndex: "a1",
-      dueDate: null,
-    },
-  ]);
+  const inserted = await dbPool
+    .insert(tasks)
+    .values([
+      {
+        content: "Ship the thing",
+        description: "",
+        projectId,
+        columnId: col!.id,
+        columnIndex: "a0",
+        dueDate: "2026-10-14T00:00:00+00:00",
+      },
+      {
+        content: "Someday maybe",
+        description: "",
+        projectId,
+        columnId: col!.id,
+        columnIndex: "a1",
+        dueDate: null,
+      },
+    ])
+    .returning({ id: tasks.id, content: tasks.content });
+
+  const [user] = await dbPool
+    .insert(users)
+    .values({
+      identityProviderId: randomUUID(),
+      name: "Feed User",
+      email: `feed-${Math.random().toString(36).slice(2)}@example.com`,
+    })
+    .returning({ id: users.id });
+  userId = user!.id;
+
+  // assign the user to the dated task only
+  const datedTask = inserted.find((task) => task.content === "Ship the thing");
+  await dbPool.insert(assignees).values({ taskId: datedTask!.id, userId });
 });
 
 afterAll(async () => {
+  await dbPool.delete(assignees);
   await dbPool.delete(tasks);
   await dbPool.delete(columns);
   await dbPool.delete(projects);
   await dbPool.delete(projectColumns);
+  await dbPool.delete(users);
 });
 
 describe("buildProjectCalendarFeed", () => {
@@ -107,5 +138,25 @@ describe("calendarFeedUrl", () => {
     expect(calendarFeedUrl("runa_cal_abc")).toContain(
       "/calendar/feed/runa_cal_abc",
     );
+  });
+});
+
+describe("buildUserCalendarFeed", () => {
+  test("includes the user's dated assigned tasks across the workspace", async () => {
+    const doc = await buildUserCalendarFeed(ORG, userId);
+    expect(doc).toContain("BEGIN:VCALENDAR");
+    expect(doc).toContain("Ship the thing");
+    expect(doc).toContain("20261014");
+    // the undated task is not assigned to the user and has no due date
+    expect(doc).not.toContain("Someday maybe");
+  });
+
+  test("is empty for a user with no assigned dated tasks", async () => {
+    const doc = await buildUserCalendarFeed(
+      ORG,
+      "00000000-0000-0000-0000-000000000000",
+    );
+    expect(doc).toContain("BEGIN:VCALENDAR");
+    expect(doc).not.toContain("Ship the thing");
   });
 });

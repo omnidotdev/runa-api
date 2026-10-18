@@ -64,8 +64,11 @@ import {
 } from "lib/tokens/apiTokens";
 import {
   createCalendarFeedToken,
+  createUserCalendarFeedToken,
   getCalendarFeedToken,
+  getUserCalendarFeedToken,
   revokeCalendarFeedToken,
+  revokeUserCalendarFeedToken,
 } from "lib/tokens/calendarFeedTokens";
 import {
   createWebhookEndpoint,
@@ -199,6 +202,9 @@ const generateGraphqlSchema = async () => {
         createCalendarFeedToken,
         revokeCalendarFeedToken,
         getCalendarFeedToken,
+        createUserCalendarFeedToken,
+        revokeUserCalendarFeedToken,
+        getUserCalendarFeedToken,
       },
       "lib/calendar/feed": {
         calendarFeedUrl,

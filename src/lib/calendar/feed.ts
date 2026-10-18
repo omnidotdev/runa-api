@@ -16,7 +16,7 @@ import { and, eq, isNotNull } from "drizzle-orm";
 
 import { PUBLIC_API_URL } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { projects, tasks } from "lib/db/schema";
+import { assignees, projects, tasks } from "lib/db/schema";
 
 import type { IcsEvent } from "@omnidotdev/cadence/ics";
 
@@ -70,6 +70,40 @@ export const buildProjectCalendarFeed = async (
 
   return buildIcsCalendar(events, {
     calendarName: project.name,
+    uidDomain: UID_DOMAIN,
+  });
+};
+
+/**
+ * Build the iCalendar document for a user's own dated tasks across a workspace
+ * (every project in the org where they are an assignee). Always returns a
+ * document (empty when they have no dated tasks).
+ */
+export const buildUserCalendarFeed = async (
+  organizationId: string,
+  userId: string,
+): Promise<string> => {
+  const rows = await dbPool
+    .select({ id: tasks.id, content: tasks.content, dueDate: tasks.dueDate })
+    .from(tasks)
+    .innerJoin(projects, eq(tasks.projectId, projects.id))
+    .innerJoin(assignees, eq(assignees.taskId, tasks.id))
+    .where(
+      and(
+        eq(projects.organizationId, organizationId),
+        eq(assignees.userId, userId),
+        isNotNull(tasks.dueDate),
+      ),
+    );
+
+  const events: IcsEvent[] = rows.map((row) => ({
+    uid: row.id,
+    title: row.content,
+    day: new Date(row.dueDate as string).toISOString().slice(0, 10),
+  }));
+
+  return buildIcsCalendar(events, {
+    calendarName: "My Runa tasks",
     uidDomain: UID_DOMAIN,
   });
 };

@@ -7,18 +7,22 @@
  */
 
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+import { randomUUID } from "node:crypto";
 
 import calendarFeedRoutes from "lib/calendar/feed.route";
 import { dbPool } from "lib/db/db";
 import {
+  assignees,
   calendarFeedToken,
   columns,
   projectColumns,
   projects,
   tasks,
+  users,
 } from "lib/db/schema";
 import {
   createCalendarFeedToken,
+  createUserCalendarFeedToken,
   revokeCalendarFeedToken,
 } from "lib/tokens/calendarFeedTokens";
 
@@ -26,16 +30,19 @@ const ORG = "org-cal-route";
 
 let projectId: string;
 let secret: string;
+let userSecret: string;
 
 const get = (path: string) =>
   calendarFeedRoutes.handle(new Request(`http://local${path}`));
 
 beforeAll(async () => {
   await dbPool.delete(calendarFeedToken);
+  await dbPool.delete(assignees);
   await dbPool.delete(tasks);
   await dbPool.delete(columns);
   await dbPool.delete(projects);
   await dbPool.delete(projectColumns);
+  await dbPool.delete(users);
 
   const [pc] = await dbPool
     .insert(projectColumns)
@@ -57,28 +64,48 @@ beforeAll(async () => {
     .insert(columns)
     .values({ title: "Todo", projectId, index: "a0" })
     .returning({ id: columns.id });
-  await dbPool.insert(tasks).values({
-    content: "Routed task",
-    description: "",
-    projectId,
-    columnId: col!.id,
-    columnIndex: "a0",
-    dueDate: "2026-11-02T00:00:00+00:00",
-  });
+  const [task] = await dbPool
+    .insert(tasks)
+    .values({
+      content: "Routed task",
+      description: "",
+      projectId,
+      columnId: col!.id,
+      columnIndex: "a0",
+      dueDate: "2026-11-02T00:00:00+00:00",
+    })
+    .returning({ id: tasks.id });
+
+  const [user] = await dbPool
+    .insert(users)
+    .values({
+      identityProviderId: randomUUID(),
+      name: "Routed User",
+      email: `routed-${Math.random().toString(36).slice(2)}@example.com`,
+    })
+    .returning({ id: users.id });
+  await dbPool.insert(assignees).values({ taskId: task!.id, userId: user!.id });
 
   ({ secret } = await createCalendarFeedToken({
     organizationId: ORG,
     projectId,
     createdBy: "idp-admin",
   }));
+  ({ secret: userSecret } = await createUserCalendarFeedToken({
+    organizationId: ORG,
+    userId: user!.id,
+    createdBy: "idp-user",
+  }));
 });
 
 afterAll(async () => {
   await dbPool.delete(calendarFeedToken);
+  await dbPool.delete(assignees);
   await dbPool.delete(tasks);
   await dbPool.delete(columns);
   await dbPool.delete(projects);
   await dbPool.delete(projectColumns);
+  await dbPool.delete(users);
 });
 
 describe("GET /calendar/feed/:token", () => {
@@ -97,6 +124,15 @@ describe("GET /calendar/feed/:token", () => {
     const res = await get(`/calendar/feed/${secret}.ics`);
     expect(res.status).toBe(200);
     expect(await res.text()).toContain("BEGIN:VCALENDAR");
+  });
+
+  test("serves a user feed token's cross-project tasks", async () => {
+    const res = await get(`/calendar/feed/${userSecret}`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("text/calendar");
+    const body = await res.text();
+    expect(body).toContain("BEGIN:VCALENDAR");
+    expect(body).toContain("Routed task");
   });
 
   test("returns a generic 404 for an unknown token", async () => {
