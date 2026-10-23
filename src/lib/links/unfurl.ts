@@ -133,6 +133,41 @@ const fetchFaviconDataUri = async (href: string): Promise<string | null> => {
 };
 
 /**
+ * Ordered favicon URLs to try for a site, best-first. A same-host declared
+ * `<link rel=icon>` wins; otherwise the origin's `/favicon.ico`, then the same
+ * path on the toggled www/apex host. The host toggle matters because some sites
+ * serve a real icon on only one of the two: e.g. linkedin.com/favicon.ico
+ * returns an HTML wall while www.linkedin.com/favicon.ico is the actual icon, so
+ * an apex-stored link would otherwise resolve to no favicon. Each candidate is
+ * still content-type validated by `fetchFaviconDataUri`, so an HTML response is
+ * rejected and the next candidate is tried.
+ */
+export const faviconCandidates = (
+  origin: string | null,
+  declaredFavicon: string | null,
+  sameHostDeclared: boolean,
+): string[] => {
+  const candidates: string[] = [];
+
+  if (sameHostDeclared && declaredFavicon) candidates.push(declaredFavicon);
+
+  if (origin) {
+    candidates.push(`${origin}/favicon.ico`);
+    try {
+      const { protocol, hostname } = new URL(origin);
+      const toggledHost = hostname.startsWith("www.")
+        ? hostname.slice(4)
+        : `www.${hostname}`;
+      candidates.push(`${protocol}//${toggledHost}/favicon.ico`);
+    } catch {
+      // origin is not a valid URL - skip the host toggle
+    }
+  }
+
+  return [...new Set(candidates)];
+};
+
+/**
  * Fetch preview metadata for a URL. The page fetch is best-effort: auth-walled or
  * redirect-heavy pages (e.g. a Google Doc, which bounces through sign-in) fail to
  * yield title/description, but we still fetch the site's `/favicon.ico` from the
@@ -171,13 +206,16 @@ const fetchUnfurl = async (rawUrl: string): Promise<UnfurlResult> => {
     // page unreachable/auth-walled - fall through to the origin favicon
   }
 
-  // Prefer a same-host declared favicon; otherwise the original site's /favicon.ico
-  const faviconTarget =
-    (sameHostDeclared && declaredFavicon) ||
-    (origin ? `${origin}/favicon.ico` : null);
-  const faviconDataUri = faviconTarget
-    ? await fetchFaviconDataUri(faviconTarget)
-    : null;
+  // Try each candidate in order and keep the first that yields a real image
+  let faviconDataUri: string | null = null;
+  for (const candidate of faviconCandidates(
+    origin,
+    declaredFavicon,
+    sameHostDeclared,
+  )) {
+    faviconDataUri = await fetchFaviconDataUri(candidate);
+    if (faviconDataUri) break;
+  }
 
   return {
     url: rawUrl,
