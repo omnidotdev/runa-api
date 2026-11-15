@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { buildTaskChanges } from "../taskChanges";
+import { buildTaskChanges, effectiveTaskPatch } from "../taskChanges";
 
 describe("buildTaskChanges", () => {
   it("labels a column change as a move, using the resolved column title", () => {
@@ -53,5 +53,51 @@ describe("buildTaskChanges", () => {
       "To Do",
     );
     expect(changes.map((c) => c.field)).toEqual(["status", "priority"]);
+  });
+});
+
+describe("effectiveTaskPatch", () => {
+  const before = {
+    content:
+      '<p class="mb-2 last:mb-0"><span style="white-space: pre-wrap;">Research S Corp</span></p>',
+    description: "<p>notes</p>",
+    priority: "medium",
+    dueDate: "2026-01-05 00:00:00+00",
+    columnId: "c1",
+  };
+
+  it("drops a title re-save whose text is unchanged, even with different markup", () => {
+    expect(
+      effectiveTaskPatch({ content: "<p>Research  S Corp</p>" }, before),
+    ).toEqual({});
+  });
+
+  it("keeps a real rename", () => {
+    expect(
+      effectiveTaskPatch({ content: "<p>Research LLC</p>" }, before),
+    ).toEqual({ content: "<p>Research LLC</p>" });
+  });
+
+  it("drops unchanged description, priority, due date, and column", () => {
+    expect(
+      effectiveTaskPatch(
+        {
+          description: "<p>notes</p>",
+          priority: "medium",
+          dueDate: "2026-01-05T00:00:00Z",
+          columnId: "c1",
+        },
+        before,
+      ),
+    ).toEqual({});
+  });
+
+  it("keeps untracked fields and returns the patch as-is without a previous state", () => {
+    expect(effectiveTaskPatch({ columnIndex: "a1" }, before)).toEqual({
+      columnIndex: "a1",
+    });
+    expect(effectiveTaskPatch({ content: "x" }, null)).toEqual({
+      content: "x",
+    });
   });
 });

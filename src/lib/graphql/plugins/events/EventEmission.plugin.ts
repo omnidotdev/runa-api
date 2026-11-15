@@ -7,7 +7,7 @@ import {
   buildResourceEvent,
   resourceEventWith,
 } from "lib/events/resourceEvent";
-import { buildTaskChanges } from "lib/events/taskChanges";
+import { buildTaskChanges, effectiveTaskPatch } from "lib/events/taskChanges";
 import { events } from "lib/providers";
 
 import type { OrgVia } from "lib/events/resourceEvent";
@@ -127,17 +127,41 @@ const emitTaskUpdated = (): PlanWrapperFn =>
       buildResourceEvent,
       resourceEventWith,
       buildTaskChanges,
+      effectiveTaskPatch,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
-        const $result = plan();
         const $rowId = fieldArgs.getRaw(["input", "rowId"]);
         const $patch = fieldArgs.getRaw(["input", "patch"]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
+        // read the stored values BEFORE the update runs (a side effect created
+        // ahead of plan() executes first), so unchanged re-saves can be dropped
+        const $before = sideEffect([$rowId, $db], async ([rowId, db]) => {
+          if (!rowId) return null;
+          try {
+            const task = await db.query.tasks.findFirst({
+              where: (table, { eq }) => eq(table.id, rowId as string),
+              columns: {
+                content: true,
+                description: true,
+                priority: true,
+                dueDate: true,
+                columnId: true,
+              },
+            });
+            return task ?? null;
+          } catch (error) {
+            console.error("[Events] Failed to read task before update:", error);
+            return null;
+          }
+        });
+
+        const $result = plan();
+
         sideEffect(
-          [$result, $rowId, $patch, $observer, $db],
-          async ([result, rowId, patch, observer, db]) => {
+          [$result, $rowId, $patch, $before, $observer, $db],
+          async ([result, rowId, patch, before, observer, db]) => {
             const id =
               (result as { id?: string } | null)?.id ??
               (rowId as string | undefined);
@@ -151,7 +175,15 @@ const emitTaskUpdated = (): PlanWrapperFn =>
                 with: resourceEventWith("project"),
               });
 
-              const patchObj = (patch ?? {}) as Record<string, unknown>;
+              const rawPatch = (patch ?? {}) as Record<string, unknown>;
+              const patchObj = effectiveTaskPatch(rawPatch, before);
+              // every patched field was re-saved unchanged: nothing happened
+              if (
+                Object.keys(rawPatch).length > 0 &&
+                Object.keys(patchObj).length === 0
+              ) {
+                return;
+              }
               let columnTitle: string | null = null;
               if ("columnId" in patchObj && patchObj.columnId) {
                 const column = await db.query.columns.findFirst({
@@ -192,6 +224,7 @@ const emitTaskUpdated = (): PlanWrapperFn =>
       buildResourceEvent,
       resourceEventWith,
       buildTaskChanges,
+      effectiveTaskPatch,
     ],
   );
 
