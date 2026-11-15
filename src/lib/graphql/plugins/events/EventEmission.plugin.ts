@@ -51,6 +51,8 @@ const emitOnMutate = (
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         const $rowId =
           action === "created"
             ? constant(undefined)
@@ -159,6 +161,10 @@ const emitTaskUpdated = (): PlanWrapperFn =>
 
         const $result = plan();
 
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+
+        if (!$result) return $result;
+
         sideEffect(
           [$result, $rowId, $patch, $before, $observer, $db],
           async ([result, rowId, patch, before, observer, db]) => {
@@ -261,6 +267,8 @@ const emitTaskAssoc = (
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         const $taskId = fieldArgs.getRaw(taskIdPath);
         const $assocId = fieldArgs.getRaw(assocIdPath);
         const $observer = context().get("observer");
@@ -363,6 +371,8 @@ const emitPostActivity = (
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         const $rowId =
           action === "created"
             ? constant(undefined)

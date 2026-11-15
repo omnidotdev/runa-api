@@ -44,6 +44,8 @@ const notifyOnAssign = (): PlanWrapperFn =>
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         const $input = fieldArgs.getRaw(["input", "assignee"]);
         const $observer = context().get("observer");
         const $organizations = context().get("organizations");

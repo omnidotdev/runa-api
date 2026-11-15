@@ -31,6 +31,8 @@ const notifyOnCommentCreate = (): PlanWrapperFn =>
     (context, sideEffect, notifyCommentCreated): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         const $input = fieldArgs.getRaw(["input", "post"]);
         const $observer = context().get("observer");
         const $organizations = context().get("organizations");
@@ -67,6 +69,8 @@ const notifyOnTaskCreate = (): PlanWrapperFn =>
     (context, sideEffect, notifyNewMentions): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         // the create payload wraps the inserted row; read its id via the step
         // (the payload's runtime value is an opaque tuple, not the row)
         // biome-ignore lint/suspicious/noExplicitAny: create payload object step
@@ -150,6 +154,10 @@ const notifyOnDescriptionEdit = (entity: "task" | "post"): PlanWrapperFn =>
         );
 
         const $result = plan();
+
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+
+        if (!$result) return $result;
         const $observer = context().get("observer");
         const $organizations = context().get("organizations");
 
@@ -205,6 +213,10 @@ const notifyOnTaskMove = (): PlanWrapperFn =>
         });
 
         const $result = plan();
+
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+
+        if (!$result) return $result;
         const $observer = context().get("observer");
         const $organizations = context().get("organizations");
 

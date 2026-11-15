@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "src",
+    "paths": { "*": ["./src/*"] },
     "esModuleInterop": true,
     "moduleResolution": "bundler",
     "module": "esnext",

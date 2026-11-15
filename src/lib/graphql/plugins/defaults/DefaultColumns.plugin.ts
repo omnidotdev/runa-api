@@ -44,6 +44,8 @@ const createDefaultColumns = (): PlanWrapperFn =>
     ): PlanWrapperFn =>
       (plan) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         const $db = context().get("db");
 
         const $objectResult = $result as ObjectStep<{

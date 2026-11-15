@@ -1,4 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>omnidotdev/.github", "customManagers:biomeVersions"]
+  "extends": ["github>omnidotdev/.github", "customManagers:biomeVersions"],
+  "packageRules": [
+    {
+      "description": "Postgraphile v5 and grafast peer on graphql ^16; hold graphql 17 until they support it",
+      "matchPackageNames": ["graphql"],
+      "allowedVersions": "<17"
+    },
+    {
+      "description": "grafast's envelop integration peers on @envelop/core ^5, which graphql-yoga 6 and the envelop 6 plugins replace; hold their majors until grafast supports envelop 6",
+      "matchPackageNames": ["graphql-yoga", "@graphql-yoga/**", "@envelop/**"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "elysia-rate-limit 5 requires Elysia 2; move together with an Elysia 2 upgrade",
+      "matchPackageNames": ["elysia-rate-limit"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ]
 }
