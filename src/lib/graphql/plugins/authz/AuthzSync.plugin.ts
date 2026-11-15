@@ -51,6 +51,8 @@ const syncCreateProject = (): PlanWrapperFn =>
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         const $input = fieldArgs.getRaw(["input", "project"]);
         const $accessToken = context().get("accessToken");
 
@@ -125,6 +127,8 @@ const syncDeleteProject = (): PlanWrapperFn =>
     ): PlanWrapperFn =>
       (plan, _, _fieldArgs) => {
         const $result = plan();
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+        if (!$result) return $result;
         const $accessToken = context().get("accessToken");
 
         // Extract data from the delete step using proper Grafast methods

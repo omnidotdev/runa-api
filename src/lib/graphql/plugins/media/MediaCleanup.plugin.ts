@@ -57,6 +57,10 @@ const cleanupOnUpdate = (): PlanWrapperFn =>
 
         const $result = plan();
 
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+
+        if (!$result) return $result;
+
         sideEffect([$result, $old, $patch], async ([result, old, patch]) => {
           if (!result) return;
           await cleanupDereferencedMedia(
@@ -95,6 +99,10 @@ const cleanupOnDelete = (): PlanWrapperFn =>
         });
 
         const $result = plan();
+
+        // a wrapped mutation always plans a step; narrow away grafast's nullable type
+
+        if (!$result) return $result;
 
         sideEffect([$result, $old], async ([result, old]) => {
           if (!result) return;
