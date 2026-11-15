@@ -9,7 +9,6 @@ import {
   createAuthzProvider,
   createBillingProvider,
   createEventsProvider,
-  createFlagProvider,
   createNotificationProvider,
   createStorageProvider,
 } from "@omnidotdev/providers";
@@ -19,8 +18,6 @@ import {
   AUTHZ_SERVICE_KEY,
   BILLING_BASE_URL,
   BILLING_SERVICE_API_KEY,
-  FLAGS_API_HOST,
-  FLAGS_CLIENT_KEY,
   HERALD_API_KEY,
   HERALD_API_URL,
   HERALD_FROM_EMAIL,
@@ -96,17 +93,6 @@ export const notifications = createNotificationProvider(
         apiUrl: HERALD_API_URL,
         apiKey: HERALD_API_KEY,
         defaultFrom: HERALD_FROM_EMAIL,
-      }
-    : {},
-);
-
-export const flags = createFlagProvider(
-  FLAGS_API_HOST
-    ? {
-        provider: "unleash",
-        url: FLAGS_API_HOST,
-        apiKey: FLAGS_CLIENT_KEY!,
-        appName: "runa-api",
       }
     : {},
 );

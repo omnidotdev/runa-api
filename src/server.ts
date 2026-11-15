@@ -43,7 +43,6 @@ import {
   projectAvatarRoutes,
   projectBackgroundRoutes,
 } from "lib/media";
-import { maintenanceMiddleware } from "lib/middleware/maintenance";
 import { startDigestPoller } from "lib/notifications/digestQueue";
 import {
   SEARCH_RECONCILE_INTERVAL_MS,
@@ -194,7 +193,6 @@ async function startServer(): Promise<void> {
         duration: 60_000,
       }),
     )
-    .use(maintenanceMiddleware)
     .use(
       cors({
         origin: CORS_ALLOWED_ORIGINS!.split(","),
