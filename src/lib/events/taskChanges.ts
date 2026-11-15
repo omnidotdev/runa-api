@@ -58,3 +58,69 @@ export const buildTaskChanges = EXPORTABLE(
     },
   [PRIORITY_LABELS],
 );
+
+/** The task's stored values for the fields an update can label */
+interface TaskBeforeState {
+  content: string | null;
+  description: string | null;
+  priority: string | null;
+  dueDate: string | null;
+  columnId: string | null;
+}
+
+/**
+ * Drop patch fields whose value did not actually change, so a client that
+ * re-saves an unchanged field (e.g. the title editor re-emitting after a
+ * navigation, or re-normalizing the same text into different markup) never
+ * shows up in the activity feed as "renamed this task". Title text is compared
+ * ignoring markup and whitespace; dates are compared as instants. Without a
+ * known previous state the patch is returned unchanged
+ */
+export const effectiveTaskPatch = EXPORTABLE(
+  () =>
+    (
+      patch: Record<string, unknown> | null | undefined,
+      before: TaskBeforeState | null | undefined,
+    ): Record<string, unknown> => {
+      if (!patch) return {};
+      if (!before) return patch;
+
+      const text = (value: unknown): string =>
+        String(value ?? "")
+          .replace(/<[^>]*>/g, " ")
+          .replace(/&nbsp;/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      const instant = (value: unknown): number | null => {
+        if (value == null || value === "") return null;
+        // accept the Postgres text form ("2026-01-05 00:00:00+00") as well as ISO
+        const iso = String(value)
+          .replace(" ", "T")
+          .replace(/([+-]\d{2})$/, "$1:00");
+        const time = new Date(iso).getTime();
+        return Number.isNaN(time) ? null : time;
+      };
+
+      const unchanged = (key: string, value: unknown): boolean => {
+        switch (key) {
+          case "content":
+            return text(value) === text(before.content);
+          case "description":
+            return (value ?? "") === (before.description ?? "");
+          case "priority":
+            return value === before.priority;
+          case "dueDate":
+            return instant(value) === instant(before.dueDate);
+          case "columnId":
+            return value === before.columnId;
+          default:
+            return false;
+        }
+      };
+
+      return Object.fromEntries(
+        Object.entries(patch).filter(([key, value]) => !unchanged(key, value)),
+      );
+    },
+  [],
+);

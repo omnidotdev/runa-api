@@ -119,7 +119,7 @@ const spec_projectProjectLabel = {
     }
   },
   extensions: {
-    oid: "16894",
+    oid: "16888",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -180,7 +180,7 @@ const spec_taskLabel = {
     }
   },
   extensions: {
-    oid: "16583",
+    oid: "16577",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -250,7 +250,7 @@ const spec_assignee = {
     }
   },
   extensions: {
-    oid: "16402",
+    oid: "16397",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -322,7 +322,7 @@ const spec_notificationDigestQueue = {
     }
   },
   extensions: {
-    oid: "17081",
+    oid: "17075",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -403,7 +403,7 @@ const spec_emoji = {
     }
   },
   extensions: {
-    oid: "16695",
+    oid: "16689",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -494,7 +494,7 @@ const spec_user = {
     }
   },
   extensions: {
-    oid: "16453",
+    oid: "16448",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -583,7 +583,7 @@ const spec_post = {
     }
   },
   extensions: {
-    oid: "16420",
+    oid: "16415",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -674,7 +674,7 @@ const spec_projectColumn = {
     }
   },
   extensions: {
-    oid: "16612",
+    oid: "16606",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -765,7 +765,7 @@ const spec_projectLabel = {
     }
   },
   extensions: {
-    oid: "16884",
+    oid: "16878",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -867,7 +867,7 @@ const spec_column = {
     }
   },
   extensions: {
-    oid: "16410",
+    oid: "16405",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -966,7 +966,7 @@ const spec_label = {
     }
   },
   extensions: {
-    oid: "16573",
+    oid: "16567",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1058,7 +1058,7 @@ const spec_projectLink = {
     }
   },
   extensions: {
-    oid: "16948",
+    oid: "16942",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1161,7 +1161,7 @@ const spec_userPreference = {
     }
   },
   extensions: {
-    oid: "16623",
+    oid: "16617",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1270,7 +1270,7 @@ const apiTokenCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "17187",
+    oid: "17181",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1380,7 +1380,7 @@ const calendarFeedTokenCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "17198",
+    oid: "17192",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1495,7 +1495,7 @@ const webhookEndpointCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "17173",
+    oid: "17167",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1615,7 +1615,7 @@ const spec_notificationPreference = {
     }
   },
   extensions: {
-    oid: "17064",
+    oid: "17058",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1718,7 +1718,7 @@ const spec_wardenSyncQueue = {
     }
   },
   extensions: {
-    oid: "17051",
+    oid: "17045",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1847,7 +1847,7 @@ const linkUnfurlCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "17147",
+    oid: "17141",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1982,7 +1982,7 @@ const webhookDeliveryCodec = recordCodec({
     }
   },
   extensions: {
-    oid: "17161",
+    oid: "17155",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2094,7 +2094,7 @@ const spec_settings = {
     }
   },
   extensions: {
-    oid: "16465",
+    oid: "16460",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2272,7 +2272,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "17021",
+    oid: "17015",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2427,7 +2427,7 @@ const spec_task = {
     }
   },
   extensions: {
-    oid: "16441",
+    oid: "16436",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2596,7 +2596,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "16430",
+    oid: "16425",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -7927,13 +7927,63 @@ const buildTaskChanges = (patch, columnTitle) => {
   });
   return changes;
 };
+const effectiveTaskPatch = (patch, before) => {
+  if (!patch) return {};
+  if (!before) return patch;
+  const text = value => String(value ?? "").replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim(),
+    instant = value => {
+      if (value == null || value === "") return null;
+      const iso = String(value).replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
+        time = new Date(iso).getTime();
+      return Number.isNaN(time) ? null : time;
+    },
+    unchanged = (key, value) => {
+      switch (key) {
+        case "content":
+          return text(value) === text(before.content);
+        case "description":
+          return (value ?? "") === (before.description ?? "");
+        case "priority":
+          return value === before.priority;
+        case "dueDate":
+          return instant(value) === instant(before.dueDate);
+        case "columnId":
+          return value === before.columnId;
+        default:
+          return !1;
+      }
+    };
+  return Object.fromEntries(Object.entries(patch).filter(([key, value]) => !unchanged(key, value)));
+};
 const planWrapper53 = (plan, _, fieldArgs) => {
-  const $result = plan(),
-    $rowId = fieldArgs.getRaw(["input", "rowId"]),
+  const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
-    $db = context().get("db");
-  sideEffect([$result, $rowId, $patch, $observer, $db], async ([result, rowId, patch, observer, db]) => {
+    $db = context().get("db"),
+    $before = sideEffect([$rowId, $db], async ([rowId, db]) => {
+      if (!rowId) return null;
+      try {
+        return (await db.query.tasks.findFirst({
+          where(table, {
+            eq
+          }) {
+            return eq(table.id, rowId);
+          },
+          columns: {
+            content: !0,
+            description: !0,
+            priority: !0,
+            dueDate: !0,
+            columnId: !0
+          }
+        })) ?? null;
+      } catch (error) {
+        console.error("[Events] Failed to read task before update:", error);
+        return null;
+      }
+    }),
+    $result = plan();
+  sideEffect([$result, $rowId, $patch, $before, $observer, $db], async ([result, rowId, patch, before, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
@@ -7943,7 +7993,9 @@ const planWrapper53 = (plan, _, fieldArgs) => {
           },
           with: resourceEventWith("project")
         }),
-        patchObj = patch ?? {};
+        rawPatch = patch ?? {},
+        patchObj = effectiveTaskPatch(rawPatch, before);
+      if (Object.keys(rawPatch).length > 0 && Object.keys(patchObj).length === 0) return;
       let columnTitle = null;
       if ("columnId" in patchObj && patchObj.columnId) columnTitle = (await db.query.columns.findFirst({
         where(fields, operators) {
