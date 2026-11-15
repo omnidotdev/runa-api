@@ -45,6 +45,11 @@ import {
   resolveAssignmentEmail,
 } from "lib/notifications/assignmentEmail";
 import { enqueueAssignmentDigest } from "lib/notifications/digestQueue";
+import {
+  notifyCommentCreated,
+  notifyNewMentions,
+  notifyTaskMoved,
+} from "lib/notifications/taskActivity";
 import { events, notifications } from "lib/providers";
 import {
   deleteCommentFromIndex,
@@ -244,6 +249,11 @@ const generateGraphqlSchema = async () => {
         resolveAssignmentDigestItem,
       },
       "lib/notifications/digestQueue": { enqueueAssignmentDigest },
+      "lib/notifications/taskActivity": {
+        notifyCommentCreated,
+        notifyNewMentions,
+        notifyTaskMoved,
+      },
       "lib/providers": { events, notifications },
       "lib/search": {
         deleteCommentFromIndex,
