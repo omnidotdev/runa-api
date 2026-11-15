@@ -50,19 +50,47 @@ const emitOnMutate = (
       orgVia,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
+        // a deleted row is gone once the mutation runs, so read it first (a
+        // side effect created ahead of plan() executes before the mutation)
+        const $deletedRow =
+          action === "deleted"
+            ? sideEffect(
+                [fieldArgs.getRaw(["input", "rowId"]), context().get("db")],
+                async ([rowId, db]) => {
+                  try {
+                    // biome-ignore lint/suspicious/noExplicitAny: relational lookup keyed by table name
+                    const repo = (db as any).query[table];
+                    if (!repo || !rowId) return null;
+                    return await repo.findFirst({
+                      // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
+                      where: (fields: any, operators: any) =>
+                        operators.eq(fields.id, rowId),
+                      with: resourceEventWith(orgVia),
+                    });
+                  } catch {
+                    return null;
+                  }
+                },
+              )
+            : constant(null);
+
         const $result = plan();
         // a wrapped mutation always plans a step; narrow away grafast's nullable type
         if (!$result) return $result;
+        // a create payload wraps the inserted row (its runtime value is an
+        // opaque tuple), so read the new id through the step; updates and
+        // deletes carry it on the input
         const $rowId =
           action === "created"
-            ? constant(undefined)
+            ? // biome-ignore lint/suspicious/noExplicitAny: create payload object step
+              ($result as any).get("result").get("id")
             : fieldArgs.getRaw(["input", "rowId"]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$result, $rowId, $observer, $db],
-          async ([result, rowId, observer, db]) => {
+          [$result, $rowId, $deletedRow, $observer, $db],
+          async ([result, rowId, deletedRow, observer, db]) => {
             const id =
               (result as { id?: string } | null)?.id ??
               (rowId as string | undefined);
@@ -73,21 +101,44 @@ const emitOnMutate = (
               const repo = (db as any).query[table];
               if (!repo) return;
 
-              const row = await repo.findFirst({
-                // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
-                where: (fields: any, operators: any) =>
-                  operators.eq(fields.id, id),
-                with: resourceEventWith(orgVia),
-              });
+              const lookup = () =>
+                repo.findFirst({
+                  // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
+                  where: (fields: any, operators: any) =>
+                    operators.eq(fields.id, id),
+                  with: resourceEventWith(orgVia),
+                });
+              const send = (row: unknown) =>
+                events.emit(
+                  buildResourceEvent(
+                    { entity, action, nameColumn, orgVia },
+                    id,
+                    row,
+                    observer,
+                  ),
+                );
 
-              await events.emit(
-                buildResourceEvent(
-                  { entity, action, nameColumn, orgVia },
-                  id,
-                  row,
-                  observer,
-                ),
-              );
+              // read before the request commits, so an updated or deleted row
+              // still resolves; a created row is not visible yet, so its
+              // lookup retries off the request path instead of blocking it
+              const row = action === "deleted" ? deletedRow : await lookup();
+              if (row || action !== "created") {
+                await send(row);
+                return;
+              }
+              void (async () => {
+                let created = null;
+                for (let attempt = 0; !created && attempt < 10; attempt++) {
+                  await new Promise((resolve) => setTimeout(resolve, 300));
+                  created = await lookup();
+                }
+                await send(created);
+              })().catch((error) => {
+                console.error(
+                  `[Events] Failed to emit ${entity}.${action}:`,
+                  error,
+                );
+              });
             } catch (error) {
               console.error(
                 `[Events] Failed to emit ${entity}.${action}:`,
@@ -370,42 +421,95 @@ const emitPostActivity = (
       action,
     ): PlanWrapperFn =>
       (plan, _, fieldArgs) => {
+        // a deleted post is gone once the mutation runs, so read it first
+        const $deletedPost =
+          action === "deleted"
+            ? sideEffect(
+                [fieldArgs.getRaw(["input", "rowId"]), context().get("db")],
+                async ([rowId, db]) => {
+                  try {
+                    if (!rowId) return null;
+                    return (
+                      (await db.query.posts.findFirst({
+                        // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
+                        where: (fields: any, operators: any) =>
+                          operators.eq(fields.id, rowId),
+                        with: resourceEventWith("task"),
+                      })) ?? null
+                    );
+                  } catch {
+                    return null;
+                  }
+                },
+              )
+            : constant(null);
+
         const $result = plan();
         // a wrapped mutation always plans a step; narrow away grafast's nullable type
         if (!$result) return $result;
+        // a create payload wraps the inserted row (its runtime value is an
+        // opaque tuple), so read the new id through the step; updates and
+        // deletes carry it on the input
         const $rowId =
           action === "created"
-            ? constant(undefined)
+            ? // biome-ignore lint/suspicious/noExplicitAny: create payload object step
+              ($result as any).get("result").get("id")
             : fieldArgs.getRaw(["input", "rowId"]);
         const $observer = context().get("observer");
         const $db = context().get("db");
 
         sideEffect(
-          [$result, $rowId, $observer, $db],
-          async ([result, rowId, observer, db]) => {
+          [$result, $rowId, $deletedPost, $observer, $db],
+          async ([result, rowId, deletedPost, observer, db]) => {
             const id =
               (result as { id?: string } | null)?.id ??
               (rowId as string | undefined);
             if (!id) return;
 
             try {
-              const post = await db.query.posts.findFirst({
-                // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
-                where: (fields: any, operators: any) =>
-                  operators.eq(fields.id, id),
-                with: resourceEventWith("task"),
-              });
-              const taskId = (post as { taskId?: string } | null)?.taskId;
-              if (!taskId) return;
+              const lookup = () =>
+                db.query.posts.findFirst({
+                  // biome-ignore lint/suspicious/noExplicitAny: drizzle where callback
+                  where: (fields: any, operators: any) =>
+                    operators.eq(fields.id, id),
+                  with: resourceEventWith("task"),
+                });
+              const send = async (post: unknown) => {
+                const taskId = (post as { taskId?: string } | null)?.taskId;
+                if (!taskId) return;
+                await events.emit(
+                  buildResourceEvent(
+                    {
+                      entity: "post",
+                      action,
+                      nameColumn: null,
+                      orgVia: "task",
+                    },
+                    taskId,
+                    post,
+                    observer,
+                  ),
+                );
+              };
 
-              await events.emit(
-                buildResourceEvent(
-                  { entity: "post", action, nameColumn: null, orgVia: "task" },
-                  taskId,
-                  post,
-                  observer,
-                ),
-              );
+              // same visibility rule as emitOnMutate: resolve updates and
+              // deletes before commit, retry a just-created post off the
+              // request path
+              const post = action === "deleted" ? deletedPost : await lookup();
+              if (post || action !== "created") {
+                await send(post);
+                return;
+              }
+              void (async () => {
+                let created = null;
+                for (let attempt = 0; !created && attempt < 10; attempt++) {
+                  await new Promise((resolve) => setTimeout(resolve, 300));
+                  created = await lookup();
+                }
+                await send(created);
+              })().catch((error) => {
+                console.error(`[Events] Failed to emit post.${action}:`, error);
+              });
             } catch (error) {
               console.error(`[Events] Failed to emit post.${action}:`, error);
             }
