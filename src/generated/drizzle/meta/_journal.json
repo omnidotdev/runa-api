@@ -512,6 +512,13 @@
       "when": 1792364567698,
       "tag": "0072_loud_scarlet_witch",
       "breakpoints": true
+    },
+    {
+      "idx": 73,
+      "version": "7",
+      "when": 1794728777848,
+      "tag": "0073_curvy_baron_strucker",
+      "breakpoints": true
     }
   ]
 }

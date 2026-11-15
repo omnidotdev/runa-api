@@ -24,6 +24,13 @@ export const notificationPreferences = pgTable(
     // cadence for assignment emails: "immediate" (default) or "digest" (batched
     // into one grouped email per window). App-level validation, not a pgEnum
     taskAssignedCadence: text().notNull().default("immediate"),
+    // email the user when someone comments on a task they're involved in
+    // (author, assignee, or prior commenter)
+    emailTaskComment: boolean().notNull().default(true),
+    // email the user when someone @mentions them in a task or comment
+    emailTaskMention: boolean().notNull().default(true),
+    // email the user when a task they're involved in moves to another project
+    emailTaskMoved: boolean().notNull().default(true),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

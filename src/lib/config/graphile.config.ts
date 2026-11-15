@@ -33,7 +33,10 @@ import { UserIdResolverPlugin } from "lib/graphql/plugins/idp";
 import LinkPreviewPlugin from "lib/graphql/plugins/links/LinkPreview.plugin";
 import { MediaCleanupPlugin } from "lib/graphql/plugins/media";
 import { ContentModerationPlugin } from "lib/graphql/plugins/moderation";
-import { AssignmentNotificationPlugin } from "lib/graphql/plugins/notifications";
+import {
+  AssignmentNotificationPlugin,
+  TaskNotificationPlugin,
+} from "lib/graphql/plugins/notifications";
 import ObserverPlugin from "lib/graphql/plugins/observer.plugin";
 import {
   PostSearchPlugin,
@@ -101,6 +104,8 @@ const graphilePreset: GraphileConfig.Preset = {
     EventEmissionPlugin,
     // Assignment notification plugin (post-mutation email + event)
     AssignmentNotificationPlugin,
+    // Task-activity notification plugin (comment, mention, and move emails)
+    TaskNotificationPlugin,
     // Media cleanup plugin (post-mutation orphaned-object deletion)
     MediaCleanupPlugin,
     // Search indexing plugins
