@@ -23,11 +23,8 @@ import type {
 
 /** @knipignore Used by scripts */
 export type { TupleSyncResult };
-
-export { startWardenSyncPoller };
-
 /** @knipignore Re-exported for API completeness; used internally and by scripts */
-export { enqueueWardenSync, stopWardenSyncPoller };
+export { enqueueWardenSync, startWardenSyncPoller, stopWardenSyncPoller };
 
 /**
  * Check if AuthZ is enabled and configured.

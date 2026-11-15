@@ -71,7 +71,7 @@ if (OTEL_EXPORTER_OTLP_ENDPOINT) {
   // Set up logger provider for logs with processors in config
   const loggerProvider = new LoggerProvider({
     resource,
-    processors: [new BatchLogRecordProcessor(logExporter)],
+    processors: [new BatchLogRecordProcessor({ exporter: logExporter })],
   });
 
   // Initialize OpenTelemetry SDK
