@@ -6051,29 +6051,45 @@ ${String(oldPlan6)}`);
   return $newPlan;
 }
 const planWrapper7 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = constant(null),
+    $result = plan();
   if (!$result) return $result;
-  const $rowId = constant(void 0),
+  const $rowId = $result.get("result").get("id"),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["columns"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("project")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("project")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "column",
+          action: "created",
+          nameColumn: "title",
+          orgVia: "project"
+        }, id, row, observer)),
+        row = await lookup();
+      if (row) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit column.created:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "column",
-        action: "created",
-        nameColumn: "title",
-        orgVia: "project"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit column.created:`, error);
     }
@@ -6194,29 +6210,45 @@ ${String(oldPlan10)}`);
   return $newPlan;
 }
 const planWrapper10 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = constant(null),
+    $result = plan();
   if (!$result) return $result;
-  const $rowId = constant(void 0),
+  const $rowId = $result.get("result").get("id"),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["labels"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("direct")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("direct")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "label",
+          action: "created",
+          nameColumn: "name",
+          orgVia: "direct"
+        }, id, row, observer)),
+        row = await lookup();
+      if (row) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit label.created:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "label",
-        action: "created",
-        nameColumn: "name",
-        orgVia: "direct"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit label.created:`, error);
     }
@@ -6330,29 +6362,47 @@ ${String(oldPlan15)}`);
   return $newPlan;
 }
 const planWrapper14 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedPost = constant(null),
+    $result = plan();
   if (!$result) return $result;
-  const $rowId = constant(void 0),
+  const $rowId = $result.get("result").get("id"),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedPost, $observer, $db], async ([result, rowId, deletedPost, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
-      const post = await db.query.posts.findFirst({
+      const lookup = () => db.query.posts.findFirst({
           where(fields, operators) {
             return operators.eq(fields.id, id);
           },
           with: resourceEventWith("task")
         }),
-        taskId = post?.taskId;
-      if (!taskId) return;
-      await events.emit(buildResourceEvent({
-        entity: "post",
-        action: "created",
-        nameColumn: null,
-        orgVia: "task"
-      }, taskId, post, observer));
+        send = async post => {
+          const taskId = post?.taskId;
+          if (!taskId) return;
+          await events.emit(buildResourceEvent({
+            entity: "post",
+            action: "created",
+            nameColumn: null,
+            orgVia: "task"
+          }, taskId, post, observer));
+        },
+        post = await lookup();
+      if (post) {
+        await send(post);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit post.created:`, error);
+      });
     } catch (error) {
       console.error(`[Events] Failed to emit post.created:`, error);
     }
@@ -6671,29 +6721,45 @@ ${String(oldPlan19)}`);
   return $newPlan;
 }
 const planWrapper22 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = constant(null),
+    $result = plan();
   if (!$result) return $result;
-  const $rowId = constant(void 0),
+  const $rowId = $result.get("result").get("id"),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["projects"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("direct")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("direct")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "project",
+          action: "created",
+          nameColumn: "name",
+          orgVia: "direct"
+        }, id, row, observer)),
+        row = await lookup();
+      if (row) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit project.created:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "project",
-        action: "created",
-        nameColumn: "name",
-        orgVia: "direct"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit project.created:`, error);
     }
@@ -6880,29 +6946,45 @@ ${String(oldPlan29)}`);
   return $newPlan;
 }
 const planWrapper28 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = constant(null),
+    $result = plan();
   if (!$result) return $result;
-  const $rowId = constant(void 0),
+  const $rowId = $result.get("result").get("id"),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["tasks"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("project")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("project")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "task",
+          action: "created",
+          nameColumn: "number",
+          orgVia: "project"
+        }, id, row, observer)),
+        row = await lookup();
+      if (row) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit task.created:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "task",
-        action: "created",
-        nameColumn: "number",
-        orgVia: "project"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit task.created:`, error);
     }
@@ -7226,29 +7308,45 @@ ${String(oldPlan36)}`);
   return $newPlan;
 }
 const planWrapper37 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = constant(null),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["columns"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("project")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("project")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "column",
+          action: "updated",
+          nameColumn: "title",
+          orgVia: "project"
+        }, id, row, observer)),
+        row = await lookup();
+      if (row || true) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit column.updated:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "column",
-        action: "updated",
-        nameColumn: "title",
-        orgVia: "project"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit column.updated:`, error);
     }
@@ -7365,29 +7463,45 @@ ${String(oldPlan40)}`);
   return $newPlan;
 }
 const planWrapper40 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = constant(null),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["labels"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("direct")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("direct")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "label",
+          action: "updated",
+          nameColumn: "name",
+          orgVia: "direct"
+        }, id, row, observer)),
+        row = await lookup();
+      if (row || true) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit label.updated:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "label",
-        action: "updated",
-        nameColumn: "name",
-        orgVia: "direct"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit label.updated:`, error);
     }
@@ -7530,29 +7644,47 @@ ${String(oldPlan45)}`);
   return $newPlan;
 }
 const planWrapper44 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedPost = constant(null),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedPost, $observer, $db], async ([result, rowId, deletedPost, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
-      const post = await db.query.posts.findFirst({
+      const lookup = () => db.query.posts.findFirst({
           where(fields, operators) {
             return operators.eq(fields.id, id);
           },
           with: resourceEventWith("task")
         }),
-        taskId = post?.taskId;
-      if (!taskId) return;
-      await events.emit(buildResourceEvent({
-        entity: "post",
-        action: "updated",
-        nameColumn: null,
-        orgVia: "task"
-      }, taskId, post, observer));
+        send = async post => {
+          const taskId = post?.taskId;
+          if (!taskId) return;
+          await events.emit(buildResourceEvent({
+            entity: "post",
+            action: "updated",
+            nameColumn: null,
+            orgVia: "task"
+          }, taskId, post, observer));
+        },
+        post = await lookup();
+      if (post || true) {
+        await send(post);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit post.updated:`, error);
+      });
     } catch (error) {
       console.error(`[Events] Failed to emit post.updated:`, error);
     }
@@ -7730,29 +7862,45 @@ ${String(oldPlan50)}`);
   return $newPlan;
 }
 const planWrapper49 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = constant(null),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["projects"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("direct")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("direct")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "project",
+          action: "updated",
+          nameColumn: "name",
+          orgVia: "direct"
+        }, id, row, observer)),
+        row = await lookup();
+      if (row || true) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit project.updated:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "project",
-        action: "updated",
-        nameColumn: "name",
-        orgVia: "direct"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit project.updated:`, error);
     }
@@ -8523,29 +8671,58 @@ ${String(oldPlan65)}`);
   return $newPlan;
 }
 const planWrapper65 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
+      try {
+        const repo = db.query["columns"];
+        if (!repo || !rowId) return null;
+        return await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, rowId);
+          },
+          with: resourceEventWith("project")
+        });
+      } catch {
+        return null;
+      }
+    }),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["columns"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("project")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("project")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "column",
+          action: "deleted",
+          nameColumn: "title",
+          orgVia: "project"
+        }, id, row, observer)),
+        row = deletedRow;
+      if (row || true) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit column.deleted:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "column",
-        action: "deleted",
-        nameColumn: "title",
-        orgVia: "project"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit column.deleted:`, error);
     }
@@ -8654,29 +8831,58 @@ ${String(oldPlan68)}`);
   return $newPlan;
 }
 const planWrapper68 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
+      try {
+        const repo = db.query["labels"];
+        if (!repo || !rowId) return null;
+        return await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, rowId);
+          },
+          with: resourceEventWith("direct")
+        });
+      } catch {
+        return null;
+      }
+    }),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["labels"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("direct")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("direct")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "label",
+          action: "deleted",
+          nameColumn: "name",
+          orgVia: "direct"
+        }, id, row, observer)),
+        row = deletedRow;
+      if (row || true) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit label.deleted:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "label",
-        action: "deleted",
-        nameColumn: "name",
-        orgVia: "direct"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit label.deleted:`, error);
     }
@@ -8770,29 +8976,59 @@ ${String(oldPlan72)}`);
   return $newPlan;
 }
 const planWrapper71 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedPost = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
+      try {
+        if (!rowId) return null;
+        return (await db.query.posts.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, rowId);
+          },
+          with: resourceEventWith("task")
+        })) ?? null;
+      } catch {
+        return null;
+      }
+    }),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedPost, $observer, $db], async ([result, rowId, deletedPost, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
-      const post = await db.query.posts.findFirst({
+      const lookup = () => db.query.posts.findFirst({
           where(fields, operators) {
             return operators.eq(fields.id, id);
           },
           with: resourceEventWith("task")
         }),
-        taskId = post?.taskId;
-      if (!taskId) return;
-      await events.emit(buildResourceEvent({
-        entity: "post",
-        action: "deleted",
-        nameColumn: null,
-        orgVia: "task"
-      }, taskId, post, observer));
+        send = async post => {
+          const taskId = post?.taskId;
+          if (!taskId) return;
+          await events.emit(buildResourceEvent({
+            entity: "post",
+            action: "deleted",
+            nameColumn: null,
+            orgVia: "task"
+          }, taskId, post, observer));
+        },
+        post = deletedPost;
+      if (post || true) {
+        await send(post);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit post.deleted:`, error);
+      });
     } catch (error) {
       console.error(`[Events] Failed to emit post.deleted:`, error);
     }
@@ -8910,29 +9146,58 @@ ${String(oldPlan76)}`);
   return $newPlan;
 }
 const planWrapper75 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
+      try {
+        const repo = db.query["projects"];
+        if (!repo || !rowId) return null;
+        return await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, rowId);
+          },
+          with: resourceEventWith("direct")
+        });
+      } catch {
+        return null;
+      }
+    }),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["projects"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("direct")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("direct")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "project",
+          action: "deleted",
+          nameColumn: "name",
+          orgVia: "direct"
+        }, id, row, observer)),
+        row = deletedRow;
+      if (row || true) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit project.deleted:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "project",
-        action: "deleted",
-        nameColumn: "name",
-        orgVia: "direct"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit project.deleted:`, error);
     }
@@ -9157,29 +9422,58 @@ ${String(oldPlan82)}`);
   return $newPlan;
 }
 const planWrapper81 = (plan, _, fieldArgs) => {
-  const $result = plan();
+  const $deletedRow = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
+      try {
+        const repo = db.query["tasks"];
+        if (!repo || !rowId) return null;
+        return await repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, rowId);
+          },
+          with: resourceEventWith("project")
+        });
+      } catch {
+        return null;
+      }
+    }),
+    $result = plan();
   if (!$result) return $result;
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
-  sideEffect([$result, $rowId, $observer, $db], async ([result, rowId, observer, db]) => {
+  sideEffect([$result, $rowId, $deletedRow, $observer, $db], async ([result, rowId, deletedRow, observer, db]) => {
     const id = result?.id ?? rowId;
     if (!id) return;
     try {
       const repo = db.query["tasks"];
       if (!repo) return;
-      const row = await repo.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.id, id);
-        },
-        with: resourceEventWith("project")
+      const lookup = () => repo.findFirst({
+          where(fields, operators) {
+            return operators.eq(fields.id, id);
+          },
+          with: resourceEventWith("project")
+        }),
+        send = row => events.emit(buildResourceEvent({
+          entity: "task",
+          action: "deleted",
+          nameColumn: "number",
+          orgVia: "project"
+        }, id, row, observer)),
+        row = deletedRow;
+      if (row || true) {
+        await send(row);
+        return;
+      }
+      (async () => {
+        let created = null;
+        for (let attempt = 0; !created && attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          created = await lookup();
+        }
+        await send(created);
+      })().catch(error => {
+        console.error(`[Events] Failed to emit task.deleted:`, error);
       });
-      await events.emit(buildResourceEvent({
-        entity: "task",
-        action: "deleted",
-        nameColumn: "number",
-        orgVia: "project"
-      }, id, row, observer));
     } catch (error) {
       console.error(`[Events] Failed to emit task.deleted:`, error);
     }
