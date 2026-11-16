@@ -36,6 +36,8 @@ import {
 } from "lib/graphql/plugins";
 import tokenScopeGatePlugin from "lib/graphql/plugins/tokenScopeGate.plugin";
 import idpWebhook from "lib/idp/webhooks";
+import { isInternalRequest } from "lib/mcp/internal";
+import { createMcpRoutes } from "lib/mcp/mcp.route";
 import {
   attachmentDeleteRoutes,
   attachmentServeRoutes,
@@ -168,6 +170,10 @@ async function startServer(): Promise<void> {
   /**
    * Elysia server.
    */
+  // bound once the app exists, so MCP tool calls can reach its GraphQL route
+  let handleOwnRequest: (request: Request) => Promise<Response> = async () =>
+    new Response(null, { status: 503 });
+
   const app = new Elysia({
     ...(isDevEnv && {
       serve: {
@@ -191,6 +197,9 @@ async function startServer(): Promise<void> {
       rateLimit({
         max: 100,
         duration: 60_000,
+        // an MCP tool call's inner GraphQL request; the outer /mcp request
+        // already counted against the caller
+        skip: (request) => isInternalRequest(request),
       }),
     )
     .use(
@@ -208,6 +217,9 @@ async function startServer(): Promise<void> {
     .use(attachmentServeRoutes)
     .use(projectAvatarRoutes)
     .use(projectBackgroundRoutes)
+    // MCP server: tool calls run through this app's own GraphQL handler so
+    // every auth, scope, and authorization plugin applies
+    .use(createMcpRoutes((request) => handleOwnRequest(request)))
     .use(
       yoga({
         schema,
@@ -251,6 +263,8 @@ async function startServer(): Promise<void> {
       version: BUILD_VERSION || "0.1.0",
     }))
     .listen(PORT);
+
+  handleOwnRequest = (request) => app.handle(request);
 
   // Initialize search indexes if search is enabled, then reconcile (self-heal)
   // the index from the database on boot and periodically thereafter so any

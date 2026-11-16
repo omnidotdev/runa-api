@@ -69,6 +69,8 @@ const OPERATION_SCOPES: Record<string, ApiScope> = {
   projects: "project:read",
   project: "project:read",
   labels: "project:read",
+  columns: "project:read",
+  column: "project:read",
   // task writes
   createTask: "task:write",
   updateTask: "task:write",
