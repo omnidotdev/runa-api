@@ -970,7 +970,7 @@ const linkUnfurlCodec = recordCodec({
   executor: executor
 });
 const notificationDigestQueueIdentifier = sql.identifier("public", "notification_digest_queue");
-const spec_notificationDigestQueue = {
+const notificationDigestQueueCodec = recordCodec({
   name: "notificationDigestQueue",
   identifier: notificationDigestQueueIdentifier,
   attributes: {
@@ -1036,11 +1036,14 @@ const spec_notificationDigestQueue = {
       serviceName: "main",
       schemaName: "public",
       name: "notification_digest_queue"
+    },
+    tags: {
+      __proto__: null,
+      behavior: "-*"
     }
   },
   executor: executor
-};
-const notificationDigestQueueCodec = recordCodec(spec_notificationDigestQueue);
+});
 const notificationPreferenceIdentifier = sql.identifier("public", "notification_preference");
 const spec_notificationPreference = {
   name: "notificationPreference",
@@ -2133,7 +2136,9 @@ const spec_user = {
       codec: TYPES.text,
       notNull: true,
       extensions: {
-        __proto__: null,
+        tags: {
+          behavior: "-*"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true
@@ -2256,7 +2261,7 @@ const spec_userPreference = {
 };
 const userPreferenceCodec = recordCodec(spec_userPreference);
 const wardenSyncQueueIdentifier = sql.identifier("public", "warden_sync_queue");
-const spec_wardenSyncQueue = {
+const wardenSyncQueueCodec = recordCodec({
   name: "wardenSyncQueue",
   identifier: wardenSyncQueueIdentifier,
   attributes: {
@@ -2353,11 +2358,14 @@ const spec_wardenSyncQueue = {
       serviceName: "main",
       schemaName: "public",
       name: "warden_sync_queue"
+    },
+    tags: {
+      __proto__: null,
+      behavior: "-*"
     }
   },
   executor: executor
-};
-const wardenSyncQueueCodec = recordCodec(spec_wardenSyncQueue);
+});
 const webhookDeliveryIdentifier = sql.identifier("public", "webhook_delivery");
 const webhookDeliveryCodec = recordCodec({
   name: "webhookDelivery",
@@ -2620,6 +2628,20 @@ const assigneeUniques = [{
     }
   }
 }];
+const readerOrgIds = () => lambda(context(), ctx => {
+  const c = ctx;
+  if (c.apiTokenPrincipal) return [c.apiTokenPrincipal.organizationId];
+  if (!c.observer) return [];
+  return (c.organizations ?? []).map(org => org.id);
+});
+const visibleProjectIds = $step => {
+  const orgs = $step.placeholder(readerOrgIds(), listOfCodec(TYPES.text));
+  return sql`(select p.id from public.project p where p.organization_id = any(${orgs}) or p.is_public)`;
+};
+const visibleTaskIds = $step => sql`(select t.id from public.task t where t.project_id in ${visibleProjectIds($step)})`;
+const key7 = $step => {
+  $step.where(sql`${$step.alias}.task_id in ${visibleTaskIds($step)}`);
+};
 const assignee_resourceOptionsConfig = {
   executor: executor,
   name: "assignee",
@@ -2637,7 +2659,8 @@ const assignee_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: assigneeUniques
+  uniques: assigneeUniques,
+  selectAuth: key7
 };
 const attachmentUniques = [{
   attributes: ["id"],
@@ -2663,7 +2686,8 @@ const attachment_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: attachmentUniques
+  uniques: attachmentUniques,
+  selectAuth: key7
 };
 const calendar_feed_token_resourceOptionsConfig = {
   executor: executor,
@@ -2694,6 +2718,9 @@ const columnUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
+const key72 = $step => {
+  $step.where(sql`${$step.alias}.project_id in ${visibleProjectIds($step)}`);
+};
 const column_resourceOptionsConfig = {
   executor: executor,
   name: "column",
@@ -2711,7 +2738,8 @@ const column_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: columnUniques
+  uniques: columnUniques,
+  selectAuth: key72
 };
 const emojiUniques = [{
   attributes: ["id"],
@@ -2734,7 +2762,10 @@ const emoji_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: emojiUniques
+  uniques: emojiUniques,
+  selectAuth($step) {
+    $step.where(sql`${$step.alias}.post_id in (select po.id from public.post po where po.task_id in ${visibleTaskIds($step)})`);
+  }
 };
 const labelUniques = [{
   attributes: ["id"],
@@ -2757,13 +2788,13 @@ const label_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: labelUniques
+  uniques: labelUniques,
+  selectAuth($step) {
+    const orgs = $step.placeholder(readerOrgIds(), listOfCodec(TYPES.text));
+    $step.where(sql`(${$step.alias}.project_id in ${visibleProjectIds($step)} or (${$step.alias}.project_id is null and ${$step.alias}.organization_id = any(${orgs})))`);
+  }
 };
 const link_unfurlUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const notification_digest_queueUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
@@ -2779,12 +2810,18 @@ const notification_digest_queue_resourceOptionsConfig = {
       schemaName: "public",
       name: "notification_digest_queue"
     },
+    tags: {
+      behavior: "-*"
+    },
     canSelect: true,
     canInsert: true,
     canUpdate: true,
     canDelete: true
   },
-  uniques: notification_digest_queueUniques
+  uniques: [{
+    attributes: ["id"],
+    isPrimary: true
+  }]
 };
 const notification_preferenceUniques = [{
   attributes: ["id"],
@@ -2798,6 +2835,11 @@ const notification_preferenceUniques = [{
     }
   }
 }];
+const readerUserId = () => lambda(context(), ctx => ctx.observer?.id ?? null);
+const key75 = $step => {
+  const self = $step.placeholder(readerUserId(), TYPES.uuid);
+  $step.where(sql`${$step.alias}.user_id = ${self}`);
+};
 const notification_preference_resourceOptionsConfig = {
   executor: executor,
   name: "notification_preference",
@@ -2815,7 +2857,8 @@ const notification_preference_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: notification_preferenceUniques
+  uniques: notification_preferenceUniques,
+  selectAuth: key75
 };
 const postUniques = [{
   attributes: ["id"],
@@ -2838,7 +2881,8 @@ const post_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: postUniques
+  uniques: postUniques,
+  selectAuth: key7
 };
 const projectUniques = [{
   attributes: ["id"],
@@ -2869,12 +2913,20 @@ const project_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: projectUniques
+  uniques: projectUniques,
+  selectAuth($step) {
+    const orgs = $step.placeholder(readerOrgIds(), listOfCodec(TYPES.text));
+    $step.where(sql`(${$step.alias}.organization_id = any(${orgs}) or ${$step.alias}.is_public)`);
+  }
 };
 const project_columnUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
+const key77 = $step => {
+  const orgs = $step.placeholder(readerOrgIds(), listOfCodec(TYPES.text));
+  $step.where(sql`${$step.alias}.organization_id = any(${orgs})`);
+};
 const project_column_resourceOptionsConfig = {
   executor: executor,
   name: "project_column",
@@ -2892,7 +2944,8 @@ const project_column_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: project_columnUniques
+  uniques: project_columnUniques,
+  selectAuth: key77
 };
 const project_labelUniques = [{
   attributes: ["id"],
@@ -2915,7 +2968,8 @@ const project_label_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: project_labelUniques
+  uniques: project_labelUniques,
+  selectAuth: key77
 };
 const project_linkUniques = [{
   attributes: ["id"],
@@ -2938,7 +2992,8 @@ const project_link_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: project_linkUniques
+  uniques: project_linkUniques,
+  selectAuth: key72
 };
 const project_project_labelUniques = [{
   attributes: ["project_id", "project_label_id"],
@@ -2961,7 +3016,8 @@ const project_project_label_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: project_project_labelUniques
+  uniques: project_project_labelUniques,
+  selectAuth: key72
 };
 const settingsUniques = [{
   attributes: ["id"],
@@ -3004,7 +3060,8 @@ const task_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: taskUniques
+  uniques: taskUniques,
+  selectAuth: key72
 };
 const task_labelUniques = [{
   attributes: ["task_id", "label_id"],
@@ -3035,7 +3092,8 @@ const task_label_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: task_labelUniques
+  uniques: task_labelUniques,
+  selectAuth: key7
 };
 const userUniques = [{
   attributes: ["id"],
@@ -3074,7 +3132,17 @@ const user_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: userUniques
+  uniques: userUniques,
+  selectAuth($step) {
+    const self = $step.placeholder(readerUserId(), TYPES.uuid),
+      tasks = visibleTaskIds($step),
+      u = $step.alias;
+    $step.where(sql`(${u}.id = ${self}
+        or ${u}.id in (select t.author_id from public.task t where t.id in ${tasks})
+        or ${u}.id in (select a.user_id from public.assignee a where a.task_id in ${tasks})
+        or ${u}.id in (select po.author_id from public.post po where po.task_id in ${tasks})
+        or ${u}.id in (select e.user_id from public.emoji e join public.post po on po.id = e.post_id where po.task_id in ${tasks}))`);
+  }
 };
 const user_preferenceUniques = [{
   attributes: ["id"],
@@ -3105,12 +3173,9 @@ const user_preference_resourceOptionsConfig = {
     canUpdate: true,
     canDelete: true
   },
-  uniques: user_preferenceUniques
+  uniques: user_preferenceUniques,
+  selectAuth: key75
 };
-const warden_sync_queueUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
 const registryConfig = {
   pgExecutors: {
     __proto__: null,
@@ -3232,7 +3297,8 @@ const registryConfig = {
         canUpdate: true,
         canDelete: true
       },
-      uniques: settingsUniques
+      uniques: settingsUniques,
+      selectAuth: key77
     },
     task: task_resourceOptionsConfig,
     task_label: task_label_resourceOptionsConfig,
@@ -3250,12 +3316,18 @@ const registryConfig = {
           schemaName: "public",
           name: "warden_sync_queue"
         },
+        tags: {
+          behavior: "-*"
+        },
         canSelect: true,
         canInsert: true,
         canUpdate: true,
         canDelete: true
       },
-      uniques: warden_sync_queueUniques
+      uniques: [{
+        attributes: ["id"],
+        isPrimary: true
+      }]
     },
     webhook_delivery: {
       executor: executor,
@@ -3780,14 +3852,6 @@ const nodeIdHandler_LinkUnfurl = makeTableNodeIdHandler({
   resource: spec_resource_link_unfurlPgResource,
   pk: link_unfurlUniques[0].attributes
 });
-const spec_resource_notification_digest_queuePgResource = registry.pgResources["notification_digest_queue"];
-const nodeIdHandler_NotificationDigestQueue = makeTableNodeIdHandler({
-  typeName: "NotificationDigestQueue",
-  identifier: "NotificationDigestQueue",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: spec_resource_notification_digest_queuePgResource,
-  pk: notification_digest_queueUniques[0].attributes
-});
 const spec_resource_notification_preferencePgResource = registry.pgResources["notification_preference"];
 const nodeIdHandler_NotificationPreference = makeTableNodeIdHandler({
   typeName: "NotificationPreference",
@@ -3884,14 +3948,6 @@ const nodeIdHandler_UserPreference = makeTableNodeIdHandler({
   resource: spec_resource_user_preferencePgResource,
   pk: user_preferenceUniques[0].attributes
 });
-const spec_resource_warden_sync_queuePgResource = registry.pgResources["warden_sync_queue"];
-const nodeIdHandler_WardenSyncQueue = makeTableNodeIdHandler({
-  typeName: "WardenSyncQueue",
-  identifier: "WardenSyncQueue",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: spec_resource_warden_sync_queuePgResource,
-  pk: warden_sync_queueUniques[0].attributes
-});
 const nodeIdHandlerByTypeName = {
   __proto__: null,
   Query: {
@@ -3919,7 +3975,6 @@ const nodeIdHandlerByTypeName = {
   Emoji: nodeIdHandler_Emoji,
   Label: nodeIdHandler_Label,
   LinkUnfurl: nodeIdHandler_LinkUnfurl,
-  NotificationDigestQueue: nodeIdHandler_NotificationDigestQueue,
   NotificationPreference: nodeIdHandler_NotificationPreference,
   Post: nodeIdHandler_Post,
   Project: nodeIdHandler_Project,
@@ -3931,8 +3986,7 @@ const nodeIdHandlerByTypeName = {
   Task: nodeIdHandler_Task,
   TaskLabel: nodeIdHandler_TaskLabel,
   User: nodeIdHandler_User,
-  UserPreference: nodeIdHandler_UserPreference,
-  WardenSyncQueue: nodeIdHandler_WardenSyncQueue
+  UserPreference: nodeIdHandler_UserPreference
 };
 const decodeNodeId = makeDecodeNodeId(Object.values(nodeIdHandlerByTypeName));
 function findTypeNameMatch(specifier) {
@@ -5245,12 +5299,6 @@ function UserPreferenceDistinctCountAggregates_viewModePlan($pgSelectSingle) {
 function UserPreferenceGroupBy_VIEW_MODEApply($pgSelect) {
   applyGroupByAttribute("view_mode", TYPES.varchar, $pgSelect);
 }
-function NotificationDigestQueueDistinctCountAggregates_payloadPlan($pgSelectSingle) {
-  return pgAggregatesPlanAggregateAttribute(TYPES.jsonb, "payload", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-}
-function NotificationDigestQueueGroupBy_PAYLOADApply($pgSelect) {
-  applyGroupByAttribute("payload", TYPES.jsonb, $pgSelect);
-}
 const relation15 = registry.pgRelations["projectColumn"]["projectsByTheirProjectColumnId"];
 const relation16 = registry.pgRelations["projectLabel"]["projectProjectLabelsByTheirProjectLabelId"];
 const relation17 = registry.pgRelations["user"]["assigneesByTheirUserId"];
@@ -5259,7 +5307,6 @@ const relation19 = registry.pgRelations["user"]["tasksByTheirAuthorId"];
 const relation20 = registry.pgRelations["user"]["userPreferencesByTheirUserId"];
 const relation21 = registry.pgRelations["user"]["emojisByTheirUserId"];
 const relation22 = registry.pgRelations["user"]["attachmentsByTheirAuthorId"];
-const relation23 = registry.pgRelations["user"]["notificationDigestQueuesByTheirUserId"];
 function getClientMutationIdForCreatePlan($mutation) {
   return $mutation.getStepForKey("result").getMeta("clientMutationId");
 }
@@ -5345,13 +5392,6 @@ function LabelInput_colorApply(obj, val, info) {
 }
 function LabelInput_organizationIdApply(obj, val, info) {
   obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateNotificationDigestQueuePayload_notificationDigestQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_notification_digest_queuePgResource, notification_digest_queueUniques[0].attributes, $mutation, fieldArgs);
-function NotificationDigestQueueInput_payloadApply(obj, val, info) {
-  obj.set("payload", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function NotificationDigestQueueInput_sendAfterApply(obj, val, info) {
-  obj.set("send_after", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateNotificationPreferencePayload_notificationPreferenceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_notification_preferencePgResource, notification_preferenceUniques[0].attributes, $mutation, fieldArgs);
 function NotificationPreferenceInput_emailTaskAssignedApply(obj, val, info) {
@@ -5457,31 +5497,12 @@ function UserInput_identityProviderIdApply(obj, val, info) {
 function UserInput_avatarUrlApply(obj, val, info) {
   obj.set("avatar_url", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function UserInput_emailApply(obj, val, info) {
-  obj.set("email", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateUserPreferencePayload_userPreferenceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_user_preferencePgResource, user_preferenceUniques[0].attributes, $mutation, fieldArgs);
 function UserPreferenceInput_hiddenColumnIdsApply(obj, val, info) {
   obj.set("hidden_column_ids", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function UserPreferenceInput_pinOrderApply(obj, val, info) {
   obj.set("pin_order", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_warden_sync_queuePgResource, warden_sync_queueUniques[0].attributes, $mutation, fieldArgs);
-function WardenSyncQueueInput_operationApply(obj, val, info) {
-  obj.set("operation", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function WardenSyncQueueInput_attemptsApply(obj, val, info) {
-  obj.set("attempts", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function WardenSyncQueueInput_maxAttemptsApply(obj, val, info) {
-  obj.set("max_attempts", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function WardenSyncQueueInput_lastErrorApply(obj, val, info) {
-  obj.set("last_error", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function WardenSyncQueueInput_nextRetryAtApply(obj, val, info) {
-  obj.set("next_retry_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const MoveTaskPayload_taskId_plan = $row => lambda($row, r => r?.["id"] ?? null);
 const MoveTaskPayload_projectId_plan = $row => lambda($row, r => r?.["projectId"] ?? null);
@@ -5507,6 +5528,12 @@ const Query_taskLabelPlan = (_$root, {
   task_id: $taskId,
   label_id: $labelId
 });
+const oldPlan = (_$root, {
+  $email
+}) => spec_resource_userPgResource.get({
+  email: $email
+});
+const planWrapper = () => constant(null);
 const specForHandlerCache = new Map();
 function specForHandler(handler) {
   const existing = specForHandlerCache.get(handler);
@@ -5545,10 +5572,6 @@ const nodeFetcher_Label = $nodeId => {
 const nodeFetcher_LinkUnfurl = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_LinkUnfurl));
   return nodeIdHandler_LinkUnfurl.get(nodeIdHandler_LinkUnfurl.getSpec($decoded));
-};
-const nodeFetcher_NotificationDigestQueue = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NotificationDigestQueue));
-  return nodeIdHandler_NotificationDigestQueue.get(nodeIdHandler_NotificationDigestQueue.getSpec($decoded));
 };
 const nodeFetcher_NotificationPreference = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NotificationPreference));
@@ -5598,10 +5621,6 @@ const nodeFetcher_UserPreference = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_UserPreference));
   return nodeIdHandler_UserPreference.get(nodeIdHandler_UserPreference.getSpec($decoded));
 };
-const nodeFetcher_WardenSyncQueue = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_WardenSyncQueue));
-  return nodeIdHandler_WardenSyncQueue.get(nodeIdHandler_WardenSyncQueue.getSpec($decoded));
-};
 const allFields = [{
   name: "rowId",
   type: "UUID!"
@@ -5615,14 +5634,14 @@ const allFields = [{
   name: "email",
   type: "String!"
 }];
-function oldPlan4(_, args) {
+function oldPlan5(_, args) {
   const $insert = pgInsertSingle(spec_resource_assigneePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper = (plan, _, fieldArgs) => {
+const planWrapper2 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "assignee"]),
     $db = context().get("db");
   sideEffect([$input, $db], async ([input, db]) => {
@@ -5662,25 +5681,25 @@ const planWrapper = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan3(...planParams) {
+function oldPlan4(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan4.apply(this, args);
+        $prev = oldPlan5.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createAssignee, but that function did not return a step!
-${String(oldPlan4)}`);
+${String(oldPlan5)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper2(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper2 = (plan, _, fieldArgs) => {
+const planWrapper3 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "assignee"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5709,20 +5728,20 @@ const planWrapper2 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan2(...planParams) {
+function oldPlan3(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan3.apply(this, args);
+        $prev = oldPlan4.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createAssignee, but that function did not return a step!
-${String(oldPlan3)}`);
+${String(oldPlan4)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper2(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper3(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -5791,7 +5810,7 @@ const buildAssocChange = (entity, action, name) => {
 };
 const taskIdPath = ["input", "assignee", "taskId"];
 const assocIdPath = ["input", "assignee", "userId"];
-const planWrapper3 = (plan, _, fieldArgs) => {
+const planWrapper4 = (plan, _, fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $taskId = fieldArgs.getRaw(taskIdPath),
@@ -5837,25 +5856,25 @@ const planWrapper3 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan(...planParams) {
+function oldPlan2(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan2.apply(this, args);
+        $prev = oldPlan3.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createAssignee, but that function did not return a step!
-${String(oldPlan2)}`);
+${String(oldPlan3)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper3(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper4(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper4 = (plan, _, fieldArgs) => {
+const planWrapper5 = (plan, _, fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $input = fieldArgs.getRaw(["input", "assignee"]),
@@ -5957,14 +5976,14 @@ const planWrapper4 = (plan, _, fieldArgs) => {
 function applyInputToInsert(_, $object) {
   return $object;
 }
-function oldPlan7(_, args) {
+function oldPlan8(_, args) {
   const $insert = pgInsertSingle(spec_resource_columnPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper5 = (plan, _, fieldArgs) => {
+const planWrapper6 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "column"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -5994,27 +6013,27 @@ const planWrapper5 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan6(...planParams) {
+function oldPlan7(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan7.apply(this, args);
+        $prev = oldPlan8.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan7)}`);
+${String(oldPlan8)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const shouldBlock = result => result.matchedTerms.length > 0 || result.score >= 0.9;
 const fields = ["title"];
-const planWrapper6 = (plan, _, fieldArgs) => {
+const planWrapper7 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "column"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -6032,25 +6051,25 @@ const planWrapper6 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan5(...planParams) {
+function oldPlan6(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan6.apply(this, args);
+        $prev = oldPlan7.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan6)}`);
+${String(oldPlan7)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper6(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper7 = (plan, _, fieldArgs) => {
+const planWrapper8 = (plan, _, fieldArgs) => {
   const $deletedRow = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -6096,14 +6115,14 @@ const planWrapper7 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan8(_, args) {
+function oldPlan9(_, args) {
   const $insert = pgInsertSingle(spec_resource_emojiPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper8 = (plan, _, fieldArgs) => {
+const planWrapper9 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "emoji"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6134,14 +6153,14 @@ const planWrapper8 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan10(_, args) {
+function oldPlan11(_, args) {
   const $insert = pgInsertSingle(spec_resource_labelPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper9 = (plan, _, fieldArgs) => {
+const planWrapper10 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "label"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6191,25 +6210,25 @@ const planWrapper9 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan9(...planParams) {
+function oldPlan10(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan10.apply(this, args);
+        $prev = oldPlan11.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createLabel, but that function did not return a step!
-${String(oldPlan10)}`);
+${String(oldPlan11)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper10 = (plan, _, fieldArgs) => {
+const planWrapper11 = (plan, _, fieldArgs) => {
   const $deletedRow = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -6255,14 +6274,14 @@ const planWrapper10 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan11(_, args) {
+function oldPlan12(_, args) {
   const $insert = pgInsertSingle(spec_resource_notification_preferencePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper11 = (plan, _, fieldArgs) => {
+const planWrapper12 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "notificationPreference"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -6272,14 +6291,14 @@ const planWrapper11 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan16(_, args) {
+function oldPlan17(_, args) {
   const $insert = pgInsertSingle(spec_resource_postPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper12 = (plan, _, fieldArgs) => {
+const planWrapper13 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "post"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6306,26 +6325,26 @@ const planWrapper12 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan15(...planParams) {
+function oldPlan16(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan16.apply(this, args);
+        $prev = oldPlan17.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan16)}`);
+${String(oldPlan17)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields2 = ["title", "description"];
-const planWrapper13 = (plan, _, fieldArgs) => {
+const planWrapper14 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "post"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -6343,25 +6362,25 @@ const planWrapper13 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan14(...planParams) {
+function oldPlan15(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan15.apply(this, args);
+        $prev = oldPlan16.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan15)}`);
+${String(oldPlan16)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper13(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper14 = (plan, _, fieldArgs) => {
+const planWrapper15 = (plan, _, fieldArgs) => {
   const $deletedPost = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -6409,25 +6428,25 @@ const planWrapper14 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan13(...planParams) {
+function oldPlan14(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan14.apply(this, args);
+        $prev = oldPlan15.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan14)}`);
+${String(oldPlan15)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper14(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper15 = (plan, _, fieldArgs) => {
+const planWrapper16 = (plan, _, fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $input = fieldArgs.getRaw(["input", "post"]),
@@ -6454,25 +6473,25 @@ const planWrapper15 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan12(...planParams) {
+function oldPlan13(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan13.apply(this, args);
+        $prev = oldPlan14.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan13)}`);
+${String(oldPlan14)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper15(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper16 = (plan, $record) => {
+const planWrapper17 = (plan, $record) => {
   if (!false) return plan();
   const $db = context().get("db");
   sideEffect([$record, $db], async ([record, db]) => {
@@ -6495,14 +6514,14 @@ const planWrapper16 = (plan, $record) => {
   });
   return plan();
 };
-function oldPlan23(_, args) {
+function oldPlan24(_, args) {
   const $insert = pgInsertSingle(spec_resource_projectPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper17 = (plan, _, fieldArgs) => {
+const planWrapper18 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "project"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6535,26 +6554,26 @@ const planWrapper17 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan22(...planParams) {
+function oldPlan23(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan23.apply(this, args);
+        $prev = oldPlan24.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan23)}`);
+${String(oldPlan24)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields3 = ["description"];
-const planWrapper18 = (plan, _, fieldArgs) => {
+const planWrapper19 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "project"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -6572,25 +6591,25 @@ const planWrapper18 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan21(...planParams) {
+function oldPlan22(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan22.apply(this, args);
+        $prev = oldPlan23.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan22)}`);
+${String(oldPlan23)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper18(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper19 = (plan, _, fieldArgs) => {
+const planWrapper20 = (plan, _, fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $input = fieldArgs.getRaw(["input", "project"]),
@@ -6618,20 +6637,20 @@ const planWrapper19 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan20(...planParams) {
+function oldPlan21(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan21.apply(this, args);
+        $prev = oldPlan22.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan21)}`);
+${String(oldPlan22)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper19(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -6652,7 +6671,7 @@ const DEFAULT_COLUMNS = [{
   title: "Done",
   icon: "emoji:\uD83C\uDF15"
 }];
-const planWrapper20 = plan => {
+const planWrapper21 = plan => {
   const $result = plan();
   if (!$result) return $result;
   const $db = context().get("db"),
@@ -6669,25 +6688,25 @@ const planWrapper20 = plan => {
   });
   return $result;
 };
-function oldPlan19(...planParams) {
+function oldPlan20(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan20.apply(this, args);
+        $prev = oldPlan21.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan20)}`);
+${String(oldPlan21)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper20(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper21 = plan => {
+const planWrapper22 = plan => {
   const $result = plan();
   if (!$result) return $result;
   const $db = context().get("db"),
@@ -6702,25 +6721,25 @@ const planWrapper21 = plan => {
   });
   return $result;
 };
-function oldPlan18(...planParams) {
+function oldPlan19(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan19.apply(this, args);
+        $prev = oldPlan20.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan19)}`);
+${String(oldPlan20)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper21(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper22 = (plan, _, fieldArgs) => {
+const planWrapper23 = (plan, _, fieldArgs) => {
   const $deletedRow = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -6766,25 +6785,25 @@ const planWrapper22 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan17(...planParams) {
+function oldPlan18(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan18.apply(this, args);
+        $prev = oldPlan19.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan18)}`);
+${String(oldPlan19)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper22(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper23 = (plan, $record) => {
+const planWrapper24 = (plan, $record) => {
   if (!false) return plan();
   const $db = context().get("db");
   sideEffect([$record, $db], async ([record, db]) => {
@@ -6800,14 +6819,14 @@ const planWrapper23 = (plan, $record) => {
   });
   return plan();
 };
-function oldPlan24(_, args) {
+function oldPlan25(_, args) {
   const $insert = pgInsertSingle(spec_resource_project_columnPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper24 = (plan, _, fieldArgs) => {
+const planWrapper25 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "projectColumn"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6823,14 +6842,14 @@ const planWrapper24 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan25(_, args) {
+function oldPlan26(_, args) {
   const $insert = pgInsertSingle(spec_resource_project_linkPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper25 = (plan, _, fieldArgs) => {
+const planWrapper26 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "projectLink"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -6846,14 +6865,14 @@ const planWrapper25 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan30(_, args) {
+function oldPlan31(_, args) {
   const $insert = pgInsertSingle(spec_resource_taskPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper26 = (plan, _, fieldArgs) => {
+const planWrapper27 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "task"]),
     $patch = constant(null),
     $observer = context().get("observer"),
@@ -6890,26 +6909,26 @@ const planWrapper26 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan29(...planParams) {
+function oldPlan30(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan30.apply(this, args);
+        $prev = oldPlan31.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan30)}`);
+${String(oldPlan31)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields4 = ["content", "description"];
-const planWrapper27 = (plan, _, fieldArgs) => {
+const planWrapper28 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "task"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -6927,25 +6946,25 @@ const planWrapper27 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan28(...planParams) {
+function oldPlan29(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan29.apply(this, args);
+        $prev = oldPlan30.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan29)}`);
+${String(oldPlan30)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper27(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper28 = (plan, _, fieldArgs) => {
+const planWrapper29 = (plan, _, fieldArgs) => {
   const $deletedRow = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -6991,25 +7010,25 @@ const planWrapper28 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan27(...planParams) {
+function oldPlan28(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan28.apply(this, args);
+        $prev = oldPlan29.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan28)}`);
+${String(oldPlan29)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper28(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper29 = (plan, _, fieldArgs) => {
+const planWrapper30 = (plan, _, fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $taskId = $result.get("result").get("id"),
@@ -7038,25 +7057,25 @@ const planWrapper29 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan26(...planParams) {
+function oldPlan27(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan27.apply(this, args);
+        $prev = oldPlan28.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan27)}`);
+${String(oldPlan28)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper29(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper30 = (plan, $record) => {
+const planWrapper31 = (plan, $record) => {
   if (!false) return plan();
   const $db = context().get("db");
   sideEffect([$record, $db], async ([record, db]) => {
@@ -7075,14 +7094,14 @@ const planWrapper30 = (plan, $record) => {
   });
   return plan();
 };
-function oldPlan32(_, args) {
+function oldPlan33(_, args) {
   const $insert = pgInsertSingle(spec_resource_task_labelPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper31 = (plan, _, fieldArgs) => {
+const planWrapper32 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "taskLabel"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7107,27 +7126,27 @@ const planWrapper31 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan31(...planParams) {
+function oldPlan32(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan32.apply(this, args);
+        $prev = oldPlan33.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.createTaskLabel, but that function did not return a step!
-${String(oldPlan32)}`);
+${String(oldPlan33)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const taskIdPath2 = ["input", "taskLabel", "taskId"];
 const assocIdPath2 = ["input", "taskLabel", "labelId"];
-const planWrapper32 = (plan, _, fieldArgs) => {
+const planWrapper33 = (plan, _, fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $taskId = fieldArgs.getRaw(taskIdPath2),
@@ -7173,14 +7192,14 @@ const planWrapper32 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan33(_, args) {
+function oldPlan34(_, args) {
   const $insert = pgInsertSingle(spec_resource_userPgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper33 = (plan, _, fieldArgs) => {
+const planWrapper34 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "user"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -7189,14 +7208,14 @@ const planWrapper33 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan34(_, args) {
+function oldPlan35(_, args) {
   const $insert = pgInsertSingle(spec_resource_user_preferencePgResource);
   args.apply($insert);
   return object({
     result: $insert
   });
 }
-const planWrapper34 = (plan, _, fieldArgs) => {
+const planWrapper35 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "userPreference"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -7217,7 +7236,7 @@ const specFromArgs_Column = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Column, $nodeId);
 };
-const oldPlan37 = (_$root, args) => {
+const oldPlan38 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7226,7 +7245,7 @@ const oldPlan37 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper35 = (plan, _, fieldArgs) => {
+const planWrapper36 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7252,26 +7271,26 @@ const planWrapper35 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan36(...planParams) {
+function oldPlan37(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan37.apply(this, args);
+        $prev = oldPlan38.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan37)}`);
+${String(oldPlan38)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields5 = ["title"];
-const planWrapper36 = (plan, _, fieldArgs) => {
+const planWrapper37 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -7289,25 +7308,25 @@ const planWrapper36 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan35(...planParams) {
+function oldPlan36(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan36.apply(this, args);
+        $prev = oldPlan37.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan36)}`);
+${String(oldPlan37)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper36(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper37 = (plan, _, fieldArgs) => {
+const planWrapper38 = (plan, _, fieldArgs) => {
   const $deletedRow = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -7357,7 +7376,7 @@ const specFromArgs_Emoji = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Emoji, $nodeId);
 };
-const oldPlan38 = (_$root, args) => {
+const oldPlan39 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_emojiPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7366,7 +7385,7 @@ const oldPlan38 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper38 = (plan, _, fieldArgs) => {
+const planWrapper39 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7404,7 +7423,7 @@ const specFromArgs_Label = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Label, $nodeId);
 };
-const oldPlan40 = (_$root, args) => {
+const oldPlan41 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7413,7 +7432,7 @@ const oldPlan40 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper39 = (plan, _, fieldArgs) => {
+const planWrapper40 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7444,25 +7463,25 @@ const planWrapper39 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan39(...planParams) {
+function oldPlan40(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan40.apply(this, args);
+        $prev = oldPlan41.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateLabel, but that function did not return a step!
-${String(oldPlan40)}`);
+${String(oldPlan41)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper40 = (plan, _, fieldArgs) => {
+const planWrapper41 = (plan, _, fieldArgs) => {
   const $deletedRow = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -7508,15 +7527,11 @@ const planWrapper40 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const specFromArgs_NotificationDigestQueue = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_NotificationDigestQueue, $nodeId);
-};
 const specFromArgs_NotificationPreference = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_NotificationPreference, $nodeId);
 };
-const oldPlan41 = (_$root, args) => {
+const oldPlan42 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_notification_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7525,7 +7540,7 @@ const oldPlan41 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper41 = (plan, _, fieldArgs) => {
+const planWrapper42 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -7549,7 +7564,7 @@ const specFromArgs_Post = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Post, $nodeId);
 };
-const oldPlan46 = (_$root, args) => {
+const oldPlan47 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7558,7 +7573,7 @@ const oldPlan46 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper42 = (plan, _, fieldArgs) => {
+const planWrapper43 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7588,26 +7603,26 @@ const planWrapper42 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan45(...planParams) {
+function oldPlan46(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan46.apply(this, args);
+        $prev = oldPlan47.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan46)}`);
+${String(oldPlan47)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper42(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields6 = ["title", "description"];
-const planWrapper43 = (plan, _, fieldArgs) => {
+const planWrapper44 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -7625,25 +7640,25 @@ const planWrapper43 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan44(...planParams) {
+function oldPlan45(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan45.apply(this, args);
+        $prev = oldPlan46.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan45)}`);
+${String(oldPlan46)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper43(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper44(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper44 = (plan, _, fieldArgs) => {
+const planWrapper45 = (plan, _, fieldArgs) => {
   const $deletedPost = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -7691,25 +7706,25 @@ const planWrapper44 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan43(...planParams) {
+function oldPlan44(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan44.apply(this, args);
+        $prev = oldPlan45.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan44)}`);
+${String(oldPlan45)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper44(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper45(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper45 = (plan, _, fieldArgs) => {
+const planWrapper46 = (plan, _, fieldArgs) => {
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
     $db = context().get("db"),
@@ -7758,20 +7773,20 @@ const planWrapper45 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan42(...planParams) {
+function oldPlan43(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan43.apply(this, args);
+        $prev = oldPlan44.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan43)}`);
+${String(oldPlan44)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper45(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper46(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -7780,7 +7795,7 @@ const specFromArgs_Project = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
 };
-const oldPlan51 = (_$root, args) => {
+const oldPlan52 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7789,7 +7804,7 @@ const oldPlan51 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper47 = (plan, _, fieldArgs) => {
+const planWrapper48 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -7806,26 +7821,26 @@ const planWrapper47 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan50(...planParams) {
+function oldPlan51(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan51.apply(this, args);
+        $prev = oldPlan52.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan51)}`);
+${String(oldPlan52)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper47(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper48(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields7 = ["description"];
-const planWrapper48 = (plan, _, fieldArgs) => {
+const planWrapper49 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -7843,25 +7858,25 @@ const planWrapper48 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan49(...planParams) {
+function oldPlan50(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan50.apply(this, args);
+        $prev = oldPlan51.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan50)}`);
+${String(oldPlan51)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper48(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper49(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper49 = (plan, _, fieldArgs) => {
+const planWrapper50 = (plan, _, fieldArgs) => {
   const $deletedRow = constant(null),
     $result = plan();
   if (!$result) return $result;
@@ -7907,25 +7922,25 @@ const planWrapper49 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan48(...planParams) {
+function oldPlan49(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan49.apply(this, args);
+        $prev = oldPlan50.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan49)}`);
+${String(oldPlan50)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper49(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper50(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper50 = (plan, _, fieldArgs) => {
+const planWrapper51 = (plan, _, fieldArgs) => {
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
     $db = context().get("db"),
@@ -7950,20 +7965,20 @@ const planWrapper50 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan47(...planParams) {
+function oldPlan48(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan48.apply(this, args);
+        $prev = oldPlan49.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan48)}`);
+${String(oldPlan49)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper50(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper51(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -7972,7 +7987,7 @@ const specFromArgs_ProjectColumn = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectColumn, $nodeId);
 };
-const oldPlan52 = (_$root, args) => {
+const oldPlan53 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -7981,7 +7996,7 @@ const oldPlan52 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper52 = (plan, _, fieldArgs) => {
+const planWrapper53 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8015,7 +8030,7 @@ const specFromArgs_ProjectLink = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ProjectLink, $nodeId);
 };
-const oldPlan53 = (_$root, args) => {
+const oldPlan54 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_project_linkPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8024,7 +8039,7 @@ const oldPlan53 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper53 = (plan, _, fieldArgs) => {
+const planWrapper54 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8062,7 +8077,7 @@ const specFromArgs_Task = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Task, $nodeId);
 };
-const oldPlan58 = (_$root, args) => {
+const oldPlan59 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8071,7 +8086,7 @@ const oldPlan58 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper54 = (plan, _, fieldArgs) => {
+const planWrapper55 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
@@ -8124,26 +8139,26 @@ const planWrapper54 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan57(...planParams) {
+function oldPlan58(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan58.apply(this, args);
+        $prev = oldPlan59.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan58)}`);
+${String(oldPlan59)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper54(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const fields8 = ["content", "description"];
-const planWrapper55 = (plan, _, fieldArgs) => {
+const planWrapper56 = (plan, _, fieldArgs) => {
   const $source = fieldArgs.getRaw(["input", "patch"]);
   sideEffect([$source], async ([source]) => {
     const row = source;
@@ -8161,20 +8176,20 @@ const planWrapper55 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan56(...planParams) {
+function oldPlan57(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan57.apply(this, args);
+        $prev = oldPlan58.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan57)}`);
+${String(oldPlan58)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper55(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -8240,7 +8255,7 @@ const effectiveTaskPatch = (patch, before) => {
     };
   return Object.fromEntries(Object.entries(patch).filter(([key, value]) => !unchanged(key, value)));
 };
-const planWrapper56 = (plan, _, fieldArgs) => {
+const planWrapper57 = (plan, _, fieldArgs) => {
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
     $observer = context().get("observer"),
@@ -8303,25 +8318,25 @@ const planWrapper56 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan55(...planParams) {
+function oldPlan56(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan56.apply(this, args);
+        $prev = oldPlan57.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan56)}`);
+${String(oldPlan57)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper56(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper57 = (plan, _, fieldArgs) => {
+const planWrapper58 = (plan, _, fieldArgs) => {
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $patch = fieldArgs.getRaw(["input", "patch"]),
     $db = context().get("db"),
@@ -8387,20 +8402,20 @@ const planWrapper57 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan54(...planParams) {
+function oldPlan55(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan55.apply(this, args);
+        $prev = oldPlan56.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan55)}`);
+${String(oldPlan56)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper57(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper58(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
@@ -8413,7 +8428,7 @@ const specFromArgs_User = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_User, $nodeId);
 };
-const oldPlan59 = (_$root, args) => {
+const oldPlan60 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8422,7 +8437,7 @@ const oldPlan59 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper59 = (plan, _, fieldArgs) => {
+const planWrapper60 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -8435,7 +8450,7 @@ const specFromArgs_UserPreference = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_UserPreference, $nodeId);
 };
-const oldPlan60 = (_$root, args) => {
+const oldPlan61 = (_$root, args) => {
   const $update = pgUpdateSingle(spec_resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8444,7 +8459,7 @@ const oldPlan60 = (_$root, args) => {
     result: $update
   });
 };
-const planWrapper60 = (plan, _, fieldArgs) => {
+const planWrapper61 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -8464,11 +8479,7 @@ const planWrapper60 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const specFromArgs_WardenSyncQueue = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_WardenSyncQueue, $nodeId);
-};
-const oldPlan63 = (_$root, args) => {
+const oldPlan64 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_assigneePgResource, {
     task_id: args.getRaw(['input', "taskId"]),
     user_id: args.getRaw(['input', "userId"])
@@ -8478,7 +8489,7 @@ const oldPlan63 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper61 = (plan, _, fieldArgs) => {
+const planWrapper62 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input"]),
     $db = context().get("db");
   sideEffect([$input, $db], async ([input, db]) => {
@@ -8509,25 +8520,25 @@ const planWrapper61 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan62(...planParams) {
+function oldPlan63(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan63.apply(this, args);
+        $prev = oldPlan64.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteAssignee, but that function did not return a step!
-${String(oldPlan63)}`);
+${String(oldPlan64)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper61(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper62(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper62 = (plan, _, fieldArgs) => {
+const planWrapper63 = (plan, _, fieldArgs) => {
   const $taskId = fieldArgs.getRaw(["input", "taskId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8551,27 +8562,27 @@ const planWrapper62 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan61(...planParams) {
+function oldPlan62(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan62.apply(this, args);
+        $prev = oldPlan63.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteAssignee, but that function did not return a step!
-${String(oldPlan62)}`);
+${String(oldPlan63)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper62(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper63(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const taskIdPath3 = ["input", "taskId"];
 const assocIdPath3 = ["input", "userId"];
-const planWrapper63 = (plan, _, fieldArgs) => {
+const planWrapper64 = (plan, _, fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $taskId = fieldArgs.getRaw(taskIdPath3),
@@ -8617,7 +8628,7 @@ const planWrapper63 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan65 = (_$root, args) => {
+const oldPlan66 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8626,7 +8637,7 @@ const oldPlan65 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper64 = (plan, _, fieldArgs) => {
+const planWrapper65 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8652,25 +8663,25 @@ const planWrapper64 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan64(...planParams) {
+function oldPlan65(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan65.apply(this, args);
+        $prev = oldPlan66.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteColumn, but that function did not return a step!
-${String(oldPlan65)}`);
+${String(oldPlan66)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper64(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper65(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper65 = (plan, _, fieldArgs) => {
+const planWrapper66 = (plan, _, fieldArgs) => {
   const $deletedRow = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
       try {
         const repo = db.query["columns"];
@@ -8729,7 +8740,7 @@ const planWrapper65 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan66 = (_$root, args) => {
+const oldPlan67 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_emojiPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8738,7 +8749,7 @@ const oldPlan66 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper66 = (plan, _, fieldArgs) => {
+const planWrapper67 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8772,7 +8783,7 @@ const planWrapper66 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan68 = (_$root, args) => {
+const oldPlan69 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_labelPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8781,7 +8792,7 @@ const oldPlan68 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper67 = (plan, _, fieldArgs) => {
+const planWrapper68 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8812,25 +8823,25 @@ const planWrapper67 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan67(...planParams) {
+function oldPlan68(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan68.apply(this, args);
+        $prev = oldPlan69.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteLabel, but that function did not return a step!
-${String(oldPlan68)}`);
+${String(oldPlan69)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper67(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper68(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper68 = (plan, _, fieldArgs) => {
+const planWrapper69 = (plan, _, fieldArgs) => {
   const $deletedRow = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
       try {
         const repo = db.query["labels"];
@@ -8889,7 +8900,7 @@ const planWrapper68 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan69 = (_$root, args) => {
+const oldPlan70 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_notification_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8898,7 +8909,7 @@ const oldPlan69 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper69 = (plan, _, fieldArgs) => {
+const planWrapper70 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -8918,7 +8929,7 @@ const planWrapper69 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan72 = (_$root, args) => {
+const oldPlan73 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_postPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -8927,7 +8938,7 @@ const oldPlan72 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper70 = (plan, _, fieldArgs) => {
+const planWrapper71 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -8957,25 +8968,25 @@ const planWrapper70 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan71(...planParams) {
+function oldPlan72(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan72.apply(this, args);
+        $prev = oldPlan73.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan72)}`);
+${String(oldPlan73)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper70(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper71(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper71 = (plan, _, fieldArgs) => {
+const planWrapper72 = (plan, _, fieldArgs) => {
   const $deletedPost = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
       try {
         if (!rowId) return null;
@@ -9035,25 +9046,25 @@ const planWrapper71 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan70(...planParams) {
+function oldPlan71(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan71.apply(this, args);
+        $prev = oldPlan72.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan71)}`);
+${String(oldPlan72)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper71(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper72(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper72 = (plan, _, fieldArgs) => {
+const planWrapper73 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([postId]) => {
@@ -9061,7 +9072,7 @@ const planWrapper72 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan77 = (_$root, args) => {
+const oldPlan78 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_projectPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -9070,7 +9081,7 @@ const oldPlan77 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper73 = (plan, _, fieldArgs) => {
+const planWrapper74 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -9087,25 +9098,25 @@ const planWrapper73 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan76(...planParams) {
+function oldPlan77(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan77.apply(this, args);
+        $prev = oldPlan78.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan77)}`);
+${String(oldPlan78)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper73(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper74(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper74 = (plan, _, _fieldArgs) => {
+const planWrapper75 = (plan, _, _fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $accessToken = context().get("accessToken"),
@@ -9127,25 +9138,25 @@ const planWrapper74 = (plan, _, _fieldArgs) => {
   });
   return $result;
 };
-function oldPlan75(...planParams) {
+function oldPlan76(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan76.apply(this, args);
+        $prev = oldPlan77.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan76)}`);
+${String(oldPlan77)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper74(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper75(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper75 = (plan, _, fieldArgs) => {
+const planWrapper76 = (plan, _, fieldArgs) => {
   const $deletedRow = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
       try {
         const repo = db.query["projects"];
@@ -9204,25 +9215,25 @@ const planWrapper75 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan74(...planParams) {
+function oldPlan75(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan75.apply(this, args);
+        $prev = oldPlan76.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan75)}`);
+${String(oldPlan76)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper75(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper76(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper76 = (plan, _, fieldArgs) => {
+const planWrapper77 = (plan, _, fieldArgs) => {
   const $rowId = fieldArgs.getRaw(["input", "rowId"]),
     $db = context().get("db"),
     $old = sideEffect([$rowId, $db], async ([rowId, db]) => {
@@ -9245,25 +9256,25 @@ const planWrapper76 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan73(...planParams) {
+function oldPlan74(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan74.apply(this, args);
+        $prev = oldPlan75.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan74)}`);
+${String(oldPlan75)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper76(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper77(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper77 = (plan, _, fieldArgs) => {
+const planWrapper78 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([projectId]) => {
@@ -9271,7 +9282,7 @@ const planWrapper77 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan78 = (_$root, args) => {
+const oldPlan79 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_project_columnPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -9280,7 +9291,7 @@ const oldPlan78 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper78 = (plan, _, fieldArgs) => {
+const planWrapper79 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -9306,7 +9317,7 @@ const planWrapper78 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan79 = (_$root, args) => {
+const oldPlan80 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_project_linkPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -9315,7 +9326,7 @@ const oldPlan79 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper79 = (plan, _, fieldArgs) => {
+const planWrapper80 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db"),
@@ -9341,7 +9352,7 @@ const planWrapper79 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan82 = (_$root, args) => {
+const oldPlan83 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_taskPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -9350,7 +9361,7 @@ const oldPlan82 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper80 = (plan, _, fieldArgs) => {
+const planWrapper81 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $patch = constant(null),
     $observer = context().get("observer"),
@@ -9403,25 +9414,25 @@ const planWrapper80 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-function oldPlan81(...planParams) {
+function oldPlan82(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan82.apply(this, args);
+        $prev = oldPlan83.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteTask, but that function did not return a step!
-${String(oldPlan82)}`);
+${String(oldPlan83)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper80(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper81(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper81 = (plan, _, fieldArgs) => {
+const planWrapper82 = (plan, _, fieldArgs) => {
   const $deletedRow = sideEffect([fieldArgs.getRaw(["input", "rowId"]), context().get("db")], async ([rowId, db]) => {
       try {
         const repo = db.query["tasks"];
@@ -9480,25 +9491,25 @@ const planWrapper81 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-function oldPlan80(...planParams) {
+function oldPlan81(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan81.apply(this, args);
+        $prev = oldPlan82.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteTask, but that function did not return a step!
-${String(oldPlan81)}`);
+${String(oldPlan82)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper81(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper82(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
-const planWrapper82 = (plan, _, fieldArgs) => {
+const planWrapper83 = (plan, _, fieldArgs) => {
   if (!false) return plan();
   const $input = fieldArgs.getRaw(["input", "rowId"]);
   sideEffect([$input], async ([taskId]) => {
@@ -9506,7 +9517,7 @@ const planWrapper82 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan84 = (_$root, args) => {
+const oldPlan85 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_task_labelPgResource, {
     task_id: args.getRaw(['input', "taskId"]),
     label_id: args.getRaw(['input', "labelId"])
@@ -9516,27 +9527,27 @@ const oldPlan84 = (_$root, args) => {
     result: $delete
   });
 };
-function oldPlan83(...planParams) {
+function oldPlan84(...planParams) {
   const smartPlan = (...overrideParams) => {
       const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-        $prev = oldPlan84.apply(this, args);
+        $prev = oldPlan85.apply(this, args);
       if (!($prev instanceof ExecutableStep)) {
         console.error(`Wrapped a plan function at Mutation.deleteTaskLabel, but that function did not return a step!
-${String(oldPlan84)}`);
+${String(oldPlan85)}`);
         throw Error("Wrapped a plan function, but that function did not return a step!");
       }
       args[1].autoApply($prev);
       return $prev;
     },
     [$source, fieldArgs, info] = planParams,
-    $newPlan = planWrapper62(smartPlan, $source, fieldArgs, info);
+    $newPlan = planWrapper63(smartPlan, $source, fieldArgs, info);
   if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
   if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
   return $newPlan;
 }
 const taskIdPath4 = ["input", "taskId"];
 const assocIdPath4 = ["input", "labelId"];
-const planWrapper84 = (plan, _, fieldArgs) => {
+const planWrapper85 = (plan, _, fieldArgs) => {
   const $result = plan();
   if (!$result) return $result;
   const $taskId = fieldArgs.getRaw(taskIdPath4),
@@ -9582,7 +9593,7 @@ const planWrapper84 = (plan, _, fieldArgs) => {
   });
   return $result;
 };
-const oldPlan85 = (_$root, args) => {
+const oldPlan86 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_userPgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -9591,7 +9602,7 @@ const oldPlan85 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper85 = (plan, _, fieldArgs) => {
+const planWrapper86 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer");
   sideEffect([$input, $observer], async ([input, observer]) => {
@@ -9600,7 +9611,7 @@ const planWrapper85 = (plan, _, fieldArgs) => {
   });
   return plan();
 };
-const oldPlan86 = (_$root, args) => {
+const oldPlan87 = (_$root, args) => {
   const $delete = pgDeleteSingle(spec_resource_user_preferencePgResource, {
     id: args.getRaw(['input', "rowId"])
   });
@@ -9609,7 +9620,7 @@ const oldPlan86 = (_$root, args) => {
     result: $delete
   });
 };
-const planWrapper86 = (plan, _, fieldArgs) => {
+const planWrapper87 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw(["input", "rowId"]),
     $observer = context().get("observer"),
     $db = context().get("db");
@@ -9647,7 +9658,7 @@ const Mutation_moveTask_plan = (_$root, fieldArgs) => {
     });
   }, !1);
 };
-const planWrapper87 = (plan, _, fieldArgs) => {
+const planWrapper88 = (plan, _, fieldArgs) => {
   const $input = fieldArgs.getRaw("input"),
     $db = context().get("db"),
     $before = sideEffect([$input, $db], async ([input, db]) => {
@@ -9907,7 +9918,6 @@ type User implements Node {
   avatarUrl: String
   createdAt: Datetime!
   updatedAt: Datetime!
-  email: String!
 
   """Reads and enables pagination through a set of \`Assignee\`."""
   assignees(
@@ -10117,42 +10127,6 @@ type User implements Node {
   Reads a single \`NotificationPreference\` that is related to this \`User\`.
   """
   notificationPreference: NotificationPreference
-
-  """
-  Reads and enables pagination through a set of \`NotificationDigestQueue\`.
-  """
-  notificationDigestQueues(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: NotificationDigestQueueCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: NotificationDigestQueueFilter
-
-    """The method to use when ordering \`NotificationDigestQueue\`."""
-    orderBy: [NotificationDigestQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueConnection!
 }
 
 """A connection to a list of \`Assignee\` values."""
@@ -11032,9 +11006,6 @@ input UserFilter {
   """Filter by the object’s \`updatedAt\` field."""
   updatedAt: DatetimeFilter
 
-  """Filter by the object’s \`email\` field."""
-  email: StringFilter
-
   """Filter by the object’s \`assignees\` relation."""
   assignees: UserToManyAssigneeFilter
 
@@ -11076,12 +11047,6 @@ input UserFilter {
 
   """A related \`notificationPreference\` exists."""
   notificationPreferenceExists: Boolean
-
-  """Filter by the object’s \`notificationDigestQueues\` relation."""
-  notificationDigestQueues: UserToManyNotificationDigestQueueFilter
-
-  """Some related \`notificationDigestQueues\` exist."""
-  notificationDigestQueuesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -12671,83 +12636,6 @@ input NotificationPreferenceFilter {
 
   """Negates the expression."""
   not: NotificationPreferenceFilter
-}
-
-"""
-A filter to be used against many \`NotificationDigestQueue\` object types. All fields are combined with a logical ‘and.’
-"""
-input UserToManyNotificationDigestQueueFilter {
-  """
-  Every related \`NotificationDigestQueue\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: NotificationDigestQueueFilter
-
-  """
-  Some related \`NotificationDigestQueue\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: NotificationDigestQueueFilter
-
-  """
-  No related \`NotificationDigestQueue\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: NotificationDigestQueueFilter
-
-  """
-  Aggregates across related \`NotificationDigestQueue\` match the filter criteria.
-  """
-  aggregates: NotificationDigestQueueAggregatesFilter
-}
-
-"""
-A filter to be used against \`NotificationDigestQueue\` object types. All fields are combined with a logical ‘and.’
-"""
-input NotificationDigestQueueFilter {
-  """Filter by the object’s \`rowId\` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s \`userId\` field."""
-  userId: UUIDFilter
-
-  """Filter by the object’s \`sendAfter\` field."""
-  sendAfter: DatetimeFilter
-
-  """Filter by the object’s \`createdAt\` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s \`user\` relation."""
-  user: UserFilter
-
-  """Checks for all expressions in this list."""
-  and: [NotificationDigestQueueFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [NotificationDigestQueueFilter!]
-
-  """Negates the expression."""
-  not: NotificationDigestQueueFilter
-}
-
-"""
-A filter to be used against aggregates of \`NotificationDigestQueue\` object types.
-"""
-input NotificationDigestQueueAggregatesFilter {
-  """
-  A filter that must pass for the relevant \`NotificationDigestQueue\` object to be included within the aggregate.
-  """
-  filter: NotificationDigestQueueFilter
-
-  """
-  Distinct count aggregate over matching \`NotificationDigestQueue\` objects.
-  """
-  distinctCount: NotificationDigestQueueDistinctCountAggregateFilter
-}
-
-input NotificationDigestQueueDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  userId: BigIntFilter
-  payload: BigIntFilter
-  sendAfter: BigIntFilter
-  createdAt: BigIntFilter
 }
 
 """
@@ -16762,202 +16650,6 @@ type NotificationPreference implements Node {
   user: User
 }
 
-"""A connection to a list of \`NotificationDigestQueue\` values."""
-type NotificationDigestQueueConnection {
-  """A list of \`NotificationDigestQueue\` objects."""
-  nodes: [NotificationDigestQueue!]!
-
-  """
-  A list of edges which contains the \`NotificationDigestQueue\` and cursor to aid in pagination.
-  """
-  edges: [NotificationDigestQueueEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* \`NotificationDigestQueue\` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: NotificationDigestQueueAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping \`NotificationDigestQueue\` for these aggregates.
-    """
-    groupBy: [NotificationDigestQueueGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: NotificationDigestQueueHavingInput
-  ): [NotificationDigestQueueAggregates!]
-}
-
-type NotificationDigestQueue implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  userId: UUID!
-  payload: JSON!
-  sendAfter: Datetime!
-  createdAt: Datetime!
-
-  """
-  Reads a single \`User\` that is related to this \`NotificationDigestQueue\`.
-  """
-  user: User
-}
-
-"""A \`NotificationDigestQueue\` edge in the connection."""
-type NotificationDigestQueueEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The \`NotificationDigestQueue\` at the end of the edge."""
-  node: NotificationDigestQueue!
-}
-
-type NotificationDigestQueueAggregates {
-  keys: [String]
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: NotificationDigestQueueDistinctCountAggregates
-}
-
-type NotificationDigestQueueDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of userId across the matching connection"""
-  userId: BigInt
-
-  """Distinct count of payload across the matching connection"""
-  payload: BigInt
-
-  """Distinct count of sendAfter across the matching connection"""
-  sendAfter: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-}
-
-"""
-Grouping methods for \`NotificationDigestQueue\` for usage during aggregation.
-"""
-enum NotificationDigestQueueGroupBy {
-  USER_ID
-  PAYLOAD
-  SEND_AFTER
-  SEND_AFTER_TRUNCATED_TO_HOUR
-  SEND_AFTER_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for \`NotificationDigestQueue\` aggregates."""
-input NotificationDigestQueueHavingInput {
-  AND: [NotificationDigestQueueHavingInput!]
-  OR: [NotificationDigestQueueHavingInput!]
-  sum: NotificationDigestQueueHavingSumInput
-  distinctCount: NotificationDigestQueueHavingDistinctCountInput
-  min: NotificationDigestQueueHavingMinInput
-  max: NotificationDigestQueueHavingMaxInput
-  average: NotificationDigestQueueHavingAverageInput
-  stddevSample: NotificationDigestQueueHavingStddevSampleInput
-  stddevPopulation: NotificationDigestQueueHavingStddevPopulationInput
-  varianceSample: NotificationDigestQueueHavingVarianceSampleInput
-  variancePopulation: NotificationDigestQueueHavingVariancePopulationInput
-}
-
-input NotificationDigestQueueHavingSumInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingDistinctCountInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingMinInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingMaxInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingAverageInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingStddevSampleInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingStddevPopulationInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingVarianceSampleInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingVariancePopulationInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against \`NotificationDigestQueue\` object types. All
-fields are tested for equality and combined with a logical ‘and.’
-"""
-input NotificationDigestQueueCondition {
-  """Checks for equality with the object’s \`rowId\` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s \`userId\` field."""
-  userId: UUID
-
-  """Checks for equality with the object’s \`sendAfter\` field."""
-  sendAfter: Datetime
-
-  """Checks for equality with the object’s \`createdAt\` field."""
-  createdAt: Datetime
-}
-
-"""Methods to use when ordering \`NotificationDigestQueue\`."""
-enum NotificationDigestQueueOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  USER_ID_ASC
-  USER_ID_DESC
-  SEND_AFTER_ASC
-  SEND_AFTER_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-}
-
 type Setting implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -16972,21 +16664,6 @@ type Setting implements Node {
   subscriptionId: String
   deletedAt: Datetime
   deletionReason: String
-}
-
-type WardenSyncQueue implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  operation: String!
-  payload: JSON!
-  attempts: Int!
-  maxAttempts: Int!
-  lastError: String
-  nextRetryAt: Datetime!
-  createdAt: Datetime!
 }
 
 type LinkUnfurl implements Node {
@@ -18007,9 +17684,6 @@ type UserDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
-
-  """Distinct count of email across the matching connection"""
-  email: BigInt
 }
 
 """Grouping methods for \`User\` for usage during aggregation."""
@@ -18105,9 +17779,6 @@ input UserCondition {
 
   """Checks for equality with the object’s \`updatedAt\` field."""
   updatedAt: Datetime
-
-  """Checks for equality with the object’s \`email\` field."""
-  email: String
 }
 
 """Methods to use when ordering \`User\`."""
@@ -18127,8 +17798,6 @@ enum UserOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  EMAIL_ASC
-  EMAIL_DESC
   ASSIGNEES_COUNT_ASC
   ASSIGNEES_COUNT_DESC
   ASSIGNEES_DISTINCT_COUNT_USER_ID_ASC
@@ -18331,385 +18000,6 @@ enum UserOrderBy {
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_WIDTH_DESC
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_ASC
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_DESC
-  NOTIFICATION_DIGEST_QUEUES_COUNT_ASC
-  NOTIFICATION_DIGEST_QUEUES_COUNT_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_DESC
-}
-
-"""A connection to a list of \`WardenSyncQueue\` values."""
-type WardenSyncQueueConnection {
-  """A list of \`WardenSyncQueue\` objects."""
-  nodes: [WardenSyncQueue!]!
-
-  """
-  A list of edges which contains the \`WardenSyncQueue\` and cursor to aid in pagination.
-  """
-  edges: [WardenSyncQueueEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* \`WardenSyncQueue\` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: WardenSyncQueueAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping \`WardenSyncQueue\` for these aggregates.
-    """
-    groupBy: [WardenSyncQueueGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: WardenSyncQueueHavingInput
-  ): [WardenSyncQueueAggregates!]
-}
-
-"""A \`WardenSyncQueue\` edge in the connection."""
-type WardenSyncQueueEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The \`WardenSyncQueue\` at the end of the edge."""
-  node: WardenSyncQueue!
-}
-
-type WardenSyncQueueAggregates {
-  keys: [String]
-
-  """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: WardenSyncQueueSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: WardenSyncQueueDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: WardenSyncQueueMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: WardenSyncQueueMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: WardenSyncQueueAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: WardenSyncQueueStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: WardenSyncQueueStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: WardenSyncQueueVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: WardenSyncQueueVariancePopulationAggregates
-}
-
-type WardenSyncQueueSumAggregates {
-  """Sum of attempts across the matching connection"""
-  attempts: BigInt!
-
-  """Sum of maxAttempts across the matching connection"""
-  maxAttempts: BigInt!
-}
-
-type WardenSyncQueueDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of operation across the matching connection"""
-  operation: BigInt
-
-  """Distinct count of payload across the matching connection"""
-  payload: BigInt
-
-  """Distinct count of attempts across the matching connection"""
-  attempts: BigInt
-
-  """Distinct count of maxAttempts across the matching connection"""
-  maxAttempts: BigInt
-
-  """Distinct count of lastError across the matching connection"""
-  lastError: BigInt
-
-  """Distinct count of nextRetryAt across the matching connection"""
-  nextRetryAt: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-}
-
-type WardenSyncQueueMinAggregates {
-  """Minimum of attempts across the matching connection"""
-  attempts: Int
-
-  """Minimum of maxAttempts across the matching connection"""
-  maxAttempts: Int
-}
-
-type WardenSyncQueueMaxAggregates {
-  """Maximum of attempts across the matching connection"""
-  attempts: Int
-
-  """Maximum of maxAttempts across the matching connection"""
-  maxAttempts: Int
-}
-
-type WardenSyncQueueAverageAggregates {
-  """Mean average of attempts across the matching connection"""
-  attempts: BigFloat
-
-  """Mean average of maxAttempts across the matching connection"""
-  maxAttempts: BigFloat
-}
-
-type WardenSyncQueueStddevSampleAggregates {
-  """Sample standard deviation of attempts across the matching connection"""
-  attempts: BigFloat
-
-  """
-  Sample standard deviation of maxAttempts across the matching connection
-  """
-  maxAttempts: BigFloat
-}
-
-type WardenSyncQueueStddevPopulationAggregates {
-  """
-  Population standard deviation of attempts across the matching connection
-  """
-  attempts: BigFloat
-
-  """
-  Population standard deviation of maxAttempts across the matching connection
-  """
-  maxAttempts: BigFloat
-}
-
-type WardenSyncQueueVarianceSampleAggregates {
-  """Sample variance of attempts across the matching connection"""
-  attempts: BigFloat
-
-  """Sample variance of maxAttempts across the matching connection"""
-  maxAttempts: BigFloat
-}
-
-type WardenSyncQueueVariancePopulationAggregates {
-  """Population variance of attempts across the matching connection"""
-  attempts: BigFloat
-
-  """Population variance of maxAttempts across the matching connection"""
-  maxAttempts: BigFloat
-}
-
-"""Grouping methods for \`WardenSyncQueue\` for usage during aggregation."""
-enum WardenSyncQueueGroupBy {
-  OPERATION
-  PAYLOAD
-  ATTEMPTS
-  MAX_ATTEMPTS
-  LAST_ERROR
-  NEXT_RETRY_AT
-  NEXT_RETRY_AT_TRUNCATED_TO_HOUR
-  NEXT_RETRY_AT_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for \`WardenSyncQueue\` aggregates."""
-input WardenSyncQueueHavingInput {
-  AND: [WardenSyncQueueHavingInput!]
-  OR: [WardenSyncQueueHavingInput!]
-  sum: WardenSyncQueueHavingSumInput
-  distinctCount: WardenSyncQueueHavingDistinctCountInput
-  min: WardenSyncQueueHavingMinInput
-  max: WardenSyncQueueHavingMaxInput
-  average: WardenSyncQueueHavingAverageInput
-  stddevSample: WardenSyncQueueHavingStddevSampleInput
-  stddevPopulation: WardenSyncQueueHavingStddevPopulationInput
-  varianceSample: WardenSyncQueueHavingVarianceSampleInput
-  variancePopulation: WardenSyncQueueHavingVariancePopulationInput
-}
-
-input WardenSyncQueueHavingSumInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingDistinctCountInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingMinInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingMaxInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingAverageInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingStddevSampleInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingStddevPopulationInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingVarianceSampleInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingVariancePopulationInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against \`WardenSyncQueue\` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input WardenSyncQueueCondition {
-  """Checks for equality with the object’s \`rowId\` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s \`operation\` field."""
-  operation: String
-
-  """Checks for equality with the object’s \`attempts\` field."""
-  attempts: Int
-
-  """Checks for equality with the object’s \`maxAttempts\` field."""
-  maxAttempts: Int
-
-  """Checks for equality with the object’s \`lastError\` field."""
-  lastError: String
-
-  """Checks for equality with the object’s \`nextRetryAt\` field."""
-  nextRetryAt: Datetime
-
-  """Checks for equality with the object’s \`createdAt\` field."""
-  createdAt: Datetime
-}
-
-"""
-A filter to be used against \`WardenSyncQueue\` object types. All fields are combined with a logical ‘and.’
-"""
-input WardenSyncQueueFilter {
-  """Filter by the object’s \`rowId\` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s \`operation\` field."""
-  operation: StringFilter
-
-  """Filter by the object’s \`attempts\` field."""
-  attempts: IntFilter
-
-  """Filter by the object’s \`maxAttempts\` field."""
-  maxAttempts: IntFilter
-
-  """Filter by the object’s \`lastError\` field."""
-  lastError: StringFilter
-
-  """Filter by the object’s \`nextRetryAt\` field."""
-  nextRetryAt: DatetimeFilter
-
-  """Filter by the object’s \`createdAt\` field."""
-  createdAt: DatetimeFilter
-
-  """Checks for all expressions in this list."""
-  and: [WardenSyncQueueFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [WardenSyncQueueFilter!]
-
-  """Negates the expression."""
-  not: WardenSyncQueueFilter
-}
-
-"""Methods to use when ordering \`WardenSyncQueue\`."""
-enum WardenSyncQueueOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  OPERATION_ASC
-  OPERATION_DESC
-  ATTEMPTS_ASC
-  ATTEMPTS_DESC
-  MAX_ATTEMPTS_ASC
-  MAX_ATTEMPTS_DESC
-  LAST_ERROR_ASC
-  LAST_ERROR_DESC
-  NEXT_RETRY_AT_ASC
-  NEXT_RETRY_AT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
 }
 
 """The output of our create \`Assignee\` mutation."""
@@ -18893,50 +18183,6 @@ input LabelInput {
   updatedAt: Datetime
   icon: String
   organizationId: String
-}
-
-"""The output of our create \`NotificationDigestQueue\` mutation."""
-type CreateNotificationDigestQueuePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`NotificationDigestQueue\` that was created by this mutation."""
-  notificationDigestQueue: NotificationDigestQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`NotificationDigestQueue\`. May be used by Relay 1."""
-  notificationDigestQueueEdge(
-    """The method to use when ordering \`NotificationDigestQueue\`."""
-    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueEdge
-}
-
-"""All input for the create \`NotificationDigestQueue\` mutation."""
-input CreateNotificationDigestQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`NotificationDigestQueue\` to be created by this mutation."""
-  notificationDigestQueue: NotificationDigestQueueInput!
-}
-
-"""An input for mutations affecting \`NotificationDigestQueue\`"""
-input NotificationDigestQueueInput {
-  rowId: UUID
-  userId: UUID!
-  payload: JSON!
-  sendAfter: Datetime
-  createdAt: Datetime
 }
 
 """The output of our create \`NotificationPreference\` mutation."""
@@ -19453,7 +18699,6 @@ input UserInput {
   avatarUrl: String
   createdAt: Datetime
   updatedAt: Datetime
-  email: String!
 }
 
 """The output of our create \`UserPreference\` mutation."""
@@ -19501,53 +18746,6 @@ input UserPreferenceInput {
   updatedAt: Datetime
   viewMode: String
   pinOrder: Int
-}
-
-"""The output of our create \`WardenSyncQueue\` mutation."""
-type CreateWardenSyncQueuePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`WardenSyncQueue\` that was created by this mutation."""
-  wardenSyncQueue: WardenSyncQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`WardenSyncQueue\`. May be used by Relay 1."""
-  wardenSyncQueueEdge(
-    """The method to use when ordering \`WardenSyncQueue\`."""
-    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueEdge
-}
-
-"""All input for the create \`WardenSyncQueue\` mutation."""
-input CreateWardenSyncQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`WardenSyncQueue\` to be created by this mutation."""
-  wardenSyncQueue: WardenSyncQueueInput!
-}
-
-"""An input for mutations affecting \`WardenSyncQueue\`"""
-input WardenSyncQueueInput {
-  rowId: UUID
-  operation: String!
-  payload: JSON!
-  attempts: Int
-  maxAttempts: Int
-  lastError: String
-  nextRetryAt: Datetime
-  createdAt: Datetime
 }
 
 """The output of our update \`Assignee\` mutation."""
@@ -19828,74 +19026,6 @@ input UpdateLabelInput {
   An object where the defined keys will be set on the \`Label\` being updated.
   """
   patch: LabelPatch!
-}
-
-"""The output of our update \`NotificationDigestQueue\` mutation."""
-type UpdateNotificationDigestQueuePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`NotificationDigestQueue\` that was updated by this mutation."""
-  notificationDigestQueue: NotificationDigestQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`NotificationDigestQueue\`. May be used by Relay 1."""
-  notificationDigestQueueEdge(
-    """The method to use when ordering \`NotificationDigestQueue\`."""
-    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueEdge
-}
-
-"""All input for the \`updateNotificationDigestQueueById\` mutation."""
-input UpdateNotificationDigestQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`NotificationDigestQueue\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`NotificationDigestQueue\` being updated.
-  """
-  patch: NotificationDigestQueuePatch!
-}
-
-"""
-Represents an update to a \`NotificationDigestQueue\`. Fields that are set will be updated.
-"""
-input NotificationDigestQueuePatch {
-  rowId: UUID
-  userId: UUID
-  payload: JSON
-  sendAfter: Datetime
-  createdAt: Datetime
-}
-
-"""All input for the \`updateNotificationDigestQueue\` mutation."""
-input UpdateNotificationDigestQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`NotificationDigestQueue\` being updated.
-  """
-  patch: NotificationDigestQueuePatch!
 }
 
 """The output of our update \`NotificationPreference\` mutation."""
@@ -20657,7 +19787,6 @@ input UserPatch {
   avatarUrl: String
   createdAt: Datetime
   updatedAt: Datetime
-  email: String
 }
 
 """All input for the \`updateUser\` mutation."""
@@ -20744,77 +19873,6 @@ input UpdateUserPreferenceInput {
   An object where the defined keys will be set on the \`UserPreference\` being updated.
   """
   patch: UserPreferencePatch!
-}
-
-"""The output of our update \`WardenSyncQueue\` mutation."""
-type UpdateWardenSyncQueuePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`WardenSyncQueue\` that was updated by this mutation."""
-  wardenSyncQueue: WardenSyncQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`WardenSyncQueue\`. May be used by Relay 1."""
-  wardenSyncQueueEdge(
-    """The method to use when ordering \`WardenSyncQueue\`."""
-    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueEdge
-}
-
-"""All input for the \`updateWardenSyncQueueById\` mutation."""
-input UpdateWardenSyncQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`WardenSyncQueue\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`WardenSyncQueue\` being updated.
-  """
-  patch: WardenSyncQueuePatch!
-}
-
-"""
-Represents an update to a \`WardenSyncQueue\`. Fields that are set will be updated.
-"""
-input WardenSyncQueuePatch {
-  rowId: UUID
-  operation: String
-  payload: JSON
-  attempts: Int
-  maxAttempts: Int
-  lastError: String
-  nextRetryAt: Datetime
-  createdAt: Datetime
-}
-
-"""All input for the \`updateWardenSyncQueue\` mutation."""
-input UpdateWardenSyncQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`WardenSyncQueue\` being updated.
-  """
-  patch: WardenSyncQueuePatch!
 }
 
 """The output of our delete \`Assignee\` mutation."""
@@ -21002,54 +20060,6 @@ input DeleteLabelByIdInput {
 
 """All input for the \`deleteLabel\` mutation."""
 input DeleteLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete \`NotificationDigestQueue\` mutation."""
-type DeleteNotificationDigestQueuePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`NotificationDigestQueue\` that was deleted by this mutation."""
-  notificationDigestQueue: NotificationDigestQueue
-  deletedNotificationDigestQueueId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`NotificationDigestQueue\`. May be used by Relay 1."""
-  notificationDigestQueueEdge(
-    """The method to use when ordering \`NotificationDigestQueue\`."""
-    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueEdge
-}
-
-"""All input for the \`deleteNotificationDigestQueueById\` mutation."""
-input DeleteNotificationDigestQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`NotificationDigestQueue\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteNotificationDigestQueue\` mutation."""
-input DeleteNotificationDigestQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -21636,54 +20646,6 @@ input DeleteUserPreferenceInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`WardenSyncQueue\` mutation."""
-type DeleteWardenSyncQueuePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`WardenSyncQueue\` that was deleted by this mutation."""
-  wardenSyncQueue: WardenSyncQueue
-  deletedWardenSyncQueueId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`WardenSyncQueue\`. May be used by Relay 1."""
-  wardenSyncQueueEdge(
-    """The method to use when ordering \`WardenSyncQueue\`."""
-    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueEdge
-}
-
-"""All input for the \`deleteWardenSyncQueueById\` mutation."""
-input DeleteWardenSyncQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`WardenSyncQueue\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteWardenSyncQueue\` mutation."""
-input DeleteWardenSyncQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The currently authenticated user."""
 type Observer {
   rowId: UUID!
@@ -21929,9 +20891,6 @@ type Query implements Node {
   """Get a single \`Label\`."""
   label(rowId: UUID!): Label
 
-  """Get a single \`NotificationDigestQueue\`."""
-  notificationDigestQueue(rowId: UUID!): NotificationDigestQueue
-
   """Get a single \`NotificationPreference\`."""
   notificationPreference(rowId: UUID!): NotificationPreference
 
@@ -21992,9 +20951,6 @@ type Query implements Node {
   """Get a single \`UserPreference\`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
-  """Get a single \`WardenSyncQueue\`."""
-  wardenSyncQueue(rowId: UUID!): WardenSyncQueue
-
   """Reads a single \`Assignee\` using its globally unique \`ID\`."""
   assigneeById(
     """The globally unique \`ID\` to be used in selecting a single \`Assignee\`."""
@@ -22034,16 +20990,6 @@ type Query implements Node {
     """
     id: ID!
   ): LinkUnfurl
-
-  """
-  Reads a single \`NotificationDigestQueue\` using its globally unique \`ID\`.
-  """
-  notificationDigestQueueById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`NotificationDigestQueue\`.
-    """
-    id: ID!
-  ): NotificationDigestQueue
 
   """
   Reads a single \`NotificationPreference\` using its globally unique \`ID\`.
@@ -22130,14 +21076,6 @@ type Query implements Node {
     """
     id: ID!
   ): UserPreference
-
-  """Reads a single \`WardenSyncQueue\` using its globally unique \`ID\`."""
-  wardenSyncQueueById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`WardenSyncQueue\`.
-    """
-    id: ID!
-  ): WardenSyncQueue
 
   """Reads and enables pagination through a set of \`Assignee\`."""
   assignees(
@@ -22308,42 +21246,6 @@ type Query implements Node {
     """The method to use when ordering \`Label\`."""
     orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): LabelConnection
-
-  """
-  Reads and enables pagination through a set of \`NotificationDigestQueue\`.
-  """
-  notificationDigestQueues(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: NotificationDigestQueueCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: NotificationDigestQueueFilter
-
-    """The method to use when ordering \`NotificationDigestQueue\`."""
-    orderBy: [NotificationDigestQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueConnection
 
   """
   Reads and enables pagination through a set of \`NotificationPreference\`.
@@ -22755,40 +21657,6 @@ type Query implements Node {
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
 
-  """Reads and enables pagination through a set of \`WardenSyncQueue\`."""
-  wardenSyncQueues(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: WardenSyncQueueCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: WardenSyncQueueFilter
-
-    """The method to use when ordering \`WardenSyncQueue\`."""
-    orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueConnection
-
   """
   Returns the currently authenticated user (observer).
   Returns null if not authenticated.
@@ -22858,14 +21726,6 @@ type Mutation {
     """
     input: CreateLabelInput!
   ): CreateLabelPayload
-
-  """Creates a single \`NotificationDigestQueue\`."""
-  createNotificationDigestQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateNotificationDigestQueueInput!
-  ): CreateNotificationDigestQueuePayload
 
   """Creates a single \`NotificationPreference\`."""
   createNotificationPreference(
@@ -22963,14 +21823,6 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
-  """Creates a single \`WardenSyncQueue\`."""
-  createWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateWardenSyncQueueInput!
-  ): CreateWardenSyncQueuePayload
-
   """Updates a single \`Assignee\` using its globally unique id and a patch."""
   updateAssigneeById(
     """
@@ -23034,26 +21886,6 @@ type Mutation {
     """
     input: UpdateLabelInput!
   ): UpdateLabelPayload
-
-  """
-  Updates a single \`NotificationDigestQueue\` using its globally unique id and a patch.
-  """
-  updateNotificationDigestQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNotificationDigestQueueByIdInput!
-  ): UpdateNotificationDigestQueuePayload
-
-  """
-  Updates a single \`NotificationDigestQueue\` using a unique key and a patch.
-  """
-  updateNotificationDigestQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNotificationDigestQueueInput!
-  ): UpdateNotificationDigestQueuePayload
 
   """
   Updates a single \`NotificationPreference\` using its globally unique id and a patch.
@@ -23261,24 +22093,6 @@ type Mutation {
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
 
-  """
-  Updates a single \`WardenSyncQueue\` using its globally unique id and a patch.
-  """
-  updateWardenSyncQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWardenSyncQueueByIdInput!
-  ): UpdateWardenSyncQueuePayload
-
-  """Updates a single \`WardenSyncQueue\` using a unique key and a patch."""
-  updateWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWardenSyncQueueInput!
-  ): UpdateWardenSyncQueuePayload
-
   """Deletes a single \`Assignee\` using its globally unique id."""
   deleteAssigneeById(
     """
@@ -23342,24 +22156,6 @@ type Mutation {
     """
     input: DeleteLabelInput!
   ): DeleteLabelPayload
-
-  """
-  Deletes a single \`NotificationDigestQueue\` using its globally unique id.
-  """
-  deleteNotificationDigestQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNotificationDigestQueueByIdInput!
-  ): DeleteNotificationDigestQueuePayload
-
-  """Deletes a single \`NotificationDigestQueue\` using a unique key."""
-  deleteNotificationDigestQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNotificationDigestQueueInput!
-  ): DeleteNotificationDigestQueuePayload
 
   """
   Deletes a single \`NotificationPreference\` using its globally unique id.
@@ -23554,22 +22350,6 @@ type Mutation {
     """
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
-
-  """Deletes a single \`WardenSyncQueue\` using its globally unique id."""
-  deleteWardenSyncQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWardenSyncQueueByIdInput!
-  ): DeleteWardenSyncQueuePayload
-
-  """Deletes a single \`WardenSyncQueue\` using a unique key."""
-  deleteWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWardenSyncQueueInput!
-  ): DeleteWardenSyncQueuePayload
 
   """
   Move a task to a column in another project within the same workspace.
@@ -23888,32 +22668,6 @@ export const objects = {
       },
       node(_$root, fieldArgs) {
         return fieldArgs.getRaw("id");
-      },
-      notificationDigestQueue(_$root, {
-        $rowId
-      }) {
-        return spec_resource_notification_digest_queuePgResource.get({
-          id: $rowId
-        });
-      },
-      notificationDigestQueueById(_$parent, args) {
-        const $nodeId = args.getRaw("id");
-        return nodeFetcher_NotificationDigestQueue($nodeId);
-      },
-      notificationDigestQueues: {
-        plan() {
-          return connection(spec_resource_notification_digest_queuePgResource.find());
-        },
-        args: {
-          first: applyFirstArg,
-          last: applyLastArg,
-          offset: applyOffsetArg,
-          before: applyBeforeArg,
-          after: applyAfterArg,
-          condition: applyConditionArgToConnection,
-          filter: Task_assigneesfilterApplyPlan,
-          orderBy: applyOrderByArgToConnection
-        }
       },
       notificationPreference(_$root, {
         $rowId
@@ -24249,12 +23003,23 @@ export const objects = {
           id: $rowId
         });
       },
-      userByEmail(_$root, {
-        $email
-      }) {
-        return spec_resource_userPgResource.get({
-          email: $email
-        });
+      userByEmail(...planParams) {
+        const smartPlan = (...overrideParams) => {
+            const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+              $prev = oldPlan.apply(this, args);
+            if (!($prev instanceof ExecutableStep)) {
+              console.error(`Wrapped a plan function at Query.userByEmail, but that function did not return a step!
+${String(oldPlan)}`);
+              throw Error("Wrapped a plan function, but that function did not return a step!");
+            }
+            args[1].autoApply($prev);
+            return $prev;
+          },
+          [$source, fieldArgs, info] = planParams,
+          $newPlan = planWrapper(smartPlan, $source, fieldArgs, info);
+        if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+        if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+        return $newPlan;
       },
       userById(_$parent, args) {
         const $nodeId = args.getRaw("id");
@@ -24317,32 +23082,6 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
-      wardenSyncQueue(_$root, {
-        $rowId
-      }) {
-        return spec_resource_warden_sync_queuePgResource.get({
-          id: $rowId
-        });
-      },
-      wardenSyncQueueById(_$parent, args) {
-        const $nodeId = args.getRaw("id");
-        return nodeFetcher_WardenSyncQueue($nodeId);
-      },
-      wardenSyncQueues: {
-        plan() {
-          return connection(spec_resource_warden_sync_queuePgResource.find());
-        },
-        args: {
-          first: applyFirstArg,
-          last: applyLastArg,
-          offset: applyOffsetArg,
-          before: applyBeforeArg,
-          after: applyAfterArg,
-          condition: applyConditionArgToConnection,
-          filter: Task_assigneesfilterApplyPlan,
-          orderBy: applyOrderByArgToConnection
-        }
-      },
       webhookEndpoints(_$root, fieldArgs) {
         const $organizationId = fieldArgs.getRaw("organizationId"),
           $observer = context().get("observer"),
@@ -24387,17 +23126,17 @@ export const objects = {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan.apply(this, args);
+                $prev = oldPlan2.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createAssignee, but that function did not return a step!
-${String(oldPlan)}`);
+${String(oldPlan2)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper4(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper5(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24433,33 +23172,10 @@ ${String(oldPlan)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan5.apply(this, args);
+                $prev = oldPlan6.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createColumn, but that function did not return a step!
-${String(oldPlan5)}`);
-                throw Error("Wrapped a plan function, but that function did not return a step!");
-              }
-              args[1].autoApply($prev);
-              return $prev;
-            },
-            [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper7(smartPlan, $source, fieldArgs, info);
-          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-          if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-          return $newPlan;
-        },
-        args: {
-          input: applyInputToInsert
-        }
-      },
-      createEmoji: {
-        plan(...planParams) {
-          const smartPlan = (...overrideParams) => {
-              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan8.apply(this, args);
-              if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at Mutation.createEmoji, but that function did not return a step!
-${String(oldPlan8)}`);
+${String(oldPlan6)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
@@ -24475,13 +23191,13 @@ ${String(oldPlan8)}`);
           input: applyInputToInsert
         }
       },
-      createLabel: {
+      createEmoji: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
                 $prev = oldPlan9.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at Mutation.createLabel, but that function did not return a step!
+                console.error(`Wrapped a plan function at Mutation.createEmoji, but that function did not return a step!
 ${String(oldPlan9)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
@@ -24489,7 +23205,30 @@ ${String(oldPlan9)}`);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper10(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper9(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createLabel: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan10.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at Mutation.createLabel, but that function did not return a step!
+${String(oldPlan10)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24518,33 +23257,21 @@ ${String(oldPlan9)}`);
           };
         }, !1);
       },
-      createNotificationDigestQueue: {
-        plan(_, args) {
-          const $insert = pgInsertSingle(spec_resource_notification_digest_queuePgResource);
-          args.apply($insert);
-          return object({
-            result: $insert
-          });
-        },
-        args: {
-          input: applyInputToInsert
-        }
-      },
       createNotificationPreference: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan11.apply(this, args);
+                $prev = oldPlan12.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createNotificationPreference, but that function did not return a step!
-${String(oldPlan11)}`);
+${String(oldPlan12)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper11(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper12(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24557,17 +23284,17 @@ ${String(oldPlan11)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan12.apply(this, args);
+                $prev = oldPlan13.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createPost, but that function did not return a step!
-${String(oldPlan12)}`);
+${String(oldPlan13)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24580,17 +23307,17 @@ ${String(oldPlan12)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan17.apply(this, args);
+                $prev = oldPlan18.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProject, but that function did not return a step!
-${String(oldPlan17)}`);
+${String(oldPlan18)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24603,17 +23330,17 @@ ${String(oldPlan17)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan24.apply(this, args);
+                $prev = oldPlan25.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProjectColumn, but that function did not return a step!
-${String(oldPlan24)}`);
+${String(oldPlan25)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24638,17 +23365,17 @@ ${String(oldPlan24)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan25.apply(this, args);
+                $prev = oldPlan26.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createProjectLink, but that function did not return a step!
-${String(oldPlan25)}`);
+${String(oldPlan26)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper25(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper26(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24685,17 +23412,17 @@ ${String(oldPlan25)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan26.apply(this, args);
+                $prev = oldPlan27.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createTask, but that function did not return a step!
-${String(oldPlan26)}`);
+${String(oldPlan27)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24708,33 +23435,10 @@ ${String(oldPlan26)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan31.apply(this, args);
+                $prev = oldPlan32.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.createTaskLabel, but that function did not return a step!
-${String(oldPlan31)}`);
-                throw Error("Wrapped a plan function, but that function did not return a step!");
-              }
-              args[1].autoApply($prev);
-              return $prev;
-            },
-            [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper32(smartPlan, $source, fieldArgs, info);
-          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
-          if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
-          return $newPlan;
-        },
-        args: {
-          input: applyInputToInsert
-        }
-      },
-      createUser: {
-        plan(...planParams) {
-          const smartPlan = (...overrideParams) => {
-              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan33.apply(this, args);
-              if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at Mutation.createUser, but that function did not return a step!
-${String(oldPlan33)}`);
+${String(oldPlan32)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
@@ -24750,13 +23454,13 @@ ${String(oldPlan33)}`);
           input: applyInputToInsert
         }
       },
-      createUserPreference: {
+      createUser: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
                 $prev = oldPlan34.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
-                console.error(`Wrapped a plan function at Mutation.createUserPreference, but that function did not return a step!
+                console.error(`Wrapped a plan function at Mutation.createUser, but that function did not return a step!
 ${String(oldPlan34)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
@@ -24773,13 +23477,24 @@ ${String(oldPlan34)}`);
           input: applyInputToInsert
         }
       },
-      createWardenSyncQueue: {
-        plan(_, args) {
-          const $insert = pgInsertSingle(spec_resource_warden_sync_queuePgResource);
-          args.apply($insert);
-          return object({
-            result: $insert
-          });
+      createUserPreference: {
+        plan(...planParams) {
+          const smartPlan = (...overrideParams) => {
+              const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
+                $prev = oldPlan35.apply(this, args);
+              if (!($prev instanceof ExecutableStep)) {
+                console.error(`Wrapped a plan function at Mutation.createUserPreference, but that function did not return a step!
+${String(oldPlan35)}`);
+                throw Error("Wrapped a plan function, but that function did not return a step!");
+              }
+              args[1].autoApply($prev);
+              return $prev;
+            },
+            [$source, fieldArgs, info] = planParams,
+            $newPlan = planWrapper35(smartPlan, $source, fieldArgs, info);
+          if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
+          if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
+          return $newPlan;
         },
         args: {
           input: applyInputToInsert
@@ -24814,17 +23529,17 @@ ${String(oldPlan34)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan61.apply(this, args);
+                $prev = oldPlan62.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteAssignee, but that function did not return a step!
-${String(oldPlan61)}`);
+${String(oldPlan62)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper63(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper64(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24849,17 +23564,17 @@ ${String(oldPlan61)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan64.apply(this, args);
+                $prev = oldPlan65.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteColumn, but that function did not return a step!
-${String(oldPlan64)}`);
+${String(oldPlan65)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper65(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper66(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24884,17 +23599,17 @@ ${String(oldPlan64)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan66.apply(this, args);
+                $prev = oldPlan67.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteEmoji, but that function did not return a step!
-${String(oldPlan66)}`);
+${String(oldPlan67)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper66(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper67(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24919,17 +23634,17 @@ ${String(oldPlan66)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan67.apply(this, args);
+                $prev = oldPlan68.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteLabel, but that function did not return a step!
-${String(oldPlan67)}`);
+${String(oldPlan68)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper68(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper69(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -24950,47 +23665,21 @@ ${String(oldPlan67)}`);
           input: applyInputToUpdateOrDelete
         }
       },
-      deleteNotificationDigestQueue: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(spec_resource_notification_digest_queuePgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
-        },
-        args: {
-          input: applyInputToUpdateOrDelete
-        }
-      },
-      deleteNotificationDigestQueueById: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(spec_resource_notification_digest_queuePgResource, specFromArgs_NotificationDigestQueue(args));
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
-        },
-        args: {
-          input: applyInputToUpdateOrDelete
-        }
-      },
       deleteNotificationPreference: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan69.apply(this, args);
+                $prev = oldPlan70.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteNotificationPreference, but that function did not return a step!
-${String(oldPlan69)}`);
+${String(oldPlan70)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper69(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper70(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25015,17 +23704,17 @@ ${String(oldPlan69)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan70.apply(this, args);
+                $prev = oldPlan71.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deletePost, but that function did not return a step!
-${String(oldPlan70)}`);
+${String(oldPlan71)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper72(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper73(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25050,17 +23739,17 @@ ${String(oldPlan70)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan73.apply(this, args);
+                $prev = oldPlan74.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProject, but that function did not return a step!
-${String(oldPlan73)}`);
+${String(oldPlan74)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper77(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper78(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25085,17 +23774,17 @@ ${String(oldPlan73)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan78.apply(this, args);
+                $prev = oldPlan79.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectColumn, but that function did not return a step!
-${String(oldPlan78)}`);
+${String(oldPlan79)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper78(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper79(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25146,17 +23835,17 @@ ${String(oldPlan78)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan79.apply(this, args);
+                $prev = oldPlan80.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteProjectLink, but that function did not return a step!
-${String(oldPlan79)}`);
+${String(oldPlan80)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper79(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper80(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25234,17 +23923,17 @@ ${String(oldPlan79)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan80.apply(this, args);
+                $prev = oldPlan81.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteTask, but that function did not return a step!
-${String(oldPlan80)}`);
+${String(oldPlan81)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper82(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper83(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25269,17 +23958,17 @@ ${String(oldPlan80)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan83.apply(this, args);
+                $prev = oldPlan84.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteTaskLabel, but that function did not return a step!
-${String(oldPlan83)}`);
+${String(oldPlan84)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper84(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper85(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25304,17 +23993,17 @@ ${String(oldPlan83)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan85.apply(this, args);
+                $prev = oldPlan86.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteUser, but that function did not return a step!
-${String(oldPlan85)}`);
+${String(oldPlan86)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper85(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper86(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25339,17 +24028,17 @@ ${String(oldPlan85)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan86.apply(this, args);
+                $prev = oldPlan87.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.deleteUserPreference, but that function did not return a step!
-${String(oldPlan86)}`);
+${String(oldPlan87)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper86(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper87(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25361,32 +24050,6 @@ ${String(oldPlan86)}`);
       deleteUserPreferenceById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(spec_resource_user_preferencePgResource, specFromArgs_UserPreference(args));
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
-        },
-        args: {
-          input: applyInputToUpdateOrDelete
-        }
-      },
-      deleteWardenSyncQueue: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(spec_resource_warden_sync_queuePgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($delete);
-          return object({
-            result: $delete
-          });
-        },
-        args: {
-          input: applyInputToUpdateOrDelete
-        }
-      },
-      deleteWardenSyncQueueById: {
-        plan(_$root, args) {
-          const $delete = pgDeleteSingle(spec_resource_warden_sync_queuePgResource, specFromArgs_WardenSyncQueue(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -25426,7 +24089,7 @@ ${String(Mutation_moveTask_plan)}`);
             return $prev;
           },
           [$source, fieldArgs, info] = planParams,
-          $newPlan = planWrapper87(smartPlan, $source, fieldArgs, info);
+          $newPlan = planWrapper88(smartPlan, $source, fieldArgs, info);
         if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
         if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
         return $newPlan;
@@ -25539,17 +24202,17 @@ ${String(Mutation_moveTask_plan)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan35.apply(this, args);
+                $prev = oldPlan36.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateColumn, but that function did not return a step!
-${String(oldPlan35)}`);
+${String(oldPlan36)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper37(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25574,17 +24237,17 @@ ${String(oldPlan35)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan38.apply(this, args);
+                $prev = oldPlan39.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateEmoji, but that function did not return a step!
-${String(oldPlan38)}`);
+${String(oldPlan39)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper38(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper39(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25609,17 +24272,17 @@ ${String(oldPlan38)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan39.apply(this, args);
+                $prev = oldPlan40.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateLabel, but that function did not return a step!
-${String(oldPlan39)}`);
+${String(oldPlan40)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper40(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25640,47 +24303,21 @@ ${String(oldPlan39)}`);
           input: applyInputToUpdateOrDelete
         }
       },
-      updateNotificationDigestQueue: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(spec_resource_notification_digest_queuePgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($update);
-          return object({
-            result: $update
-          });
-        },
-        args: {
-          input: applyInputToUpdateOrDelete
-        }
-      },
-      updateNotificationDigestQueueById: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(spec_resource_notification_digest_queuePgResource, specFromArgs_NotificationDigestQueue(args));
-          args.apply($update);
-          return object({
-            result: $update
-          });
-        },
-        args: {
-          input: applyInputToUpdateOrDelete
-        }
-      },
       updateNotificationPreference: {
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan41.apply(this, args);
+                $prev = oldPlan42.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateNotificationPreference, but that function did not return a step!
-${String(oldPlan41)}`);
+${String(oldPlan42)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper41(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper42(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25705,17 +24342,17 @@ ${String(oldPlan41)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan42.apply(this, args);
+                $prev = oldPlan43.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updatePost, but that function did not return a step!
-${String(oldPlan42)}`);
+${String(oldPlan43)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper16(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper17(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25740,17 +24377,17 @@ ${String(oldPlan42)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan47.apply(this, args);
+                $prev = oldPlan48.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProject, but that function did not return a step!
-${String(oldPlan47)}`);
+${String(oldPlan48)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper23(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper24(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25775,17 +24412,17 @@ ${String(oldPlan47)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan52.apply(this, args);
+                $prev = oldPlan53.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProjectColumn, but that function did not return a step!
-${String(oldPlan52)}`);
+${String(oldPlan53)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper52(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper53(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25836,17 +24473,17 @@ ${String(oldPlan52)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan53.apply(this, args);
+                $prev = oldPlan54.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateProjectLink, but that function did not return a step!
-${String(oldPlan53)}`);
+${String(oldPlan54)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper53(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper54(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25924,17 +24561,17 @@ ${String(oldPlan53)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan54.apply(this, args);
+                $prev = oldPlan55.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateTask, but that function did not return a step!
-${String(oldPlan54)}`);
+${String(oldPlan55)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper30(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper31(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -25986,17 +24623,17 @@ ${String(oldPlan54)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan59.apply(this, args);
+                $prev = oldPlan60.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateUser, but that function did not return a step!
-${String(oldPlan59)}`);
+${String(oldPlan60)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper59(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper60(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -26021,17 +24658,17 @@ ${String(oldPlan59)}`);
         plan(...planParams) {
           const smartPlan = (...overrideParams) => {
               const args = [...overrideParams.concat(planParams.slice(overrideParams.length))],
-                $prev = oldPlan60.apply(this, args);
+                $prev = oldPlan61.apply(this, args);
               if (!($prev instanceof ExecutableStep)) {
                 console.error(`Wrapped a plan function at Mutation.updateUserPreference, but that function did not return a step!
-${String(oldPlan60)}`);
+${String(oldPlan61)}`);
                 throw Error("Wrapped a plan function, but that function did not return a step!");
               }
               args[1].autoApply($prev);
               return $prev;
             },
             [$source, fieldArgs, info] = planParams,
-            $newPlan = planWrapper60(smartPlan, $source, fieldArgs, info);
+            $newPlan = planWrapper61(smartPlan, $source, fieldArgs, info);
           if ($newPlan === void 0) throw Error("Your plan wrapper didn't return anything; it must return a step or null!");
           if ($newPlan !== null && !isStep($newPlan)) throw Error(`Your plan wrapper returned something other than a step... It must return a step (or null). (Returned: ${inspect($newPlan)})`);
           return $newPlan;
@@ -26043,32 +24680,6 @@ ${String(oldPlan60)}`);
       updateUserPreferenceById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(spec_resource_user_preferencePgResource, specFromArgs_UserPreference(args));
-          args.apply($update);
-          return object({
-            result: $update
-          });
-        },
-        args: {
-          input: applyInputToUpdateOrDelete
-        }
-      },
-      updateWardenSyncQueue: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(spec_resource_warden_sync_queuePgResource, {
-            id: args.getRaw(['input', "rowId"])
-          });
-          args.apply($update);
-          return object({
-            result: $update
-          });
-        },
-        args: {
-          input: applyInputToUpdateOrDelete
-        }
-      },
-      updateWardenSyncQueueById: {
-        plan(_$root, args) {
-          const $update = pgUpdateSingle(spec_resource_warden_sync_queuePgResource, specFromArgs_WardenSyncQueue(args));
           args.apply($update);
           return object({
             result: $update
@@ -26486,15 +25097,6 @@ ${String(oldPlan60)}`);
       url: WebhookEndpointInfo_url_plan
     }
   },
-  CreateNotificationDigestQueuePayload: {
-    assertStep: assertStep,
-    plans: {
-      clientMutationId: getClientMutationIdForCreatePlan,
-      notificationDigestQueue: planCreatePayloadResult,
-      notificationDigestQueueEdge: CreateNotificationDigestQueuePayload_notificationDigestQueueEdgePlan,
-      query: queryPlan
-    }
-  },
   CreateNotificationPreferencePayload: {
     assertStep: assertStep,
     plans: {
@@ -26603,15 +25205,6 @@ ${String(oldPlan60)}`);
       userPreferenceEdge: CreateUserPreferencePayload_userPreferenceEdgePlan
     }
   },
-  CreateWardenSyncQueuePayload: {
-    assertStep: assertStep,
-    plans: {
-      clientMutationId: getClientMutationIdForCreatePlan,
-      query: queryPlan,
-      wardenSyncQueue: planCreatePayloadResult,
-      wardenSyncQueueEdge: CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan
-    }
-  },
   CreateWebhookEndpointPayload: {
     plans: {
       enabled: WebhookEndpointInfo_enabled_plan,
@@ -26673,20 +25266,6 @@ ${String(oldPlan60)}`);
       },
       label: planCreatePayloadResult,
       labelEdge: CreateLabelPayload_labelEdgePlan,
-      query: queryPlan
-    }
-  },
-  DeleteNotificationDigestQueuePayload: {
-    assertStep: ObjectStep,
-    plans: {
-      clientMutationId: getClientMutationIdForCreatePlan,
-      deletedNotificationDigestQueueId($object) {
-        const $record = $object.getStepForKey("result"),
-          specifier = nodeIdHandler_NotificationDigestQueue.plan($record);
-        return lambda(specifier, base64JSONNodeIdCodec.encode);
-      },
-      notificationDigestQueue: planCreatePayloadResult,
-      notificationDigestQueueEdge: CreateNotificationDigestQueuePayload_notificationDigestQueueEdgePlan,
       query: queryPlan
     }
   },
@@ -26856,20 +25435,6 @@ ${String(oldPlan60)}`);
       query: queryPlan,
       userPreference: planCreatePayloadResult,
       userPreferenceEdge: CreateUserPreferencePayload_userPreferenceEdgePlan
-    }
-  },
-  DeleteWardenSyncQueuePayload: {
-    assertStep: ObjectStep,
-    plans: {
-      clientMutationId: getClientMutationIdForCreatePlan,
-      deletedWardenSyncQueueId($object) {
-        const $record = $object.getStepForKey("result"),
-          specifier = nodeIdHandler_WardenSyncQueue.plan($record);
-        return lambda(specifier, base64JSONNodeIdCodec.encode);
-      },
-      query: queryPlan,
-      wardenSyncQueue: planCreatePayloadResult,
-      wardenSyncQueueEdge: CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan
     }
   },
   DeleteWebhookEndpointPayload: {
@@ -27076,59 +25641,6 @@ ${String(oldPlan60)}`);
       createdAt: WebhookEndpointInfo_createdAt_plan,
       enabled: WebhookEndpointInfo_enabled_plan,
       lastUsedAt: ApiTokenInfo_lastUsedAt_plan
-    }
-  },
-  NotificationDigestQueue: {
-    assertStep: assertPgClassSingleStep,
-    plans: {
-      createdAt: Assignee_createdAtPlan,
-      id($parent) {
-        const specifier = nodeIdHandler_NotificationDigestQueue.plan($parent);
-        return lambda(specifier, nodeIdCodecs[nodeIdHandler_NotificationDigestQueue.codec.name].encode);
-      },
-      rowId: Task_rowIdPlan,
-      sendAfter($record) {
-        return $record.get("send_after");
-      },
-      user: Assignee_userPlan,
-      userId: Assignee_userIdPlan
-    },
-    planType($specifier) {
-      const spec = Object.create(null);
-      for (const pkCol of notification_digest_queueUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
-      return spec_resource_notification_digest_queuePgResource.get(spec);
-    }
-  },
-  NotificationDigestQueueAggregates: {
-    assertStep: assertPgClassSingleStep,
-    plans: {
-      distinctCount: pgAggregatesPlanAggregates,
-      keys: AssigneeAggregates_keysPlan
-    }
-  },
-  NotificationDigestQueueConnection: {
-    assertStep: ConnectionStep,
-    plans: {
-      aggregates: pgAggregatesCloneSubplanWithoutPaginationSingle,
-      groupedAggregates: {
-        plan: pgAggregateCloneSubplanWithoutPaginationAsAggregate,
-        args: {
-          groupBy: pgAggregatesApplyGroupedAggregate,
-          having: pgAggregatesApplyConditionsToGroupedAggregates
-        }
-      },
-      totalCount: totalCountConnectionPlan
-    }
-  },
-  NotificationDigestQueueDistinctCountAggregates: {
-    plans: {
-      createdAt: AssigneeDistinctCountAggregates_createdAtPlan,
-      payload: NotificationDigestQueueDistinctCountAggregates_payloadPlan,
-      rowId: EmojiDistinctCountAggregates_rowIdPlan,
-      sendAfter($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.timestamptz, "send_after", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
-      userId: AssigneeDistinctCountAggregates_userIdPlan
     }
   },
   NotificationPreference: {
@@ -28301,15 +26813,6 @@ ${String(oldPlan60)}`);
       query: queryPlan
     }
   },
-  UpdateNotificationDigestQueuePayload: {
-    assertStep: ObjectStep,
-    plans: {
-      clientMutationId: getClientMutationIdForCreatePlan,
-      notificationDigestQueue: planCreatePayloadResult,
-      notificationDigestQueueEdge: CreateNotificationDigestQueuePayload_notificationDigestQueueEdgePlan,
-      query: queryPlan
-    }
-  },
   UpdateNotificationPreferencePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -28418,15 +26921,6 @@ ${String(oldPlan60)}`);
       userPreferenceEdge: CreateUserPreferencePayload_userPreferenceEdgePlan
     }
   },
-  UpdateWardenSyncQueuePayload: {
-    assertStep: ObjectStep,
-    plans: {
-      clientMutationId: getClientMutationIdForCreatePlan,
-      query: queryPlan,
-      wardenSyncQueue: planCreatePayloadResult,
-      wardenSyncQueueEdge: CreateWardenSyncQueuePayload_wardenSyncQueueEdgePlan
-    }
-  },
   User: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -28531,24 +27025,6 @@ ${String(oldPlan60)}`);
       identityProviderId($record) {
         return $record.get("identity_provider_id");
       },
-      notificationDigestQueues: {
-        plan($record) {
-          const $records = spec_resource_notification_digest_queuePgResource.find({
-            user_id: $record.get("id")
-          });
-          return connection($records);
-        },
-        args: {
-          first: applyFirstArg,
-          last: applyLastArg,
-          offset: applyOffsetArg,
-          before: applyBeforeArg,
-          after: applyAfterArg,
-          condition: applyConditionArgToConnection,
-          filter: Task_assigneesfilterApplyPlan,
-          orderBy: applyOrderByArgToConnection
-        }
-      },
       notificationPreference($record) {
         return spec_resource_notification_preferencePgResource.get({
           user_id: $record.get("id")
@@ -28608,9 +27084,6 @@ ${String(oldPlan60)}`);
         return pgAggregatesPlanAggregateAttribute(TYPES.text, "avatar_url", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       createdAt: AssigneeDistinctCountAggregates_createdAtPlan,
-      email($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.text, "email", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
       identityProviderId($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.uuid, "identity_provider_id", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
@@ -28745,162 +27218,6 @@ ${String(oldPlan60)}`);
     plans: {
       pinOrder($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.int, "pin_order", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
-      }
-    }
-  },
-  WardenSyncQueue: {
-    assertStep: assertPgClassSingleStep,
-    plans: {
-      createdAt: Assignee_createdAtPlan,
-      id($parent) {
-        const specifier = nodeIdHandler_WardenSyncQueue.plan($parent);
-        return lambda(specifier, nodeIdCodecs[nodeIdHandler_WardenSyncQueue.codec.name].encode);
-      },
-      lastError($record) {
-        return $record.get("last_error");
-      },
-      maxAttempts($record) {
-        return $record.get("max_attempts");
-      },
-      nextRetryAt($record) {
-        return $record.get("next_retry_at");
-      },
-      rowId: Task_rowIdPlan
-    },
-    planType($specifier) {
-      const spec = Object.create(null);
-      for (const pkCol of warden_sync_queueUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
-      return spec_resource_warden_sync_queuePgResource.get(spec);
-    }
-  },
-  WardenSyncQueueAggregates: {
-    assertStep: assertPgClassSingleStep,
-    plans: {
-      average: pgAggregatesPlanAggregates,
-      distinctCount: pgAggregatesPlanAggregates,
-      keys: AssigneeAggregates_keysPlan,
-      max: pgAggregatesPlanAggregates,
-      min: pgAggregatesPlanAggregates,
-      stddevPopulation: pgAggregatesPlanAggregates,
-      stddevSample: pgAggregatesPlanAggregates,
-      sum: pgAggregatesPlanAggregates,
-      variancePopulation: pgAggregatesPlanAggregates,
-      varianceSample: pgAggregatesPlanAggregates
-    }
-  },
-  WardenSyncQueueAverageAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_average, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_average, $pgSelectSingle);
-      }
-    }
-  },
-  WardenSyncQueueConnection: {
-    assertStep: ConnectionStep,
-    plans: {
-      aggregates: pgAggregatesCloneSubplanWithoutPaginationSingle,
-      groupedAggregates: {
-        plan: pgAggregateCloneSubplanWithoutPaginationAsAggregate,
-        args: {
-          groupBy: pgAggregatesApplyGroupedAggregate,
-          having: pgAggregatesApplyConditionsToGroupedAggregates
-        }
-      },
-      totalCount: totalCountConnectionPlan
-    }
-  },
-  WardenSyncQueueDistinctCountAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
-      createdAt: AssigneeDistinctCountAggregates_createdAtPlan,
-      lastError($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.text, "last_error", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
-      nextRetryAt($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.timestamptz, "next_retry_at", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
-      operation($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.text, "operation", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
-      },
-      payload: NotificationDigestQueueDistinctCountAggregates_payloadPlan,
-      rowId: EmojiDistinctCountAggregates_rowIdPlan
-    }
-  },
-  WardenSyncQueueMaxAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.int, pgAggregateSpec_max, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.int, pgAggregateSpec_max, $pgSelectSingle);
-      }
-    }
-  },
-  WardenSyncQueueMinAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.int, pgAggregateSpec_min, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.int, pgAggregateSpec_min, $pgSelectSingle);
-      }
-    }
-  },
-  WardenSyncQueueStddevPopulationAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_stddevPopulation, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_stddevPopulation, $pgSelectSingle);
-      }
-    }
-  },
-  WardenSyncQueueStddevSampleAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_stddevSample, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_stddevSample, $pgSelectSingle);
-      }
-    }
-  },
-  WardenSyncQueueSumAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.bigint, pgAggregateSpec_sum, $pgSelectSingle);
-      }
-    }
-  },
-  WardenSyncQueueVariancePopulationAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_variancePopulation, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_variancePopulation, $pgSelectSingle);
-      }
-    }
-  },
-  WardenSyncQueueVarianceSampleAggregates: {
-    plans: {
-      attempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "attempts", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
-      },
-      maxAttempts($pgSelectSingle) {
-        return pgAggregatesPlanAggregateAttribute(TYPES.int, "max_attempts", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
       }
     }
   },
@@ -29881,12 +28198,6 @@ export const inputObjects = {
       label: applyCreateFields
     }
   },
-  CreateNotificationDigestQueueInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate,
-      notificationDigestQueue: applyCreateFields
-    }
-  },
   CreateNotificationPreferenceInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -29959,12 +28270,6 @@ export const inputObjects = {
       userPreference: applyCreateFields
     }
   },
-  CreateWardenSyncQueueInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate,
-      wardenSyncQueue: applyCreateFields
-    }
-  },
   DatetimeFilter: {
     plans: {
       distinctFrom: pgAggregatesApply_distinctFrom,
@@ -30016,16 +28321,6 @@ export const inputObjects = {
     }
   },
   DeleteLabelInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate
-    }
-  },
-  DeleteNotificationDigestQueueByIdInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate
-    }
-  },
-  DeleteNotificationDigestQueueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -30146,16 +28441,6 @@ export const inputObjects = {
     }
   },
   DeleteUserPreferenceInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate
-    }
-  },
-  DeleteWardenSyncQueueByIdInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate
-    }
-  },
-  DeleteWardenSyncQueueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -30637,182 +28922,6 @@ export const inputObjects = {
       every: TaskToManyAssigneeFilter_everyApply,
       none: TaskToManyAssigneeFilter_noneApply,
       some: TaskToManyAssigneeFilter_someApply
-    }
-  },
-  NotificationDigestQueueAggregatesFilter: {
-    plans: {
-      distinctCount: AssigneeAggregatesFilter_distinctCountApply,
-      filter: filterApply
-    }
-  },
-  NotificationDigestQueueCondition: {
-    plans: {
-      createdAt: AssigneeCondition_createdAtApply,
-      rowId: EmojiCondition_rowIdApply,
-      sendAfter($condition, val) {
-        return applyAttributeCondition("send_after", TYPES.timestamptz, $condition, val);
-      },
-      userId: AssigneeCondition_userIdApply
-    }
-  },
-  NotificationDigestQueueDistinctCountAggregateFilter: {
-    plans: {
-      createdAt: AssigneeDistinctCountAggregateFilter_createdAtApply,
-      payload($parent, input) {
-        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "payload", TYPES.bigint, TYPES.jsonb, $parent, input);
-      },
-      rowId: PostDistinctCountAggregateFilter_rowIdApply,
-      sendAfter($parent, input) {
-        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "send_after", TYPES.bigint, TYPES.timestamptz, $parent, input);
-      },
-      userId: AssigneeDistinctCountAggregateFilter_userIdApply
-    }
-  },
-  NotificationDigestQueueFilter: {
-    plans: {
-      and: AssigneeFilter_andApply,
-      createdAt(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_notificationDigestQueue.attributes.created_at, queryBuilder, value);
-      },
-      not: AssigneeFilter_notApply,
-      or: AssigneeFilter_orApply,
-      rowId(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("rowId", "id", spec_notificationDigestQueue.attributes.id, queryBuilder, value);
-      },
-      sendAfter(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("sendAfter", "send_after", spec_notificationDigestQueue.attributes.send_after, queryBuilder, value);
-      },
-      user($where, value) {
-        return pgConnectionFilterApplySingleRelation(spec_resource_userPgResource, userIdentifier, registryConfig.pgRelations.notificationDigestQueue.userByMyUserId.localAttributes, registryConfig.pgRelations.notificationDigestQueue.userByMyUserId.remoteAttributes, $where, value);
-      },
-      userId(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("userId", "user_id", spec_notificationDigestQueue.attributes.user_id, queryBuilder, value);
-      }
-    }
-  },
-  NotificationDigestQueueHavingAverageInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueHavingDistinctCountInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueHavingInput: {
-    plans: {
-      AND: pgAggregatesApplyAnd,
-      average: pgAggregatesPlanAggregatesField,
-      distinctCount: pgAggregatesPlanAggregatesField,
-      max: pgAggregatesPlanAggregatesField,
-      min: pgAggregatesPlanAggregatesField,
-      OR: AssigneeHavingInput_ORApply,
-      stddevPopulation: pgAggregatesPlanAggregatesField,
-      stddevSample: pgAggregatesPlanAggregatesField,
-      sum: pgAggregatesPlanAggregatesField,
-      variancePopulation: pgAggregatesPlanAggregatesField,
-      varianceSample: pgAggregatesPlanAggregatesField
-    }
-  },
-  NotificationDigestQueueHavingMaxInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueHavingMinInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueHavingStddevPopulationInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueHavingStddevSampleInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueHavingSumInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueHavingVariancePopulationInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueHavingVarianceSampleInput: {
-    plans: {
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_notificationDigestQueue.attributes.created_at, "created_at", $having);
-      },
-      sendAfter($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_notificationDigestQueue.attributes.send_after, "send_after", $having);
-      }
-    }
-  },
-  NotificationDigestQueueInput: {
-    baked: createObjectAndApplyChildren,
-    plans: {
-      createdAt: AssigneeInput_createdAtApply,
-      payload: NotificationDigestQueueInput_payloadApply,
-      rowId: ColumnInput_rowIdApply,
-      sendAfter: NotificationDigestQueueInput_sendAfterApply,
-      userId: AssigneeInput_userIdApply
-    }
-  },
-  NotificationDigestQueuePatch: {
-    baked: createObjectAndApplyChildren,
-    plans: {
-      createdAt: AssigneeInput_createdAtApply,
-      payload: NotificationDigestQueueInput_payloadApply,
-      rowId: ColumnInput_rowIdApply,
-      sendAfter: NotificationDigestQueueInput_sendAfterApply,
-      userId: AssigneeInput_userIdApply
     }
   },
   NotificationPreferenceCondition: {
@@ -33721,18 +31830,6 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
-  UpdateNotificationDigestQueueByIdInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate,
-      patch: applyCreateFields
-    }
-  },
-  UpdateNotificationDigestQueueInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate,
-      patch: applyCreateFields
-    }
-  },
   UpdateNotificationPreferenceByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -33877,27 +31974,12 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
-  UpdateWardenSyncQueueByIdInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate,
-      patch: applyCreateFields
-    }
-  },
-  UpdateWardenSyncQueueInput: {
-    plans: {
-      clientMutationId: applyClientMutationIdForCreate,
-      patch: applyCreateFields
-    }
-  },
   UserCondition: {
     plans: {
       avatarUrl($condition, val) {
         return applyAttributeCondition("avatar_url", TYPES.text, $condition, val);
       },
       createdAt: AssigneeCondition_createdAtApply,
-      email($condition, val) {
-        return applyAttributeCondition("email", TYPES.text, $condition, val);
-      },
       identityProviderId($condition, val) {
         return applyAttributeCondition("identity_provider_id", TYPES.uuid, $condition, val);
       },
@@ -34011,9 +32093,6 @@ export const inputObjects = {
       createdAt(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_user.attributes.created_at, queryBuilder, value);
       },
-      email(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("email", "email", spec_user.attributes.email, queryBuilder, value);
-      },
       emojis($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -34045,30 +32124,6 @@ export const inputObjects = {
         return pgConnectionFilterApplyAttribute("name", "name", spec_user.attributes.name, queryBuilder, value);
       },
       not: AssigneeFilter_notApply,
-      notificationDigestQueues($where, value) {
-        assertAllowed(value, "object");
-        const $rel = $where.andPlan();
-        $rel.extensions.pgFilterRelation = {
-          tableExpression: notificationDigestQueueIdentifier,
-          alias: spec_resource_notification_digest_queuePgResource.name,
-          localAttributes: registryConfig.pgRelations.user.notificationDigestQueuesByTheirUserId.localAttributes,
-          remoteAttributes: registryConfig.pgRelations.user.notificationDigestQueuesByTheirUserId.remoteAttributes
-        };
-        return $rel;
-      },
-      notificationDigestQueuesExist($where, value) {
-        assertAllowed(value, "scalar");
-        if (value == null) return;
-        const $subQuery = $where.existsPlan({
-          tableExpression: notificationDigestQueueIdentifier,
-          alias: spec_resource_notification_digest_queuePgResource.name,
-          equals: value
-        });
-        registryConfig.pgRelations.user.notificationDigestQueuesByTheirUserId.localAttributes.forEach((localAttribute, i) => {
-          const remoteAttribute = registryConfig.pgRelations.user.notificationDigestQueuesByTheirUserId.remoteAttributes[i];
-          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
-        });
-      },
       notificationPreference($where, value) {
         assertAllowed(value, "object");
         const $subQuery = $where.existsPlan({
@@ -34238,7 +32293,6 @@ export const inputObjects = {
     plans: {
       avatarUrl: UserInput_avatarUrlApply,
       createdAt: AssigneeInput_createdAtApply,
-      email: UserInput_emailApply,
       identityProviderId: UserInput_identityProviderIdApply,
       name: LabelInput_nameApply,
       rowId: ColumnInput_rowIdApply,
@@ -34250,7 +32304,6 @@ export const inputObjects = {
     plans: {
       avatarUrl: UserInput_avatarUrlApply,
       createdAt: AssigneeInput_createdAtApply,
-      email: UserInput_emailApply,
       identityProviderId: UserInput_identityProviderIdApply,
       name: LabelInput_nameApply,
       rowId: ColumnInput_rowIdApply,
@@ -34577,14 +32630,6 @@ export const inputObjects = {
       some: TaskToManyAssigneeFilter_someApply
     }
   },
-  UserToManyNotificationDigestQueueFilter: {
-    plans: {
-      aggregates: TaskToManyAssigneeFilter_aggregatesApply,
-      every: TaskToManyAssigneeFilter_everyApply,
-      none: TaskToManyAssigneeFilter_noneApply,
-      some: TaskToManyAssigneeFilter_someApply
-    }
-  },
   UserToManyPostFilter: {
     plans: {
       aggregates: TaskToManyAssigneeFilter_aggregatesApply,
@@ -34622,240 +32667,6 @@ export const inputObjects = {
       notDistinctFrom: pgAggregatesApply_notDistinctFrom,
       notEqualTo: pgAggregatesApply_notEqualTo,
       notIn: pgAggregatesApply_notIn
-    }
-  },
-  WardenSyncQueueCondition: {
-    plans: {
-      attempts($condition, val) {
-        return applyAttributeCondition("attempts", TYPES.int, $condition, val);
-      },
-      createdAt: AssigneeCondition_createdAtApply,
-      lastError($condition, val) {
-        return applyAttributeCondition("last_error", TYPES.text, $condition, val);
-      },
-      maxAttempts($condition, val) {
-        return applyAttributeCondition("max_attempts", TYPES.int, $condition, val);
-      },
-      nextRetryAt($condition, val) {
-        return applyAttributeCondition("next_retry_at", TYPES.timestamptz, $condition, val);
-      },
-      operation($condition, val) {
-        return applyAttributeCondition("operation", TYPES.text, $condition, val);
-      },
-      rowId: EmojiCondition_rowIdApply
-    }
-  },
-  WardenSyncQueueFilter: {
-    plans: {
-      and: AssigneeFilter_andApply,
-      attempts(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("attempts", "attempts", spec_wardenSyncQueue.attributes.attempts, queryBuilder, value);
-      },
-      createdAt(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("createdAt", "created_at", spec_wardenSyncQueue.attributes.created_at, queryBuilder, value);
-      },
-      lastError(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("lastError", "last_error", spec_wardenSyncQueue.attributes.last_error, queryBuilder, value);
-      },
-      maxAttempts(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("maxAttempts", "max_attempts", spec_wardenSyncQueue.attributes.max_attempts, queryBuilder, value);
-      },
-      nextRetryAt(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("nextRetryAt", "next_retry_at", spec_wardenSyncQueue.attributes.next_retry_at, queryBuilder, value);
-      },
-      not: AssigneeFilter_notApply,
-      operation(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("operation", "operation", spec_wardenSyncQueue.attributes.operation, queryBuilder, value);
-      },
-      or: AssigneeFilter_orApply,
-      rowId(queryBuilder, value) {
-        return pgConnectionFilterApplyAttribute("rowId", "id", spec_wardenSyncQueue.attributes.id, queryBuilder, value);
-      }
-    }
-  },
-  WardenSyncQueueHavingAverageInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_average, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueHavingDistinctCountInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_distinctCount, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueHavingInput: {
-    plans: {
-      AND: pgAggregatesApplyAnd,
-      average: pgAggregatesPlanAggregatesField,
-      distinctCount: pgAggregatesPlanAggregatesField,
-      max: pgAggregatesPlanAggregatesField,
-      min: pgAggregatesPlanAggregatesField,
-      OR: AssigneeHavingInput_ORApply,
-      stddevPopulation: pgAggregatesPlanAggregatesField,
-      stddevSample: pgAggregatesPlanAggregatesField,
-      sum: pgAggregatesPlanAggregatesField,
-      variancePopulation: pgAggregatesPlanAggregatesField,
-      varianceSample: pgAggregatesPlanAggregatesField
-    }
-  },
-  WardenSyncQueueHavingMaxInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_max, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueHavingMinInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_min, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueHavingStddevPopulationInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevPopulation, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueHavingStddevSampleInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_stddevSample, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueHavingSumInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_sum, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueHavingVariancePopulationInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_variancePopulation, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueHavingVarianceSampleInput: {
-    plans: {
-      attempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_wardenSyncQueue.attributes.attempts, "attempts", $having);
-      },
-      createdAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_wardenSyncQueue.attributes.created_at, "created_at", $having);
-      },
-      maxAttempts($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_wardenSyncQueue.attributes.max_attempts, "max_attempts", $having);
-      },
-      nextRetryAt($having) {
-        return pgAggregatesApplyAttributeFilter(pgAggregateSpec_varianceSample, spec_wardenSyncQueue.attributes.next_retry_at, "next_retry_at", $having);
-      }
-    }
-  },
-  WardenSyncQueueInput: {
-    baked: createObjectAndApplyChildren,
-    plans: {
-      attempts: WardenSyncQueueInput_attemptsApply,
-      createdAt: AssigneeInput_createdAtApply,
-      lastError: WardenSyncQueueInput_lastErrorApply,
-      maxAttempts: WardenSyncQueueInput_maxAttemptsApply,
-      nextRetryAt: WardenSyncQueueInput_nextRetryAtApply,
-      operation: WardenSyncQueueInput_operationApply,
-      payload: NotificationDigestQueueInput_payloadApply,
-      rowId: ColumnInput_rowIdApply
-    }
-  },
-  WardenSyncQueuePatch: {
-    baked: createObjectAndApplyChildren,
-    plans: {
-      attempts: WardenSyncQueueInput_attemptsApply,
-      createdAt: AssigneeInput_createdAtApply,
-      lastError: WardenSyncQueueInput_lastErrorApply,
-      maxAttempts: WardenSyncQueueInput_maxAttemptsApply,
-      nextRetryAt: WardenSyncQueueInput_nextRetryAtApply,
-      operation: WardenSyncQueueInput_operationApply,
-      payload: NotificationDigestQueueInput_payloadApply,
-      rowId: ColumnInput_rowIdApply
     }
   }
 };
@@ -35491,64 +33302,6 @@ export const enums = {
       },
       UPDATED_AT_ASC: AssigneeOrderBy_UPDATED_AT_ASCApply,
       UPDATED_AT_DESC: AssigneeOrderBy_UPDATED_AT_DESCApply
-    }
-  },
-  NotificationDigestQueueGroupBy: {
-    values: {
-      CREATED_AT: AssigneeGroupBy_CREATED_ATApply,
-      CREATED_AT_TRUNCATED_TO_DAY: AssigneeGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
-      CREATED_AT_TRUNCATED_TO_HOUR: AssigneeGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
-      PAYLOAD: NotificationDigestQueueGroupBy_PAYLOADApply,
-      SEND_AFTER($pgSelect) {
-        applyGroupByAttribute("send_after", TYPES.timestamptz, $pgSelect);
-      },
-      SEND_AFTER_TRUNCATED_TO_DAY(qb) {
-        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_day, "send_after", TYPES.timestamptz, qb);
-      },
-      SEND_AFTER_TRUNCATED_TO_HOUR(qb) {
-        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_hour, "send_after", TYPES.timestamptz, qb);
-      },
-      USER_ID: AssigneeGroupBy_USER_IDApply
-    }
-  },
-  NotificationDigestQueueOrderBy: {
-    values: {
-      CREATED_AT_ASC: AssigneeOrderBy_CREATED_AT_ASCApply,
-      CREATED_AT_DESC: AssigneeOrderBy_CREATED_AT_DESCApply,
-      PRIMARY_KEY_ASC(queryBuilder) {
-        notification_digest_queueUniques[0].attributes.forEach(attributeName => {
-          queryBuilder.orderBy({
-            attribute: attributeName,
-            direction: "ASC"
-          });
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      PRIMARY_KEY_DESC(queryBuilder) {
-        notification_digest_queueUniques[0].attributes.forEach(attributeName => {
-          queryBuilder.orderBy({
-            attribute: attributeName,
-            direction: "DESC"
-          });
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      ROW_ID_ASC: EmojiOrderBy_ROW_ID_ASCApply,
-      ROW_ID_DESC: EmojiOrderBy_ROW_ID_DESCApply,
-      SEND_AFTER_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "send_after",
-          direction: "ASC"
-        });
-      },
-      SEND_AFTER_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "send_after",
-          direction: "DESC"
-        });
-      },
-      USER_ID_ASC: AssigneeOrderBy_USER_ID_ASCApply,
-      USER_ID_DESC: AssigneeOrderBy_USER_ID_DESCApply
     }
   },
   NotificationPreferenceGroupBy: {
@@ -38158,20 +35911,6 @@ export const enums = {
       },
       CREATED_AT_ASC: AssigneeOrderBy_CREATED_AT_ASCApply,
       CREATED_AT_DESC: AssigneeOrderBy_CREATED_AT_DESCApply,
-      EMAIL_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "email",
-          direction: "ASC"
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      EMAIL_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "email",
-          direction: "DESC"
-        });
-        queryBuilder.setOrderIsUnique();
-      },
       EMOJIS_COUNT_ASC($select) {
         pgAggregatesApplyOrderByTotalCount("ASC", relation21, spec_resource_emojiPgResource, $select);
       },
@@ -38230,42 +35969,6 @@ export const enums = {
       },
       NAME_ASC: ProjectOrderBy_NAME_ASCApply,
       NAME_DESC: ProjectOrderBy_NAME_DESCApply,
-      NOTIFICATION_DIGEST_QUEUES_COUNT_ASC($select) {
-        pgAggregatesApplyOrderByTotalCount("ASC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_COUNT_DESC($select) {
-        pgAggregatesApplyOrderByTotalCount("DESC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.created_at, "created_at", "ASC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.created_at, "created_at", "DESC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.payload, "payload", "ASC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.payload, "payload", "DESC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.id, "id", "ASC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.id, "id", "DESC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.send_after, "send_after", "ASC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.send_after, "send_after", "DESC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_ASC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.user_id, "user_id", "ASC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
-      NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_DESC($select) {
-        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_notificationDigestQueue.attributes.user_id, "user_id", "DESC", relation23, spec_resource_notification_digest_queuePgResource, $select);
-      },
       PRIMARY_KEY_ASC(queryBuilder) {
         userUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
@@ -38455,121 +36158,6 @@ export const enums = {
       USER_ID_DESC: UserPreferenceOrderBy_USER_ID_DESCApply,
       VIEW_MODE_ASC: UserPreferenceOrderBy_VIEW_MODE_ASCApply,
       VIEW_MODE_DESC: UserPreferenceOrderBy_VIEW_MODE_DESCApply
-    }
-  },
-  WardenSyncQueueGroupBy: {
-    values: {
-      ATTEMPTS($pgSelect) {
-        applyGroupByAttribute("attempts", TYPES.int, $pgSelect);
-      },
-      CREATED_AT: AssigneeGroupBy_CREATED_ATApply,
-      CREATED_AT_TRUNCATED_TO_DAY: AssigneeGroupBy_CREATED_AT_TRUNCATED_TO_DAYApply,
-      CREATED_AT_TRUNCATED_TO_HOUR: AssigneeGroupBy_CREATED_AT_TRUNCATED_TO_HOURApply,
-      LAST_ERROR($pgSelect) {
-        applyGroupByAttribute("last_error", TYPES.text, $pgSelect);
-      },
-      MAX_ATTEMPTS($pgSelect) {
-        applyGroupByAttribute("max_attempts", TYPES.int, $pgSelect);
-      },
-      NEXT_RETRY_AT($pgSelect) {
-        applyGroupByAttribute("next_retry_at", TYPES.timestamptz, $pgSelect);
-      },
-      NEXT_RETRY_AT_TRUNCATED_TO_DAY(qb) {
-        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_day, "next_retry_at", TYPES.timestamptz, qb);
-      },
-      NEXT_RETRY_AT_TRUNCATED_TO_HOUR(qb) {
-        applyGroupByAggregateSpec(pgAggregateGroupBySpec_truncated_to_hour, "next_retry_at", TYPES.timestamptz, qb);
-      },
-      OPERATION($pgSelect) {
-        applyGroupByAttribute("operation", TYPES.text, $pgSelect);
-      },
-      PAYLOAD: NotificationDigestQueueGroupBy_PAYLOADApply
-    }
-  },
-  WardenSyncQueueOrderBy: {
-    values: {
-      ATTEMPTS_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "attempts",
-          direction: "ASC"
-        });
-      },
-      ATTEMPTS_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "attempts",
-          direction: "DESC"
-        });
-      },
-      CREATED_AT_ASC: AssigneeOrderBy_CREATED_AT_ASCApply,
-      CREATED_AT_DESC: AssigneeOrderBy_CREATED_AT_DESCApply,
-      LAST_ERROR_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "last_error",
-          direction: "ASC"
-        });
-      },
-      LAST_ERROR_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "last_error",
-          direction: "DESC"
-        });
-      },
-      MAX_ATTEMPTS_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "max_attempts",
-          direction: "ASC"
-        });
-      },
-      MAX_ATTEMPTS_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "max_attempts",
-          direction: "DESC"
-        });
-      },
-      NEXT_RETRY_AT_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "next_retry_at",
-          direction: "ASC"
-        });
-      },
-      NEXT_RETRY_AT_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "next_retry_at",
-          direction: "DESC"
-        });
-      },
-      OPERATION_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "operation",
-          direction: "ASC"
-        });
-      },
-      OPERATION_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "operation",
-          direction: "DESC"
-        });
-      },
-      PRIMARY_KEY_ASC(queryBuilder) {
-        warden_sync_queueUniques[0].attributes.forEach(attributeName => {
-          queryBuilder.orderBy({
-            attribute: attributeName,
-            direction: "ASC"
-          });
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      PRIMARY_KEY_DESC(queryBuilder) {
-        warden_sync_queueUniques[0].attributes.forEach(attributeName => {
-          queryBuilder.orderBy({
-            attribute: attributeName,
-            direction: "DESC"
-          });
-        });
-        queryBuilder.setOrderIsUnique();
-      },
-      ROW_ID_ASC: EmojiOrderBy_ROW_ID_ASCApply,
-      ROW_ID_DESC: EmojiOrderBy_ROW_ID_DESCApply
     }
   }
 };
