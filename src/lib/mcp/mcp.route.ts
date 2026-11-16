@@ -111,6 +111,7 @@ export const createMcpRoutes = (handle: RequestHandler) =>
       registerRunaTools(server, {
         graphql: createGraphqlRunner(handle, token),
         userId: user.id,
+        organizationId: principal.organizationId,
       });
 
       // stateless: a fresh server + transport per request, JSON responses

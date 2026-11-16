@@ -21,6 +21,8 @@ interface ToolContext {
   graphql: GraphqlRunner;
   /** Local id of the user the token acts as (author of created content) */
   userId: string;
+  /** The workspace the token was issued for */
+  organizationId: string;
 }
 
 const PRIORITIES = ["low", "medium", "high"] as const;
@@ -108,7 +110,7 @@ const endOfColumnIndex = async (
 /** Register every Runa tool on a server bound to one caller */
 export const registerRunaTools = (
   server: McpServer,
-  { graphql, userId }: ToolContext,
+  { graphql, userId, organizationId }: ToolContext,
 ) => {
   server.registerTool(
     "list_projects",
@@ -129,7 +131,14 @@ export const registerRunaTools = (
           }[];
         };
       }>(
-        `{ projects(orderBy: NAME_ASC) { nodes { rowId name slug prefix } } }`,
+        // the token's own workspace only; public boards of other workspaces
+        // are readable but are not this workspace's projects
+        `query ($organizationId: String!) {
+          projects(condition: { organizationId: $organizationId }, orderBy: NAME_ASC) {
+            nodes { rowId name slug prefix }
+          }
+        }`,
+        { organizationId },
       );
       return data.projects.nodes.map((p) => ({
         id: p.rowId,
