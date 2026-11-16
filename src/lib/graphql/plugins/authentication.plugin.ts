@@ -9,11 +9,16 @@ import {
   createGetOrganizationClaimsFromCache,
   extractBearerToken,
   isIntrospectionQuery,
-  validateClaims,
 } from "@omnidotdev/providers/graphql";
 import { eq } from "drizzle-orm";
 
-import { AUTH_BASE_URL, isDevEnv, protectRoutes } from "lib/config/env.config";
+import {
+  AUTH_BASE_URL,
+  enforceGatekeeperAudience,
+  gatekeeperAudiences,
+  isDevEnv,
+  protectRoutes,
+} from "lib/config/env.config";
 import { users } from "lib/db/schema";
 import { ensureOrganizationProvisioned } from "lib/idp/provisionOrganization";
 
@@ -81,24 +86,36 @@ const resolveUser: ResolveUserFn<SelectUser, GraphQLContext> = async (ctx) => {
       );
     }
 
-    // Validate via external IDP (Gatekeeper)
-    // Better Auth OIDC access tokens are opaque tokens, not JWTs.
-    // Validation is done via the userinfo endpoint which verifies the token server-side.
-    // If the access token looks like a JWT (3 dot-separated parts), we can optionally
-    // verify it for additional security, but this is not required.
+    // Validate via external IDP (Gatekeeper). Runa's web sessions carry opaque
+    // access tokens, validated by the userinfo call below. A JWT (three
+    // dot-separated parts) comes from a resource-bound sign-in, such as the
+    // Runa MCP server's: verify its signature and issuer, and require an
+    // accepted audience so a token minted for another Omni service is refused
     const isJwtFormat = accessToken.split(".").length === 3;
     if (isJwtFormat) {
-      try {
-        const verifiedPayload = await verifyAccessToken(accessToken);
-        validateClaims(verifiedPayload, {
-          expectedIssuer: AUTH_BASE_URL,
-        });
-      } catch (jwtError) {
-        // JWT verification failed - this is expected for opaque tokens
-        // Continue with userinfo validation which will definitively validate the token
+      const payload = await verifyAccessToken(accessToken).catch(() => null);
+      const audience = (payload as { aud?: string | string[] } | null)?.aud;
+      const audiences = (Array.isArray(audience) ? audience : [audience])
+        .filter((value): value is string => typeof value === "string")
+        .map((value) => value.replace(/\/+$/, ""));
+      const accepted =
+        !!payload &&
+        audiences.some((value) => gatekeeperAudiences.includes(value));
+
+      if (!accepted) {
+        if (enforceGatekeeperAudience) {
+          throw new AuthenticationError(
+            payload
+              ? "Access token audience is not accepted by this API"
+              : "Access token signature or issuer is invalid",
+            "INVALID_TOKEN",
+          );
+        }
         console.warn(
-          "[Auth] JWT verification skipped (opaque token):",
-          jwtError instanceof Error ? jwtError.message : jwtError,
+          "[Auth] JWT would be rejected (audience mode is warn):",
+          payload
+            ? `aud=${audiences.join(",")}`
+            : "invalid signature or issuer",
         );
       }
     }

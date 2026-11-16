@@ -9,6 +9,10 @@ export const {
   DATABASE_URL,
   AUTH_SECRET,
   AUTH_BASE_URL,
+  // Accepted `aud` values for Gatekeeper JWT access tokens (comma-separated)
+  GATEKEEPER_AUDIENCE,
+  // `enforce` (default) rejects a JWT minted for another audience; `warn` logs
+  GATEKEEPER_AUDIENCE_MODE,
   GRAPHQL_MAX_COMPLEXITY_COST,
   CORS_ALLOWED_ORIGINS,
   PROTECT_ROUTES,
@@ -74,6 +78,22 @@ export const protectRoutes = isProdEnv || PROTECT_ROUTES === "true";
  * be enabled only after an end-to-end smoke test against the live authed stack.
  */
 export const acceptApiTokens = ACCEPT_API_TOKENS === "true";
+
+/**
+ * Audiences a Gatekeeper JWT access token may carry to be accepted. Runa's own
+ * web sessions use opaque tokens and are unaffected; JWTs reach this API from
+ * the Runa MCP server after a browser sign-in (aud https://mcp.runa.omni.dev),
+ * and a JWT minted for another Omni service is refused
+ */
+export const gatekeeperAudiences = (
+  GATEKEEPER_AUDIENCE ?? "https://mcp.runa.omni.dev"
+)
+  .split(",")
+  .map((audience) => audience.trim().replace(/\/+$/, ""))
+  .filter(Boolean);
+
+/** Whether an audience mismatch rejects the token (`enforce`) or only logs */
+export const enforceGatekeeperAudience = GATEKEEPER_AUDIENCE_MODE !== "warn";
 
 /** Whether search indexing is enabled */
 export const isSearchEnabled = !!MEILISEARCH_URL && !!MEILISEARCH_MASTER_KEY;
