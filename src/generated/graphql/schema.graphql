@@ -214,7 +214,6 @@ type User implements Node {
   avatarUrl: String
   createdAt: Datetime!
   updatedAt: Datetime!
-  email: String!
 
   """Reads and enables pagination through a set of `Assignee`."""
   assignees(
@@ -424,42 +423,6 @@ type User implements Node {
   Reads a single `NotificationPreference` that is related to this `User`.
   """
   notificationPreference: NotificationPreference
-
-  """
-  Reads and enables pagination through a set of `NotificationDigestQueue`.
-  """
-  notificationDigestQueues(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: NotificationDigestQueueCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: NotificationDigestQueueFilter
-
-    """The method to use when ordering `NotificationDigestQueue`."""
-    orderBy: [NotificationDigestQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueConnection!
 }
 
 """A connection to a list of `Assignee` values."""
@@ -1339,9 +1302,6 @@ input UserFilter {
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
 
-  """Filter by the object’s `email` field."""
-  email: StringFilter
-
   """Filter by the object’s `assignees` relation."""
   assignees: UserToManyAssigneeFilter
 
@@ -1383,12 +1343,6 @@ input UserFilter {
 
   """A related `notificationPreference` exists."""
   notificationPreferenceExists: Boolean
-
-  """Filter by the object’s `notificationDigestQueues` relation."""
-  notificationDigestQueues: UserToManyNotificationDigestQueueFilter
-
-  """Some related `notificationDigestQueues` exist."""
-  notificationDigestQueuesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [UserFilter!]
@@ -2978,83 +2932,6 @@ input NotificationPreferenceFilter {
 
   """Negates the expression."""
   not: NotificationPreferenceFilter
-}
-
-"""
-A filter to be used against many `NotificationDigestQueue` object types. All fields are combined with a logical ‘and.’
-"""
-input UserToManyNotificationDigestQueueFilter {
-  """
-  Every related `NotificationDigestQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: NotificationDigestQueueFilter
-
-  """
-  Some related `NotificationDigestQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: NotificationDigestQueueFilter
-
-  """
-  No related `NotificationDigestQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: NotificationDigestQueueFilter
-
-  """
-  Aggregates across related `NotificationDigestQueue` match the filter criteria.
-  """
-  aggregates: NotificationDigestQueueAggregatesFilter
-}
-
-"""
-A filter to be used against `NotificationDigestQueue` object types. All fields are combined with a logical ‘and.’
-"""
-input NotificationDigestQueueFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `userId` field."""
-  userId: UUIDFilter
-
-  """Filter by the object’s `sendAfter` field."""
-  sendAfter: DatetimeFilter
-
-  """Filter by the object’s `createdAt` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s `user` relation."""
-  user: UserFilter
-
-  """Checks for all expressions in this list."""
-  and: [NotificationDigestQueueFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [NotificationDigestQueueFilter!]
-
-  """Negates the expression."""
-  not: NotificationDigestQueueFilter
-}
-
-"""
-A filter to be used against aggregates of `NotificationDigestQueue` object types.
-"""
-input NotificationDigestQueueAggregatesFilter {
-  """
-  A filter that must pass for the relevant `NotificationDigestQueue` object to be included within the aggregate.
-  """
-  filter: NotificationDigestQueueFilter
-
-  """
-  Distinct count aggregate over matching `NotificationDigestQueue` objects.
-  """
-  distinctCount: NotificationDigestQueueDistinctCountAggregateFilter
-}
-
-input NotificationDigestQueueDistinctCountAggregateFilter {
-  rowId: BigIntFilter
-  userId: BigIntFilter
-  payload: BigIntFilter
-  sendAfter: BigIntFilter
-  createdAt: BigIntFilter
 }
 
 """
@@ -7069,202 +6946,6 @@ type NotificationPreference implements Node {
   user: User
 }
 
-"""A connection to a list of `NotificationDigestQueue` values."""
-type NotificationDigestQueueConnection {
-  """A list of `NotificationDigestQueue` objects."""
-  nodes: [NotificationDigestQueue!]!
-
-  """
-  A list of edges which contains the `NotificationDigestQueue` and cursor to aid in pagination.
-  """
-  edges: [NotificationDigestQueueEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `NotificationDigestQueue` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: NotificationDigestQueueAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping `NotificationDigestQueue` for these aggregates.
-    """
-    groupBy: [NotificationDigestQueueGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: NotificationDigestQueueHavingInput
-  ): [NotificationDigestQueueAggregates!]
-}
-
-type NotificationDigestQueue implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  userId: UUID!
-  payload: JSON!
-  sendAfter: Datetime!
-  createdAt: Datetime!
-
-  """
-  Reads a single `User` that is related to this `NotificationDigestQueue`.
-  """
-  user: User
-}
-
-"""A `NotificationDigestQueue` edge in the connection."""
-type NotificationDigestQueueEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `NotificationDigestQueue` at the end of the edge."""
-  node: NotificationDigestQueue!
-}
-
-type NotificationDigestQueueAggregates {
-  keys: [String]
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: NotificationDigestQueueDistinctCountAggregates
-}
-
-type NotificationDigestQueueDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of userId across the matching connection"""
-  userId: BigInt
-
-  """Distinct count of payload across the matching connection"""
-  payload: BigInt
-
-  """Distinct count of sendAfter across the matching connection"""
-  sendAfter: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-}
-
-"""
-Grouping methods for `NotificationDigestQueue` for usage during aggregation.
-"""
-enum NotificationDigestQueueGroupBy {
-  USER_ID
-  PAYLOAD
-  SEND_AFTER
-  SEND_AFTER_TRUNCATED_TO_HOUR
-  SEND_AFTER_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `NotificationDigestQueue` aggregates."""
-input NotificationDigestQueueHavingInput {
-  AND: [NotificationDigestQueueHavingInput!]
-  OR: [NotificationDigestQueueHavingInput!]
-  sum: NotificationDigestQueueHavingSumInput
-  distinctCount: NotificationDigestQueueHavingDistinctCountInput
-  min: NotificationDigestQueueHavingMinInput
-  max: NotificationDigestQueueHavingMaxInput
-  average: NotificationDigestQueueHavingAverageInput
-  stddevSample: NotificationDigestQueueHavingStddevSampleInput
-  stddevPopulation: NotificationDigestQueueHavingStddevPopulationInput
-  varianceSample: NotificationDigestQueueHavingVarianceSampleInput
-  variancePopulation: NotificationDigestQueueHavingVariancePopulationInput
-}
-
-input NotificationDigestQueueHavingSumInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingDistinctCountInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingMinInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingMaxInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingAverageInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingStddevSampleInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingStddevPopulationInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingVarianceSampleInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input NotificationDigestQueueHavingVariancePopulationInput {
-  sendAfter: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `NotificationDigestQueue` object types. All
-fields are tested for equality and combined with a logical ‘and.’
-"""
-input NotificationDigestQueueCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `userId` field."""
-  userId: UUID
-
-  """Checks for equality with the object’s `sendAfter` field."""
-  sendAfter: Datetime
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-}
-
-"""Methods to use when ordering `NotificationDigestQueue`."""
-enum NotificationDigestQueueOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  USER_ID_ASC
-  USER_ID_DESC
-  SEND_AFTER_ASC
-  SEND_AFTER_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-}
-
 type Setting implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -7279,21 +6960,6 @@ type Setting implements Node {
   subscriptionId: String
   deletedAt: Datetime
   deletionReason: String
-}
-
-type WardenSyncQueue implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  operation: String!
-  payload: JSON!
-  attempts: Int!
-  maxAttempts: Int!
-  lastError: String
-  nextRetryAt: Datetime!
-  createdAt: Datetime!
 }
 
 type LinkUnfurl implements Node {
@@ -8314,9 +7980,6 @@ type UserDistinctCountAggregates {
 
   """Distinct count of updatedAt across the matching connection"""
   updatedAt: BigInt
-
-  """Distinct count of email across the matching connection"""
-  email: BigInt
 }
 
 """Grouping methods for `User` for usage during aggregation."""
@@ -8412,9 +8075,6 @@ input UserCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
-
-  """Checks for equality with the object’s `email` field."""
-  email: String
 }
 
 """Methods to use when ordering `User`."""
@@ -8434,8 +8094,6 @@ enum UserOrderBy {
   CREATED_AT_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  EMAIL_ASC
-  EMAIL_DESC
   ASSIGNEES_COUNT_ASC
   ASSIGNEES_COUNT_DESC
   ASSIGNEES_DISTINCT_COUNT_USER_ID_ASC
@@ -8638,385 +8296,6 @@ enum UserOrderBy {
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_WIDTH_DESC
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_ASC
   AUTHORED_ATTACHMENTS_VARIANCE_POPULATION_HEIGHT_DESC
-  NOTIFICATION_DIGEST_QUEUES_COUNT_ASC
-  NOTIFICATION_DIGEST_QUEUES_COUNT_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_ROW_ID_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_USER_ID_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_PAYLOAD_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_SEND_AFTER_DESC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_ASC
-  NOTIFICATION_DIGEST_QUEUES_DISTINCT_COUNT_CREATED_AT_DESC
-}
-
-"""A connection to a list of `WardenSyncQueue` values."""
-type WardenSyncQueueConnection {
-  """A list of `WardenSyncQueue` objects."""
-  nodes: [WardenSyncQueue!]!
-
-  """
-  A list of edges which contains the `WardenSyncQueue` and cursor to aid in pagination.
-  """
-  edges: [WardenSyncQueueEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `WardenSyncQueue` you could get from the connection.
-  """
-  totalCount: Int!
-
-  """
-  Aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  aggregates: WardenSyncQueueAggregates
-
-  """
-  Grouped aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  groupedAggregates(
-    """
-    The method to use when grouping `WardenSyncQueue` for these aggregates.
-    """
-    groupBy: [WardenSyncQueueGroupBy!]!
-
-    """Conditions on the grouped aggregates."""
-    having: WardenSyncQueueHavingInput
-  ): [WardenSyncQueueAggregates!]
-}
-
-"""A `WardenSyncQueue` edge in the connection."""
-type WardenSyncQueueEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `WardenSyncQueue` at the end of the edge."""
-  node: WardenSyncQueue!
-}
-
-type WardenSyncQueueAggregates {
-  keys: [String]
-
-  """
-  Sum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  sum: WardenSyncQueueSumAggregates
-
-  """
-  Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  distinctCount: WardenSyncQueueDistinctCountAggregates
-
-  """
-  Minimum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  min: WardenSyncQueueMinAggregates
-
-  """
-  Maximum aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  max: WardenSyncQueueMaxAggregates
-
-  """
-  Mean average aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  average: WardenSyncQueueAverageAggregates
-
-  """
-  Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevSample: WardenSyncQueueStddevSampleAggregates
-
-  """
-  Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  stddevPopulation: WardenSyncQueueStddevPopulationAggregates
-
-  """
-  Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  varianceSample: WardenSyncQueueVarianceSampleAggregates
-
-  """
-  Population variance aggregates across the matching connection (ignoring before/after/first/last/offset)
-  """
-  variancePopulation: WardenSyncQueueVariancePopulationAggregates
-}
-
-type WardenSyncQueueSumAggregates {
-  """Sum of attempts across the matching connection"""
-  attempts: BigInt!
-
-  """Sum of maxAttempts across the matching connection"""
-  maxAttempts: BigInt!
-}
-
-type WardenSyncQueueDistinctCountAggregates {
-  """Distinct count of rowId across the matching connection"""
-  rowId: BigInt
-
-  """Distinct count of operation across the matching connection"""
-  operation: BigInt
-
-  """Distinct count of payload across the matching connection"""
-  payload: BigInt
-
-  """Distinct count of attempts across the matching connection"""
-  attempts: BigInt
-
-  """Distinct count of maxAttempts across the matching connection"""
-  maxAttempts: BigInt
-
-  """Distinct count of lastError across the matching connection"""
-  lastError: BigInt
-
-  """Distinct count of nextRetryAt across the matching connection"""
-  nextRetryAt: BigInt
-
-  """Distinct count of createdAt across the matching connection"""
-  createdAt: BigInt
-}
-
-type WardenSyncQueueMinAggregates {
-  """Minimum of attempts across the matching connection"""
-  attempts: Int
-
-  """Minimum of maxAttempts across the matching connection"""
-  maxAttempts: Int
-}
-
-type WardenSyncQueueMaxAggregates {
-  """Maximum of attempts across the matching connection"""
-  attempts: Int
-
-  """Maximum of maxAttempts across the matching connection"""
-  maxAttempts: Int
-}
-
-type WardenSyncQueueAverageAggregates {
-  """Mean average of attempts across the matching connection"""
-  attempts: BigFloat
-
-  """Mean average of maxAttempts across the matching connection"""
-  maxAttempts: BigFloat
-}
-
-type WardenSyncQueueStddevSampleAggregates {
-  """Sample standard deviation of attempts across the matching connection"""
-  attempts: BigFloat
-
-  """
-  Sample standard deviation of maxAttempts across the matching connection
-  """
-  maxAttempts: BigFloat
-}
-
-type WardenSyncQueueStddevPopulationAggregates {
-  """
-  Population standard deviation of attempts across the matching connection
-  """
-  attempts: BigFloat
-
-  """
-  Population standard deviation of maxAttempts across the matching connection
-  """
-  maxAttempts: BigFloat
-}
-
-type WardenSyncQueueVarianceSampleAggregates {
-  """Sample variance of attempts across the matching connection"""
-  attempts: BigFloat
-
-  """Sample variance of maxAttempts across the matching connection"""
-  maxAttempts: BigFloat
-}
-
-type WardenSyncQueueVariancePopulationAggregates {
-  """Population variance of attempts across the matching connection"""
-  attempts: BigFloat
-
-  """Population variance of maxAttempts across the matching connection"""
-  maxAttempts: BigFloat
-}
-
-"""Grouping methods for `WardenSyncQueue` for usage during aggregation."""
-enum WardenSyncQueueGroupBy {
-  OPERATION
-  PAYLOAD
-  ATTEMPTS
-  MAX_ATTEMPTS
-  LAST_ERROR
-  NEXT_RETRY_AT
-  NEXT_RETRY_AT_TRUNCATED_TO_HOUR
-  NEXT_RETRY_AT_TRUNCATED_TO_DAY
-  CREATED_AT
-  CREATED_AT_TRUNCATED_TO_HOUR
-  CREATED_AT_TRUNCATED_TO_DAY
-}
-
-"""Conditions for `WardenSyncQueue` aggregates."""
-input WardenSyncQueueHavingInput {
-  AND: [WardenSyncQueueHavingInput!]
-  OR: [WardenSyncQueueHavingInput!]
-  sum: WardenSyncQueueHavingSumInput
-  distinctCount: WardenSyncQueueHavingDistinctCountInput
-  min: WardenSyncQueueHavingMinInput
-  max: WardenSyncQueueHavingMaxInput
-  average: WardenSyncQueueHavingAverageInput
-  stddevSample: WardenSyncQueueHavingStddevSampleInput
-  stddevPopulation: WardenSyncQueueHavingStddevPopulationInput
-  varianceSample: WardenSyncQueueHavingVarianceSampleInput
-  variancePopulation: WardenSyncQueueHavingVariancePopulationInput
-}
-
-input WardenSyncQueueHavingSumInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingDistinctCountInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingMinInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingMaxInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingAverageInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingStddevSampleInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingStddevPopulationInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingVarianceSampleInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-input WardenSyncQueueHavingVariancePopulationInput {
-  attempts: HavingIntFilter
-  maxAttempts: HavingIntFilter
-  nextRetryAt: HavingDatetimeFilter
-  createdAt: HavingDatetimeFilter
-}
-
-"""
-A condition to be used against `WardenSyncQueue` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input WardenSyncQueueCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `operation` field."""
-  operation: String
-
-  """Checks for equality with the object’s `attempts` field."""
-  attempts: Int
-
-  """Checks for equality with the object’s `maxAttempts` field."""
-  maxAttempts: Int
-
-  """Checks for equality with the object’s `lastError` field."""
-  lastError: String
-
-  """Checks for equality with the object’s `nextRetryAt` field."""
-  nextRetryAt: Datetime
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-}
-
-"""
-A filter to be used against `WardenSyncQueue` object types. All fields are combined with a logical ‘and.’
-"""
-input WardenSyncQueueFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `operation` field."""
-  operation: StringFilter
-
-  """Filter by the object’s `attempts` field."""
-  attempts: IntFilter
-
-  """Filter by the object’s `maxAttempts` field."""
-  maxAttempts: IntFilter
-
-  """Filter by the object’s `lastError` field."""
-  lastError: StringFilter
-
-  """Filter by the object’s `nextRetryAt` field."""
-  nextRetryAt: DatetimeFilter
-
-  """Filter by the object’s `createdAt` field."""
-  createdAt: DatetimeFilter
-
-  """Checks for all expressions in this list."""
-  and: [WardenSyncQueueFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [WardenSyncQueueFilter!]
-
-  """Negates the expression."""
-  not: WardenSyncQueueFilter
-}
-
-"""Methods to use when ordering `WardenSyncQueue`."""
-enum WardenSyncQueueOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  OPERATION_ASC
-  OPERATION_DESC
-  ATTEMPTS_ASC
-  ATTEMPTS_DESC
-  MAX_ATTEMPTS_ASC
-  MAX_ATTEMPTS_DESC
-  LAST_ERROR_ASC
-  LAST_ERROR_DESC
-  NEXT_RETRY_AT_ASC
-  NEXT_RETRY_AT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
 }
 
 """The output of our create `Assignee` mutation."""
@@ -9200,50 +8479,6 @@ input LabelInput {
   updatedAt: Datetime
   icon: String
   organizationId: String
-}
-
-"""The output of our create `NotificationDigestQueue` mutation."""
-type CreateNotificationDigestQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `NotificationDigestQueue` that was created by this mutation."""
-  notificationDigestQueue: NotificationDigestQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `NotificationDigestQueue`. May be used by Relay 1."""
-  notificationDigestQueueEdge(
-    """The method to use when ordering `NotificationDigestQueue`."""
-    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueEdge
-}
-
-"""All input for the create `NotificationDigestQueue` mutation."""
-input CreateNotificationDigestQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `NotificationDigestQueue` to be created by this mutation."""
-  notificationDigestQueue: NotificationDigestQueueInput!
-}
-
-"""An input for mutations affecting `NotificationDigestQueue`"""
-input NotificationDigestQueueInput {
-  rowId: UUID
-  userId: UUID!
-  payload: JSON!
-  sendAfter: Datetime
-  createdAt: Datetime
 }
 
 """The output of our create `NotificationPreference` mutation."""
@@ -9760,7 +8995,6 @@ input UserInput {
   avatarUrl: String
   createdAt: Datetime
   updatedAt: Datetime
-  email: String!
 }
 
 """The output of our create `UserPreference` mutation."""
@@ -9808,53 +9042,6 @@ input UserPreferenceInput {
   updatedAt: Datetime
   viewMode: String
   pinOrder: Int
-}
-
-"""The output of our create `WardenSyncQueue` mutation."""
-type CreateWardenSyncQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `WardenSyncQueue` that was created by this mutation."""
-  wardenSyncQueue: WardenSyncQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `WardenSyncQueue`. May be used by Relay 1."""
-  wardenSyncQueueEdge(
-    """The method to use when ordering `WardenSyncQueue`."""
-    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueEdge
-}
-
-"""All input for the create `WardenSyncQueue` mutation."""
-input CreateWardenSyncQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `WardenSyncQueue` to be created by this mutation."""
-  wardenSyncQueue: WardenSyncQueueInput!
-}
-
-"""An input for mutations affecting `WardenSyncQueue`"""
-input WardenSyncQueueInput {
-  rowId: UUID
-  operation: String!
-  payload: JSON!
-  attempts: Int
-  maxAttempts: Int
-  lastError: String
-  nextRetryAt: Datetime
-  createdAt: Datetime
 }
 
 """The output of our update `Assignee` mutation."""
@@ -10135,74 +9322,6 @@ input UpdateLabelInput {
   An object where the defined keys will be set on the `Label` being updated.
   """
   patch: LabelPatch!
-}
-
-"""The output of our update `NotificationDigestQueue` mutation."""
-type UpdateNotificationDigestQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `NotificationDigestQueue` that was updated by this mutation."""
-  notificationDigestQueue: NotificationDigestQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `NotificationDigestQueue`. May be used by Relay 1."""
-  notificationDigestQueueEdge(
-    """The method to use when ordering `NotificationDigestQueue`."""
-    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueEdge
-}
-
-"""All input for the `updateNotificationDigestQueueById` mutation."""
-input UpdateNotificationDigestQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `NotificationDigestQueue` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `NotificationDigestQueue` being updated.
-  """
-  patch: NotificationDigestQueuePatch!
-}
-
-"""
-Represents an update to a `NotificationDigestQueue`. Fields that are set will be updated.
-"""
-input NotificationDigestQueuePatch {
-  rowId: UUID
-  userId: UUID
-  payload: JSON
-  sendAfter: Datetime
-  createdAt: Datetime
-}
-
-"""All input for the `updateNotificationDigestQueue` mutation."""
-input UpdateNotificationDigestQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `NotificationDigestQueue` being updated.
-  """
-  patch: NotificationDigestQueuePatch!
 }
 
 """The output of our update `NotificationPreference` mutation."""
@@ -10964,7 +10083,6 @@ input UserPatch {
   avatarUrl: String
   createdAt: Datetime
   updatedAt: Datetime
-  email: String
 }
 
 """All input for the `updateUser` mutation."""
@@ -11051,77 +10169,6 @@ input UpdateUserPreferenceInput {
   An object where the defined keys will be set on the `UserPreference` being updated.
   """
   patch: UserPreferencePatch!
-}
-
-"""The output of our update `WardenSyncQueue` mutation."""
-type UpdateWardenSyncQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `WardenSyncQueue` that was updated by this mutation."""
-  wardenSyncQueue: WardenSyncQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `WardenSyncQueue`. May be used by Relay 1."""
-  wardenSyncQueueEdge(
-    """The method to use when ordering `WardenSyncQueue`."""
-    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueEdge
-}
-
-"""All input for the `updateWardenSyncQueueById` mutation."""
-input UpdateWardenSyncQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `WardenSyncQueue` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `WardenSyncQueue` being updated.
-  """
-  patch: WardenSyncQueuePatch!
-}
-
-"""
-Represents an update to a `WardenSyncQueue`. Fields that are set will be updated.
-"""
-input WardenSyncQueuePatch {
-  rowId: UUID
-  operation: String
-  payload: JSON
-  attempts: Int
-  maxAttempts: Int
-  lastError: String
-  nextRetryAt: Datetime
-  createdAt: Datetime
-}
-
-"""All input for the `updateWardenSyncQueue` mutation."""
-input UpdateWardenSyncQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `WardenSyncQueue` being updated.
-  """
-  patch: WardenSyncQueuePatch!
 }
 
 """The output of our delete `Assignee` mutation."""
@@ -11309,54 +10356,6 @@ input DeleteLabelByIdInput {
 
 """All input for the `deleteLabel` mutation."""
 input DeleteLabelInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `NotificationDigestQueue` mutation."""
-type DeleteNotificationDigestQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `NotificationDigestQueue` that was deleted by this mutation."""
-  notificationDigestQueue: NotificationDigestQueue
-  deletedNotificationDigestQueueId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `NotificationDigestQueue`. May be used by Relay 1."""
-  notificationDigestQueueEdge(
-    """The method to use when ordering `NotificationDigestQueue`."""
-    orderBy: [NotificationDigestQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueEdge
-}
-
-"""All input for the `deleteNotificationDigestQueueById` mutation."""
-input DeleteNotificationDigestQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `NotificationDigestQueue` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteNotificationDigestQueue` mutation."""
-input DeleteNotificationDigestQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -11943,54 +10942,6 @@ input DeleteUserPreferenceInput {
   rowId: UUID!
 }
 
-"""The output of our delete `WardenSyncQueue` mutation."""
-type DeleteWardenSyncQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `WardenSyncQueue` that was deleted by this mutation."""
-  wardenSyncQueue: WardenSyncQueue
-  deletedWardenSyncQueueId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `WardenSyncQueue`. May be used by Relay 1."""
-  wardenSyncQueueEdge(
-    """The method to use when ordering `WardenSyncQueue`."""
-    orderBy: [WardenSyncQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueEdge
-}
-
-"""All input for the `deleteWardenSyncQueueById` mutation."""
-input DeleteWardenSyncQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `WardenSyncQueue` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteWardenSyncQueue` mutation."""
-input DeleteWardenSyncQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The currently authenticated user."""
 type Observer {
   rowId: UUID!
@@ -12236,9 +11187,6 @@ type Query implements Node {
   """Get a single `Label`."""
   label(rowId: UUID!): Label
 
-  """Get a single `NotificationDigestQueue`."""
-  notificationDigestQueue(rowId: UUID!): NotificationDigestQueue
-
   """Get a single `NotificationPreference`."""
   notificationPreference(rowId: UUID!): NotificationPreference
 
@@ -12299,9 +11247,6 @@ type Query implements Node {
   """Get a single `UserPreference`."""
   userPreferenceByUserIdAndProjectId(userId: UUID!, projectId: UUID!): UserPreference
 
-  """Get a single `WardenSyncQueue`."""
-  wardenSyncQueue(rowId: UUID!): WardenSyncQueue
-
   """Reads a single `Assignee` using its globally unique `ID`."""
   assigneeById(
     """The globally unique `ID` to be used in selecting a single `Assignee`."""
@@ -12341,16 +11286,6 @@ type Query implements Node {
     """
     id: ID!
   ): LinkUnfurl
-
-  """
-  Reads a single `NotificationDigestQueue` using its globally unique `ID`.
-  """
-  notificationDigestQueueById(
-    """
-    The globally unique `ID` to be used in selecting a single `NotificationDigestQueue`.
-    """
-    id: ID!
-  ): NotificationDigestQueue
 
   """
   Reads a single `NotificationPreference` using its globally unique `ID`.
@@ -12437,14 +11372,6 @@ type Query implements Node {
     """
     id: ID!
   ): UserPreference
-
-  """Reads a single `WardenSyncQueue` using its globally unique `ID`."""
-  wardenSyncQueueById(
-    """
-    The globally unique `ID` to be used in selecting a single `WardenSyncQueue`.
-    """
-    id: ID!
-  ): WardenSyncQueue
 
   """Reads and enables pagination through a set of `Assignee`."""
   assignees(
@@ -12615,42 +11542,6 @@ type Query implements Node {
     """The method to use when ordering `Label`."""
     orderBy: [LabelOrderBy!] = [PRIMARY_KEY_ASC]
   ): LabelConnection
-
-  """
-  Reads and enables pagination through a set of `NotificationDigestQueue`.
-  """
-  notificationDigestQueues(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: NotificationDigestQueueCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: NotificationDigestQueueFilter
-
-    """The method to use when ordering `NotificationDigestQueue`."""
-    orderBy: [NotificationDigestQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): NotificationDigestQueueConnection
 
   """
   Reads and enables pagination through a set of `NotificationPreference`.
@@ -13062,40 +11953,6 @@ type Query implements Node {
     orderBy: [UserPreferenceOrderBy!] = [PRIMARY_KEY_ASC]
   ): UserPreferenceConnection
 
-  """Reads and enables pagination through a set of `WardenSyncQueue`."""
-  wardenSyncQueues(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: WardenSyncQueueCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: WardenSyncQueueFilter
-
-    """The method to use when ordering `WardenSyncQueue`."""
-    orderBy: [WardenSyncQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): WardenSyncQueueConnection
-
   """
   Returns the currently authenticated user (observer).
   Returns null if not authenticated.
@@ -13165,14 +12022,6 @@ type Mutation {
     """
     input: CreateLabelInput!
   ): CreateLabelPayload
-
-  """Creates a single `NotificationDigestQueue`."""
-  createNotificationDigestQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateNotificationDigestQueueInput!
-  ): CreateNotificationDigestQueuePayload
 
   """Creates a single `NotificationPreference`."""
   createNotificationPreference(
@@ -13270,14 +12119,6 @@ type Mutation {
     input: CreateUserPreferenceInput!
   ): CreateUserPreferencePayload
 
-  """Creates a single `WardenSyncQueue`."""
-  createWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateWardenSyncQueueInput!
-  ): CreateWardenSyncQueuePayload
-
   """Updates a single `Assignee` using its globally unique id and a patch."""
   updateAssigneeById(
     """
@@ -13341,26 +12182,6 @@ type Mutation {
     """
     input: UpdateLabelInput!
   ): UpdateLabelPayload
-
-  """
-  Updates a single `NotificationDigestQueue` using its globally unique id and a patch.
-  """
-  updateNotificationDigestQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNotificationDigestQueueByIdInput!
-  ): UpdateNotificationDigestQueuePayload
-
-  """
-  Updates a single `NotificationDigestQueue` using a unique key and a patch.
-  """
-  updateNotificationDigestQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNotificationDigestQueueInput!
-  ): UpdateNotificationDigestQueuePayload
 
   """
   Updates a single `NotificationPreference` using its globally unique id and a patch.
@@ -13568,24 +12389,6 @@ type Mutation {
     input: UpdateUserPreferenceInput!
   ): UpdateUserPreferencePayload
 
-  """
-  Updates a single `WardenSyncQueue` using its globally unique id and a patch.
-  """
-  updateWardenSyncQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWardenSyncQueueByIdInput!
-  ): UpdateWardenSyncQueuePayload
-
-  """Updates a single `WardenSyncQueue` using a unique key and a patch."""
-  updateWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateWardenSyncQueueInput!
-  ): UpdateWardenSyncQueuePayload
-
   """Deletes a single `Assignee` using its globally unique id."""
   deleteAssigneeById(
     """
@@ -13649,24 +12452,6 @@ type Mutation {
     """
     input: DeleteLabelInput!
   ): DeleteLabelPayload
-
-  """
-  Deletes a single `NotificationDigestQueue` using its globally unique id.
-  """
-  deleteNotificationDigestQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNotificationDigestQueueByIdInput!
-  ): DeleteNotificationDigestQueuePayload
-
-  """Deletes a single `NotificationDigestQueue` using a unique key."""
-  deleteNotificationDigestQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNotificationDigestQueueInput!
-  ): DeleteNotificationDigestQueuePayload
 
   """
   Deletes a single `NotificationPreference` using its globally unique id.
@@ -13861,22 +12646,6 @@ type Mutation {
     """
     input: DeleteUserPreferenceInput!
   ): DeleteUserPreferencePayload
-
-  """Deletes a single `WardenSyncQueue` using its globally unique id."""
-  deleteWardenSyncQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWardenSyncQueueByIdInput!
-  ): DeleteWardenSyncQueuePayload
-
-  """Deletes a single `WardenSyncQueue` using a unique key."""
-  deleteWardenSyncQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteWardenSyncQueueInput!
-  ): DeleteWardenSyncQueuePayload
 
   """
   Move a task to a column in another project within the same workspace.

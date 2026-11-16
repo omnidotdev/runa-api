@@ -49,6 +49,23 @@ const SmartTagPlugin = jsonPgSmartTags({
           behavior: "-*",
         },
       },
+      // Internal queues: the digest queue holds recipient emails and task
+      // titles, the sync queue holds authorization tuples; neither is ever
+      // part of the public API surface
+      notification_digest_queue: {
+        tags: { behavior: "-*" },
+      },
+      warden_sync_queue: {
+        tags: { behavior: "-*" },
+      },
+      // Email addresses are personal data the app never reads through GraphQL
+      // (it gets the signed-in user's email from the session); keep them out of
+      // the API entirely, including the userByEmail lookup
+      user: {
+        attribute: {
+          email: { tags: { behavior: "-*" } },
+        },
+      },
     },
   },
 });

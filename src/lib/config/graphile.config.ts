@@ -15,10 +15,12 @@ import {
   ProjectColumnPlugin,
   ProjectLinkPlugin,
   ProjectPlugin,
+  ReadScopePlugin,
   SettingsPlugin,
   SmartTagPlugin,
   TaskLabelPlugin,
   TaskPlugin,
+  UserByEmailLookupPlugin,
   UserPlugin,
   UserPreferencePlugin,
 } from "lib/graphql/plugins/authorization";
@@ -76,6 +78,9 @@ const graphilePreset: GraphileConfig.Preset = {
     ProjectLinkPlugin,
     SettingsPlugin,
     SmartTagPlugin,
+    // Read-side row scoping for every select of workspace data
+    ReadScopePlugin,
+    UserByEmailLookupPlugin,
     TaskPlugin,
     TaskLabelPlugin,
     // Custom moveTask mutation (cross-project move with number reassignment)
