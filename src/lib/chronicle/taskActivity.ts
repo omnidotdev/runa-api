@@ -5,13 +5,16 @@
  * Chronicle. This is the read side: it queries Chronicle's `resourceActivity`,
  * scoped to a single organization and the task's id as the resource.
  *
- * SECURITY: Chronicle enforces no authorization on reads - any caller passing an
- * org id gets that org's data. The caller here MUST pass only the request's own
- * resolved organizationId (never a client-supplied one); the GraphQL resolver is
- * responsible for that scoping and the permission check.
+ * SECURITY: runa reads with its own Chronicle service key, which Chronicle limits
+ * to runa's events but not to one organization. The caller here MUST pass only
+ * the request's own resolved organizationId (never a client-supplied one); the
+ * GraphQL resolver is responsible for that scoping and the permission check.
  */
 
-import { CHRONICLE_API_URL } from "lib/config/env.config";
+import {
+  CHRONICLE_API_URL,
+  CHRONICLE_SERVICE_KEY,
+} from "lib/config/env.config";
 import { buildCreationEntry, withCreationBaseline } from "./creationBaseline";
 
 /** A flattened activity entry for a task. */
@@ -72,14 +75,17 @@ interface FetchTaskActivityArgs {
   authorName?: string | null;
   /** Injectable for tests; defaults to the global fetch. */
   fetchImpl?: typeof fetch;
+  /** Chronicle endpoint and service read key; default to the env config */
+  apiUrl?: string;
+  serviceKey?: string;
 }
 
 /**
  * Fetch and flatten a task's activity from Chronicle, most recent first, always
  * anchored by a synthesized "created this task" entry (built from the task's own
  * row) so the feed is never empty for a real task and pre-instrumentation tasks
- * still show their origin. Returns just that anchor when Chronicle is
- * unconfigured (graceful degradation). Throws a generic, user-safe error on
+ * still show their origin. Returns just that anchor when Chronicle (URL or
+ * service key) is unconfigured (graceful degradation). Throws a generic, user-safe error on
  * transport/GraphQL failure; detail is logged only
  */
 export const fetchTaskActivity = async ({
@@ -89,6 +95,8 @@ export const fetchTaskActivity = async ({
   createdAt,
   authorName,
   fetchImpl = fetch,
+  apiUrl = CHRONICLE_API_URL,
+  serviceKey = CHRONICLE_SERVICE_KEY,
 }: FetchTaskActivityArgs): Promise<TaskActivityEntry[]> => {
   const baseline = buildCreationEntry({
     taskId,
@@ -96,13 +104,17 @@ export const fetchTaskActivity = async ({
     authorName: authorName ?? null,
   });
 
-  if (!CHRONICLE_API_URL) return withCreationBaseline([], baseline);
+  // Chronicle refuses unauthenticated reads, so a missing key is unconfigured
+  if (!apiUrl || !serviceKey) return withCreationBaseline([], baseline);
 
   let events: ChronicleEvent[];
   try {
-    const res = await fetchImpl(`${CHRONICLE_API_URL}/graphql`, {
+    const res = await fetchImpl(`${apiUrl}/graphql`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${serviceKey}`,
+      },
       body: JSON.stringify({
         query: RESOURCE_ACTIVITY_QUERY,
         variables: { organizationId, resourceId: taskId, limit },

@@ -65,6 +65,8 @@ export const {
   HERALD_FROM_EMAIL,
   // Audit/activity feed (Chronicle). When unset, the task activity feed is empty.
   CHRONICLE_API_URL,
+  // Chronicle service read key (limited to runa's events). Required with the URL
+  CHRONICLE_SERVICE_KEY,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development";
@@ -115,7 +117,7 @@ export const isNotificationsEnabled = !!(
 );
 
 /** Whether the audit/activity feed (Chronicle) is configured */
-export const isAuditEnabled = !!CHRONICLE_API_URL;
+export const isAuditEnabled = !!CHRONICLE_API_URL && !!CHRONICLE_SERVICE_KEY;
 
 // Startup warnings for optional integrations
 if (!BILLING_BASE_URL)
@@ -143,3 +145,5 @@ if (!APP_BASE_URL)
   console.warn("APP_BASE_URL not set, task links in emails will be omitted");
 if (!CHRONICLE_API_URL)
   console.warn("CHRONICLE_API_URL not set, task activity feed disabled");
+else if (!CHRONICLE_SERVICE_KEY)
+  console.warn("CHRONICLE_SERVICE_KEY not set, task activity feed disabled");
