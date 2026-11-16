@@ -1,14 +1,16 @@
 /**
- * Builds a project's read-only iCalendar feed: fetch the project's dated tasks
- * and hand them to cadence's RFC 5545 generator, one all-day VEVENT per task.
+ * Builds the read-only iCalendar feeds: fetch the dated tasks and hand them to
+ * cadence's RFC 5545 generator, one VEVENT per task.
  *
- * Due dates are stored as a tz-aware instant at the picked local start-of-day
- * (see the app's `storedDueDate`), and the app renders them with `dayjs(...)`
- * in the viewer's local time. There is no viewer timezone on the server, so the
- * feed buckets each task on its UTC day (`toISOString().slice(0, 10)`), which
- * matches a viewer at/near UTC. This can land a day off for tasks whose owner
- * picked the date far east of UTC, the same imperfection the app already has;
- * fully fixing it needs a date-only column, out of scope here.
+ * A timed due date (`dueHasTime`) is emitted as a timed event at its stored
+ * instant. An all-day due date is emitted on its calendar day, read tolerantly
+ * as the nearest UTC midnight (see `allDayKey`), so both canonical UTC-midnight
+ * rows and legacy rows stored at a creator's local midnight land on the
+ * intended day. Task titles are stored as rich-text HTML and are reduced to
+ * plain text for the event summary.
+ *
+ * These builders do no authorization; the feed route authorizes the token
+ * first (see `feedAccess`).
  */
 
 import { buildIcsCalendar } from "@omnidotdev/cadence/ics";
@@ -17,6 +19,8 @@ import { and, eq, isNotNull } from "drizzle-orm";
 import { PUBLIC_API_URL } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import { assignees, projects, tasks } from "lib/db/schema";
+import { htmlToText } from "lib/notifications/mentions";
+import { allDayKey } from "lib/tasks/dueDate";
 
 import type { IcsEvent } from "@omnidotdev/cadence/ics";
 
@@ -31,10 +35,13 @@ const TASK_FEED_COLUMNS = {
   dueHasTime: tasks.dueHasTime,
 };
 
+/** Summary for a task whose title is empty once its markup is stripped */
+const UNTITLED = "Untitled task";
+
 /**
- * A task row -> an ICS event: all-day on its UTC day, or a timed event (passing
- * the stored instant as `start`) when the task carries a time-of-day. dueDate
- * is non-null here (feed queries filter it).
+ * A task row -> an ICS event: all-day on its calendar day, or a timed event
+ * (passing the stored instant as `start`) when the task carries a time-of-day.
+ * dueDate is non-null here (feed queries filter it).
  */
 const toIcsEvent = (row: {
   id: string;
@@ -45,8 +52,8 @@ const toIcsEvent = (row: {
   const dueDate = row.dueDate as string;
   return {
     uid: row.id,
-    title: row.content,
-    day: new Date(dueDate).toISOString().slice(0, 10),
+    title: htmlToText(row.content) || UNTITLED,
+    day: allDayKey(dueDate),
     ...(row.dueHasTime ? { start: dueDate } : {}),
   };
 };
@@ -93,15 +100,17 @@ export const buildProjectCalendarFeed = async (
 
 /**
  * Build the iCalendar document for a user's own dated tasks across a workspace
- * (every project in the org where they are an assignee). Always returns a
- * document (empty when they have no dated tasks).
+ * (every project in the org where they are an assignee), limited to the
+ * projects `readableProjectIds` says they can currently read. Always returns a
+ * document (empty when they have no readable dated tasks).
  */
 export const buildUserCalendarFeed = async (
   organizationId: string,
   userId: string,
+  readableProjectIds: (projectIds: string[]) => Promise<Set<string>>,
 ): Promise<string> => {
   const rows = await dbPool
-    .select(TASK_FEED_COLUMNS)
+    .select({ ...TASK_FEED_COLUMNS, projectId: tasks.projectId })
     .from(tasks)
     .innerJoin(projects, eq(tasks.projectId, projects.id))
     .innerJoin(assignees, eq(assignees.taskId, tasks.id))
@@ -113,8 +122,15 @@ export const buildUserCalendarFeed = async (
       ),
     );
 
-  return buildIcsCalendar(rows.map(toIcsEvent), {
-    calendarName: "My Runa tasks",
-    uidDomain: UID_DOMAIN,
-  });
+  const readable = rows.length
+    ? await readableProjectIds([...new Set(rows.map((row) => row.projectId))])
+    : new Set<string>();
+
+  return buildIcsCalendar(
+    rows.filter((row) => readable.has(row.projectId)).map(toIcsEvent),
+    {
+      calendarName: "My Runa tasks",
+      uidDomain: UID_DOMAIN,
+    },
+  );
 };

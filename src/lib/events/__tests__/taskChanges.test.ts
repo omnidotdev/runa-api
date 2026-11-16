@@ -30,6 +30,27 @@ describe("buildTaskChanges", () => {
     );
   });
 
+  it("labels an all-day due date with its tolerant calendar day", () => {
+    // a legacy all-day date stored at local midnight east of UTC (UTC+1)
+    expect(
+      buildTaskChanges({
+        dueDate: "2026-01-04T23:00:00Z",
+        dueHasTime: false,
+      })[0].label,
+    ).toBe("set the due date to 2026-01-05");
+    // a legacy all-day date stored at local midnight west of UTC (UTC-6)
+    expect(buildTaskChanges({ dueDate: "2026-01-05T06:00:00Z" })[0].label).toBe(
+      "set the due date to 2026-01-05",
+    );
+  });
+
+  it("labels a timed due date with its UTC date and time", () => {
+    expect(
+      buildTaskChanges({ dueDate: "2026-01-05T21:30:00Z", dueHasTime: true })[0]
+        .label,
+    ).toBe("set the due date to 2026-01-05 21:30 UTC");
+  });
+
   it("labels title and description edits", () => {
     expect(buildTaskChanges({ content: "x" })[0]).toEqual({
       field: "content",

@@ -42,9 +42,11 @@ const toInfo = (row: SelectCalendarFeedToken): CalendarFeedTokenInfo => ({
 });
 
 /** What a resolved feed token grants read-only access to: one of project/user. */
-interface ResolvedCalendarFeedToken {
+export interface ResolvedCalendarFeedToken {
   tokenId: string;
   organizationId: string;
+  /** Identity-provider id of whoever created the token */
+  createdBy: string;
   /** Set for a project feed; null for a user feed. */
   projectId: string | null;
   /** Set for a user feed; null for a project feed. */
@@ -122,9 +124,10 @@ export const getCalendarFeedToken = async (
 };
 
 /**
- * Resolve a feed token to its project, or null if it is not a feed token, is
- * unknown, or is revoked. Records last use (best-effort). This grants only
- * read-only access to that one project's dated tasks.
+ * Resolve a feed token to its project or user, or null if it is not a feed
+ * token, is unknown, or is revoked. Records last use (best-effort). Resolving
+ * does not authorize: the feed route still checks, on every request, that the
+ * token's owner can currently read what it publishes (see `feedAccess`).
  */
 export const resolveCalendarFeedToken = async (
   plaintext: string,
@@ -149,6 +152,7 @@ export const resolveCalendarFeedToken = async (
   return {
     tokenId: row.id,
     organizationId: row.organizationId,
+    createdBy: row.createdBy,
     projectId: row.projectId,
     userId: row.userId,
   };

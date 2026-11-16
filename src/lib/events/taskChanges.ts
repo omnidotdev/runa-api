@@ -1,5 +1,7 @@
 import { EXPORTABLE } from "graphile-export";
 
+import { allDayKey, dueDateInstant } from "lib/tasks/dueDate";
+
 import type { ResourceChange } from "./resourceEvent";
 
 const PRIORITY_LABELS: Record<string, string> = {
@@ -15,7 +17,7 @@ const PRIORITY_LABELS: Record<string, string> = {
  * change into a move label. Ordering/timestamp fields are ignored as noise
  */
 export const buildTaskChanges = EXPORTABLE(
-  (PRIORITY_LABELS) =>
+  (PRIORITY_LABELS, allDayKey, dueDateInstant) =>
     (
       patch: Record<string, unknown> | null | undefined,
       columnTitle?: string | null,
@@ -40,11 +42,21 @@ export const buildTaskChanges = EXPORTABLE(
         });
       }
       if ("dueDate" in patch) {
+        // a timed due date is labeled with its UTC date and time (the server
+        // has no viewer zone); an all-day one with its tolerant calendar day
+        const time =
+          patch.dueHasTime === true
+            ? dueDateInstant(patch.dueDate as string)
+            : null;
+        const day =
+          time !== null
+            ? `${new Date(time).toISOString().slice(0, 16).replace("T", " ")} UTC`
+            : patch.dueDate
+              ? allDayKey(patch.dueDate as string)
+              : null;
         changes.push({
           field: "dueDate",
-          label: patch.dueDate
-            ? `set the due date to ${String(patch.dueDate).slice(0, 10)}`
-            : "cleared the due date",
+          label: day ? `set the due date to ${day}` : "cleared the due date",
         });
       }
       if ("content" in patch) {
@@ -56,7 +68,7 @@ export const buildTaskChanges = EXPORTABLE(
 
       return changes;
     },
-  [PRIORITY_LABELS],
+  [PRIORITY_LABELS, allDayKey, dueDateInstant],
 );
 
 /** The task's stored values for the fields an update can label */

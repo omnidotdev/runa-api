@@ -8,51 +8,69 @@
  * outside the GraphQL auth plugin by design; it authenticates solely via the
  * token it resolves.
  *
+ * A live token is not enough on its own: every request re-checks that the
+ * token's owner can still read what it publishes (see `feedAccess`), so a feed
+ * stops once its creator loses access or its project or workspace is deleted.
+ *
  * The token must never be logged (it would otherwise land in access logs); this
- * route adds no request logging, returns a generic 404 for an unknown or revoked
- * token (no detail leaked), and marks the response `private, no-store` so shared
- * caches never retain feed contents.
+ * route adds no request logging, returns a generic 404 for an unknown, revoked,
+ * or no longer authorized token (no detail leaked), and marks every response
+ * `private, no-store` so shared caches never retain feed contents. When access
+ * cannot be checked (authorization service down) it answers 503, so calendar
+ * clients retry instead of treating the feed as gone.
  */
 
 import { Elysia } from "elysia";
 
 import { resolveCalendarFeedToken } from "lib/tokens/calendarFeedTokens";
-import { buildProjectCalendarFeed, buildUserCalendarFeed } from "./feed";
+import { serveCalendarFeed } from "./feedAccess";
 
-const NOT_FOUND = "Not found";
+import type { FeedPermissionCheck } from "./feedAccess";
 
-const calendarFeedRoutes = new Elysia({ prefix: "/calendar" }).get(
-  "/feed/:token",
-  async ({ params, set }) => {
-    // tolerate clients that append a .ics extension to the subscribe URL
-    const raw = (params as Record<string, string>).token ?? "";
-    const token = raw.endsWith(".ics") ? raw.slice(0, -4) : raw;
+const NO_STORE = "private, no-store, max-age=0";
 
-    const resolved = await resolveCalendarFeedToken(token);
-    if (!resolved) {
-      set.status = 404;
-      return NOT_FOUND;
-    }
+const plain = (status: number, body: string): Response =>
+  new Response(body, {
+    status,
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+      "cache-control": NO_STORE,
+    },
+  });
 
-    // a token is scoped to exactly one of a project or a user
-    const ics = resolved.userId
-      ? await buildUserCalendarFeed(resolved.organizationId, resolved.userId)
-      : resolved.projectId
-        ? await buildProjectCalendarFeed(resolved.projectId)
-        : null;
-    if (ics === null) {
-      set.status = 404;
-      return NOT_FOUND;
-    }
+/**
+ * Build the feed routes. `permissionCheck` overrides the Warden read check
+ * (tests inject one); by default each request gets a fresh Warden check
+ */
+export const createCalendarFeedRoutes = (
+  permissionCheck?: () => FeedPermissionCheck,
+) =>
+  new Elysia({ prefix: "/calendar" }).get(
+    "/feed/:token",
+    async ({ params }) => {
+      // tolerate clients that append a .ics extension to the subscribe URL
+      const raw = (params as Record<string, string>).token ?? "";
+      const token = raw.endsWith(".ics") ? raw.slice(0, -4) : raw;
 
-    return new Response(ics, {
-      headers: {
-        "content-type": "text/calendar; charset=utf-8",
-        "content-disposition": 'inline; filename="calendar.ics"',
-        "cache-control": "private, no-store, max-age=0",
-      },
-    });
-  },
-);
+      const resolved = await resolveCalendarFeedToken(token);
+      if (!resolved) return plain(404, "Not found");
+
+      const result = await serveCalendarFeed(resolved, permissionCheck?.());
+      if (result.status === "not_found") return plain(404, "Not found");
+      if (result.status === "unavailable") {
+        return plain(503, "Service unavailable");
+      }
+
+      return new Response(result.ics, {
+        headers: {
+          "content-type": "text/calendar; charset=utf-8",
+          "content-disposition": 'inline; filename="calendar.ics"',
+          "cache-control": NO_STORE,
+        },
+      });
+    },
+  );
+
+const calendarFeedRoutes = createCalendarFeedRoutes();
 
 export default calendarFeedRoutes;

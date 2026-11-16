@@ -1,7 +1,8 @@
 /**
  * Integration tests for the project calendar feed builder against a real
- * Postgres (requires DATABASE_URL): only dated tasks become events, each on its
- * UTC day, the ICS carries the project name, and a missing project yields null.
+ * Postgres (requires DATABASE_URL): only dated tasks become events, all-day ones
+ * on their tolerant calendar day (nearest UTC midnight), titles as plain text,
+ * the ICS carries the project name, and a missing project yields null.
  */
 
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
@@ -85,6 +86,34 @@ beforeAll(async () => {
         dueDate: "2026-10-16T14:30:00+00:00",
         dueHasTime: true,
       },
+      {
+        // legacy all-day row stored at local midnight in UTC+1
+        content: "Paris kickoff",
+        description: "",
+        projectId,
+        columnId: col!.id,
+        columnIndex: "a3",
+        dueDate: "2026-10-20T00:00:00+01:00",
+      },
+      {
+        // canonical all-day row at UTC midnight
+        content: "Canonical deadline",
+        description: "",
+        projectId,
+        columnId: col!.id,
+        columnIndex: "a4",
+        dueDate: "2026-10-21T00:00:00Z",
+      },
+      {
+        // rich-text title from the web editor
+        content:
+          '<p dir="ltr"><span style="white-space: pre-wrap;">Fix login &amp; signup</span></p>',
+        description: "",
+        projectId,
+        columnId: col!.id,
+        columnIndex: "a5",
+        dueDate: "2026-10-22T00:00:00Z",
+      },
     ])
     .returning({ id: tasks.id, content: tasks.content });
 
@@ -136,6 +165,25 @@ describe("buildProjectCalendarFeed", () => {
     expect(doc).toContain("DTEND:20261016T153000Z");
   });
 
+  test("puts a local-midnight all-day date east of UTC on its intended day", async () => {
+    const doc = (await buildProjectCalendarFeed(projectId)) as string;
+    // stored as 2026-10-19T23:00Z; the UTC day alone would be a day early
+    expect(doc).toContain("DTSTART;VALUE=DATE:20261020");
+    expect(doc).not.toContain("DTSTART;VALUE=DATE:20261019");
+  });
+
+  test("puts a canonical UTC-midnight all-day date on that day", async () => {
+    const doc = (await buildProjectCalendarFeed(projectId)) as string;
+    expect(doc).toContain("DTSTART;VALUE=DATE:20261021");
+  });
+
+  test("publishes rich-text titles as plain text", async () => {
+    const doc = (await buildProjectCalendarFeed(projectId)) as string;
+    expect(doc).toContain("SUMMARY:Fix login & signup");
+    expect(doc).not.toContain("<p");
+    expect(doc).not.toContain("&amp;");
+  });
+
   test("returns null for a project that does not exist", async () => {
     expect(
       await buildProjectCalendarFeed("00000000-0000-0000-0000-000000000000"),
@@ -161,8 +209,10 @@ describe("calendarFeedUrl", () => {
 });
 
 describe("buildUserCalendarFeed", () => {
+  const everyProject = async (projectIds: string[]) => new Set(projectIds);
+
   test("includes the user's dated assigned tasks across the workspace", async () => {
-    const doc = await buildUserCalendarFeed(ORG, userId);
+    const doc = await buildUserCalendarFeed(ORG, userId, everyProject);
     expect(doc).toContain("BEGIN:VCALENDAR");
     expect(doc).toContain("Ship the thing");
     expect(doc).toContain("20261014");
@@ -174,7 +224,19 @@ describe("buildUserCalendarFeed", () => {
     const doc = await buildUserCalendarFeed(
       ORG,
       "00000000-0000-0000-0000-000000000000",
+      everyProject,
     );
+    expect(doc).toContain("BEGIN:VCALENDAR");
+    expect(doc).not.toContain("Ship the thing");
+  });
+
+  test("leaves out tasks in projects the user can no longer read", async () => {
+    let asked: string[] = [];
+    const doc = await buildUserCalendarFeed(ORG, userId, async (ids) => {
+      asked = ids;
+      return new Set<string>();
+    });
+    expect(asked).toEqual([projectId]);
     expect(doc).toContain("BEGIN:VCALENDAR");
     expect(doc).not.toContain("Ship the thing");
   });

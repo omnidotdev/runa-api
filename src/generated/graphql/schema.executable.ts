@@ -8201,6 +8201,21 @@ const PRIORITY_LABELS = {
   medium: "Medium",
   high: "High"
 };
+const dueDateInstant = value => {
+  if (value == null || value === "") return null;
+  if (value instanceof Date) {
+    const time = value.getTime();
+    return Number.isNaN(time) ? null : time;
+  }
+  const iso = value.trim().replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
+    time = new Date(iso).getTime();
+  return Number.isNaN(time) ? null : time;
+};
+const allDayKey = value => {
+  const time = dueDateInstant(value);
+  if (time === null) return String(value).slice(0, 10);
+  return new Date(time + 43200000).toISOString().slice(0, 10);
+};
 const buildTaskChanges = (patch, columnTitle) => {
   if (!patch) return [];
   const changes = [];
@@ -8215,10 +8230,14 @@ const buildTaskChanges = (patch, columnTitle) => {
       label: `set priority to ${PRIORITY_LABELS[priority] ?? priority}`
     });
   }
-  if ("dueDate" in patch) changes.push({
-    field: "dueDate",
-    label: patch.dueDate ? `set the due date to ${String(patch.dueDate).slice(0, 10)}` : "cleared the due date"
-  });
+  if ("dueDate" in patch) {
+    const time = patch.dueHasTime === !0 ? dueDateInstant(patch.dueDate) : null,
+      day = time !== null ? `${new Date(time).toISOString().slice(0, 16).replace("T", " ")} UTC` : patch.dueDate ? allDayKey(patch.dueDate) : null;
+    changes.push({
+      field: "dueDate",
+      label: day ? `set the due date to ${day}` : "cleared the due date"
+    });
+  }
   if ("content" in patch) changes.push({
     field: "content",
     label: "renamed this task"
