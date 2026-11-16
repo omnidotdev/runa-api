@@ -48,6 +48,7 @@ import {
 import MoveTaskPlugin from "lib/graphql/plugins/tasks/MoveTask.plugin";
 import TaskActivityPlugin from "lib/graphql/plugins/tasks/TaskActivity.plugin";
 import ApiTokenPlugin from "lib/graphql/plugins/tokens/ApiToken.plugin";
+import ViewerPlugin from "lib/graphql/plugins/viewer/Viewer.plugin";
 import WebhookEndpointPlugin from "lib/graphql/plugins/webhooks/WebhookEndpoint.plugin";
 import { DATABASE_URL, isDevEnv, isProdEnv } from "./env.config";
 
@@ -85,6 +86,8 @@ const graphilePreset: GraphileConfig.Preset = {
     TaskLabelPlugin,
     // Custom moveTask mutation (cross-project move with number reassignment)
     MoveTaskPlugin,
+    // Caller identity + workspaces (viewer, viewerWorkspaces) for integrations
+    ViewerPlugin,
     // Custom webhook-endpoint management mutations (admin-gated; secret shown once)
     WebhookEndpointPlugin,
     // Custom API-token management mutations (admin-gated; plaintext shown once)

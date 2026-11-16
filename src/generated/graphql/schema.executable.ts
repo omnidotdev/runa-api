@@ -5506,6 +5506,8 @@ function UserPreferenceInput_pinOrderApply(obj, val, info) {
 }
 const MoveTaskPayload_taskId_plan = $row => lambda($row, r => r?.["id"] ?? null);
 const MoveTaskPayload_projectId_plan = $row => lambda($row, r => r?.["projectId"] ?? null);
+const Viewer_rowId_plan = $value => lambda($value, value => value?.["id"] ?? null);
+const Viewer_name_plan = $value => lambda($value, value => value?.["name"] ?? null);
 const WebhookEndpointInfo_url_plan = $row => lambda($row, r => r?.["url"] ?? null);
 const WebhookEndpointInfo_enabled_plan = $row => lambda($row, r => r?.["enabled"] ?? null);
 const WebhookEndpointInfo_createdAt_plan = $row => lambda($row, r => r?.["createdAt"] ?? null);
@@ -20686,6 +20688,27 @@ type MoveTaskPayload {
   columnIndex: String
 }
 
+"""The user a request acts as."""
+type Viewer {
+  """The user's id."""
+  rowId: UUID!
+
+  """The user's display name."""
+  name: String!
+}
+
+"""A workspace the request can act in."""
+type ViewerWorkspace {
+  """The workspace (organization) id."""
+  id: String!
+
+  """The workspace's URL slug, when known."""
+  slug: String
+
+  """The workspace's display name, when known."""
+  name: String
+}
+
 """A webhook endpoint, without its signing secret."""
 type WebhookEndpointInfo {
   id: UUID
@@ -21662,6 +21685,15 @@ type Query implements Node {
   Returns null if not authenticated.
   """
   observer: Observer
+
+  """The user this request acts as (an API token acts as its creator)."""
+  viewer: Viewer
+
+  """
+  The workspaces this request can act in: the single workspace of an API
+  token, or every workspace of a signed-in user.
+  """
+  viewerWorkspaces: [ViewerWorkspace!]!
 
   """
   List a workspace's webhook endpoints (requires workspace admin). Secret-less.
@@ -23081,6 +23113,28 @@ ${String(oldPlan)}`);
           filter: Task_assigneesfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
+      },
+      viewer() {
+        return lambda(context().get("observer"), observer => observer ? {
+          id: observer.id,
+          name: observer.name
+        } : null);
+      },
+      viewerWorkspaces() {
+        return lambda(context(), ctx => {
+          const c = ctx;
+          if (c.apiTokenPrincipal) return [{
+            id: c.apiTokenPrincipal.organizationId,
+            slug: null,
+            name: null
+          }];
+          if (!c.observer) return [];
+          return (c.organizations ?? []).map(org => ({
+            id: org.id,
+            slug: org.slug ?? null,
+            name: org.name ?? null
+          }));
+        });
       },
       webhookEndpoints(_$root, fieldArgs) {
         const $organizationId = fieldArgs.getRaw("organizationId"),
@@ -27218,6 +27272,21 @@ ${String(oldPlan61)}`);
     plans: {
       pinOrder($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.int, "pin_order", TYPES.numeric, pgAggregateSpec_varianceSample, $pgSelectSingle);
+      }
+    }
+  },
+  Viewer: {
+    plans: {
+      name: Viewer_name_plan,
+      rowId: Viewer_rowId_plan
+    }
+  },
+  ViewerWorkspace: {
+    plans: {
+      id: Viewer_rowId_plan,
+      name: Viewer_name_plan,
+      slug($value) {
+        return lambda($value, value => value?.["slug"] ?? null);
       }
     }
   },

@@ -10982,6 +10982,27 @@ type MoveTaskPayload {
   columnIndex: String
 }
 
+"""The user a request acts as."""
+type Viewer {
+  """The user's id."""
+  rowId: UUID!
+
+  """The user's display name."""
+  name: String!
+}
+
+"""A workspace the request can act in."""
+type ViewerWorkspace {
+  """The workspace (organization) id."""
+  id: String!
+
+  """The workspace's URL slug, when known."""
+  slug: String
+
+  """The workspace's display name, when known."""
+  name: String
+}
+
 """A webhook endpoint, without its signing secret."""
 type WebhookEndpointInfo {
   id: UUID
@@ -11958,6 +11979,15 @@ type Query implements Node {
   Returns null if not authenticated.
   """
   observer: Observer
+
+  """The user this request acts as (an API token acts as its creator)."""
+  viewer: Viewer
+
+  """
+  The workspaces this request can act in: the single workspace of an API
+  token, or every workspace of a signed-in user.
+  """
+  viewerWorkspaces: [ViewerWorkspace!]!
 
   """
   List a workspace's webhook endpoints (requires workspace admin). Secret-less.

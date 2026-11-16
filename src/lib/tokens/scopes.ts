@@ -115,7 +115,19 @@ export const requiredScopeForOperation = (field: string): ApiScope | null =>
  * Whether a token's granted scopes permit a given operation. Default-deny: an
  * unmapped operation is denied even to a token holding every scope.
  */
+/**
+ * Fields that only describe the caller itself (who the token acts as and which
+ * workspace it is bound to). Any token may read them, whatever its scopes, so
+ * an integration can always identify its own context
+ */
+const CALLER_FIELDS: ReadonlySet<string> = new Set([
+  "viewer",
+  "viewerWorkspaces",
+]);
+
 export const operationPermittedByScopes = (
   field: string,
   granted: readonly string[],
-): boolean => tokenScopePermits(granted, requiredScopeForOperation(field));
+): boolean =>
+  CALLER_FIELDS.has(field) ||
+  tokenScopePermits(granted, requiredScopeForOperation(field));
