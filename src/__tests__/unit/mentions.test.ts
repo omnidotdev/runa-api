@@ -60,6 +60,13 @@ describe("htmlToText", () => {
     ).toBe("Hello there Tom & Jerry <3");
   });
 
+  it("decodes numeric character references and leaves unknown entities", () => {
+    expect(
+      htmlToText("<p>It&#39;s &#x27;done&#x27; &#8212; caf&#233; &copy;</p>"),
+    ).toBe("It's 'done' \u2014 caf\u00e9 &copy;");
+    expect(htmlToText("&amp;lt;b&amp;gt;")).toBe("&lt;b&gt;");
+  });
+
   it("handles empty input", () => {
     expect(htmlToText(undefined)).toBe("");
   });

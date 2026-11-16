@@ -44,9 +44,23 @@ const ENTITIES: Record<string, string> = {
   "&lt;": "<",
   "&gt;": ">",
   "&quot;": '"',
-  "&#39;": "'",
-  "&#x27;": "'",
+  "&apos;": "'",
   "&nbsp;": " ",
+};
+
+/** Decode one named or numeric character reference, leaving unknown ones */
+const decodeEntity = (entity: string): string => {
+  const numeric = entity.match(/^&#(x[0-9a-f]+|\d+);$/i);
+  if (numeric?.[1]) {
+    const code = numeric[1].toLowerCase().startsWith("x")
+      ? Number.parseInt(numeric[1].slice(1), 16)
+      : Number.parseInt(numeric[1], 10);
+    if (code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff)) {
+      return String.fromCodePoint(code);
+    }
+    return entity;
+  }
+  return ENTITIES[entity.toLowerCase()] ?? entity;
 };
 
 /**
@@ -60,10 +74,7 @@ export const htmlToText = (html: string | null | undefined): string => {
   return html
     .replace(/<\s*(br|\/p|\/div|\/li|\/h[1-6]|\/blockquote)\b[^>]*>/gi, " ")
     .replace(/<[^>]*>/g, "")
-    .replace(
-      /&(amp|lt|gt|quot|#39|#x27|nbsp);/g,
-      (entity) => ENTITIES[entity] ?? entity,
-    )
+    .replace(/&(?:[a-z]+|#x[0-9a-f]+|#\d+);/gi, decodeEntity)
     .replace(/\s+/g, " ")
     .trim();
 };
