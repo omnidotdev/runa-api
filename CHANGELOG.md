@@ -1,5 +1,13 @@
 # @omnidotdev/runa-api
 
+## 0.1.1
+
+### Patch Changes
+
+- [#78](https://github.com/omnidotdev/runa-api/pull/78) [`00da3a5`](https://github.com/omnidotdev/runa-api/commit/00da3a5593f6af6b40616c02f7066d321584a294) Thanks [@coopbri](https://github.com/coopbri)! - Read a task's activity feed with a dedicated service credential (`CHRONICLE_SERVICE_KEY`). Without it the feed shows only the task's creation entry
+
+- [#80](https://github.com/omnidotdev/runa-api/pull/80) [`ebe3479`](https://github.com/omnidotdev/runa-api/commit/ebe3479746dad1c6ac60c733fffce1ad70963164) Thanks [@coopbri](https://github.com/coopbri)! - Stop writing email addresses to the logs. Notification email sends now log only the recipient count and message id, by moving to `@omnidotdev/providers` v0.2.0.
+
 ## 0.1.0
 
 ### Minor Changes
