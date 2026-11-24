@@ -519,6 +519,13 @@
       "when": 1794728777848,
       "tag": "0073_curvy_baron_strucker",
       "breakpoints": true
+    },
+    {
+      "idx": 74,
+      "version": "7",
+      "when": 1795553248991,
+      "tag": "0074_exotic_the_call",
+      "breakpoints": true
     }
   ]
 }

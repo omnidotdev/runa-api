@@ -37,6 +37,8 @@ export type ProjectBackground =
       position?: string;
       blur?: number;
       chromeContrast?: "light" | "dark";
+      /** Blur-up placeholder (tiny webp data URI) shown until the image loads */
+      lqip?: string;
     };
 
 /**
@@ -71,6 +73,8 @@ export const projects = pgTable(
     background: jsonb().$type<ProjectBackground>(),
     // Avatar image URL (served via the media serve route)
     image: text(),
+    // Blur-up placeholder for `image` (tiny webp data URI), null when unknown
+    imageLqip: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

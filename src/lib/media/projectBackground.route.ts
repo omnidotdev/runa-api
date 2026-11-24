@@ -4,7 +4,8 @@
  * Accepts a single multipart image plus the target `projectId`, authorizes the
  * uploader against the project, enforces per-org storage limits, writes the
  * bytes to object storage under a background key, and returns the storage key
- * (`assetId`) plus its serve URL. The client persists the key inside
+ * (`assetId`), its serve URL, and a blur-up placeholder (`lqip`). The client
+ * persists the key and placeholder inside
  * `project.background` via the `updateProject` GraphQL mutation, where the
  * Project authorization plugin gates the write, and rebuilds an optimized serve
  * URL (the serve route resizes/reencodes on the fly).
@@ -15,6 +16,7 @@
 
 import { randomUUID } from "node:crypto";
 
+import { generateLqip } from "@omnidotdev/providers/media-server";
 import { eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
@@ -149,7 +151,11 @@ const projectBackgroundRoutes = new Elysia({ prefix: "/api/projects" }).post(
     }
 
     set.status = 201;
-    return { assetId: storageKey, url: proxiedUrl(storageKey) };
+    return {
+      assetId: storageKey,
+      url: proxiedUrl(storageKey),
+      lqip: await generateLqip(buffer),
+    };
   },
   {
     body: t.Object({

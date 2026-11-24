@@ -1405,6 +1405,15 @@ const spec_project = {
         canInsert: true,
         canUpdate: true
       }
+    },
+    image_lqip: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
     }
   },
   extensions: {
@@ -5440,6 +5449,9 @@ function ProjectInput_imageApply(obj, val, info) {
 }
 function ProjectInput_backgroundApply(obj, val, info) {
   obj.set("background", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ProjectInput_imageLqipApply(obj, val, info) {
+  obj.set("image_lqip", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateProjectColumnPayload_projectColumnEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_project_columnPgResource, project_columnUniques[0].attributes, $mutation, fieldArgs);
 const CreateProjectLabelPayload_projectLabelEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(spec_resource_project_labelPgResource, project_labelUniques[0].attributes, $mutation, fieldArgs);
@@ -11475,6 +11487,9 @@ input ProjectFilter {
   """Filter by the object’s \`image\` field."""
   image: StringFilter
 
+  """Filter by the object’s \`imageLqip\` field."""
+  imageLqip: StringFilter
+
   """Filter by the object’s \`columns\` relation."""
   columns: ProjectToManyColumnFilter
 
@@ -12339,6 +12354,7 @@ input ProjectDistinctCountAggregateFilter {
   color: BigIntFilter
   image: BigIntFilter
   background: BigIntFilter
+  imageLqip: BigIntFilter
 }
 
 input ProjectMinAggregateFilter {
@@ -14347,6 +14363,7 @@ type Project implements Node {
   color: String
   image: String
   background: JSON
+  imageLqip: String
 
   """Reads a single \`ProjectColumn\` that is related to this \`Project\`."""
   projectColumn: ProjectColumn
@@ -14745,6 +14762,9 @@ type ProjectDistinctCountAggregates {
 
   """Distinct count of background across the matching connection"""
   background: BigInt
+
+  """Distinct count of imageLqip across the matching connection"""
+  imageLqip: BigInt
 }
 
 type ProjectMinAggregates {
@@ -14806,6 +14826,7 @@ enum ProjectGroupBy {
   COLOR
   IMAGE
   BACKGROUND
+  IMAGE_LQIP
 }
 
 """Conditions for \`Project\` aggregates."""
@@ -14922,6 +14943,9 @@ input ProjectCondition {
 
   """Checks for equality with the object’s \`image\` field."""
   image: String
+
+  """Checks for equality with the object’s \`imageLqip\` field."""
+  imageLqip: String
 }
 
 """Methods to use when ordering \`Project\`."""
@@ -14957,6 +14981,8 @@ enum ProjectOrderBy {
   COLOR_DESC
   IMAGE_ASC
   IMAGE_DESC
+  IMAGE_LQIP_ASC
+  IMAGE_LQIP_DESC
   COLUMNS_COUNT_ASC
   COLUMNS_COUNT_DESC
   COLUMNS_DISTINCT_COUNT_ROW_ID_ASC
@@ -17152,6 +17178,8 @@ enum ProjectColumnOrderBy {
   PROJECTS_DISTINCT_COUNT_IMAGE_DESC
   PROJECTS_DISTINCT_COUNT_BACKGROUND_ASC
   PROJECTS_DISTINCT_COUNT_BACKGROUND_DESC
+  PROJECTS_DISTINCT_COUNT_IMAGE_LQIP_ASC
+  PROJECTS_DISTINCT_COUNT_IMAGE_LQIP_DESC
   PROJECTS_MIN_NEXT_TASK_NUMBER_ASC
   PROJECTS_MIN_NEXT_TASK_NUMBER_DESC
   PROJECTS_MAX_NEXT_TASK_NUMBER_ASC
@@ -18352,6 +18380,7 @@ input ProjectInput {
   color: String
   image: String
   background: JSON
+  imageLqip: String
 }
 
 """The output of our create \`ProjectColumn\` mutation."""
@@ -19250,6 +19279,7 @@ input ProjectPatch {
   color: String
   image: String
   background: JSON
+  imageLqip: String
 }
 
 """All input for the \`updateProject\` mutation."""
@@ -25910,6 +25940,9 @@ ${String(oldPlan61)}`);
         const specifier = nodeIdHandler_Project.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Project.codec.name].encode);
       },
+      imageLqip($record) {
+        return $record.get("image_lqip");
+      },
       isPublic($record) {
         return $record.get("is_public");
       },
@@ -26141,6 +26174,9 @@ ${String(oldPlan61)}`);
       description: PostDistinctCountAggregates_descriptionPlan,
       image($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.text, "image", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
+      },
+      imageLqip($pgSelectSingle) {
+        return pgAggregatesPlanAggregateAttribute(TYPES.text, "image_lqip", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
       },
       isPublic($pgSelectSingle) {
         return pgAggregatesPlanAggregateAttribute(TYPES.boolean, "is_public", TYPES.bigint, pgAggregateSpec_distinctCount, $pgSelectSingle);
@@ -29695,6 +29731,9 @@ export const inputObjects = {
       image($condition, val) {
         return applyAttributeCondition("image", TYPES.text, $condition, val);
       },
+      imageLqip($condition, val) {
+        return applyAttributeCondition("image_lqip", TYPES.text, $condition, val);
+      },
       isPublic($condition, val) {
         return applyAttributeCondition("is_public", TYPES.boolean, $condition, val);
       },
@@ -29729,6 +29768,9 @@ export const inputObjects = {
       description: PostDistinctCountAggregateFilter_descriptionApply,
       image($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "image", TYPES.bigint, TYPES.text, $parent, input);
+      },
+      imageLqip($parent, input) {
+        return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "image_lqip", TYPES.bigint, TYPES.text, $parent, input);
       },
       isPublic($parent, input) {
         return pgAggregateApplyAttributeOrder(pgAggregateSpec_distinctCount, "is_public", TYPES.bigint, TYPES.boolean, $parent, input);
@@ -29792,6 +29834,9 @@ export const inputObjects = {
       },
       image(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("image", "image", spec_project.attributes.image, queryBuilder, value);
+      },
+      imageLqip(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("imageLqip", "image_lqip", spec_project.attributes.image_lqip, queryBuilder, value);
       },
       isPublic(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("isPublic", "is_public", spec_project.attributes.is_public, queryBuilder, value);
@@ -30088,6 +30133,7 @@ export const inputObjects = {
       createdAt: AssigneeInput_createdAtApply,
       description: PostInput_descriptionApply,
       image: ProjectInput_imageApply,
+      imageLqip: ProjectInput_imageLqipApply,
       isPublic: ProjectInput_isPublicApply,
       name: LabelInput_nameApply,
       nextTaskNumber: ProjectInput_nextTaskNumberApply,
@@ -30605,6 +30651,7 @@ export const inputObjects = {
       createdAt: AssigneeInput_createdAtApply,
       description: PostInput_descriptionApply,
       image: ProjectInput_imageApply,
+      imageLqip: ProjectInput_imageLqipApply,
       isPublic: ProjectInput_isPublicApply,
       name: LabelInput_nameApply,
       nextTaskNumber: ProjectInput_nextTaskNumberApply,
@@ -33935,6 +33982,12 @@ export const enums = {
       PROJECTS_DISTINCT_COUNT_IMAGE_DESC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image, "image", "DESC", relation15, spec_resource_projectPgResource, $select);
       },
+      PROJECTS_DISTINCT_COUNT_IMAGE_LQIP_ASC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image_lqip, "image_lqip", "ASC", relation15, spec_resource_projectPgResource, $select);
+      },
+      PROJECTS_DISTINCT_COUNT_IMAGE_LQIP_DESC($select) {
+        pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.image_lqip, "image_lqip", "DESC", relation15, spec_resource_projectPgResource, $select);
+      },
       PROJECTS_DISTINCT_COUNT_IS_PUBLIC_ASC($select) {
         pgAggregatesApplyOrderByAttribute(pgAggregateSpec_distinctCount, spec_project.attributes.is_public, "is_public", "ASC", relation15, spec_resource_projectPgResource, $select);
       },
@@ -34054,6 +34107,9 @@ export const enums = {
       DESCRIPTION: PostGroupBy_DESCRIPTIONApply,
       IMAGE($pgSelect) {
         applyGroupByAttribute("image", TYPES.text, $pgSelect);
+      },
+      IMAGE_LQIP($pgSelect) {
+        applyGroupByAttribute("image_lqip", TYPES.text, $pgSelect);
       },
       IS_PUBLIC($pgSelect) {
         applyGroupByAttribute("is_public", TYPES.boolean, $pgSelect);
@@ -34286,6 +34342,18 @@ export const enums = {
       IMAGE_DESC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "image",
+          direction: "DESC"
+        });
+      },
+      IMAGE_LQIP_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "image_lqip",
+          direction: "ASC"
+        });
+      },
+      IMAGE_LQIP_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "image_lqip",
           direction: "DESC"
         });
       },

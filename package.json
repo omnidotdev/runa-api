@@ -46,7 +46,7 @@
     "@graphile/simplify-inflection": "^9.0.1",
     "@graphql-yoga/plugin-disable-introspection": "^2.19.0",
     "@omnidotdev/cadence": "github:omnidotdev/cadence#v0.1.0",
-    "@omnidotdev/providers": "github:omnidotdev/providers#v0.2.0",
+    "@omnidotdev/providers": "github:omnidotdev/providers#v0.7.0",
     "@omnidotdev/search": "github:omnidotdev/search",
     "@opentelemetry/api": "^1.10.0",
     "@opentelemetry/auto-instrumentations-node": "^0.83.1",
