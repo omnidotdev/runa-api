@@ -26,6 +26,7 @@
     "db:seed": "NODE_ENV=development bun run --env-file .env.local src/scripts/db/seedDatabase.ts",
     "db:studio": "bun --env-file .env.local drizzle-kit studio --config src/lib/config/drizzle.config.ts",
     "db:up": "bun --env-file .env.local drizzle-kit up --config src/lib/config/drizzle.config.ts",
+    "backfill:lqip": "bun run src/scripts/backfillLqip.ts",
     "db:normalize-due-dates": "bun run --env-file .env.local src/scripts/normalizeDueDates.ts",
     "authz:backfill": "bun run --env-file .env.local src/scripts/authz/backfillProjectTuples.ts",
     "authz:detect-drift": "bun run --env-file .env.local src/scripts/authz/detectDrift.ts",
