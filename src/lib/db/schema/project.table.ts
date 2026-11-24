@@ -1,6 +1,7 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   index,
   integer,
   jsonb,
@@ -19,7 +20,7 @@ import { projectColumns } from "./projectColumn.table";
 import { projectLinks } from "./projectLink.table";
 import { tasks } from "./task.table";
 
-import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel, SQL } from "drizzle-orm";
 
 /**
  * Board background. Distinct from `color` (which drives accents: avatars,
@@ -40,6 +41,17 @@ export type ProjectBackground =
       /** Blur-up placeholder (tiny webp data URI) shown until the image loads */
       lqip?: string;
     };
+
+/**
+ * Constrain a client-supplied blur-up placeholder to null or a small inline
+ * base64 image data URI, so a patch cannot store arbitrary strings that the
+ * app paints as a CSS background. The `;` after the media type is written as
+ * the regex escape `\u003b` because drizzle-kit cuts a check's SQL at a
+ * literal semicolon
+ * @param value - SQL expression holding the placeholder text
+ */
+const lqipCheck = (value: SQL) =>
+  sql`${value} is null or (length(${value}) <= 4096 and ${value} ~ '^data:image/(webp|png|jpeg)\\u003bbase64,[A-Za-z0-9+/=]+$')`;
 
 /**
  * Project table.
@@ -84,6 +96,11 @@ export const projects = pgTable(
     index().on(table.projectColumnId),
     index().on(table.projectColumnId, table.columnIndex),
     unique().on(table.slug, table.organizationId),
+    check("project_image_lqip_format", lqipCheck(sql`${table.imageLqip}`)),
+    check(
+      "project_background_lqip_format",
+      lqipCheck(sql`(${table.background} ->> 'lqip')`),
+    ),
   ],
 );
 

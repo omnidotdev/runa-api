@@ -16,7 +16,6 @@
 
 import { randomUUID } from "node:crypto";
 
-import { generateLqip } from "@omnidotdev/providers/media-server";
 import { eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
@@ -31,6 +30,7 @@ import {
 } from "lib/graphql/plugins/authorization/constants";
 import { moderateImage } from "lib/moderation/image";
 import { storage } from "lib/providers";
+import { makeProjectLqip } from "./lqip";
 import { extensionForMimeType, validateUpload } from "./mediaConfig";
 import { proxiedUrl, resolveSubject } from "./util";
 
@@ -154,7 +154,7 @@ const projectBackgroundRoutes = new Elysia({ prefix: "/api/projects" }).post(
     return {
       assetId: storageKey,
       url: proxiedUrl(storageKey),
-      lqip: await generateLqip(buffer),
+      lqip: await makeProjectLqip(buffer),
     };
   },
   {
