@@ -296,6 +296,7 @@ const main = async () => {
   const unknown = args.find((arg) => arg !== "--dry-run");
   if (unknown) throw new Error(`Unknown argument ${unknown}\n${USAGE}`);
   const dryRun = args.includes("--dry-run");
+  if (!s3 || !S3_BUCKET) throw new Error("object storage is not configured");
 
   console.info(`${dryRun ? "DRY RUN" : "APPLY"}: backfilling image previews`);
 
