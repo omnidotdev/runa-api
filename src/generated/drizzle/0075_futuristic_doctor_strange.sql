@@ -1,0 +1,2 @@
+ALTER TABLE "project" ADD CONSTRAINT "project_image_lqip_format" CHECK ("project"."image_lqip" is null or (length("project"."image_lqip") <= 4096 and "project"."image_lqip" ~ '^data:image/(webp|png|jpeg)\u003bbase64,[A-Za-z0-9+/=]+$'));--> statement-breakpoint
+ALTER TABLE "project" ADD CONSTRAINT "project_background_lqip_format" CHECK (("project"."background" ->> 'lqip') is null or (length(("project"."background" ->> 'lqip')) <= 4096 and ("project"."background" ->> 'lqip') ~ '^data:image/(webp|png|jpeg)\u003bbase64,[A-Za-z0-9+/=]+$'));

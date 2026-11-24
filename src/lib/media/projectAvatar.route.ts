@@ -3,9 +3,10 @@
  *
  * Accepts a single multipart image plus the target `projectId`, authorizes the
  * uploader against the project, enforces per-org storage limits, writes the
- * bytes to object storage under an avatar key, and returns the serve URL. The
- * client then sets it via the `updateProject` GraphQL mutation (`patch.image`),
- * where the Project authorization plugin gates the write.
+ * bytes to object storage under an avatar key, and returns the serve URL plus a
+ * blur-up placeholder. The client then sets both via the `updateProject`
+ * GraphQL mutation (`patch.image` and `patch.imageLqip`), where the Project
+ * authorization plugin gates the write.
  */
 
 import { randomUUID } from "node:crypto";
@@ -24,6 +25,7 @@ import {
 } from "lib/graphql/plugins/authorization/constants";
 import { moderateImage } from "lib/moderation/image";
 import { storage } from "lib/providers";
+import { makeProjectLqip } from "./lqip";
 import { extensionForMimeType, validateUpload } from "./mediaConfig";
 import { proxiedUrl, resolveSubject } from "./util";
 
@@ -143,8 +145,11 @@ const projectAvatarRoutes = new Elysia({ prefix: "/api/projects" }).post(
       return { error: "Failed to store avatar" };
     }
 
+    // Best-effort: null when no placeholder could be made
+    const lqip = await makeProjectLqip(buffer);
+
     set.status = 201;
-    return { url: proxiedUrl(storageKey) };
+    return { url: proxiedUrl(storageKey), lqip };
   },
   {
     body: t.Object({

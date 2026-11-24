@@ -10,6 +10,7 @@
 
 import { createHash } from "node:crypto";
 
+import { generateLqip } from "@omnidotdev/providers/media-server";
 import { eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import sharp from "sharp";
@@ -36,9 +37,6 @@ const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 
 /** Generated thumbnail width in pixels */
 const THUMBNAIL_WIDTH = 480;
-
-/** Blur-up placeholder width in pixels */
-const LQIP_WIDTH = 16;
 
 const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
   "/upload",
@@ -177,16 +175,15 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
         metadata.thumbnailUrl = proxiedUrl(thumbKey);
         metadata.thumbnailWidth = thumb.info.width;
         metadata.thumbnailHeight = thumb.info.height;
-
-        const lqipBuffer = await sharp(buffer)
-          .resize(LQIP_WIDTH)
-          .webp({ quality: 30 })
-          .toBuffer();
-        metadata.lqip = `data:image/webp;base64,${lqipBuffer.toString("base64")}`;
       } catch (error) {
         // Non-fatal: store the original without a thumbnail
         console.warn("[Attachments] Image processing failed:", error);
       }
+
+      // Best-effort and independent of the thumbnail, so a failed thumbnail
+      // still keeps its placeholder
+      const lqip = await generateLqip(buffer);
+      if (lqip) metadata.lqip = lqip;
     }
 
     try {
