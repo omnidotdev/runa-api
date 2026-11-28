@@ -30,7 +30,7 @@ const DEFAULT_LIMITS: Record<string, Record<string, number>> = {
   max_assignees: { free: 2 },
   max_members: { free: 5 },
   max_admins: { free: 1 },
-  // Per-file upload cap (bytes); mirrors mediaConfig's hard ceiling
+  // Per-file upload cap (bytes); mediaConfig adds only an absolute ceiling
   max_attachment_bytes: { free: 25 * 1024 * 1024 },
   // Per-org total attachment storage (bytes)
   max_storage_bytes: { free: 1024 * 1024 * 1024 },

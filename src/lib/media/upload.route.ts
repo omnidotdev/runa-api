@@ -11,7 +11,7 @@
 import { createHash } from "node:crypto";
 
 import { generateLqip } from "@omnidotdev/providers/media-server";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import sharp from "sharp";
 
@@ -28,6 +28,7 @@ import {
 import { moderateImage } from "lib/moderation/image";
 import { events, storage } from "lib/providers";
 import { extensionForMimeType, validateUpload } from "./mediaConfig";
+import { getOrganizationStorageBytes } from "./storageUsage";
 import { proxiedUrl, resolveSubject } from "./util";
 
 import type { AttachmentMetadata } from "lib/db/schema/attachment.table";
@@ -107,12 +108,7 @@ const attachmentUploadRoutes = new Elysia({ prefix: "/api/attachments" }).post(
     }
 
     // Per-org total storage gate
-    const [{ total: usedBytes } = { total: 0 }] = await dbPool
-      .select({
-        total: sql<number>`coalesce(sum(${attachments.fileSize}), 0)::int`,
-      })
-      .from(attachments)
-      .where(eq(attachments.organizationId, task.organizationId));
+    const usedBytes = await getOrganizationStorageBytes(task.organizationId);
 
     const withinStorageLimit = await isWithinLimit(
       { organizationId: task.organizationId },

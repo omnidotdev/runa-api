@@ -16,13 +16,13 @@
 
 import { randomUUID } from "node:crypto";
 
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { checkPermission } from "lib/authz";
 import { protectRoutes } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
-import { attachments, projects } from "lib/db/schema";
+import { projects } from "lib/db/schema";
 import { isWithinLimit } from "lib/entitlements";
 import {
   FEATURE_KEYS,
@@ -31,7 +31,12 @@ import {
 import { moderateImage } from "lib/moderation/image";
 import { storage } from "lib/providers";
 import { makeProjectLqip } from "./lqip";
-import { extensionForMimeType, validateUpload } from "./mediaConfig";
+import {
+  MAX_PROJECT_IMAGE_BYTES,
+  extensionForMimeType,
+  validateUpload,
+} from "./mediaConfig";
+import { getOrganizationStorageBytes } from "./storageUsage";
 import { proxiedUrl, resolveSubject } from "./util";
 
 /** One year, in seconds, for immutable content-hashed object caching */
@@ -55,7 +60,11 @@ const projectBackgroundRoutes = new Elysia({ prefix: "/api/projects" }).post(
       return { error: "No file provided" };
     }
 
-    const validation = validateUpload(file.type, file.size);
+    const validation = validateUpload(
+      file.type,
+      file.size,
+      MAX_PROJECT_IMAGE_BYTES,
+    );
     if ("error" in validation) {
       set.status = file.size > 0 ? 415 : 400;
       return { error: validation.error };
@@ -106,12 +115,7 @@ const projectBackgroundRoutes = new Elysia({ prefix: "/api/projects" }).post(
     }
 
     // Per-org total storage gate
-    const [{ total: usedBytes } = { total: 0 }] = await dbPool
-      .select({
-        total: sql<number>`coalesce(sum(${attachments.fileSize}), 0)::int`,
-      })
-      .from(attachments)
-      .where(eq(attachments.organizationId, project.organizationId));
+    const usedBytes = await getOrganizationStorageBytes(project.organizationId);
 
     const withinStorageLimit = await isWithinLimit(
       { organizationId: project.organizationId },
