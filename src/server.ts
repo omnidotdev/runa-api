@@ -43,6 +43,7 @@ import {
   projectAvatarRoutes,
   projectBackgroundRoutes,
 } from "lib/media";
+import { MAX_UPLOAD_BYTES } from "lib/media/mediaConfig";
 import { startDigestPoller } from "lib/notifications/digestQueue";
 import {
   SEARCH_RECONCILE_INTERVAL_MS,
@@ -169,8 +170,11 @@ async function startServer(): Promise<void> {
    * Elysia server.
    */
   const app = new Elysia({
-    ...(isDevEnv && {
-      serve: {
+    serve: {
+      // Bun rejects request bodies over 128MB by default, below the largest
+      // per-file plan cap; leave headroom for multipart framing
+      maxRequestBodySize: MAX_UPLOAD_BYTES + 1024 * 1024,
+      ...(isDevEnv && {
         // https://elysiajs.com/patterns/configuration#serve-tls
         // https://bun.sh/guides/http/tls
         // NB: Elysia (and Bun) trust the well-known CA list curated by Mozilla (https://wiki.mozilla.org/CA/Included_Certificates), but they can be customized here if needed (`tls.ca` option)
@@ -178,8 +182,8 @@ async function startServer(): Promise<void> {
           certFile: "cert.pem",
           keyFile: "key.pem",
         },
-      },
-    }),
+      }),
+    },
   })
     .onAfterHandle(({ set }) => {
       set.headers["X-Content-Type-Options"] = "nosniff";

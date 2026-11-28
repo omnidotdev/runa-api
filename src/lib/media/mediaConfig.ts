@@ -28,12 +28,19 @@ const VIDEO_MIME_TYPES = new Set([
   "video/quicktime",
 ]);
 
-/** Per-kind size limits */
-const MAX_BYTES: Record<MediaKind, number> = {
-  image: 20 * MB,
-  video: 50 * MB,
-  file: 25 * MB,
-};
+/**
+ * Absolute per-file ceiling for any upload, regardless of kind. The per-file
+ * plan cap (`max_attachment_bytes`) is the effective limit; this only backstops
+ * billing-bypass workspaces since uploads are buffered in memory. Matches the
+ * largest plan cap (Team, 250MB) so it never undercuts a paid tier
+ */
+export const MAX_UPLOAD_BYTES = 250 * MB;
+
+/**
+ * Per-file ceiling for project images (avatars and backgrounds), which only
+ * render as display images. Applied on top of the plan cap
+ */
+export const MAX_PROJECT_IMAGE_BYTES = 20 * MB;
 
 /**
  * MIME types we refuse outright (executables / scripts), even as generic files,
@@ -96,11 +103,13 @@ export const extensionForMimeType = (mimeType: string): string => {
 
 /**
  * Validate a candidate upload. Returns the resolved kind on success, or an error
- * message describing why the file is rejected.
+ * message describing why the file is rejected. The plan's per-file cap is
+ * checked separately against entitlements; `maxBytes` is only the hard ceiling.
  */
 export const validateUpload = (
   mimeType: string,
   fileSize: number,
+  maxBytes: number = MAX_UPLOAD_BYTES,
 ): { kind: MediaKind } | { error: string } => {
   if (!mimeType) return { error: "Missing content type" };
   if (BLOCKED_MIME_TYPES.has(mimeType))
@@ -108,11 +117,8 @@ export const validateUpload = (
   if (fileSize <= 0) return { error: "Empty file" };
 
   const kind = kindFromMimeType(mimeType);
-  const maxBytes = MAX_BYTES[kind];
   if (fileSize > maxBytes) {
-    return {
-      error: `${kind} exceeds the ${Math.round(maxBytes / MB)}MB limit`,
-    };
+    return { error: `File exceeds the ${Math.round(maxBytes / MB)}MB limit` };
   }
 
   return { kind };

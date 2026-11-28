@@ -1,6 +1,8 @@
 import { describe, expect, it } from "bun:test";
 
 import {
+  MAX_PROJECT_IMAGE_BYTES,
+  MAX_UPLOAD_BYTES,
   extensionForMimeType,
   kindFromMimeType,
   validateUpload,
@@ -55,9 +57,39 @@ describe("mediaConfig", () => {
       });
     });
 
-    it("rejects an oversized image", () => {
-      const result = validateUpload("image/png", 21 * MB);
+    // Regression: fixed per-kind ceilings (image 20MB, video 50MB, file 25MB)
+    // used to reject files the paid per-file plan caps (100MB, 250MB) allow
+    it("does not undercut the largest paid per-file plan cap", () => {
+      const teamCap = 262_144_000;
+      expect(MAX_UPLOAD_BYTES).toBeGreaterThanOrEqual(teamCap);
+      expect(validateUpload("image/png", 100 * MB)).toEqual({ kind: "image" });
+      expect(validateUpload("video/mp4", teamCap)).toEqual({ kind: "video" });
+      expect(validateUpload("application/pdf", 100 * MB)).toEqual({
+        kind: "file",
+      });
+    });
+
+    it("rejects a file over the absolute ceiling", () => {
+      const result = validateUpload("video/mp4", MAX_UPLOAD_BYTES + 1);
       expect("error" in result).toBe(true);
+    });
+
+    it("applies a caller-supplied ceiling (project images)", () => {
+      expect(
+        "error" in
+          validateUpload(
+            "image/png",
+            MAX_PROJECT_IMAGE_BYTES + 1,
+            MAX_PROJECT_IMAGE_BYTES,
+          ),
+      ).toBe(true);
+      expect(
+        validateUpload(
+          "image/png",
+          MAX_PROJECT_IMAGE_BYTES,
+          MAX_PROJECT_IMAGE_BYTES,
+        ),
+      ).toEqual({ kind: "image" });
     });
 
     it("rejects empty files", () => {
