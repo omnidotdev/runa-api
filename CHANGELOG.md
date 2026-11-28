@@ -1,5 +1,23 @@
 # @omnidotdev/runa-api
 
+## 0.2.0
+
+### Minor Changes
+
+- [#85](https://github.com/omnidotdev/runa-api/pull/85) [`8bd1c66`](https://github.com/omnidotdev/runa-api/commit/8bd1c6691db9743e50ecadad9f1b05aba1779234) Thanks [@coopbri](https://github.com/coopbri)! - Images show a soft blurred preview while they load. Project avatar and board background uploads now return a blur-up placeholder (`lqip`), stored as the new `project.imageLqip` field and inside the image `background`. Both places only accept a small base64 image data URI (at most 4096 characters)
+
+### Patch Changes
+
+- [#87](https://github.com/omnidotdev/runa-api/pull/87) [`59fcd03`](https://github.com/omnidotdev/runa-api/commit/59fcd03fbbcd95bb5f9d75c4a987c4412a183036) Thanks [@coopbri](https://github.com/coopbri)! - The production build now runs in production mode, so API errors no longer include internal details and GraphQL runs without development overhead
+
+- [#78](https://github.com/omnidotdev/runa-api/pull/78) [`00da3a5`](https://github.com/omnidotdev/runa-api/commit/00da3a5593f6af6b40616c02f7066d321584a294) Thanks [@coopbri](https://github.com/coopbri)! - Read a task's activity feed with a dedicated service credential (`CHRONICLE_SERVICE_KEY`). Without it the feed shows only the task's creation entry
+
+- [#80](https://github.com/omnidotdev/runa-api/pull/80) [`ebe3479`](https://github.com/omnidotdev/runa-api/commit/ebe3479746dad1c6ac60c733fffce1ad70963164) Thanks [@coopbri](https://github.com/coopbri)! - Stop writing email addresses to the logs. Notification email sends now log only the recipient count and message id, by moving to `@omnidotdev/providers` v0.2.0.
+
+- [#89](https://github.com/omnidotdev/runa-api/pull/89) [`ead8edd`](https://github.com/omnidotdev/runa-api/commit/ead8edd1a56e02a375a1864207f12e5b944a203f) Thanks [@coopbri](https://github.com/coopbri)! - Every plan now includes unlimited members and admins. Workspaces without a provisioned plan are no longer limited to 5 members and 1 admin
+
+- [#88](https://github.com/omnidotdev/runa-api/pull/88) [`abd8e1d`](https://github.com/omnidotdev/runa-api/commit/abd8e1d44bc37e76a33c9a34392883fa0eded7cf) Thanks [@coopbri](https://github.com/coopbri)! - Uploads no longer fail once a workspace stores more than about 2 GB of attachments. Attachments can now use the full per-file size of the workspace plan (25 MB Free, 100 MB Pro, 250 MB Team) instead of being cut off at 20 MB for images, 50 MB for videos, and 25 MB for other files. Project avatars and backgrounds stay limited to 20 MB
+
 ## 0.1.0
 
 ### Minor Changes
